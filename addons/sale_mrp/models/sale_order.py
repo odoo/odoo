@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime
 
 from collections import defaultdict
 from odoo import api, fields, models, _
@@ -50,3 +51,17 @@ class SaleOrder(models.Model):
                 'view_mode': 'list,form',
             })
         return action
+
+    def write(self, values):
+        if values.get('commitment_date'):
+            commitment_date = values.get('commitment_date')
+            commitment_date = datetime.fromisoformat(commitment_date) if isinstance(commitment_date, str) else commitment_date
+            for order in self:
+                order_date = order.commitment_date or order.expected_date
+                if not order_date:
+                    continue
+                delta = commitment_date - order_date
+                for production in order.mrp_production_ids:
+                    if production.state in ('confirmed', 'progress', 'to_close'):
+                        production.date_start += delta
+        return super().write(values)

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.tools.sql import column_exists, create_column
@@ -198,6 +199,22 @@ class StockPicking(models.Model):
     def _can_return(self):
         self.ensure_one()
         return super()._can_return() or self.sale_id
+
+    def write(self, values):
+        if values.get('scheduled_date'):
+            new_scheduled_date = values.get('scheduled_date')
+            new_scheduled_date = datetime.fromisoformat(new_scheduled_date) if isinstance(new_scheduled_date, str) else new_scheduled_date
+            for picking in self:
+                delta = new_scheduled_date - picking.scheduled_date
+                if picking.sale_id and delta.days > 0:
+                    picking.sale_id.message_post(
+                        body=_(
+                            'Transfer %(picking)s has been delayed by %(delay)s days.',
+                            picking=picking._get_html_link(),
+                            delay=delta.days
+                        )
+                    )
+        return super().write(values)
 
 
 class StockLot(models.Model):
