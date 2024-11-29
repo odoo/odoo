@@ -41,7 +41,7 @@ class TestGraph(BaseCase):
                 patch(__package__ + '.graph_legacy.Graph.update_from_db'), \
                 patch(__package__ + '.graph_legacy.get_manifest', lambda name: manifests.get(name, {})), \
                 patch('odoo.modules.packages.get_manifest', lambda name: manifests.get(name, {})), \
-                patch('odoo.modules.packages._imported_modules', lambda cr: ['studio_customization']):
+                patch('odoo.modules.packages.PackageGraph._imported_modules', set(['studio_customization'])):
             dummy_cr = None
             graph = PackageGraph(dummy_cr)
             graph_legacy = GraphLegacy()
