@@ -76,7 +76,7 @@ class PaymentProvider(models.Model):
                 if not provider.razorpay_key_id or not provider.razorpay_key_secret:
                     raise ValidationError(_(
                         "Razorpay credentials are missing. Click the \"Connect\" button to set up"
-                        " your account"
+                        " your account."
                     ))
 
     # === CRUD METHODS === #
@@ -127,24 +127,18 @@ class PaymentProvider(models.Model):
             'target': 'self',
         }
 
-    def action_razorpay_reset_oauth_account(self):
-        """ Reset the Razorpay OAuth account.
+    def _get_reset_values(self):
+        """Override of `payment` to supply the provider-specific credential values to reset."""
+        if self.code != 'razorpay':
+            return super()._get_reset_values()
 
-        Note: self.ensure_one()
-
-        :return: None
-        """
-        self.ensure_one()
-
-        return self.write({
+        return {
             'razorpay_account_id': None,
             'razorpay_public_token': None,
             'razorpay_refresh_token': None,
             'razorpay_access_token': None,
             'razorpay_access_token_expiry': None,
-            'state': 'disabled',
-            'is_published': False,
-        })
+        }
 
     def action_razorpay_create_webhook(self):
         """ Create a webhook and display a toast notification.

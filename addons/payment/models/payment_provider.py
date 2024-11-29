@@ -12,6 +12,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
 
+
 # Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
 _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
@@ -480,6 +481,34 @@ class PaymentProvider(models.Model):
 
         :param int menu_id: The menu from which the onboarding is started, as an `ir.ui.menu` id.
         :return: The onboarding action.
+        :rtype: dict
+        """
+        return {}
+
+    def action_reset_credentials(self):
+        """Reset the credentials of the provider, disable it, and unpublish it.
+
+        Note: self.ensure_one()
+
+        :return: The result of the write operation.
+        :rtype: bool
+        """
+        self.ensure_one()
+
+        return self.write({
+            'state': 'disabled',
+            'is_published': False,
+            **self._get_reset_values(),
+        })
+
+    def _get_reset_values(self):
+        """Return the values to reset the credentials of the provider.
+
+        Providers can override this to supply their own credential fields to reset.
+
+        Note: self.ensure_one() from :meth: `action_reset_credentials`
+
+        :return: The values to reset the credentials of the provider.
         :rtype: dict
         """
         return {}
