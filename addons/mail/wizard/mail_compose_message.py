@@ -971,6 +971,17 @@ class MailComposeMessage(models.TransientModel):
 
         if email_mode:
             mail_values_all = self._process_mail_values_state(mail_values_all)
+            # based on previous values, compute message ID / references
+            for res_id, mail_values in mail_values_all.items():
+                # generate message_id directly; instead of letting mail_message create
+                # method doing it. Then use it to craft references, allowing to keep
+                # a trace of message_id even when email providers override it.
+                # Note that if 'auto_delete' is set and if 'auto_delete_keep_log' is False,
+                # mail.message is removed and parent finding based on messageID
+                # may be broken, tough life
+                message_id = self.env['mail.message']._get_message_id(mail_values)
+                mail_values['message_id'] = message_id
+                mail_values['references'] = message_id
         return mail_values_all
 
     def _prepare_mail_values_static(self):
