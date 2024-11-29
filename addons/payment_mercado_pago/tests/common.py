@@ -12,6 +12,7 @@ class MercadoPagoCommon(PaymentCommon):
         super().setUpClass()
 
         cls.provider = cls._prepare_provider('mercado_pago', update_values={
+            'mercado_pago_account_country_id': cls.env.ref('base.mx').id,
             'mercado_pago_access_token': 'TEST-4850554046279901-TEST-TEST',
         })
         cls.payment_id = '123456'

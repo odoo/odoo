@@ -550,12 +550,6 @@
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
         <field name="support_refund">none</field>
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.INR'),
-                         ref('base.NGN'),
-                     ])]"
-        />
     </record>
 
     <record id="payment_method_becs_direct_debit" model="payment.method">
@@ -1933,6 +1927,18 @@
                          ref('base.EUR'),
                      ])]"
         />
+    </record>
+
+    <record id="payment_method_mercado_pago_wallet" model="payment.method">
+        <field name="name">Mercado Pago Wallet</field>
+        <field name="code">mercado_pago_wallet</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/mercado_livre.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
     </record>
 
     <record id="payment_method_mobile_money" model="payment.method">

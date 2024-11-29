@@ -14,7 +14,11 @@ class ResConfigSettings(models.TransientModel):
     )
     onboarding_payment_module = fields.Selection(
         string="Onboarding Payment Module",
-        selection=[('razorpay', "Razorpay"), ('stripe', "Stripe")],
+        selection=[
+            ('mercado_pago', "Mercado Pago"),
+            ('razorpay', "Razorpay"),
+            ('stripe', "Stripe"),
+        ],
         compute='_compute_onboarding_payment_module',
     )
 
@@ -44,6 +48,8 @@ class ResConfigSettings(models.TransientModel):
                 config.onboarding_payment_module = 'razorpay'
             elif config.company_id.country_id.is_stripe_supported_country:
                 config.onboarding_payment_module = 'stripe'
+            elif config.company_id.country_id.is_mercado_pago_supported_country:
+                config.onboarding_payment_module = 'mercado_pago'
             else:
                 config.onboarding_payment_module = None
 

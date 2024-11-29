@@ -6,17 +6,53 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
+
+from odoo.addons.payment_mercado_pago import const
 
 
 _logger = get_payment_logger(__name__)
 
 
-class MercadoPagoController(http.Controller):
-    _return_url = '/payment/mercado_pago/return'
-    _webhook_url = '/payment/mercado_pago/webhook'
+class MercadoPagoPaymentController(http.Controller):
 
-    @http.route(_return_url, type='http', methods=['GET'], auth='public')
+    @http.route('/payment/mercado_pago/payments', type='jsonrpc', auth='public')
+    def mercado_pago_payment(
+        self, reference, transaction_amount, token, installments, payment_method_brand, issuer_id
+    ):
+        """Make a payment request and process the payment data.
+
+        :param str reference: The reference of the transaction
+        :param int transaction_amount: The amount of the transaction in minor units of the currency
+        :param int token: The transaction token of card received from Mercado Pago.
+        :param int installments:
+        :param int payment_method_brand: The payment method of the transaction.
+        :param int issuer_id: The issuer id of the card received from Mercado Pago.
+        :rtype: None
+        """
+        tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
+            'mercado_pago', {'external_reference': reference}
+        )
+        payload = tx_sudo._mercado_pago_prepare_payment_request_payload()
+        payload.update({
+            'transaction_amount': float(transaction_amount),
+            'token': token,
+            'installments': installments,
+            'payment_method_id': payment_method_brand,
+            'issuer_id': issuer_id,
+        })
+        response_content = tx_sudo._send_api_request(
+            'POST',
+            endpoint='/v1/payments',
+            json=payload,
+            idempotency_key=payment_utils.generate_idempotency_key(tx_sudo, scope='direct_payment'),
+        )
+        tx_sudo._process(
+            'mercado_pago', dict(response_content, merchantReference=reference, token=token)
+        )
+
+    @http.route(const.PAYMENT_RETURN_ROUTE, type='http', methods=['GET'], auth='public')
     def mercado_pago_return_from_checkout(self, **data):
         """Process the payment data sent by Mercado Pago after redirection from checkout.
 
@@ -32,7 +68,8 @@ class MercadoPagoController(http.Controller):
         return request.redirect('/payment/status')
 
     @http.route(
-        f'{_webhook_url}/<reference>', type='http', auth='public', methods=['POST'], csrf=False
+        f'{const.WEBHOOK_ROUTE}/<reference>', type='http', auth='public', methods=['POST'],
+        csrf=False
     )
     def mercado_pago_webhook(self, reference, **_kwargs):
         """ Process the payment data sent by Mercado Pago to the webhook.
