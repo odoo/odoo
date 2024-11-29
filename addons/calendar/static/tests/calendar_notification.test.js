@@ -1,17 +1,14 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
+import { click, contains, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { test } from "@odoo/hoot";
 import {
     asyncStep,
-    click,
-    contains,
     mockService,
     onRpc,
+    preloadBundle,
     serverState,
-    start,
-    startServer,
     waitForSteps,
-} from "@mail/../tests/mail_test_helpers";
-import { test } from "@odoo/hoot";
-import { preloadBundle } from "@web/../tests/web_test_helpers";
+} from "@web/../tests/web_test_helpers";
 
 defineCalendarModels();
 preloadBundle("web.fullcalendar_lib");

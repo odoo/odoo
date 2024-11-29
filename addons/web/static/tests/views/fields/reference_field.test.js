@@ -5,14 +5,12 @@ import {
     clickSave,
     defineModels,
     fields,
+    mockService,
     models,
     mountView,
     mountViewInDialog,
     onRpc,
-    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import { actionService } from "@web/webclient/actions/action_service";
 
 class Partner extends models.Model {
     name = fields.Char();
@@ -291,18 +289,18 @@ test("reference in form view", async () => {
             expect(args[0]).toEqual([37], {
                 message: "should call get_formview_action with correct id",
             });
-            return Promise.resolve({
+            return {
                 res_id: 17,
                 type: "ir.actions.act_window",
                 target: "current",
                 res_model: "res.partner",
-            });
+            };
         }
         if (method === "get_formview_id") {
             expect(args[0]).toEqual([37], {
                 message: "should call get_formview_id with correct id",
             });
-            return Promise.resolve(false);
+            return false;
         }
         if (method === "name_search") {
             expect(model).toBe("partner.type", {
@@ -317,17 +315,11 @@ test("reference in form view", async () => {
         }
     });
 
-    patchWithCleanup(actionService, {
-        start() {
-            const service = super.start(...arguments);
-            return {
-                ...service,
-                doAction(action) {
-                    expect(action.res_id).toEqual(17, {
-                        message: "should do a do_action with correct parameters",
-                    });
-                },
-            };
+    mockService("action", {
+        doAction(action) {
+            expect(action.res_id).toBe(17, {
+                message: "should do a do_action with correct parameters",
+            });
         },
     });
 

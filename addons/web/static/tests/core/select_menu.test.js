@@ -158,14 +158,16 @@ test("Close dropdown on escape keydown", async () => {
     expect(".o_select_menu_menu").toHaveCount(0);
 });
 
-test.tags("desktop")("Search input should be present and auto-focused", async () => {
+test.tags("desktop");
+test("Search input should be present and auto-focused", async () => {
     await mountSingleApp(Parent);
     await open();
     expect("input.o_select_menu_sticky").toHaveCount(1);
     expect("input.o_select_menu_sticky").toBeFocused();
 });
 
-test.tags("mobile")("Search input should be present", async () => {
+test.tags("mobile");
+test("Search input should be present", async () => {
     await mountSingleApp(Parent);
     await open();
     expect("input.o_select_menu_sticky").toHaveCount(1);
@@ -743,7 +745,8 @@ test("When multiSelect is enable, allow deselecting elements by clicking the sel
     expect(".o_select_menu .o_tag").toHaveCount(0);
 });
 
-test.tags("desktop")("Navigation is possible from the input when it is focused", async () => {
+test.tags("desktop");
+test("Navigation is possible from the input when it is focused", async () => {
     class MyParent extends Component {
         static props = ["*"];
         static components = { SelectMenu };

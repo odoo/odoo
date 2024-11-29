@@ -305,7 +305,8 @@ test("sidebar: unpin chat from bus", async () => {
     await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
 });
 
-test.tags("focus required")("chat - channel should count unread message", async () => {
+test.tags("focus required");
+test("chat - channel should count unread message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Demo",
@@ -331,7 +332,8 @@ test.tags("focus required")("chat - channel should count unread message", async 
     await contains(".o-discuss-badge", { count: 0 });
 });
 
-test.tags("focus required")("mark channel as seen on last message visible", async () => {
+test.tags("focus required");
+test("mark channel as seen on last message visible", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
@@ -1189,7 +1191,8 @@ test("Unpinning channel closes its chat window", async () => {
     await contains(".o-mail-ChatWindow", { count: 0, text: "Sales" });
 });
 
-test.tags("focus required")("Update channel data via bus notification", async () => {
+test.tags("focus required");
+test("Update channel data via bus notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "Sales",

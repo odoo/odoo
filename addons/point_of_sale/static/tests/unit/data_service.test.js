@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { defineModels, makeMockEnv, models } from "@web/../tests/web_test_helpers";
+import { defineModels, getService, makeMockEnv, models } from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
 
 class PosSession extends models.ServerModel {
@@ -124,13 +124,11 @@ class ResPartner extends models.ServerModel {
     }
 }
 test("don't retry sending data to the server if the reason that caused the failure is not a network error", async () => {
-    await defineModels({ PosSession, ResPartner });
-    const env = await makeMockEnv();
-    try {
-        await env.services.pos_data.create("res.partner", [{ name: "Test 1", vat: "BE40301926" }]);
-    } catch {
-        expect.step("create failed");
-        expect(env.services.pos_data.network.unsyncData.length).toBe(0);
-    }
-    expect.verifySteps(["create failed"]);
+    defineModels({ PosSession, ResPartner });
+    await makeMockEnv();
+
+    await expect(
+        getService("pos_data").create("res.partner", [{ name: "Test 1", vat: "BE40301926" }])
+    ).rejects.toThrow();
+    expect(getService("pos_data").network.unsyncData).toHaveLength(0);
 });

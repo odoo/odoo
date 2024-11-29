@@ -140,7 +140,8 @@ customElements.define(
     }
 );
 
-describe.tags("ui")(parseUrl(import.meta.url), () => {
+describe.tags("ui");
+describe(parseUrl(import.meta.url), () => {
     test.todo("should crash", async () => {
         expect().toBeFalsy();
     });

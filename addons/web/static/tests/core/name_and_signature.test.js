@@ -109,5 +109,5 @@ test("test name_and_signature widget update signmode with onSignatureChange prop
     };
     await mountWithCleanup(NameAndSignature, { props });
     await contains(".o_web_sign_draw_button").click();
-    expect(currentSignMode).toEqual("draw");
+    expect(currentSignMode).toBe("draw");
 });

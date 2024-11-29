@@ -147,7 +147,8 @@ test("formviewdialog buttons in footer are not duplicated", async () => {
     });
 });
 
-test.tags("desktop")("Form dialog and subview with _view_ref contexts", async () => {
+test.tags("desktop");
+test("Form dialog and subview with _view_ref contexts", async () => {
     expect.assertions(2);
 
     Instrument._records = [{ id: 1, name: "Tromblon", badassery: [1] }];
@@ -385,7 +386,8 @@ test("Save a FormViewDialog when a required field is empty don't close the dialo
     expect(".modal").toHaveCount(0, { message: "modal should be closed" });
 });
 
-test.tags("desktop")("new record has an expand button", async () => {
+test.tags("desktop");
+test("new record has an expand button", async () => {
     Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
     Partner._records = [];
     onRpc("web_save", async () => {
@@ -414,7 +416,8 @@ test.tags("desktop")("new record has an expand button", async () => {
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
 
-test.tags("desktop")("existing record has an expand button", async () => {
+test.tags("desktop");
+test("existing record has an expand button", async () => {
     Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
     onRpc("web_save", async () => {
         expect.step("save");
@@ -443,7 +446,8 @@ test.tags("desktop")("existing record has an expand button", async () => {
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
 
-test.tags("mobile")("no expand button on mobile", async () => {
+test.tags("mobile");
+test("no expand button on mobile", async () => {
     Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
     await mountWithCleanup(WebClient);
     getService("dialog").add(FormViewDialog, {
@@ -455,7 +459,8 @@ test.tags("mobile")("no expand button on mobile", async () => {
     expect(".o_dialog .modal-header .o_expand_button").toHaveCount(0);
 });
 
-test.tags("desktop")("expand button with save and new", async () => {
+test.tags("desktop");
+test("expand button with save and new", async () => {
     Instrument._views["form,false"] = /* xml */ `<form><field name="name"/></form>`;
     Instrument._records = [{ id: 1, name: "Violon" }];
     onRpc("web_save", async () => {

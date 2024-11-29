@@ -58,7 +58,8 @@ test(`mount a CalendarYearRenderer`, async () => {
     expect(`:not(.fc-day-disabled) > * > * > .fc-daygrid-day-number`).toHaveCount(365);
 });
 
-test.tags("desktop")(`display events`, async () => {
+test.tags("desktop");
+test(`display events`, async () => {
     mockService("popover", () => ({
         add(target, component, props) {
             expect.step(`${props.date.toISODate()} ${props.records[0].title}`);
@@ -102,7 +103,8 @@ test.tags("desktop")(`display events`, async () => {
     expect.verifySteps(["2021-07-04 allDay:true no event"]);
 });
 
-test.tags("desktop")(`select a range of date`, async () => {
+test.tags("desktop");
+test(`select a range of date`, async () => {
     await start({
         createRecord({ isAllDay, start, end }) {
             expect.step("create");

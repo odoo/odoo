@@ -78,7 +78,8 @@ test(`Day: click all day slot`, async () => {
     expect.verifySteps(["create"]);
 });
 
-test.tags("desktop")(`Day: select range`, async () => {
+test.tags("desktop");
+test(`Day: select range`, async () => {
     await start({
         model: { ...FAKE_MODEL, scale: "day" },
         createRecord(record) {
@@ -98,7 +99,8 @@ test(`Day: check event`, async () => {
     expect(`.o_event`).toHaveAttribute("data-event-id", "1");
 });
 
-test.tags("desktop")(`Day: click on event`, async () => {
+test.tags("desktop");
+test(`Day: click on event`, async () => {
     mockService("popover", () => ({
         add(target, component, { record }) {
             expect.step("popover");

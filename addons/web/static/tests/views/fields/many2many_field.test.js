@@ -188,7 +188,8 @@ class Users extends models.Model {
 
 defineModels([Partner, PartnerType, Product, Turtle, Users]);
 
-test.tags("desktop")("many2many kanban: edition", async () => {
+test.tags("desktop");
+test("many2many kanban: edition", async () => {
     expect.assertions(24);
 
     onRpc("partner.type", "web_save", ({ args }) => {
@@ -1482,7 +1483,8 @@ test("onchange with 40+ commands for a many2many", async () => {
     expect.verifySteps(["web_save", "web_read"]);
 });
 
-test.tags("desktop")("onchange with 40+ commands for a many2many on desktop", async () => {
+test.tags("desktop");
+test("onchange with 40+ commands for a many2many on desktop", async () => {
     // this test ensures that the basic_model correctly handles more LINK_TO
     // commands than the limit of the dataPoint (40 for x2many kanban)
 
@@ -1858,7 +1860,7 @@ test("`this` inside rendererProps should reference the component", async () => {
             super.setup();
             this.selectCreate = (params) => {
                 expect.step("selectCreate");
-                expect(this.num).toEqual(2);
+                expect(this.num).toBe(2);
             };
             this.num = 1;
         }

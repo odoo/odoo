@@ -77,7 +77,8 @@ test("Fold state is saved on the server", async () => {
     await click(".o-mail-ChatBubble");
 });
 
-test.tags("focus required")("Seen message is saved on the server", async () => {
+test.tags("focus required");
+test("Seen message is saved on the server", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     const userId = serverState.userId;

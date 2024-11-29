@@ -34,6 +34,7 @@ test("Can replace an image", async () => {
     expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
 });
 
+test.tags("focus required");
 test("Selection is collapsed after the image after replacing it", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
         return [
@@ -62,6 +63,7 @@ test("Selection is collapsed after the image after replacing it", async () => {
     expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe("<p>abc<img>[]def</p>");
 });
 
+test.tags("focus required");
 test("Can insert an image, and selection should be collapsed after it", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
         return [

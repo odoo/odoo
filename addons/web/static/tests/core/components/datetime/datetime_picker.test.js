@@ -625,7 +625,8 @@ test("next month and previous month", async () => {
     });
 });
 
-test.tags("desktop")("additional month, hide time picker", async () => {
+test.tags("desktop");
+test("additional month, hide time picker", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [
@@ -666,7 +667,8 @@ test.tags("desktop")("additional month, hide time picker", async () => {
     });
 });
 
-test.tags("desktop")("additional month, empty range value", async () => {
+test.tags("desktop");
+test("additional month, empty range value", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [null, null],
@@ -720,7 +722,8 @@ test.tags("desktop")("additional month, empty range value", async () => {
     });
 });
 
-test.tags("desktop")("range value", async () => {
+test.tags("desktop");
+test("range value", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [
@@ -827,7 +830,8 @@ test("range value on small device", async () => {
     });
 });
 
-test.tags("desktop")("range value, previous month", async () => {
+test.tags("desktop");
+test("range value, previous month", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [false, false],
@@ -1223,7 +1227,8 @@ test("range value, select time for first value", async () => {
     ]);
 });
 
-test.tags("desktop")("range value, select date for second value", async () => {
+test.tags("desktop");
+test("range value, select date for second value", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [
@@ -1263,7 +1268,8 @@ test("range value, select time for second value", async () => {
     ]);
 });
 
-test.tags("desktop")("range value, select date for second value before first value", async () => {
+test.tags("desktop");
+test("range value, select date for second value before first value", async () => {
     await mountWithCleanup(DateTimePicker, {
         props: {
             value: [

@@ -163,7 +163,8 @@ test("connection lost when opening form view from kanban", async () => {
     expect.verifySteps(["/web/webclient/version_info"]);
 });
 
-test.tags("desktop")("connection lost when coming back to kanban from form", async () => {
+test.tags("desktop");
+test("connection lost when coming back to kanban from form", async () => {
     expect.errors(1);
 
     stepAllNetworkCalls();

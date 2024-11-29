@@ -239,7 +239,8 @@ test("use incorrect formula", async () => {
     });
 });
 
-test.tags("desktop")("float field in editable list view", async () => {
+test.tags("desktop");
+test("float field in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "partner",

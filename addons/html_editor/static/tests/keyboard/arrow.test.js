@@ -24,6 +24,7 @@ describe("Around ZWS", () => {
         });
     });
 
+    test.tags("focus required");
     test("should move past a zws (collapsed - ArrowLeft)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B[]</span>cd</p>',
@@ -384,6 +385,7 @@ describe("Selection correction when it lands at the editable root", () => {
         });
     });
 
+    test.tags("focus required");
     test("should place cursor in the table above", async () => {
         await testEditor({
             contentBefore:
@@ -445,6 +447,7 @@ describe("Selection correction when it lands at the editable root", () => {
         });
     });
 
+    test.tags("focus required");
     test("should place cursor before the first separator", async () => {
         await testEditor({
             contentBefore:
@@ -456,6 +459,7 @@ describe("Selection correction when it lands at the editable root", () => {
     });
 });
 
+describe.tags("focus required");
 describe("Around invisible chars in RTL languages", () => {
     describe("ZWS", () => {
         const content = "<p>" + "الرجال" + '<span class="a">\u200B</span>' + "هؤلاء" + "</p>";

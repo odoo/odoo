@@ -474,7 +474,8 @@ describe("Link creation", () => {
     });
 });
 
-describe.tags("desktop")("Link formatting in the popover", () => {
+describe.tags("desktop");
+describe("Link formatting in the popover", () => {
     test("click on link, the link popover should load the current format correctly", async () => {
         await setupEditor(
             '<p><a href="http://test.com/" class="btn btn-outline-primary rounded-circle btn-lg">link2[]</a></p>'

@@ -385,7 +385,8 @@ test("should be able to select farthest-corner option in radial gradient", async
     expect("button[title='Extend to the farthest corner']").toHaveClass("active");
 });
 
-describe.tags("desktop")("color preview", () => {
+describe.tags("desktop");
+describe("color preview", () => {
     test("preview color should work and be reverted", async () => {
         await setupEditor("<p>[test]</p>");
 

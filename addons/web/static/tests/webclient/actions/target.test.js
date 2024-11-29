@@ -162,7 +162,8 @@ describe("new", () => {
         });
     });
 
-    test.tags("desktop")("Button with `close` attribute closes dialog on desktop", async () => {
+    test.tags("desktop");
+    test("Button with `close` attribute closes dialog on desktop", async () => {
         Partner._views = {
             "form,false": `
                 <form>
@@ -219,7 +220,8 @@ describe("new", () => {
         expect(".modal").toHaveCount(0);
     });
 
-    test.tags("mobile")("Button with `close` attribute closes dialog on mobile", async () => {
+    test.tags("mobile");
+    test("Button with `close` attribute closes dialog on mobile", async () => {
         Partner._views = {
             "form,false": `
                 <form>
@@ -336,14 +338,14 @@ describe("new", () => {
         Partner._views["form,1000"] = `<form>Another action</form>`;
 
         onRpc("method", () => {
-            return Promise.resolve({
+            return {
                 id: 1000,
                 name: "Another window action",
                 res_model: "partner",
                 target: "new",
                 type: "ir.actions.act_window",
                 views: [[1000, "form"]],
-            });
+            };
         });
 
         await mountWithCleanup(WebClient);
@@ -573,7 +575,8 @@ describe("fullscreen", () => {
         expect(".o_main_navbar").toHaveCount(1);
     });
 
-    test.tags("desktop")('fullscreen on action change: back to a "current" action', async () => {
+    test.tags("desktop");
+    test('fullscreen on action change: back to a "current" action', async () => {
         defineActions([
             {
                 id: 6,
@@ -604,7 +607,8 @@ describe("fullscreen", () => {
         expect(".o_main_navbar").toHaveCount(1);
     });
 
-    test.tags("desktop")('fullscreen on action change: all "fullscreen" actions', async () => {
+    test.tags("desktop");
+    test('fullscreen on action change: all "fullscreen" actions', async () => {
         defineActions([
             {
                 id: 6,
@@ -696,7 +700,8 @@ describe("fullscreen", () => {
 });
 
 describe("main", () => {
-    test.tags("desktop")('can execute act_window actions in target="main"', async () => {
+    test.tags("desktop");
+    test('can execute act_window actions in target="main"', async () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction(1);
         expect(".o_kanban_view").toHaveCount(1);
@@ -715,7 +720,8 @@ describe("main", () => {
         expect(".o_control_panel .o_breadcrumb").toHaveText("Another Partner Action");
     });
 
-    test.tags("desktop")('can switch view in an action in target="main"', async () => {
+    test.tags("desktop");
+    test('can switch view in an action in target="main"', async () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction({
             name: "Partner Action",
@@ -739,7 +745,8 @@ describe("main", () => {
         expect(".o_control_panel .o_breadcrumb").toHaveText("Partner Action\nFirst record");
     });
 
-    test.tags("desktop")('can restore an action in target="main"', async () => {
+    test.tags("desktop");
+    test('can restore an action in target="main"', async () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction({
             name: "Partner Action",

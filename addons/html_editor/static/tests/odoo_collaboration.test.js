@@ -11,6 +11,7 @@ import { patch } from "@web/core/utils/patch";
 import { getContent, getSelection, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { animationFrame, advanceTime } from "@odoo/hoot-mock";
+import { tick } from "@odoo/hoot-dom";
 
 /**
  * @typedef PeerPool
@@ -422,7 +423,7 @@ describe("Stale detection & recovery", () => {
             await peers.p3.focus();
             await peers.p1.openDataChannel(peers.p3);
             // This timeout is necessary for the selection to be set
-            await new Promise((resolve) => setTimeout(resolve));
+            await tick();
 
             expect(peers.p3.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
                 message: "p3 should not have a stale document",
@@ -1121,7 +1122,7 @@ describe("History steps Ids", () => {
         await peers.p2.focus();
         await peers.p1.openDataChannel(peers.p2);
         // This timeout is necessary for the selection to be set
-        await new Promise((resolve) => setTimeout(resolve));
+        await tick();
 
         expect(peers.p2.plugins.collaborationOdoo.isDocumentStale).toBe(false, {
             message: "p2 should not have a stale document",
@@ -1160,7 +1161,7 @@ describe("Selection", () => {
         await peers.p2.focus();
         await peers.p1.openDataChannel(peers.p2);
         await animationFrame();
-        await new Promise((resolve) => setTimeout(resolve));
+        await tick();
         expect(
             peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection
                 .anchorOffset

@@ -602,7 +602,7 @@ export function makeExpect(params) {
      * @template [R=unknown]
      * @param {R} received
      * @example
-     *  expect([1, 2, 3]).toEqual(1, 2, 3);
+     *  expect([1, 2, 3]).toEqual([1, 2, 3]);
      */
     function expect(received) {
         if (arguments.length > 1) {

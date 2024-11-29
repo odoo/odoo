@@ -92,7 +92,8 @@ test("AceEditorField on html fields works", async () => {
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("desktop", "focus required")("AceEditorField doesn't crash when editing", async () => {
+test.tags("desktop", "focus required");
+test("AceEditorField doesn't crash when editing", async () => {
     await mountView({
         resModel: "res.partner",
         resId: 1,
@@ -144,7 +145,8 @@ test("leaving an untouched record with an unset ace field should not write", asy
     expect.verifySteps(["web_read: [[2]]"]);
 });
 
-test.tags("focus required")("AceEditorField only trigger onchanges when blurred", async () => {
+test.tags("focus required");
+test("AceEditorField only trigger onchanges when blurred", async () => {
     Partner._onChanges.foo = () => {};
     for (const record of Partner._records) {
         record.foo = false;

@@ -50,7 +50,8 @@ test("no auto-call on joining group chat", async () => {
     await contains(".o-discuss-Call", { count: 0 });
 });
 
-test.tags("mobile")("show Push-to-Talk button on mobile", async () => {
+test.tags("mobile");
+test("show Push-to-Talk button on mobile", async () => {
     mockGetMedia();
     mockUserAgent("android");
     const pyEnv = await startServer();

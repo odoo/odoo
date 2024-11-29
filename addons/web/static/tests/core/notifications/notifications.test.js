@@ -230,7 +230,8 @@ test("can close a non-sticky notification", async () => {
     expect(".o_notification").toHaveCount(0);
 });
 
-test.tags("desktop")("can refresh the duration of a non-sticky notification", async () => {
+test.tags("desktop");
+test("can refresh the duration of a non-sticky notification", async () => {
     await makeMockEnv();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")

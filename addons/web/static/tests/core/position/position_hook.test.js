@@ -1,5 +1,5 @@
 import { before, destroy, expect, getFixture, test } from "@odoo/hoot";
-import { queryOne, scroll } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, queryOne, scroll } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, useRef, xml } from "@odoo/owl";
 import { defineParams, defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -227,7 +227,7 @@ test("reposition popper when a load event occurs", async () => {
     await mountWithCleanup(TestComp);
     // onPositioned called when component mounted
     expect.verifySteps(["onPositioned called"]);
-    queryOne("#popper").dispatchEvent(new Event("load"));
+    manuallyDispatchProgrammaticEvent(queryOne("#popper"), "load");
     await animationFrame();
     // onPositioned called when load event is triggered
     expect.verifySteps(["onPositioned called"]);

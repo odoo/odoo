@@ -405,7 +405,8 @@ test("basic flow in editable list view - monetary field", async () => {
     expect(dollarCell).toHaveText("$ 108.25", { message: "The new value should be correct" });
 });
 
-test.tags("desktop")("changing currency updates the field - float field", async () => {
+test.tags("desktop");
+test("changing currency updates the field - float field", async () => {
     Partner._records = [
         {
             id: 1,
@@ -440,7 +441,8 @@ test.tags("desktop")("changing currency updates the field - float field", async 
     });
 });
 
-test.tags("desktop")("changing currency updates the field - monetary field", async () => {
+test.tags("desktop");
+test("changing currency updates the field - monetary field", async () => {
     Partner._records = [
         {
             id: 1,

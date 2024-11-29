@@ -1,5 +1,6 @@
+import { expect, test } from "@odoo/hoot";
+import { middleClick, rightClick } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-import { expect, getFixture, test } from "@odoo/hoot";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 test(`main button click`, async () => {
@@ -48,10 +49,8 @@ test(`detect if middle Click`, async () => {
     }
 
     await mountWithCleanup(MyComponent, { props: { text: "text from props" } });
+    await middleClick(".clickMe");
 
-    getFixture()
-        .querySelector(".clickMe")
-        .dispatchEvent(new PointerEvent("auxclick", { button: 1 })); // Auxiliary button pressed
     expect.verifySteps(["isMiddleClick: true"]);
 });
 
@@ -170,9 +169,7 @@ test(`Secondary button clicked`, async () => {
     }
 
     await mountWithCleanup(MyComponent, { props: { text: "text from props" } });
+    await rightClick(".clickMe");
 
-    getFixture()
-        .querySelector(".clickMe")
-        .dispatchEvent(new PointerEvent("auxclick", { button: 2 })); // Secondary button pressed
     expect.verifySteps([]);
 });

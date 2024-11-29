@@ -1150,8 +1150,10 @@ export class Runner {
          * @returns {ConfigurableFunction}
          * @example
          *  // Will be tagged with "desktop" and "ui"
-         *  test.tags("desktop", "ui")("my test", () => { ... });
-         *  test.tags(["desktop", "ui"])("my test", () => { ... });
+         *  test.tags("desktop", "ui");
+  test("my test", () => { ... });
+         *  test.tags(["desktop", "ui"]);
+  test("my test", () => { ... });
          * @example
          *  test.tags`mobile,ui`("my mobile test", () => { ... });
          */

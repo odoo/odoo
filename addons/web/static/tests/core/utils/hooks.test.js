@@ -23,7 +23,8 @@ import {
 } from "@web/core/utils/hooks";
 
 describe("useAutofocus", () => {
-    test.tags("desktop")("simple usecase", async () => {
+    test.tags("desktop");
+    test("simple usecase", async () => {
         const state = reactive({ text: "" });
 
         class MyComponent extends Component {
@@ -50,7 +51,8 @@ describe("useAutofocus", () => {
         expect("input").toBeFocused();
     });
 
-    test.tags("desktop")("simple usecase when input type is number", async () => {
+    test.tags("desktop");
+    test("simple usecase when input type is number", async () => {
         const state = reactive({ counter: 0 });
 
         class MyComponent extends Component {
@@ -77,7 +79,8 @@ describe("useAutofocus", () => {
         expect("input").toBeFocused();
     });
 
-    test.tags("desktop")("conditional autofocus", async () => {
+    test.tags("desktop");
+    test("conditional autofocus", async () => {
         const state = reactive({ showInput: true });
 
         class MyComponent extends Component {
@@ -160,7 +163,8 @@ describe("useAutofocus", () => {
         expect("input").toBeFocused();
     });
 
-    test.tags("desktop")("supports different ref names", async () => {
+    test.tags("desktop");
+    test("supports different ref names", async () => {
         const state = reactive({ showSecond: true });
 
         class MyComponent extends Component {
@@ -196,7 +200,8 @@ describe("useAutofocus", () => {
         expect("input:last").toBeFocused();
     });
 
-    test.tags("desktop")("can select its content", async () => {
+    test.tags("desktop");
+    test("can select its content", async () => {
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`

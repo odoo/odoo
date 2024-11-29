@@ -6,7 +6,8 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText, undo } from "./_helpers/user_actions";
 
-test.tags("desktop")("add an emoji with powerbox", async () => {
+test.tags("desktop");
+test("add an emoji with powerbox", async () => {
     const { el, editor } = await setupEditor("<p>ab[]</p>");
     await loadBundle("web.assets_emoji");
 
@@ -36,7 +37,8 @@ test("click on emoji command to open emoji picker", async () => {
     expect(".o-EmojiPicker").toHaveCount(1);
 });
 
-test.tags("desktop")("undo an emoji", async () => {
+test.tags("desktop");
+test("undo an emoji", async () => {
     const { el, editor } = await setupEditor("<p>ab[]</p>");
     await loadBundle("web.assets_emoji");
     expect(getContent(el)).toBe("<p>ab[]</p>");

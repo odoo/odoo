@@ -24,7 +24,8 @@ test("shortcut plugin allow registering shortcuts", async () => {
     expect(count).toBe(1);
 });
 
-test.tags("iframe")("shortcut plugin allow registering shortcuts in iframe", async () => {
+test.tags("iframe");
+test("shortcut plugin allow registering shortcuts in iframe", async () => {
     let count = 0;
     class TestPlugin extends Plugin {
         static id = "test";

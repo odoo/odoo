@@ -1,5 +1,13 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryAll, queryAllValues, queryFirst, queryOne, select } from "@odoo/hoot-dom";
+import {
+    click,
+    pointerDown,
+    queryAll,
+    queryAllValues,
+    queryFirst,
+    queryOne,
+    select,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -453,9 +461,7 @@ test("SelectionField in kanban view with handle widget", async () => {
                 </kanban>`,
     });
 
-    const ev = new PointerEvent("pointerdown", { bubbles: true, cancelable: true });
-    const select = queryFirst(".o_kanban_record .o_field_widget[name=color] select");
-    select.dispatchEvent(ev);
+    const events = await pointerDown(".o_kanban_record .o_field_widget[name=color] select");
     await animationFrame();
-    expect(ev.defaultPrevented).toBe(false);
+    expect(events.get("pointerdown").defaultPrevented).toBe(false);
 });

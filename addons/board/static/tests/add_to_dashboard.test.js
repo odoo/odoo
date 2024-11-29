@@ -102,7 +102,7 @@ test("save actions to dashboard", async () => {
         });
         expect(args.action_id).toBe(1, { message: "should save the correct action" });
         expect(args.view_mode).toBe("list", { message: "should save the correct view type" });
-        return Promise.resolve(true);
+        return true;
     });
 
     await mountWithCleanup(WebClient);
@@ -160,7 +160,7 @@ test("save two searches to dashboard", async () => {
         }
 
         filter_count += 1;
-        return Promise.resolve(true);
+        return true;
     });
 
     await mountWithCleanup(WebClient);
@@ -218,7 +218,7 @@ test("save an action domain to dashboard", async () => {
         expect(args.domain).toEqual(expected_domain, {
             message: "the correct domain should be sent",
         });
-        return Promise.resolve(true);
+        return true;
     });
 
     await mountWithCleanup(WebClient);
@@ -281,7 +281,7 @@ test("Add a view to dashboard (keynav)", async () => {
 
     onRpc("/board/add_to_dashboard", () => {
         expect.step("add to board");
-        return Promise.resolve(true);
+        return true;
     });
 
     await mountWithCleanup(WebClient);
@@ -320,7 +320,7 @@ test("Add a view with dynamic domain", async () => {
     onRpc("/board/add_to_dashboard", async (request) => {
         const { params: args } = await request.json();
         expect(args.domain).toEqual(["&", ["int_field", "<=", 3], ["user_id", "=", 7]]);
-        return Promise.resolve(true);
+        return true;
     });
 
     await mountWithCleanup(WebClient);
@@ -366,7 +366,7 @@ test("Add a view to dashboard doesn't save default filters", async () => {
             group_by: [],
             dashboard_merge_domains_contexts: false,
         });
-        return Promise.resolve(true);
+        return true;
     });
     onRpc("/web/domain/validate", () => {
         return true;

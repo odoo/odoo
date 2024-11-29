@@ -37,7 +37,8 @@ test("openChat: open new chat for user", async () => {
     await contains(".o-mail-ChatWindow");
 });
 
-test.tags("focus required")("openChat: open existing chat for user", async () => {
+test.tags("focus required");
+test("openChat: open existing chat for user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });

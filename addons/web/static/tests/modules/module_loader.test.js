@@ -4,7 +4,8 @@ import { microTick, tick } from "@odoo/hoot-dom";
 /** @type {typeof OdooModuleLoader} */
 const ModuleLoader = Object.getPrototypeOf(odoo.loader.constructor);
 
-test.tags("headless")("define: simple case", async () => {
+test.tags("headless");
+test("define: simple case", async () => {
     const loader = new ModuleLoader();
 
     const modA = {};
@@ -36,7 +37,8 @@ test.tags("headless")("define: simple case", async () => {
     expect.verifySteps(["check done"]);
 });
 
-test.tags("headless")("define: invalid module error handling", async () => {
+test.tags("headless");
+test("define: invalid module error handling", async () => {
     const loader = new ModuleLoader(getFixture());
 
     expect(() => loader.define(null, null, null)).toThrow(/Module name should be a string/);
@@ -48,7 +50,8 @@ test.tags("headless")("define: invalid module error handling", async () => {
     expect(loader.checkErrorProm).toBe(null);
 });
 
-test.tags("headless")("define: duplicate name", async () => {
+test.tags("headless");
+test("define: duplicate name", async () => {
     const loader = new ModuleLoader(getFixture());
 
     loader.define("a", [], () => ":)");

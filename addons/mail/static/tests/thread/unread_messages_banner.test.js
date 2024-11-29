@@ -10,6 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { Thread } from "@mail/core/common/thread";
 import { describe, test } from "@odoo/hoot";
+import { delay } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -91,7 +92,7 @@ test("scroll to the first unread message (slow ref registration)", async () => {
         async registerMessageRef() {
             if (slowRegisterMessageRef) {
                 // Ensure scroll is made even when messages are mounted later.
-                await new Promise((res) => setTimeout(res, 500));
+                await delay(500);
             }
             super.registerMessageRef(...arguments);
         },

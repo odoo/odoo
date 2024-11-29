@@ -28,7 +28,6 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 
-import { queryOne } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
@@ -699,7 +698,7 @@ test("chat preview should not display correspondent name in body", async () => {
     await contains(".o-mail-NotificationItem img");
     await contains(".o-mail-NotificationItem-name", { text: "Demo" });
     await contains(".o-mail-NotificationItem-text", { text: "test" });
-    expect(queryOne(".o-mail-NotificationItem-text").textContent).toBe("test"); // exactly
+    expect(".o-mail-NotificationItem-text:only").toHaveText("test"); // exactly
 });
 
 test("filtered previews", async () => {

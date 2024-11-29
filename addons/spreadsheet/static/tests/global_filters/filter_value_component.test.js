@@ -1,5 +1,5 @@
-import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { click, queryAllTexts, queryAllValues } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { contains, makeMockEnv, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
@@ -54,18 +54,13 @@ test("text filter with range", async function () {
     setCellContent(model, "A2", "0");
     setCellFormat(model, "A2", "0.00");
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
-    const fixture = getFixture();
-    const select = fixture.querySelector("select");
-    const options = [...fixture.querySelectorAll("option")];
-    const optionsLabels = options.map((el) => el.textContent);
-    const optionsValues = options.map((el) => el.value);
-    expect(select.value).toBe("", { message: "no value is selected" });
-    expect(optionsLabels).toEqual(["Choose a value...", "foo", "0.00"], {
+    expect("select").toHaveValue("", { message: "no value is selected" });
+    expect(queryAllTexts("option")).toEqual(["Choose a value...", "foo", "0.00"], {
         message: "values are formatted",
     });
-    expect(optionsValues).toEqual(["", "foo", "0"]);
+    expect(queryAllValues("option")).toEqual(["", "foo", "0"]);
     await contains("select").select("0");
-    expect(select.value).toBe("0", { message: "value is selected" });
+    expect("select").toHaveValue("0", { message: "value is selected" });
     expect(model.getters.getGlobalFilterValue("42")).toBe("0", { message: "value is set" });
 });
 

@@ -60,8 +60,8 @@ import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { FormController } from "@web/views/form/form_controller";
-import { WebClient } from "@web/webclient/webclient";
 import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
+import { WebClient } from "@web/webclient/webclient";
 
 const fieldsRegistry = registry.category("fields");
 const widgetsRegistry = registry.category("view_widgets");
@@ -284,7 +284,8 @@ test(`form view with a group that contains an invisible group`, async () => {
     expect(`.o_form_view .o_group`).toHaveCount(1);
 });
 
-test.tags("mobile")(`button box rendering on small screen`, async () => {
+test.tags("mobile");
+test(`button box rendering on small screen`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -299,7 +300,8 @@ test.tags("mobile")(`button box rendering on small screen`, async () => {
     expect(`.o-dropdown--menu #btn4`).toHaveCount(1);
 });
 
-test.tags("desktop")(`button box rendering on big screen`, async () => {
+test.tags("desktop");
+test(`button box rendering on big screen`, async () => {
     const bus = new EventBus();
     mockService("ui", (env) => {
         Object.defineProperty(env, "isSmall", {
@@ -1780,7 +1782,8 @@ test(`trying to leave an invalid form view should not change the navbar`, async 
     expect(`.o_main_navbar .o_menu_brand`).toHaveText("App1");
 });
 
-test.tags("desktop")(`rendering stat buttons with action on desktop`, async () => {
+test.tags("desktop");
+test(`rendering stat buttons with action on desktop`, async () => {
     mockService("action", {
         doActionButton(params) {
             expect.step("doActionButton");
@@ -1817,7 +1820,8 @@ test.tags("desktop")(`rendering stat buttons with action on desktop`, async () =
     expect.verifySteps(["doActionButton"]);
 });
 
-test.tags("mobile")(`rendering stat buttons with action on mobile`, async () => {
+test.tags("mobile");
+test(`rendering stat buttons with action on mobile`, async () => {
     mockService("action", {
         doActionButton(params) {
             expect.step("doActionButton");
@@ -1855,7 +1859,8 @@ test.tags("mobile")(`rendering stat buttons with action on mobile`, async () => 
     expect.verifySteps(["doActionButton"]);
 });
 
-test.tags("desktop")(`rendering stat buttons without class on desktop`, async () => {
+test.tags("desktop");
+test(`rendering stat buttons without class on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -1878,7 +1883,8 @@ test.tags("desktop")(`rendering stat buttons without class on desktop`, async ()
     expect(`button.oe_stat_button`).toHaveCount(1);
 });
 
-test.tags("mobile")(`rendering stat buttons without class on mobile`, async () => {
+test.tags("mobile");
+test(`rendering stat buttons without class on mobile`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -1902,7 +1908,8 @@ test.tags("mobile")(`rendering stat buttons without class on mobile`, async () =
     expect(`button.oe_stat_button`).toHaveCount(1);
 });
 
-test.tags("desktop")(`rendering stat buttons without action on desktop`, async () => {
+test.tags("desktop");
+test(`rendering stat buttons without action on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -1928,7 +1935,8 @@ test.tags("desktop")(`rendering stat buttons without action on desktop`, async (
     expect(`button.oe_stat_button[disabled]`).toHaveCount(1);
 });
 
-test.tags("mobile")(`rendering stat buttons without action on mobile`, async () => {
+test.tags("mobile");
+test(`rendering stat buttons without action on mobile`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -1955,7 +1963,8 @@ test.tags("mobile")(`rendering stat buttons without action on mobile`, async () 
     expect(`button.oe_stat_button[disabled]`).toHaveCount(1);
 });
 
-test.tags("desktop")(`readonly stat buttons stays disabled on desktop`, async () => {
+test.tags("desktop");
+test(`readonly stat buttons stays disabled on desktop`, async () => {
     mockService("action", {
         async doActionButton(params) {
             if (params.name == "action_to_perform") {
@@ -1999,7 +2008,8 @@ test.tags("desktop")(`readonly stat buttons stays disabled on desktop`, async ()
     expect.verifySteps(["action_to_perform"]);
 });
 
-test.tags("mobile")(`readonly stat buttons stays disabled on mobile`, async () => {
+test.tags("mobile");
+test(`readonly stat buttons stays disabled on mobile`, async () => {
     mockService("action", {
         async doActionButton(params) {
             if (params.name == "action_to_perform") {
@@ -2520,7 +2530,8 @@ test(`required field computed by another field in a x2m`, async () => {
     expect(`.o_field_invalid`).toHaveCount(0);
 });
 
-test.tags("desktop")(`tooltips on multiple occurrences of fields and labels`, async () => {
+test.tags("desktop");
+test(`tooltips on multiple occurrences of fields and labels`, async () => {
     Partner._fields.foo = fields.Char({ help: "foo tooltip" });
     Partner._fields.bar = fields.Boolean({ help: "bar tooltip" });
 
@@ -2610,7 +2621,8 @@ test(`field with readonly modifier depending on id`, async () => {
     expect(`.o_field_widget[name=int_field]`).toHaveClass("o_readonly_modifier");
 });
 
-test.tags("desktop")(`readonly attrs on lines are re-evaluated on field change 2`, async () => {
+test.tags("desktop");
+test(`readonly attrs on lines are re-evaluated on field change 2`, async () => {
     Partner._records[0].product_ids = [37];
     Partner._records[0].parent_id = false;
 
@@ -3046,7 +3058,8 @@ test(`form views in dialogs do not have class o_xxl_form_view`, async () => {
     expect(`.o_dialog .o_form_view`).not.toHaveClass("o_xxl_form_view");
 });
 
-test.tags("desktop")(`buttons in form view`, async () => {
+test.tags("desktop");
+test(`buttons in form view`, async () => {
     expect.errors(1);
 
     mockService("action", {
@@ -3102,7 +3115,8 @@ test.tags("desktop")(`buttons in form view`, async () => {
     expect.verifyErrors(["doActionButton error"]);
 });
 
-test.tags("desktop")(`buttons classes in form view`, async () => {
+test.tags("desktop");
+test(`buttons classes in form view`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -3169,7 +3183,8 @@ test(`buttons should be in .o_statusbar_buttons in form view header on desktop`,
     expect(`.o_statusbar_buttons > div:eq(0)`).toHaveAttribute("name", "foo");
 });
 
-test.tags("mobile")(`buttons should be in CogMenu in form view header on mobile`, async () => {
+test.tags("mobile");
+test(`buttons should be in CogMenu in form view header on mobile`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -3225,7 +3240,8 @@ test(`button in form view and long willStart`, async () => {
     expect.verifySteps(["web_read1", "willStart"]);
 });
 
-test.tags("desktop")(`button in form view and long willStart on desktop`, async () => {
+test.tags("desktop");
+test(`button in form view and long willStart on desktop`, async () => {
     mockService("action", {
         doActionButton(params) {
             params.onClose();
@@ -3276,7 +3292,8 @@ test.tags("desktop")(`button in form view and long willStart on desktop`, async 
     expect.verifySteps(["web_read3", "willUpdateProps"]);
 });
 
-test.tags("mobile")(`button in form view and long willStart on mobile`, async () => {
+test.tags("mobile");
+test(`button in form view and long willStart on mobile`, async () => {
     mockService("action", {
         doActionButton(params) {
             params.onClose();
@@ -3329,7 +3346,8 @@ test.tags("mobile")(`button in form view and long willStart on mobile`, async ()
     expect.verifySteps(["web_read3", "willUpdateProps"]);
 });
 
-test.tags("desktop")(`buttons in form view, new record`, async () => {
+test.tags("desktop");
+test(`buttons in form view, new record`, async () => {
     // this test simulates a situation similar to the settings forms.
 
     let resId = null;
@@ -4416,7 +4434,8 @@ test(`editing a translatable field in a duplicate record overrides translations`
     expect.verifySteps(["web_save", "web_override_translations"]);
 });
 
-test.tags("desktop")(`clicking on stat buttons in edit mode on desktop`, async () => {
+test.tags("desktop");
+test(`clicking on stat buttons in edit mode on desktop`, async () => {
     mockService("action", {
         doActionButton() {
             expect.step("doActionButton");
@@ -4456,7 +4475,8 @@ test.tags("desktop")(`clicking on stat buttons in edit mode on desktop`, async (
     expect.verifySteps(["web_save", "doActionButton"]);
 });
 
-test.tags("mobile")(`clicking on stat buttons in edit mode on mobile`, async () => {
+test.tags("mobile");
+test(`clicking on stat buttons in edit mode on mobile`, async () => {
     mockService("action", {
         doActionButton() {
             expect.step("doActionButton");
@@ -4535,7 +4555,8 @@ test(`clicking on stat buttons save and reload in edit mode on desktop`, async (
     expect(`.o_control_panel .o_breadcrumb`).toHaveText("GOLDORAK");
 });
 
-test.tags("mobile")(`clicking on stat buttons save and reload in edit mode on mobile`, async () => {
+test.tags("mobile");
+test(`clicking on stat buttons save and reload in edit mode on mobile`, async () => {
     mockService("action", {
         doActionButton() {},
     });
@@ -4627,7 +4648,8 @@ test(`buttons with attr "special=save" save`, async () => {
     expect.verifySteps(["web_save", "execute_action"]);
 });
 
-test.tags("desktop")(`buttons with attr "special" in dialog close the dialog`, async () => {
+test.tags("desktop");
+test(`buttons with attr "special" in dialog close the dialog`, async () => {
     Product._views = {
         form: `
             <form>
@@ -4682,7 +4704,8 @@ test.tags("desktop")(`buttons with attr "special" in dialog close the dialog`, a
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
 });
 
-test.tags("desktop")(`Add custom buttons to default buttons (replace="0")`, async () => {
+test.tags("desktop");
+test(`Add custom buttons to default buttons (replace="0")`, async () => {
     Product._views = {
         form: `
             <form>
@@ -4874,7 +4897,8 @@ test(`discard changes on a dirty form view (for date field)`, async () => {
     expect(`.o_field_widget input`).toHaveValue("01/25/2017");
 });
 
-test.tags("desktop")(`discard changes on relational data on new record`, async () => {
+test.tags("desktop");
+test(`discard changes on relational data on new record`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5256,7 +5280,8 @@ test(`switching to another record from a dirty one`, async () => {
     expect.verifySteps([]);
 });
 
-test.tags("desktop")(`switching to another record from a dirty one on desktop`, async () => {
+test.tags("desktop");
+test(`switching to another record from a dirty one on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5293,7 +5318,8 @@ test(`do not reload after save when using pager`, async () => {
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("desktop")(`do not reload after save when using pager on desktop`, async () => {
+test.tags("desktop");
+test(`do not reload after save when using pager on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5333,7 +5359,8 @@ test(`switching to another record from an invalid one`, async () => {
     expect.verifySteps([]);
 });
 
-test.tags("desktop")(`switching to another record from an invalid one on desktop`, async () => {
+test.tags("desktop");
+test(`switching to another record from an invalid one on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5436,7 +5463,8 @@ test("open a new record from an invalid one", async () => {
     expect(`.o_breadcrumb`).toHaveText("New");
 });
 
-test.tags("desktop")(`switching to another record from an invalid one (2) on desktop`, async () => {
+test.tags("desktop");
+test(`switching to another record from an invalid one (2) on desktop`, async () => {
     // in this scenario, the record is already invalid in db, so we should be allowed to
     // leave it
     Partner._records[0].foo = false;
@@ -5548,7 +5576,8 @@ test(`handling dirty state: switching to another record`, async () => {
     expect(`.o_breadcrumb`).toHaveText("second record");
 });
 
-test.tags("desktop")(`handling dirty state: switching to another record on desktop`, async () => {
+test.tags("desktop");
+test(`handling dirty state: switching to another record on desktop`, async () => {
     Partner._fields.priority = fields.Selection({
         default: 1,
         selection: [
@@ -5785,7 +5814,8 @@ test(`pager is hidden in create mode`, async () => {
     expect(`.o_pager`).toHaveCount(1);
 });
 
-test.tags("desktop")(`pager is hidden in create mode on desktop`, async () => {
+test.tags("desktop");
+test(`pager is hidden in create mode on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5818,7 +5848,8 @@ test(`switching to another record`, async () => {
     expect(`.o_breadcrumb`).toHaveText("second record");
 });
 
-test.tags("desktop")(`switching to another record on desktop`, async () => {
+test.tags("desktop");
+test(`switching to another record on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5858,7 +5889,8 @@ test(`switching to non-existing record`, async () => {
     expect(`.o_notification_body`).toHaveCount(1);
 });
 
-test.tags("desktop")(`switching to non-existing record on desktop`, async () => {
+test.tags("desktop");
+test(`switching to non-existing record on desktop`, async () => {
     expect.errors(1);
 
     await mountView({
@@ -5973,7 +6005,8 @@ test(`deleting a record`, async () => {
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
 });
 
-test.tags("desktop")(`deleting a record on desktop`, async () => {
+test.tags("desktop");
+test(`deleting a record on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -6851,7 +6884,8 @@ test(`context of onchanges contains the context of changed fields`, async () => 
     expect.verifySteps(["onchange"]);
 });
 
-test.tags("desktop")(`clicking on a stat button with a context on desktop`, async () => {
+test.tags("desktop");
+test(`clicking on a stat button with a context on desktop`, async () => {
     mockService("action", {
         doActionButton({ buttonContext }) {
             // button context should have been evaluated and given to the
@@ -6881,7 +6915,8 @@ test.tags("desktop")(`clicking on a stat button with a context on desktop`, asyn
     expect.verifySteps(["doActionButton"]);
 });
 
-test.tags("mobile")(`clicking on a stat button with a context on mobile`, async () => {
+test.tags("mobile");
+test(`clicking on a stat button with a context on mobile`, async () => {
     mockService("action", {
         doActionButton({ buttonContext }) {
             // button context should have been evaluated and given to the
@@ -6912,7 +6947,8 @@ test.tags("mobile")(`clicking on a stat button with a context on mobile`, async 
     expect.verifySteps(["doActionButton"]);
 });
 
-test.tags("desktop")(`clicking on a stat button with x2many in context on desktop`, async () => {
+test.tags("desktop");
+test(`clicking on a stat button with x2many in context on desktop`, async () => {
     Partner._records[1].type_ids = [12];
 
     mockService("action", {
@@ -6944,7 +6980,8 @@ test.tags("desktop")(`clicking on a stat button with x2many in context on deskto
     expect.verifySteps(["doActionButton"]);
 });
 
-test.tags("mobile")(`clicking on a stat button with x2many in context on mobile`, async () => {
+test.tags("mobile");
+test(`clicking on a stat button with x2many in context on mobile`, async () => {
     Partner._records[1].type_ids = [12];
 
     mockService("action", {
@@ -6977,7 +7014,8 @@ test.tags("mobile")(`clicking on a stat button with x2many in context on mobile`
     expect.verifySteps(["doActionButton"]);
 });
 
-test.tags("desktop")(`clicking on a stat button with no context on desktop`, async () => {
+test.tags("desktop");
+test(`clicking on a stat button with no context on desktop`, async () => {
     mockService("action", {
         doActionButton({ buttonContext }) {
             // button context should have been evaluated and given to the
@@ -7008,7 +7046,8 @@ test.tags("desktop")(`clicking on a stat button with no context on desktop`, asy
     expect.verifySteps(["doActionButton"]);
 });
 
-test.tags("mobile")(`clicking on a stat button with no context on mobile`, async () => {
+test.tags("mobile");
+test(`clicking on a stat button with no context on mobile`, async () => {
     mockService("action", {
         doActionButton({ buttonContext }) {
             // button context should have been evaluated and given to the
@@ -7060,7 +7099,8 @@ test(`display a stat button outside a buttonbox`, async () => {
     expect(`button .o_field_widget .o_stat_value`).toHaveText("9");
 });
 
-test.tags("desktop")(`display something else than a button in a buttonbox on desktop`, async () => {
+test.tags("desktop");
+test(`display something else than a button in a buttonbox on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7081,7 +7121,8 @@ test.tags("desktop")(`display something else than a button in a buttonbox on des
     expect(`.o-form-buttonbox > label`).toHaveCount(1);
 });
 
-test.tags("mobile")(`display something else than a button in a buttonbox on mobile`, async () => {
+test.tags("mobile");
+test(`display something else than a button in a buttonbox on mobile`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7215,7 +7256,8 @@ test(`button box accepts extra classes`, async () => {
     expect(`.o-form-buttonbox.my_class`).toHaveCount(1);
 });
 
-test.tags("desktop")(`many2manys inside one2manys are saved correctly`, async () => {
+test.tags("desktop");
+test(`many2manys inside one2manys are saved correctly`, async () => {
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
         const command = args[1].child_ids;
@@ -7287,7 +7329,8 @@ test(`one2manys (list editable) inside one2manys are saved correctly`, async () 
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("desktop")(`*_view_ref in context are passed correctly`, async () => {
+test.tags("desktop");
+test(`*_view_ref in context are passed correctly`, async () => {
     PartnerType._views = {
         "list,module.list_view_ref": `<list/>`,
     };
@@ -7559,7 +7602,8 @@ test(`open new record even with warning message`, async () => {
     expect(`.o_field_widget[name=foo] input`).toHaveValue("");
 });
 
-test.tags("desktop")(`render stat button with string inline on desktop`, async () => {
+test.tags("desktop");
+test(`render stat button with string inline on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7577,7 +7621,8 @@ test.tags("desktop")(`render stat button with string inline on desktop`, async (
     expect(`.o_form_view .o-form-buttonbox button.oe_stat_button`).toHaveText("Inventory Moves");
 });
 
-test.tags("mobile")(`render stat button with string inline on mobile`, async () => {
+test.tags("mobile");
+test(`render stat button with string inline on mobile`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7649,7 +7694,8 @@ test(`no field should be focused`, async () => {
     expect(document.body).toBeFocused();
 });
 
-test.tags("desktop")(`in create mode, first field is focused`, async () => {
+test.tags("desktop");
+test(`in create mode, first field is focused`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7660,7 +7706,8 @@ test.tags("desktop")(`in create mode, first field is focused`, async () => {
     expect(input.selectionStart).toBe(input.value.length);
 });
 
-test.tags("desktop")(`in create mode, autofocus fields are focused`, async () => {
+test.tags("desktop");
+test(`in create mode, autofocus fields are focused`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7669,7 +7716,8 @@ test.tags("desktop")(`in create mode, autofocus fields are focused`, async () =>
     expect(`.o_field_widget[name="foo"] input`).toBeFocused();
 });
 
-test.tags("desktop")(`autofocus first visible field`, async () => {
+test.tags("desktop");
+test(`autofocus first visible field`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7702,7 +7750,8 @@ test(`no autofocus with disable_autofocus option`, async () => {
     expect(`.o_field_widget[name="foo"] input`).not.toBeFocused();
 });
 
-test.tags("desktop")(`In READ mode, focus the first primary button of the form`, async () => {
+test.tags("desktop");
+test(`In READ mode, focus the first primary button of the form`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7728,7 +7777,8 @@ test.tags("desktop")(`In READ mode, focus the first primary button of the form`,
 });
 
 // should clearly be a mobile test too
-test.tags("desktop")(`check scroll on small height screens`, async () => {
+test.tags("desktop");
+test(`check scroll on small height screens`, async () => {
     Partner._views = {
         list: `<list><field name="display_name"/></list>`,
         form: `<form><field name="parent_id"/></form>`,
@@ -8276,7 +8326,8 @@ test(`default_order on x2many embedded view`, async () => {
     ]);
 });
 
-test.tags("desktop")(`action context is used when evaluating domains`, async () => {
+test.tags("desktop");
+test(`action context is used when evaluating domains`, async () => {
     onRpc("name_search", ({ kwargs }) => {
         expect.step("name_search");
         expect(kwargs.args[0]).toEqual(["id", "in", [45, 46, 47]]);
@@ -8701,7 +8752,8 @@ test(`translate event correctly handled with multiple controllers`, async () => 
     expect.verifySteps(["get_field_translations"]);
 });
 
-test.tags("desktop")(`buttons are disabled until status bar action is resolved`, async () => {
+test.tags("desktop");
+test(`buttons are disabled until status bar action is resolved`, async () => {
     const deferred = new Deferred();
     mockService("action", {
         async doActionButton() {
@@ -8913,7 +8965,8 @@ test(`buttons with "confirm" attribute: click twice on "Ok" on desktop`, async (
     expect.verifySteps(["web_save", "execute_action"]);
 });
 
-test.tags("mobile")(`buttons with "confirm" attribute: click twice on "Ok" on mobile`, async () => {
+test.tags("mobile");
+test(`buttons with "confirm" attribute: click twice on "Ok" on mobile`, async () => {
     mockService("action", {
         doActionButton() {
             expect.step("execute_action"); // should be called only once
@@ -9036,7 +9089,8 @@ test(`form view is not broken if save failed in readonly mode on field changed`,
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("desktop")(`context is correctly passed after save & new in FormViewDialog`, async () => {
+test.tags("desktop");
+test(`context is correctly passed after save & new in FormViewDialog`, async () => {
     Product._views = {
         form: `<form><field name="partner_type_id" context="{'color': parent.id}"/></form>`,
         list: `<list><field name="display_name"/></list>`,
@@ -9182,7 +9236,8 @@ test(`delete a duplicated record`, async () => {
     expect.verifySteps(["unlink"]);
 });
 
-test.tags("desktop")(`display tooltips for buttons (debug = false)`, async () => {
+test.tags("desktop");
+test(`display tooltips for buttons (debug = false)`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -9210,7 +9265,8 @@ test.tags("desktop")(`display tooltips for buttons (debug = false)`, async () =>
     expect(`.o-tooltip`).toHaveText("Button2\n\nhelp Button2");
 });
 
-test.tags("desktop")(`display tooltips for buttons (debug = true)`, async () => {
+test.tags("desktop");
+test(`display tooltips for buttons (debug = true)`, async () => {
     serverState.debug = true;
 
     await mountView({
@@ -9315,7 +9371,8 @@ test(`process the context for inline subview`, async () => {
     expect(`.o_list_renderer thead tr th:not(.o_list_actions_header)`).toHaveCount(1);
 });
 
-test.tags("desktop")(`process the context for subview not inline`, async () => {
+test.tags("desktop");
+test(`process the context for subview not inline`, async () => {
     Partner._records[0].child_ids = [2];
     Partner._views = {
         list: `
@@ -9518,7 +9575,8 @@ test(`widget with readonly attribute`, async () => {
     expect(`.o_widget`).toHaveText("readonly");
 });
 
-test.tags("desktop")(`support header button as widgets on form statusbar on desktop`, async () => {
+test.tags("desktop");
+test(`support header button as widgets on form statusbar on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -9528,7 +9586,8 @@ test.tags("desktop")(`support header button as widgets on form statusbar on desk
     expect(`span.o_attach_document`).toHaveText("Attach document");
 });
 
-test.tags("mobile")(`support header button as widgets on form statusbar on mobile`, async () => {
+test.tags("mobile");
+test(`support header button as widgets on form statusbar on mobile`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -9564,7 +9623,8 @@ test(`basic support for widgets: onchange update`, async () => {
     expect(`.o_widget`).toHaveText("I am alive!");
 });
 
-test.tags("desktop")(`proper stringification in debug mode tooltip`, async () => {
+test.tags("desktop");
+test(`proper stringification in debug mode tooltip`, async () => {
     serverState.debug = true;
 
     await mountView({
@@ -9593,7 +9653,8 @@ test.tags("desktop")(`proper stringification in debug mode tooltip`, async () =>
     );
 });
 
-test.tags("desktop")(`field tooltip in debug mode, on field with domain attr`, async () => {
+test.tags("desktop");
+test(`field tooltip in debug mode, on field with domain attr`, async () => {
     serverState.debug = true;
 
     await mountView({
@@ -9614,7 +9675,8 @@ test.tags("desktop")(`field tooltip in debug mode, on field with domain attr`, a
     expect(`.o-tooltip--technical > li[data-item="domain"]`).toHaveText(/\[\['id', '>', 3\]\]/);
 });
 
-test.tags("desktop")(`do not display unset attributes in debug field tooltip`, async () => {
+test.tags("desktop");
+test(`do not display unset attributes in debug field tooltip`, async () => {
     serverState.debug = true;
 
     await mountView({
@@ -9640,7 +9702,8 @@ test.tags("desktop")(`do not display unset attributes in debug field tooltip`, a
     ]);
 });
 
-test.tags("desktop")(`do not change pager when discarding current record on desktop`, async () => {
+test.tags("desktop");
+test(`do not change pager when discarding current record on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -9656,7 +9719,8 @@ test.tags("desktop")(`do not change pager when discarding current record on desk
     expect(getPagerLimit()).toBe(2);
 });
 
-test.tags("desktop")(`coming to a form view from a grouped and sorted list`, async () => {
+test.tags("desktop");
+test(`coming to a form view from a grouped and sorted list`, async () => {
     defineActions([
         {
             id: 1,
@@ -9729,7 +9793,8 @@ test.tags("desktop")(`coming to a form view from a grouped and sorted list`, asy
     expect.verifySteps(["partner:web_read"]);
 });
 
-test.tags("desktop")(`keep editing after call_button fail`, async () => {
+test.tags("desktop");
+test(`keep editing after call_button fail`, async () => {
     expect.errors(1);
 
     let values = null;
@@ -9876,7 +9941,8 @@ test(`save record with onchange on one2many with required field`, async () => {
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("desktop")(`leave the form view while saving`, async () => {
+test.tags("desktop");
+test(`leave the form view while saving`, async () => {
     Partner._onChanges = {
         foo(record) {
             record.name = record.foo === "trigger onchange" ? "changed" : "default";
@@ -9999,7 +10065,8 @@ test(`leave the form twice (clicking on the breadcrumb) should save only once`, 
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("desktop")(`discard after a failed save (and close notifications)`, async () => {
+test.tags("desktop");
+test(`discard after a failed save (and close notifications)`, async () => {
     Partner._views = {
         form: `
             <form>
@@ -10327,7 +10394,8 @@ test(`reload company when writing on records of model res.company`, async () => 
     expect.verifySteps(["web_save", "reload company"]);
 });
 
-test.tags("desktop")(`company_dependent field in form view, in multi company group`, async () => {
+test.tags("desktop");
+test(`company_dependent field in form view, in multi company group`, async () => {
     Partner._fields.foo = fields.Char({ company_dependent: true });
     Partner._fields.product_id = fields.Many2one({
         relation: "product",
@@ -10553,7 +10621,8 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     expect(`[name=foo] span`).toHaveText("xphone");
 });
 
-test.tags("desktop")(`Action Button clicked with failing action on desktop`, async () => {
+test.tags("desktop");
+test(`Action Button clicked with failing action on desktop`, async () => {
     expect.errors(1);
 
     class MyComponent extends Component {
@@ -10596,7 +10665,8 @@ test.tags("desktop")(`Action Button clicked with failing action on desktop`, asy
     expect.verifyErrors(["test"]);
 });
 
-test.tags("mobile")(`Action Button clicked with failing action on mobile`, async () => {
+test.tags("mobile");
+test(`Action Button clicked with failing action on mobile`, async () => {
     expect.errors(1);
 
     class MyComponent extends Component {
@@ -10758,7 +10828,8 @@ test(`help on field as precedence over field's declaration -- form`, async () =>
     expect(tooltipInfo.field.help).toBe("xmlHelp");
 });
 
-test.tags("desktop")(`help on field is shown without debug mode -- form`, async () => {
+test.tags("desktop");
+test(`help on field is shown without debug mode -- form`, async () => {
     Partner._fields.bar = fields.Boolean({ help: "bar tooltip" });
 
     await mountView({
@@ -10804,7 +10875,8 @@ test(`onSave/onDiscard props`, async () => {
     expect.verifySteps(["discard"]);
 });
 
-test.tags("desktop")(`form view does not deactivate sample data on other views`, async () => {
+test.tags("desktop");
+test(`form view does not deactivate sample data on other views`, async () => {
     ResUsers._records = [];
     Partner._records = [];
     Partner._views = {
@@ -10832,7 +10904,8 @@ test.tags("desktop")(`form view does not deactivate sample data on other views`,
     expect(`.o_list_view .o_content.o_view_sample_data`).toHaveCount(1);
 });
 
-test.tags("desktop")(`empty x2manys when coming form a list with sample data`, async () => {
+test.tags("desktop");
+test(`empty x2manys when coming form a list with sample data`, async () => {
     ResUsers._records = [];
     Partner._records = [];
     Partner._views = {
@@ -11806,7 +11879,8 @@ test(`custom x2many with a m2o in relatedFields and column_invisible`, async () 
     expect.verifySteps(["web_read", "web_save"]);
 });
 
-test.tags("desktop")(`custom x2many with relatedFields and list view not inline`, async () => {
+test.tags("desktop");
+test(`custom x2many with relatedFields and list view not inline`, async () => {
     fieldsRegistry.add("my_widget", {
         ...x2ManyField,
         component: class MyField extends X2ManyField {},
@@ -12137,7 +12211,8 @@ test("onchange returns values w.r.t. extended record specs, for not extended one
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("mobile")(`statusbar buttons are correctly rendered in mobile`, async () => {
+test.tags("mobile");
+test(`statusbar buttons are correctly rendered in mobile`, async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -12165,7 +12240,8 @@ test.tags("mobile")(`statusbar buttons are correctly rendered in mobile`, async 
     });
 });
 
-test.tags("mobile")(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
+test.tags("mobile");
+test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -12203,7 +12279,8 @@ test.tags("mobile")(`statusbar widgets should appear in the CogMenu dropdown`, a
     });
 });
 
-test.tags("mobile")(`CogMenu dropdown should keep its open/close state`, async () => {
+test.tags("mobile");
+test(`CogMenu dropdown should keep its open/close state`, async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -12246,23 +12323,22 @@ test.tags("mobile")(`CogMenu dropdown should keep its open/close state`, async (
     });
 });
 
-test.tags("mobile")(
-    `CogMenu dropdown's open/close state shouldn't be modified after 'onchange'`,
-    async () => {
-        Partner._onChanges = {
-            name() {},
-        };
-        const onchangeDef = new Deferred();
-        onRpc("partner", "onchange", ({ args }) => {
-            if (args[2][0] === "name") {
-                return onchangeDef;
-            }
-        });
+test.tags("mobile");
+test(`CogMenu dropdown's open/close state shouldn't be modified after 'onchange'`, async () => {
+    Partner._onChanges = {
+        name() {},
+    };
+    const onchangeDef = new Deferred();
+    onRpc("partner", "onchange", ({ args }) => {
+        if (args[2][0] === "name") {
+            return onchangeDef;
+        }
+    });
 
-        await mountView({
-            type: "form",
-            resModel: "partner",
-            arch: `
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
                 <form>
                     <header>
                         <button name="create" string="Create Invoice" type="action" />
@@ -12273,43 +12349,41 @@ test.tags("mobile")(
                     </sheet>
                 </form>
             `,
-        });
+    });
 
-        expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
-            message: "statusbar should contain a dropdown",
-        });
-        expect(".o_cp_action_menus button:has(.fa-cog)").not.toHaveClass("show", {
-            message: "dropdown should be opened",
-        });
+    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
+        message: "statusbar should contain a dropdown",
+    });
+    expect(".o_cp_action_menus button:has(.fa-cog)").not.toHaveClass("show", {
+        message: "dropdown should be opened",
+    });
 
-        await contains(".o_field_widget[name=name] input").edit("before onchange");
-        await contains(".o_cp_action_menus button:has(.fa-cog)").click();
-        expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
-            message: "dropdown should be opened",
-        });
+    await contains(".o_field_widget[name=name] input").edit("before onchange");
+    await contains(".o_cp_action_menus button:has(.fa-cog)").click();
+    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
+        message: "dropdown should be opened",
+    });
 
-        onchangeDef.resolve({ value: { name: "after onchange" } });
-        await animationFrame();
-        expect(".o_field_widget[name=name] input").toHaveValue("after onchange");
-        expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
-            message: "dropdown should be opened",
-        });
-    }
-);
+    onchangeDef.resolve({ value: { name: "after onchange" } });
+    await animationFrame();
+    expect(".o_field_widget[name=name] input").toHaveValue("after onchange");
+    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
+        message: "dropdown should be opened",
+    });
+});
 
-test.tags("mobile")(
-    `preserve current scroll position on form view while closing dialog`,
-    async () => {
-        Partner._views = {
-            kanban: `<kanban><templates><t t-name="card"><field name="name" /></t></templates></kanban>`,
-            search: `<search />`,
-        };
+test.tags("mobile");
+test(`preserve current scroll position on form view while closing dialog`, async () => {
+    Partner._views = {
+        kanban: `<kanban><templates><t t-name="card"><field name="name" /></t></templates></kanban>`,
+        search: `<search />`,
+    };
 
-        await mountView({
-            type: "form",
-            resModel: "partner",
-            resId: 2,
-            arch: `
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
                 <form>
                     <sheet>
                         <p style="height:500px" />
@@ -12318,41 +12392,41 @@ test.tags("mobile")(
                     </sheet>
                 </form>
             `,
-        });
+    });
 
-        let position = { top: 0, left: 0 };
-        patchWithCleanup(window, {
-            scrollTo(newPosition) {
-                position = newPosition;
-            },
-            get scrollX() {
-                return position.left;
-            },
-            get scrollY() {
-                return position.top;
-            },
-        });
+    let position = { top: 0, left: 0 };
+    patchWithCleanup(window, {
+        scrollTo(newPosition) {
+            position = newPosition;
+        },
+        get scrollX() {
+            return position.left;
+        },
+        get scrollY() {
+            return position.top;
+        },
+    });
 
-        window.scrollTo({ top: 265, left: 0 });
-        expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
-        expect(window.screenLeft).toBe(0, { message: "Should be 0 px from left as it is" });
+    window.scrollTo({ top: 265, left: 0 });
+    expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
+    expect(window.screenLeft).toBe(0, { message: "Should be 0 px from left as it is" });
 
-        // click on m2o field
-        await contains(".o_field_many2one input").click();
-        // assert.strictEqual(window.scrollY, 0, "Should have scrolled to top (0) px");
-        expect(".modal.o_modal_full").toHaveCount(1, {
-            message: "there should be a many2one modal opened in full screen",
-        });
+    // click on m2o field
+    await contains(".o_field_many2one input").click();
+    // assert.strictEqual(window.scrollY, 0, "Should have scrolled to top (0) px");
+    expect(".modal.o_modal_full").toHaveCount(1, {
+        message: "there should be a many2one modal opened in full screen",
+    });
 
-        // click on back button
-        await contains(".modal .modal-header .oi-arrow-left").click();
+    // click on back button
+    await contains(".modal .modal-header .oi-arrow-left").click();
 
-        expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
-        expect(window.screenLeft).toBe(0, { message: "Should be 0 px from left as it is" });
-    }
-);
+    expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
+    expect(window.screenLeft).toBe(0, { message: "Should be 0 px from left as it is" });
+});
 
-test.tags("mobile")("attach_document widget also works inside a dropdown", async () => {
+test.tags("mobile");
+test("attach_document widget also works inside a dropdown", async () => {
     let fileInput;
     patchWithCleanup(AttachDocumentWidget.prototype, {
         setup() {

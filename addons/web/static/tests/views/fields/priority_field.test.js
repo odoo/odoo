@@ -123,7 +123,8 @@ test("PriorityField in form view", async () => {
     expect(".o_field_widget .o_priority a.o_priority_star.fa-star-o").toHaveCount(0);
 });
 
-test.tags("desktop")("PriorityField hover a star in form view", async () => {
+test.tags("desktop");
+test("PriorityField hover a star in form view", async () => {
     expect.assertions(10);
     await mountView({
         type: "form",
@@ -315,7 +316,8 @@ test("PriorityField in editable list view", async () => {
     });
 });
 
-test.tags("desktop")("PriorityField hover in editable list view", async () => {
+test.tags("desktop");
+test("PriorityField hover in editable list view", async () => {
     onRpc("has_group", () => true);
     await mountView({
         type: "list",
