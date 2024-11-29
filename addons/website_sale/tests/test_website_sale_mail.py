@@ -3,8 +3,12 @@
 from unittest.mock import patch
 
 import odoo
-from odoo import fields
+
+from odoo import SUPERUSER_ID, fields
 from odoo.tests import HttpCase, tagged
+
+from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -48,3 +52,54 @@ class TestWebsiteSaleMail(HttpCase):
             self.assertTrue(new_mail)
             self.assertIn('Your', new_mail.body_html)
             self.assertIn('Order', new_mail.body_html)
+
+
+@tagged('post_install', '-at_install')
+class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
+
+    def test_salesman_assignation(self):
+        self.website.salesperson_id = self.user_admin
+        MailThread = odoo.addons.mail.models.mail_thread.MailThread
+        base_method = MailThread._message_create
+        superuser = self.env['res.users'].browse(SUPERUSER_ID)
+
+        # Public user
+        with patch.object(
+            MailThread, '_message_create', autospec=True, side_effect=base_method
+        ) as patcher:
+            self.cart.with_user(self.public_user).with_context(tracking_disable=False, mail_no_track=False).sudo().action_confirm()
+            patcher.assert_called()
+
+            order, msg_values = None, {}
+            for (record, call_args), _whatever in patcher.call_args_list:
+                if record._name == 'sale.order':
+                    order = record
+                    msg_values = call_args[0]
+                    break
+
+            self.assertEqual(order, self.cart)
+            self.assertEqual(msg_values['author_id'], superuser.partner_id.id)
+            self.assertEqual(msg_values['partner_ids'], self.partner_admin.ids)
+            self.assertEqual(msg_values['subject'], f"You have been assigned to {order.name}")
+
+        # Portal user
+        user_portal = self._create_portal_user()
+        portal_partner = user_portal.partner_id
+        portal_user_cart = self.cart.copy({'partner_id': portal_partner.id, 'user_id': False})
+        with patch.object(
+            MailThread, '_message_create', autospec=True, side_effect=base_method
+        ) as patcher:
+            portal_user_cart.with_user(user_portal).with_context(tracking_disable=False, mail_no_track=False).sudo().action_confirm()
+            patcher.assert_called()
+
+            order, msg_values = None, {}
+            for (record, call_args), _whatever in patcher.call_args_list:
+                if record._name == 'sale.order':
+                    order = record
+                    msg_values = call_args[0]
+                    break
+
+            self.assertEqual(order, portal_user_cart)
+            self.assertEqual(msg_values['author_id'], superuser.partner_id.id)
+            self.assertEqual(msg_values['partner_ids'], self.partner_admin.ids)
+            self.assertEqual(msg_values['subject'], f"You have been assigned to {order.name}")
