@@ -6,7 +6,7 @@ import { leftPos } from "@html_editor/utils/position";
 
 export class LinkPastePlugin extends Plugin {
     static id = "linkPaste";
-    static dependencies = ["link", "clipboard", "selection", "dom"];
+    static dependencies = ["link", "clipboard", "selection", "dom", "history"];
     resources = {
         before_paste_handlers: this.removeFullySelectedLink.bind(this),
         paste_text_overrides: this.handlePasteText.bind(this),
