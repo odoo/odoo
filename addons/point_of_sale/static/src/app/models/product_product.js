@@ -124,7 +124,7 @@ export class ProductProduct extends Base {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
+    get_price(pricelist, quantity, price_extra = 0, recurring = false, list_price = false) {
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in the case where there is a pricelist item
         // but we can't load the base pricelist to get the price when calling this method again.
@@ -140,7 +140,7 @@ export class ProductProduct extends Base {
         }
 
         const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
-        let price = this.lst_price + (price_extra || 0);
+        let price = (list_price || this.lst_price) + (price_extra || 0);
         const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
         if (!rule) {
             return price;
@@ -148,7 +148,7 @@ export class ProductProduct extends Base {
 
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
-                price = this.get_price(rule.base_pricelist_id, quantity, 0, true);
+                price = this.get_price(rule.base_pricelist_id, quantity, 0, true, list_price);
             }
         } else if (rule.base === "standard_price") {
             price = this.standard_price;
@@ -241,6 +241,10 @@ export class ProductProduct extends Base {
             });
         });
         return isCombinationArchived;
+    }
+
+    get productDisplayName() {
+        return this.default_code ? `[${this.default_code}] ${this.name}` : this.name;
     }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);

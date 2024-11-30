@@ -213,8 +213,8 @@ export class Message extends Record {
     }
 
     get dateDay() {
-        let dateDay = this.datetime.toLocaleString(DateTime.DATE_FULL);
-        if (dateDay === DateTime.now().toLocaleString(DateTime.DATE_FULL)) {
+        let dateDay = this.datetime.toLocaleString(DateTime.DATE_MED);
+        if (dateDay === DateTime.now().toLocaleString(DateTime.DATE_MED)) {
             dateDay = _t("Today");
         }
         return dateDay;

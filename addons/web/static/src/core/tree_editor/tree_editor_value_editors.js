@@ -15,6 +15,7 @@ import { unique } from "@web/core/utils/arrays";
 import { Input, Select, List, Range, Within } from "@web/core/tree_editor/tree_editor_components";
 import { connector, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
 import { getResModel, disambiguate, isId } from "@web/core/tree_editor/utils";
+import { Domain } from "@web/core/domain";
 
 const { DateTime } = luxon;
 
@@ -77,6 +78,17 @@ function makeSelectEditor(options, params = {}) {
     };
 }
 
+function getDomain(fieldDef) {
+    if (fieldDef.type === "many2one") {
+        return [];
+    }
+    try {
+        return new Domain(fieldDef.domain || []).toList();
+    } catch {
+        return [];
+    }
+}
+
 function makeAutoCompleteEditor(fieldDef) {
     return {
         component: DomainSelectorAutocomplete,
@@ -84,6 +96,7 @@ function makeAutoCompleteEditor(fieldDef) {
             return {
                 resModel: getResModel(fieldDef),
                 fieldString: fieldDef.string,
+                domain: getDomain(fieldDef),
                 update: (value) => update(unique(value)),
                 resIds: unique(value),
             };

@@ -59,7 +59,7 @@ class StockPickingType(models.Model):
     @api.model
     def _is_auto_wave_grouped(self):
         self.ensure_one()
-        return any(self[key] for key in self._get_wave_group_by_keys())
+        return self.auto_batch and any(self[key] for key in self._get_wave_group_by_keys())
 
     @api.model
     def _get_batch_group_by_keys(self):

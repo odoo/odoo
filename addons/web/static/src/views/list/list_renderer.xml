@@ -126,7 +126,7 @@
                             href="#"
                             role="button"
                             t-att-class="create_index !== 0 ? 'ml16' : ''"
-                            t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
+                            t-att-tabindex="editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: create.context })"
                         >
                             <t t-esc="create.string"/>
@@ -139,7 +139,7 @@
                             record="props.list"
                             string="create.string"
                             title="create.title"
-                            tabindex="props.list.editedRecord ? '-1' : '0'"
+                            tabindex="editedRecord ? '-1' : '0'"
                         />
                     </t>
                 </td>
@@ -165,7 +165,7 @@
                         >
                             <a href="#"
                                 role="button"
-                                t-on-click.stop.prevent="() => group.addNewRecord({}, props.editable === 'top')"
+                                t-on-click.stop.prevent="() => this.addInGroup(group)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
                             >
                                 Add a line
@@ -179,7 +179,7 @@
 
     <t t-name="web.ListRenderer.GroupRow">
         <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer"
-            t-on-click="() => this.toggleGroup(group)"
+            t-on-click="(ev) => this.onGroupHeaderClicked(ev, group)"
         >
             <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)"
                 tabindex="-1"
@@ -269,7 +269,7 @@
                                     record="record"
                                     string="button.string"
                                     title="button.title"
-                                    tabindex="props.list.editedRecord ? '-1' : '0'"
+                                    tabindex="editedRecord ? '-1' : '0'"
                                     onClick="isX2Many and record.isNew ? displaySaveNotification.bind(this) : ''"
                                 />
                             </t>

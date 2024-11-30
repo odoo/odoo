@@ -1,6 +1,11 @@
 import { HtmlField } from "@html_editor/fields/html_field";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
+import {
+    getEditableDescendants,
+    getEmbeddedProps,
+} from "@html_editor/others/embedded_component_utils";
+import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
@@ -14,6 +19,7 @@ import {
     waitUntil,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
+import { onWillDestroy, xml } from "@odoo/owl";
 import {
     clickSave,
     contains,
@@ -31,15 +37,9 @@ import { assets } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
+import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
 import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
-import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
-import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
-import {
-    getEditableDescendants,
-    getEmbeddedProps,
-} from "@html_editor/others/embedded_component_utils";
-import { onWillDestroy, xml } from "@odoo/owl";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -511,6 +511,7 @@ test("create new record and load it correctly", async () => {
     expect(".odoo-editor-editable").toHaveInnerHTML("<p>2</p>");
 });
 
+test.tags("focus required");
 test("edit html field and blur multiple time should apply 1 onchange", async () => {
     const def = new Deferred();
     Partner._onChanges = {
@@ -546,6 +547,7 @@ test("edit html field and blur multiple time should apply 1 onchange", async () 
     expect.verifySteps([]);
 });
 
+test.tags("focus required");
 test("edit an html field during an onchange", async () => {
     const def = new Deferred();
     Partner._onChanges = {
@@ -810,7 +812,8 @@ test("isDirty should be false when the content is being transformed by the edito
     expect(`.o_form_button_save`).not.toBeVisible();
 });
 
-test.tags("desktop")("link preview in Link Popover", async () => {
+test.tags("desktop");
+test("link preview in Link Popover", async () => {
     Partner._records = [
         {
             id: 1,
@@ -945,7 +948,7 @@ test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/media");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
 
     await press("Enter");
     await animationFrame();
@@ -971,7 +974,7 @@ test("MediaDialog does not contain 'Videos' tab in html field when 'disableVideo
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/media");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
 
     await press("Enter");
     await animationFrame();
@@ -1003,7 +1006,7 @@ test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () 
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/media");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
 
     await press("Enter");
     await animationFrame();
@@ -1035,7 +1038,7 @@ test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'disableVi
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/media");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
 
     await press("Enter");
     await animationFrame();
@@ -1060,7 +1063,7 @@ test("'Media' command is available by default", async () => {
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/media");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
+    expect(queryAllTexts(".o-we-command-name")[0]).toBe("Media");
 });
 
 test("'Media' command is not available when 'disableImage' = true", async () => {
@@ -1604,11 +1607,11 @@ describe("sandbox", () => {
         ];
 
         patchWithCleanup(assets, {
-            getBundle: (name) => {
+            async getBundle(name) {
                 expect.step(name);
                 return {
-                    jsLibs: [],
                     cssLibs: ["testCSS"],
+                    jsLibs: [],
                 };
             },
         });
@@ -1907,12 +1910,12 @@ describe("save image", () => {
         await waitFor("img");
         const img = htmlEditor.editable.querySelector("img");
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
-        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+        expect(img).toHaveClass("o_b64_image_to_save");
 
         // Save changes.
         await contains(".o_form_button_save").click();
         expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
-        expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
+        expect(img).not.toHaveClass("o_b64_image_to_save");
         expect.verifySteps(["add_data: partner 1"]);
     });
 
@@ -1966,17 +1969,17 @@ describe("save image", () => {
         await waitFor("img");
         const img = htmlEditor.editable.querySelector("img");
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
-        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+        expect(img).toHaveClass("o_b64_image_to_save");
 
         // Save changes.
         await contains(".o_form_button_save").click();
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
-        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+        expect(img).toHaveClass("o_b64_image_to_save");
 
         def.resolve();
         await tick();
         expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=1234");
-        expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
+        expect(img).not.toHaveClass("o_b64_image_to_save");
 
         expect.verifySteps(["add_data-start: partner 1", "add_data-end: partner 1", "web_save"]);
     });
@@ -2036,12 +2039,12 @@ describe("save image", () => {
         await waitFor("img");
         const img = htmlEditor.editable.querySelector("img");
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
-        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+        expect(img).toHaveClass("o_b64_image_to_save");
 
         // Save changes.
         await contains(".o_pager_next").click();
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
-        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+        expect(img).toHaveClass("o_b64_image_to_save");
         expect(".test_target_2").toHaveCount(0);
 
         def.resolve();
@@ -2095,12 +2098,12 @@ describe("save image", () => {
         await waitFor("img");
         const img = htmlEditor.editable.querySelector("img");
         expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
-        expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
+        expect(img).toHaveClass("o_b64_image_to_save");
 
         // Save changes.
         await contains(".o_form_button_save").click();
         expect(img.getAttribute("src")).toBe("/test_image_url.png?access_token=12345");
-        expect(img.classList.contains("o_b64_image_to_save")).not.toBe(true);
+        expect(img).not.toHaveClass("o_b64_image_to_save");
         expect.verifySteps(["add_data: partner 1", "generate_access_token: 123"]);
     });
 });

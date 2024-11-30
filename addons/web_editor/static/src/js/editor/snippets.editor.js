@@ -1939,6 +1939,7 @@ class SnippetsMenu extends Component {
             // text will load it). The colorpalette itself will do the actual
             // waiting of the loading completion.
             this.options.wysiwyg.getColorpickerTemplate();
+            this.options.wysiwyg.toolbarEl.classList.add("d-none");
         });
 
         onMounted(async () => {
@@ -1998,6 +1999,10 @@ class SnippetsMenu extends Component {
 
         useBus(this.props.bus, "CLEAN_FOR_SAVE", ({ detail }) => {
             detail.proms.push(this.cleanForSave());
+        });
+
+        useBus(this.props.bus, "UPDATE_SCROLLING_ELEMENT", ({ detail }) => {
+            this.draggableComponent?.update({ scrollingElement: detail.scrollingElement });
         });
     }
     /**
@@ -2065,7 +2070,6 @@ class SnippetsMenu extends Component {
 
         const toolbarEl = this._toolbarWrapperEl.firstChild;
         toolbarEl.classList.remove('oe-floating');
-        this.options.wysiwyg.toolbarEl.classList.add('d-none');
         this.options.wysiwyg.setupToolbar(toolbarEl);
         this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);

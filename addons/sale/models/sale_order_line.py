@@ -762,8 +762,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             base_line = line._prepare_base_line_for_taxes_computation()
             self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
-            line.price_subtotal = base_line['tax_details']['total_excluded_currency']
-            line.price_total = base_line['tax_details']['total_included_currency']
+            line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
+            line.price_total = base_line['tax_details']['raw_total_included_currency']
             line.price_tax = line.price_total - line.price_subtotal
 
     @api.depends('price_subtotal', 'product_uom_qty')

@@ -1,5 +1,5 @@
-import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { dblclick } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { dblclick, queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import {
@@ -13,13 +13,11 @@ defineSpreadsheetDashboardModels();
 
 test("is empty with no figures", async () => {
     await createSpreadsheetDashboard();
-    const fixture = getFixture();
     expect(".o_mobile_dashboard").toHaveCount(1);
-    const content = fixture.querySelector(".o_mobile_dashboard");
-    expect(content.innerText.split("\n")).toEqual([
-        "Dashboard CRM 1",
-        "Only chart figures are displayed in small screens but this dashboard doesn't contain any",
-    ]);
+    expect(".o_mobile_dashboard").toHaveText(
+        "Dashboard CRM 1\n" +
+            "Only chart figures are displayed in small screens but this dashboard doesn't contain any"
+    );
 });
 
 test("with no available dashboard", async () => {
@@ -27,9 +25,7 @@ test("with no available dashboard", async () => {
     serverData.models["spreadsheet.dashboard"].records = [];
     serverData.models["spreadsheet.dashboard.group"].records = [];
     await createSpreadsheetDashboard({ serverData });
-    const fixture = getFixture();
-    const content = fixture.querySelector(".o_mobile_dashboard");
-    expect(content.innerText).toBe("No available dashboard");
+    expect(".o_mobile_dashboard").toHaveText("No available dashboard");
 });
 
 test("displays figures in first sheet", async () => {
@@ -132,26 +128,24 @@ test("double clicking on a figure doesn't open the side panel", async () => {
 
 test("can switch dashboard", async () => {
     await createSpreadsheetDashboard();
-    const fixture = getFixture();
-    expect(fixture.querySelector(".o_search_panel_summary").innerText).toBe("Dashboard CRM 1");
+    expect(".o_search_panel_summary").toHaveText("Dashboard CRM 1");
     await contains(".o_search_panel_current_selection").click();
-    const dashboardElements = [...document.querySelectorAll("section header.list-group-item")];
-    expect(dashboardElements[0].classList.contains("active")).toBe(true);
-    expect(dashboardElements.map((el) => el.innerText)).toEqual([
+    const dashboardElements = queryAll("section header.list-group-item", { root: document.body });
+    expect(dashboardElements[0]).toHaveClass("active");
+    expect(queryAllTexts(dashboardElements)).toEqual([
         "Dashboard CRM 1",
         "Dashboard CRM 2",
         "Dashboard Accounting 1",
     ]);
     await contains(dashboardElements[1]).click();
-    expect(fixture.querySelector(".o_search_panel_summary").innerText).toBe("Dashboard CRM 2");
+    expect(".o_search_panel_summary").toHaveText("Dashboard CRM 2");
 });
 
 test("can go back from dashboard selection", async () => {
     await createSpreadsheetDashboard();
-    const fixture = getFixture();
     expect(".o_mobile_dashboard").toHaveCount(1);
-    expect(fixture.querySelector(".o_search_panel_summary").innerText).toBe("Dashboard CRM 1");
+    expect(".o_search_panel_summary").toHaveText("Dashboard CRM 1");
     await contains(".o_search_panel_current_selection").click();
     await contains(document.querySelector(".o_mobile_search_button")).click();
-    expect(fixture.querySelector(".o_search_panel_summary").innerText).toBe("Dashboard CRM 1");
+    expect(".o_search_panel_summary").toHaveText("Dashboard CRM 1");
 });

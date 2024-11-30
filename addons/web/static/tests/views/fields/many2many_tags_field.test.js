@@ -1577,7 +1577,7 @@ test("Many2ManyTagsField with edit_tags option", async () => {
         expect(args[0]).toEqual([12], {
             message: "should call get_formview_id with correct id",
         });
-        return Promise.resolve(false);
+        return false;
     });
     onRpc("partner.type", "web_save", ({ args }) => {
         expect(args[1]).toEqual({ name: "new" });

@@ -8762,7 +8762,6 @@ test(`list with handle widget`, async () => {
         expect(params.ids).toEqual([3, 2, 1], {
             message: "should write the sequence in correct order",
         });
-        return Promise.resolve();
     });
 
     await mountView({
@@ -10872,7 +10871,7 @@ test(`grouped list view, indentation for empty group`, async () => {
         // Override of the read_group to display the row even if there is no record in it,
         // to mock the behavihour of some fields e.g stage_id on the sale order.
         if (kwargs.groupby[0] === "m2o") {
-            return Promise.resolve({
+            return {
                 groups: [
                     {
                         id: 8,
@@ -10886,7 +10885,7 @@ test(`grouped list view, indentation for empty group`, async () => {
                     },
                 ],
                 length: 1,
-            });
+            };
         }
     });
 
@@ -11574,11 +11573,11 @@ test(`grouped list: have a group with pager, then apply filter`, async () => {
 
     await contains(`.o_group_header:eq(1)`).click();
     expect(`.o_data_row`).toHaveCount(2);
-    expect(queryFirst(`.o_group_header .o_pager`).innerText).toBe("1-2 / 3");
+    expect(`.o_group_header .o_pager:first`).toHaveText("1-2 / 3");
 
     await contains(`.o_group_header .o_pager_next`).click();
     expect(`.o_data_row`).toHaveCount(1);
-    expect(queryFirst(`.o_group_header .o_pager`).innerText).toBe("3-3 / 3");
+    expect(`.o_group_header .o_pager:first`).toHaveText("3-3 / 3");
 
     await toggleSearchBarMenu();
     await toggleMenuItem("Some Filter");
@@ -13059,6 +13058,40 @@ test(`add a new row in grouped editable="bottom" list`, async () => {
     await contains(`.o_selected_row [name=foo] input`).edit("pla", { confirm: false });
     await contains(`.o_list_button_save`).click();
     expect(`.o_data_row`).toHaveCount(5);
+});
+
+test("editable grouped list: fold group with edited row", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: '<list editable="top"><field name="foo"/></list>',
+        groupBy: ["bar"],
+    });
+
+    await contains(".o_group_header").click();
+    expect(".o_data_row .o_data_cell").toHaveText("blip");
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".o_selected_row [name=foo] input").edit("some change");
+    await contains(".o_group_header").click();
+    await contains(".o_group_header").click();
+    expect(".o_data_row .o_data_cell").toHaveText("some change");
+});
+
+test("editable grouped list: add row with edited row", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: '<list editable="bottom"><field name="foo"/></list>',
+        groupBy: ["bar"],
+    });
+
+    await contains(".o_group_header").click();
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".o_selected_row [name=foo] input").edit("some change");
+    await contains(".o_group_field_row_add a").click();
+    expect(".o_data_row").toHaveCount(2);
+    expect(".o_data_row:first .o_data_cell").toHaveText("some change");
 });
 
 test(`add and discard a line through keyboard navigation without crashing`, async () => {
@@ -16366,4 +16399,35 @@ test("two pages, go page 2, record deleted meanwhile (grouped case)", async () =
     await pagerNext(queryFirst(".o_group_header"));
     expect(".o_data_row").toHaveCount(3);
     expect(".o_group_header .o_pager").toHaveCount(0);
+});
+
+test("open record, with invalid record in list", async () => {
+    // in this scenario, the record is already invalid in db, so we should be allowed to
+    // leave it
+    Foo._records[0].foo = false;
+    Foo._views = {
+        form: `<form><field name="foo"/><field name="int_field"/></form>`,
+        list: `<list><field name="foo" required="1"/><field name="int_field"/></list>`,
+        search: `<search/>`,
+    };
+
+    mockService("notification", {
+        add() {
+            throw new Error("should not display a notification");
+        },
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "foo",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
+    });
+
+    await contains(".o_data_cell").click();
+
+    expect(".o_form_view").toHaveCount(1);
 });

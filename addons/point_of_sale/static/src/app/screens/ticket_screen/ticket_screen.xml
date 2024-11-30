@@ -121,8 +121,7 @@
                             Select the product(s) to refund and set the quantity
                         </div>
                         <OrderWidget lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
-                            total="env.utils.formatCurrency(_selectedSyncedOrder.get_total_with_tax())"
-                            tax="!env.utils.floatIsZero(_selectedSyncedOrder.get_total_tax()) and env.utils.formatCurrency(_selectedSyncedOrder.get_total_tax()) or ''"
+                            taxTotals="_selectedSyncedOrder.taxTotals"
                             generalNote="_selectedSyncedOrder?.general_note or ''">
                             <t t-set="line" t-value="scope.line" />
                             <Orderline line="line.getDisplayData()"

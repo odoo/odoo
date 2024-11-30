@@ -585,7 +585,10 @@ export class LinkTools extends Link {
         }
         const protocolLessPrevUrl = previousUrl.replace(/^https?:\/\/|^mailto:/i, '');
         const content = weUtils.getLinkLabel(this.linkEl);
-        if (content === previousUrl || content === protocolLessPrevUrl) {
+        if (
+            (content === previousUrl || content === protocolLessPrevUrl) &&
+            this.linkComponentWrapperRef.el
+        ) {
             const newUrl = this.linkComponentWrapperRef.el.querySelector('input[name="url"]').value;
             const protocolLessNewUrl = newUrl.replace(/^https?:\/\/|^mailto:/i, '')
             const newContent = content.replace(protocolLessPrevUrl, protocolLessNewUrl);

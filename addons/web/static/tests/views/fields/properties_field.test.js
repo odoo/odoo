@@ -157,6 +157,10 @@ function getLocalStorageFold() {
     };
 }
 
+function getPropertyHandleElement(propertyName) {
+    return queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
+}
+
 class Partner extends models.Model {
     display_name = fields.Char();
     properties = fields.Properties({
@@ -671,7 +675,8 @@ test("properties: float and integer", async () => {
 /**
  * Test the properties re-arrangement
  */
-test.tags("desktop")("properties: move properties", async () => {
+test.tags("desktop");
+test("properties: move properties", async () => {
     onRpc("has_access", () => true);
 
     await mountView({
@@ -850,7 +855,8 @@ test("properties: tags", async () => {
 /**
  * Test the properties many2one
  */
-test.tags("desktop")("properties: many2one", async () => {
+test.tags("desktop");
+test("properties: many2one", async () => {
     onRpc(({ method, model, args }) => {
         if (method === "has_access") {
             return true;
@@ -940,7 +946,8 @@ test.tags("desktop")("properties: many2one", async () => {
 /**
  * Test the properties many2many
  */
-test.tags("desktop")("properties: many2many", async () => {
+test.tags("desktop");
+test("properties: many2many", async () => {
     onRpc(({ method, model, args }) => {
         if (method === "has_access") {
             return true;
@@ -1043,7 +1050,8 @@ test.tags("desktop")("properties: many2many", async () => {
  * and changes the co-model of the field, the model loaded by the "Search more..."
  * modal should correspond to the selected model and should be updated dynamically.
  */
-test.tags("desktop")("properties: many2one 'Search more...'", async () => {
+test.tags("desktop");
+test("properties: many2one 'Search more...'", async () => {
     onRpc(({ method, model }) => {
         if (["has_access", "has_group"].includes(method)) {
             return true;
@@ -1248,7 +1256,8 @@ test("properties: date(time) property manipulations", async () => {
  * are set to False).
  * Resetting the old model / type should reset the original name.
  */
-test.tags("desktop")("properties: name reset", async () => {
+test.tags("desktop");
+test("properties: name reset", async () => {
     onRpc(({ method, model }) => {
         if (method === "has_access") {
             return true;
@@ -1586,7 +1595,8 @@ test("properties: kanban view without properties", async () => {
 /**
  * Check that the properties are shown when switching view.
  */
-test.tags("desktop")("properties: switch view on desktop", async () => {
+test.tags("desktop");
+test("properties: switch view on desktop", async () => {
     Partner._views[["search", false]] = /* xml */ `<search/>`;
     Partner._views[["kanban", 99]] = /* xml */ `<kanban>
                 <templates>
@@ -1619,7 +1629,8 @@ test.tags("desktop")("properties: switch view on desktop", async () => {
     });
 });
 
-test.tags("mobile")("properties: switch view on mobile", async () => {
+test.tags("mobile");
+test("properties: switch view on mobile", async () => {
     Partner._views[["search", false]] = /* xml */ `<search/>`;
     Partner._views[["kanban", 99]] = /* xml */ `<kanban>
                 <templates>
@@ -1902,7 +1913,8 @@ test("properties: form view and falsy domain, properties are empty", async () =>
 // Test the properties groups
 // ---------------------------------------------------
 
-test.tags("desktop")("properties: separators layout", async () => {
+test.tags("desktop");
+test("properties: separators layout", async () => {
     await makePropertiesGroupView([false, false, false, false]);
     await toggleSeparator("property_1", true);
     expect(getGroups()).toEqual([
@@ -2065,7 +2077,8 @@ test("properties: separators and local storage", async () => {
 /**
  * Test the behavior of the properties when we move them inside folded groups
  */
-test.tags("desktop")("properties: separators move properties", async () => {
+test.tags("desktop");
+test("properties: separators move properties", async () => {
     await makePropertiesGroupView([false, true, true, false, true, true, false]);
 
     // return true if the given separator is folded
@@ -2236,7 +2249,8 @@ test.tags("desktop")("properties: separators move properties", async () => {
     });
 });
 
-test.tags("desktop")("properties: separators drag and drop", async () => {
+test.tags("desktop");
+test("properties: separators drag and drop", async () => {
     // 2 columns view, 5 properties
     await makePropertiesGroupView([false, false, false, false, false]);
     expect(getGroups()).toEqual([
@@ -2405,7 +2419,8 @@ test("properties: no add properties action in cogmenu if no properties field", a
     expect(".o-dropdown--menu span:contains(Add Properties)").toHaveCount(0);
 });
 
-test.tags("desktop")("properties: onChange return new properties", async () => {
+test.tags("desktop");
+test("properties: onChange return new properties", async () => {
     ResCompany._records.push({
         id: 38,
         name: "Company 2",
@@ -2489,4 +2504,73 @@ test("new property, change record, change property type", async () => {
 
     await contains(".o_pager_previous").click();
     expect(".o_property_field .o_property_field_value input").toHaveValue("0");
+});
+
+test.tags("desktop")("properties: moving single property to 2nd group in auto split mode", async () => {
+    await makePropertiesGroupView([false]);
+    const { moveTo, drop } = await contains(getPropertyHandleElement("property_1"), {
+        visible: false,
+    }).drag();
+    const secondGroup = queryFirst(".o_property_group:last-of-type");
+    await moveTo(secondGroup, "bottom");
+    await drop();
+    expect(getGroups()).toEqual([
+        [["GROUP 1", "property_gen_2"]],
+        [
+            ["GROUP 2", "property_gen_3"],
+            ["Property 1", "property_1"],
+        ],
+    ]);
+});
+
+test.tags("desktop")("properties: moving single property to 1st group", async () => {
+    await makePropertiesGroupView([true, true, false]);
+
+    await contains(getPropertyHandleElement("property_3"), {
+        visible: false,
+    }).dragAndDrop(getPropertyHandleElement("property_1"));
+    expect(getGroups()).toEqual([
+        [
+            ["SEPARATOR 1", "property_1"],
+            ["Property 3", "property_3"],
+        ],
+        [["SEPARATOR 2", "property_2"]],
+    ]);
+});
+
+test.tags("desktop")("properties: split, moving property from 2nd group to 1st", async () => {
+    await makePropertiesGroupView([true, false, false]);
+
+    await contains(getPropertyHandleElement("property_3"), {
+        visible: false,
+    }).dragAndDrop(getPropertyHandleElement("property_2"), "top");
+    expect(getGroups()).toEqual([
+        [
+            ["SEPARATOR 1", "property_1"],
+            ["Property 3", "property_3"],
+            ["Property 2", "property_2"],
+        ],
+        [["GROUP 2", "property_gen_2"]],
+    ]);
+});
+
+test.tags("desktop")("properties: split, moving property from 1st group to 2nd", async () => {
+    await makePropertiesGroupView([true, false, false, false, false, false]);
+
+    await contains(getPropertyHandleElement("property_3"), {
+        visible: false,
+    }).dragAndDrop(getPropertyHandleElement("property_6"), "top");
+    expect(getGroups()).toEqual([
+        [
+            ["SEPARATOR 1", "property_1"],
+            ["Property 2", "property_2"],
+            ["Property 4", "property_4"],
+        ],
+        [
+            ["GROUP 2", "property_gen_2"],
+            ["Property 5", "property_5"],
+            ["Property 3", "property_3"],
+            ["Property 6", "property_6"],
+        ],
+    ]);
 });

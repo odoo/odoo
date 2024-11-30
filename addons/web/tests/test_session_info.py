@@ -38,6 +38,9 @@ class TestSessionInfo(common.HttpCase):
     def test_session_info(self):
         """ Checks that the session_info['user_companies'] structure correspond to what is expected """
         self.authenticate(self.user.login, self.user_password)
+        # Avoid the create part of res.users.settings since get_session_info
+        # route is readonly
+        self.env['res.users.settings']._find_or_create_for_user(self.user)
         response = self.url_open("/web/session/get_session_info", data=self.payload, headers=self.headers)
         self.assertEqual(response.status_code, 200)
 

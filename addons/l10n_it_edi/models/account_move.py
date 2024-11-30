@@ -450,7 +450,7 @@ class AccountMove(models.Model):
             discount = base_line['discount']
             price_unit = base_line['price_unit']
             quantity = base_line['quantity']
-            price_subtotal = base_line['price_subtotal'] = tax_details['total_excluded_currency']
+            price_subtotal = base_line['price_subtotal'] = tax_details['raw_total_excluded_currency']
 
             if discount == 100.0:
                 gross_price_subtotal_before_discount = price_unit * quantity
@@ -468,8 +468,8 @@ class AccountMove(models.Model):
                 tax_data['_tax_amount'] = tax.amount
                 if tax.amount == -11.5:
                     tax_data['_tax_amount'] = -23.0
-                    tax_data['base_amount'] *= 0.5
-                    tax_data['base_amount_currency'] *= 0.5
+                    tax_data['raw_base_amount'] *= 0.5
+                    tax_data['raw_base_amount_currency'] *= 0.5
 
             if not is_downpayment:
                 # Negative lines linked to down payment should stay negative

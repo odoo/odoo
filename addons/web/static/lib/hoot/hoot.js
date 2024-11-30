@@ -46,7 +46,6 @@ export const onError = makeRuntimeHook("onError");
 
 // Fixture
 export const getFixture = runner.fixture.get;
-export const mountOnFixture = runner.fixture.mount;
 
 // Other functions
 export const dryRun = runner.exportFn(runner.dryRun);

@@ -599,6 +599,20 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             # silently ignore if the field doesn't exist (yet)
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
 
+    def test_branch(self):
+        # Test the auto-installation of a chart template (including demo data) on a branch
+        # Create a new main company, because install_demo doesn't do anything when reloading data
+        company = self.env['res.company'].create([{'name': 'Test Company'}])
+        branch = self.env['res.company'].create([{
+            'name': 'Test Branch',
+            'parent_id': company.id,
+        }])
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=True)
+        self.assertEqual(company.chart_template, 'test')
+        self.assertEqual(branch.chart_template, 'test')
+
     def test_change_coa(self):
         def _get_chart_template_mapping(self, get_all=False):
             return {'other_test': {
@@ -618,12 +632,42 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True)
         ):
             self.env['account.chart.template'].try_loading('other_test', company=self.company, install_demo=True)
+
+            # Create a branch and an unrelated company
+            branch, other_company = self.env['res.company'].create([
+                {
+                    'name': 'Test Branch',
+                    'parent_id': self.company.id,
+                },
+                {
+                    'name': 'Other Test Company',
+                },
+            ])
+            # Run precommit hook to load the template on the branch
+            self.env.cr.precommit.run()
+
         self.assertEqual(self.company.chart_template, 'other_test')
+        self.assertEqual(branch.chart_template, 'other_test')
         self.assertFalse(self.company.anglo_saxon_accounting)
+
+        # Setup a shared account, belonging to the company, the branch, and the unrelated company
+        shared_account = self.env['account.account'].create([{
+            'name': 'Shared Account',
+            'company_ids': [Command.set((self.company | branch | other_company).ids)],
+            'code_mapping_ids': [
+                Command.create({'company_id': self.company.id, 'code': '180001'}),
+                Command.create({'company_id': branch.id, 'code': '180001'}),
+                Command.create({'company_id': other_company.id, 'code': '180001'}),
+            ],
+        }])
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=True)
         self.assertEqual(self.company.chart_template, 'test')
+        self.assertEqual(branch.chart_template, 'test')
+
+        # Check that the shared account was not deleted, but just unlinked from the company and the branch.
+        self.assertEqual(shared_account.company_ids, other_company)
 
     def test_update_tax_with_non_existent_tag(self):
         """ Tests that when we update the CoA with a tax that has a tag that does not exist yet we raise an error.

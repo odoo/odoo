@@ -5,7 +5,6 @@ import {
     contains,
     defineMailModels,
     focus,
-    hover,
     inputFiles,
     insertText,
     onRpcBefore,
@@ -20,13 +19,13 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import {
     Command,
     getService,
     patchWithCleanup,
+    preloadBundle,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
@@ -36,6 +35,7 @@ import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
+preloadBundle("web.assets_emoji");
 
 test("Mobile: chat window shouldn't open automatically after receiving a new message", async () => {
     const pyEnv = await startServer();
@@ -459,7 +459,8 @@ test("ESC cancels thread rename", async () => {
     await contains(".o-mail-ChatWindow-command", { text: "General" });
 });
 
-test.tags("focus required")("open 2 different chat windows: enough screen width", async () => {
+test.tags("focus required");
+test("open 2 different chat windows: enough screen width", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);
     patchUiSize({ width: 1920 });
@@ -529,7 +530,8 @@ test("focus next visible chat window when closing current chat window with ESCAP
     });
 });
 
-test.tags("focus required")("chat window: switch on TAB", async () => {
+test.tags("focus required");
+test("chat window: switch on TAB", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([{ name: "channel1" }, { name: "channel2" }]);
     patchUiSize({ width: 1920 });
@@ -566,7 +568,8 @@ test.tags("focus required")("chat window: switch on TAB", async () => {
     });
 });
 
-test.tags("focus required")("chat window: TAB cycle with 3 open chat windows", async () => {
+test.tags("focus required");
+test("chat window: TAB cycle with 3 open chat windows", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {
@@ -643,7 +646,7 @@ test("chat window should open when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/action", async (args) => {
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
         }
@@ -1046,42 +1049,6 @@ test("Notification settings rendering in chatwindow", async () => {
     await contains("button", { text: "For 8 hours" });
     await contains("button", { text: "For 24 hours" });
     await contains("button", { text: "Until I turn it back on" });
-});
-
-test("Can make chat windows bigger", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
-    await start();
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow");
-    const normalWidth = queryFirst(".o-mail-ChatWindow").getBoundingClientRect().width;
-    await hover(".o-mail-ChatHub-bubbles");
-    await click("button[title='Chat Options']");
-    await contains("button:contains(Large windows)");
-    await contains("button:contains(Large windows) input");
-    await contains("button:contains(Large windows) input:not(:checked)");
-    await click("button:contains(Large windows)");
-    await contains("button:contains(Large windows) input:checked");
-    await contains(".o-mail-ChatWindow.o-large");
-    const largeWidth = queryFirst(".o-mail-ChatWindow").getBoundingClientRect().width;
-    expect(largeWidth).toBeGreaterThan(normalWidth);
-});
-
-test("Bigger chat windows is locally persistent (saved in local storage)", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
-    browser.localStorage.setItem("mail.user_setting.chat_window_big", true);
-    await start();
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow.o-large");
-    expect(browser.localStorage.getItem("mail.user_setting.chat_window_big")).toBe("true");
-    await hover(".o-mail-ChatHub-bubbles");
-    await click("button[title='Chat Options']");
-    await click("button:contains(Large windows)");
-    await contains(".o-mail-ChatWindow.o-large");
-    expect(browser.localStorage.getItem("mail.user_setting.chat_window_big")).toBe(null);
 });
 
 test("open channel in chat window from push notification", async () => {

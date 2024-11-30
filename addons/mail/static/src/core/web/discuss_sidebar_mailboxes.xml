@@ -23,17 +23,17 @@
 
     <t t-name="mail.Mailbox.main">
         <button
-            class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-center px-0 mx-2 border-0 rounded-2 fw-normal text-reset"
+            class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-center px-0 border-0 rounded-2 fw-normal text-reset"
             t-att-class="{
                 'bg-inherit': mailbox.notEq(store.discuss.thread),
                 'o-active': mailbox.eq(store.discuss.thread),
-                'justify-content-center position-relative': store.discuss.isSidebarCompact,
-                'py-0': !store.discuss.isSidebarCompact,
+                'mx-2 justify-content-center position-relative': store.discuss.isSidebarCompact,
+                'mx-3 py-0': !store.discuss.isSidebarCompact,
             }"
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
         >
-            <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'ms-3 me-2')" thread="mailbox"/>
+            <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'mx-2')" thread="mailbox"/>
             <t t-if="!store.discuss.isSidebarCompact">
                 <div class="me-2 text-truncate small" style="line-height: 1.65;" t-esc="mailbox.name"/>
                 <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
