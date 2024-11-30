@@ -1506,6 +1506,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         self._check_company()
         moves = self
+        merge = self.env.context.get("merge_moves") if "merge_moves" in self.env.context else merge
         if merge:
             moves = self._merge_moves(merge_into=merge_into)
 
