@@ -273,7 +273,7 @@ class AccountAnalyticPlan(models.Model):
                 prev.field_description = plan.name
             elif not plan.parent_id:
                 column = plan._strict_column_name()
-                self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
+                field = self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
                     'name': column,
                     'field_description': plan.name,
                     'state': 'manual',
@@ -284,11 +284,24 @@ class AccountAnalyticPlan(models.Model):
                     'copied': True,
                     'on_delete': 'restrict',
                 })
+<<<<<<< saas-17.4
                 Model = self.env[model]
                 if Model._auto:
                     tablename = Model._table
                     indexname = make_index_name(tablename, column)
                     create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+||||||| f922f09b83c68dff36c064d20709a6e6ba4541dc
+                tablename = self.env['account.analytic.line']._table
+                indexname = make_index_name(tablename, column)
+                create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+=======
+                tablename = self.env['account.analytic.line']._table
+                indexname = make_index_name(tablename, column)
+                create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+                field.write({
+                    'index': True,
+                })
+>>>>>>> 9f63efc7586e42aa1d1a3cb393758f7dfc1f37fb
 
 
 class AccountAnalyticApplicability(models.Model):
