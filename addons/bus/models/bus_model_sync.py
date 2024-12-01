@@ -5,6 +5,7 @@ from odoo import fields, models, api
 
 class BusModelSync(models.Model):
     _name = 'bus.model.sync'
+    _description = 'Model for synchronizing updates in real-time across user sessions using Odoo\'s Bus system.'
 
     def _bus_model_notify_event(self, model_name, view_id):
         merged_view = f'realtime_sync_{model_name}_{view_id}'
