@@ -12,9 +12,10 @@ def global_create(self, vals):
     """
     records = _original_create(self, vals)
 
-    view_ids = self.env['ir.ui.view'].search([('active', '=', True), ('model', '=', self._name)])
-    for view in view_ids:
-        self.env['bus.model.sync']._bus_model_notify_event(self._name, view.id)
+    if 'bus.model.sync' in self.env:
+        view_ids = self.env['ir.ui.view'].sudo().search([('active', '=', True), ('model', '=', self._name)])
+        for view in view_ids:
+            self.env['bus.model.sync']._bus_model_notify_event(self._name, view.id)
 
     return records
 
