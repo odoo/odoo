@@ -11,3 +11,5 @@ from . import res_groups
 from . import res_users
 from . import res_users_settings
 from . import res_partner
+from . import bus_model_sync
+
