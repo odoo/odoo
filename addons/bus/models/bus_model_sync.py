@@ -1,26 +1,38 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
-from odoo import models, fields, api
+from odoo import models, api
 from odoo.models import BaseModel
 
+_logger = logging.getLogger(__name__)
 _original_create = BaseModel.create
 
+
 @api.model_create_multi
-def global_create(self, vals_list):
+def create(self, vals_list):
     """
-   Extended global `create` method.
+    Extended method for creating multiple records.
+    Notifies bus events when records are created.
     """
-    records = _original_create(self, vals_list)
+    try:
+        records = _original_create(self, vals_list)
 
-    if 'bus.model.sync' in self.env:
-        view_ids = self.env['ir.ui.view'].sudo().search([('active', '=', True), ('model', '=', self._name)])
-        for view in view_ids:
-            self.env['bus.model.sync']._bus_model_notify_event(self._name, view.id)
+        if 'bus.model.sync' in self.env:
+            view_ids = self.env['ir.ui.view'].sudo().search([
+                ('active', '=', True),
+                ('model', '=', self._name)
+            ])
+            for view in view_ids:
+                self.env['bus.model.sync']._bus_model_notify_event(self._name, view.id)
 
-    return records
+        return records
+
+    except Exception as e:
+        _logger.exception("Error creating records: %s", e)
+        raise e
 
 
-BaseModel.create = global_create
+BaseModel.create = create
 
 
 class BusModelSync(models.AbstractModel):
