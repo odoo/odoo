@@ -5,12 +5,12 @@ from odoo.models import BaseModel
 
 _original_create = BaseModel.create
 
-
-def global_create(self, vals):
+@api.model_create_multi
+def global_create(self, vals_list):
     """
    Extended global `create` method.
     """
-    records = _original_create(self, vals)
+    records = _original_create(self, vals_list)
 
     if 'bus.model.sync' in self.env:
         view_ids = self.env['ir.ui.view'].sudo().search([('active', '=', True), ('model', '=', self._name)])
