@@ -23,7 +23,7 @@ def create(self, vals_list):
                 ('model', '=', self._name)
             ])
             for view in view_ids:
-                self.env['bus.model.sync']._bus_model_notify_event(self._name, view.id)
+                self.env['bus.model.sync'].sudo()._bus_model_notify_event(self._name, view.id)
 
         return records
 
