@@ -160,7 +160,6 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const self = this;
         var attrs = ['placeholder', 'title', 'alt', 'value'];
         const $editable = this.getEditableArea();
-        const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>(.*)<\/span>/;
         let $edited = $();
         _.each(attrs, function (attr) {
             const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
@@ -168,18 +167,18 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
                 var trans = $node.attr(attr);
-                var match = trans.match(translationRegex);
+                var initSha = $(trans).data("oe-translation-initial-sha");
                 var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_attribute').appendTo(self.websiteService.pageDocument.body);
                 $trans.data('$node', $node).data('attribute', attr);
 
                 translation[attr] = $trans[0];
-                $node.attr(attr, match[2]);
+                $node.attr(attr, initSha);
                 // Using jQuery attr() to update the "value" will not change
                 // what appears in the DOM and will not update the value
                 // property on inputs. We need to force the right value instead
                 // of the original translation <span/>.
                 if (attr === 'value') {
-                    $node[0].value = match[2];
+                    $node[0].value = initSha;
                 }
 
                 $node.addClass('o_translatable_attribute').data('translation', translation);
@@ -191,14 +190,14 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             var $node = $(this);
             var translation = $node.data('translation') || {};
             var trans = $node.text();
-            var match = trans.match(translationRegex);
+            var initSha = $(trans).data("oe-translation-initial-sha");
             var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_text').appendTo(self.websiteService.pageDocument.body);
             $trans.data('$node', $node);
 
             translation['textContent'] = $trans[0];
-            $node.val(match[2]);
+            $node.val(initSha);
             // Update the text content of textarea too.
-            $node[0].innerText = match[2];
+            $node[0].innerText = initSha;
 
             $node.addClass('o_translatable_text').removeClass('o_text_content_invisible')
                 .data('translation', translation);
