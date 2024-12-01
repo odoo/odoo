@@ -5,10 +5,10 @@
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
 # Chloe Wang, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
+# Raymond Yu <cl_yu@hotmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -243,6 +243,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    认证证书: <t t-out=\"object.survey_id.display_name or ''\">反馈表</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>亲爱的 <span t-out=\"object.partner_id.name or 'participant'\">参与人</span></p>\n"
+"                <p>\n"
+"                    随函附上您的\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">家具设计</strong>\n"
+"                    认证证书\n"
+"                </p>\n"
+"                <p>祝贺您通过测试，成绩为<strong t-out=\"object.scoring_percentage\"></strong>% !</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -3957,7 +3983,7 @@ msgstr "空间站"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Speak softly so that they need to focus to hear you"
-msgstr "轻声说话，使他们需要集中注意力才能听到您说话。"
+msgstr "轻声说话，使他们需要集中注意力才能听到您说话"
 
 #. module: survey
 #. odoo-python

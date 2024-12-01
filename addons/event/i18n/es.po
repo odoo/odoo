@@ -8,11 +8,11 @@
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Óscar Fonseca <tecnico@pyming.com>, 2022
-# Jolien De Paepe, 2023
 # Ana Sanjuán, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Pilar Vargas, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Pilar Vargas, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,13 +80,14 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"'Acreditación doblable - %s - %s' % ((object.event_id.name or "
+"'Credencial plegable - %s - %s' % ((object.event_id.name or "
 "'Evento').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'Insignia plegable - %s' % (object.name or 'Evento').replace('/','')"
+msgstr ""
+"'Credencial plegable - %s' % (object.name or 'Evento').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -237,7 +238,7 @@ msgstr ""
 "<div>\n"
 "    Estimado <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br>\n"
 "    Gracias por su consulta.<br>\n"
-"    Aquí está su insignia para el evento <t t-out=\"object.event_id.name or ''\">Presentación en línea de la colección de OpenWood</t>.<br>\n"
+"    Aquí está su credencial para el evento <t t-out=\"object.event_id.name or ''\">Presentación en línea de la colección de OpenWood</t>.<br>\n"
 "    Contáctenos si tiene alguna pregunta.\n"
 "    <br><br>\n"
 "    Gracias,\n"
@@ -2250,20 +2251,20 @@ msgstr "Experimente música en vivo, comida local y bebidas."
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
 msgid "Foldable Badge"
-msgstr "Insignia plegable"
+msgstr "Credencial plegable"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 msgstr ""
-"Insignia plegable - {{ (object.event_id.name or 'Evento').replace('/','_') "
-"}}"
+"Credencial plegable - {{ (object.event_id.name or 'Evento').replace('/','_')"
+" }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
 msgid "Foldable Badge Example"
-msgstr "Ejemplo de insignia plegable"
+msgstr "Ejemplo de credencial plegable"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -2357,7 +2358,7 @@ msgstr "Entrada de página completa"
 msgid ""
 "Full Page Ticket - {{ (object.event_id.name or 'Event').replace('/','') }}"
 msgstr ""
-"Tíquet de página completa - {{ (object.event_id.name or "
+"Entrada de página completa - {{ (object.event_id.name or "
 "'Event').replace('/','') }}"
 
 #. module: event
@@ -3347,7 +3348,7 @@ msgstr "Error de envío del SMS"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Scan badges to confirm attendances"
-msgstr "Escanea insignias para confirmar asistencias"
+msgstr "Escanea credenciales para confirmar asistencias"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
