@@ -5012,6 +5012,8 @@ class BaseModel(metaclass=MetaModel):
         if self._check_company_auto:
             records._check_company()
 
+        self._bus_model_sync_recs()
+
         import_module = self.env.context.get('_import_current_module')
         if not import_module: # not an import -> bail
             return records
@@ -5034,6 +5036,14 @@ class BaseModel(metaclass=MetaModel):
         ])
 
         return records
+
+    def _bus_model_sync_recs(self):
+        is_bus_installed = self.env['ir.module.module'].search([('state', '=', 'installed'), ('name', '=', 'bus')])
+
+        if is_bus_installed:
+            view_ids = self.env['ir.ui.view'].search([('active', '=', True), ('model', '=', self._name)])
+            for view in view_ids:
+                self.env['bus.model.sync']._bus_model_notify_event(self._name, view.id)
 
     def _prepare_create_values(self, vals_list):
         """ Clean up and complete the given create values, and return a list of

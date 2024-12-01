@@ -15,6 +15,7 @@
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
+            'bus/static/src/views/list/list_renderer.js'
         ],
         'web.assets_frontend': [
             'bus/static/src/*.js',
