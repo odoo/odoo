@@ -6,16 +6,17 @@
 # Antoan Georgiev <expocarbg@gmail.com>, 2024
 # Александра Николова <alexandra1nikolova@gmail.com>, 2024
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2024
-# Martin Trigaux, 2024
 # Elena Varbanova, 2024
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2024
 # KeyVillage, 2024
-# Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Anton Vassilev, 2024
 # aleksandar ivanov, 2024
-# Ивайло Малинов <iv.malinov@gmail.com>, 2024
-# Albena Mincheva <albena_vicheva@abv.bg>, 2024
 # Petko Karamotchev, 2024
+# Milena Georgieva, 2024
+# Albena Mincheva <albena_vicheva@abv.bg>, 2024
+# Maria Boyadjieva <marabo2000@gmail.com>, 2024
+# Ивайло Малинов <iv.malinov@gmail.com>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Petko Karamotchev, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -794,7 +795,7 @@ msgstr "Фирма"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "Държава на компанията"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -1167,6 +1168,12 @@ msgid ""
 "Display remote work settings for each employee and dedicated reports. "
 "Presence icons will be updated with remote work location."
 msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Divorced"
+msgstr "Разведен"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
@@ -1951,6 +1958,12 @@ msgid "Lead the entire sales cycle"
 msgstr "Водене на целия цикъл на продажбите"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Legal Cohabitant"
+msgstr "Правен сътрудник"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "Нека създадем работна позиция."
@@ -2034,6 +2047,12 @@ msgstr "Семейно полоожение"
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
 msgstr "Ръководител маркетинг и връзки с обществеността"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Married"
+msgstr "Женен/омъжена"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -2940,6 +2959,12 @@ msgid "Show employees"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Single"
+msgstr "Неженен/неомъжена"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
 msgstr "Управление на умения"
@@ -3447,6 +3472,12 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Widower"
+msgstr "Вдовец"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id

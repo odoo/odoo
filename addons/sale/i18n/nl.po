@@ -3,9 +3,9 @@
 # 	* sale
 # 
 # Translators:
-# Manon Rondou, 2024
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -966,7 +966,7 @@ msgstr "<span>Zichtbaarheid verkoop</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Taxes</span>"
-msgstr "<span>BTW </span>"
+msgstr "<span>Btw</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2200,7 +2200,7 @@ msgstr "Korting %(percent)s%%"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr "Korting %(percent)s%%- Op producten met de volgende BTW %(taxes)s"
+msgstr "Korting %(percent)s%%- Op producten met de volgende btw %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -2486,7 +2486,7 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
-"Fiscale posities worden gebruikt om BTW en rekeningen voor bepaalde klanten "
+"Fiscale posities worden gebruikt om btw en rekeningen voor bepaalde klanten "
 "of verkooporders/facturen aan te passen. De standaardwaarde komt van de "
 "klant."
 
@@ -2508,7 +2508,7 @@ msgstr "Volgers"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Partners)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
@@ -2741,7 +2741,7 @@ msgstr "In de order"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
-msgstr "Incl. BTW)"
+msgstr "Incl. btw)"
 
 #. module: sale
 #. odoo-python
@@ -3671,7 +3671,7 @@ msgstr "Verpakkingshoeveelheid"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "Relatiekredietwaarschuwing"
+msgstr "Kredietwaarschuwing partner"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3794,12 +3794,12 @@ msgstr "Prijs"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Gereduceerde prijs excl. BTW"
+msgstr "Gereduceerde prijs excl. btw"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr "Prijs Verlaag BTW incl"
+msgstr "Prijs Verlaag btw incl"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -3946,7 +3946,7 @@ msgstr "De productprijzen werden herberekend."
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product taxes have been recomputed according to fiscal position %s."
 msgstr ""
-"De BTW's van de producten zijn herberekend volgens fiscale positie %s."
+"De btw's van de producten zijn herberekend volgens fiscale positie %s."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -4154,7 +4154,7 @@ msgstr "Bereken alle prijzen opnieuw op basis van deze prijslijst"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr "Bereken alle BTW's opnieuw op basis van deze fiscale positie"
+msgstr "Bereken alle btw's opnieuw op basis van deze fiscale positie"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -4537,7 +4537,7 @@ msgstr "Verkoop: Offerte verzenden"
 #. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
-msgstr "Verkoop: Totaal excl. BTW"
+msgstr "Verkoop: Totaal excl. btw"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -4896,18 +4896,18 @@ msgstr "Labels"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax 15%"
-msgstr "BTW 15%"
+msgstr "Btw 15%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_calculation_rounding_method
 msgid "Tax Calculation Rounding Method"
-msgstr "BTW afrondingsmethode"
+msgstr "Btw afrondingsmethode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_country_id
 msgid "Tax Country"
-msgstr "BTW land"
+msgstr "Btw land"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4917,17 +4917,17 @@ msgstr "Btw nr."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Tax Total"
-msgstr "Totaal BTW"
+msgstr "Totaal btw"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
 msgid "Tax Totals"
-msgstr "Totaal BTW"
+msgstr "Totaal btw"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr "BTW afrondingsmethode"
+msgstr "Btw afrondingsmethode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4935,7 +4935,7 @@ msgstr "BTW afrondingsmethode"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_discount__tax_ids
@@ -4949,8 +4949,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
-"Het team %(team_name)s heeft actieve verkooporders. Overweeg deze te "
-"annuleren of het team te archiveren."
+"Het team %(team_name)s heeft %(sale_order_count)s actieve verkooporders. "
+"Overweeg deze te annuleren of het team te archiveren."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
@@ -5308,7 +5308,7 @@ msgid ""
 msgstr ""
 "Dit overzicht voert een analyse uit op je offertes en verkooporders. "
 "Analyseer je omzet en sorteer het op verschillende groepeer criteria "
-"(verkoper, relatie, product, etc.) Gebruik dit overzicht op nog niet "
+"(verkoper, partner, product, etc.) Gebruik dit overzicht op nog niet "
 "gefactureerde verkopen. Als je je omzet wilt analyseren, moet je de "
 "factuuranalyse gebruiken in de financiële applicatie."
 
@@ -5322,7 +5322,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Dit overzicht voert een analyse uit op je offertes. Analyseer je omzet en "
-"sorteer het op verschillende groepeer criteria (verkoper, relatie, product, "
+"sorteer het op verschillende groepeer criteria (verkoper, partner, product, "
 "etc.) Gebruik dit overzicht op nog niet gefactureerde verkopen. Als je je "
 "omzet wilt analyseren, moet je de factuuranalyse gebruiken in de financiële "
 "applicatie."
@@ -5337,7 +5337,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Dit overzicht voert een analyse uit op je verkooporders. Analyseer je omzet "
-"en sorteer het op verschillende groepeer criteria (verkoper, relatie, "
+"en sorteer het op verschillende groepeer criteria (verkoper, partner, "
 "product, etc.) Gebruik dit overzicht op nog niet gefactureerde verkopen. Als"
 " je je omzet wilt analyseren, moet je de factuuranalyse gebruiken in de "
 "financiële applicatie."
@@ -5347,7 +5347,7 @@ msgstr ""
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
-"Hiermee worden alle BTW's bijgewerkt op basis van de nu geselecteerde "
+"Hiermee worden alle btw's bijgewerkt op basis van de nu geselecteerde "
 "fiscale positie."
 
 #. module: sale
@@ -5404,17 +5404,17 @@ msgstr "Totaal"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr "Totaal BTW"
+msgstr "Totaal btw"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Excluded"
-msgstr "Totaal exclusief BTW"
+msgstr "Totaal exclusief btw"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Included"
-msgstr "Totaal incl. BTW"
+msgstr "Totaal incl. btw"
 
 #. module: sale
 #. odoo-javascript
@@ -5525,28 +5525,28 @@ msgstr "Deblokkeren"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Excl. BTW"
+msgstr "Excl. btw"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr "Totaal excl. BTW gefactureerd"
+msgstr "Totaal excl. btw gefactureerd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr "Totaal excl. BTW te factureren"
+msgstr "Totaal excl. btw te factureren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr "Totaal excl. BTW gefactureerd"
+msgstr "Totaal excl. btw gefactureerd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
-msgstr "Totaal excl. BTW"
+msgstr "Totaal excl. btw"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
@@ -5566,7 +5566,7 @@ msgstr "Prijzen bijwerken"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr "BTW bijwerken"
+msgstr "Btw bijwerken"
 
 #. module: sale
 #. odoo-python

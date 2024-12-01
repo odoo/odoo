@@ -69,7 +69,7 @@ msgstr ""
 "\n"
 "* Definieert het volgende grootboekschema:\n"
 "* Oostenrijks algemeen grootboekschema 2010\n"
-"* Definieert sjablonen voor BTW op verkopen en inkopen\n"
+"* Definieert sjablonen voor btw op verkopen en inkopen\n"
 "* Definieert belastingsjablonen\n"
 "* Definieert fiscale posities voor de Oostenrijkse fiscale wetgeving\n"
 "* Definieert belastingrapportage U1 / U30\n"
@@ -687,8 +687,8 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"* Voeg BTW-boekrapport toe dat wettelijk verplicht is in Argentinië en dat de BTW-detailinformatie bevat van verkopen of inkopen die in een bepaalde periode zijn gedaan.\n"
-"* Voeg een BTW-overzichtsrapport toe dat wordt gebruikt om facturering te analyseren\n"
+"* Voeg btw-boekrapport toe dat wettelijk verplicht is in Argentinië en dat de btw-detailinformatie bevat van verkopen of inkopen die in een bepaalde periode zijn gedaan.\n"
+"* Voeg een btw-overzichtsrapport toe dat wordt gebruikt om facturering te analyseren\n"
 "* Voeg Digital VAT Book-functionaliteit toe waarmee we TXT-bestanden kunnen genereren om in AFIP te importeren. Degenen die we implementeren zijn:\n"
 "\n"
 "* LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
@@ -699,8 +699,8 @@ msgstr ""
 "\n"
 "Officiële documentatie AFIP\n"
 "\n"
-"* Digitaal BTW-boek - recordontwerp https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
-"* CITI - recordontwerp (hetzelfde als het digitale BTW-boek): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* Digitaal btw-boek - recordontwerp https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - recordontwerp (hetzelfde als het digitale btw-boek): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
 "* CITI - specificatie (geeft meer informatie over het opmaken van de nummers en de vulling van de numerieke / alfanumerieke velden): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones .doc\n"
 "\n"
 
@@ -844,11 +844,11 @@ msgid ""
 "\"Python Code\" defines the amount of the tax.\n"
 msgstr ""
 "\n"
-"        Een BTW die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals eenheidsprijs, product of relatie.\n"
+"        Btw die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals eenheidsprijs, product of partner.\n"
 "\n"
-"        \"Code toe te passen\" bepaalt of de BTW al dan niet moet worden toegepast.\n"
+"        \"Code toe te passen\" bepaalt of de btw al dan niet moet worden toegepast.\n"
 "\n"
-"        \"Python code\" bepaalt het bedrag van de BTW.\n"
+"        \"Python code\" bepaalt het bedrag van de btw.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1005,7 +1005,7 @@ msgstr ""
 "rekeningafschrift tegen de betaling.\n"
 "\n"
 "- Bankrekeningen van leveranciers kunnen op dezelfde plaats worden opgezet, maar dat is het wel\n"
-"over het algemeen gemakkelijker om ze in te stellen vanaf de relatie van voor de verkoper.\n"
+"over het algemeen gemakkelijker om ze in te stellen vanaf de partner van voor de verkoper.\n"
 "\n"
 "- * Boekhouding> Leveranciers> Leveranciers *\n"
 "\n"
@@ -1564,7 +1564,7 @@ msgstr ""
 "\n"
 "Met deze module kun je ook het Franse btw-rapport exporteren en naar de DGFiP, een OGA of een deskundige accountant sturen.\n"
 "\n"
-"Het voegt een nieuwe knop \"EDI BTW\" toe aan het Franse btw-rapport en een nieuw menu-item \"EDI exports\" (onder \"Rapportage\",\n"
+"Het voegt een nieuwe knop \"EDI btw\" toe aan het Franse btw-rapport en een nieuw menu-item \"EDI exports\" (onder \"Rapportage\",\n"
 "in de sectie \"Afschriftrapporten\").\n"
 
 #. module: base
@@ -1577,7 +1577,7 @@ msgid ""
 msgstr ""
 "\n"
 "Boekhoudkundige rapporten voor Duitsland\n"
-"Bevat Balans-, Winst- en Verlies-, BTW- en Relatie-BTW-rapporten\n"
+"Bevat Balans-, Winst- en Verlies-, btw- en Partner-btw-rapporten\n"
 "Voegt ook DATEV-exportopties toe aan het grootboek\n"
 
 #. module: base
@@ -1960,7 +1960,7 @@ msgstr ""
 "\n"
 "Boekhoudkundige rapporten voor Zambia\n"
 "================================\n"
-"    - Financiële rapportages (Balans & winst en verlies & BTW)\n"
+"    - Financiële rapportages (Balans & winst en verlies & btw)\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_reports
@@ -2063,43 +2063,43 @@ msgid ""
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
 "\n"
-"Voeg een nieuw model toe met de naam 'Identificatietype' dat de BTW-veldfunctionaliteit in de relatie uitbreidt en de gebruiker in staat stelt om contactpersonen te identificeren (een eventuele factuur), niet alleen met hun belastingnummer (BTW), maar ook met andere soorten identificaties, zoals een nationaal document , paspoort, buitenlandse ID, enz. Met deze module geïnstalleerd zie je nu in het partnerformulier twee velden:\n"
+"Voeg een nieuw model toe met de naam 'Identificatietype' dat de btw-veldfunctionaliteit in de partner uitbreidt en de gebruiker in staat stelt om contactpersonen te identificeren (een eventuele factuur), niet alleen met hun belastingnummer (btw), maar ook met andere soorten identificaties, zoals een nationaal document , paspoort, buitenlandse ID, enz. Met deze module geïnstalleerd zie je nu in het partnerformulier twee velden:\n"
 "\n"
 "* Identificatie type\n"
 "* Identificatie Nummer\n"
 "\n"
 "Dit gedrag is een algemene vereiste voor sommige Latijns-Amerikaanse landen, zoals Argentinië en Chili. Als je lokalisatie deze vereisten heeft, moet je van deze module afhankelijk zijn en in je lokalisatiemodule de identificatietypen definiëren die in je land worden gebruikt. Over het algemeen worden dit soort identificaties gedefinieerd door de overheidsinstanties die de fiscale operaties reguleren. Bijvoorbeeld:\n"
 "\n"
-"* AFIP in Argentinië definieert DNI, CUIT (BTW voor rechtspersonen), CUIL (BTW voor natuurlijke persoon) en nog eens 80 geldige identificatietypen.\n"
+"* AFIP in Argentinië definieert DNI, CUIT (btw voor rechtspersonen), CUIL (btw voor natuurlijke persoon) en nog eens 80 geldige identificatietypen.\n"
 "\n"
 "Elke identificatie bevat deze informatie:\n"
 "\n"
 "* naam: korte naam van de identificatie\n"
 "* beschrijving: kan dezelfde korte naam of een lange naam zijn\n"
 "* country_id: het land waar deze identificatie thuishoort\n"
-"* is_vat: identificeer dit record als de overeenkomstige BTW voor het specifieke land.\n"
+"* is_vat: identificeer dit record als de overeenkomstige btw voor het specifieke land.\n"
 "* volgorde: laten we de identificatietypen sorteren op basis van degene die het meest worden gebruikt.\n"
 "* actief: we kunnen identificaties activeren / deactiveren om het onze klanten gemakkelijker te maken\n"
 "\n"
-"Om deze module compatibel te maken voor omgevingen met meerdere bedrijven waar we bedrijven hebben die deze vereiste niet nodig / ondersteunen, hebben we generieke identificatietypen en generieke regels toegevoegd om de contactgegevens te beheren en deze transparant te maken voor de gebruiker wanneer alleen de BTW zoals we voorheen kenden.\n"
+"Om deze module compatibel te maken voor omgevingen met meerdere bedrijven waar we bedrijven hebben die deze vereiste niet nodig / ondersteunen, hebben we generieke identificatietypen en generieke regels toegevoegd om de contactgegevens te beheren en deze transparant te maken voor de gebruiker wanneer alleen de btw zoals we voorheen kenden.\n"
 "\n"
 "Generieke identificaties:\n"
 "\n"
-"* BTW: Het fiscale belastingnummer of BTW-nummer wordt standaard geselecteerd als identificatietype, zodat de gebruiker alleen het gerelateerde BTW-nummer hoeft toe te voegen.\n"
+"* btw: Het fiscale belastingnummer of btw-nummer wordt standaard geselecteerd als identificatietype, zodat de gebruiker alleen het gerelateerde btw-nummer hoeft toe te voegen.\n"
 "* Paspoort\n"
 "* Buitenlands identiteitsbewijs (buitenlands nationaal document)\n"
 "\n"
-"Regels bij het aanmaken van een nieuwe relatie: We zien alleen de identificatietypen die zinvol zijn, rekening houdend met deze regels:\n"
+"Regels bij het aanmaken van een nieuwe partner: We zien alleen de identificatietypen die zinvol zijn, rekening houdend met deze regels:\n"
 "\n"
-"* Als de relatie geen landadres heeft ingesteld: toont de generieke identificatietypen plus degene die zijn gedefinieerd in het land van het gerelateerde bedrijf van de relatie (als de relatie geen specifiek bedrijf heeft, worden de identificatietypen weergegeven die betrekking hebben op het huidige gebruikersbedrijf)\n"
+"* Als de partner geen landadres heeft ingesteld: toont de generieke identificatietypen plus degene die zijn gedefinieerd in het land van het gerelateerde bedrijf van de partner (als de partner geen specifiek bedrijf heeft, worden de identificatietypen weergegeven die betrekking hebben op het huidige gebruikersbedrijf)\n"
 "\n"
-"* Als de relatie een landadres heeft: toont de generieke identificatietypen plus degene die zijn gedefinieerd voor het land van de relatie.\n"
+"* Als de partner een landadres heeft: toont de generieke identificatietypen plus degene die zijn gedefinieerd voor het land van de partner.\n"
 "\n"
-"Bij het aanmaken van een nieuw bedrijf, wordt op de gerelateerde relatie altijd het gerelateerde land is_vat-identificatietype ingesteld.\n"
+"Bij het aanmaken van een nieuw bedrijf, wordt op de gerelateerde partner altijd het gerelateerde land is_vat-identificatietype ingesteld.\n"
 "\n"
 "Alle gedefinieerde identificatietypen kunnen worden bekeken en geactiveerd / gedeactiveerd in het menu \"Contacten / Configuratie / Identificatietype\".\n"
 "\n"
-"Deze module is compatibel met de base_vat-module om BTW-nummers te kunnen bevestigen voor elk land dat al dan niet de mogelijkheid heeft om meerdere identificatietypen te beheren.\n"
+"Deze module is compatibel met de base_vat-module om btw-nummers te kunnen bevestigen voor elk land dat al dan niet de mogelijkheid heeft om meerdere identificatietypen te beheren.\n"
 "\n"
 
 #. module: base
@@ -2856,7 +2856,7 @@ msgstr ""
 "\n"
 "Maar ook:\n"
 "    - activeert een aantal regionale valuta.\n"
-"    - installeert Australische BTW.\n"
+"    - installeert Australische btw.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_reports
@@ -3082,7 +3082,7 @@ msgstr ""
 "\n"
 "Deze bestaat uit:\n"
 "    - Grootboekschema\n"
-"    - BTW structuur\n"
+"    - Btw-structuur\n"
 "    - Bronbelasting structuur\n"
 "    - Regionale gebieden lijst\n"
 "    \n"
@@ -3248,7 +3248,7 @@ msgid ""
 "Basic package for Cyprus that contains the chart of accounts, taxes, tax reports,...\n"
 msgstr ""
 "\n"
-"Basispakket voor Cyprus met het rekeningstelsel, de BTW, BTW-aangiften, ...\n"
+"Basispakket voor Cyprus met het rekeningstelsel, de btw, btw-aangiften, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -3428,7 +3428,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Boliviaans grootboekschema en BTW structuur.\n"
+"Boliviaans grootboekschema en btw-structuur.\n"
 "\n"
 "Plan contable boliviano e impuestos de acuerdo a disposiciones vigentes.\n"
 "\n"
@@ -3803,7 +3803,7 @@ msgstr ""
 "\n"
 "Grootboekschema (COA) sjabloon voor de boekhouding van Letland.\n"
 "Deze module bevat ook:\n"
-"* BTW groepen,\n"
+"* btw-groepen,\n"
 "* Meest voorkomende Letse belastingen,\n"
 "* Fiscale posities,\n"
 "* Letse banklijst.\n"
@@ -4123,7 +4123,7 @@ msgstr ""
 "Dit hangt af van antwoorden of beoordelingen van sommige vragen door verschillende gebruikers.\n"
 "Een onderzoek kan meerdere pagina's hebben. Elke pagina mag meerdere vragen bevatten en\n"
 "elke vraag mag meerdere antwoorden hebben. Verschillende gebruikers mogen verschillende\n"
-"antwoorden of vragen geven en afhankelijk hiervan wordt de enquête gedaan. Relaties krijgen ook\n"
+"antwoorden of vragen geven en afhankelijk hiervan wordt de enquête gedaan. Partners krijgen ook\n"
 "een e-mail toegestuurd met een persoonlijk token en een uitnodiging voor de enquête.\n"
 
 #. module: base
@@ -4517,7 +4517,7 @@ msgstr ""
 "je moet de nummersreeksen invoeren die je hebt gekregen\n"
 "door de overheid in Boekhouding> Klanten> e-Faktur\n"
 "\n"
-"Wanneer je een factuur bevestigd, waarbij de relatie de ID PKP heeft\n"
+"Wanneer je een factuur bevestigd, waarbij de partner de ID PKP heeft\n"
 "aangevinkt, wordt er een fiscaal nummer aan die factuur toegewezen.\n"
 "Daarna kun je de nog te exporteren facturen filteren in het\n"
 "facturenlijst en klik op Actie> Download e-Faktur om te downloaden\n"
@@ -4801,11 +4801,11 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"EU One Stop Shop (OSS) BTW\n"
+"EU One Stop Shop (OSS) btw\n"
 "==========================\n"
 "\n"
-"Vanaf 1 juli 2021 moeten EU-bedrijven die goederen binnen de EU verkopen voor meer dan 10 000 EUR aan kopers in een andere EU-lidstaat, zich registreren en BTW betalen in de lidstaat van de koper.\n"
-"Onder deze nieuwe EU-brede drempel kunt je de binnenlandse regels voor BTW op je grensoverschrijdende verkopen blijven toepassen. Om de toepassing van deze EU-richtlijn te vereenvoudigen, stelt de One Stop Shop (OSS) registratieregeling bedrijven in staat om een unieke belastingaangifte te doen.\n"
+"Vanaf 1 juli 2021 moeten EU-bedrijven die goederen binnen de EU verkopen voor meer dan 10 000 EUR aan kopers in een andere EU-lidstaat, zich registreren en btw betalen in de lidstaat van de koper.\n"
+"Onder deze nieuwe EU-brede drempel kunt je de binnenlandse regels voor btw op je grensoverschrijdende verkopen blijven toepassen. Om de toepassing van deze EU-richtlijn te vereenvoudigen, stelt de One Stop Shop (OSS) registratieregeling bedrijven in staat om een unieke belastingaangifte te doen.\n"
 "\n"
 "Deze module maakt het mogelijk door te helpen bij het maken van de vereiste EU-fiscale posities en belastingen om de vereiste belastingen automatisch toe te passen en vast te leggen.\n"
 "\n"
@@ -4828,7 +4828,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"EU One Stop Shop (OSS) BTW-rapporten\n"
+"EU One Stop Shop (OSS) btw-rapporten\n"
 "================================================= ==========================================\n"
 "\n"
 "Biedt rapporten voor OSS met exportbestanden voor beschikbare EU-landen.\n"
@@ -5065,7 +5065,7 @@ msgid ""
 "Enable the VAT wizard when posting a tax return journal entry\n"
 msgstr ""
 "\n"
-"Schakel de BTW-wizard in bij het boeken van een journaalboeking voor de belastingaangifte\n"
+"Schakel de btw-wizard in bij het boeken van een journaalboeking voor de belastingaangifte\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -5500,7 +5500,7 @@ msgstr ""
 "\n"
 "Volg de volgende configuratiestappen voor Productie:\n"
 "\n"
-"1. Ga naar je bedrijf en configureer je BTW-nummer en AFIP Verantwoordelijkheidstype\n"
+"1. Ga naar je bedrijf en configureer je btw-nummer en AFIP Verantwoordelijkheidstype\n"
 "2. Ga naar Boekhouding / Instellingen en stel het rekeningstelsel in dat je wilt gebruiken.\n"
 "3. Maak je verkoopjournalen aan rekening houdend met AFIP POS info.\n"
 "\n"
@@ -5544,12 +5544,12 @@ msgstr ""
 "  * Exento (EX)\n"
 "  * Monotributo (Mono)\n"
 "\n"
-"* Argentijnse Belastingen en Rekeningen Belastinggroepen (BTW-belastingen met de bestaande aliquots en andere typen)\n"
+"* Argentijnse Belastingen en Rekeningen Belastinggroepen (btw-belastingen met de bestaande aliquots en andere typen)\n"
 "* AFIP Verantwoordelijkheidstypes\n"
 "* Fiscale posities (om belastingen in kaart te brengen)\n"
 "* Soorten juridische documenten in Argentinië\n"
 "* Identificatietypen die geldig zijn in Argentinië.\n"
-"* Land AFIP-codes en Land BTW-codes voor rechtspersonen, natuurlijke personen en anderen\n"
+"* Land AFIP-codes en Land btw-codes voor rechtspersonen, natuurlijke personen en anderen\n"
 "* Valuta AFIP-codes\n"
 "* Maateenheid AFIP-codes\n"
 "* Partners: Consumidor Final en AFIP\n"
@@ -5613,7 +5613,7 @@ msgstr ""
 "* Documentsoorten (er zijn ongeveer 41 soorten inkoopdocumenten in Ecuador)\n"
 "* Identificatietypes\n"
 "* Ecuadoraanse banken\n"
-"* Partners: Consumidor Final, SRI, IESS, en ook basis BTW-geldigheidsverklaring\n"
+"* Partners: Consumidor Final, SRI, IESS, en ook basis btw-geldigheidsverklaring\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -5747,7 +5747,7 @@ msgstr ""
 "Tot de functionaliteiten behoren:\n"
 "\n"
 "* Uruguayaans algemeen rekeningschema\n"
-"* Vooraf geconfigureerde BTW-belastingen en belastinggroepen.\n"
+"* Vooraf geconfigureerde btw-belastingen en belastinggroepen.\n"
 "* Juridische documenttypen in Uruguay.\n"
 "* Geldige typen contactidentificatie in Uruguay.\n"
 "* Configuratie en activering van Uruguayaanse valuta (UYU, UYI - Unidad Indexada Uruguaya).\n"
@@ -5832,7 +5832,7 @@ msgstr ""
 "\n"
 "Genereert Intrastat XML-rapport voor aangifte\n"
 "Op basis van facturen.\n"
-"Voegt de mogelijkheid toe om het land van herkomst van goederen en de BTW van de relatie op te geven in het Intrastat XML-rapport.\n"
+"Voegt de mogelijkheid toe om het land van herkomst van goederen en de btw van de partner op te geven in het Intrastat XML-rapport.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_intrastat
@@ -5843,7 +5843,7 @@ msgid ""
 msgstr ""
 "\n"
 "Genereert Intrastat XML-rapport voor aangifte.\n"
-"Voegt de mogelijkheid toe om het land van herkomst van goederen en de BTW van de relatie op te geven in het Intrastat XML-rapport.\n"
+"Voegt de mogelijkheid toe om het land van herkomst van goederen en de btw van de partner op te geven in het Intrastat XML-rapport.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -6678,7 +6678,7 @@ msgid ""
 "Malta basic package that contains the chart of accounts, the taxes, tax reports, etc.\n"
 msgstr ""
 "\n"
-"Basispakket voor Malta met het rekeningstelsel, de BTW, BTW-aangiften, ...\n"
+"Basispakket voor Malta met het rekeningstelsel, de btw, btw-aangiften, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_3way_match
@@ -7228,7 +7228,7 @@ msgstr ""
 "Module voor het importeren van FEC-standaardbestanden, handig voor het importeren van boekhoudgeschiedenis.\n"
 "\n"
 "FEC-bestanden (fichier des écritures comptables) zijn de standaard boekhoudrapporten die Franse bedrijven moeten indienen bij de belastingdienst.\n"
-"Met deze module kun je rekeningen, dagboeken, relaties en verhuizingen uit deze bestanden importeren.\n"
+"Met deze module kun je rekeningen, dagboeken, partners en verhuizingen uit deze bestanden importeren.\n"
 "\n"
 "Alleen het CSV-formaat van FEC is geïmplementeerd.\n"
 "'utf-8', 'utf-8-sig' en 'iso8859_15' zijn de enige toegestane coderingen.\n"
@@ -7299,7 +7299,7 @@ msgstr ""
 "Module voor het importeren van SAF-T bestanden, handig voor het importeren van de boekhoudgeschiedenis.\n"
 "\n"
 "SAF-T bestanden zijn de standaard boekhoudrapportages die bedrijven in sommige landen moeten indienen bij de belastingdienst. \n"
-"Met deze module, kunnen rekeningen, dagboeken, relaties, belastingen en boekingen uit deze bestanden worden geïmporteerd.\n"
+"Met deze module, kunnen rekeningen, dagboeken, partners, belastingen en boekingen uit deze bestanden worden geïmporteerd.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_sie_import
@@ -7319,7 +7319,7 @@ msgstr ""
 "Module voor het importeren van SIE 5-standaardbestanden.\n"
 "\n"
 "Het huidige bereik van de module maakt de initialisatie van de boekhouding mogelijk door rekeningsaldi te importeren,\n"
-"relaties (Klanten & Leveranciers) en boekingen (journaalgegevens moeten aanwezig zijn in het bestand).\n"
+"partners (Klanten & Leveranciers) en boekingen (journaalgegevens moeten aanwezig zijn in het bestand).\n"
 "\n"
 "Het importeert geen analyse-, activa- en \"accountkoppelings\" -gegevens.\n"
 "\n"
@@ -7599,7 +7599,7 @@ msgstr ""
 "- Winst en verlies\n"
 "- Balansrekening\n"
 "- Cash flow afschriften\n"
-"- BTW terugbetaal rapport\n"
+"- Terugbetaalrapport btw\n"
 "- Bedrijfsomzet belasting rapport\n"
 "\n"
 "Financiële vereisten bijdragen: Bashkuu Lodoikhuu BumanIT LLC\n"
@@ -7651,7 +7651,7 @@ msgstr ""
 "\n"
 "Maar ook:\n"
 "    - activeert een aantal regionale valuta.\n"
-"    - installeert Australische BTW.\n"
+"    - installeert Australische btw.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -7689,7 +7689,7 @@ msgstr ""
 "andere vormen van automatisering) en maakt het veel moeilijker om\n"
 "kennis over het importeer/exporteer systeem te verzamelen omdat het gespreid is over 3+ verschillende projecten.\n"
 "\n"
-"* In een meer uitbreidbare manier, zodat gebruikers en relaties hun eigen\n"
+"* In een meer uitbreidbare manier, zodat gebruikers en partners hun eigen\n"
 "front-end kunnen bouwen om via andere bestandsformaten te importeren (bijvoorbeeld OpenDocument\n"
 "bestanden) die mogelijk gemakkelijker te verwerken zijn in hun werk flow of vanuit\n"
 "hun data productie bronnen.\n"
@@ -7980,7 +7980,7 @@ msgstr ""
 "\n"
 "Panamese grootboekschema en fiscale localisatie.\n"
 "\n"
-"Panamese boekhouding en BTW volgens de geldende voorschriften\n"
+"Panamese boekhouding en btw volgens de geldende voorschriften\n"
 "\n"
 "In samenwerking met \n"
 "- AHMNET CORP http://www.ahmnet.com\n"
@@ -7994,7 +7994,7 @@ msgid ""
 "========================\n"
 msgstr ""
 "\n"
-"Relatie Geolokalisatie\n"
+"Partner Geolokalisatie\n"
 "========================\n"
 
 #. module: base
@@ -8511,7 +8511,7 @@ msgid ""
 "Show your company address/partner address on Google Maps. Configure an API key in the Website settings.\n"
 msgstr ""
 "\n"
-"Toont je bedrijfsadres / relatieadres op Google Maps. Configureer een API key in de website instellingen.\n"
+"Toont je bedrijfsadres / partneradres op Google Maps. Configureer een API key in de website instellingen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -8545,7 +8545,7 @@ msgstr ""
 "\n"
 "Deze module voegt voor de boekhouding het volgende toe:\n"
 " - Het rekeningschema van Singapore\n"
-" - Veld UEN (Uniek Entiteitsnummer) op bedrijf en relatie\n"
+" - Veld UEN (Uniek Entiteitsnummer) op bedrijf en partner\n"
 " - Veld PermitNo en PermitNoDate op de factuur\n"
 "\n"
 
@@ -8610,7 +8610,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Slowaakse boekhoudschema en lokalisatie: grootboekschema 2020, basis BTW-tarieven +\n"
+"Slowaakse boekhoudschema en lokalisatie: grootboekschema 2020, basis btw-tarieven +\n"
 "fiscale posities.\n"
 "\n"
 "Tento module definieert:\n"
@@ -8650,7 +8650,7 @@ msgstr ""
 "        * Spaans algemeen rekeningstelsel 2008\n"
 "        * Spaans algemeen rekeningstelsel 2008 voor kleine en middelgrote ondernemingen\n"
 "        * Spaans algemeen rekeningstelsel 2008 voor verenigingen\n"
-"    * Definieert sjablonen voor verkoop en aankoop BTW\n"
+"    * Definieert sjablonen voor verkoop en aankoop btw\n"
 "    * Definieert belastingsjablonen\n"
 "    * Definieert fiscale posities voor Spaanse fiscale wetgeving\n"
 "    * Definieert belastingrapporten mod 111, 115 en 303\n"
@@ -8787,7 +8787,7 @@ msgstr ""
 "De QR-factuur wordt bij de factuur gevoegd en vergemakkelijkt de betaling.\n"
 "\n"
 "Een QR-factuur wordt gegenereerd als:\n"
-"    - De relatie op je factuur een volledig adres (straat, stad, postcode en land) in Zwitserland heeft\n"
+"    - De partner op je factuur een volledig adres (straat, stad, postcode en land) in Zwitserland heeft\n"
 "    - De optie om de Zwitserse QR-code te genereren is geselecteerd op de factuur (wordt standaard gedaan)\n"
 "    - Een correct rekeningnummer/QR-IBAN is ingestald op je bankdagboek\n"
 "    - (bij het gebruik van een QR-IBAN): de betalingsreferentie van de factuur is een QR-referentie\n"
@@ -9028,7 +9028,7 @@ msgstr ""
 "De leveringshandleiding (guia de despacho) is nodig als bewijs\n"
 "dat je goederen verzendt tussen A en B.\n"
 "\n"
-"Het is configureerbaar op de relatie als er prijzen nodig zijn op de relatie\n"
+"Het is configureerbaar op de partner als er prijzen nodig zijn op de partner\n"
 "leveringshandleiding en of ze uit de verkooporder moeten komen\n"
 "of het product zelf.\n"
 "\n"
@@ -9330,7 +9330,7 @@ msgstr ""
 "    * Lijstprijs\n"
 "    * Leveranciersprijs\n"
 "\n"
-"Prijslijst voorkeuren op product en/of relaties.\n"
+"Prijslijst voorkeuren op product en/of partners.\n"
 "\n"
 "Product labels met barcode afdrukken.\n"
 
@@ -9393,14 +9393,14 @@ msgstr ""
 "\n"
 "Wizards in deze module:\n"
 "--------------------------------\n"
-"    * Intracommunautaire aangifte: Lijst van klanten met BTW en gefactureerde\n"
+"    * Intracommunautaire aangifte: Lijst van klanten met btw en gefactureerde\n"
 "bedragen. Bereidt een XML-bestand voor.\n"
 "      \n"
 "        **Te volgen Pad :** Facturatie / Rapportages / Belgische aangiften / Intracommunautaire aangifte\n"
-"    *Periodieke BTW aangifte: Bereidt een XML-bestand voor met de periodieke BTW aangifte\n"
+"    *Periodieke btw-aangifte: Bereidt een XML-bestand voor met de periodieke btw-aangifte\n"
 "      van het hoofdbedrijf van de ingelogde gebruiker.\n"
 "      \n"
-"        **Te volgen Pad :** Facturatie / Rapportages / Belgische aangiften / Periodieke BTW aangiften\n"
+"        **Te volgen Pad :** Facturatie / Rapportages / Belgische aangiften / Periodieke btw-aangiften\n"
 "    * Jaarlijkse klantenlisting: Bereidt een XML-bestand voor met de klantenlijst \n"
 "      van het hoofdbedrijf van de ingelogde gebruiker gebaseerd op\n"
 "      Boekjaar.\n"
@@ -9458,8 +9458,8 @@ msgstr ""
 "Dit is de basismodule voor het beheren van het grootboekschema voor Guatemala.\n"
 "=====================================================================\n"
 "\n"
-"Maakt een boekhoudkundig sjabloon voor Guatemala. Het omvat ook de BTW en munteenheden\n"
-"voor Guatemale. - Voegt het grootboekschema toe voor Guatemala. Het bevat ook de BTW \n"
+"Maakt een boekhoudkundig sjabloon voor Guatemala. Het omvat ook de btw en munteenheden\n"
+"voor Guatemale. - Voegt het grootboekschema toe voor Guatemala. Het bevat ook de btw \n"
 "en de lokale valuta."
 
 #. module: base
@@ -9572,15 +9572,15 @@ msgstr ""
 "\n"
 "Dit is de basismodule voor het grootboekschema van Luxemburg.\n"
 "======================================================================\n"
-"    * Het officiële Luxemburgse grootboekschema (wet van juni 2009 + 2011 rekening en BTW),\n"
-"    * Het BTW-code schema voor Luxemburg\n"
-"    * De meest gebruikte BTW's gebruikt in Luxemburg\n"
+"    * Het officiële Luxemburgse grootboekschema (wet van juni 2009 + 2011 rekening en btw),\n"
+"    * Het btw-code schema voor Luxemburg\n"
+"    * De meest gebruikte btw's gebruikt in Luxemburg\n"
 "    * Standaard fiscale positie voor lokaal, intracom en extracom\n"
 "\n"
 "Opmerkingen:\n"
 "* Het grootboekschema van 2015 is geïmplementeerd in grote maten,\n"
 "zie de eerste sheet van tax.xls voor details over wat ondersteund is\n"
-"* om het BTW  sjabloon te wijzigen, updatet je tax.xls en voer je tax2csv.py uit\n"
+"* om het btw-sjabloon te wijzigen, updatet je tax.xls en voer je tax2csv.py uit\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my
@@ -9759,7 +9759,7 @@ msgstr ""
 "Dit is de nieuwste UK Odoo lokalisatie die nodig is om Odoo boekhouding te gebruiken voor UK SME's met:\n"
 "=================================================================================================\n"
 "    - Een CT600-ready grootboekschema\n"
-"    - VAT100-ready BTW structuur\n"
+"    - VAT100-ready btw-structuur\n"
 "    - InfoLogic UK landenlijst\n"
 "    - Een paar andere aanpassingen"
 
@@ -9781,7 +9781,7 @@ msgstr ""
 "\n"
 "Deze module bestaat uit:\n"
 "- Generiek Israëlisch grootboekschema\n"
-"- BTW en BTW-aangifteraportage\n"
+"- Btw en btw-aangifteraportage\n"
 "- Meerdere fiscale posities\n"
 
 #. module: base
@@ -9797,7 +9797,7 @@ msgstr ""
 "Dit is de laatste Zuid-Afrikaanse basis module voor localisatie die nodig is om Odoo te doen werken in ZA:\n"
 "================================================================================\n"
 "- Een generiek grootboekschema\n"
-"- SARS BTW gereed structuur"
+"- SARS btw gereed structuur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -9810,7 +9810,7 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 msgstr ""
 "\n"
-"Dit is de module om het grootboekschema, BTW structuur, fiscale positie en BTW mapping te beheren.\n"
+"Dit is de module om het grootboekschema, btw-structuur, fiscale positie en btw mapping te beheren.\n"
 "Het voegt ook het registratienummer voor Roemenië toe in Odoo.\n"
 "================================================================================================================\n"
 "Roemeense grootboekschema en lokalisatie.\n"
@@ -9854,7 +9854,7 @@ msgstr ""
 "Fiscale posities\n"
 "----------------\n"
 "\n"
-"Bij het overwegen van de BTW die moeten worden toegepast, is de provincie waar de levering plaatsvindt wat belangrijk is.\n"
+"Bij het overwegen van de btw die moeten worden toegepast, is de provincie waar de levering plaatsvindt wat belangrijk is.\n"
 "Daarom hebben we beslist om de meest voorkomende cases te implementeren in de fiscale posities: levering is de \n"
 "verantwoordelijkheid van de leverancier en wordt gedaan op de klantlocatie.\n"
 "\n"
@@ -9866,10 +9866,10 @@ msgstr ""
 "2) Je hebt een klant van een andere provincie. Maar deze klant komt naar je locatie\n"
 "met zijn vrachtwagen om de producten op te halen. Stel bij deze klant geen fiscale positie in.\n"
 "\n"
-"3) Een internationale leverancier reken je geen BTW aan. BTW worden aangerekend bij de douane\n"
+"3) Een internationale leverancier reken je geen btw aan. Btw's worden aangerekend bij de douane\n"
 "douane-expediteur. Stel de leverancier zijn fiscale positie in op internationaal.\n"
 "\n"
-"4) Een internationale leverancier reken je je lokale BTW aan. Deze zijn geregistreerd met je\n"
+"4) Een internationale leverancier reken je je lokale btw aan. Deze zijn geregistreerd met je\n"
 "positie.\n"
 
 #. module: base
@@ -9887,7 +9887,7 @@ msgid ""
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 msgstr ""
 "\n"
-"Dit is de module om de grootboekrekeningen en BTW in Odoo te beheren voor Polen\n"
+"Dit is de module om de grootboekrekeningen en btw in Odoo te beheren voor Polen\n"
 "==================================================================================\n"
 "\n"
 "To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i\n"
@@ -9942,18 +9942,18 @@ msgstr ""
 "Deze module is van toepassing voor bedrijven die zich bevinden op het Franse vasteland. Het is niet van toepassing voor\n"
 "bedrijven die geabseerd zijn in de DOM-TOMs (Guadeloupe, Martinique, Frans-Guyana, Réunion, Mayotte).\n"
 "\n"
-"Deze lokalisatiemodule maakt de BTW van het type 'BTW inbegrepen' aan voor inkopen\n"
+"Deze lokalisatiemodule maakt de btw van het type 'btw inbegrepen' aan voor inkopen\n"
 "(vereist wanneer je de module 'hr_expense' gebruikt). Het type\n"
-"'BTW inbegrepen', wordt niet beheerd door de fiscale posities aangeboden door deze\n"
-"module (te complex om beide scenario's 'Exclusief BTW' en 'Inclusief BTW'\n"
+"'btw inbegrepen', wordt niet beheerd door de fiscale posities aangeboden door deze\n"
+"module (te complex om beide scenario's 'Exclusief btw' en 'Inclusief btw'\n"
 "te beheren in de fiscale posities).\n"
 "\n"
 "Deze lokalisatiemodule gaat niet goed om met het scenario waarbij een bedrijf van het\n"
 "Franse vasteland diensten verkoopt aan een land gebaseerd in de DOMS. We zouden het kunnen beheren in de\n"
-"fiscale posities, maar het zou vereisen om een onderscheid te maken tussen BTW voor 'producten'\n"
+"fiscale posities, maar het zou vereisen om een onderscheid te maken tussen btw voor 'producten'\n"
 "en 'Diensten'. Dit is te 'zwaar' om standaard in te stellen\n"
 "in l10n_fr_account; bedrijven die diensten verkopen aan DOM gebaseerde bedrijven moeten de configuratie\n"
-"van hun BTW en fiscale posities handmatig updaten.\n"
+"van hun btw en fiscale posities handmatig updaten.\n"
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion en Camptocamp.\n"
 
@@ -9976,7 +9976,7 @@ msgstr ""
 "\n"
 "Grootboekschema.\n"
 "* Het fiscale code systeem voor Mongolië.\n"
-"* De belangrijkste BTW gebruikt in Mongolië\n"
+"* De belangrijkste btw gebruikt in Mongolië\n"
 "* Lokale fiscale posities\n"
 "\n"
 "Bijdrager: Baskhuu Lodoikhuu. BumanIT LLC\n"
@@ -10483,18 +10483,18 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Met deze module kun je je resellers / relaties op je website publiceren en inkomende leads / verkoopkansen naar hen doorsturen.\n"
+"Met deze module kun je je resellers / partners op je website publiceren en inkomende leads / verkoopkansen naar hen doorsturen.\n"
 "\n"
 "\n"
-"** Publiceer een relatie **\n"
+"** Publiceer een partner **\n"
 "\n"
-"Om een ​​relatie te publiceren, stel je een * Niveau * in het contactformulier in (in de sectie Partneropdracht) en klik je op de knop * Publiceren *.\n"
+"Om een ​​partner te publiceren, stel je een * Niveau * in het contactformulier in (in de sectie Partneropdracht) en klik je op de knop * Publiceren *.\n"
 "\n"
 "** Forward leads **\n"
 "\n"
-"Het doorsturen van leads kan voor één of meerdere leads tegelijk worden gedaan. De actie is beschikbaar in de sectie * Toegewezen relatie * van de lead- / verkoopkansformulierweergave en in het menu * Actie * van de lijstweergave.\n"
+"Het doorsturen van leads kan voor één of meerdere leads tegelijk worden gedaan. De actie is beschikbaar in de sectie * Toegewezen partner * van de lead- / verkoopkansformulierweergave en in het menu * Actie * van de lijstweergave.\n"
 "\n"
-"De automatische toewijzing wordt berekend op basis van het gewicht van partnerniveaus en de geolokalisatie. Relaties krijgen leads die zich om hen heen bevinden.\n"
+"De automatische toewijzing wordt berekend op basis van het gewicht van partnerniveaus en de geolokalisatie. Partners krijgen leads die zich om hen heen bevinden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_update_tax_tags
@@ -10853,6 +10853,32 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
+msgid ""
+"\n"
+"This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"with pain.008.001.02 specification) to send to your bank in order to\n"
+"collect a set of payments.\n"
+"\n"
+"To be eligible for this payment method, a customer must have first\n"
+"returned a mandate to the company, giving their consent to use direct debit.\n"
+"This consent must have been encoded as a 'customer mandate' in Odoo.\n"
+"\n"
+"You also need to meet the following requirements in order to properly\n"
+"generate an SDD file:\n"
+"- Your company account must be set to a valid IBAN number\n"
+"- Your company must have been given a creditor identifier (this can be done in Settings - General Settings - Accounting section)\n"
+"- Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"- Every customer for whom you generate a payment must have a valid IBAN account number.\n"
+"\n"
+"Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"To register a payment for open invoices, you can use the dedicated\n"
+"'SEPA Direct Debit' option by selecting a bank account in the 'Register\n"
+"Payment' wizard. An error message will appear if no valid mandate is\n"
+"available for generating a payment on the selected invoice.\n"
+msgstr ""
+
+#. module: base
 msgid ""
 "\n"
 "This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
@@ -12150,23 +12176,23 @@ msgid ""
 "only the country code will be validated.\n"
 msgstr ""
 "\n"
-"BTW validatie voor relatie's BTW nummers.\n"
+"btw validatie voor btw-nummers van partners.\n"
 "=========================================\n"
 "\n"
-"Na het installeren van deze module worden waardes ingegeven in het BTW veld van de relaties\n"
+"Na het installeren van deze module worden waardes ingegeven in het btw-veld van de partners\n"
 "bevestigd voor alle ondersteunde landen. Het land is de afgeleide van de\n"
-"2-cijferige landcode die een prefix is van het BTW nummer, bijvoorbeeld \"BE0477472701\"\n"
+"2-cijferige landcode die een prefix is van het btw-nummer, bijvoorbeeld \"BE0477472701\"\n"
 "wordt bevestigd volgens de belgische regels.\n"
 "\n"
-"Er zijn twee verschillende niveaus van BTW validatie:\n"
+"Er zijn twee verschillende niveaus van btw validatie:\n"
 "--------------------------------------------------------\n"
 "Standaard is een simpele klik buiten het venster genoed om de validatie uit te voeren\n"
 "voor het land, meestal een simpel cijfer. Dit is snel en\n"
 "altijd beschikbaar, maar staat cijfers toe die misschien niet echt zijn toegewezen,\n"
 "of niet meer valide zijn.\n"
 "\n"
-"* Wanneer de \"BTW VIES controle\" optie is ingeschakeld (in de configuratie op de configuratie van de gebruiker\n"
-"zijn bedrijf), worden BTW nummers verzonden naar de EU VIES\n"
+"* Wanneer de \"btw VIES controle\" optie is ingeschakeld (in de configuratie op de configuratie van de gebruiker\n"
+"zijn bedrijf), worden btw-nummers verzonden naar de EU VIES\n"
 "database, waar werkelijk wordt gecontroleerd of het nummer geldig is en momenteel\n"
 "is toegewezen aan een EU bedrijf. Dit is een beetje trager dan de simpele\n"
 "klik controle, vereist een internet connectie, en kan mogelijk niet altijd beschikbaar zijn. Als de dienst niet beschikbaar is of het verzochte land\n"
@@ -13046,7 +13072,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
 msgid "<span class=\"badge rounded-pill bg-light border\">inactive</span>"
-msgstr "<span class=\"badge round-pill bg-light border\">inactief</span>"
+msgstr "<span class=\"badge rounded-pill bg-light border\">inactief</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_kanban
@@ -13444,17 +13470,17 @@ msgstr "<strong>XML ID</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Fields</strong></u>"
-msgstr "<je><strong>Velden</strong></je>"
+msgstr "<u><strong>Velden</strong></u>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Security</strong></u>"
-msgstr "<je><strong>Beveiliging</strong></je>"
+msgstr "<u><strong>Beveiliging</strong></u>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<u><strong>Views</strong></u>"
-msgstr "<je><strong>Weergaven</strong></je>"
+msgstr "<u><strong>Weergaven</strong></u>"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -13787,7 +13813,7 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Company "
 "Registry</span></span> already exists ("
 msgstr ""
-"Er bestaat al een relatie met hetzelfde <span><span "
+"Er bestaat al een partner met hetzelfde <span><span "
 "class=\"o_vat_label\">Bedrijfsregister</span></span> ("
 
 #. module: base
@@ -13796,7 +13822,7 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
-"Een relatie met hetzelfde <span><span class=\"o_vat_label\">BTW "
+"Een partner met hetzelfde <span><span class=\"o_vat_label\">btw-"
 "nummer</span></span> bestaat al ("
 
 #. module: base
@@ -14219,10 +14245,10 @@ msgstr ""
 "Deze module is speciaal gemaakt om de boekhoudkundig \n"
 "functionaliteit te beheren volgens de Nederlandse best practice.\n"
 "\n"
-"Deze module bevat het Nederlands grootboek en BTW schema.\n"
+"Deze module bevat het Nederlands grootboek en btw-schema.\n"
 "Dit schema is gemaakt voor de meest voorkomende bedrijven en daarom bruikbaar voor bijna elk bedrijf.\n"
 "\n"
-"De BTW-rekeningen worden onmiddellijk gekoppeld om de vereiste rapportages te genereren. Voorbeeld \n"
+"De btw-rekeningen worden onmiddellijk gekoppeld om de vereiste rapportages te genereren. Voorbeeld \n"
 "van deze rapportages is de intracommunautaire transacties.\n"
 "\n"
 "Na de installatie van deze module zal de configuratie worden geactiveerd.\n"
@@ -15461,7 +15487,7 @@ msgid ""
 "Allows to send sms to website visitor if the visitor is linked to a partner."
 msgstr ""
 "Staat het versturen van SMS naar website bezoeker toe indien de bezoeker "
-"gekoppeld is aan een relatie."
+"gekoppeld is aan een partner."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_sms
@@ -16496,7 +16522,7 @@ msgstr "Anguilla"
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Another partner already has this barcode"
-msgstr "Een andere relatie heeft reeds deze barcode"
+msgstr "Een andere partner heeft reeds deze barcode"
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -19727,7 +19753,7 @@ msgid ""
 "Choose a subview of partners that includes only address fields, to change "
 "the way users can input addresses."
 msgstr ""
-"Kies een subweergave van relaties die enkel adres velden toont, om te "
+"Kies een subweergave van partners die enkel adres velden toont, om te "
 "wijzigen hoe gebruikers adressen kunnen ingeven."
 
 #. module: base
@@ -21756,7 +21782,7 @@ msgstr "Standaard website thema"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
 msgid "Define Taxes as Python Code"
-msgstr "Definieer BTW als Python code"
+msgstr "Definieer btw als Python code"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -22867,7 +22893,7 @@ msgid ""
 "sharing data."
 msgstr ""
 "Ofwel een klant (geen gebruiker), ofwel een gedeelde gebruiker. Aangegeven "
-"dat de huidige relatie een klant is zonder toegang of met een beperkte "
+"dat de huidige partner een klant is zonder toegang of met een beperkte "
 "toegang gemaakt voor het delen van gegevens."
 
 #. module: base
@@ -24432,7 +24458,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping (Legacy)"
-msgstr ""
+msgstr "Fedex Shipping (oud)"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.CNH
@@ -25158,7 +25184,7 @@ msgstr "Frankrijk - Verlof"
 msgid ""
 "France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
 msgstr ""
-"Frankrijk - BTW Anti-Fraude Certificering voor kassa (CGI 286 I-3 bis)"
+"Frankrijk - Btw Anti-Fraude Certificering voor kassa (CGI 286 I-3 bis)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_work_entry_holidays
@@ -30309,12 +30335,12 @@ msgstr "Contacten samenvoegen"
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_line
 msgid "Merge Partner Line"
-msgstr "Relatieregel samenvoegen"
+msgstr "Partnerregel samenvoegen"
 
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Relaties samenvoegen wizard"
+msgstr "Partners samenvoegen wizard"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -30527,13 +30553,13 @@ msgstr ""
 "Belastingen:\n"
 "------------\n"
 "\n"
-"'IGV': {'naam': 'BTW', 'code': 'S'},\n"
-"'IVAP': {'naam': 'BTW', 'code': ''},\n"
+"'IGV': {'naam': 'btw', 'code': 'S'},\n"
+"'IVAP': {'naam': 'btw', 'code': ''},\n"
 "'ISC': {'naam': 'ACC', 'code': 'S'},\n"
 "'ICBPER': {'naam': 'OVER', 'code': ''},\n"
 "'EXP': {'naam': 'VRIJ', 'code': 'G'},\n"
 "'GRA': {'naam': 'VRIJ', 'code': 'Z'},\n"
-"'EXO': {'naam': 'BTW', 'code': 'E'},\n"
+"'EXO': {'naam': 'btw', 'code': 'E'},\n"
 "'INA': {'naam': 'VRIJ', 'code': 'O'},\n"
 "'ANDERS': {'naam': 'OVER', 'code': 'S'},\n"
 "\n"
@@ -35010,12 +35036,12 @@ msgstr "Barscodes ontleden volgens de GS1-128 specificaties"
 #: model:ir.model.fields,field_description:base.field_res_company__partner_id
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "Relatie automatisch aanvullen"
+msgstr "Partner automatisch aanvullen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commissions
@@ -35025,12 +35051,12 @@ msgstr "Klantcommissies"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
-msgstr "Relatielabels"
+msgstr "Partnerlabels"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
 msgid "Partner Title"
-msgstr "Relatietitel"
+msgstr "Partnertitel"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
@@ -35041,7 +35067,7 @@ msgstr "Juridische entiteit"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
 msgid "Partner is Active"
-msgstr "Relatie is actief"
+msgstr "Partner is actief"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
@@ -35052,36 +35078,36 @@ msgstr "Partnermodule voor website"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_company_registry_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_company_registry_partner_id
 msgid "Partner with same Company Registry"
-msgstr "Relatie met hetzelfde bedrijfsregister"
+msgstr "Partner met hetzelfde bedrijfsregister"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr "Relatie met hetzelfde BTW nummer"
+msgstr "Partner met hetzelfde btw-nummer"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
 msgid "Partner-related data of the user"
-msgstr "Relatie gerelateerde gegevens van de gebruiker"
+msgstr "Partner gerelateerde gegevens van de gebruiker"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category__partner_ids
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Partners"
-msgstr "Relaties"
+msgstr "Partners"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr "Relatie geolocatie"
+msgstr "Partner geolocatie"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Partners: %(category)s"
-msgstr "Relaties: %(category)s"
+msgstr "Partners: %(category)s"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_passkey
@@ -36467,7 +36493,7 @@ msgstr "Publiceer je ledenlijst"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
 msgid "Publish your resellers/partners and forward leads to them"
-msgstr "Publiceer je resellers / relaties en stuur leads naar hen door"
+msgstr "Publiceer je resellers / partners en stuur leads naar hen door"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__published_version
@@ -37079,7 +37105,7 @@ msgstr "Gerelateerd model"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
 msgid "Related Partner"
-msgstr "Gerelateerde relatie"
+msgstr "Gerelateerde partner"
 
 #. module: base
 #. odoo-python
@@ -38314,17 +38340,17 @@ msgstr "Zoek bank"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Search Partner"
-msgstr "Zoek relatie"
+msgstr "Zoek partner"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_category_view_search
 msgid "Search Partner Category"
-msgstr "Zoek relatiecategorie"
+msgstr "Zoek partnercategorie"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 msgid "Search Partner Industry"
-msgstr "Zoek relatieindustrie"
+msgstr "Zoek partnerindustrie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
@@ -38616,6 +38642,9 @@ msgid ""
 " install the new \"Fedex Shipping\" module and uninstall this one as soon as"
 " possible. This integration will stop working in 2024"
 msgstr ""
+"Dit is de oude-integratie met FedEx die niet langer wordt ondersteund. "
+"Installeer de nieuwe module \"Fedex Shipping\" en verwijder deze zo snel "
+"mogelijk. Deze integratie stopt met werken in 2024."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
@@ -38900,7 +38929,7 @@ msgstr "Deel groep"
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_share
 #: model:ir.model.fields,field_description:base.field_res_users__partner_share
 msgid "Share Partner"
-msgstr "Deel relatie"
+msgstr "Deel partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__share
@@ -39700,7 +39729,7 @@ msgstr "Standaard"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft
 msgid "Standard Audit File for Tax Base module"
-msgstr "Standaard auditbestand voor BTW-grondslagmodule"
+msgstr "Standaard auditbestand voor btw-grondslagmodule"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_starshipit
@@ -40779,8 +40808,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"Het BTW-nummer. Waarden hier worden gevalideerd op basis van het "
-"landformaat. Je kunt '/' gebruiken om aan te geven dat de relatie niet "
+"Het btw-nummer. Waarden hier worden gevalideerd op basis van het "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat de partner niet "
 "belastingplichtig is."
 
 #. module: base
@@ -40837,7 +40866,7 @@ msgstr "De staatcode moet uniek zijn per land!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
 msgid "The combination Account Number/Partner must be unique."
-msgstr "De combinatie Rekeningnummer/Relatie moet uniek zijn."
+msgstr "De combinatie Rekeningnummer/Partner moet uniek zijn."
 
 #. module: base
 #. odoo-python
@@ -40856,8 +40885,8 @@ msgid ""
 "The company assigned to this partner does not match the company this partner"
 " represents."
 msgstr ""
-"Het bedrijf dat is toegewezen aan deze relatie komt niet overeen met het "
-"bedrijf dat deze relatie vertegenwoordigt."
+"Het bedrijf dat is toegewezen aan deze partner komt niet overeen met het "
+"bedrijf dat deze partner vertegenwoordigt."
 
 #. module: base
 #. odoo-python
@@ -41401,7 +41430,7 @@ msgid ""
 "ID. It must be unique across all partners of a same country"
 msgstr ""
 "Het registratienummer van het bedrijf. Gebruik het als het verschilt van het"
-" BTW-nummer. Het moet uniek zijn voor alle relaties van hetzelfde land"
+" btw-nummer. Het moet uniek zijn voor alle partners van hetzelfde land"
 
 #. module: base
 #. odoo-python
@@ -42458,7 +42487,7 @@ msgstr ""
 "Toni Rhodes werkt <b>sinds 10 jaar</b> in de IT-sector. Hij is bekend\n"
 "met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
 "IT-budget met bijna de helft in de afgelopen 2 jaar.\n"
-"Beroemde Managing Relatie."
+"Beroemde Managing Partner."
 
 #. module: base
 #. odoo-python
@@ -43475,7 +43504,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_python
 msgid "Use python code to define taxes"
-msgstr "Gebruik python-code om BTW te berekenen"
+msgstr "Gebruik python-code om btw te berekenen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__use_date_range
@@ -43515,7 +43544,7 @@ msgstr "Gebruik het formaat '%s'"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__vat_label
 msgid "Use this field if you want to change vat label."
-msgstr "Gebruikt dit veld als je het BTW label wilt wijzigen."
+msgstr "Gebruikt dit veld als je het btw-label wilt wijzigen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_view_id
@@ -43774,12 +43803,12 @@ msgstr "Oezbekistan"
 #: model:res.country,vat_label:base.si model:res.country,vat_label:base.sk
 #: model:res.country,vat_label:base.uk
 msgid "VAT"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr "BTW nummer controle"
+msgstr "Btw-nummer controle"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_voip
@@ -43834,7 +43863,7 @@ msgstr "Vanuatu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__vat_label
 msgid "Vat Label"
-msgstr "BTW label"
+msgstr "Btw-label"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VUV
@@ -44330,7 +44359,7 @@ msgstr "Website Modules Test"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_partner
 msgid "Website Partner"
-msgstr "Website relatie"
+msgstr "Website partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
@@ -44963,7 +44992,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "You cannot create recursive Partner hierarchies."
-msgstr "Het is niet mogelijk een recursieve relatie hiërarchie te maken."
+msgstr "Het is niet mogelijk een recursieve partner hiërarchie te maken."
 
 #. module: base
 #. odoo-python

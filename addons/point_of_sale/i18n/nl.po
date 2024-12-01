@@ -5,9 +5,9 @@
 # Translators:
 # Martin Trigaux, 2024
 # Lukas Van Cauter <cvl@odoo.com>, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1751,7 +1751,7 @@ msgid ""
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
 "Kies een specifieke fiscale positie op het order afhankelijk van het soort "
-"klant (vrijstelling van BTW, ter plaatse of afhaling, enzovoort)."
+"klant (vrijstelling van btw, ter plaatse of afhaling, enzovoort)."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
@@ -2487,12 +2487,12 @@ msgstr "Standaard QR-code"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__sale_tax_id
 msgid "Default Sale Tax"
-msgstr "Standaard BTW op verkopen"
+msgstr "Standaard btw op verkopen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default Sales Tax"
-msgstr "Standaard verkoop BTW"
+msgstr "Standaard btw verkoop"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2507,7 +2507,7 @@ msgstr "Standaardjournalen voor orders en facturen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default sales tax for products"
-msgstr "Standaard verkoop BTW voor producten"
+msgstr "Standaard btw verkoop voor producten"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
@@ -2814,7 +2814,7 @@ msgstr "Details bewerken"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
 msgid "Edit Partner"
-msgstr "Relatie bewerken"
+msgstr "Partner bewerken"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action_edit_pos
@@ -3049,7 +3049,7 @@ msgstr "Flexibele prijslijsten"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Flexible Taxes"
-msgstr "Flexibele BTW"
+msgstr "Flexibele btw"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3067,7 +3067,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_partner_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Partners)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
@@ -3677,8 +3677,8 @@ msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
 msgstr ""
-"Het is verboden om een BTW te wijzigen die is gebruikt in een kassaorders "
-"die niet is geboekt. Je moet de kassasessies sluiten voordat je de BTW "
+"Het is verboden om een btw te wijzigen die is gebruikt in een kassaorders "
+"die niet is geboekt. Je moet de kassasessies sluiten voordat je de btw "
 "wijzigt."
 
 #. module: point_of_sale
@@ -4282,7 +4282,7 @@ msgstr "Geen Kassa geselecteerd"
 #. odoo-python
 #: code:addons/point_of_sale/models/report_sale_details.py:0
 msgid "No Taxes"
-msgstr "Geen BTW"
+msgstr "Geen btw"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5278,7 +5278,7 @@ msgstr "Je dient de factuur via de backend af te drukken"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Please provide a partner for the sale."
-msgstr "Kies een relatie voor deze verkoop."
+msgstr "Kies een partner voor deze verkoop."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5702,7 +5702,7 @@ msgstr "Prijskorting van %(original_price)s naar %(discounted_price)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.xml:0
 msgid "Price excl. Tax:"
-msgstr "Prijs excl. BTW:"
+msgstr "Prijs excl. btw:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
@@ -7237,7 +7237,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_subtotal_excl
 msgid "Subtotal w/o Tax"
-msgstr "Subtotaal excl. BTW"
+msgstr "Subtotaal excl. btw"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_sub_total
@@ -7324,13 +7324,13 @@ msgstr "Tarragewicht:"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model,name:point_of_sale.model_account_tax
 msgid "Tax"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_tax_included
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_tax_included
 msgid "Tax Display"
-msgstr "BTW weergave"
+msgstr "Btw-weergave"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal
@@ -7340,7 +7340,7 @@ msgstr "Excl. btw"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_tax_group
 msgid "Tax Group"
-msgstr "BTW-groep"
+msgstr "Btw-groep"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
@@ -7350,28 +7350,28 @@ msgstr "Incl. btw"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "BTW mapping van de fiscale positie"
+msgstr "Btw-mapping van de fiscale positie"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Tax Name"
-msgstr "BTW naam"
+msgstr "Btw-naam"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_tax_regime_selection
 msgid "Tax Regime Selection value"
-msgstr "BTW beleid selectiewaarde"
+msgstr "Btw beleid selectiewaarde"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__subtotal
 msgid "Tax-Excluded Price"
-msgstr "Prijzen exclusief BTW"
+msgstr "Prijzen exclusief btw"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__total
 msgid "Tax-Included Price"
-msgstr "Prijzen inclusief BTW"
+msgstr "Prijzen inclusief btw"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7382,28 +7382,28 @@ msgstr "Prijzen inclusief BTW"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Taxes on refunds"
-msgstr "BTW op retouren"
+msgstr "Btw op retouren"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Taxes on sales"
-msgstr "BTW op verkopen"
+msgstr "Btw op verkopen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids_after_fiscal_position
 msgid "Taxes to Apply"
-msgstr "BTW om toe te passen"
+msgstr "Btw om toe te passen"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sales_detail_report.xml:0
 msgid "Taxes:"
-msgstr "BTW:"
+msgstr "Btw:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -7890,7 +7890,7 @@ msgid ""
 "orders, it is probably caused by taxes or accounting configurations changes."
 msgstr ""
 "Er is een verschil tussen de te boeken bedragen en de bedragen van de "
-"orders, dit wordt waarschijnlijk veroorzaakt door wijzigingen in BTW of "
+"orders, dit wordt waarschijnlijk veroorzaakt door wijzigingen in btw of "
 "boekhoudkundige instellingen."
 
 #. module: point_of_sale
@@ -8008,7 +8008,7 @@ msgid ""
 " specific tax rates."
 msgstr ""
 "Dit is handig voor restaurants met op locatie- en afhaaldiensten die "
-"specifieke BTW tarieven impliceren."
+"specifieke btw-tarieven impliceren."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8112,7 +8112,7 @@ msgstr "Deze sessie is al gesloten."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
 msgstr ""
-"Deze BTW wordt toegepast op ieder nieuw product wat wordt aangemaakt in deze"
+"Deze btw wordt toegepast op ieder nieuw product wat wordt aangemaakt in deze"
 " catalogus."
 
 #. module: point_of_sale
@@ -8283,7 +8283,7 @@ msgstr "Totaalprijs"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.xml:0
 msgid "Total Price excl. Tax:"
-msgstr "Totale prijs excl. BTW:"
+msgstr "Totale prijs excl. btw:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
@@ -8398,7 +8398,7 @@ msgid ""
 "%s"
 msgstr ""
 "Niet in staat om de sessie te sluiten en te bevestigen.\n"
-"Stel de overeenstemmende BTW-rekening in elke regel van de volgende BTW's:\n"
+"Stel de overeenstemmende btw-rekening in elke regel van de volgende btw's:\n"
 "%s"
 
 #. module: point_of_sale
@@ -8501,7 +8501,7 @@ msgstr "Niet-gesynchroniseerde bestelling"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Untaxed Amount"
-msgstr "Excl. BTW"
+msgstr "Excl. btw"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8560,7 +8560,7 @@ msgstr "Gebruik barcodes om producten, klantenkaarten etc. te scannen."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
-msgstr "Gebruik fiscale posities om verschillende BTW's op orders te krijgen"
+msgstr "Gebruik fiscale posities om verschillende btw's op orders te krijgen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8598,7 +8598,7 @@ msgstr "Uuid"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "VAT:"
-msgstr "BTW:"
+msgstr "Btw:"
 
 #. module: point_of_sale
 #. odoo-javascript
