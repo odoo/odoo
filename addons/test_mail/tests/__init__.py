@@ -13,6 +13,7 @@ from . import test_mail_gateway
 from . import test_mail_mail
 from . import test_mail_management
 from . import test_mail_message
+from . import test_mail_message_security
 from . import test_mail_multicompany
 from . import test_mail_push
 from . import test_mail_scheduled_message

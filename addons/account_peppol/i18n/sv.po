@@ -36,9 +36,9 @@ msgid ""
 "                        The invoice will be sent automatically via Peppol\n"
 "                    </span>"
 msgstr ""
-"<span class=\"mx-1\" invisible=\"not peppol_is_demo_uuid\"> (Demo)</span>\n"
+"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> (Demo)</span>\n"
 "                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
-"                        Fakturan skickas automatiskt till PEPPOL\n"
+"                        Fakturan skickas automatiskt till Peppol\n"
 "                    </span>"
 
 #. module: account_peppol
@@ -50,9 +50,9 @@ msgid ""
 "                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
 msgstr ""
 "<span class=\"o_form_label\">\n"
-"                                    Peppol Detaljer\n"
-"                                <span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" title=\"Värden som anges här är företagsspecifika.\"/>"
+"                                    Peppol detaljer\n"
+"                                </span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Värden som sätts här är företagsspecifika.\"/>"
 
 #. module: account_peppol
 #. odoo-python
@@ -103,13 +103,13 @@ msgstr "Konto använt för Peppol"
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__available_peppol_edi_formats
 msgid "Available Peppol Edi Formats"
-msgstr ""
+msgstr "Tillgängliga Peppol Edi Format"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_sending_methods
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__available_peppol_sending_methods
 msgid "Available Peppol Sending Methods"
-msgstr ""
+msgstr "Tillgängliga Peppol-sändningsmetoder"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
