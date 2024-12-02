@@ -1,16 +1,24 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-
-import { _t } from "@web/core/l10n/translation";
-import { clamp } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
+import { loadJS } from "@web/core/assets";
 
+/* global FB */
 export class FacebookPage extends Interaction {
     static selector = ".o_facebook_page";
 
     setup() {
         this.previousWidth = 0;
-        const params = pick(this.el.dataset, "href", "id", "height", "tabs", "small_header", "hide_cover");
+        const params = pick(
+            this.el.dataset,
+            "href",
+            "id",
+            "height",
+            "width",
+            "tabs",
+            "small_header",
+            "hide_cover"
+        );
         if (!params.href) {
             return;
         }
@@ -19,35 +27,47 @@ export class FacebookPage extends Interaction {
             delete params.id;
         }
 
-        this.renderIframe(params);
+        this.renderFacebookPlugin(params);
 
-        this.resizeObserver = new ResizeObserver(this.debounced(this.renderIframe.bind(this, params), 100));
-        this.resizeObserver.observe(this.el.parentElement);
+        this.resizeObserver = new ResizeObserver(
+            this.debounced(this.renderFacebookPlugin.bind(this, params), 100)
+        );
+        this.resizeObserver.observe(this.el);
         this.registerCleanup(() => { this.resizeObserver.disconnect() });
     }
 
+    async willStart() {
+        await loadJS("https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0", {
+            defer: "defer",
+            crossorigin: "anonymous"
+        });
+    }
+
     /**
-     * Prepare iframe element & replace it with existing iframe.
+     * Prepare Facebook plugin element & replace it with existing content.
      *
      * @param {Object} params
     */
-    renderIframe(params) {
-        params.width = clamp(Math.floor(this.el.getBoundingClientRect().width), 180, 500);
-        if (this.previousWidth !== params.width) {
-            this.previousWidth = params.width;
-            const searchParams = new URLSearchParams(params);
+    renderFacebookPlugin(params) {
+        if (typeof FB !== "undefined") {
+            if (this.previousWidth !== params.width) {
+                this.previousWidth = params.width;
 
-            const iframeEl = document.createElement("iframe");
-            iframeEl.setAttribute("style", "border: none; overflow: hidden;");
-            iframeEl.setAttribute("aria-label", _t("Facebook"));
-            iframeEl.height = params.height;
-            iframeEl.width = params.width;
+                const fbDiv = document.createElement("div");
+                fbDiv.className = "fb-page";
+                fbDiv.setAttribute("data-href", params.href);
+                fbDiv.setAttribute("data-tabs", params.tabs || "");
+                fbDiv.setAttribute("data-width", params.width);
+                fbDiv.setAttribute("data-height", params.height);
+                fbDiv.setAttribute("data-small-header", params.small_header || "false");
+                fbDiv.setAttribute("data-hide-cover", params.hide_cover || "false");
 
-            this.el.replaceChildren(iframeEl);
-            this.registerCleanup(() => { iframeEl.remove(); });
-
-            const src = "https://www.facebook.com/plugins/page.php?" + searchParams;
-            this.services.website_cookies.manageIframeSrc(iframeEl, src);
+                this.el.replaceChildren(fbDiv);
+                this.registerCleanup(() => {
+                    fbDiv.remove();
+                });
+            }
+            FB.XFBML.parse(this.el);
         }
     }
 }
