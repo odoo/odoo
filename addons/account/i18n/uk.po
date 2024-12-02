@@ -7,6 +7,7 @@
 # Vitalii Fedko, 2024
 # Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,9 +35,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Переміщення (%s) незбалансоване.\n"
-"Сума дебету дорівнює %s сума кредиту дорівнює %s.\n"
-"Ви повинні вказати типовий рахунок на журналі \"%s\" для автоматичного балансу кожної проводки."
+"Переміщення (%(move)s) незбалансоване.\n"
+"Сума дебету дорівнює %(debit_total)s сума кредиту дорівнює %(credit_total)s.\n"
+"Ви повинні вказати типовий рахунок на журналі \"%(journal)s\" для автоматичного балансу кожної проводки."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -14952,11 +14953,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"Шаблон діаграми Syscohada не слід вибирати. Натомість вам слід безпосередньо"
-" вибрати шаблон діаграми, пов’язаний із вашою країною."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat

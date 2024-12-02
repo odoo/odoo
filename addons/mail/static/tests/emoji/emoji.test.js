@@ -1,4 +1,4 @@
-import { patchTranslations } from "@web/../tests/web_test_helpers";
+import { patchTranslations, preloadBundle } from "@web/../tests/web_test_helpers";
 
 import {
     click,
@@ -12,11 +12,12 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 
-import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 import { queryFirst } from "@odoo/hoot-dom";
+import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 
 describe.current.tags("desktop");
 defineMailModels();
+preloadBundle("web.assets_emoji");
 
 test("emoji picker works well with translation with double quotes", async () => {
     patchTranslations({

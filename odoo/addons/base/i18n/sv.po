@@ -25,9 +25,9 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Lasse L, 2024
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Martin Trigaux, 2024
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 14:42+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1940,6 +1940,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss\n"
 msgstr ""
+"\n"
+"Redovisningsrapporter för Turkiet\n"
+"\n"
+"- Balansräkning\n"
+"- Vinst och förlust\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -4771,6 +4776,9 @@ msgid ""
 "EFT Batch Payment\n"
 "=================\n"
 msgstr ""
+"\n"
+"EFT-delbetalning\n"
+"=================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -5506,6 +5514,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Funktionell\n"
+"----------\n"
+"\n"
+"Den här modulen lägger till redovisningsfunktioner för den argentinska lokaliseringen, som representerar den minimala konfiguration som behövs för att ett företag ska kunna verka i Argentina och under AFIP (Administración Federal de Ingresos Públicos) regler och riktlinjer.\n"
+"\n"
+"Följ nästa konfigurationssteg för produktion:\n"
+"\n"
+"1. Gå till ditt företag och konfigurera ditt momsnummer och AFIP-ansvarstyp\n"
+"2. Gå till Redovisning / Inställningar och ange vilken kontoplan du vill använda.\n"
+"3. Skapa dina försäljningsjournaler med hänsyn till AFIP POS-information.\n"
+"\n"
+"Demodata för testning:\n"
+"\n"
+"* 3 företag skapades, ett för varje AFIP-ansvarstyp med respektive kontoplan installerad. Välj det företag som fixar dig för att göra tester:\n"
+"\n"
+"* (AR) Ansvarig Inscripto\n"
+"* (AR) Exento\n"
+"* (AR) Monotributo\n"
+"\n"
+"* Journalförsäljning konfigurerad till förtryckta och expofakturor i alla företag\n"
+"* Fakturor och andra dokumentexempel redan validerade i \"(AR) Responsable Inscripto\"-företaget\n"
+"* Partners exempel för de olika ansvarstyperna:\n"
+"\n"
+"* ADHOC (IVA Responsable Inscripto)\n"
+"* Servicios Globales (IVA Sujeto Exento)\n"
+"* Gritti (Monotributo)\n"
+"* Montana Sur. IVA Liberado i Zona Franca\n"
+"* Barcelona mat (Cliente del Exterior)\n"
+"* Odoo (Proveedor del Exterior)\n"
+"\n"
+"Höjdpunkter:\n"
+"\n"
+"* Kontoplan kommer inte att installeras automatiskt, varje CoA-mall beror på företagets AFIP-ansvar, du måste installera CoA för dina behov.\n"
+"* Inga försäljningsjournaler kommer att genereras när du installerar en CoA, du måste konfigurera dina journaler manuellt.\n"
+"* Dokumenttypen kommer att vara korrekt förvald när en faktura skapas beroende på det skattemässiga ansvaret för utfärdaren och mottagaren av dokumentet och den relaterade journalen.\n"
+"* En CBU-kontotyp har lagts till och även CBU-validering\n"
+"\n"
+"\n"
+"Teknisk\n"
+"----------\n"
+"\n"
+"Denna modul lägger till både modeller och fält som så småningom kommer att användas för den elektroniska fakturamodulen. Här är en sammanfattning av de viktigaste funktionerna:\n"
+"\n"
+"Masterdata:\n"
+"\n"
+"* Kontoplan: en för varje AFIP-ansvar som är relaterat till en juridisk person:\n"
+"\n"
+"* Ansvarig Inscripto (RI)\n"
+"* Exento (EX)\n"
+"* Monotributo (mono)\n"
+"\n"
+"* Argentinska skatter och kontoskattegrupper (moms med befintliga alikvoter och andra typer)\n"
+"* AFIP ansvarstyper\n"
+"* Finansiella positioner (för att kartlägga skatter)\n"
+"* Typer av juridiska dokument i Argentina\n"
+"* Identifieringstyper giltiga i Argentina.\n"
+"* Lands-AFIP-koder och landsmomskoder för juridiska personer, fysiska personer och andra\n"
+"* Valuta AFIP-koder\n"
+"* Måttenhet AFIP-koder\n"
+"* Partners: Consumidor Final och AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -7083,6 +7152,8 @@ msgid ""
 "\n"
 "Modelo 303: Extra fields regarding Rectificación\n"
 msgstr ""
+"\n"
+"Modell 303: Extra fält angående Rectificación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
@@ -8611,6 +8682,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Spanska kontoplaner (PGCE 2008).\n"
+"=========================================\n"
+"\n"
+"* Definierar följande kontoplansmallar:\n"
+"* Spansk allmän kontoplan 2008\n"
+"* Spansk allmän kontoplan 2008 för små och medelstora företag\n"
+"* Spansk allmän kontoplan 2008 för föreningar\n"
+"* Definierar mallar för försäljning och köp moms\n"
+"* Definierar skattemallar\n"
+"* Definierar finanspolitiska positioner för spansk skattelagstiftning\n"
+"* Definierar skatterapporter mod 111, 115 och 303\n"
+"\n"
+"5.3: Uppdatera skatter med start Q4 2024 enligt BOE-A-2024-12944 (Royal Decreet 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8677,6 +8762,8 @@ msgid ""
 "\n"
 "Support for Indian TDS (Tax Deducted at Source) for Payment.\n"
 msgstr ""
+"\n"
+"Stöd för indisk TDS (skatt som dras av vid källan) för betalning.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_withholding
@@ -8840,6 +8927,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"UBL PINT e-faktureringsformatet för Australien och Nya Zeeland är baserat på Peppol International (PINT) modell för fakturering.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
@@ -8865,6 +8954,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"UBL PINT e-faktureringsformatet för Singapore är baserat på Peppol International (PINT) modell för fakturering.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -9441,6 +9532,13 @@ msgid ""
 "- Chart of accounts\n"
 "- Taxes\n"
 msgstr ""
+"\n"
+"Detta är basmodulen för att hantera redovisningsdiagrammet för Irak i Odoo.\n"
+"================================================== =============================\n"
+"Irak redovisning grundläggande diagram och lokalisering.\n"
+"Aktiverar:\n"
+"- Kontoplan\n"
+"- Skatter\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
@@ -9601,6 +9699,17 @@ msgid ""
 "- Taxes\n"
 "- Tax Report\n"
 msgstr ""
+"\n"
+"Detta är basmodulen för att hantera redovisningsdiagrammet för Turkiet i Odoo\n"
+"================================================== =========================\n"
+"\n"
+"Turkisk redovisning grundläggande diagram och lokaliseringar\n"
+"--------------------------------------------------\n"
+"Aktiverar:\n"
+"\n"
+"- Kontoplan\n"
+"- Skatter\n"
+"- Skatterapport\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_account
@@ -10795,6 +10904,32 @@ msgid ""
 "with pain.008.001.02 specification) to send to your bank in order to\n"
 "collect a set of payments.\n"
 "\n"
+"To be eligible for this payment method, a customer must have first\n"
+"returned a mandate to the company, giving their consent to use direct debit.\n"
+"This consent must have been encoded as a 'customer mandate' in Odoo.\n"
+"\n"
+"You also need to meet the following requirements in order to properly\n"
+"generate an SDD file:\n"
+"- Your company account must be set to a valid IBAN number\n"
+"- Your company must have been given a creditor identifier (this can be done in Settings - General Settings - Accounting section)\n"
+"- Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"- Every customer for whom you generate a payment must have a valid IBAN account number.\n"
+"\n"
+"Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"To register a payment for open invoices, you can use the dedicated\n"
+"'SEPA Direct Debit' option by selecting a bank account in the 'Register\n"
+"Payment' wizard. An error message will appear if no valid mandate is\n"
+"available for generating a payment on the selected invoice.\n"
+msgstr ""
+
+#. module: base
+msgid ""
+"\n"
+"This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"with pain.008.001.02 specification) to send to your bank in order to\n"
+"collect a set of payments.\n"
+"\n"
 "To be elligible for this payment method, a customer must have first\n"
 "returned a mandate to the company, giving his consent to use direct debit.\n"
 "This consent must have been encoded as a 'customer mandate' into Odoo.\n"
@@ -11368,6 +11503,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Swiggy.\n"
 msgstr ""
+"\n"
+"Denna modul integreras med UrbanPiper för att ta emot och hantera beställningar från Swiggy.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
@@ -11375,6 +11512,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Uber Eats.\n"
 msgstr ""
+"\n"
+"Den här modulen integreras med UrbanPiper för att ta emot och hantera beställningar från Uber Eats.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_zomato
@@ -11754,6 +11893,10 @@ msgid ""
 "It installs sale capabilities, front-end flow, eCommerce, questions and\n"
 "automatic lead generation, full Online support, sms and whatsapp support, ...\n"
 msgstr ""
+"\n"
+"Den här modulen kommer att testa Odoos huvudhändelseflöden, både frontend och backend.\n"
+"Den installerar försäljningsmöjligheter, front-end-flöde, e-handel, frågor och\n"
+"automatisk leadgenerering, full onlinesupport, sms och whatsapp-support, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
@@ -11901,6 +12044,12 @@ msgid ""
 "- Income tax calculations\n"
 "- Stamp tax deductions\n"
 msgstr ""
+"\n"
+"Turkiska löne- och skatteregler\n"
+"==============================\n"
+"- Socialförsäkringspremie/försäkringsberäkningar för anställning och arbetslöshet\n"
+"- Inkomstskatteberäkningar\n"
+"- Stämpelskatteavdrag\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -12350,7 +12499,7 @@ msgstr "%(company_currency_name)s per %(rate_currency_name)s"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%(integral_amount)s %(currency_unit)s"
-msgstr "%(integrerat_belopp)s %(valutaenhet)s"
+msgstr "%(integral_amount)s %(currency_unit)s"
 
 #. module: base
 #. odoo-python
@@ -12505,6 +12654,9 @@ msgid ""
 "'%%(field)s'. Each property need at least 'name', 'type' and 'string' "
 "attribute."
 msgstr ""
+"'%(value)s' verkar inte vara ett giltigt egenskapsvärde för fältet "
+"'%%(field)s'. Varje egenskap behöver minst attributen 'name', 'type' och "
+"'string'."
 
 #. module: base
 #. odoo-python
@@ -12513,6 +12665,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Selection value for "
 "'%(label_property)s' (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' verkar inte vara ett giltigt urvalsvärde för "
+"'%(label_property)s' (underfält till fältet '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -12521,6 +12675,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' verkar inte vara ett giltigt taggvärde för '%(label_property)s' "
+"(underfält till fältet '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -12529,6 +12685,8 @@ msgid ""
 "'%(value)s' does not seem to be an float for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' verkar inte vara ett flytande för fältet '%(label_property)s' "
+"egenskap (underfält till fältet '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -12537,6 +12695,8 @@ msgid ""
 "'%(value)s' does not seem to be an integer for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' verkar inte vara ett heltal för fältet '%(label_property)s' "
+"egenskap (underfält till fältet '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -12799,7 +12959,7 @@ msgstr "9. %w              ==&gt; 5 ( fredag är den 6:e dagen)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2many commands namespace"
-msgstr "<kod>Kommando</kod>: x2many-kommandonas namnrymd"
+msgstr "<code>Kommando</code>: x2many-kommandonas namnrymd"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12807,8 +12967,8 @@ msgid ""
 "<code>UserError</code>: exception class for raising user-facing warning "
 "messages"
 msgstr ""
-"<kod>UserError</kod>: undantagsklass för att skapa varningsmeddelanden till "
-"användaren"
+"<code>UserError</code>: undantagsklass för att skapa varningsmeddelanden "
+"till användaren"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12833,7 +12993,7 @@ msgstr "<code>dateutil</code> (Python-modul)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr "<kod>env</kod>: miljö där åtgärden utlöses"
+msgstr "<code>env</code>: miljö där åtgärden utlöses"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12841,8 +13001,8 @@ msgid ""
 "<code>float_compare()</code>: utility function to compare floats based on a "
 "specific precision"
 msgstr ""
-"<kod>float_compare()</kod>: verktygsfunktion för att jämföra flyttal baserat"
-" på en specifik precision"
+"<code>float_compare()</code>: verktygsfunktion för att jämföra flyttal "
+"baserat på en specifik precision"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12865,7 +13025,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>record</code>: record on which the action is triggered"
-msgstr "<kod>post</kod>: post där åtgärden utlöses"
+msgstr "<code>post</code>: post där åtgärden utlöses"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12934,7 +13094,7 @@ msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
-msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Inloggning\"/>"
+msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -13077,7 +13237,7 @@ msgid ""
 "'many2many'\">by</span>"
 msgstr ""
 "<span invisible=\"evaluation_type != 'value' or not update_field_type == "
-"'many2many'\">by</span>"
+"'many2many'\">av</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -13086,7 +13246,7 @@ msgid ""
 "'many2many'\">to</span>"
 msgstr ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type == "
-"'many2many'\">to</span>"
+"'many2many'\">till</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -13273,6 +13433,8 @@ msgstr ""
 msgid ""
 "<strong>Please confirm your identity by entering your password</strong>"
 msgstr ""
+"<strong>Vänligen bekräfta din identitet genom att ange ditt "
+"lösenord</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -17464,7 +17626,7 @@ msgstr "Australien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_anz_ubl_pint
 msgid "Australia & New Zealand - UBL PINT"
-msgstr ""
+msgstr "Australien och Nya Zeeland - UBL PINT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
@@ -18651,6 +18813,8 @@ msgstr "Brygga mellan lager och redovisning"
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
 msgid "Bridge created to add computation of timesheet to subscription"
 msgstr ""
+"Brygga skapad för att lägga till beräkning av tidrapport till "
+"prenumerationen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account_asset
@@ -22641,7 +22805,7 @@ msgstr "EET"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
 msgid "EFT Batch Payment"
-msgstr ""
+msgstr "EFT-delbetalning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -23822,7 +23986,7 @@ msgstr "Evenemang Social"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full_enterprise
 msgid "Event Test (all modules)"
-msgstr ""
+msgstr "Evenemangstest (alla moduler)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_exhibitor
@@ -24107,7 +24271,7 @@ msgstr "Exportera betalningar som CPA 005 AFT-filer"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_nz_eft
 msgid "Export payments as EFT files"
-msgstr ""
+msgstr "Exportera betalningar som EFT-filer"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_payment_nacha
@@ -24341,7 +24505,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping (Legacy)"
-msgstr ""
+msgstr "Fedex Shipping (legacy)"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.CNH
@@ -27167,7 +27331,7 @@ msgstr "Indian - Stock Report(GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_withholding_payment
 msgid "Indian - TDS For Payment"
-msgstr ""
+msgstr "Indiskt - TDS för betalning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_tds_tcs
@@ -27666,7 +27830,7 @@ msgstr "Ogiltigt JSON-format i fältet Default Value."
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid attributes %s in element <attribute>"
-msgstr "Ogiltiga attribut %s i element <attribut>"
+msgstr "Ogiltiga attribut %s i element <attribute>"
 
 #. module: base
 #. odoo-python
@@ -27950,7 +28114,7 @@ msgstr "Irak"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_iq
 msgid "Iraq - Accounting"
-msgstr ""
+msgstr "Irak - Bokföring"
 
 #. module: base
 #: model:res.country,name:base.ie
@@ -30442,12 +30606,12 @@ msgstr ""
 "------\n"
 "\n"
 "\"IGV\": {\"name\": \"Moms\", \"code\": \"S\"},\n"
-"\"IVAP\": {\"name\": \"VAT\", \"code\": ''},\n"
+"\"IVAP\": {\"name\": \"Moms\", \"code\": ''},\n"
 "\"ISC\": {\"name\": \"EXC\", \"code\": \"S\"},\n"
 "\"ICBPER\": {\"name\": \"OTH\", \"code\": ''},\n"
 "\"EXP\": {\"name\": \"FRE\", \"code\": \"G\"},\n"
 "\"GRA\": {\"name\": \"FRE\", \"code\": \"Z\"},\n"
-"\"EXO\": {\"name\": \"VAT\", \"code\": \"E\"},\n"
+"\"EXO\": {\"name\": \"Moms\", \"code\": \"E\"},\n"
 "\"INA\": {\"name\": \"FRE\", \"code\": \"O\"},\n"
 "\"OTHERS\": {\"name\": \"OTH\", \"code\": \"S\"},\n"
 "\n"
@@ -30467,10 +30631,10 @@ msgstr ""
 "\n"
 "https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
 "\n"
-"**Note:**\n"
+"**Notering:**\n"
 "---------\n"
 "\n"
-"**FÖRHÅLLANDET MELLAN PCGE OCH SKATTELAGSTIFTNINGEN:** **NOT:** **NOT:**\n"
+"**FÖRHÅLLANDET MELLAN PCGE OCH SKATTELAGSTIFTNINGEN:**\n"
 "\n"
 "Denna CGAAP har utarbetats som ett redovisningsverktyg för att samla information som skall lämnas på framsidan av de finansiella rapporterna eller i noterna till de finansiella rapporterna.\n"
 "Denna CGAAP har utarbetats som ett redovisningsverktyg för att samla information som krävs att lämnas i de finansiella rapporterna eller i noterna till de finansiella rapporterna. Sådan ackumulering sker\n"
@@ -32709,7 +32873,8 @@ msgstr ""
 "### Odoo's POS förblir pålitlig även om din anslutning inte är\n"
 "\n"
 "Implementera nya butiker med bara en internetanslutning: **ingen installation, ingen\n"
-"specifik hårdvara krävs**. Det fungerar med alla **iPad, Tablet PC, bärbara datorer** eller\n"
+"specifik hårdvara krävs**. Det fungerar med alla **iPad, Tablet PC, bärbara \n"
+"er** eller\n"
 "industriell POS-maskin.\n"
 "\n"
 "En internetanslutning krävs för att starta Point of Sale, men den kommer att\n"
@@ -34506,12 +34671,12 @@ msgstr "POS Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_swiggy
 msgid "POS UrbanPiper - Swiggy"
-msgstr ""
+msgstr "POS UrbanPiper - Swiggy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
 msgid "POS UrbanPiper - Uber Eats"
-msgstr ""
+msgstr "POS UrbanPiper - Uber Eats"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_zomato
@@ -36191,7 +36356,7 @@ msgstr "Projektförsäljning Prenumeration"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Project Sales Subscription Timesheet"
-msgstr ""
+msgstr "Tidrapport för projektförsäljning prenumeration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_stock
@@ -38551,6 +38716,9 @@ msgid ""
 " install the new \"Fedex Shipping\" module and uninstall this one as soon as"
 " possible. This integration will stop working in 2024"
 msgstr ""
+"Detta är den äldre integrationen med FedEx som inte längre stöds. Installera"
+" den nya \"Fedex Shipping\"-modulen och avinstallera denna så snart som "
+"möjligt. Denna integration kommer att sluta fungera 2024"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
@@ -39015,7 +39183,7 @@ msgstr "Singapore - Redovisningsrapporter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sg_ubl_pint
 msgid "Singapore - UBL PINT"
-msgstr ""
+msgstr "Singapore - UBL PINT"
 
 #. module: base
 #: model:res.country,name:base.sx
@@ -39298,7 +39466,7 @@ msgstr "Spain - Accounting (PGCE 2008) Rapporter"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "Spanien – Redovisningsrapporter (uppdatering 2024)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -42351,8 +42519,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "To return an action, assign: <code>action = {...}</code>"
 msgstr ""
-"Om du vill returnera en åtgärd tilldelar du: <code>action =</code> <code> "
-"{...}</code>"
+"Om du vill returnera en åtgärd tilldelar du: <code>action = {...}</code>"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_to-do
@@ -42949,6 +43116,8 @@ msgid ""
 "Unable to import'%%(field)s' Properties field as a whole, target individual "
 "property instead."
 msgstr ""
+"Det gick inte att importera'%%(field)s' Egenskapsfältet som helhet, rikta in"
+" dig på enskild egendom istället."
 
 #. module: base
 #. odoo-python
@@ -43195,6 +43364,8 @@ msgid ""
 "Unknown value '%(value)s' for boolean '%(label_property)s' property "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"Okänt värde '%(value)s' för booleriskt '%(label_property)s' värde (underfält"
+" av '%%(field)s' fält)."
 
 #. module: base
 #. odoo-python

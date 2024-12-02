@@ -162,7 +162,8 @@ test("view switcher hotkey cycles through views", async () => {
     expect(`.o_list_view`).toHaveCount(1);
 });
 
-test.tags("mobile")("Control panel is shown/hide on top when scrolling", async () => {
+test.tags("mobile");
+test("Control panel is shown/hide on top when scrolling", async () => {
     await mountWithSearch(
         ControlPanel,
         { resModel: "foo" },

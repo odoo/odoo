@@ -55,7 +55,8 @@ test("Delete starred message updates counter", async () => {
     await contains("button", { count: 0, target: env2, text: "Starred1" });
 });
 
-test.tags("focus required")("Thread rename", async () => {
+test.tags("focus required");
+test("Thread rename", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         create_uid: serverState.userId,
@@ -74,7 +75,8 @@ test.tags("focus required")("Thread rename", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Sales" });
 });
 
-test.tags("focus required")("Thread description update", async () => {
+test.tags("focus required");
+test("Thread description update", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         create_uid: serverState.userId,

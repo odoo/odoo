@@ -228,7 +228,7 @@ msgstr "Reguła automatyzacji"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Automation Rule Name"
-msgstr ""
+msgstr "Nazwa reguły automatyzacji"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -236,7 +236,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation Rules"
-msgstr ""
+msgstr "Reguły automatyzacji"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -336,6 +336,9 @@ msgid ""
 "delay before the trigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Opóźnienie po dacie wyzwalacza. Możesz wprowadzić liczbę ujemną, jeśli "
+"potrzebujesz przesunięcia działania przed datę wyzwalacza. na przykład "
+"wysłanie przypomnienia 15 minut przed spotkaniem."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -465,6 +468,8 @@ msgid ""
 "If present, this condition must be satisfied before executing the automation"
 " rule."
 msgstr ""
+"Jeśli podane, to warunek musi być spełniony, aby reguła automatyzacji "
+"została wykonana."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -472,6 +477,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
 msgstr ""
+"Jeśli podane, to warunek musi być spełniony, aby rekord został "
+"zmodyfikowany. Nie jest to sprawdzane podczas tworzenia rekordu."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -501,7 +508,7 @@ msgstr "Najmniej Opóźniona Wiadomość"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__log_webhook_calls
 msgid "Log Calls"
-msgstr ""
+msgstr "Loguj połączenia"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -542,7 +549,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the automation rule runs."
-msgstr ""
+msgstr "Model, na którym działa reguła automatyzacji."
 
 #. module: base_automation
 #. odoo-javascript
@@ -736,6 +743,8 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"Niektóre wyzwalacze potrzebują referencji do pola wyboru. To pole jest "
+"używane do przechowywania go."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
@@ -743,6 +752,8 @@ msgid ""
 "Some triggers need a reference to another field. This field is used to store"
 " it."
 msgstr ""
+"Niektóre wyzwalacze potrzebują referencji do innego pola. To pole jest "
+"używane do przechowywania go."
 
 #. module: base_automation
 #. odoo-javascript
@@ -799,6 +810,9 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"Reguła automatyzacji zostanie wywołana wtedy i tylko wtedy, gdy jedno z tych"
+" pól zostanie zaktualizowane. Jeśli pozostanie puste, wszystkie pola będą "
+"obserwowane."
 
 #. module: base_automation
 #. odoo-javascript
@@ -814,6 +828,8 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
+"Ten kod zostanie uruchomiony, aby sprawdzić który rekord regułu "
+"automatyzacji powinien zostać użyty."
 
 #. module: base_automation
 #. odoo-javascript
@@ -840,12 +856,12 @@ msgstr "Data wyzwolenia"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_selection_field_id
 msgid "Trigger Field"
-msgstr ""
+msgstr "Pole wyzwalacza"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "Model pola wyzwalacza"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -855,7 +871,7 @@ msgstr "Pola wyzwalające"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
+msgstr "Odniesienie wyzwalacza"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.ir_actions_server_view_form_automation
@@ -932,7 +948,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
 msgid "Webhook UUID"
-msgstr ""
+msgstr "Webhook UUID"
 
 #. module: base_automation
 #. odoo-javascript
@@ -946,6 +962,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Przy obliczaniu warunku opartego na dniu można użyć kalendarza do obliczenia"
+" daty na podstawie dni roboczych."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id

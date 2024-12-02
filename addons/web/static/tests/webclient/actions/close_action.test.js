@@ -164,7 +164,8 @@ test("history back calls on_close handler of dialog action", async () => {
     expect(".modal").toHaveCount(0);
 });
 
-test.tags("desktop")("history back called within on_close", async () => {
+test.tags("desktop");
+test("history back called within on_close", async () => {
     let list;
     patchWithCleanup(listView.Controller.prototype, {
         setup() {
@@ -221,7 +222,8 @@ test("history back calls onclose handler of dialog action with 2 breadcrumbs", a
     expect(".modal").toHaveCount(0);
 });
 
-test.tags("desktop")("web client is not deadlocked when a view crashes", async () => {
+test.tags("desktop");
+test("web client is not deadlocked when a view crashes", async () => {
     expect.assertions(4);
     expect.errors(1);
 

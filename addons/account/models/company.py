@@ -29,13 +29,20 @@ MONTH_SELECTION = [
     ('12', 'December'),
 ]
 
-PEPPOL_LIST = [
-    'AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
-    'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'ME',
-    'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'SE', 'SI', 'SK', 'SM', 'TR', 'VA',
+INTEGRITY_HASH_BATCH_SIZE = 1000
+
+# List of countries where Peppol should be used by default.
+PEPPOL_DEFAULT_COUNTRIES = [
+    'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
+    'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
+    'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
 ]
 
-INTEGRITY_HASH_BATCH_SIZE = 1000
+# List of countries where Peppol is accessible.
+PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
+    'AD', 'AL',  'BA', 'BG', 'GB', 'HR', 'HU', 'LI', 'MC', 'ME',
+    'MK', 'RS', 'SK', 'SM', 'TR', 'VA',
+]
 
 SOFT_LOCK_DATE_FIELDS = [
     'fiscalyear_lock_date',
@@ -393,7 +400,7 @@ class ResCompany(models.Model):
         companies = super().create(vals_list)
         for company in companies:
             if root_template := company.parent_ids[0].chart_template:
-                def try_loading(company=company):
+                def try_loading(company=company, root_template=root_template):
                     self.env['account.chart.template']._load(
                         root_template,
                         company,

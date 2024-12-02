@@ -242,13 +242,17 @@ const getDefaultRunTimeValue = () => ({
 
     // File
     fileInput: null,
-});
 
-const getDefaultSpecialKeysValue = () => ({
-    altKey: false,
-    ctrlKey: false,
-    metaKey: false,
-    shiftKey: false,
+    // Buttons
+    buttons: 0,
+
+    // Modifier keys
+    modifierKeys: {
+        altKey: false,
+        ctrlKey: false,
+        metaKey: false,
+        shiftKey: false,
+    },
 });
 
 /**
@@ -279,55 +283,55 @@ const getDifferentParents = (el1, el2) => {
 /**
  * @template {typeof Event} T
  * @param {EventType} eventType
- * @returns {[T, (attrs: FullEventInit) => EventInit]}
+ * @returns {[T, ((attrs: FullEventInit) => EventInit), number]}
  */
 const getEventConstructor = (eventType) => {
     switch (eventType) {
         // Mouse events
-        case "auxclick":
-        case "contextmenu":
         case "dblclick":
         case "mousedown":
         case "mouseup":
         case "mousemove":
         case "mouseover":
         case "mouseout":
-            return [MouseEvent, mapBubblingMouseEvent];
+            return [MouseEvent, mapMouseEvent, BUBBLES | CANCELABLE];
         case "mouseenter":
         case "mouseleave":
-            return [MouseEvent, mapNonBubblingMouseEvent];
+            return [MouseEvent, mapMouseEvent];
 
         // Pointer events
+        case "auxclick":
         case "click":
+        case "contextmenu":
         case "pointerdown":
         case "pointerup":
         case "pointermove":
         case "pointerover":
         case "pointerout":
-            return [PointerEvent, mapBubblingPointerEvent];
+            return [PointerEvent, mapPointerEvent, BUBBLES | CANCELABLE];
         case "pointerenter":
         case "pointerleave":
         case "pointercancel":
-            return [PointerEvent, mapNonBubblingPointerEvent];
+            return [PointerEvent, mapPointerEvent];
 
         // Focus events
         case "blur":
         case "focus":
-            return [FocusEvent, mapNonBubblingEvent];
+            return [FocusEvent, mapEvent];
         case "focusin":
         case "focusout":
-            return [FocusEvent, mapBubblingEvent];
+            return [FocusEvent, mapEvent, BUBBLES];
 
         // Clipboard events
         case "cut":
         case "copy":
         case "paste":
-            return [ClipboardEvent, mapBubblingEvent];
+            return [ClipboardEvent, mapEvent, BUBBLES];
 
         // Keyboard events
         case "keydown":
         case "keyup":
-            return [KeyboardEvent, mapKeyboardEvent];
+            return [KeyboardEvent, mapKeyboardEvent, BUBBLES | CANCELABLE];
 
         // Drag events
         case "drag":
@@ -337,67 +341,67 @@ const getEventConstructor = (eventType) => {
         case "dragleave":
         case "dragover":
         case "drop":
-            return [DragEvent, mapBubblingEvent];
+            return [DragEvent, mapEvent, BUBBLES];
 
         // Input events
         case "beforeinput":
-            return [InputEvent, mapCancelableInputEvent];
+            return [InputEvent, mapInputEvent, BUBBLES | CANCELABLE];
         case "input":
-            return [InputEvent, mapInputEvent];
+            return [InputEvent, mapInputEvent, BUBBLES];
 
         // Composition events
         case "compositionstart":
         case "compositionend":
-            return [CompositionEvent, mapBubblingEvent];
+            return [CompositionEvent, mapEvent, BUBBLES];
 
         // Selection events
         case "select":
         case "selectionchange":
-            return [Event, mapBubblingEvent];
+            return [Event, mapEvent, BUBBLES];
 
         // Touch events
         case "touchstart":
         case "touchend":
         case "touchmove":
-            return [TouchEvent, mapCancelableTouchEvent];
+            return [TouchEvent, mapTouchEvent, BUBBLES | CANCELABLE];
         case "touchcancel":
-            return [TouchEvent, mapNonCancelableTouchEvent];
+            return [TouchEvent, mapTouchEvent, BUBBLES];
 
         // Resize events
         case "resize":
-            return [Event, mapNonBubblingEvent];
+            return [Event, mapEvent];
 
         // Submit events
         case "submit":
-            return [SubmitEvent, mapBubblingCancelableEvent];
+            return [SubmitEvent, mapEvent, BUBBLES | CANCELABLE];
 
         // Wheel events
         case "wheel":
-            return [WheelEvent, mapWheelEvent];
+            return [WheelEvent, mapWheelEvent, BUBBLES];
 
         // Animation events
         case "animationcancel":
         case "animationend":
         case "animationiteration":
         case "animationstart": {
-            return [AnimationEvent, mapBubblingCancelableEvent];
+            return [AnimationEvent, mapEvent, BUBBLES | CANCELABLE];
         }
 
         // Error events
         case "error":
-            return [ErrorEvent, mapNonBubblingEvent];
+            return [ErrorEvent, mapEvent];
         case "unhandledrejection":
-            return [PromiseRejectionEvent, mapNonBubblingCancelableEvent];
+            return [PromiseRejectionEvent, mapEvent, CANCELABLE];
 
         // Unload events (BeforeUnloadEvent cannot be constructed)
         case "beforeunload":
-            return [Event, mapNonBubblingCancelableEvent];
+            return [Event, mapEvent, CANCELABLE];
         case "unload":
-            return [Event, mapNonBubblingEvent];
+            return [Event, mapEvent];
 
         // Default: base Event constructor
         default:
-            return [Event, mapBubblingEvent];
+            return [Event, mapEvent, BUBBLES];
     }
 };
 
@@ -545,6 +549,66 @@ const parseKeyStrokes = (keyStrokes, options) =>
     });
 
 /**
+ * Redirects all 'submit' events to explicit network requests.
+ *
+ * This allows the `mockFetch` helper to take control over submit requests.
+ *
+ * @param {SubmitEvent} ev
+ */
+const redirectSubmit = (ev) => {
+    if (isPrevented(ev)) {
+        return;
+    }
+
+    ev.preventDefault();
+
+    /** @type {HTMLFormElement} */
+    const form = ev.target;
+
+    globalThis.fetch(form.action, {
+        method: form.method,
+        body: new FormData(form, ev.submitter),
+    });
+};
+
+/**
+ * @param {PointerEventInit} eventInit
+ * @param {boolean} toggle
+ */
+const registerButton = (eventInit, toggle) => {
+    let value = 0;
+    switch (eventInit.button) {
+        case btn.LEFT: {
+            // Main button (left button)
+            value = 1;
+            break;
+        }
+        case btn.MIDDLE: {
+            // Auxiliary button (middle button)
+            value = 4;
+            break;
+        }
+        case btn.RIGHT: {
+            // Secondary button (right button)
+            value = 2;
+            break;
+        }
+        case btn.BACK: {
+            // Fourth button (Browser Back)
+            value = 8;
+            break;
+        }
+        case btn.FORWARD: {
+            // Fifth button (Browser Forward)
+            value = 16;
+            break;
+        }
+    }
+
+    runTime.buttons = $max(runTime.buttons + (toggle ? value : -value), 0);
+};
+
+/**
  * @param {Event} ev
  */
 const registerFileInput = ({ target }) => {
@@ -616,18 +680,22 @@ const registerForChange = async (target, initialValue, confirmAction) => {
  */
 const registerSpecialKey = (eventInit, toggle) => {
     switch (eventInit.key) {
-        case "Alt":
-            specialKeys.altKey = toggle;
+        case "Alt": {
+            runTime.modifierKeys.altKey = toggle;
             break;
-        case "Control":
-            specialKeys.ctrlKey = toggle;
+        }
+        case "Control": {
+            runTime.modifierKeys.ctrlKey = toggle;
             break;
-        case "Meta":
-            specialKeys.metaKey = toggle;
+        }
+        case "Meta": {
+            runTime.modifierKeys.metaKey = toggle;
             break;
-        case "Shift":
-            specialKeys.shiftKey = toggle;
+        }
+        case "Shift": {
+            runTime.modifierKeys.shiftKey = toggle;
             break;
+        }
     }
 };
 
@@ -754,13 +822,14 @@ const toEventPosition = (clientX, clientY, position) => {
 
 /**
  * @param {EventTarget} target
- * @param {PointerEventInit} eventInit
+ * @param {PointerEventInit} pointerInit
  */
 const triggerClick = async (target, pointerInit) => {
     if (target.disabled) {
         return;
     }
-    const clickEvent = await dispatch(target, "click", pointerInit);
+    const eventType = (pointerInit.button ?? 0) === btn.LEFT ? "click" : "auxclick";
+    const clickEvent = await dispatch(target, eventType, pointerInit);
     if (isPrevented(clickEvent)) {
         return;
     }
@@ -1214,7 +1283,7 @@ const _keyDown = async (target, eventInit) => {
                  *  On: unprevented and unrepeated 'Enter' keydown on mentioned elements
                  *  Do: triggers a 'click' event on the element
                  */
-                await dispatch(target, "click", { button: 0 });
+                await dispatch(target, "click", { button: btn.LEFT });
             }
             break;
         }
@@ -1312,7 +1381,7 @@ const _keyUp = async (target, eventInit) => {
          *  On: unprevented ' ' keydown on an <input type="checkbox"/>
          *  Do: triggers a 'click' event on the input
          */
-        await triggerClick(target, { button: 0 });
+        await triggerClick(target, { button: btn.LEFT });
     }
 };
 
@@ -1328,6 +1397,8 @@ const _pointerDown = async (target, options) => {
         ...runTime.position,
         button: options?.button || 0,
     };
+
+    registerButton(eventInit, true);
 
     if (pointerDownTarget !== runTime.previousPointerDownTarget) {
         runTime.clickCount = 0;
@@ -1349,9 +1420,9 @@ const _pointerDown = async (target, options) => {
     // Focus the element (if focusable)
     await triggerFocus(target);
 
-    if (eventInit.button === 0 && !hasTouch() && pointerDownTarget.draggable) {
+    if (eventInit.button === btn.LEFT && !hasTouch() && pointerDownTarget.draggable) {
         runTime.canStartDrag = true;
-    } else if (eventInit.button === 2) {
+    } else if (eventInit.button === btn.RIGHT) {
         /**
          * Special action: context menu
          *  On: unprevented 'pointerdown' with right click and its related
@@ -1372,6 +1443,8 @@ const _pointerUp = async (target, options) => {
         ...runTime.position,
         button: options?.button || 0,
     };
+
+    registerButton(eventInit, false);
 
     if (runTime.isDragging) {
         // If dragging, only drag events are triggered
@@ -1415,9 +1488,11 @@ const _pointerUp = async (target, options) => {
     }
     if (actualTarget) {
         await triggerClick(actualTarget, mouseEventInit);
-        runTime.clickCount++;
-        if (!hasTouch() && runTime.clickCount % 2 === 0) {
-            await dispatch(actualTarget, "dblclick", mouseEventInit);
+        if (mouseEventInit.button === btn.LEFT) {
+            runTime.clickCount++;
+            if (!hasTouch() && runTime.clickCount % 2 === 0) {
+                await dispatch(actualTarget, "dblclick", mouseEventInit);
+            }
         }
     }
 
@@ -1463,6 +1538,13 @@ const _select = async (target, value) => {
     await dispatch(target, "change");
 };
 
+const btn = {
+    LEFT: 0,
+    MIDDLE: 1,
+    RIGHT: 2,
+    BACK: 3,
+    FORWARD: 4,
+};
 const DEPRECATED_EVENT_PROPERTIES = {
     keyCode: "key",
     which: "key",
@@ -1520,7 +1602,6 @@ let fullClear = false;
 
 // Keyboard global variables
 const changeTargetListeners = [];
-const specialKeys = getDefaultSpecialKeysValue();
 
 // Other global variables
 const runTime = getDefaultRunTimeValue();
@@ -1529,49 +1610,18 @@ const runTime = getDefaultRunTimeValue();
 // Event init attributes mappers
 //-----------------------------------------------------------------------------
 
+const BUBBLES = 0b001;
+const CANCELABLE = 0b010;
+
 // Generic mappers
 // ---------------
 
 /**
- * - bubbles
- * - can be canceled
- * @param {FullEventInit} eventInit
- */
-const mapBubblingCancelableEvent = (eventInit) => ({
-    ...mapBubblingEvent(eventInit),
-    cancelable: true,
-});
-
-/**
- * - bubbles
- * - cannot be canceled
- * @param {FullEventInit} eventInit
- */
-const mapBubblingEvent = (eventInit) => ({
-    composed: true,
-    ...eventInit,
-    bubbles: true,
-});
-
-/**
- * - does not bubble
- * - can be canceled
- * @param {FullEventInit} eventInit
- */
-const mapNonBubblingCancelableEvent = (eventInit) => ({
-    ...mapNonBubblingEvent(eventInit),
-    cancelable: true,
-});
-
-/**
  * - does not bubble
  * - cannot be canceled
  * @param {FullEventInit} eventInit
  */
-const mapNonBubblingEvent = (eventInit) => ({
-    composed: true,
-    ...eventInit,
-});
+const mapEvent = (eventInit) => eventInit;
 
 // Pointer, mouse & wheel event mappers
 // ------------------------------------
@@ -1579,47 +1629,34 @@ const mapNonBubblingEvent = (eventInit) => ({
 /**
  * @param {FullEventInit<MouseEventInit>} eventInit
  */
-const mapBubblingMouseEvent = (eventInit) => ({
+const mapMouseEvent = (eventInit) => ({
+    button: -1,
+    buttons: runTime.buttons,
     clientX: eventInit.clientX ?? eventInit.pageX ?? eventInit.screenX ?? 0,
     clientY: eventInit.clientY ?? eventInit.pageY ?? eventInit.screenY ?? 0,
     view: getWindow(),
-    ...specialKeys,
-    ...mapBubblingCancelableEvent(eventInit),
-});
-
-/**
- * @param {FullEventInit<MouseEventInit>} eventInit
- */
-const mapNonBubblingMouseEvent = (eventInit) => ({
-    ...mapBubblingMouseEvent(eventInit),
-    bubbles: false,
-    cancelable: false,
+    ...runTime.modifierKeys,
+    ...eventInit,
 });
 
 /**
  * @param {FullEventInit<PointerEventInit>} eventInit
  */
-const mapBubblingPointerEvent = (eventInit) => ({
+const mapPointerEvent = (eventInit) => ({
+    ...mapMouseEvent(eventInit),
+    button: btn.LEFT,
     pointerId: 1,
     pointerType: hasTouch() ? "touch" : "mouse",
-    ...mapBubblingMouseEvent(eventInit),
-});
-
-/**
- * @param {FullEventInit<PointerEventInit>} eventInit
- */
-const mapNonBubblingPointerEvent = (eventInit) => ({
-    pointerId: 1,
-    pointerType: hasTouch() ? "touch" : "mouse",
-    ...mapNonBubblingMouseEvent(eventInit),
+    ...eventInit,
 });
 
 /**
  * @param {FullEventInit<WheelEventInit>} eventInit
  */
 const mapWheelEvent = (eventInit) => ({
-    ...specialKeys,
-    ...mapBubblingEvent(eventInit),
+    ...mapMouseEvent(eventInit),
+    button: btn.LEFT,
+    ...eventInit,
 });
 
 // Touch event mappers
@@ -1628,12 +1665,12 @@ const mapWheelEvent = (eventInit) => ({
 /**
  * @param {FullEventInit<TouchEventInit>} eventInit
  */
-const mapCancelableTouchEvent = (eventInit) => {
+const mapTouchEvent = (eventInit) => {
     const touches = eventInit.targetTouches ||
         eventInit.touches || [new Touch({ identifier: 0, ...eventInit })];
     return {
         view: getWindow(),
-        ...mapBubblingCancelableEvent(eventInit),
+        ...eventInit,
         changedTouches: eventInit.changedTouches || touches,
         target: eventInit.target,
         targetTouches: eventInit.targetTouches || touches,
@@ -1641,24 +1678,8 @@ const mapCancelableTouchEvent = (eventInit) => {
     };
 };
 
-/**
- * @param {FullEventInit<TouchEventInit>} eventInit
- */
-const mapNonCancelableTouchEvent = (eventInit) => ({
-    ...mapCancelableTouchEvent(eventInit),
-    cancelable: false,
-});
-
 // Keyboard & input event mappers
 // ------------------------------
-
-/**
- * @param {FullEventInit<InputEventInit>} eventInit
- */
-const mapCancelableInputEvent = (eventInit) => ({
-    ...mapInputEvent(eventInit),
-    cancelable: true,
-});
 
 /**
  * @param {FullEventInit<InputEventInit>} eventInit
@@ -1667,17 +1688,17 @@ const mapInputEvent = (eventInit) => ({
     data: null,
     isComposing: Boolean(runTime.isComposing),
     view: getWindow(),
-    ...mapBubblingEvent(eventInit),
+    ...eventInit,
 });
 
 /**
  * @param {FullEventInit<KeyboardEventInit>} eventInit
  */
 const mapKeyboardEvent = (eventInit) => ({
-    ...specialKeys,
     isComposing: Boolean(runTime.isComposing),
     view: getWindow(),
-    ...mapBubblingCancelableEvent(eventInit),
+    ...runTime.modifierKeys,
+    ...eventInit,
 });
 
 //-----------------------------------------------------------------------------
@@ -1799,6 +1820,7 @@ export async function dblclick(target, options) {
     const finalizeEvents = setupEvents("dblclick");
     const element = queryFirst(await target, options);
 
+    options = { ...options, button: btn.LEFT };
     await _implicitHover(element, options);
     await _click(element, options);
     await _click(element, options);
@@ -1842,8 +1864,19 @@ export async function dispatch(target, type, eventInit) {
         }
     }
 
-    const [Constructor, processParams] = getEventConstructor(type);
-    const params = processParams({ ...eventInit, target, type });
+    const [Constructor, processParams, flags] = getEventConstructor(type);
+    const params = processParams({
+        composed: true,
+        ...eventInit,
+        target,
+        type,
+    });
+    if (flags & BUBBLES) {
+        params.bubbles = true;
+    }
+    if (flags & CANCELABLE) {
+        params.cancelable = true;
+    }
     const event = new Constructor(type, params);
 
     await Promise.resolve(target.dispatchEvent(event));
@@ -1907,8 +1940,12 @@ export async function drag(target, options) {
         /** @type {DragHelpers["cancel"]} */
         async function cancel(options) {
             const finalizeEvents = setupEvents("drag & drop: cancel");
+            const element = getDocument().body;
 
-            await _press(getDocument().body, { key: "Escape" });
+            // Reset buttons
+            runTime.buttons = 0;
+
+            await _press(element, { key: "Escape" });
 
             dragEvents.push(...(await finalizeEvents(options)));
 
@@ -2145,6 +2182,27 @@ export async function leave(options) {
 }
 
 /**
+ * Performs a middle-click sequence on the given {@link AsyncTarget}.
+ *
+ * @see {@link click}
+ * @param {AsyncTarget} target
+ * @param {PointerOptions} [options]
+ * @returns {Promise<EventList>}
+ * @example
+ *  middleClick("button"); // Middle-clicks on the first <button> element
+ */
+export async function middleClick(target, options) {
+    const finalizeEvents = setupEvents("middleClick");
+    const element = queryFirst(await target, options);
+
+    options = { ...options, button: btn.MIDDLE };
+    await _implicitHover(element, options);
+    await _click(element, options);
+
+    return finalizeEvents(options);
+}
+
+/**
  * Shorthand helper to attach an event listener to the given {@link Target}, and
  * returning a function to remove the listener.
  *
@@ -2284,6 +2342,27 @@ export async function resize(dimensions, options) {
 }
 
 /**
+ * Performs a right-click sequence on the given {@link AsyncTarget}.
+ *
+ * @see {@link click}
+ * @param {AsyncTarget} target
+ * @param {PointerOptions} [options]
+ * @returns {Promise<EventList>}
+ * @example
+ *  rightClick("button"); // Middle-clicks on the first <button> element
+ */
+export async function rightClick(target, options) {
+    const finalizeEvents = setupEvents("rightClick");
+    const element = queryFirst(await target, options);
+
+    options = { ...options, button: btn.RIGHT };
+    await _implicitHover(element, options);
+    await _click(element, options);
+
+    return finalizeEvents(options);
+}
+
+/**
  * Performs a scroll event sequence on the given {@link AsyncTarget}.
  *
  * The event sequence is as follows:
@@ -2415,12 +2494,11 @@ export function setupEventActions(fixture) {
     removeChangeTargetListeners();
 
     fixture.addEventListener("click", registerFileInput, { capture: true });
+    fixture.addEventListener("focus", registerFileInput, { capture: true });
+    fixture.addEventListener("submit", redirectSubmit);
 
     // Runtime global variables
     $assign(runTime, getDefaultRunTimeValue());
-
-    // Special keys
-    $assign(specialKeys, getDefaultSpecialKeysValue());
 }
 
 /**

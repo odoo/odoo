@@ -27,7 +27,8 @@ class Test extends models.Model {
 
 defineModels([Test]);
 
-test.tags("desktop")("Toolbar should not overflow scroll container", async () => {
+test.tags("desktop");
+test("Toolbar should not overflow scroll container", async () => {
     const top = (elementOrRange) => elementOrRange.getBoundingClientRect().top;
     const bottom = (elementOrRange) => elementOrRange.getBoundingClientRect().bottom;
 
@@ -123,7 +124,8 @@ test("Table column control should always be displayed on top of the table", asyn
     expect(queryAll(".o-we-table-menu[data-type='column']")).toHaveCount(0);
 });
 
-test.tags("desktop")("Table menu should close on scroll", async () => {
+test.tags("desktop");
+test("Table menu should close on scroll", async () => {
     await mountView({
         type: "form",
         resId: 2,
