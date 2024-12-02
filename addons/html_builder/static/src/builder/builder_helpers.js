@@ -31,6 +31,7 @@ export function useWeComponent() {
     }
     const weContext = {};
     const contextKeys = [
+        "preview",
         "action",
         "actionParam",
         "classAction",
@@ -39,7 +40,7 @@ export function useWeComponent() {
         "styleAction",
     ];
     for (const key of contextKeys) {
-        if (comp.props[key]) {
+        if (key in comp.props) {
             weContext[key] = comp.props[key];
         }
     }
@@ -55,6 +56,12 @@ export function useClickableWeWidget() {
     useWeComponent();
     const comp = useComponent();
     const call = comp.env.editor.shared.history.makePreviewableOperation(callActions);
+    if (
+        comp.props.preview === false ||
+        (comp.env.weContext.preview === false && comp.props.preview !== true)
+    ) {
+        call.preview = () => {};
+    }
 
     const state = useDomState(() => ({
         isActive: isActive(),
@@ -182,6 +189,7 @@ export function useInputWeWidget() {
 
 export const basicContainerWeWidgetProps = {
     applyTo: { type: String, optional: true },
+    preview: { type: Boolean, optional: true },
     // preview: { type: Boolean, optional: true },
     // reloadPage: { type: Boolean, optional: true },
 
