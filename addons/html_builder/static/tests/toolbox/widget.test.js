@@ -112,6 +112,27 @@ describe("WeButton", () => {
         expect(":iframe .test-options-target").toHaveInnerHTML("b");
         expect.verifySteps([]);
     });
+    test("prevent preview of a specific action", async () => {
+        addOption({
+            selector: ".test-options-target",
+            actions: {
+                customAction: {
+                    apply: () => {
+                        expect.step(`customAction`);
+                    },
+                },
+            },
+            template: xml`<WeButton action="'customAction'" preview="false"/>`,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        const c = contains("[data-action-id='customAction']");
+        await c.hover();
+        expect.verifySteps([]);
+        await c.click();
+        expect.verifySteps(["customAction"]);
+    });
     test("clean another action", async () => {
         addOption({
             selector: ".test-options-target",
@@ -198,6 +219,51 @@ describe("WeButtonGroup", () => {
         expect(".options-container").toBeDisplayed();
         await hover("[data-action-id='customAction']");
         expect.verifySteps(["customAction myParam"]);
+    });
+    test("prevent preview of all buttons", async () => {
+        addOption({
+            selector: ".test-options-target",
+            actions: {
+                customAction1: {
+                    apply: () => expect.step(`customAction1`),
+                },
+                customAction2: {
+                    apply: () => expect.step(`customAction2`),
+                },
+                customAction3: {
+                    apply: () => expect.step(`customAction3`),
+                },
+                customAction4: {
+                    apply: () => expect.step(`customAction3`),
+                },
+            },
+            template: xml`
+                    <WeButtonGroup preview="false">
+                        <WeButton action="'customAction1'"/>
+                        <WeButton action="'customAction2'" preview="true"/>
+                    </WeButtonGroup>
+                    <WeButtonGroup preview="true">
+                        <WeButton action="'customAction3'"/>
+                    </WeButtonGroup>
+                    <WeButtonGroup>
+                        <WeButton action="'customAction4'"/>
+                    </WeButtonGroup>`,
+        });
+        await setupWebsiteBuilder(`
+                <div class="test-options-target">
+                    <div class="a">b</div>
+                </div>
+            `);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        await contains("[data-action-id='customAction1']").hover();
+        expect.verifySteps([]);
+        await contains("[data-action-id='customAction2']").hover();
+        expect.verifySteps(["customAction2"]);
+        await contains("[data-action-id='customAction3']").hover();
+        expect.verifySteps(["customAction3"]);
+        await contains("[data-action-id='customAction4']").hover();
+        expect.verifySteps(["customAction3"]);
     });
 });
 describe("WeNumberInput", () => {
