@@ -7,7 +7,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 /**
  * @typedef {Object} Props
- * @property {function} [onAddFollowers]
+ * @property {function} [onEditFollowers]
  * @property {function} [onFollowerChanged]
  * @property {import('@mail/core/common/thread_model').Thread} thread
  * @extends {Component<Props, Env>}
@@ -16,7 +16,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 export class FollowerList extends Component {
     static template = "mail.FollowerList";
     static components = { DropdownItem };
-    static props = ["onAddFollowers?", "onFollowerChanged?", "thread", "dropdown"];
+    static props = ["onEditFollowers?", "onFollowerChanged?", "thread", "dropdown"];
 
     setup() {
         super.setup();
@@ -29,23 +29,23 @@ export class FollowerList extends Component {
         });
     }
 
-    onClickAddFollowers() {
+    onClickEditFollowers() {
         const action = {
             type: "ir.actions.act_window",
-            res_model: "mail.wizard.invite",
+            res_model: "mail.followers.edit",
             view_mode: "form",
             views: [[false, "form"]],
-            name: _t("Add followers to this document"),
+            name: _t("Edit followers of this document"),
             target: "new",
             context: {
                 default_res_model: this.props.thread.model,
-                default_res_id: this.props.thread.id,
+                default_res_ids: [this.props.thread.id],
                 dialog_size: "medium",
             },
         };
         this.action.doAction(action, {
             onClose: () => {
-                this.props.onAddFollowers?.();
+                this.props.onEditFollowers?.();
             },
         });
     }

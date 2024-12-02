@@ -1257,4 +1257,14 @@
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
         </record>
 
+        <record id="mail_followers_edit_action_from_lead" model="ir.actions.act_window">
+            <field name="name">Add / remove followers</field>
+            <field name="res_model">mail.followers.edit</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_res_model': 'crm.lead', 'default_res_ids': active_ids}</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
 </odoo>

@@ -27,6 +27,16 @@
             <field name="binding_view_types">list</field>
         </record>
 
+        <record id="mail_followers_edit_action_from_project" model="ir.actions.act_window">
+            <field name="name">Add / remove followers</field>
+            <field name="res_model">mail.followers.edit</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_res_model': 'project.project', 'default_res_ids': active_ids}</field>
+            <field name="binding_model_id" ref="project.model_project_project"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
         <record id="edit_project" model="ir.ui.view">
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
