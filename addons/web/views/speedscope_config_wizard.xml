@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="config_speedscope_index">
+        <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="/web/assets/any/web.assets_web.min.css" />
+        <script src="/web/assets/any/web.assets_web.min.js" type="text/javascript"/>
+        <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>/
+        
+        <div class="o_form_view">
+            <div class="o_form_sheet">
+                <h1>Profile Options</h1>
+
+                <!-- Single Form -->
+                <form id="dynamicForm" method="get">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="constant_time" name="constant_time" value="True" />
+                        <label class="form-check-label" for="constant_time">Constant Time</label>
+                    </div>
+                    <!-- add more variable here -->
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="aggregate_sql" name="aggregate_sql" value="True" />
+                        <label class="form-check-label" for="aggregate_sql">Aggregate SQL</label>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownChecklistButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Select Profiles to render
+                        </button>
+                        <ul class="dropdown-menu p-3" aria-labelledby="dropdownChecklistButton">
+                            <li class="form-check">
+                                <input type="checkbox" class="form-check-input" id="combined_profile" name="combined_profile" value="True" checked="checked"/>
+                                <label class="form-check-label" for="combined_profile">Combined profile</label>
+                            </li>
+                            <li class="form-check">
+                                <input type="checkbox" class="form-check-input" id="combined_no_context_profile" name="combined_no_context_profile" value="True" checked="checked"/>
+                                <label class="form-check-label" for="combined_no_context_profile">Combined no context profile</label>
+                            </li>
+                            <li class="form-check">
+                                <input type="checkbox" class="form-check-input" id="sql_no_gap_profile" name="sql_no_gap_profile" value="True" checked="checked"/>
+                                <label class="form-check-label" for="sql_no_gap_profile">SQL no gap profile</label>
+                            </li>
+                            <li class="form-check">
+                                <input type="checkbox" class="form-check-input" id="sql_density_profile" name="sql_density_profile" value="True" checked="checked"/>
+                                <label class="form-check-label" for="sql_density_profile">SQL Density profile</label>
+                            </li>
+                            <li class="form-check">
+                                <input type="checkbox" class="form-check-input" id="frames_profile" name="frames_profile" value="True" checked="checked"/>
+                                <label class="form-check-label" for="frames_profile">Frames profile</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <input type="hidden" name="profile_id" t-att-value="profile.id" />
+                    
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary" onclick="submitForm('/web/content/ir.profile', true)">Download</button>
+                        <button type="button" class="btn btn-secondary" onclick="submitForm('/web/speedscope', false)">Open</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function submitForm(actionUrl,download) {
+                const form = document.getElementById('dynamicForm');
+                const formData = new FormData(form);
+                const profileID = formData.get('profile_id')
+                formData.delete('profile_id')
+                const queryString = new URLSearchParams(formData).toString();
+                const fullUrl = download
+                    ? `${actionUrl}/${profileID}/speedscope?${queryString}&amp;download=${download}&amp;filename=profile_${profileID}.json`
+                    : `${actionUrl}/${profileID}?${queryString}`;
+                window.location.href = fullUrl;
+            }
+        </script>
+    </template>
+</odoo>
