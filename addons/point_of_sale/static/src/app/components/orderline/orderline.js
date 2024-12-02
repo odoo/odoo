@@ -22,9 +22,11 @@ export class Orderline extends Component {
                 packLotLines: { type: Array, optional: true },
                 price_without_discount: { type: String, optional: true },
                 taxGroupLabels: { type: String, optional: true },
+                isRefund: { type: Boolean, optional: true },
             },
         },
         showTaxGroupLabels: { type: Boolean, optional: true },
+        highlightRefund: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
         basic_receipt: { type: Boolean, optional: true },
     };

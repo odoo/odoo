@@ -649,6 +649,7 @@ export class PosOrderline extends Base {
                         .filter((label) => label)
                 ),
             ].join(" "),
+            isRefund: !!this.refunded_orderline_id,
         };
     }
 
