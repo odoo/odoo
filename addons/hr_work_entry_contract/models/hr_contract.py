@@ -74,7 +74,7 @@ class HrContract(models.Model):
                 interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                 return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
+        return self.env.ref('hr_work_entry.work_entry_type_leave')
 
     def _get_sub_leave_domain(self):
         return [('calendar_id', 'in', [False] + self.resource_calendar_id.ids)]
