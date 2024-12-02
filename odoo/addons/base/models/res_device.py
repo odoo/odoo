@@ -34,14 +34,6 @@ class ResDeviceLog(models.Model):
     is_current = fields.Boolean("Current Device", compute="_compute_is_current")
     linked_ip_addresses = fields.Text("Linked IP address", compute="_compute_linked_ip_addresses")
 
-    def init(self):
-        self.env.cr.execute(SQL("""
-            CREATE INDEX IF NOT EXISTS res_device_log__composite_idx ON %s
-            (user_id, session_identifier, platform, browser, last_activity, id) WHERE revoked = False
-        """,
-            SQL.identifier(self._table)
-        ))
-
     def _compute_display_name(self):
         for device in self:
             platform = device.platform or _("Unknown")
@@ -168,25 +160,29 @@ class ResDevice(models.Model):
         return "FROM res_device_log D"
 
     @api.model
-    def _where(self):
+    def _join(self):
         return """
-            WHERE
-                NOT EXISTS (
+            JOIN LATERAL (
+                SELECT NOT EXISTS (
                     SELECT 1
-                    FROM res_device_log D2
+                    FROM  res_device_log D2
                     WHERE
-                        D2.user_id = D.user_id
-                        AND D2.session_identifier = D.session_identifier
-                        AND D2.platform IS NOT DISTINCT FROM D.platform
-                        AND D2.browser IS NOT DISTINCT FROM D.browser
-                        AND (
-                            D2.last_activity > D.last_activity
-                            OR (D2.last_activity = D.last_activity AND D2.id > D.id)
-                        )
-                        AND D2.revoked = False
-                )
-                AND D.revoked = False
+                        D2.user_id = D.user_id AND
+                        D2.session_identifier::text = D.session_identifier::text AND
+                        D2.platform::text IS NOT DISTINCT FROM D.platform::text AND
+                        D2.browser::text IS NOT DISTINCT FROM D.browser::text AND
+                        (
+                            D2.last_activity > D.last_activity OR
+                            D2.last_activity = D.last_activity AND D2.id > D.id
+                        ) AND
+                        D2.revoked = false
+                ) AS is_latest_res_device_log
+            ) AS q ON true
         """
+
+    @api.model
+    def _where(self):
+        return "WHERE D.revoked = false"
 
     @api.model
     def _order_by(self):
@@ -196,7 +192,13 @@ class ResDevice(models.Model):
 
     @property
     def _query(self):
-        return "%s %s %s %s" % (self._select(), self._from(), self._where(), self._order_by())
+        return "%s %s %s %s %s" % (
+            self._select(),
+            self._from(),
+            self._join(),
+            self._where(),
+            self._order_by()
+        )
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
