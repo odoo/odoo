@@ -161,15 +161,15 @@ class Properties(Field):
             return values
         assert len(values) == len(records)
 
-        # each value is either None or a dict
+        # each value is either False or a dict
         result = []
         for record, value in zip(records, values):
-            definition = self._get_properties_definition(record)
-            if not value or not definition:
-                result.append(definition or [])
-            else:
+            if definition := self._get_properties_definition(record):
+                value = value or {}
                 assert isinstance(value, dict), f"Wrong type {value!r}"
                 result.append(self._dict_to_list(value, definition))
+            else:
+                result.append([])
 
         res_ids_per_model = self._get_res_ids_per_model(records.env, result)
 
@@ -184,12 +184,7 @@ class Properties(Field):
 
     def convert_to_write(self, value, record):
         """If we write a list on the child, update the definition record."""
-        if isinstance(value, list):
-            # will update the definition record
-            self._remove_display_name(value)
-            return value
-
-        return super().convert_to_write(value, record)
+        return value
 
     def _get_res_ids_per_model(self, env, values_list):
         """Read everything needed in batch for the given records.
@@ -491,6 +486,9 @@ class Properties(Field):
                     if id_ in res_ids_per_model[res_model]
                 ] if res_model in env else []
 
+            elif property_value is None:
+                property_value = False
+
             property_definition['value'] = property_value
 
     @classmethod
@@ -719,6 +717,9 @@ class PropertiesDefinition(Field):
 
         return value
 
+    def convert_to_write(self, value, record):
+        return value
+
     @classmethod
     def _validate_properties_definition(cls, properties_definition, env):
         """Raise an error if the property definition is not valid."""
@@ -777,3 +778,7 @@ class PropertiesDefinition(Field):
                 if len(all_tags) != len(set(all_tags)):
                     duplicated = set(filter(lambda x: all_tags.count(x) > 1, all_tags))
                     raise ValueError(f'Some tags are duplicated: {", ".join(duplicated)}.')
+
+            for property_parameter, allowed_types in cls.PROPERTY_PARAMETERS_MAP.items():
+                if property_definition.get('type') not in allowed_types:
+                    property_definition.pop(property_parameter, None)
