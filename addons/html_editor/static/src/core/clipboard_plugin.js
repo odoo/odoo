@@ -1,9 +1,10 @@
 import { isTextNode, paragraphRelatedElements } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { unwrapContents } from "../utils/dom";
+import { unwrapContents, splitTextNode } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
+import { DIRECTIONS } from "../utils/position";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -583,12 +584,25 @@ export class ClipboardPlugin extends Plugin {
      * @param {DragEvent} ev
      */
     onDragStart(ev) {
+        const selection = this.dependencies.selection.getEditableSelection();
         if (ev.target.nodeName === "IMG") {
             this.dragImage = ev.target instanceof HTMLElement && ev.target;
             ev.dataTransfer.setData(
                 "application/vnd.odoo.odoo-editor-node",
                 this.dragImage.outerHTML
             );
+        }
+        const splitNode = (node, offset) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const selectionToRestore = this.dependencies.selection.preserveSelection();
+                splitTextNode(node, offset, DIRECTIONS.LEFT);
+                selectionToRestore.restore();
+            }
+        };
+        if (selection.direction) {
+            splitNode(selection.focusNode, selection.focusOffset);
+        } else {
+            splitNode(selection.anchorNode, selection.anchorOffset);
         }
     }
     /**
@@ -614,12 +628,14 @@ export class ClipboardPlugin extends Plugin {
         if (image || fileTransferItems.length || htmlTransferItem) {
             if (this.document.caretPositionFromPoint) {
                 const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
+                this.dependencies.delete.deleteSelection();
                 this.dependencies.selection.setSelection({
                     anchorNode: range.offsetNode,
                     anchorOffset: range.offset,
                 });
             } else if (this.document.caretRangeFromPoint) {
                 const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
+                this.dependencies.delete.deleteSelection();
                 this.dependencies.selection.setSelection({
                     anchorNode: range.startContainer,
                     anchorOffset: range.startOffset,
