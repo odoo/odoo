@@ -27,6 +27,6 @@ class PosOrder(models.Model):
         for comp in components:
             price_unit = super()._get_pos_anglo_saxon_price_unit(comp[0].product_id, partner_id, comp[1]['qty'])
             price_unit = comp[0].product_id.uom_id._compute_price(price_unit, comp[0].product_uom_id)
-            qty_per_kit = comp[1]['qty'] / bom.product_qty / quantity
+            qty_per_kit = comp[1]['qty'] / bom.product_qty / (quantity or 1)
             total_price_unit += price_unit * qty_per_kit
         return total_price_unit
