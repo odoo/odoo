@@ -309,8 +309,13 @@ class ProductTemplate(models.Model):
         )
         show_tax_excluded = self.user_has_groups('account.group_show_line_subtotals_tax_excluded')
         tax_display = 'total_excluded' if show_tax_excluded else 'total_included'
-        # The list_price is always the price of one.
-        return taxes.compute_all(price, pricelist.currency_id, 1, product, partner)[tax_display]
+        return taxes.compute_all(
+            price_unit=price,
+            currency=pricelist.currency_id,
+            quantity=1,  # `list_price` is always the price of one
+            product=product.sudo(),  # tax computation may require access to restricted fields
+            partner=partner,
+        )[tax_display]
 
     def _get_image_holder(self):
         """Returns the holder of the image to use as default representation.
