@@ -137,7 +137,7 @@ class Survey(http.Controller):
                     if answer_sudo.partner_id.user_ids:
                         answer_sudo.partner_id.signup_cancel()
                     else:
-                        answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
+                        answer_sudo.partner_id.signup_prepare()
                     redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))[answer_sudo.partner_id.id]
                 else:
                     redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))
