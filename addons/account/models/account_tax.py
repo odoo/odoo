@@ -701,6 +701,7 @@ class AccountTax(models.Model):
         :param product:                 An optional product.product record.
         :return:                        The values representing the product.
         """
+        product = product and product.sudo()  # tax computation may depend on restricted fields
         product_values = {}
         for field_name, field_info in default_product_values.items():
             product_values[field_name] = product and product[field_name] or field_info['default_value']
