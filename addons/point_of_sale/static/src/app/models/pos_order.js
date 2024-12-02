@@ -507,7 +507,7 @@ export class PosOrder extends Base {
         return false;
     }
     doNotAllowRefundAndSales() {
-        return false;
+        return true;
     }
 
     getSelectedOrderline() {
