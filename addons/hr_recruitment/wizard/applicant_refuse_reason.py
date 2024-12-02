@@ -74,8 +74,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
         # duplicates_count can be true only if only one application is selected
         if self.duplicates_count and self.duplicates:
             applicant_id = self.applicant_ids[0]
-            duplicate_domain = applicant_id.candidate_id._get_similar_candidates_domain()
-            duplicates = self.env['hr.candidate'].search(duplicate_domain).applicant_ids
+            duplicate_domain = applicant_id._get_similar_applicants_domain()
+            duplicates = self.env['hr.applicant'].search(duplicate_domain)
             refused_applications |= duplicates
             url = applicant_id._get_html_link()
             message = _(
@@ -104,4 +104,4 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     @api.depends('applicant_ids')
     def _compute_duplicates_count(self):
-        self.duplicates_count = self.applicant_ids.other_applications_count if len(self.applicant_ids) == 1 else 0
+        self.duplicates_count = self.applicant_ids.application_count if len(self.applicant_ids) == 1 else 0
