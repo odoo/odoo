@@ -69,7 +69,9 @@ export class BusBus extends models.Model {
         }
         const values = [];
         const authenticatedUserId =
-            "res.users" in this.env && this.env.cookie.get("authenticated_user_sid");
+            "res.users" in this.env
+                ? this.env.cookie.get("authenticated_user_sid") ?? this.env.uid
+                : null;
         const channels = [
             ...IrWebSocket._build_bus_channel_list(this.channelsByUser[authenticatedUserId] || []),
         ];
@@ -92,5 +94,15 @@ export class BusBus extends models.Model {
             });
         }
         this.wsWorker.broadcast("notification", values);
+    }
+
+    /**
+     * Close the current websocket with the given reason and code.
+     *
+     * @param {number} closeCode the code to close the connection with.
+     * @param {string} [reason] the reason to close the connection with.
+     */
+    _simulateDisconnection(closeCode, reason) {
+        this.wsWorker.websocket.close(closeCode, reason);
     }
 }
