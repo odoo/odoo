@@ -28,6 +28,30 @@ def get_bban_from_iban(iban):
     """
     return normalize_iban(iban)[4:]
 
+def get_iban_part(iban, number_kind):
+    """ Get part of the iban depending on the mask
+        .. code-block:: python
+            # template = 'ITkk KBBB BBSS SSSC CCCC CCCC CCC'
+            partner.acc_number = 'IT60X0542811101000000123456'
+            partner.get_iban_part('bank') == '05428'
+            partner.get_iban_part('account') == '000000123456'
+        Returns ``False`` in case of failure
+    """
+    kind_map = {
+        'bank': 'B',  # Bank national code
+        'branch': 'S',  # Branch code
+        'account': 'C',  # Account number
+        'check': 'k',  # Check digits
+        'check_other': 'K',  # Other check digits
+    }
+    if not (mask_char := kind_map.get(number_kind.lower())):
+        return False
+    iban = normalize_iban(iban)
+    country_code = iban[:2].lower()
+    template = _map_iban_template.get(country_code, '').replace(' ', '')
+    return template and "".join(c for c, t in zip(iban, template) if t == mask_char)
+
+
 def validate_iban(iban):
     iban = normalize_iban(iban)
     if not iban:
