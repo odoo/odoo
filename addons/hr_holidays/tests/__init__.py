@@ -30,3 +30,4 @@ from . import test_hr_departure_wizard
 from . import test_time_off_card_tour
 from . import test_hr_leave_type_tour
 from . import test_time_off_graph_view_tour
+from . import test_leave_type_data
