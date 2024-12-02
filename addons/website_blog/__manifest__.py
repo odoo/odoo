@@ -50,6 +50,9 @@
             'website_blog/static/tests/interactions/**/*',
         ],
         'web.assets_unit_tests_setup': [
+            'website_blog/static/src/interactions/**/*.js',
+            # TODO Re-activate when testing edit mode
+            ('remove', 'website_blog/static/src/interactions/**/*.edit.js'),
             'website_blog/static/src/snippets/**/*.js',
             ('remove', 'website_blog/static/src/snippets/**/options.js'),
             # TODO Re-activate when testing edit mode
@@ -58,9 +61,9 @@
             ('remove', 'website_blog/static/src/snippets/**/000.js'),
         ],
         'web.assets_frontend': [
+            'website_blog/static/src/interactions/**/*',
+            ('remove', 'website_blog/static/src/interactions/**/*.edit.js'),
             'website_blog/static/src/scss/website_blog.scss',
-            'website_blog/static/src/js/contentshare.js',
-            'website_blog/static/src/js/website_blog.js',
         ],
     },
     'license': 'LGPL-3',
