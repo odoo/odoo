@@ -60,5 +60,5 @@ class TestHrHolidaysCancelLeave(TestHrHolidaysCommon):
         self.env['hr.holidays.cancel.leave'].with_user(self.user_employee).with_context(default_leave_id=self.holiday.id) \
             .new({'reason': 'Test remove holiday'}) \
             .action_cancel_leave()
-        with self.assertRaises(UserError, msg='The user should not be able to manually unarchive the leave.'):
+        with self.assertRaises(ValidationError, msg='Only a manager can modify a canceled leave.'):
             self.holiday.with_user(self.user_employee).write({'state': 'cancel'})
