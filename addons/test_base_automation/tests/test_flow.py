@@ -1244,3 +1244,43 @@ class TestHttp(common.HttpCase):
             self.env[model_name].get_view(my_view.id)["arch"],
             '<form><field name="active" on_change="1"/></form>'
         )
+
+    def test_webhook_trigger_with_headers(self):
+        model = self.env["ir.model"]._get("base.automation.linked.test")
+        record_getter = "model.search([('name', '=', payload['name'])]) if payload.get('name') else None"
+        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, log_webhook_calls=True, _actions={
+            "state": "object_write",
+            "update_path": "another_field",
+            "value": "written"
+        })
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer my-secret-token",
+            "X-Custom-Header": "custom-value",
+        }
+        obj = self.env[model.model].create({"name": "some name"})
+        response = self.url_open(automation.url, data=json.dumps({"name": "some name"}), headers=headers)
+        self.assertEqual(response.status_code, 200)
+
+    def test_headers_in_action_server(self):
+        model = self.env["ir.model"]._get("base.automation.linked.test")
+        record_getter = "model.search([('name', '=', payload['name'])]) if payload.get('name') else None"
+        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, _actions={
+            "state": "code",
+            "code": "record.write({'another_field': headers})"
+        })
+
+        headers = {
+            'User-Agent': 'Odoo',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept': '*/*',
+            'Connection': 'keep-alive',
+            'Host': '127.0.0.1',
+            'X-Custom-Header': 'Odoo-FTW',
+        }
+        obj = self.env[model.model].create({"name": "some name"})
+        self.url_open(automation.url, data=json.dumps({"name": "some name", "test_key": "test_value"}), headers=headers)
+
+        expected_headers =  "User-Agent: Odoo\r\nAccept-Encoding: gzip, deflate\r\nAccept: */*\r\nConnection: keep-alive\r\nHost: 127.0.0.1\r\nX-Custom-Header: Odoo-FTW\r\nContent-Length: 47\r\n\r\n"
+        self.assertEqual(obj.another_field, expected_headers)
