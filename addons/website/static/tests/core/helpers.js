@@ -42,6 +42,8 @@ export async function startInteractions(
         for (const name of activeInteractions) {
             if (name in content) {
                 elementRegistry.add(name, content[name][1]);
+            } else {
+                throw new Error(`White-listed Interaction does not exist: ${name}.`);
             }
         }
     }
