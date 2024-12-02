@@ -123,7 +123,7 @@ export function useClickableWeWidget() {
 }
 export function useInputWeWidget() {
     const comp = useComponent();
-    const state = useState(getState());
+    const state = useDomState(getState);
     const applyValue = comp.env.editor.shared.history.makePreviewableOperation((value) => {
         for (const [actionId, actionParam] of getActions()) {
             actionsRegistry.get(actionId).apply({
