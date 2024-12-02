@@ -26,26 +26,22 @@ def create(self, vals_list: list[ValuesType]) -> models.BaseModel:
     :raise ValueError: if a field name specified in the create values does not exist.
     :raise UserError: if a loop would be created in a hierarchy of objects as a result of the operation
     """
-    try:
-        records = _original_create(self, vals_list)
 
-        if hasattr(self.env.user, '_bus_send'):
-            view_ids = self.env['ir.ui.view'].sudo().search([
-                ('active', '=', True),
-                ('model', '=', self._name)
-            ])
-            for view in view_ids:
-                merged_view = f'NOTIFICATION_FROM_NEW_RECORD_TO_REALTIME_SYNC_{self._name}_{view.id}'
+    records = _original_create(self, vals_list)
 
-                self.env.user._bus_send(merged_view, {
-                    'mergedView': merged_view
-                })
+    if hasattr(self.env.user, '_bus_send'):
+        view_ids = self.env['ir.ui.view'].sudo().search([
+            ('active', '=', True),
+            ('model', '=', self._name)
+        ])
+        for view in view_ids:
+            merged_view = f'NOTIFICATION_FROM_NEW_RECORD_TO_REALTIME_SYNC_{self._name}_{view.id}'
+
+            self.env.user._bus_send(merged_view, {
+                'mergedView': merged_view
+            })
 
         return records
-
-    except Exception as e:
-        _logger.exception("Error creating records: %s", e)
-        raise e
 
 
 BaseModel.create = create
