@@ -354,7 +354,10 @@ class GoogleCalendarSync(models.AbstractModel):
     @api.model
     def _get_sync_partner(self, emails):
         normalized_emails = [email_normalize(contact) for contact in emails if email_normalize(contact)]
-        user_partners = self.env['mail.thread']._mail_search_on_user(normalized_emails, extra_domain=[('share', '=', False)])
+        user_partners = self.env['res.users'].sudo().search(
+            [('email_normalized', 'in', normalized_emails), ('share', '=', False)]
+        ).mapped('partner_id')
+        user_partners = self.env['res.partner'].search([('id', 'in', user_partners.ids)])
         partners = list(user_partners)
         remaining = [email for email in normalized_emails if
                      email not in [partner.email_normalized for partner in partners]]
