@@ -61,3 +61,15 @@ class ProductProduct(models.Model):
                 mail = self_ctxt.env['mail.mail'].sudo().create(mail_values)
                 mail.send(raise_exception=False)
                 product.stock_notification_partner_ids -= partner
+
+    def _to_markup_data(self, website):
+        """ Override of `website_sale` to include the product availability in the offer. """
+        markup_data = super()._to_markup_data(website)
+        if self.is_product_variant and self.is_storable:
+            free_qty = website._get_product_available_qty(self.sudo())
+            if free_qty or self.allow_out_of_stock_order:
+                availability = 'https://schema.org/InStock'
+            else:
+                availability = 'https://schema.org/OutOfStock'
+            markup_data['offers']['availability'] = availability
+        return markup_data

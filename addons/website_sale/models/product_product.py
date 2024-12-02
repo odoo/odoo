@@ -3,6 +3,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
@@ -149,3 +150,37 @@ class ProductProduct(models.Model):
             self.website_published = True
         else:
             self.website_published = False
+
+    def _to_markup_data(self, website):
+        """ Generate JSON-LD markup data for the current product.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        base_url = website.get_base_url()
+        markup_data = {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            'name': self.with_context(display_default_code=False).display_name,
+            'url': f'{base_url}{self.website_url}',
+            'image': f'{base_url}{website.image_url(self, "image_1920")}',
+            'offers': {
+                '@type': 'Offer',
+                'price': float_round(website.pricelist_id._get_product_price(
+                    self, quantity=1, target_currency=website.currency_id
+                ), 2),
+                'priceCurrency': website.currency_id.name,
+            },
+        }
+        if self.website_meta_description or self.description_sale:
+            markup_data['description'] = self.website_meta_description or self.description_sale
+        if self.rating_count:
+            markup_data['aggregateRating'] = {
+                '@type': 'AggregateRating',
+                'ratingValue': self.rating_avg,
+                'reviewCount': self.rating_count,
+            }
+        return markup_data

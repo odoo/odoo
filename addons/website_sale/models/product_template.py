@@ -9,6 +9,7 @@ from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
+from odoo.addons.website.tools import text_from_html
 
 
 _logger = logging.getLogger(__name__)
@@ -887,3 +888,32 @@ class ProductTemplate(models.Model):
                     price, currency, product_taxes, taxes, product_or_template, website=website
                 ), pricelist_rule_id
         return price, pricelist_rule_id
+
+    def _to_markup_data(self, website):
+        """ Generate JSON-LD markup data for the current product template.
+
+        If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
+        Otherwise, the markup data generation is delegated to the variant to use the
+        https://schema.org/Product schema.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        if self.product_variant_count == 1:
+            return self.product_variant_id._to_markup_data(website)
+
+        base_url = website.get_base_url()
+        markup_data = {
+            '@context': 'https://schema.org/',
+            '@type': 'ProductGroup',
+            'name': self.name,
+            'image': f'{base_url}{website.image_url(self, "image_1920")}',
+            'url': f'{base_url}{self.website_url}',
+            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
+        }
+        if self.description_ecommerce:
+            markup_data['description'] = text_from_html(self.description_ecommerce)
+        return markup_data

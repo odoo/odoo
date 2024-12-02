@@ -28,3 +28,30 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             )
 
         self.assertEqual(configurator_price[0], 110)
+
+    def test_markup_data_uses_group_schema_when_multiple_variants(self):
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'Test attribute',
+            'create_variant': 'always',
+            'value_ids': [
+                Command.create({'name': 'Test value 1'}),
+                Command.create({'name': 'Test value 2'}),
+            ],
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Test product',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': product_attribute.id,
+                    'value_ids': [Command.set(product_attribute.value_ids.ids)],
+                }),
+            ],
+        })
+        markup_data = product_template._to_markup_data(self.website)
+        self.assertEqual(markup_data['@type'], 'ProductGroup')
+        self.assertEqual(len(markup_data['hasVariant']), 2)
+
+    def test_markup_data_uses_product_schema_when_single_variant(self):
+        product_template = self.env['product.template'].create({'name': 'Test product'})
+        markup_data = product_template._to_markup_data(self.website)
+        self.assertEqual(markup_data['@type'], 'Product')

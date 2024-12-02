@@ -672,8 +672,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _prepare_product_values(self, product, category, search, **kwargs):
         ProductCategory = request.env['product.public.category']
+        product_markup_data = [product._to_markup_data(request.website)]
         if category:
             category = ProductCategory.browse(int(category)).exists()
+            # Add breadcrumb's SEO data.
+            product_markup_data.append(self._prepare_breadcrumb_markup_data(
+                request.website.get_base_url(), category, product.name
+            ))
         keep = QueryURL(
             '/shop',
             **self._product_get_query_url_kwargs(
@@ -697,6 +702,42 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ],
             'product': product,
             'view_track': view_track,
+            'product_markup_data': json_scriptsafe.dumps(product_markup_data, indent=2),
+        }
+
+    def _prepare_breadcrumb_markup_data(self, base_url, category, product_name):
+        """ Generate JSON-LD markup data for the given product category.
+
+        See https://schema.org/BreadcrumbList.
+
+        :param str base_url: The base URL of the current website.
+        :param product.public.category category: The current product category.
+        :param str product_name: The name of the current product.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
+        return {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+                {
+                    '@type': 'ListItem',
+                    'position': 1,
+                    'name': 'All Products',
+                    'item': f'{base_url}/shop',
+                },
+                {
+                    '@type': 'ListItem',
+                    'position': 2,
+                    'name': category.name,
+                    'item': f'{base_url}/shop/category/{self.env["ir.http"]._slug(category)}',
+                },
+                {
+                    '@type': 'ListItem',
+                    'position': 3,
+                    'name': product_name,
+                }
+            ]
         }
 
     @route(['/shop/change_pricelist/<model("product.pricelist"):pricelist>'], type='http', auth="public", website=True, sitemap=False)
