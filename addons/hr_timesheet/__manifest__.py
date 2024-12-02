@@ -21,7 +21,6 @@ up a management by affair.
     'depends': ['hr', 'analytic', 'project', 'uom'],
     'data': [
         'security/hr_timesheet_security.xml',
-        'security/ir.model.access.xml',
         'data/digest_data.xml',
         'data/portal_entry_data.xml',
         'views/hr_timesheet_views.xml',
