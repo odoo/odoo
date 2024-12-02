@@ -43,7 +43,6 @@ function reload(env, action) {
         }
     }
 
-    env.bus.trigger("CLEAR-CACHES");
     router.pushState(route, { replace: true, reload: true });
 }
 
@@ -70,13 +69,10 @@ async function home() {
 registry.category("actions").add("home", home);
 
 /**
- * Client action to refresh the session context (making sure
- * HTTP requests will have the right one) then reload the
- * whole interface.
+ * Client action to refresh the session context (making sure HTTP requests will
+ * have the right one). It simply reloads the page.
  */
 async function reloadContext(env, action) {
-    // side-effect of get_session_info is to refresh the session context
-    await rpc("/web/session/get_session_info");
     reload(env, action);
 }
 
