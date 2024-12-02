@@ -180,6 +180,46 @@ class TestActivitySchedule(ActivityScheduleCase):
         self.assertEqual(len(self.test_records[3].activity_ids), 0)
         self.assertEqual(len(self.test_records[4].activity_ids), 0)
 
+    @users('admin')
+    def test_next_activities(self):
+        """ Test that next activities are displayed correctly. """
+        activity_type_mail = self.env['mail.activity.type'].create({'name': 'Mail'})
+        self.activity_type_call.write({
+            'chaining_type': 'trigger',
+            'delay_from': 'current_date',
+            'triggered_next_type_id': activity_type_mail.id
+        })
+        self.activity_type_todo.write({
+            'chaining_type': 'suggest',
+            'delay_unit': 'weeks',
+            'suggested_next_type_ids': [Command.set([self.activity_type_call.id, activity_type_mail.id])]
+        })
+        test_plan = self.env['mail.activity.plan'].create({
+            'name': 'Test Plan',
+            'res_model': 'mail.test.activity',
+            'template_ids': [
+                Command.create({'activity_type_id': self.activity_type_todo.id}),
+                Command.create({'activity_type_id': self.activity_type_call.id}),
+                Command.create({'activity_type_id': activity_type_mail.id}),
+            ]
+        })
+        # Assert expected next activities
+        expected_next_activities = [['Call', 'Mail'], ['Mail'], []]
+        for template, expected_names in zip(test_plan.template_ids, expected_next_activities):
+            self.assertEqual(template.next_activity_ids.mapped('name'), expected_names)
+        # Test the plan summary
+        with self.subTest(test_case='Check plan summary'):
+            form = self._instantiate_activity_schedule_wizard(self.test_records[0])
+            form.plan_id = test_plan
+            expected_summary = (
+                '<ul>'
+                '<li>To-Do<ul><li>Call or Mail 4 weeks after previous activity deadline</li></ul></li>'
+                '<li>Call<ul><li>Mail 1 days after completion date</li></ul></li>'
+                '<li>Mail</li>'
+                '</ul>'
+            )
+            self.assertEqual(form.plan_summary, expected_summary)
+
     @users('employee')
     def test_plan_mode(self):
         """ Test the plan_mode that allows to preselect a compatible plan. """

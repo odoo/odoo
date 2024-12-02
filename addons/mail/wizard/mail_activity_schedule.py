@@ -342,11 +342,40 @@ class MailActivitySchedule(models.TransientModel):
         self.ensure_one()
         summaries = []
         for template in templates:
-            summary_line = template.activity_type_id.name
+            activity_type = template.activity_type_id
+            summary_line = activity_type.name
             if template.summary:
                 summary_line += f": {template.summary}"
             # We don't display deadlines when the user doesn't specify a plan_date
             if self.plan_date:
                 summary_line += f" ({format_date(self.env, template._get_date_deadline(self.plan_date))})"
+            next_activities = []
+            delay_unit = dict(activity_type._fields['delay_unit']._description_selection(self.env))[activity_type.delay_unit]
+            delay_from = dict(activity_type._fields['delay_from']._description_selection(self.env))[activity_type.delay_from]
+            # Triggered next activity
+            if activity_type.triggered_next_type_id:
+                next_activities.append(
+                    _("%(activity_name)s %(delay_count)s %(delay_unit)s %(delay_from)s",
+                    activity_name=activity_type.triggered_next_type_id.name,
+                    delay_count=activity_type.delay_count,
+                    delay_unit=delay_unit,
+                    delay_from=delay_from
+                ))
+            # Suggested next activities
+            elif activity_type.suggested_next_type_ids:
+                suggested_activities = _(" or ").join(activity_type.suggested_next_type_ids.mapped('name'))
+                next_activities.append(
+                    _("%(activities)s %(delay_count)s %(delay_unit)s %(delay_from)s",
+                    activities=suggested_activities,
+                    delay_count=activity_type.delay_count,
+                    delay_unit=delay_unit,
+                    delay_from=delay_from
+                ))
+            # Add next activities as nested list for each activity type
+            if next_activities:
+                nested_summary_line = Markup('<ul>%s</ul>') % Markup().join(
+                    Markup('<li>%s</li>') % activity for activity in next_activities
+                )
+                summary_line += nested_summary_line
             summaries.append(Markup('<li>%s</li>') % summary_line)
         return Markup('<ul>%s</ul>') % Markup().join(summaries) if summaries else ''
