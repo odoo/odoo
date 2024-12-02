@@ -5876,7 +5876,10 @@ class AccountMove(models.Model):
 
         # Search for partners using the user.
         if not senders:
-            senders = partners = list(self._mail_search_on_user(from_mail_addresses))
+            user_partners = self.env['res.users'].sudo().search(
+                [('email_normalized', 'in', from_mail_addresses)]
+            ).mapped('partner_id')
+            senders = partners = list(self.env['res.partner'].search([('id', 'in', user_partners.ids)]))
 
         if partners:
             # Check we are not in the case when an internal user forwarded the mail manually.
