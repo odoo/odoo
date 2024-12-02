@@ -164,6 +164,7 @@ class AlarmManager(models.AbstractModel):
                AND "event"."active"
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
+               AND "event"."stop" > now() at time zone 'utc'
              )''', [alarm_type, lastcall])
 
         events_by_alarm = {}
