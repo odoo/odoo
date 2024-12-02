@@ -39,7 +39,7 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
-        indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
+        indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and self.journal_id.type in ('sale', 'purchase'))
         for record in indian_invoice:
             gst_treatment = record.partner_id.l10n_in_gst_treatment
             if not gst_treatment:
@@ -140,3 +140,8 @@ class AccountMove(models.Model):
         if logger_msg:
             _logger.info(logger_msg)
         return res
+
+    def copy(self, default=None):
+        if self.move_type == 'entry':
+            default['l10n_in_gst_treatment'] = False
+        return super().copy(default)
