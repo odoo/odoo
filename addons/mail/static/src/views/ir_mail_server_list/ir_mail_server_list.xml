@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="IrMailServer.buttons" t-inherit="web.ListView.Buttons"
+        t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[@t-if='props.showButtons']">
+            <button type="button" class="btn btn-primary mx-2"
+                t-on-click="onLinkClick">
+                Configurator
+            </button>
+        </xpath>
+    </t>
+</templates>
