@@ -1734,6 +1734,19 @@ describe("Complex html 3p+b", () => {
     });
 });
 
+describe("Complex html div", () => {
+    const complexHtmlData = `<div><div><span style="color: #fb4934;">abc</span><span style="color: #ebdbb2;">def</span></div><div dir="rtl"><span style="color: #fb4934;">ghi</span><span style="color: #fe8019;">jkl</span></div><div><span style="color: #fb4934;">jkl</span><span style="color: #ebdbb2;">mno</span></div></div>`;
+    test("should convert div to p", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteHtml(editor, complexHtmlData);
+            },
+            contentAfter: '<p>abcdef</p><p dir="rtl">ghijkl</p><p>jklmno[]</p>',
+        });
+    });
+});
+
 describe("Special cases", () => {
     describe("lists", () => {
         test("should paste a list in a p", async () => {
