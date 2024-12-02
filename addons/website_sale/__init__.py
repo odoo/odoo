@@ -18,8 +18,7 @@ def uninstall_hook(env):
     ''' Need to reenable the `product` pricelist multi-company rule that were
         disabled to be 'overridden' for multi-website purpose
     '''
-    pl_rule = env.ref('product.product_pricelist_comp_rule', raise_if_not_found=False)
-    pl_item_rule = env.ref('product.product_pricelist_item_comp_rule', raise_if_not_found=False)
-    multi_company_rules = pl_rule or env['ir.rule']
-    multi_company_rules += pl_item_rule or env['ir.rule']
-    multi_company_rules.write({'active': True})
+    access1 = env.ref('product.access_product_pricelist_global', raise_if_not_found=False)
+    access2 = env.ref('product.access_product_pricelist_item_global', raise_if_not_found=False)
+    accesses = (access1 or env['ir.access']) + (access2 or env['ir.access'])
+    accesses.active = True
