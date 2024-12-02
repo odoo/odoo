@@ -38,6 +38,7 @@ class ChatbotCase(common.HttpCase):
             cls.step_dispatch_buy_software,
             cls.step_dispatch_pricing,
             cls.step_dispatch_operator,
+            cls.step_dispatch_documentation,
         ] = cls.env['chatbot.script.answer'].sudo().create([{
             'name': 'I want to buy the software',
             'script_step_id': cls.step_dispatch.id,
@@ -46,6 +47,9 @@ class ChatbotCase(common.HttpCase):
             'script_step_id': cls.step_dispatch.id,
         }, {
             'name': "I want to speak with an operator",
+            'script_step_id': cls.step_dispatch.id,
+        }, {
+            'name': "Other & Documentation",
             'script_step_id': cls.step_dispatch.id,
         }])
 
@@ -56,6 +60,7 @@ class ChatbotCase(common.HttpCase):
             cls.step_forward_operator,
             cls.step_no_one_available,
             cls.step_no_operator_dispatch,
+            cls.step_documentation_validated,
         ] = ChatbotScriptStep.create([{
             'step_type': 'text',
             'message': 'For any pricing question, feel free ton contact us at pricing@mycompany.com',
@@ -85,6 +90,11 @@ class ChatbotCase(common.HttpCase):
             'step_type': 'question_selection',
             'message': 'So... What can I do to help you?',
             'triggering_answer_ids': [(4, cls.step_dispatch_operator.id)],
+            'chatbot_script_id': cls.chatbot_script.id,
+        }, {
+            'step_type': 'text',
+            'message': 'Please find documentation at https://www.odoo.com/documentation/18.0/',
+            'triggering_answer_ids': [(4, cls.step_dispatch_documentation.id)],
             'chatbot_script_id': cls.chatbot_script.id,
         }])
 

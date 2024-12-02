@@ -45,5 +45,13 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
                 });
             },
         },
+        {
+            trigger: '.o-livechat-root:shadow li:contains("Other & Documentation")',
+            run: "click",
+        },
+        {
+            trigger: messagesContain("Please find documentation at"),
+            run: () => {},
+        },
     ],
 });
