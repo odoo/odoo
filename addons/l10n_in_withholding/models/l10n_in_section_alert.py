@@ -23,6 +23,7 @@ class L10n_InSectionAlert(models.Model):
             ('fiscal_yearly', 'Financial Yearly'),
         ], string="Aggregate Period", default='fiscal_yearly')
     l10n_in_section_tax_ids = fields.One2many("account.tax", "l10n_in_section_id", string="Taxes")
+    only_on_over_limit = fields.Boolean("Only on over limit")
 
     _per_transaction_limit = models.Constraint(
         'CHECK(per_transaction_limit >= 0)',
