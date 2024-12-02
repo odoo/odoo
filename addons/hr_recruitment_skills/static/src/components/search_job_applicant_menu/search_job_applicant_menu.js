@@ -30,8 +30,8 @@ export class SearchJobApplicant extends Component {
         const { globalContext } = this.env.searchModel;
         const action = await this.env.services.orm.call(
             "hr.job",
-            "action_search_matching_candidates",
-            [globalContext.active_id],
+            "action_search_matching_applicants",
+            [globalContext.active_id]
         );
         action.help = markup(action.help);
         return this.action.doAction(action);

@@ -18,7 +18,7 @@
                             <h1><field name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Sales Manager"/></h1>
                         </div>
                         <notebook>
-                            <page string="Recruitment" name="recruitment_page" invisible="1">
+                            <page string="Details" name="recruitment_page" invisible="1">
                                 <group>
                                     <group name="recruitment">
                                         <field name="company_id" options="{'no_create': True}" invisible="1" groups="base.group_multi_company" placeholder="Visible to all"/>
@@ -34,7 +34,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Job Summary" name="job_description_page" invisible="1">
+                            <page string="Summary" name="job_description_page" invisible="1">
                                 <field name="description" options="{'collaborative': true}" placeholder="e.g. Summarize the position in one or two lines..."/>
                             </page>
                         </notebook>
