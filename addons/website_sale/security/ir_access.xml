@@ -8,10 +8,11 @@
         Don't override domain_force or we will need to hardcode the original
         domain in `uninstall_hook` rather than just reenabling records.
     -->
-    <record id="product.product_pricelist_comp_rule" model="ir.rule">
+    <record id="product.access_product_pricelist_global" model="ir.access">
         <field name="active" eval="False"/>
     </record>
-    <record id="product.product_pricelist_item_comp_rule" model="ir.rule">
+    <record id="product.access_product_pricelist_item_global" model="ir.access">
         <field name="active" eval="False"/>
     </record>
-    </odoo>
+
+</odoo>
