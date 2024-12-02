@@ -23,7 +23,6 @@ up a management by affair.
     'depends': ['hr', 'hr_hourly_cost', 'analytic', 'project', 'uom'],
     'data': [
         'security/hr_timesheet_security.xml',
-        'security/ir.model.access.xml',
         'data/digest_data.xml',
         'views/hr_timesheet_views.xml',
         'views/res_config_settings_views.xml',
