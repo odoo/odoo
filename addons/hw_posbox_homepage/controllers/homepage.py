@@ -1,12 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import jinja2
 import json
 import logging
-import os
 import platform
 import subprocess
-import sys
 import threading
 import time
 
@@ -14,7 +11,6 @@ from pathlib import Path
 from odoo import http
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_drivers.main import iot_devices
-from odoo.addons.web.controllers.home import Home
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.tools.misc import file_path
 from odoo.addons.hw_drivers.server_logger import (
@@ -31,32 +27,19 @@ DRIVER_PREFIX = 'driver-'
 AVAILABLE_LOG_LEVELS = ('debug', 'info', 'warning', 'error')
 AVAILABLE_LOG_LEVELS_WITH_PARENT = AVAILABLE_LOG_LEVELS + ('parent',)
 
-if hasattr(sys, 'frozen'):
-    # When running on compiled windows binary, we don't have access to package loader.
-    path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
-    loader = jinja2.FileSystemLoader(path)
-else:
-    loader = jinja2.PackageLoader('odoo.addons.hw_posbox_homepage', "views")
 
-jinja_env = jinja2.Environment(loader=loader, autoescape=True)
-jinja_env.filters["json"] = json.dumps
-
-index_template = jinja_env.get_template('index.html')
-logs_template = jinja_env.get_template('logs.html')
-
-
-class IotBoxOwlHomePage(Home):
+class IotBoxOwlHomePage(http.Controller):
     def __init__(self):
         super().__init__()
         self.updating = threading.Lock()
 
-    @http.route()
+    @http.route('/', auth='none', type='http')
     def index(self):
-        return index_template.render()
+        return http.Stream.from_path("hw_posbox_homepage/views/index.html").get_response(content_security_policy=None)
 
     @http.route('/logs', auth='none', type='http')
     def logs_page(self):
-        return logs_template.render()
+        return http.Stream.from_path("hw_posbox_homepage/views/logs.html").get_response(content_security_policy=None)
 
     # ---------------------------------------------------------- #
     # GET methods                                                #
