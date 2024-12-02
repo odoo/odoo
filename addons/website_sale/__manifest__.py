@@ -12,7 +12,7 @@
     ],
     'data': [
         # Security
-        'security/ir_rules.xml',
+        'security/ir_access.xml',
         'security/res_groups.xml',
 
         # Record data
