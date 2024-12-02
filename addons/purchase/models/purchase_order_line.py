@@ -367,7 +367,7 @@ class PurchaseOrderLine(models.Model):
 
             # record product names to avoid resetting custom descriptions
             default_names = []
-            vendors = line.product_id._prepare_sellers({})
+            vendors = line.product_id._prepare_sellers(params=params)
             product_ctx = {'seller_id': None, 'partner_id': None, 'lang': get_lang(line.env, line.partner_id.lang).code}
             default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
             for vendor in vendors:
