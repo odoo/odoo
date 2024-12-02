@@ -199,7 +199,7 @@ class Applicant(models.Model):
     @api.depends('candidate_id')
     def _compute_categ_ids(self):
         for applicant in self:
-            applicant.categ_ids = applicant.candidate_id.categ_ids
+            applicant.categ_ids = applicant.candidate_id.categ_ids.ids + applicant.categ_ids.ids
 
     @api.depends('refuse_reason_id', 'date_closed')
     def _compute_application_status(self):
