@@ -226,7 +226,11 @@ class ResCurrency(models.Model):
                     CAST(NULL AS DATE),
                     CAST(NULL AS DATE),
                     'average',
-                    SUM(%(main_company_unit_factor)s / rate_with_days.rate * rate_with_days.number_of_days) / SUM(rate_with_days.number_of_days)
+                    CASE
+                        WHEN SUM(rate_with_days.number_of_days) = 0 THEN 0
+                        ELSE SUM(%(main_company_unit_factor)s / rate_with_days.rate * rate_with_days.number_of_days)
+                             / SUM(rate_with_days.number_of_days)
+                    END
                 FROM (
                     SELECT
                         other_company.id as other_company_id,
@@ -251,7 +255,7 @@ class ResCurrency(models.Model):
                     (
                         SELECT DISTINCT ON (other_company.id)
                             other_company.id as other_company_id,
-                            out_period_rate.rate AS rate,
+                            COALESCE(out_period_rate.rate, in_period_rate.rate, 1) AS rate,
                             EXTRACT('Day' FROM COALESCE(in_period_rate.name::TIMESTAMP, %(date_to)s::TIMESTAMP + INTERVAL '1' DAY) - %(date_from)s::TIMESTAMP) AS number_of_days
 
                         FROM res_company other_company
