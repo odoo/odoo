@@ -19,6 +19,31 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
+        """ Override of `payment` to ensure that Worldline requirement for references is satisfied.
+
+        Worldline requires for references to be at most 30 characters long.
+
+        :param str provider_code: The code of the provider handling the transaction.
+        :param str prefix: The custom prefix used to compute the full reference.
+        :param str separator: The custom separator used to separate the prefix from the suffix.
+        :return: The unique reference for the transaction.
+        :rtype: str
+        """
+        reference = super()._compute_reference(
+            provider_code, prefix=prefix, separator=separator, **kwargs
+        )
+        if provider_code != 'worldline':
+            return reference
+
+        if len(reference) <= 30:  # Worldline transaction merchantReference is limited to 30 chars
+            return reference
+
+        prefix = payment_utils.singularize_reference_prefix(prefix='WL')
+        return super()._compute_reference(
+            provider_code, prefix=prefix, separator=separator, **kwargs
+        )
+
     def _get_specific_processing_values(self, processing_values):
         """ Override of `payment` to redirect failed token-flow transactions.
 
