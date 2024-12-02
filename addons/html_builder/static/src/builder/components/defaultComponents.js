@@ -8,6 +8,7 @@ import { WeNumberInput } from "./WeNumberInput";
 import { WeSelect } from "./WeSelect";
 import { WeSelectItem } from "./WeSelectItem";
 import { WeColorpicker } from "./WeColorpicker";
+import { WeTextInput } from "./WeTextInput";
 
 export const defaultOptionComponents = {
     WeRow,
@@ -16,6 +17,7 @@ export const defaultOptionComponents = {
     WeButtonGroup,
     WeButton,
     Button,
+    WeTextInput,
     WeNumberInput,
     WeColorpicker,
     WeSelect,
