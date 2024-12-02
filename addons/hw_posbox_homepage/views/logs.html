@@ -8,10 +8,18 @@
 
         <script>
             async function getLogs() {
-                const result = await fetch('/hw_posbox_homepage/iot_logs');
-                const data = await result.json();
-                document.getElementById('logs').innerText = data.logs;
-                document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
+                try {
+                    const result = await fetch('/hw_posbox_homepage/iot_logs');
+                    if (!result.ok) {
+                        console.warn(`IoT box returned an error (${result.status} ${result.statusText})`);
+                        return;
+                    }
+                    const data = await result.json();
+                    document.getElementById('logs').innerText = data.logs;
+                    document.getElementById('logs').scrollTop = document.getElementById('logs').scrollHeight;
+                } catch(error) {
+                    console.warn(`IoT box is unreachable: ${error}`);
+                }
             }
             document.addEventListener("DOMContentLoaded", function(event) {
                 setInterval(getLogs, 1000);
