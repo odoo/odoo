@@ -78,6 +78,8 @@ test("leave stats render correctly", async () => {
 
     const individualLeaves = queryOne(".o_leave_stats #o_leave_stats_employee");
     const DepartmentLeaves = queryOne(".o_leave_stats #o_leave_stats_department");
+    console.log(individualLeaves)
+    console.log(DepartmentLeaves)
     // Displays leaves with the correct unit
     expect(queryAll("span:contains(Legal Leave)", { root: individualLeaves })).toHaveCount(1);
     expect(queryAll("span:contains(8 day(s))", { root: individualLeaves })).toHaveCount(1);

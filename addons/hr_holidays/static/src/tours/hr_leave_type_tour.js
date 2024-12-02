@@ -107,7 +107,7 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             run: "click",
         },
         {
-            trigger: 'button[name="action_approve"]',
+            trigger: 'button[name="action_validate"]',
             content: "Approve the leave",
             tooltipPosition: "bottom",
             run: "click",
@@ -180,7 +180,7 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             run: "click",
         },
         {
-            trigger: 'button[name="action_approve"]',
+            trigger: 'button[name="action_validate"]',
             content: "Approve the leave",
             tooltipPosition: "bottom",
             run: "click",

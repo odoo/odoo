@@ -1,7 +1,9 @@
+import { onWillStart } from "@odoo/owl";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 
 import { formView } from "@web/views/form/form_view";
 import { FormController } from "@web/views/form/form_controller";
@@ -14,13 +16,16 @@ export class TimeOffDialogFormController extends FormController {
         onCancelLeave: Function,
         onRecordDeleted: Function,
         onLeaveCancelled: Function,
-        onLeaveUpdated: Function,
     };
 
     setup() {
         super.setup();
         this.leaveCancelWizard = useLeaveCancelWizard();
         this.orm = useService("orm");
+        this.action = useService("action");
+        onWillStart(async () => {
+            this.isHrHolidaysUser = (await user.hasGroup("hr_holidays.group_hr_holidays_user"));
+        });
     }
 
     get record() {
@@ -30,32 +35,43 @@ export class TimeOffDialogFormController extends FormController {
     async onClick(action) {
         const args = action === "action_approve" ? [this.record.resId, false] : [this.record.resId];
         await this.orm.call("hr.leave", action, args);
-        this.props.onLeaveUpdated();
+        this.save(this.record._changes);
+    }
+
+    get canSave() {
+        return (!this.isOwnLeave && this.record.isNew) || (this.isOwnLeave && this.record.data.state === 'confirm')
     }
 
     get canApprove() {
-        return (
-            !this.model.root.isNew &&
-            this.record.data.can_approve &&
-            ["confirm", "refuse"].includes(this.record.data.state)
-        );
+        return this.record.data.can_approve && !this.record.isNew;
+    }
+
+    get canClose() {
+        return this.record.isNew || !(this.record.data.state === 'confirm' && this.canRefuse)
     }
 
     get canValidate() {
-        return (
-            !this.model.root.isNew &&
-            this.record.data.can_approve &&
-            this.record.data.state === "validate1"
-        );
+        return this.record.data.can_validate && !this.record.isNew;
     }
 
     get canRefuse() {
-        return (
-            !this.model.root.isNew &&
-            this.record.data.can_approve &&
-            this.record.data.state &&
-            ["confirm", "validate1", "validate"].includes(this.record.data.state)
-        );
+        return this.record.data.can_refuse && !this.record.isNew;
+    }
+
+    get isOwnLeave() {
+        return this.record.data.user_id && this.record.data.user_id[0] === user.userId;
+    }
+
+    get approveClassName(){
+        return this.canSave ? "btn btn-secondary" : "btn btn-primary";
+    }
+
+    get validateClassName(){
+        return this.canSave ? "btn btn-secondary" : "btn btn-primary";
+    }
+
+    get refuseClassName(){
+        return (this.canValidate || this.canApprove) ? "btn btn-secondary" : "btn btn-primary";
     }
 
     deleteRecord() {
@@ -71,16 +87,11 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     get canCancel() {
-        return !this.model.root.isNew && this.record.data.can_cancel;
+        return this.record.data.can_cancel;
     }
 
     get canDelete() {
-        return (
-            !this.canCancel &&
-            !this.model.root.isNew &&
-            this.record.data.state &&
-            !["validate", "refuse", "cancel"].includes(this.record.data.state)
-        );
+        return this.record.data.state === 'confirm';
     }
 }
 
@@ -103,10 +114,6 @@ export class TimeOffFormViewDialog extends FormViewDialog {
             jsClass: "timeoff_dialog_form",
             buttonTemplate: "hr_holidays.FormViewDialog.buttons",
             onCancelLeave: () => {
-                this.props.close();
-            },
-            onLeaveUpdated: () => {
-                this.props.onRecordSaved();
                 this.props.close();
             },
             onRecordDeleted: (record) => {

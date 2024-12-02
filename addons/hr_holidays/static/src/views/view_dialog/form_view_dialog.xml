@@ -3,29 +3,51 @@
 
     <t t-name="hr_holidays.FormViewDialog.buttons" t-inherit="web.FormViewDialog.ToOne.buttons">
         <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
-            <button class="btn btn-primary o_form_button_save" t-if="!['validate1', 'validate', 'refuse'].includes(this.record.data.state)" t-on-click="saveButtonClicked" data-hotkey="q">Save</button>
+            <button
+                class="btn btn-primary o_form_button_save"
+                t-on-click="saveButtonClicked"
+                t-if="canSave"
+                data-hotkey="q">
+                <span t-if="this.record.isNew">Create</span>
+                <span t-else="">Save</span>
+            </button>
         </xpath>
 
-        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="attributes">
-            <attribute name="class" separator=" " remove="btn-secondary"/>
-            <attribute name="t-attf-class" separator=" " add="{{ ['validate1', 'validate', 'refuse'].includes(this.record.data.state) ? 'btn-primary' : 'btn-secondary' }}"/>
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="replace">
+            <button type="button"
+                    class="btn btn-secondary o_form_button_cancel"
+                    data-hotkey="j"
+                    t-on-click.stop="discard"
+                    t-if="canClose">
+                Discard
+            </button>
         </xpath>
 
-        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="after">
-            <button class="btn btn-secondary"
-                    t-if="canCancel"
-                    t-on-click="cancelRecord"
-                    data-hotkey="x">Cancel</button>
-            <button class="btn btn-secondary"
-                    t-if="canDelete"
-                    t-on-click="deleteRecord"
-                    data-hotkey="x">Delete</button>
+        <xpath expr="//button[hasclass('o_form_button_cancel')]" position="before">
+            <button
+                t-if="canApprove"
+                t-att-class="this.approveClassName"
+                t-on-click="() => this.onClick('action_approve')"
+                data-hotkey="x">Approve</button>
+            <button
+                t-if="canValidate"
+                t-att-class="this.validateClassName"
+                t-on-click="() => this.onClick('action_validate')"
+                data-hotkey="x">Validate</button>
+            <button
+                t-if="canRefuse"
+                t-att-class="this.refuseClassName"
+                t-on-click="() =>this.onClick('action_refuse')"
+                data-hotkey="x">Refuse</button>
         </xpath>
         <xpath expr="//div" position="inside">
             <div class="ms-auto d-flex gap-1">
-                <button class="btn btn-secondary" t-if="canValidate" t-on-click="() => this.onClick('action_validate')" data-hotkey="v">Validate</button>
-                <button class="btn btn-secondary" t-if="canApprove" t-on-click="() => this.onClick('action_approve')" data-hotkey="g">Approve</button>
-                <button class="btn btn-secondary" t-if="canRefuse" t-on-click="() => this.onClick('action_refuse')" data-hotkey="z">Refuse</button>
+                <button class="btn btn-danger" t-if="canDelete" t-on-click="deleteRecord" data-hotkey="v">
+                    Delete Time Off
+                </button>
+                <button class="btn btn-danger" t-if="canCancel" t-on-click="cancelRecord" data-hotkey="x">
+                    Cancel Time Off
+                </button>
             </div>
         </xpath>
     </t>

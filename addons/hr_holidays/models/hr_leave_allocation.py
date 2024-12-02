@@ -13,9 +13,6 @@ from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
 
 
-MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
-
-
 class HrLeaveAllocation(models.Model):
     """ Allocation Requests Access specifications: similar to leave requests """
     _name = 'hr.leave.allocation'
@@ -102,9 +99,7 @@ class HrLeaveAllocation(models.Model):
         ('half_day', 'Half Day'),
         ('day', 'Day'),
     ], compute="_compute_type_request_unit")
-    department_id = fields.Many2one(
-        'hr.department', compute='_compute_department_id', store=True, string='Department',
-        readonly=False)
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department')
     # accrual configuration
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
     # lastcall is only updated on accrual date. On other dates such as carryover date,
@@ -311,7 +306,7 @@ class HrLeaveAllocation(models.Model):
         elif carryover_time == 'allocation':
             carryover_date = date(date_from.year, self.date_from.month, self.date_from.day)
         else:
-            carryover_date = date(date_from.year, MONTHS_TO_INTEGER[accrual_plan.carryover_month], accrual_plan.carryover_day)
+            carryover_date = date(date_from.year, int(accrual_plan.carryover_month), accrual_plan._get_day())
         if date_from > carryover_date:
             carryover_date += relativedelta(years=1)
         return carryover_date

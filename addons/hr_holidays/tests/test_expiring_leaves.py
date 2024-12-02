@@ -45,8 +45,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
-            'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_day': 'last',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -117,8 +117,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
-            'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_day': 'last',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -202,8 +202,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         accrual_plan_1 = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
-            'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_day': 'last',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -303,8 +303,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).sudo().create({
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
-            'carryover_day': 31,
-            'carryover_month': 'dec',
+            'carryover_day': 'last',
+            'carryover_month': '12',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
@@ -428,7 +428,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             'name': 'Test Accrual Plan',
             'carryover_date': 'other',
             'carryover_day': 1,
-            'carryover_month': 'sep',
+            'carryover_month': '9',
             'level_ids': [
                 (0, 0, {
                 'start_count': 0,
