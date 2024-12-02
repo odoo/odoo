@@ -893,7 +893,7 @@
 
     <!--  Vertical Alignment -->
     <div data-js="vAlignment" id="row_valign_snippet_option"
-         data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image"
+         data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_countdown"
          data-target=".row">
         <t t-call="website.vertical_alignment_option">
             <t t-set="indent" t-value="True"/>
@@ -993,7 +993,7 @@
 
     <t t-set="so_content_addition_selector" t-translation="off">
         blockquote, .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating,
-        .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge,
+        .s_hr, .s_google_map, .s_map, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge,
         .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge, .s_accordion
     </t>
 
@@ -1001,7 +1001,7 @@
 
     <div id="so_content_addition"
         t-attf-data-selector="#{so_content_addition_selector}, .s_card"
-        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, .btn, #{so_content_addition_selector}, .s_card:not(#{special_cards_selector})"
+        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, .btn, #{so_content_addition_selector}, .s_card:not(#{special_cards_selector}), .s_countdown_canvas_wrapper"
         t-attf-data-exclude="#{special_cards_selector}"
         data-drop-in="nav"/>
 

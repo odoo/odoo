@@ -343,10 +343,7 @@ const CountdownWidget = publicWidget.Widget.extend({
             ctx.rect(barWidth, barWidth, this.width - barWidth * 2, this.size - barWidth * 2);
             ctx.fill();
 
-            const gradient = ctx.createLinearGradient(0, this.width, 0, 0);
-            gradient.addColorStop(0, '#ffffff24');
-            gradient.addColorStop(1, this.layoutBackgroundColor);
-            ctx.fillStyle = gradient;
+            ctx.fillStyle = this.layoutBackgroundColor;
             ctx.rect(barWidth, barWidth, this.width - barWidth * 2, this.size - barWidth * 2);
             ctx.fill();
             $(ctx.canvas).css({'border-radius': '8px'});

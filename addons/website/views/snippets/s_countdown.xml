@@ -2,25 +2,52 @@
 <odoo>
 
 <template id="s_countdown" name="Countdown">
-    <section class="s_countdown pt48 pb48"
+    <section class="s_countdown o_half_screen_height o_cc o_cc5 pt48 pb48"
         data-display="dhms" data-end-action="nothing" data-size="175"
         t-att-data-end-time="datetime.datetime.now().timestamp() + 228307"
         data-layout="circle" data-layout-background="none"
-        data-progress-bar-style="surrounded" data-progress-bar-weight="thin"
-        data-text-color="o-color-1" data-layout-background-color="400" data-progress-bar-color="o-color-1">
+        data-progress-bar-style="disappear" data-progress-bar-weight="thin"
+        data-text-color="o-color-4" data-layout-background-color="o-color-2" data-progress-bar-color="o-color-2">
         <div class="container">
-            <div class="s_countdown_canvas_wrapper text-center d-flex justify-content-center">
-                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">2</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Days</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 0 1 146.0226550063448 34.80596474923991" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+            <div class="row">
+                <div class="col-12 col-lg-12 pb32">
+                    <h2 style="text-align: center;">
+                        <span style="font-size: 5rem;">All your business<br/>on a single platform</span>
+                    </h2>
+                    <p class="lead" style="text-align: center;">
+                        <span class="h5-fs">Imagine a vast collection of business apps at your disposal.<br/>No complexity, no cost, just a one-click install.</span>
+                    </p>
+                    <p style="text-align: center;">
+                        <a class="btn btn-primary"> Join the waitlist</a>
+                    </p>
                 </div>
-                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">16</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Hours</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 19.30049945197547 126.87500000000003" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                <div class="col-12 col-lg-12 s_countdown_canvas_wrapper text-center d-flex justify-content-center pb64">
+                    <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-4)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">2</text><text fill="var(--o-color-4)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Days</text><path fill="none" stroke="var(--o-color-4)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-5)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 0 1 146.0226550063448 34.80596474923991" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                    </div>
+                    <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-4)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">16</text><text fill="var(--o-color-4)" stroke="var(--o-color-4)" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Hours</text><path fill="none" stroke="var(--o-color-4)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-5)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 19.30049945197547 126.87500000000003" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                    </div>
+                    <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-4)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">30</text><text fill="var(--o-color-4)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Minutes</text><path fill="none" stroke="var(--o-color-4)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-5)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 0 1 87.5 166.25" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                    </div>
+                    <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-4)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">45</text><text fill="var(--o-color-4)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Seconds</text><path fill="none" stroke="var(--o-color-4)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-5)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 8.75 87.50000000000001" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                    </div>
                 </div>
-                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">30</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Minutes</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 0 1 87.5 166.25" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
-                </div>
-                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">45</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Seconds</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 8.75 87.50000000000001" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                <div class="col-12 col-lg-12">
+                    <div class="s_social_media text-center o_not_editable" contenteditable="false" data-snippet="s_social_media">
+                        <h4 class="s_social_media_title d-none" contenteditable="true">Social Media</h4>
+                        <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
+                            <i class="fa fa-facebook rounded-empty-circle shadow-sm bg-o-color-5 o_editable_media" style="border-color: var(--o-color-2)"/>
+                        </a>
+                        <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank" aria-label="X">
+                            <i class="fa fa-twitter rounded-empty-circle shadow-sm bg-o-color-5 o_editable_media" style="border-color: var(--o-color-2)"/>
+                        </a>
+                        <a href="/website/social/instagram" class="s_social_media_instagram" target="_blank" aria-label="Instagram">
+                            <i class="fa fa-instagram rounded-empty-circle shadow-sm bg-o-color-5 o_editable_media" style="border-color: var(--o-color-2)"/>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -53,29 +80,29 @@
                 <we-button data-select-data-attribute="dhm">D - H - M</we-button>
                 <we-button data-select-data-attribute="dhms">D - H - M - S</we-button>
             </we-select>
-            <we-colorpicker string="Text Color" data-attribute-name="textColor" data-select-data-attribute=""/>
+            <we-colorpicker string="Text Color" data-attribute-name="textColor" data-select-data-attribute="" class="o_we_sublevel_1"/>
             <we-select string="Layout">
                 <we-button data-layout="circle" data-name="circle_layout_opt">Circle</we-button>
                 <we-button data-layout="boxes" data-name="boxes_layout_opt">Boxes</we-button>
                 <we-button data-layout="clean">Clean</we-button>
                 <we-button data-layout="text">Text Inline</we-button>
             </we-select>
-            <we-select string="Layout Background" data-attribute-name="layoutBackground" data-dependencies="circle_layout_opt, boxes_layout_opt">
+            <we-select string="Fill" data-attribute-name="layoutBackground" data-dependencies="circle_layout_opt, boxes_layout_opt" class="o_we_sublevel_1">
                 <we-button data-select-data-attribute="inner">Inner</we-button>
                 <we-button data-select-data-attribute="plain">Plain</we-button>
                 <we-button data-select-data-attribute="none" data-name="no_background_layout_opt">None</we-button>
             </we-select>
-            <we-colorpicker string="Layout Background Color" data-dependencies="!no_background_layout_opt" data-attribute-name="layoutBackgroundColor" data-select-data-attribute=""/>
+            <we-colorpicker string="Fill Color" data-dependencies="!no_background_layout_opt" data-attribute-name="layoutBackgroundColor" data-select-data-attribute="" class="o_we_sublevel_1"/>
             <we-select string="Progress Bar Style" data-attribute-name="progressBarStyle" data-dependencies="circle_layout_opt, boxes_layout_opt">
                 <we-button data-select-data-attribute="surrounded">Surrounded</we-button>
                 <we-button data-select-data-attribute="disappear">Disappearing</we-button>
                 <we-button data-select-data-attribute="none" data-name="no_progressbar_style_opt">None</we-button>
             </we-select>
-            <we-select string="Progress Bar Weight" data-attribute-name="progressBarWeight" data-dependencies="!no_progressbar_style_opt">
+            <we-select string="Weight" data-attribute-name="progressBarWeight" data-dependencies="!no_progressbar_style_opt" class="o_we_sublevel_1">
                 <we-button data-select-data-attribute="thin">Thin</we-button>
                 <we-button data-select-data-attribute="thick">Thick</we-button>
             </we-select>
-            <we-colorpicker string="Progress Bar Color" data-dependencies="!no_progressbar_style_opt" data-attribute-name="progressBarColor" data-select-data-attribute=""/>
+            <we-colorpicker string="Color" data-dependencies="!no_progressbar_style_opt" data-attribute-name="progressBarColor" data-select-data-attribute="" class="o_we_sublevel_1"/>
         </div>
     </xpath>
 </template>
