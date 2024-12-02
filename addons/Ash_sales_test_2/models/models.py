@@ -2,9 +2,11 @@ from odoo import models, fields, api
 import requests
 import logging
 
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -20,8 +22,7 @@ class SaleOrder(models.Model):
         ('packed', 'Packed'),
         ('none', 'None')
     ], string="Pick Status", default='none')
-    
-    # New fields
+
     consignment_number = fields.Char(string="Consignment Number")
     carrier = fields.Char(string="Carrier")
     status = fields.Char(string="Status")
@@ -29,88 +30,99 @@ class SaleOrder(models.Model):
 
     def action_release_quotations(self):
         logger.info(f"action_release_quotations called with {len(self)} orders")
-        logger.info(f"twwwhis is 222 code ---------------------------------")
         if not self:
             logger.warning("No orders passed to action_release_quotations")
-            return  # Early exit if no orders
 
         for order in self:
             logger.info(f"Processing order: {order.name}")
             all_products_available = True
             products_data = []
 
-            # Fetch all picking records for the current order, excluding canceled pickings
+            # Fetch picking records for the current order
             picking_records = self.env['stock.picking'].search([
                 ('origin', '=', order.name),
                 ('state', '!=', 'cancel')  # Exclude canceled pickings
             ])
-
-            # Filter only "Pick" type pickings based on picking type name containing 'Pick'
+            # Filter only "pick" type pickings
             pick_only_picking_records = picking_records.filtered(
-                lambda p: 'Pick' in p.picking_type_id.name  # Adjust this condition based on your naming convention
+                lambda p: 'Pick' in p.picking_type_id.name  # Adjust logic based on your type naming convention
             )
 
-            if not pick_only_picking_records:
-                logger.warning(f"No 'Pick' pickings found for order {order.name}. Cannot proceed with release.")
-                order.is_released = 'unreleased'
-                continue  # Skip to the next order
-
-            logger.info(f"Found {len(pick_only_picking_records)} 'Pick' picking(s) for order {order.name}.")
-
             for line in order.order_line:
-                product_qty = line.product_uom_qty  
+                product_qty = line.product_uom_qty
                 product = line.product_id
 
                 # Search for the product using its default_code
                 product_default_code = product.default_code
+                available_qty = product.qty_available
 
-                # Initialize available_qty to 0; it will be updated based on location-specific quant
-                available_qty = 0
+                # Fetch the stock location using the stock.quant model
+                location_quant = self.env['stock.quant'].search([
+                    ('product_id', '=', product.id),
+                    ('location_id.usage', '=', 'internal')
+                ], limit=1)
 
-                # Fetch the stock move related to this order line and only from 'Pick' pickings
-                stock_moves = self.env['stock.move'].search([
-                    ('sale_line_id', '=', line.id),
-                    ('picking_id', 'in', pick_only_picking_records.ids),
-                    ('state', 'not in', ['cancel', 'done'])  # Ensure the move is active
-                ])
+                location_name = "Unknown"
+                location_system = "Unknown"
+                manual_location_names = []  # To store manual locations if applicable
+                manual_locations_fulfilled_qty = 0  # Track total fulfilled quantity from manual locations
 
-                if stock_moves:
-                    # Assuming one move per order line; adjust if multiple moves per line are possible
-                    move = stock_moves[0]
-                    location = move.location_id  # Source location from the 'Pick' move
+                if location_quant:
+                    location_name = location_quant.location_id.name
+                    location_system = location_quant.location_id.system_type
 
-                    logger.info(f"Found 'Pick' stock move for line {line.id}: Location '{location.name}'")
+                logger.info(
+                    '----------------------------------------------------------------------------------------------------')
+                logger.info(
+                    f"Checking product {product.name} (Default Code: {product_default_code}): Ordered {product_qty}, Available {available_qty}")
 
-                    # Fetch the stock.quant in the specific location
-                    location_quant = self.env['stock.quant'].search([
+                # Check quantity in source location
+                product_available_in_source = False
+                for picking in pick_only_picking_records:
+                    source_location = picking.location_id
+                    source_quant = self.env['stock.quant'].search([
                         ('product_id', '=', product.id),
-                        ('location_id', '=', location.id)
+                        ('location_id', '=', source_location.id)
                     ], limit=1)
 
-                    if location_quant:
-                        location_name = location_quant.location_id.name
-                        location_system = location_quant.location_id.system_type
-                        available_qty = location_quant.quantity  # Available quantity in the specific location
-                        logger.info(f"Product '{product.name}' available in '{location_name}': {available_qty}")
-                    else:
-                        location_name = "Unknown"
-                        location_system = "Unknown"
-                        available_qty = 0
-                        logger.warning(f"No stock quant found for product '{product.name}' in location '{location.name}'")
-                else:
-                    logger.warning(f"No 'Pick' stock move found for order line {line.id} in order {order.name}")
-                    location_name = "Unknown"
-                    location_system = "Unknown"
+                    # If product is manual, check child locations if not available in the source location
+                    if not source_quant or source_quant.quantity < product_qty:
+                        if product.automation_manual_product == 'manual':
+                            child_locations = self.env['stock.location'].search([
+                                ('id', 'child_of', source_location.id),
+                                ('usage', '=', 'internal')
+                            ], order="id asc")  # Sort to prioritize child of child locations
 
-                logger.info('----------------------------------------------------------------------------------------------------')
-                logger.info(f"Checking product {product.name} (Default Code: {product_default_code}): Ordered {product_qty}, Available {available_qty}")
+                            for child_location in child_locations:
+                                if manual_locations_fulfilled_qty >= product_qty:
+                                    break
 
-                if product_qty > available_qty:
+                                child_quant = self.env['stock.quant'].search([
+                                    ('product_id', '=', product.id),
+                                    ('location_id', '=', child_location.id)
+                                ], limit=1)
+
+                                if child_quant and child_quant.quantity > 0:
+                                    fulfilled_qty = min(
+                                        product_qty - manual_locations_fulfilled_qty, child_quant.quantity)
+                                    manual_locations_fulfilled_qty += fulfilled_qty
+                                    manual_location_names.append(
+                                        f"{child_location.name} (Fulfilled: {fulfilled_qty})")
+
+                            if manual_locations_fulfilled_qty >= product_qty:
+                                product_available_in_source = True
+                                break
+                    elif source_quant.quantity >= product_qty:
+                        product_available_in_source = True
+                        break
+
+                if not product_available_in_source:
+                    logger.warning(
+                        f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}.")
                     all_products_available = False
-                    logger.warning(f"Insufficient stock for product '{product.name}' in order {order.name}. Required: {product_qty}, Available: {available_qty}")
-                    break  # Exit early since one product is insufficient
+                    break
 
-                # Collect pickings that include the product within 'Pick' pickings
+                # Collect pickings that include the product
                 product_pickings = pick_only_picking_records.filtered(
                     lambda p: product.id in p.move_ids.mapped('product_id').ids
                 ).mapped('name')
@@ -128,15 +140,13 @@ class SaleOrder(models.Model):
                     'default_code': product_default_code,
                     'product_name': product.name,
                     'quantity': product_qty,
-                    'location': location_name,
+                    'location': f"{location_name} (Automation)" if not manual_location_names else
+                                f"{location_name} (Manual), {', '.join(manual_location_names)} (Manual)",
                     'system': location_system,
                     'product_class': product.automation_manual_product,
                     'picklist': product_pickings[0] if product_pickings else "No picklist",
                 })
                 logger.debug(f"Product data for {product.name}: {products_data[-1]}")
-
-            # Update order status
-            logger.info("Proceeding without authentication...")
 
             # Proceed with the release process
             if all_products_available:
@@ -146,23 +156,25 @@ class SaleOrder(models.Model):
                     'order_number': order.name,
                     'products': products_data,
                 }
+                logger.info(f"Generated data to release: {data_to_send}")
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
-                # Send data to external API
-                release_url = "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
-
+                is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+                # Send data to external API based on env
+                release_url = (
+                    "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
+                    if is_production == 'True'
+                    else "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
+                )
                 headers = {
                     "Content-Type": "application/json"
                 }
-                try:
-                    response = requests.post(release_url, json=data_to_send, headers=headers)
-                    if response.status_code == 200:
-                        logger.info(f"Order {order.name} data successfully sent to external system.")
-                    else:
-                        logger.error(f"Failed to send order {order.name} data to external system. Response: {response.text}")
-                        order.is_released = 'unreleased'
-                except requests.exceptions.RequestException as e:
-                    logger.error(f"Request exception occurred while sending order {order.name}: {e}")
+                response = requests.post(release_url, json=data_to_send, headers=headers)
+                if response.status_code == 200:
+                    logger.info(f"Order {order.name} data successfully sent to external system.")
+                else:
+                    logger.error(
+                        f"Failed to send order {order.name} data to external system. Response: {response.text}")
                     order.is_released = 'unreleased'
             else:
                 order.is_released = 'unreleased'
-                logger.info(f"Order {order.name} released: {order.is_released}")
+            logger.info(f"Order {order.name} released: {order.is_released}")
