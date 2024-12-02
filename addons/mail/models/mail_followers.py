@@ -86,7 +86,7 @@ class MailFollowers(models.Model):
             recipients of the mails as a set of tuple (model, res_id, partner_id).
         :rtype: set
         """
-        self.env['mail.mail'].flush_model(['message_id', 'recipient_ids'])
+        self.env['mail.mail'].flush_model(['mail_message_id', 'recipient_ids'])
         self.env['mail.followers'].flush_model(['partner_id', 'res_model', 'res_id'])
         self.env['mail.message'].flush_model(['model', 'res_id'])
         # mail_mail_res_partner_rel is the join table for the m2m recipient_ids field
