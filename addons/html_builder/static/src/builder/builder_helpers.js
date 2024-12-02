@@ -121,6 +121,64 @@ export function useClickableWeWidget() {
         isActive,
     };
 }
+export function useInputWeWidget() {
+    const comp = useComponent();
+    const state = useState(getState());
+    const applyValue = comp.env.editor.shared.history.makePreviewableOperation((value) => {
+        for (const [actionId, actionParam] of getActions()) {
+            actionsRegistry.get(actionId).apply({
+                editingElement: comp.env.editingElement,
+                param: actionParam,
+                value,
+            });
+        }
+    });
+    function getState() {
+        const [actionId, actionParam] = getActions()[0];
+        return {
+            value: actionsRegistry.get(actionId).getValue({
+                editingElement: comp.env.editingElement,
+                param: actionParam,
+            }),
+        };
+    }
+    function getActions() {
+        const actions = [];
+        const actionNames = [
+            "classAction",
+            "attributeAction",
+            "dataAttributeAction",
+            "styleAction",
+        ];
+        for (const actionName of actionNames) {
+            if (comp.props[actionName]) {
+                actions.push([actionName, comp.props[actionName]]);
+            }
+        }
+
+        if (comp.props.action) {
+            actions.push([comp.props.action, comp.props.actionParam]);
+        }
+        return actions;
+    }
+    let lastCommitedValue;
+    function onChange(e) {
+        const value = e.target.value;
+        if (value === lastCommitedValue) {
+            return;
+        }
+        lastCommitedValue = value;
+        applyValue.commit(value);
+    }
+    function onInput(e) {
+        applyValue.preview(e.target.value);
+    }
+    return {
+        state,
+        onChange,
+        onInput,
+    };
+}
 
 export const basicContainerWeWidgetProps = {
     applyTo: { type: String, optional: true },

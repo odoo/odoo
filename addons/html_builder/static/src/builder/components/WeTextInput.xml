@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.WeTextInput">
+    <div class="d-flex flex-row flex-nowrap align-items-center" t-att-data-action-id="props.action" style="width: 60px">
+        <input
+            type="text"
+            autocomplete="chrome-off"
+            t-att-placeholder="props.placeholder"
+            t-on-change="this.onChange"
+            t-on-blur="this.onChange"
+            t-on-input="this.onInput"
+            t-att-value="this.state.value" />
+    </div>
+</t>
+
+</templates>

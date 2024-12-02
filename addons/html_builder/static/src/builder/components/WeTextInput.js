@@ -1,11 +1,11 @@
 import { Component } from "@odoo/owl";
 import { basicContainerWeWidgetProps, useInputWeWidget, useWeComponent } from "../builder_helpers";
 
-export class WeNumberInput extends Component {
-    static template = "html_builder.WeNumberInput";
+export class WeTextInput extends Component {
+    static template = "html_builder.WeTextInput";
     static props = {
         ...basicContainerWeWidgetProps,
-        unit: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
     };
 
     setup() {
