@@ -30,7 +30,7 @@ export class SharedPopup extends Interaction {
         this.popupShown = false;
 
         // TODO: support edit mode, maybe this can be removed completely.
-        // Popup are always closed when entering edit mode (see PopupWidget),
+        // Popup are always closed when entering edit mode (see Popup interaction),
         // this allows to make sure the class is sync on the .s_popup parent
         // after that moment too.
         // if (!this.editableMode) {
