@@ -39,6 +39,10 @@ class WebSocketMock extends EventTarget {
             throw new DOMException("Failed to execute 'send' on 'WebSocket': State is not OPEN");
         }
     }
+
+    simulateIncomingMessage(message) {
+        this.dispatchEvent(new MessageEvent("message", { data: message }));
+    }
 }
 
 class SharedWorkerMock extends EventTarget {
