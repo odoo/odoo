@@ -29,6 +29,7 @@ class SaleOrder(models.Model):
 
     def action_release_quotations(self):
         logger.info(f"action_release_quotations called with {len(self)} orders")
+        logger.info(f"this is new code ---------------------------------")
         if not self:
             logger.warning("No orders passed to action_release_quotations")
         for order in self:
