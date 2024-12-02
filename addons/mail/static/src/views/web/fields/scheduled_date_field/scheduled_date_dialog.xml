@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="mail.MailComposerScheduleDialog">
-    <t t-if="props.isNote" t-set="dialogTitle">
-        Schedule Note
-    </t>
-    <t t-else="" t-set="dialogTitle">
-        Schedule Message
-    </t>
-    <Dialog title="dialogTitle" size="'md'">
+<t t-name="mail.ScheduledDateDialog">
+    <Dialog title.translate="Set Scheduled Date" size="'md'">
         <div role="radiogroup">
             <div class="d-flex justify-content-between justify-content-md-start my-3 my-sm-2">
                 <div class="form-check w-md-50">
@@ -50,11 +44,14 @@
             </div>
         </div>
         <t t-set-slot="footer">
-            <button class="btn btn-primary" t-on-click="schedule" data-hotkey="S">
-                Schedule
+            <button class="btn btn-primary" t-on-click="save" data-hotkey="S">
+                Save
             </button>
             <button class="btn btn-secondary" t-on-click="props.close" data-hotkey="C">
                 Close
+            </button>
+            <button t-if="props.isRemovable and props.scheduledDate" class="btn btn-secondary ms-auto" t-on-click="clear" data-hotkey="shift+C">
+                Clear Time
             </button>
         </t>
     </Dialog>
