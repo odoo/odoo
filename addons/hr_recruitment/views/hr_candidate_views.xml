@@ -73,7 +73,7 @@
                             <field name="user_id" string="Manager"/>
                             <field name="priority" widget="priority"/>
                             <field name="availability"/>
-                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': color}"/>
                             <field name="employee_id" invisible="1"/>
                             <field name="emp_is_active" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
@@ -130,7 +130,7 @@
                     <t t-name="card">
                         <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
                         <field t-else="" class="fw-bold fs-5" name="partner_id"/>
-                        <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="categ_ids" widget="many2many_tags" options="{'color_field': color}"/>
                         <field name="candidate_properties" widget="properties"/>
                         <footer>
                             <field name="priority" widget="priority"/>
@@ -153,7 +153,7 @@
         <field name="name">hr.candidate.view.calendar</field>
         <field name="model">hr.candidate</field>
         <field name="arch" type="xml">
-            <calendar 
+            <calendar
                 string="Candidates"
                 mode="month"
                 date_start="activity_date_deadline"
@@ -216,7 +216,7 @@
             </search>
         </field>
     </record>
-    
+
     <record id="action_hr_candidate_mass_sms" model="ir.actions.act_window">
         <field name="name">Send SMS</field>
         <field name="res_model">sms.composer</field>

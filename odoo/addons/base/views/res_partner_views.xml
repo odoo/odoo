@@ -67,7 +67,7 @@
                     <field name="state_id" optional="hide" readonly="1"/>
                     <field name="country_id" optional="show" readonly="1"/>
                     <field name="vat" optional="hide" readonly="1"/>
-                    <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': color}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                 </list>
             </field>
@@ -207,7 +207,7 @@
                             <field name="title" options='{"no_open": True}' placeholder="e.g. Mister"
                                 invisible="is_company"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
-                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"
+                            <field name="category_id" widget="many2many_tags" options="{'color_field': color}"
                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
                         </group>
                     </group>

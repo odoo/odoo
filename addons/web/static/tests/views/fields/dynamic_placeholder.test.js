@@ -24,14 +24,13 @@ class Partner extends models.Model {
     _views = {
         form: /* xml */ `
             <form>
-                <field name="placeholder" invisible="1"/>
                 <sheet>
                     <group>
                         <field
                             name="char"
                             options="{
                                 'dynamic_placeholder': true,
-                                'dynamic_placeholder_model_reference_field': 'placeholder'
+                                'dynamic_placeholder_model_reference_field': placeholder
                             }"
                         />
                     </group>

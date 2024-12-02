@@ -243,9 +243,9 @@ export const referenceField = {
     supportedTypes: ["reference", "char"],
     extractProps({ options }) {
         /*
-        1 - <field name="ref" options="{'model_field': 'model_id'}" />
+        1 - <field name="ref" options="{'model_field': model_id}" />
         2 - <field name="ref" options="{'hide_model': True}" />
-        3 - <field name="ref" options="{'model_field': 'model_id' 'hide_model': True}" />
+        3 - <field name="ref" options="{'model_field': model_id 'hide_model': True}" />
         4 - <field name="ref"/>
 
         We want to display the model selector only in the 4th case.

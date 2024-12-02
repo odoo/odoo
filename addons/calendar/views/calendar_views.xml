@@ -83,7 +83,7 @@
                 <field name="user_id" widget="many2one_avatar_user" readonly="recurrency" optional="hide"/>
                 <field name="partner_ids" widget="many2many_tags" readonly="recurrency" optional="show"/>
                 <field name="alarm_ids" widget="many2many_tags" optional="hide" readonly="recurrency"/>
-                <field name="categ_ids" widget="many2many_tags" optional="hide" readonly="recurrency" options="{'color_field': 'color'}"/>
+                <field name="categ_ids" widget="many2many_tags" optional="hide" readonly="recurrency" options="{'color_field': color}"/>
                 <field name="recurrency" optional="hide" readonly="1"/>
                 <field name="privacy" optional="hide" readonly="recurrency"/>
                 <field name="show_as" optional="hide" readonly="recurrency"/>
@@ -204,7 +204,7 @@
                             </div>
                             <field name="videocall_source" invisible="1"/>
                             <field name="access_token" invisible="1" force_save="1"/>
-                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" readonly="not user_can_edit"/>
+                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': color, 'no_create_edit': True}" readonly="not user_can_edit"/>
                             <label for="privacy"/>
                                     <div class="o_row">
                                         <field name="show_as" readonly="not user_can_edit" nolabel="1"/>
@@ -359,7 +359,7 @@
                 <field name="res_model_name" invisible="not res_model_name"
                        options="{'icon': 'fa fa-link', 'shouldOpenRecord': true}"/>
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'fa fa-bell-o'}"/>
-                <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag', 'color_field': 'color'}"/>
+                <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'fa fa-tag', 'color_field': color}"/>
                 <!-- For recurrence update Dialog -->
                 <field name="recurrency" invisible="1"/>
                 <field name="recurrence_update" invisible="1"/>

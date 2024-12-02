@@ -261,7 +261,10 @@ export class Field extends Component {
             } else if (name === "on_change") {
                 fieldInfo.onChange = exprToBoolean(value);
             } else if (name === "options") {
-                fieldInfo.options = evaluateExpr(value);
+                const evalContext = Object.fromEntries(
+                    Object.keys(fields).map((fieldName) => [fieldName, fieldName])
+                );
+                fieldInfo.options = evaluateExpr(value, evalContext);
             } else if (name === "force_save") {
                 fieldInfo.forceSave = exprToBoolean(value);
             } else if (name.startsWith("decoration-")) {

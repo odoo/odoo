@@ -38,7 +38,6 @@
                         <group>
                             <group>
                                 <field name="res_model_id" options="{'no_create': True, 'no_open': True}" />
-                                <field name="res_model_name" invisible="1" />
                                 <field name="active" widget="boolean_toggle" />
                             </group>
                             <group>
@@ -66,7 +65,7 @@
                             </group>
                         </group>
                         <group invisible="not res_model_id">
-                            <field name="domain" widget="domain" options="{'model': 'res_model_name'}"/>
+                            <field name="domain" widget="domain" options="{'model': res_model_name}"/>
                             <field name="time_field_id"/>
                             <field name="time_field_delta"/>
                             <field name="time_field_delta_unit"/>

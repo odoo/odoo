@@ -1293,6 +1293,10 @@ actual arch.
             if context:
                 vnames = get_expression_field_names(context)
                 name_manager.must_have_fields(node, vnames, node_info, ('context', context))
+            options = node.get('options')
+            if options:
+                vnames = get_expression_field_names(options)
+                name_manager.must_have_fields(node, vnames, node_info, ('options', options))
 
             for child in node:
                 if child.tag in ('form', 'list', 'graph', 'kanban', 'calendar'):

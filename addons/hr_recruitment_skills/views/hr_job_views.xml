@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="contract_type_id" position="after">
-                <field 
+                <field
                     name="skill_ids"
                     widget="many2many_tags"
-                    options="{'color_field': 'color'}"
+                    options="{'color_field': color}"
                     context="{'search_default_group_skill_type_id': 1}"
                     />
             </field>

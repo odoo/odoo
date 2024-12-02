@@ -55,7 +55,7 @@ test("The domain editor should not crash the view when given a dynamic filter", 
         resId: 1,
         arch: `
                 <form>
-                    <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                    <field name="foo" widget="domain" options="{'model': partner}" />
                     <field name="int" invisible="1" />
                 </form>`,
     });
@@ -75,7 +75,7 @@ test("The domain editor should not crash the view when given a dynamic filter ( 
         resId: 1,
         arch: `
                 <form>
-                    <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                    <field name="foo" widget="domain" options="{'model': partner}" />
                 </form>`,
     });
 
@@ -106,7 +106,7 @@ test("basic domain field usage is ok", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner.type'}" />
+                        <field name="foo" widget="domain" options="{'model': partner.type}" />
                     </group>
                 </sheet>
             </form>`,
@@ -160,7 +160,7 @@ test("using binary field in domain widget", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                        <field name="foo" widget="domain" options="{'model': partner}" />
                     </group>
                 </sheet>
             </form>`,
@@ -190,7 +190,7 @@ test("domain field is correctly reset on every view change", async function () {
                 <sheet>
                     <group>
                         <field name="bar" />
-                        <field name="foo" widget="domain" options="{'model': 'bar'}" />
+                        <field name="foo" widget="domain" options="{'model': bar}" />
                     </group>
                 </sheet>
             </form>`,
@@ -250,7 +250,7 @@ test("domain field can be reset with a new domain (from onchange)", async functi
         arch: `
                 <form>
                     <field name="name" />
-                    <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                    <field name="foo" widget="domain" options="{'model': partner}" />
                 </form>`,
     });
 
@@ -290,7 +290,7 @@ test("domain field: handle false domain as []", async function () {
                 <sheet>
                     <group>
                         <field name="bar" />
-                        <field name="foo" widget="domain" options="{'model': 'bar'}" />
+                        <field name="foo" widget="domain" options="{'model': bar}" />
                     </group>
                 </sheet>
             </form>`,
@@ -315,7 +315,7 @@ test("basic domain field: show the selection", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner.type'}" />
+                        <field name="foo" widget="domain" options="{'model': partner.type}" />
                     </group>
                 </sheet>
             </form>`,
@@ -353,7 +353,7 @@ test("field context is propagated when opening selection", async function () {
         resId: 1,
         arch: `
             <form>
-                <field name="foo" widget="domain" options="{'model': 'partner.type'}" context="{'list_view_ref': 3}"/>
+                <field name="foo" widget="domain" options="{'model': partner.type}" context="{'list_view_ref': 3}"/>
             </form>`,
     });
 
@@ -378,7 +378,7 @@ test("domain field: manually edit domain with textarea", async function () {
         form: `
             <form>
                 <field name="bar"/>
-                <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                <field name="foo" widget="domain" options="{'model': bar}"/>
             </form>`,
         search: `<search />`,
     };
@@ -423,7 +423,7 @@ test("domain field: manually set an invalid domain with textarea", async functio
         form: `
                 <form>
                     <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                    <field name="foo" widget="domain" options="{'model': bar}"/>
                 </form>`,
         search: `<search />`,
     };
@@ -490,7 +490,7 @@ test("domain field: reload count by clicking on the refresh button", async funct
         form: `
                 <form>
                     <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                    <field name="foo" widget="domain" options="{'model': bar}"/>
                 </form>`,
         search: `<search />`,
     };
@@ -539,7 +539,7 @@ test("domain field: does not wait for the count to render", async function () {
         arch: `
             <form>
                 <field name="bar"/>
-                <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                <field name="foo" widget="domain" options="{'model': bar}"/>
             </form>`,
     });
 
@@ -572,7 +572,7 @@ test("domain field: edit domain with dynamic content", async function () {
         form: `
             <form>
                 <field name="bar"/>
-                <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                <field name="foo" widget="domain" options="{'model': bar}"/>
             </form>`,
         search: `<search />`,
     };
@@ -616,7 +616,7 @@ test("domain field: edit through selector (dynamic content)", async function () 
         form: `
             <form>
                 <field name="bar"/>
-                <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                <field name="foo" widget="domain" options="{'model': bar}"/>
             </form>`,
         search: `<search />`,
     };
@@ -673,7 +673,7 @@ test("domain field without model", async function () {
         arch: `
             <form>
                 <field name="model_name"/>
-                <field name="name" widget="domain" options="{'model': 'model_name'}"/>
+                <field name="name" widget="domain" options="{'model': model_name}"/>
             </form>`,
     });
 
@@ -704,7 +704,7 @@ test("domain field in kanban view", async function () {
             <kanban>
                 <templates>
                     <t t-name="card">
-                        <field name="foo" widget="domain" options="{'model': 'partner.type'}" />
+                        <field name="foo" widget="domain" options="{'model': partner.type}" />
                     </t>
                 </templates>
             </kanban>`,
@@ -731,7 +731,7 @@ test("domain field with 'inDialog' options", async function () {
         resModel: "partner",
         arch: `
             <form>
-                <field name="name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
+                <field name="name" widget="domain" options="{'model': partner, 'in_dialog': True}"/>
             </form>`,
     });
     expect(SELECTORS.condition).toHaveCount(0);
@@ -752,7 +752,7 @@ test("invalid value in domain field with 'inDialog' options", async function () 
         resModel: "partner",
         arch: `
             <form>
-                <field name="name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
+                <field name="name" widget="domain" options="{'model': partner, 'in_dialog': True}"/>
             </form>`,
     });
     expect(SELECTORS.condition).toHaveCount(0);
@@ -779,7 +779,7 @@ test("edit domain button is available even while loading records count", async f
         resModel: "partner",
         arch: `
             <form>
-                <field name="name" widget="domain" options="{'model': 'partner', 'in_dialog': True}"/>
+                <field name="name" widget="domain" options="{'model': partner, 'in_dialog': True}"/>
             </form>`,
     });
     expect(".modal").toHaveCount(0);
@@ -804,7 +804,7 @@ test("debug input editing sets the field as dirty even without a focus out", asy
         resModel: "partner",
         arch: `
             <form>
-                <field name="name" widget="domain" options="{'model': 'partner'}"/>
+                <field name="name" widget="domain" options="{'model': partner}"/>
             </form>`,
     });
     await contains(".o_form_button_save").click();
@@ -822,7 +822,7 @@ test("debug input corrections don't need a focus out to be saved", async functio
         resModel: "partner",
         arch: `
             <form>
-                <field name="name" widget="domain" options="{'model': 'partner'}"/>
+                <field name="name" widget="domain" options="{'model': partner}"/>
             </form>`,
     });
     await contains(".o_form_button_save").click();
@@ -852,7 +852,7 @@ test("quick check on save if domain has been edited via the debug input", async 
         resModel: "partner",
         arch: `
             <form>
-                <field name="name" widget="domain" options="{'model': 'partner'}"/>
+                <field name="name" widget="domain" options="{'model': partner}"/>
             </form>`,
     });
     expect(".o_domain_show_selection_button").toHaveText("0 record(s)");
@@ -873,7 +873,7 @@ test("domain field can be foldable", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner.type', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': partner.type, 'foldable': true}" />
                     </group>
                 </sheet>
             </form>`,
@@ -936,7 +936,7 @@ test("add condition in empty foldable domain", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner.type', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': partner.type, 'foldable': true}" />
                     </group>
                 </sheet>
             </form>`,
@@ -972,7 +972,7 @@ test("foldable domain field unfolds and hides caret when domain is invalid", asy
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner.type', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': partner.type, 'foldable': true}" />
                     </group>
                 </sheet>
             </form>`,
@@ -995,7 +995,7 @@ test("folded domain field with any operator", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': partner, 'foldable': true}" />
                     </group>
                 </sheet>
             </form>`,
@@ -1018,7 +1018,7 @@ test("folded domain field with withinh operator", async function () {
             <form>
                 <sheet>
                     <group>
-                        <field name="foo" widget="domain" options="{'model': 'partner', 'foldable': true}" />
+                        <field name="foo" widget="domain" options="{'model': partner, 'foldable': true}" />
                     </group>
                 </sheet>
             </form>`,

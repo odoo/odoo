@@ -72,13 +72,12 @@
                     <group>
                         <field name="preview_record_ref" string="Recipients" placeholder="Preview on..." options="{'no_create': True}"/>
                         <field name="target_url" placeholder="Your Home Page"/>
-                        <field name="res_model" invisible="1"/><!--Get the default model for field pickers-->
                         <field name="res_model" groups="base.group_no_one"/>
                         <field name="post_suggestion" placeholder="Join me at this event!" widget="text_emojis"/>
                     </group>
                     <group>
                         <field name="user_id" widget="many2one_avatar"/>
-                        <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+                        <field name="tag_ids" widget="many2many_tags"  options="{'color_field': color}"/>
                     </group>
                 </group>
                 <notebook>
@@ -90,36 +89,36 @@
                             <div class="d-flex">
                                 <field name="content_header_dyn" title="Dynamic Field?"/>
                                 <field name="content_header" invisible="content_header_dyn" placeholder="e.g. Join Odoo Experience 2024"/>
-                                <field name="content_header_path" invisible="not content_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_header_path" invisible="not content_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': res_model}"/>
                                 <field name="content_header_color" widget="color" style="width: 40px"/>
                             </div>
                             <label for="content_sub_header"/>
                             <div class="d-flex">
                                 <field name="content_sub_header_dyn"/>
                                 <field name="content_sub_header" invisible="content_sub_header_dyn" placeholder="e.g. Aug 24, Brussels Expo"/>
-                                <field name="content_sub_header_path" invisible="not content_sub_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_sub_header_path" invisible="not content_sub_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': res_model}"/>
                                 <field name="content_sub_header_color" widget="color" style="width: 40px"/>
                             </div>
                             <label for="content_section"/>
                             <div class="d-flex">
                                 <field name="content_section_dyn"/>
                                 <field name="content_section" invisible="content_section_dyn" placeholder="e.g. Sample Talk"/>
-                                <field name="content_section_path" invisible="not content_section_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_section_path" invisible="not content_section_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': res_model}"/>
                             </div>
                             <label for="content_sub_section1"/>
                             <div class="d-flex">
                                 <field name="content_sub_section1_dyn"/>
                                 <field name="content_sub_section1" invisible="content_sub_section1_dyn" placeholder="e.g. By Lionel Messy"/>
-                                <field name="content_sub_section1_path" invisible="not content_sub_section1_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_sub_section1_path" invisible="not content_sub_section1_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': res_model}"/>
                             </div>
                              <label for="content_sub_section2"/>
                             <div class="d-flex">
                                 <field name="content_sub_section2_dyn"/>
                                 <field name="content_sub_section2" invisible="content_sub_section2_dyn" placeholder="e.g. CFO Chief Football Officer"/>
-                                <field name="content_sub_section2_path" invisible="not content_sub_section2_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_sub_section2_path" invisible="not content_sub_section2_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': res_model}"/>
                             </div>
-                            <field name="content_image1_path" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
-                            <field name="content_image2_path" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                            <field name="content_image1_path" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': res_model}"/>
+                            <field name="content_image2_path" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': res_model}"/>
                             <field name="content_button" placeholder="No button"/>
                         </group>
                         <group>
@@ -157,7 +156,7 @@
                 <templates>
                     <t t-name="card" class="o_marketing_card_campaign_kanban">
                         <field name="name" class="fw-bolder fs-5"/>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="mt-2"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': color}" class="mt-2"/>
                         <footer class="pt-0">
                             <div>
                                 <a type="object" name="action_view_cards_shared" href="#" class="me-1">
@@ -191,7 +190,7 @@
                 <field name="user_id" widget="many2one_avatar"/>
                 <field name="res_model" optional="hide"/>
                 <field name="target_url" optional="hide"/>
-                <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+                <field name="tag_ids" widget="many2many_tags"  options="{'color_field': color}"/>
             </list>
         </field>
     </record>

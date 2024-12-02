@@ -135,7 +135,7 @@
                     <field name="body_plaintext" widget="sms_widget"
                         readonly="state in ('sending', 'done')"
                         required="mailing_type == 'sms'"
-                        options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
+                        options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': mailing_model_real}"
                         enable_emojis="true"/>
                 </page>
             </xpath>

@@ -129,7 +129,7 @@ test("Many2ManyTagsField with and without color on desktop", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="partner_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="partner_ids" widget="many2many_tags" options="{'color_field': color}"/>
                 <field name="timmy" widget="many2many_tags"/>
             </form>`,
     });
@@ -187,7 +187,7 @@ test("Many2ManyTagsField with and without color on mobile", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="partner_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="partner_ids" widget="many2many_tags" options="{'color_field': color}"/>
                 <field name="timmy" widget="many2many_tags"/>
             </form>`,
     });
@@ -247,7 +247,7 @@ test("Many2ManyTagsField with color: rendering and edition on desktop", async ()
         resModel: "partner",
         arch: `
             <form>
-                <field name="timmy" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True }"/>
+                <field name="timmy" widget="many2many_tags" options="{'color_field': color, 'no_create_edit': True }"/>
             </form>`,
         resId: 1,
     });
@@ -307,7 +307,7 @@ test("Many2ManyTagsField in list view on desktop", async () => {
         resModel: "partner",
         arch: `
             <list>
-                <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="timmy" widget="many2many_tags" options="{'color_field': color}"/>
                 <field name="foo"/>
             </list>`,
         selectRecord: () => {
@@ -344,7 +344,7 @@ test("Many2ManyTagsField in list view -- multi edit on desktop", async () => {
         resModel: "partner",
         arch: `
             <list multi_edit="1">
-                <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="timmy" widget="many2many_tags" options="{'color_field': color}"/>
                 <field name="foo"/>
             </list>`,
         selectRecord: () => {
@@ -624,7 +624,7 @@ test("Many2ManyTagsField: update color", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="timmy" widget="many2many_tags" options="{'color_field': color}"/>
             </form>`,
         resId: 1,
     });
@@ -684,7 +684,7 @@ test("Many2ManyTagsField with no_edit_color option", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="timmy" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
+                <field name="timmy" widget="many2many_tags" options="{'color_field': color, 'no_edit_color': 1}"/>
             </form>`,
         resId: 1,
     });
@@ -809,7 +809,7 @@ test("Many2ManyTagsField: toggle colorpicker with multiple tags", async () => {
         resModel: "partner",
         arch: `
                 <form>
-                    <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="timmy" widget="many2many_tags" options="{'color_field': color}"/>
                 </form>`,
         resId: 1,
     });
@@ -842,7 +842,7 @@ test("Many2ManyTagsField: toggle colorpicker multiple times", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="timmy" widget="many2many_tags" options="{'color_field': color}"/>
             </form>`,
         resId: 1,
     });
@@ -1959,7 +1959,7 @@ test("Many2ManyTagsField with edit_tags option overrides color edition", async (
         resModel: "partner",
         arch: `
             <form>
-                <field name="timmy" widget="many2many_tags" options="{'edit_tags': 1, 'color_field': 'color'}"/>
+                <field name="timmy" widget="many2many_tags" options="{'edit_tags': 1, 'color_field': color}"/>
             </form>`,
         resId: 1,
     });

@@ -1356,7 +1356,7 @@ test("clicking a button with dirty settings -- discard", async () => {
         arch: /* xml */ `
             <form js_class="base_settings">
                 <app string="CRM" name="crm">
-                    <field name="product_ids" widget="many2many_tags" options="{ 'color_field': 'color' }"/>
+                    <field name="product_ids" widget="many2many_tags" options="{ 'color_field': color }"/>
                     <field name="bar" />
                     <field name="foo" />
                     <button type="object" name="mymethod" class="myBtn"/>

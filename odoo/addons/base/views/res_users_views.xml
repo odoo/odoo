@@ -158,7 +158,7 @@
                             <label for="groups_id" string="Access Rights"
                                     invisible="id &gt; 0" groups="base.group_no_one"/>
                             <div invisible="id &gt; 0" groups="base.group_no_one">
-                                <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
+                                <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': color}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
@@ -215,7 +215,7 @@
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
                                 <group string="Multi Companies" invisible="companies_count &lt;= 1">
-                                    <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
+                                    <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': color}"/>
                                     <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                 </group>
                                 <field name="groups_id"/>
@@ -233,7 +233,7 @@
                                                 aria-label="Add a language"
                                                 title="Add a language"/>
                                         </div>
-                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
+                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': tz_offset}" />
                                     </group>
                                     <group string="Menus Customization" groups="base.group_no_one"
                                         invisible="share">
@@ -446,7 +446,7 @@
                                             title="Add a language"
                                         />
                                     </div>
-                                    <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                                    <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': tz_offset}" readonly="0"/>
                                 </group>
                             </group>
                             <group name="signature">

@@ -93,7 +93,7 @@
                                 <field name="work_phone" widget="phone"/>
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="category_ids" widget="many2many_tags"
-                                    options="{'color_field': 'color', 'no_create_edit': True}"
+                                    options="{'color_field': color, 'no_create_edit': True}"
                                     placeholder="Tags" groups="hr.group_hr_user"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="company_country_id" invisible="1"/>
@@ -287,7 +287,7 @@
                     <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" widget="many2one_avatar_user" optional="hide"/>
                     <field name="active" column_invisible="True"/>
-                    <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                    <field name="category_ids" widget="many2many_tags" options="{'color_field': color}" optional="hide"/>
                     <field name="country_id" optional="hide"/>
                 </list>
             </field>
@@ -341,7 +341,7 @@
                                     <field name="birthday_public_display_string"/>
                                 </div>
                                 <field name="employee_properties" widget="properties"/>
-                                <field class="hr_tags" name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                <field class="hr_tags" name="category_ids" widget="many2many_tags" options="{'color_field': color}" optional="hide"/>
                                 <footer>
                                     <div class="d-flex ms-auto">
                                         <field name="user_id" widget="many2one_avatar_user" readonly="1" class="mb-1 ms-2"/>

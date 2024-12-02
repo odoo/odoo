@@ -205,14 +205,13 @@ test("with dynamic placeholder", async () => {
         resModel: "product",
         arch: `
             <form>
-                <field name="placeholder" invisible="1"/>
                 <sheet>
                     <group>
                         <field
                             name="description"
                             options="{
                                 'dynamic_placeholder': true,
-                                'dynamic_placeholder_model_reference_field': 'placeholder'
+                                'dynamic_placeholder_model_reference_field': placeholder
                             }"
                         />
                     </group>
@@ -235,14 +234,13 @@ test("with dynamic placeholder in mobile", async () => {
         resModel: "product",
         arch: `
             <form>
-                <field name="placeholder" invisible="1"/>
                 <sheet>
                     <group>
                         <field
                             name="description"
                             options="{
                                 'dynamic_placeholder': true,
-                                'dynamic_placeholder_model_reference_field': 'placeholder'
+                                'dynamic_placeholder_model_reference_field': placeholder
                             }"
                         />
                     </group>

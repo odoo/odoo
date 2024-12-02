@@ -648,7 +648,7 @@ test("ReferenceField with model_field option", async () => {
         arch: /* xml */ `
             <form>
                 <field name="model_id" />
-                <field name="reference" options="{'model_field': 'model_id'}" />
+                <field name="reference" options="{'model_field': model_id}" />
             </form>
         `,
     });
@@ -702,7 +702,7 @@ test("ReferenceField with model_field option (model_field not synchronized with 
         arch: /* xml */ `
             <form>
                 <field name="model_id" />
-                <field name="reference" options="{'model_field': 'model_id'}" />
+                <field name="reference" options="{'model_field': model_id}" />
            </form>
         `,
     });
@@ -770,7 +770,7 @@ test("ReferenceField with model_field option (tree list in form view)", async ()
                     <list editable="bottom">
                         <field name="name" />
                         <field name="model_id" />
-                        <field name="reference" options="{'model_field': 'model_id'}" class="reference_field" />
+                        <field name="reference" options="{'model_field': model_id}" class="reference_field" />
                     </list>
                 </field>
             </form>
@@ -848,7 +848,7 @@ test("Change model field of a ReferenceField then select an invalid value (tree 
                     <list editable="bottom">
                         <field name="name" />
                         <field name="model_id"/>
-                        <field name="reference" required="true" options="{'model_field': 'model_id'}" class="reference_field" />
+                        <field name="reference" required="true" options="{'model_field': model_id}" class="reference_field" />
                     </list>
                 </field>
             </form>
@@ -892,10 +892,10 @@ test("model selector is displayed only when it should be", async () => {
         arch: /* xml */ `
             <form>
                 <group>
-                    <field name="reference" options="{'model_field': 'model_id'}" />
+                    <field name="reference" options="{'model_field': model_id}" />
                 </group>
                 <group>
-                    <field name="reference" options="{'model_field': 'model_id', 'hide_model': True}" />
+                    <field name="reference" options="{'model_field': model_id, 'hide_model': True}" />
                 </group>
                 <group>
                     <field name="reference" options="{'hide_model': True}" />
@@ -940,7 +940,7 @@ test("reference field should await fetch model before render", async () => {
         arch: /* xml */ `
             <form>
                 <field name="model_id" invisible="1"/>
-                <field name="reference" options="{'model_field': 'model_id'}" />
+                <field name="reference" options="{'model_field': model_id}" />
             </form>
         `,
     });
