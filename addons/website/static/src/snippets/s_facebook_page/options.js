@@ -2,6 +2,8 @@ import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import options from "@web_editor/js/editor/snippets.options";
 
+/* global FB */
+
 options.registry.facebookPage = options.Class.extend({
     init() {
         this._super(...arguments);
@@ -128,6 +130,10 @@ options.registry.facebookPage = options.Class.extend({
             }
             for (const [key, value] of Object.entries(this.fbData)) {
                 this.$target[0].dataset[key] = value;
+            }
+            // Initialize the Facebook SDK
+            if (typeof FB !== 'undefined') {
+                FB.XFBML.parse();
             }
         });
     },
