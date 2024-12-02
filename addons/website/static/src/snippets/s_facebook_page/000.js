@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
-import { clamp } from "@web/core/utils/numbers";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { debounce } from "@web/core/utils/timing";
 import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
@@ -16,17 +15,13 @@ const FacebookPageWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin
         var def = this._super.apply(this, arguments);
         this.previousWidth = 0;
 
-        const params = pick(this.$el[0].dataset, 'href', 'id', 'height', 'tabs', 'small_header', 'hide_cover');
+        const params = pick(this.$el[0].dataset, 'href', 'height', 'tabs', 'small_header', 'hide_cover');
         if (!params.href) {
             return def;
         }
-        if (params.id) {
-            params.href = `https://www.facebook.com/${params.id}`;
-        }
-        delete params.id;
 
-        this._renderIframe(params);
-        this.resizeObserver = new ResizeObserver(debounce(this._renderIframe.bind(this, params), 100));
+        this._renderFacebookPage(params);
+        this.resizeObserver = new ResizeObserver(debounce(this._renderFacebookPage.bind(this, params), 100));
         this.resizeObserver.observe(this.el.parentElement);
 
         return def;
@@ -36,10 +31,7 @@ const FacebookPageWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        if (this.iframeEl) {
-            this._deactivateEditorObserver();
-            this.iframeEl.remove();
-            this._activateEditorObserver();
+        if (this.resizeObserver) {
             this.resizeObserver.disconnect();
         }
     },
@@ -49,27 +41,24 @@ const FacebookPageWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin
     //--------------------------------------------------------------------------
 
     /**
-     * Prepare iframe element & replace it with existing iframe.
+     * Render the Facebook page plugin using the SDK.
      *
      * @private
      * @param {Object} params
-    */
-    _renderIframe(params) {
+     */
+    _renderFacebookPage(params) {
         this._deactivateEditorObserver();
 
-        params.width = clamp(Math.floor(this.$el.width()), 180, 500);
+        params.width = Math.floor(this.$el.width());
         if (this.previousWidth !== params.width) {
             this.previousWidth = params.width;
-            const searchParams = new URLSearchParams(params);
-            const src = "https://www.facebook.com/plugins/page.php?" + searchParams;
-            this.iframeEl = Object.assign(document.createElement("iframe"), {
-                width: params.width,
-                height: params.height,
-            });
-            this.iframeEl.setAttribute("style", "border: none; overflow: hidden;");
-            this.iframeEl.setAttribute("aria-label", _t("Facebook"));
-            this.el.replaceChildren(this.iframeEl);
-            this._manageIframeSrc(this.el, src);
+            for (const [key, value] of Object.entries(params)) {
+                this.$el[0].dataset[key] = value;
+            }
+            // Initialize the Facebook SDK
+            if (typeof FB !== 'undefined') {
+                FB.XFBML.parse(this.el);
+            }
         }
 
         this._activateEditorObserver();

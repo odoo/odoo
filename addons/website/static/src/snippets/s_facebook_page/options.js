@@ -129,6 +129,10 @@ options.registry.facebookPage = options.Class.extend({
             for (const [key, value] of Object.entries(this.fbData)) {
                 this.$target[0].dataset[key] = value;
             }
+            // Initialize the Facebook SDK
+            if (typeof FB !== 'undefined') {
+                FB.XFBML.parse();
+            }
         });
     },
     /**
