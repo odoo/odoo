@@ -298,7 +298,7 @@ class TestAllocations(TestHrHolidaysCommon):
         shown correctly in the dropdown menu or not
         :return:
         """
-        leave_type = self.env.ref('hr_holidays.holiday_status_comp')
+        leave_type = self.env.ref('hr_holidays.leave_type_compensatory_days')
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'name': 'Alloc',
             'employee_id': self.employee.id,

@@ -14,14 +14,11 @@
     'data': [
         'security/hr_work_entry_security.xml',
         'security/ir.model.access.csv',
-        'data/hr_work_entry_data.xml',
+        'data/hr_work_entry_type_data.xml',
         'data/ir_cron_data.xml',
         'views/hr_work_entry_views.xml',
         'views/hr_contract_views.xml',
         'wizard/hr_work_entry_regeneration_wizard_views.xml',
-    ],
-    'demo': [
-        'data/hr_work_entry_demo.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -66,7 +66,7 @@ class ResourceCalendarLeaves(models.Model):
         })
         self.env.add_to_compute(self.env['hr.leave']._fields['number_of_days'], leaves)
         self.env.add_to_compute(self.env['hr.leave']._fields['duration_display'], leaves)
-        sick_time_status = self.env.ref('hr_holidays.holiday_status_sl')
+        sick_time_status = self.env.ref('hr_holidays.leave_type_sick_time_off')
         for previous_duration, leave, state in zip(previous_durations, leaves, previous_states):
             duration_difference = previous_duration - leave.number_of_days
             message = False
