@@ -227,8 +227,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         # employee should be set to current user
         allocation_form = Form(self.env['hr.leave.allocation'].with_user(self.user_employee))
         allocation_form.holiday_status_id = self.holidays_type_2
-        allocation_form.date_from = date(2019, 5, 6)
-        allocation_form.date_to = date(2019, 5, 6)
         allocation_form.name = 'New Allocation Request'
         allocation_form.save()
 
@@ -669,8 +667,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         req1_form.request_date_from = fields.Date.to_date('2021-12-06')
         req1_form.request_date_to = fields.Date.to_date('2021-12-08')
 
-        self.assertEqual(req1_form.number_of_days, 3)
         req1_form.save().action_approve()
+        self.assertEqual(req1_form.record.number_of_days, 3)
 
     def test_leave_with_public_holiday_other_company(self):
         other_company = self.env['res.company'].create({
@@ -1263,7 +1261,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_form = Form(self.env['hr.leave'].with_user(self.user_employee).with_context(context))
         leave_form.holiday_status_id = self.holidays_type_2
         leave = leave_form.save()
-        self.assertEqual(leave.number_of_days, 1.0)
+        self.assertEqual(leave.record.number_of_days, 1.0)
 
     def test_filter_time_off_type_multiple_employees(self):
         """ This test mimics the behavior of creating time off for multiple employees.

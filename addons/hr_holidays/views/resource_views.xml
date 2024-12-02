@@ -82,8 +82,15 @@
         <field name="view_mode">list,form</field>
         <field name="domain">[('resource_id', '=', False)]</field>
         <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
-        <field name="context">{
-            'search_default_filter_date': True}</field>
+        <field name="context">{'search_default_filter_date': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No Public Holidays yet!
+            </p>
+            <p>
+                Public Holidays are non-working days that don't impact employees' balances
+            </p>
+        </field>
     </record>
 
     <record id="resource_calendar_view_tree" model="ir.ui.view">

@@ -40,9 +40,9 @@ beforeEach(() => {
             employee_id: 200,
             department_id: 11,
             date_from: "2016-10-15 09:00:00",
-            date_to: "2016-10-20 18:00:00",
+            date_to: "2016-10-21 18:00:00",
             holiday_status_id: 55,
-            state: "validate",
+            state: "confirm",
             number_of_days: 8,
             number_of_hours: 64,
             leave_type_request_unit: "day",
@@ -59,6 +59,30 @@ beforeEach(() => {
             number_of_hours: 1,
             leave_type_request_unit: "hour",
         },
+        {
+            id: 16,
+            employee_id: 200,
+            department_id: 11,
+            date_from: "2016-09-11 09:00:00",
+            date_to: "2016-09-12 18:00:00",
+            holiday_status_id: 55,
+            state: "validate",
+            number_of_days: 2,
+            number_of_hours: 16,
+            leave_type_request_unit: "day",
+        },
+        {
+            id: 17,
+            employee_id: 100,
+            department_id: 11,
+            date_from: "2016-10-16 09:00:00",
+            date_to: "2016-10-16 11:00:00",
+            holiday_status_id: 65,
+            state: "validate",
+            number_of_days: 0,
+            number_of_hours: 2,
+            leave_type_request_unit: "hour",
+        },
     ];
 });
 
@@ -66,12 +90,13 @@ test("leave stats render correctly", async () => {
     await mountView({
         type: "form",
         resModel: "hr.leave",
-        resId: 15,
+        resId: 14,
         arch: `
             <form string="Leave">
-                <field name="employee_id" eval="100"/>
-                <field name="department_id" eval="11"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
                 <field name="date_from"/>
+                <field name="date_to"/>
                 <widget name="hr_leave_stats"/>
             </form>`,
     });
@@ -80,16 +105,16 @@ test("leave stats render correctly", async () => {
     const DepartmentLeaves = queryOne(".o_leave_stats #o_leave_stats_department");
     // Displays leaves with the correct unit
     expect(queryAll("span:contains(Legal Leave)", { root: individualLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(8 day(s))", { root: individualLeaves })).toHaveCount(1);
+    expect(queryAll("span:contains(2 days)", { root: individualLeaves })).toHaveCount(1);
     expect(queryAll("span:contains(Unpaid Leave)", { root: individualLeaves })).toHaveCount(1);
-    // The test below can be uncommented once array_agg is implemented in the mock server.
-    // expect(queryAll("span:contains(1 hour(s))", { root: individualLeaves })).toHaveCount(1);
+    expect(queryAll("span:contains(01:00 hours)", { root: individualLeaves })).toHaveCount(1);
 
     // Displays all leaves for that department
     expect(queryAll("span:contains(Richard)", { root: DepartmentLeaves })).toHaveCount(2);
-    expect(queryAll("span:contains(Jane)", { root: DepartmentLeaves })).toHaveCount(2);
-    expect(queryAll("span:contains(10/15/2016)", { root: DepartmentLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(10/05/2016, 12:00)", { root: DepartmentLeaves })).toHaveCount(1);
+    expect(queryAll("span:contains(10/16/2016)", { root: DepartmentLeaves })).toHaveCount(1);
+    expect(queryAll("span:contains(02:00 hours)", { root: DepartmentLeaves })).toHaveCount(1);
+    expect(queryAll("span:contains(10/20/2016)", { root: DepartmentLeaves })).toHaveCount(1);
+    expect(queryAll("span:contains(10/25/2016)", { root: DepartmentLeaves })).toHaveCount(1);
 
     expect(
         queryAll("div.o_horizontal_separator:contains(R&D)", { root: DepartmentLeaves })

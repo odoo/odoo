@@ -6,7 +6,7 @@
     'version': '1.6',
     'category': 'Human Resources/Time Off',
     'sequence': 85,
-    'summary': 'Allocate PTOs and follow leaves requests',
+    'summary': 'Allocate time off and follow leave requests',
     'website': 'https://www.odoo.com/app/time-off',
     'description': """
 Manage time off requests and allocations

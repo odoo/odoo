@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
-
+from calendar import monthrange
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
@@ -11,9 +11,6 @@ from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
-
-
-MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
 
 
 class HrLeaveAllocation(models.Model):
@@ -102,9 +99,7 @@ class HrLeaveAllocation(models.Model):
         ('half_day', 'Half Day'),
         ('day', 'Day'),
     ], compute="_compute_type_request_unit")
-    department_id = fields.Many2one(
-        'hr.department', compute='_compute_department_id', store=True, string='Department',
-        readonly=False)
+    department_id = fields.Many2one('hr.department', compute='_compute_department_id', store=True, string='Department', readonly=False)
     # accrual configuration
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
     # lastcall is only updated on accrual date. On other dates such as carryover date,
@@ -311,7 +306,10 @@ class HrLeaveAllocation(models.Model):
         elif carryover_time == 'allocation':
             carryover_date = date(date_from.year, self.date_from.month, self.date_from.day)
         else:
-            carryover_date = date(date_from.year, MONTHS_TO_INTEGER[accrual_plan.carryover_month], accrual_plan.carryover_day)
+            month = int(accrual_plan.carryover_month)
+            # 2020/2/31 will be changed to 2020/2/29
+            day = min(monthrange(date_from.year, month)[1], int(accrual_plan.carryover_day))
+            carryover_date = date(date_from.year, month, day)
         if date_from > carryover_date:
             carryover_date += relativedelta(years=1)
         return carryover_date
