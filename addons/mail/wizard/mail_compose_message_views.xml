@@ -73,15 +73,17 @@
                     <footer>
                         <button string="Send" name="action_send_mail"
                                 type="object" class="btn-primary o_mail_send" data-hotkey="q"
-                                invisible="subtype_is_log or composition_mode == 'comment' and not composition_batch"/>
+                                invisible="subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date"/>
                         <button string="Log" name="action_send_mail"
                                 type="object" class="btn-primary" data-hotkey="q"
-                                invisible="not subtype_is_log or composition_mode =='comment' and not composition_batch"/>
-                        <widget name="mail_composer_send_dropdown" invisible="composition_batch or composition_mode != 'comment'"/>
+                                invisible="not subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date"/>
+                        <button string="Schedule" name="action_schedule_message" type="object" class="btn-primary" data-hotkey="q"
+                                invisible="composition_mode != 'comment' or composition_batch or not scheduled_date"/>
                         <button string="Discard" class="btn-secondary w-auto" special="cancel" data-hotkey="x" />
                         <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not can_edit_body"/>
                         <field name="template_id" widget="mail_composer_template_selector"/>
                         <field name="body" widget="mail_composer_chatgpt" invisible="not can_edit_body"/>
+                        <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_batch or composition_mode != 'comment'"/>
                     </footer>
                 </form>
             </field>
