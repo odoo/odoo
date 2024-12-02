@@ -9,6 +9,8 @@ from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
 from odoo.http import request
 import base64
+import hashlib
+import hmac
 from collections import defaultdict
 from functools import partial, reduce
 import logging
@@ -143,6 +145,10 @@ class IrActions(models.Model):
             'float_compare': float_compare,
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
+            'hmac_digest': hmac.digest,
+            'hmac_compare_digest': hmac.compare_digest,
+            'hashlib_sha256': hashlib.sha256,
+            'hashlib_sha512': hashlib.sha512,
             'Command': Command,
         }
 
@@ -515,12 +521,15 @@ class IrActionsServer(models.Model):
 #  - time, datetime, dateutil, timezone: useful Python libraries
 #  - float_compare: utility function to compare floats based on specific precision
 #  - b64encode, b64decode: functions to encode/decode binary data
-#  - headers: a dict containing the request's HTTP headers.
-#  - payload: a dict containing the request data, either the query parameters for GET or the JSON body for POST.
+#  - hmac_digest, hmac_compare_digest: functions to digest messages for a given secret key and a digest.
+#  - hashlib_sha256, hashlib_sha512: functions to hash a given input.
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
 #  - _logger: _logger.info(message): logger to emit messages in server logs
 #  - UserError: exception class for raising user-facing warning messages
 #  - Command: x2many commands namespace
+# If you are using a webhook as a trigger, two variables are available:
+#  - headers: a dict containing the request's HTTP headers.
+#  - payload: a dict containing the request data, either the query parameters for GET or the JSON body for POST.
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     @api.model
