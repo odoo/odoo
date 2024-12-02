@@ -68,6 +68,10 @@ class L10nARWebsiteSale(WebsiteSale):
                 address_values.get('l10n_latam_identification_type_id')
             )
 
+            if not id_type or not afip_resp:
+                # Those two values were not provided and are not required, skip the validation
+                return invalid_fields, missing_fields, error_messages
+
             # Check if the AFIP responsibility is different from Final Consumer or Foreign Customer,
             # and if the identification type is different from CUIT
             if afip_resp.code not in ['5', '9'] and id_type != request.env.ref('l10n_ar.it_cuit'):
