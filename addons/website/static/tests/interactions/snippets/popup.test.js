@@ -33,30 +33,30 @@ async function modalToggleAction(fn) {
  * @param {Object} options
  * @param {number} options.showAfter - delay
  * @param {string} options.display - one of "afterDelay", "onClick", "mouseExit"
- * @param {string} options.backdrop - "true" or "false"
+ * @param {boolean} options.backdrop
  * @param {string} options.extraPrimaryBtnClasses
  * @param {string} options.modalId
- * @returns string - popup template
+ * @returns {string} - popup template
  */
 function getPopupTemplate(options = {}) {
     const {
         showAfter = 0,
         display = "afterDelay",
-        backdrop = "false",
+        backdrop = true,
         extraPrimaryBtnClasses = "",
         modalId = "",
     } = options;
     return `
         <div class="s_popup o_snippet_invisible" data-vcss="001" data-snippet="s_popup"
              data-name="Popup" id="sPopup" data-invisible="1">
-            <div class="modal fade s_popup_middle modal_shown"
+            <div class="modal fade s_popup_middle modal_shown ${backdrop ? "" : "s_popup_no_backdrop"}"
                  id="${modalId}"
                  style="background-color: var(--black-50) !important; display: none;"
                  data-show-after="${showAfter}"
                  data-display="${display}"
                  data-consents-duration="7"
                  data-bs-focus="false"
-                 data-bs-backdrop="${backdrop}"
+                 data-bs-backdrop="false"
                  tabindex="-1"
                  aria-label="Popup"
                  aria-modal="true"
