@@ -2,15 +2,13 @@
 import logging
 
 from odoo import models, api
-from odoo.models import BaseModel
-from odoo.orm.types import ValuesType
 
 _logger = logging.getLogger(__name__)
-_original_create = BaseModel.create
+_original_create = models.BaseModel.create
 
 
 @api.model_create_multi
-def create(self, vals_list: list[ValuesType]) -> models.BaseModel:
+def create(self, vals_list) -> models.BaseModel:
     """
     Extended method for creating multiple records.
     Notifies bus events when records are created.
@@ -44,4 +42,4 @@ def create(self, vals_list: list[ValuesType]) -> models.BaseModel:
         return records
 
 
-BaseModel.create = create
+models.BaseModel.create = create
