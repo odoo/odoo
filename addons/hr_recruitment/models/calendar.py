@@ -18,14 +18,6 @@ class CalendarEvent(models.Model):
                 default_partner_ids=self.env.context.get('default_partner_ids'),
                 default_name=self.env.context.get('default_name')
             )
-        elif self.env.context.get('default_candidate_id'):
-            self_ctx = self.with_context(
-                default_res_model='hr.candidate',  # res_model seems to be lost without this
-                default_res_model_id=self.env.ref('hr_recruitment.model_hr_candidate').id,
-                default_res_id=self.env.context.get('default_candidate_id'),
-                default_partner_ids=self.env.context.get('default_partner_ids'),
-                default_name=self.env.context.get('default_name')
-            )
 
         defaults = super(CalendarEvent, self_ctx).default_get(fields)
 
@@ -39,14 +31,6 @@ class CalendarEvent(models.Model):
         return defaults
 
     applicant_id = fields.Many2one('hr.applicant', string="Applicant", index='btree_not_null', ondelete='set null')
-    candidate_id = fields.Many2one(
-        'hr.candidate',
-        string="Candidate",
-        compute="_compute_candidate_id",
-        store=True,
-        readonly=False,
-        index='btree_not_null',
-        ondelete='set null')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -57,8 +41,7 @@ class CalendarEvent(models.Model):
         attachments = False
         if "default_applicant_id" in self.env.context:
             attachments = self.env['hr.applicant'].browse(self.env.context['default_applicant_id']).attachment_ids
-        elif "default_candidate_id" in self.env.context:
-            attachments = self.env['hr.candidate'].browse(self.env.context['default_candidate_id']).attachment_ids
+
         if attachments:
             self.env['ir.attachment'].create([{
                 'name': att.name,
@@ -76,10 +59,3 @@ class CalendarEvent(models.Model):
             for event in self:
                 if event.applicant_id.id == applicant_id:
                     event.is_highlighted = True
-
-    @api.depends('applicant_id')
-    def _compute_candidate_id(self):
-        for event in self:
-            if not event.applicant_id:
-                continue
-            event.candidate_id = event.applicant_id.candidate_id
