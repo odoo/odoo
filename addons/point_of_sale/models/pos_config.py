@@ -661,7 +661,7 @@ class PosConfig(models.Model):
             return {
                 'name': _('Rescue Sessions'),
                 'res_model': 'pos.session',
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
                 'domain': [('id', 'in', rescue_session_ids.ids)],
                 'type': 'ir.actions.act_window',
             }
