@@ -2,7 +2,6 @@ import {patch} from "@web/core/utils/patch";
 import {ListRenderer} from "@web/views/list/list_renderer";
 import {onWillUnmount} from "@odoo/owl";
 import {useService} from "@web/core/utils/hooks";
-import { uuid } from "@web/views/utils";
 
 
 patch(ListRenderer.prototype, {
