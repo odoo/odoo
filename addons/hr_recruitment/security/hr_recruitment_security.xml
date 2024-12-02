@@ -5,13 +5,6 @@
         <field name="sequence">11</field>
     </record>
 
-    <record id="hr.access_hr_job_user" model="ir.model.access">
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
-
     <record id="group_hr_recruitment_interviewer" model="res.groups">
         <field name="name">Interviewer</field>
         <field name="sequence">10</field>
@@ -44,4 +37,8 @@
     </record>
 
     <!-- Interviewer Access Rules -->
+    <record id="hr.access_hr_job_group_hr_user" model="ir.access">
+        <field name="operation">r</field>
+    </record>
+
     </odoo>
