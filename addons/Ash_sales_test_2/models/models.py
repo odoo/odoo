@@ -29,24 +29,34 @@ class SaleOrder(models.Model):
 
     def action_release_quotations(self):
         logger.info(f"action_release_quotations called with {len(self)} orders")
-        logger.info(f"this is new code ---------------------------------")
+        logger.info(f"twwwhis is 222 code ---------------------------------")
         if not self:
             logger.warning("No orders passed to action_release_quotations")
+            return  # Early exit if no orders
+
         for order in self:
             logger.info(f"Processing order: {order.name}")
             all_products_available = True
             products_data = []
 
-            # Fetch picking records for the current order
+            # Fetch all picking records for the current order, excluding canceled pickings
             picking_records = self.env['stock.picking'].search([
                 ('origin', '=', order.name),
                 ('state', '!=', 'cancel')  # Exclude canceled pickings
             ])
-            # Filter only "pick" type pickings
+
+            # Filter only "Pick" type pickings based on picking type name containing 'Pick'
             pick_only_picking_records = picking_records.filtered(
-                lambda p: 'Pick' in p.picking_type_id.name  # Adjust logic based on your type naming convention
+                lambda p: 'Pick' in p.picking_type_id.name  # Adjust this condition based on your naming convention
             )
-            
+
+            if not pick_only_picking_records:
+                logger.warning(f"No 'Pick' pickings found for order {order.name}. Cannot proceed with release.")
+                order.is_released = 'unreleased'
+                continue  # Skip to the next order
+
+            logger.info(f"Found {len(pick_only_picking_records)} 'Pick' picking(s) for order {order.name}.")
+
             for line in order.order_line:
                 product_qty = line.product_uom_qty  
                 product = line.product_id
@@ -57,19 +67,19 @@ class SaleOrder(models.Model):
                 # Initialize available_qty to 0; it will be updated based on location-specific quant
                 available_qty = 0
 
-                # Fetch the stock move related to this order line and picking
+                # Fetch the stock move related to this order line and only from 'Pick' pickings
                 stock_moves = self.env['stock.move'].search([
                     ('sale_line_id', '=', line.id),
-                    ('picking_id', 'in', picking_records.ids),
+                    ('picking_id', 'in', pick_only_picking_records.ids),
                     ('state', 'not in', ['cancel', 'done'])  # Ensure the move is active
                 ])
 
                 if stock_moves:
                     # Assuming one move per order line; adjust if multiple moves per line are possible
                     move = stock_moves[0]
-                    location = move.location_id  # Source location
+                    location = move.location_id  # Source location from the 'Pick' move
 
-                    logger.info(f"Found stock move for line {line.id}: Location '{location.name}'")
+                    logger.info(f"Found 'Pick' stock move for line {line.id}: Location '{location.name}'")
 
                     # Fetch the stock.quant in the specific location
                     location_quant = self.env['stock.quant'].search([
@@ -88,7 +98,7 @@ class SaleOrder(models.Model):
                         available_qty = 0
                         logger.warning(f"No stock quant found for product '{product.name}' in location '{location.name}'")
                 else:
-                    logger.warning(f"No stock move found for order line {line.id} in order {order.name}")
+                    logger.warning(f"No 'Pick' stock move found for order line {line.id} in order {order.name}")
                     location_name = "Unknown"
                     location_system = "Unknown"
 
@@ -100,7 +110,7 @@ class SaleOrder(models.Model):
                     logger.warning(f"Insufficient stock for product '{product.name}' in order {order.name}. Required: {product_qty}, Available: {available_qty}")
                     break  # Exit early since one product is insufficient
 
-                # Collect pickings that include the product
+                # Collect pickings that include the product within 'Pick' pickings
                 product_pickings = pick_only_picking_records.filtered(
                     lambda p: product.id in p.move_ids.mapped('product_id').ids
                 ).mapped('name')
@@ -156,4 +166,3 @@ class SaleOrder(models.Model):
             else:
                 order.is_released = 'unreleased'
                 logger.info(f"Order {order.name} released: {order.is_released}")
-
