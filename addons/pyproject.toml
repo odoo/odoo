@@ -1,0 +1,20 @@
+[build-system]
+requires = ['setuptools']
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = "odoo-community"
+version = "19.0.0a"
+requires-python = ">= 3.10"
+description = "Odoo community modules"
+# DistutilsOptionError: Cannot access ... (or anything outside) unless -n
+#readme = "../README.md"
+#license = { file = "../LICENSE" }
+
+[tool.setuptools]
+
+[tool.setuptools.package-dir]
+"odoo.addons" = ""
+
+[tool.setuptools.package-data]
+"*" = ["*"]
