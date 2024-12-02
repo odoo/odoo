@@ -46,14 +46,14 @@
                 <field name="allow_timesheets" invisible="1"/>
                 <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets">
                     <field name="timesheet_ids" mode="tree,kanban"
-                          readonly="not analytic_account_active">
+                          readonly="1">
                         <tree string="Timesheet Activities" default_order="date" no_open="1" create="false" delete="0">
                             <field name="date"/>
                             <field name="employee_id"/>
                             <field name="name"/>
                             <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                         </tree>
-                        <kanban class="o_kanban_mobile">
+                        <kanban class="o_kanban_mobile" action="action_open_timesheet_view_portal" type="object">
                             <field name="date"/>
                             <field name="employee_id"/>
                             <field name="name"/>
