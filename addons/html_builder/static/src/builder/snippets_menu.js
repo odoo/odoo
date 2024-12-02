@@ -25,6 +25,7 @@ import { _t } from "@web/core/l10n/translation";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useSetupAction } from "@web/search/action_hook";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 const BUILDER_PLUGIN = [
     BuilderOptionsPlugin,
@@ -90,7 +91,9 @@ export class SnippetsMenu extends Component {
                 },
                 getRecordInfo: (editableEl) => {
                     if (!editableEl) {
-                        editableEl = this.editor.shared.selection.getEditableSelection().anchorNode;
+                        editableEl = closestElement(
+                            this.editor.shared.selection.getEditableSelection().anchorNode
+                        );
                     }
                     return {
                         resModel: editableEl.dataset["oeModel"],
