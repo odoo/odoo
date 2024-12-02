@@ -251,7 +251,7 @@ class ResCurrency(models.Model):
                     (
                         SELECT DISTINCT ON (other_company.id)
                             other_company.id as other_company_id,
-                            out_period_rate.rate AS rate,
+                            COALESCE(out_period_rate.rate, 1.0) AS rate,
                             EXTRACT('Day' FROM COALESCE(in_period_rate.name::TIMESTAMP, %(date_to)s::TIMESTAMP + INTERVAL '1' DAY) - %(date_from)s::TIMESTAMP) AS number_of_days
 
                         FROM res_company other_company
