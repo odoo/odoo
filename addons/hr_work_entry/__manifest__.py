@@ -13,7 +13,7 @@
     'data': [
         'security/hr_work_entry_security.xml',
         'security/ir.model.access.csv',
-        'data/hr_work_entry_data.xml',
+        'data/hr_work_entry_type_data.xml',
         'views/hr_work_entry_views.xml',
         'views/hr_employee_views.xml',
         'views/resource_calendar_views.xml',
