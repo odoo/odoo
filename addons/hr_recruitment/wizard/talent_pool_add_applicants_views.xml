@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="talent_pool_add_applicants_view_form" model="ir.ui.view">
+        <field name="name">talent.pool.add.applicants.view.form</field>
+        <field name="model">talent.pool.add.applicants</field>
+        <field name="arch" type="xml">
+            <form string="Add Applicants to the Pool">
+                <group>
+                    <field
+                        name="applicant_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color'}"
+                        invisible="context.get('default_applicant_ids')"
+                    />
+                    <field
+                        name="talent_pool_ids"
+                        widget="many2many_tags"
+                        options="{'color_field': 'color'}"
+                        invisible="context.get('default_talent_pool_ids')"
+                    />
+                    <field
+                        name="categ_ids"
+                        options="{'color_field': 'color'}"
+                        widget="many2many_tags"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="action_add_applicants_to_pool"
+                        string="Add to Pool"
+                        type="object"
+                        class="btn-primary"
+                        data-hotkey="q"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

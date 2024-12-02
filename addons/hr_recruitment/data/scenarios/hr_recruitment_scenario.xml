@@ -69,7 +69,7 @@
         <!--            -->
         <!-- Applicants -->
         <!--            -->
-        <record id="scenario_candidate_helen" model="hr.candidate">
+        <record id="scenario_applicant_macm_helen" model="hr.applicant">
             <field name="email_from">helenlee@exampe.email.com</field>
             <field name="partner_name">Helen Lee</field>
             <field name="type_id" ref="degree_bac5" />
@@ -77,9 +77,6 @@
                 eval="[Command.set([ref('tag_applicant_sales'), ref('tag_applicant_manager'), ref('tag_applicant_demo')])]" />
             <field name="availability"
                 eval="DateTime.today()" />
-        </record>
-        <record id="scenario_applicant_macm_helen" model="hr.applicant">
-            <field name="candidate_id" ref="scenario_candidate_helen" />
             <field name="priority">2</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/helen.lee</field>
             <field name="job_id" ref="job_marketing" />
@@ -94,7 +91,7 @@
             <field name="write_date" eval="DateTime.today() - relativedelta(days=20)" />
         </record>
 
-        <record id="scenario_candidate_enrique" model="hr.candidate">
+        <record id="scenario_applicant_macm_enrique" model="hr.applicant">
             <field name="email_from">enrique.jones152@gmail.example.com</field>
             <field name="partner_name">Enrique Jones</field>
             <field name="type_id" ref="degree_bachelor" />
@@ -102,9 +99,6 @@
                 eval="[Command.set([ref('tag_applicant_sales'), ref('tag_applicant_demo')])]" />
             <field name="availability"
                 eval="DateTime.today() + relativedelta(days=10)" />
-        </record>
-        <record id="scenario_applicant_macm_enrique" model="hr.applicant">
-            <field name="candidate_id" ref="scenario_candidate_enrique" />
             <field name="priority">2</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/enrique.jones</field>
             <field name="job_id" ref="job_marketing" />
@@ -119,7 +113,7 @@
                 eval="DateTime.today() - relativedelta(days=1)" />
         </record>
 
-        <record id="scenario_candidate_hannah" model="hr.candidate">
+        <record id="scenario_applicant_fsd_hannah" model="hr.applicant">
             <field name="email_from">hannah.glover@exampe.email.com</field>
             <field name="partner_name">Hannah Glover</field>
             <field name="type_id" ref="degree_licenced" />
@@ -127,9 +121,6 @@
                 eval="[Command.set([ref('tag_applicant_it'), ref('tag_applicant_manager'), ref('tag_applicant_demo')])]" />
             <field name="availability"
                 eval="DateTime.today() + relativedelta(months=1)" />
-        </record>
-        <record id="scenario_applicant_fsd_hannah" model="hr.applicant">
-            <field name="candidate_id" ref="scenario_candidate_hannah" />
             <field name="priority">3</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/hannah.glover</field>
             <field name="job_id" ref="job_full_stack_dev" />
@@ -145,7 +136,7 @@
                 eval="DateTime.today() - relativedelta(days=5)" />
         </record>
 
-        <record id="scenario_candidate_simon" model="hr.candidate">
+        <record id="scenario_applicant_fsd_simon" model="hr.applicant">
             <field name="email_from">simon.jones@exampe.email.com</field>
             <field name="partner_name">Simon Jones</field>
             <field name="type_id" ref="degree_graduate" />
@@ -153,9 +144,6 @@
                 eval="[Command.set([ref('tag_applicant_demo')])]" />
             <field name="availability"
                 eval="DateTime.today()" />
-        </record>
-        <record id="scenario_applicant_fsd_simon" model="hr.applicant">
-            <field name="candidate_id" ref="scenario_candidate_simon" />
             <field name="priority">0</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/simon.jones</field>
             <field name="job_id" ref="job_full_stack_dev" />
@@ -174,7 +162,7 @@
                 eval="DateTime.today() - relativedelta(days=3)" />
         </record>
 
-        <record id="scenario_candidate_maria" model="hr.candidate">
+        <record id="scenario_applicant_fsd_maria" model="hr.applicant">
             <field name="email_from">maria.rodriguez@example.email.com</field>
             <field name="partner_name">Maria Rodriguez</field>
             <field name="type_id" ref="degree_graduate" />
@@ -182,9 +170,6 @@
                 eval="[Command.set([ref('tag_applicant_demo')])]" />
             <field name="availability"
                 eval="(DateTime.today()).strftime('%Y-%m-%d')" />
-        </record>
-        <record id="scenario_applicant_fsd_maria" model="hr.applicant">
-            <field name="candidate_id" ref="scenario_candidate_maria" />
             <field name="priority">0</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/maria.rodriguez</field>
             <field name="job_id" ref="job_full_stack_dev" />
@@ -210,7 +195,7 @@
             <field name="name">Enrique_Jones_CV.pdf</field>
             <field name="datas" type="base64"
                 file="hr_recruitment/static/applicant_cvs/Enrique_Jones_CV.pdf"></field>
-            <field name="res_model">hr.candidate</field>
+            <field name="res_model">hr.applicant</field>
             <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
         </record>
 
@@ -281,7 +266,7 @@
 
         <record id="msg_scenario_applicant_macm_helen_mm_c_1" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_macm_helen" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
             <field name="body" type="html">
                 <p>Dear colleagues,</p>
                 <p>
@@ -314,7 +299,7 @@
 
         <record id="msg_scenario_applicant_macm_helen_mm_c_2" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_macm_helen" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
             <field name="body" type="html">
                 <p>Dear colleagues,</p>
                 <p>
@@ -347,7 +332,7 @@
 
         <record id="msg_scenario_applicant_macm_helen_mm_c_3" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_macm_helen" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
             <field name="body" type="html">
                 <p>Dear colleagues,</p>
                 <p>
@@ -382,7 +367,7 @@
 
         <record id="msg_scenario_applicant_macm_helen_mm_c_4" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_macm_helen" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_helen" />
             <field name="body" type="html">
                 <p>Dear colleagues,</p>
                 <p>
@@ -435,7 +420,7 @@
 
         <record id="msg_scenario_applicant_macm_enrique_mm_c_1" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_macm_enrique" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
             <field name="body" type="html">
                 <p>Dear colleagues,</p>
                 <p>
@@ -471,7 +456,7 @@
 
         <record id="msg_scenario_applicant_macm_enrique_mm_c_2" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_macm_enrique" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
             <field name="body" type="html">
                 <p>Dear colleagues,</p>
                 <p>
@@ -508,7 +493,7 @@
 
         <record id="msg_scenario_applicant_macm_enrique_mm_c_3" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_macm_enrique" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_macm_enrique" />
             <field name="body" type="html">
                 <p>Dear colleagues,</p>
                 <p>
@@ -549,7 +534,7 @@
 
         <record id="scenario_applicant_fsd_hannah_mm_c_1" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_fsd_hannah" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_fsd_hannah" />
             <field name="body" type="html">
                 <p>Dear team,</p>
                 <p>
@@ -592,7 +577,7 @@
 
         <record id="scenario_applicant_fsd_simon_mm_c_1" model="mail.message">
             <field name="model">hr.applicant</field>
-            <field name="res_id" ref="scenario_applicant_fsd_simon" />
+            <field name="res_id" ref="hr_recruitment.scenario_applicant_fsd_simon" />
             <field name="body" type="html">
                 <p>
                     After reviewing Simon's application, it appears that his skill set is not

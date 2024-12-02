@@ -46,7 +46,7 @@ class TestRecruitmentInterviewer(MailCommon):
         self.assertFalse(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should be removed from interviewer")
 
         applicant = self.env['hr.applicant'].create({
-            'candidate_id': self.env['hr.candidate'].create({'partner_name': 'toto'}).id,
+            'partner_name': 'toto',
             'job_id': self.job.id,
             'interviewer_ids': self.simple_user.ids,
         })
@@ -70,17 +70,16 @@ class TestRecruitmentInterviewer(MailCommon):
         self.assertFalse(interviewer_group.id in self.simple_user.all_group_ids.ids, "Simple User should be removed from interviewer")
 
     def test_interviewer_access_rights(self):
-        candidate = self.env['hr.candidate'].create({'partner_name': 'toto'})
-
         applicant = self.env['hr.applicant'].create({
-            'candidate_id': candidate.id,
+            'partner_name': 'toto',
             'job_id': self.job.id,
         })
+
         with self.assertRaises(AccessError):
             applicant.with_user(self.interviewer_user).read()
 
         applicant = self.env['hr.applicant'].create({
-            'candidate_id': candidate.id,
+            'partner_name': 'toto',
             'job_id': self.job.id,
             'interviewer_ids': self.interviewer_user.ids,
         })
@@ -88,7 +87,7 @@ class TestRecruitmentInterviewer(MailCommon):
 
         self.job.interviewer_ids = self.interviewer_user.ids
         applicant = self.env['hr.applicant'].create({
-            'candidate_id': candidate.id,
+            'partner_name': 'toto',
             'job_id': self.job.id,
         })
         applicant.with_user(self.interviewer_user).read()

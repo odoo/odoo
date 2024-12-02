@@ -5,15 +5,31 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="stage_id">
+                <header>
+                    <button
+                        name="action_job_add_applicants"
+                        string="Create Applications"
+                        invisible="context.get('default_job_id') or context.get('no_create_application_button')"
+                        type="object"
+                    />
+                    <button
+                        name="action_talent_pool_add_applicants"
+                        type="object"
+                        class="btn-primary"
+                        string="Add Applicants "
+                        display="always"
+                        invisible="not context.get('default_talent_pool_ids')"
+                        groups="hr_recruitment.group_hr_recruitment_user"
+                    />
+                </header>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="last_stage_id" column_invisible="True"/>
                 <field name="date_last_stage_update" column_invisible="True"/>
                 <field name="partner_name" readonly="1" optional="show"/>
-                <field name="create_date" readonly="1" optional="show"/>
+                <field name="create_date" readonly="1" optional="show" widget="timeless_datetime"/>
                 <field name="type_id" column_invisible="True"/>
-                <field name="job_id" optional="show"/>
-                <field name="stage_id" optional="show"/>
-                <field name="candidate_id" optional="show"/>
+                <field name="job_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
+                <field name="stage_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
                 <field name="activity_ids" widget="list_activity" optional="hide"/>
@@ -67,9 +83,11 @@
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr.group_hr_user"
                         class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
-                <button string="Refuse" name="archive_applicant" type="object" invisible="not active" data-hotkey="d"/>
+                <button string="Refuse" name="archive_applicant" type="object" invisible="not active or is_pool_applicant" data-hotkey="d"/>
                 <button string="Restore" name="action_unarchive" type="object" invisible="active" data-hotkey="x"/>
-                <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not active and not employee_id"/>
+                <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="(not active and not employee_id) or is_pool_applicant"/>
+                <button string="Create Applications" name="action_job_add_applicants" type="object" invisible="not is_pool_applicant"/>
+                <button string="Add to Pool" name="action_talent_pool_add_applicants" type="object" invisible="is_pool_applicant or is_applicant_in_pool"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -84,13 +102,13 @@
                             <span class="o_stat_text">Employee</span>
                         </div>
                     </button>
-                    <button name="action_open_other_applications"
+                    <button name="action_open_applications"
                             class="oe_stat_button"
                             icon="fa-pencil"
                             type="object"
                             context="{'active_test': False}"
-                            invisible="not other_applications_count">
-                        <field name="other_applications_count" widget="statinfo" string="Other applications"/>
+                            invisible="not application_count or (application_count &lt;= 1 and not is_pool_applicant)">
+                        <field name="application_count" widget="statinfo" string="Applications"/>
                     </button>
                     <button name="action_create_meeting" class="oe_stat_button" icon="fa-calendar" type="object" invisible="not id">
                         <div class="o_field_widget o_stat_info">
@@ -98,7 +116,16 @@
                             <span class="o_stat_value"><field name="meeting_display_date" readonly="1"/></span>
                         </div>
                     </button>
+                    <button
+                        name="action_talent_pool_stat_button"
+                        class="oe_stat_button"
+                        icon="fa-users"
+                        type="object"
+                        invisible="not id or is_pool_applicant or not is_applicant_in_pool">
+                        <field name="talent_pool_count" widget="statinfo" string="Talent Pools"/>
+                    </button>
                 </div>
+                <!-- Job pipe ribbons -->
                 <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="application_status != 'refused'"/>
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="application_status != 'archived'"/>
                 <widget name="web_ribbon" title="Hired" invisible="application_status != 'hired'" />
@@ -106,12 +133,12 @@
                 <field name="legend_normal" invisible="1"/>
                 <field name="legend_blocked" invisible="1"/>
                 <field name="legend_done" invisible="1"/>
-                <field name="kanban_state" widget="state_selection" invisible="application_status == 'refused' or application_status == 'archived'"/>
-                <field name="priority" widget="priority"/>
+                <field name="kanban_state" widget="state_selection" invisible="application_status == 'refused' or application_status == 'archived' or is_pool_applicant"/>
                 <div class="oe_title pe-0">
-                    <label for="candidate_id" class="oe_edit_only"/>
+                    <label for="partner_name" class="oe_edit_only" string="Applicant" invisible="is_pool_applicant"/>
+                    <label for="partner_name" class="oe_edit_only" string="Talent" invisible="not is_pool_applicant"/>
                     <h1 class="d-flex justify-content-between align-items-center">
-                        <field name="candidate_id" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
+                        <field name="partner_name" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
                     </h1>
                 </div>
                 <group>
@@ -124,9 +151,11 @@
                         <field name="linkedin_profile" placeholder="e.g. https://www.linkedin.com/in/..." widget="url"/>
                     </group>
                     <group>
-                        <field name="job_id"/>
+                        <field name="priority" widget="priority"/>
+                        <field name="job_id" invisible="is_pool_applicant"/>
+                        <field name="talent_pool_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not is_pool_applicant"/>
                         <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
-                        <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" placeholder="Who can access candidates" />
+                        <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" invisible="is_pool_applicant" placeholder="Who can access applicants" />
                         <field name="date_closed" invisible="not date_closed" />
                         <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
@@ -263,7 +292,6 @@
                 <group expand="0" string="Group By">
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
-                    <filter string="Candidate" name="candidate" domain="[]" context="{'group_by': 'candidate_id'}"/>
                     <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
                     <filter string="Hiring Date" name="hired_date" context="{'group_by': 'date_closed'}"/>
@@ -306,7 +334,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="candidate_id" options="{'no_create_edit': True}" placeholder="e.g. John Doe"/>
+                    <field name="partner_name" options="{'no_create_edit': True}" placeholder="e.g. John Doe"/>
                     <field name="job_id" options="{'no_open': True}"/>
                     <field name="company_id" invisible="1"/>
                 </group>
@@ -319,7 +347,18 @@
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <kanban highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1">
+            <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1">
+                <header>
+                    <button
+                        name="action_talent_pool_add_applicants"
+                        type="object"
+                        class="btn-primary"
+                        string="Add Applicants "
+                        display="always"
+                        invisible="not context.get('default_talent_pool_ids')"
+                        groups="hr_recruitment.group_hr_recruitment_user"
+                    />
+                </header>
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
                 <field name="legend_normal"/>
                 <field name="legend_blocked"/>
@@ -344,7 +383,7 @@
                         <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="application_status != 'refused'"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="application_status != 'archived'"/>
                         <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
-                        <field name="job_id" invisible="context.get('search_default_job_id', False)"/>
+                        <field name="job_id" invisible="context.get('search_default_job_id', False) or is_pool_applicant"/>
                         <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         <field name="applicant_properties" widget="properties"/>
                         <footer>
@@ -398,6 +437,39 @@
                 Applicants and their attached résumé are created automatically when an email is sent.
                 If you install the document management modules, all resumes are indexed automatically,
                 so that you can easily search through their content.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_kanban_view_applicant_talent_pool" model="ir.ui.view">
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_talent_pool_applications" model="ir.actions.act_window">
+        <field name="name">Talents</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="domain">[
+            ('talent_pool_ids', '=', active_ids),
+        ]</field>
+        <field name="view_mode">list,kanban,form,graph,calendar,pivot,activity</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'list'}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_kanban_view_applicant_talent_pool')})]"/>
+        <field name="context">{'default_talent_pool_ids': active_ids, 'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No Talents in the pool yet
+            </p>
+            <p>
+                Try adding some to the pool
             </p>
         </field>
     </record>
@@ -484,7 +556,7 @@
             <pivot string="Recruitment Analysis" sample="1">
                 <field name="stage_id" type="row"/>
                 <field name="job_id" type="col"/>
-                <field name="candidate_id"/>
+                <field name="partner_name"/>
             </pivot>
         </field>
     </record>

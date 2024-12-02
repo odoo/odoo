@@ -8,7 +8,6 @@
     'depends': ['hr_recruitment', 'sms'],
     'data': [
         'views/hr_applicant_views.xml',
-        'views/hr_candidate_views.xml',
     ],
     'auto_install': True,
     'license': 'LGPL-3',
