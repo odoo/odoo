@@ -89,6 +89,9 @@ export class SnippetsMenu extends Component {
                     },
                 },
                 getRecordInfo: (editableEl) => {
+                    if (!editableEl) {
+                        editableEl = this.editor.shared.selection.getEditableSelection().anchorNode;
+                    }
                     return {
                         resModel: editableEl.dataset["oeModel"],
                         resId: editableEl.dataset["oeId"],
