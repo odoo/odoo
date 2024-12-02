@@ -139,6 +139,13 @@ class TestPerformanceTimeit(TransactionCase):
         self.launch_perf("records.name = 'ok'", self.parent_0_child)
         self.launch_perf_set("records.name = records[0].name")
 
+    def test_perf_field_set_compute(self):
+        field = self.Model._fields['simple_compute']
+        self.launch_perf_set(
+            "field.compute_value(records); records.invalidate_model(['simple_compute'])", 
+            ctx={'field': field},
+        )
+
     def test_perf_field_set_flush(self):
         self.launch_perf("records.flush_recordset()", self.parent_0_child)
         self.launch_perf("records.write({'name': 'ok'}); records.flush_recordset()", self.parent_0_child)
