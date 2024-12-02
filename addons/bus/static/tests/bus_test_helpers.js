@@ -8,6 +8,7 @@ import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
+import { patchWebsocketWorkerWithCleanup } from "./mock_websocket";
 
 patch(busService, {
     _onMessage(id, type, payload) {
@@ -204,4 +205,35 @@ export function waitNotifications(...expectedNotifications) {
     return Promise.all(
         expectedNotifications.map((expectedNotification) => _waitNotification(expectedNotification))
     );
+}
+
+/**
+ * Returns a deferred that resolves when an event matching the given type is
+ * received by the websocket worker.
+ *
+ * @param {import("@web/env").OdooEnv} env
+ * @param {import("@bus/workers/websocket_worker").WorkerAction} targetAction
+ */
+export function waitForWorkerEvent(targetAction) {
+    const evReceivedDeferred = new Deferred();
+    const failTimeout = setTimeout(() => {
+        unpatch();
+        const message = `Waited ${TIMEOUT}ms for ${targetAction} to be received.`;
+        expect(true).toBe(false, { message });
+        evReceivedDeferred.reject(new Error(message));
+    }, TIMEOUT);
+    const worker = patchWebsocketWorkerWithCleanup();
+    const unpatch = patch(worker, {
+        _onClientMessage(_, { action }) {
+            super._onClientMessage(...arguments);
+            if (targetAction === action) {
+                unpatch();
+                clearTimeout(failTimeout);
+                expect(true).toBe(true, { message: `Action "${action}" received.` });
+                evReceivedDeferred.resolve();
+            }
+        },
+    });
+    after(unpatch);
+    return evReceivedDeferred;
 }
