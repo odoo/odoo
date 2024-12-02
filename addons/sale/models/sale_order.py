@@ -589,9 +589,12 @@ class SaleOrder(models.Model):
             show_warning = order.state in ('draft', 'sent') and \
                            order.company_id.account_use_credit_limit
             if show_warning:
-                updated_credit = order.partner_id.commercial_partner_id.credit + (order.amount_total / order.currency_rate)
+                order_sudo = order.sudo()
+                current_credit = order_sudo.partner_id.commercial_partner_id.credit
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order, updated_credit)
+                    record=order_sudo,
+                    updated_credit=current_credit + order.amount_total / order.currency_rate,
+                )
 
     @api.depends_context('lang')
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
