@@ -1253,9 +1253,9 @@ class TestComposerInternals(TestMailComposer):
         # cannot schedule a message in mass_mail mode
         composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record)
-            ).create({'body': 'Test', 'composition_mode': 'mass_mail'})
+            ).create({'body': 'Test', 'composition_mode': 'mass_mail', 'scheduled_date': FieldDatetime.to_string(self.reference_now + timedelta(hours=2))})
         with self.assertRaises(UserError):
-            composer.action_schedule_message(FieldDatetime.to_string(self.reference_now + timedelta(hours=2)))
+            composer.action_schedule_message()
 
         # schedule a message in mono-comment mode
         attachment_data = self._generate_attachments_data(1, 'mail.compose.message', 0)[0]
@@ -1267,9 +1267,14 @@ class TestComposerInternals(TestMailComposer):
                 'attachment_ids': [(0, 0, attachment_data)],
                 'partner_ids': [(4, self.test_record.customer_id.id)],
             })
+        # cannot schedule a message without a scheduled date
+        with self.assertRaises(UserError):
+            composer.action_schedule_message()
+
+        composer.write({'scheduled_date': FieldDatetime.to_string(self.reference_now + timedelta(hours=2))})
         composer_attachment = composer.attachment_ids
         with self.mock_datetime_and_now(self.reference_now):
-            composer.action_schedule_message(FieldDatetime.to_string(self.reference_now + timedelta(hours=2)))
+            composer.action_schedule_message()
         # should have created a scheduled message with correct parameters
         scheduled_message = self.env['mail.scheduled.message'].search([
             ['model', '=', self.test_record._name],

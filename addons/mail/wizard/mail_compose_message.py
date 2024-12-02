@@ -654,7 +654,7 @@ class MailComposeMessage(models.TransientModel):
     # ACTIONS
     # ------------------------------------------------------------
 
-    def action_schedule_message(self, scheduled_date=False):
+    def action_schedule_message(self):
         # currently only allowed in mono-comment mode
         if any(wizard.composition_mode != 'comment' or wizard.composition_batch for wizard in self):
             raise UserError(_("A message can only be scheduled in monocomment mode"))
@@ -662,7 +662,8 @@ class MailComposeMessage(models.TransientModel):
         for wizard in self:
             res_id = wizard._evaluate_res_ids()[0]
             post_values = self._prepare_mail_values([res_id])[res_id]
-            post_scheduled_date = post_values.pop('scheduled_date')
+            if not post_values['scheduled_date']:
+                raise UserError(_("A scheduled date is needed to schedule a message"))
             create_values.append({
                 'attachment_ids': post_values.pop('attachment_ids'),
                 'author_id': post_values.pop('author_id'),
@@ -671,7 +672,7 @@ class MailComposeMessage(models.TransientModel):
                 'model': wizard.model,
                 'partner_ids': post_values.pop('partner_ids'),
                 'res_id': res_id,
-                'scheduled_date': scheduled_date or post_scheduled_date,
+                'scheduled_date': post_values.pop('scheduled_date'),
                 'subject': post_values.pop('subject'),
                 'notification_parameters': json.dumps(post_values),  # last to not include popped post_values
             })
