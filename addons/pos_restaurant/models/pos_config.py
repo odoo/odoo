@@ -72,10 +72,12 @@ class PosConfig(models.Model):
     @api.model
     def _load_bar_data(self):
         convert.convert_file(self.env, 'pos_restaurant', 'data/scenarios/bar_data.xml', None, noupdate=True, mode='init', kind='data')
+        convert.convert_file(self.env, 'pos_restaurant', 'data/restaurant_session_floor.xml', None, noupdate=True, mode='init', kind='data')
 
     @api.model
     def _load_restaurant_data(self):
         convert.convert_file(self.env, 'pos_restaurant', 'data/scenarios/restaurant_data.xml', None, noupdate=True, mode='init', kind='data')
+        convert.convert_file(self.env, 'pos_restaurant', 'data/restaurant_session_floor.xml', None, noupdate=True, mode='init', kind='data')
 
     @api.model
     def load_onboarding_bar_scenario(self):
@@ -88,6 +90,10 @@ class PosConfig(models.Model):
             'pos_restaurant.pos_category_cocktails',
             'pos_restaurant.pos_category_soft_drinks',
         ])
+        floor = self.env.ref('pos_restaurant.floor_main')
+        new_floor = floor.copy()
+        for table in floor.table_ids:
+            table.copy({'floor_id': new_floor.id})
         config = self.env['pos.config'].create({
             'name': 'Bar',
             'company_id': self.env.company.id,
@@ -97,6 +103,7 @@ class PosConfig(models.Model):
             'iface_available_categ_ids': bar_categories,
             'iface_splitbill': True,
             'module_pos_restaurant': True,
+            'floor_ids': [new_floor.id],
         })
         self.env['ir.model.data']._update_xmlids([{
             'xml_id': self._get_suffixed_ref_name(ref_name),
@@ -124,6 +131,10 @@ class PosConfig(models.Model):
             'iface_available_categ_ids': restaurant_categories,
             'iface_splitbill': True,
             'module_pos_restaurant': True,
+            'floor_ids': [
+                self.env.ref('pos_restaurant.floor_main').id,
+                self.env.ref('pos_restaurant.floor_patio').id,
+            ],
         })
         self.env['ir.model.data']._update_xmlids([{
             'xml_id': self._get_suffixed_ref_name(ref_name),
@@ -133,4 +144,4 @@ class PosConfig(models.Model):
         if self.env.company.id == self.env.ref('base.main_company').id:
             existing_session = self.env.ref('pos_restaurant.pos_closed_session_3', raise_if_not_found=False)
             if not existing_session:
-                convert.convert_file(self.env, 'pos_restaurant', 'data/restaurant_session_floor.xml', None, noupdate=True, mode='init', kind='data')
+                convert.convert_file(self.env, 'pos_restaurant', 'data/restaurant_pos_order.xml', None, noupdate=True, mode='init', kind='data')
