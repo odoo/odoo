@@ -16,5 +16,6 @@ class ResCompany(models.Model):
             'social_twitter': website_id.social_twitter or social_media_links.get('social_twitter'),
             'social_instagram': website_id.social_instagram or social_media_links.get('social_instagram'),
             'social_tiktok': website_id.social_tiktok or social_media_links.get('social_tiktok'),
+            'social_threads': website_id.social_threads or social_media_links.get('social_threads'),
         })
         return social_media_links
