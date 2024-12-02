@@ -1,4 +1,4 @@
-import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
+import { WebsiteBuilder } from "@html_builder/website_builder_action";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -54,10 +54,9 @@ test("discard modified elements", async () => {
 });
 
 test("discard without any modifications", async () => {
-    patchWithCleanup(SnippetsMenu.prototype, {
+    patchWithCleanup(WebsiteBuilder.prototype, {
         async reloadIframeAndCloseEditor() {
-            this.props.iframe.contentDocument.body.innerHTML = wrapExample;
-            this.props.closeEditor();
+            this.websiteContent.el.contentDocument.body.innerHTML = wrapExample;
         },
     });
     await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
@@ -79,10 +78,10 @@ function setupSaveAndReloadIframe() {
         resultSave.push(args[1]);
         return true;
     });
-    patchWithCleanup(SnippetsMenu.prototype, {
+    patchWithCleanup(WebsiteBuilder.prototype, {
         async reloadIframeAndCloseEditor() {
-            this.props.iframe.contentDocument.body.innerHTML = resultSave.at(-1) || wrapExample;
-            this.props.closeEditor();
+            this.websiteContent.el.contentDocument.body.innerHTML =
+                resultSave.at(-1) || wrapExample;
         },
     });
     return resultSave;

@@ -1,13 +1,15 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, getSnippetStructure, setupWebsiteBuilder } from "./helpers";
+import {
+    defineWebsiteModels,
+    getSnippetStructure,
+    invisiblePopup,
+    setupWebsiteBuilder,
+} from "./helpers";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 
 defineWebsiteModels();
-
-const invisiblePopup =
-    '<div class="s_popup o_snippet_invisible" data-snippet="s_popup" data-name="Popup" id="sPopup1732546784762" data-invisible="1"></div>';
 
 test("click on invisible elements in the invisible elements tab", async () => {
     await setupWebsiteBuilder(`${invisiblePopup}`);

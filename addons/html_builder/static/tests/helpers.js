@@ -1,4 +1,5 @@
 import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
+import { WebsiteBuilder } from "@html_builder/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
@@ -33,6 +34,9 @@ class IrUiView extends models.Model {
 
 export const exampleWebsiteContent = '<h1 class="title">Hello</h1>';
 
+export const invisiblePopup =
+    '<div class="s_popup o_snippet_invisible" data-snippet="s_popup" data-name="Popup" id="sPopup1732546784762" data-invisible="1"></div>';
+
 export const wrapExample = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${exampleWebsiteContent}</div>`;
 
 export function defineWebsiteModels() {
@@ -48,6 +52,31 @@ export async function setupWebsiteBuilder(
     pyEnv["website"].create({});
     let editor;
     await mountWithCleanup(WebClient);
+    let resolveIframeLoaded = () => {};
+    const iframeLoaded = new Promise((resolve) => {
+        resolveIframeLoaded = (el) => {
+            resolve(el);
+        };
+    });
+    patchWithCleanup(WebsiteBuilder.prototype, {
+        get systrayProps() {
+            return {
+                onNewPage: this.onNewPage.bind(this),
+                onEditPage: this.onEditPage.bind(this),
+                iframeLoaded: iframeLoaded,
+            };
+        },
+        get menuProps() {
+            return {
+                closeEditor: this.reloadIframeAndCloseEditor.bind(this),
+                snippetsName: "website.snippets",
+                toggleMobile: this.toggleMobile.bind(this),
+                isTranslation: !!this.translation,
+                iframeLoaded: iframeLoaded,
+                overlayRef: this.overlayRef,
+            };
+        },
+    });
     await getService("action").doAction({
         name: "Website Builder",
         tag: "egg_website_preview",
@@ -69,7 +98,7 @@ export async function setupWebsiteBuilder(
         });
     }
 
-    const iframe = queryOne("iframe[data-src='/website/force/1']");
+    const iframe = queryOne("iframe[data-src^='/website/force/1']");
     iframe.contentDocument.body.innerHTML = `<div id="wrapwrap">${websiteContent}</div>`;
     if (loadIframeBundles) {
         loadBundle("html_builder.inside_builder_style", {
@@ -80,6 +109,8 @@ export async function setupWebsiteBuilder(
             js: false,
         });
     }
+    resolveIframeLoaded(iframe);
+    await animationFrame();
     if (openEditor) {
         await openSnippetsMenu();
     }
