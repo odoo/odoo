@@ -54,7 +54,7 @@ class IotBoxOwlHomePage(Home):
     def index(self):
         return index_template.render()
 
-    @http.route("/logs")
+    @http.route('/logs', auth='none', type='http')
     def logs_page(self):
         return logs_template.render()
 
