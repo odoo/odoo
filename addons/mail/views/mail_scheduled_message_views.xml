@@ -18,7 +18,6 @@
                                     options="{'no_quick_create': True}"
                                     context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                             </div>
-                            <field name="scheduled_date" options="{'min_date': 'today'}"/>
                             <field name="subject" required="True"/>
                         </group>
                         <group col="1">
@@ -29,12 +28,13 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button string="Save" class="btn-primary" special="save" data-hotkey="S"/>
+                        <button string="Save" class="btn-primary" special="save" invisible="not scheduled_date" data-hotkey="S"/>
                         <button string="Send Now" invisible="is_note" type="object" name="post_message" data-hotkey="q"/>
                         <button string="Log Now" invisible="not is_note" type="object" name="post_message" data-hotkey="q"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                         <field name="attachment_ids" widget="mail_composer_attachment_selector"/>
                         <field name="body" widget="mail_composer_chatgpt"/> 
+                        <field name="scheduled_date" widget="datetime_scheduled_date"/>
                     </footer>
                 </form>
             </field>
