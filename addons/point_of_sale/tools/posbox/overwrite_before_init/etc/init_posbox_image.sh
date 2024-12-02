@@ -24,14 +24,14 @@ echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
 echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
 # Aliases
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf --load=hw_drivers,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl stop odoo; sudo /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias read_mode='sudo mount -o remount,ro / && sudo mount -o remount,ro /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks; sudo chroot /root_bypass_ramdisks/; mount -t proc proc /proc'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias nano='write_mode; nano -l'" | tee -a /home/pi/.bashrc
+echo  "alias nano='write_mode; sudo nano -l'" | tee -a /home/pi/.bashrc
 echo  "alias vim='write_mode; sudo vim'" | tee -a /home/pi/.bashrc
 echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n\"'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
@@ -39,7 +39,10 @@ echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
 echo  "alias odoo_restart='sudo systemctl restart odoo'" >> /home/pi/.bashrc
 echo "
 odoo_help() {
-  echo 'Welcome to Odoo IoTBox tools'
+  echo '-------------------------------'
+  echo ' Welcome to Odoo IoT Box tools'
+  echo '-------------------------------'
+  echo ''
   echo 'odoo                Starts/Restarts Odoo server manually (not through odoo.service)'
   echo 'odoo_logs           Displays Odoo server logs in real time'
   echo 'odoo_conf           Displays Odoo configuration file content'
@@ -51,6 +54,8 @@ odoo_help() {
   echo 'odoo_stop           Stops Odoo service'
   echo 'odoo_restart        Restarts Odoo service'
   echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
+  echo ''
+  echo 'Odoo IoT online help: <https://www.odoo.com/documentation/master/applications/general/iot.html>'
 }
 
 odoo_dev() {
@@ -61,9 +66,10 @@ odoo_dev() {
   write_mode
   pwd=\$(pwd)
   cd /home/pi/odoo
-  git remote add dev https://github.com/odoo-dev/odoo.git
-  git fetch dev \$1 --depth=1 --prune
-  git reset --hard dev/\$1
+  sudo git config --global --add safe.directory /home/pi/odoo
+  sudo git remote add dev https://github.com/odoo-dev/odoo.git
+  sudo git fetch dev \$1 --depth=1 --prune
+  sudo git reset --hard dev/\$1
   cd \$pwd
 }
 
@@ -82,10 +88,6 @@ pip() {
 
 source ~/.bashrc
 source /home/pi/.bashrc
-
-# copy the odoo.conf file to the overwrite directory
-mv -v "/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "/home/pi/"
-chown pi:pi "/home/pi/odoo.conf"
 
 apt-get update
 
@@ -205,13 +207,24 @@ wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/
 chmod +x /usr/local/bin/eftdvs
 wget 'https://nightly.odoo.com/master/iotbox/eftapi.so' -P /usr/lib/
 
+# Create Odoo user for odoo service and disable password login
+adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
+
+# Replace pi user with odoo user in sudoers file: odoo user doesn't need to type its password to run sudo commands
+mv /etc/sudoers.d/010_pi-nopasswd /etc/sudoers.d/010_odoo-nopasswd
+sed -i 's/pi/odoo/g' /etc/sudoers.d/010_odoo-nopasswd
+
+# copy the odoo.conf file to the overwrite directory
+mv -v "/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "/home/pi/"
+chown odoo:odoo "/home/pi/odoo.conf"
+
 groupadd usbusers
-usermod -a -G usbusers pi
-usermod -a -G lp pi
+usermod -a -G usbusers odoo
+usermod -a -G lp odoo
 usermod -a -G input lightdm
 mkdir -v /var/log/odoo
-chown pi:pi /var/log/odoo
-chown pi:pi -R /home/pi/odoo/
+chown odoo:odoo /var/log/odoo
+chown odoo:odoo -R /home/pi/odoo/
 
 # logrotate is very picky when it comes to file permissions
 chown -R root:root /etc/logrotate.d/
@@ -246,9 +259,6 @@ echo "disable_overscan=1" >> /boot/config.txt
 
 # Use the fkms driver instead of the legacy one (RPI3 requires this)
 sed -i '/dtoverlay/c\dtoverlay=vc4-fkms-v3d' /boot/config.txt
-
-# exclude /drivers folder from git info to be able to load specific drivers
-echo "addons/hw_drivers/iot_devices/" > /home/pi/odoo/.git/info/exclude
 
 # create dirs for ramdisks
 create_ramdisk_dir () {
