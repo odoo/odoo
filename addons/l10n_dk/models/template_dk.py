@@ -30,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'dk_coa_2720',
                 'account_sale_tax_id': 'tax_s1',
                 'account_purchase_tax_id': 'tax_k1',
+                'default_cash_difference_income_account_id': 'dk_coa_2720',
+                'default_cash_difference_expense_account_id': 'dk_coa_2720',
                 'expense_account_id': 'dk_coa_1610',
                 'income_account_id': 'dk_coa_1010',
             },
