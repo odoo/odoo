@@ -21,7 +21,6 @@
     ],
     'data': [
         'security/project_security.xml',
-        'security/ir.model.access.xml',
         'data/digest_data.xml',
         'report/project_task_burndown_chart_report_views.xml',
         'views/account_analytic_account_views.xml',

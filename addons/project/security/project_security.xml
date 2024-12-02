@@ -51,11 +51,11 @@
 <data noupdate="1">
 
     <!-- Portal -->
-    <record id="project_task_rule_portal_project_sharing" model="ir.rule">
+    <record id="access_project_task_group_portal" model="ir.access">
         <field name="name">Project/Task: portal users: portal user can edit with project sharing feature</field>
         <field name="model_id" ref="project.model_project_task"/>
         <field name="active">0</field>
-        <field name="domain_force">[
+        <field name="domain">[
             ('project_id.privacy_visibility', '=', 'portal'),
             ('active', '=', True),
             '|',
@@ -65,11 +65,8 @@
                     ('limited_access', '=', False),
                 ]),
         ]</field>
-        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-        <field name="perm_read" eval="False"/>
-        <field name="perm_write" eval="True"/>
-        <field name="perm_create" eval="True"/>
-        <field name="perm_unlink" eval="False"/>
+        <field name="group_id" ref="base.group_portal"/>
+        <field name="operation">wc</field>
     </record>
 
     </data>
