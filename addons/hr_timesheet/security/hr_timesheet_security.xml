@@ -28,21 +28,18 @@
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
-        <record id="timesheet_line_rule_portal_user" model="ir.rule">
+        <record id="access_account_analytic_line_group_portal" model="ir.access">
             <field name="name">account.analytic.line.timesheet.portal.user</field>
             <field name="model_id" ref="analytic.model_account_analytic_line"/>
             <field name="active">0</field>
-            <field name="domain_force">[
+            <field name="domain">[
                 ('project_id', '!=', False),
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                 ('project_id.privacy_visibility', '=', 'portal'),
                 ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
             ]</field>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="operation">r</field>
+            <field name="group_id" ref="base.group_portal"/>
         </record>
 
         <record id="project.group_project_manager" model="res.groups">
