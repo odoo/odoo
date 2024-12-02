@@ -31,6 +31,10 @@ class BaseModel(models.AbstractModel):
             return self.domain or super().get_base_url()
         if 'website_id' in self and self.sudo().website_id.domain:
             return self.sudo().website_id.domain
+        if 'website_id' in self.env.context:
+            domain = self.env['website'].browse(self.env.context['website_id']).sudo().domain
+            if domain:
+                return domain
         if 'company_id' in self and self.company_id.website_id.domain:
             return self.company_id.website_id.domain
         return super().get_base_url()
