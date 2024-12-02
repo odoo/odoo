@@ -183,16 +183,16 @@ class AccountMove(models.Model):
         return error_msg
 
     def _l10n_jo_edi_send(self):
-        for invoice in self:
-            if not self.env['res.company']._with_locked_records(records=invoice, allow_raising=False):
-                return
-            if error_message := invoice._l10n_jo_validate_config() or invoice._l10n_jo_validate_fields() or invoice._submit_to_jofotara():
-                invoice.l10n_jo_edi_error = error_message
-                return error_message
-            else:
-                invoice.l10n_jo_edi_error = False
-                invoice.l10n_jo_edi_state = 'sent'
-                invoice.with_context(no_new_invoice=True).message_post(
-                    body=_("E-invoice (JoFotara) submitted successfully."),
-                    attachment_ids=invoice.l10n_jo_edi_xml_attachment_id.ids,
-                )
+        self.ensure_one()
+        if not self.env['res.company']._with_locked_records(records=self, allow_raising=False):
+            return
+        if error_message := self._l10n_jo_validate_config() or self._l10n_jo_validate_fields() or self._submit_to_jofotara():
+            self.l10n_jo_edi_error = error_message
+            return error_message
+        else:
+            self.l10n_jo_edi_error = False
+            self.l10n_jo_edi_state = 'sent'
+            self.with_context(no_new_invoice=True).message_post(
+                body=_("E-invoice (JoFotara) submitted successfully."),
+                attachment_ids=self.l10n_jo_edi_xml_attachment_id.ids,
+            )
