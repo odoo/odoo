@@ -91,16 +91,20 @@ test("scroll to the first unread message (slow ref registration)", async () => {
         async registerMessageRef() {
             if (slowRegisterMessageRef) {
                 // Ensure scroll is made even when messages are mounted later.
-                await new Promise((res) => setTimeout(res, 500));
+                await new Promise((res) => setTimeout(res, 250));
             }
             super.registerMessageRef(...arguments);
         },
     });
     await start();
     await openDiscuss(channelId);
+    await tick(); // wait for the scroll to first unread to complete
+    // Mark the message as unread again; otherwise, the banner will disappear
+    // when reaching the bottom of the thread.
+    await click("[title='Expand']", { parent: [".o-mail-Message", { text: "message 100" }] });
+    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
     await click("[title='Jump to Present']");
-    await scroll(".o-mail-Thread", "bottom");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await isInViewportOf(".o-mail-Message:contains(message 200)", ".o-mail-Thread");
     slowRegisterMessageRef = true;
     await click("span", {
         text: "101 new messages",
