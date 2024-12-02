@@ -1,4 +1,12 @@
-import { Component, onWillDestroy, onWillStart, useRef, useState, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { useService, useChildRef } from "@web/core/utils/hooks";
@@ -18,7 +26,7 @@ function unslugHtmlDataObject(repr) {
     };
 }
 
-class WebsiteBuilder extends Component {
+export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
     static components = { LazyComponent, LocalOverlayContainer };
     static props = { ...standardActionServiceProps };
@@ -31,9 +39,11 @@ class WebsiteBuilder extends Component {
         });
         this.state = useState({ isEditing: false, isMobile: false });
         this.websiteService = useService("website");
+        this.ui = useService("ui");
         // TODO: to remove: this is only needed to not use the website systray
         // when using the "website preview" app.
         this.websiteService.useMysterious = true;
+        this.translation = !!this.props.action.context.params?.edit_translations;
 
         this.overlayRef = useChildRef();
         useSubEnv({
@@ -47,9 +57,20 @@ class WebsiteBuilder extends Component {
                 this.websiteService.fetchUserGroups(),
             ]);
             this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
-            this.initialUrl = `/website/force/${encodeURIComponent(this.backendWebsiteId)}`;
+            const encodedPath = encodeURIComponent(this.path);
+            this.initialUrl = `/website/force/${encodeURIComponent(
+                this.backendWebsiteId
+            )}?path=${encodedPath}`;
             this.websiteService.currentWebsiteId = this.backendWebsiteId;
         });
+        onMounted(() => {
+            const { enable_editor, edit_translations } = this.props.action.context.params || {};
+            const edition = !!(enable_editor || edit_translations);
+            if (edition) {
+                this.onEditPage();
+            }
+        });
+        this.setIframeLoaded();
         this.addSystrayItems();
         onWillDestroy(() => {
             this.websiteService.useMysterious = false;
@@ -59,32 +80,31 @@ class WebsiteBuilder extends Component {
 
     get menuProps() {
         return {
-            iframe: this.websiteContent.el,
-            closeEditor: this.closeEditor.bind(this),
+            closeEditor: this.reloadIframeAndCloseEditor.bind(this),
             snippetsName: "website.snippets",
             toggleMobile: this.toggleMobile.bind(this),
             overlayRef: this.overlayRef,
+            isTranslation: this.translation,
+            iframeLoaded: this.iframeLoaded,
+        };
+    }
+
+    get systrayProps() {
+        return {
+            onNewPage: this.onNewPage.bind(this),
+            onEditPage: this.onEditPage.bind(this),
+            iframeLoaded: this.iframeLoaded,
         };
     }
 
     addSystrayItems() {
-        const systrayProps = {
-            onNewPage: this.onNewPage.bind(this),
-            onEditPage: this.onEditPage.bind(this),
-        };
         registry
             .category("systray")
             .add(
                 "website.WebsiteSystrayItem",
-                { Component: WebsiteSystrayItem, props: systrayProps },
+                { Component: WebsiteSystrayItem, props: this.systrayProps },
                 { sequence: -100 }
             );
-    }
-
-    closeEditor() {
-        document.querySelector(".o_main_navbar").removeAttribute("style");
-        this.state.isEditing = false;
-        this.addSystrayItems();
     }
 
     onNewPage() {
@@ -105,10 +125,87 @@ class WebsiteBuilder extends Component {
             targetDoc: this.websiteContent.el.contentDocument,
         });
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
+        if (this.translation) {
+            deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
+        }
+        this.resolveIframeLoaded();
     }
+
+    get path() {
+        let path = this.props.action.context.params?.path;
+        if (path) {
+            const url = new URL(path, window.location.origin);
+            if (isTopWindowURL(url)) {
+                // If the client action is initialized with a path that should
+                // not be opened inside the iframe (= something we would want to
+                // open on the top window), we consider that this is not a valid
+                // flow. Instead of trying to open it on the top window, we
+                // initialize the iframe with the website homepage...
+                path = "/";
+            } else {
+                // ... otherwise, the path still needs to be normalized (as it
+                // would be if the given path was used as an href of a  <a/>
+                // element).
+                path = url.pathname + url.search;
+            }
+        } else {
+            path = "/";
+        }
+        return path;
+    }
+
+    async reloadIframeAndCloseEditor() {
+        this.ui.block();
+        this.setIframeLoaded();
+        this.websiteContent.el.contentWindow.location.reload();
+        await this.iframeLoaded;
+        this.ui.unblock();
+        document.querySelector(".o_main_navbar").removeAttribute("style");
+        this.state.isEditing = false;
+        this.addSystrayItems();
+    }
+
+    setIframeLoaded() {
+        this.iframeLoaded = new Promise((resolve) => {
+            this.resolveIframeLoaded = () => {
+                resolve(this.websiteContent.el);
+            };
+        });
+    }
+
     toggleMobile() {
         this.state.isMobile = !this.state.isMobile;
     }
+}
+
+function deleteQueryParam(param, target = window, adaptBrowserUrl = false) {
+    const url = new URL(target.location.href);
+    url.searchParams.delete(param);
+    // TODO: maybe to use in the action service
+    target.history.replaceState(target.history.state, null, url);
+    if (adaptBrowserUrl) {
+        deleteQueryParam(param);
+    }
+}
+
+/**
+ * Returns true if the url should be opened in the top
+ * window.
+ *
+ * @param host {string} host of the route.
+ * @param pathname {string} path of the route.
+ */
+function isTopWindowURL({ host, pathname }) {
+    const backendRoutes = ["/web", "/web/session/logout", "/odoo"];
+    return (
+        host !== window.location.host ||
+        (pathname &&
+            (backendRoutes.includes(pathname) ||
+                pathname.startsWith("/@/") ||
+                pathname.startsWith("/odoo/") ||
+                pathname.startsWith("/web/content/") ||
+                pathname.startsWith("/document/share/")))
+    );
 }
 
 registry.category("actions").add("egg_website_preview", WebsiteBuilder);

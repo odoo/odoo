@@ -38,25 +38,17 @@ const BUILDER_PLUGIN = [
     HandleDirtyElementPlugin,
 ];
 
-function onIframeLoaded(iframe, callback) {
-    const doc = iframe.contentDocument;
-    if (doc.readyState === "complete") {
-        callback();
-    } else {
-        iframe.addEventListener("load", callback, { once: true });
-    }
-}
-
 // todo: Why is it called SnippetsMenu? Should we rename it to BuilderSidebar?
 export class SnippetsMenu extends Component {
     static template = "html_builder.SnippetsMenu";
     static components = { BlockTab, CustomizeTab, InvisibleElementsPanel };
     static props = {
-        iframe: { type: Object },
         closeEditor: { type: Function },
         snippetsName: { type: String },
         toggleMobile: { type: Function },
         overlayRef: { type: Function },
+        isTranslation: { type: Boolean },
+        iframeLoaded: { type: Object },
     };
 
     setup() {
@@ -66,7 +58,7 @@ export class SnippetsMenu extends Component {
         this.state = useState({
             canUndo: false,
             canRedo: false,
-            activeTab: "blocks",
+            activeTab: this.props.isTranslation ? "customize" : "blocks",
             currentOptionsContainers: undefined,
             invisibleEls: [],
         });
@@ -82,6 +74,8 @@ export class SnippetsMenu extends Component {
             ".o_snippet_invisible, .o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
 
         const editorBus = new EventBus();
+        // TODO: maybe do a different config for the translate mode and the
+        // "regular" mode.
         this.editor = new Editor(
             {
                 Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN],
@@ -97,6 +91,8 @@ export class SnippetsMenu extends Component {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         this.setTab("customize");
                     },
+                    unsplittable_node_predicates: (node) =>
+                        node.querySelector("[data-oe-translation-source-sha]"),
                 },
                 getRecordInfo: (editableEl) => {
                     if (!editableEl) {
@@ -124,8 +120,14 @@ export class SnippetsMenu extends Component {
                 snippetsName: this.props.snippetsName,
             })
         );
+
         onWillStart(async () => {
             await this.snippetModel.load();
+            // Ensure that the iframe is loaded and the editor is created before
+            // instantiating the sub components that potentially need the
+            // editor.
+            const iframeEl = await this.props.iframeLoaded;
+            this.editor.attachTo(iframeEl.contentDocument.body.querySelector("#wrapwrap"));
         });
 
         useSubEnv({
@@ -135,9 +137,6 @@ export class SnippetsMenu extends Component {
         // onMounted(() => {
         //     // actionService.setActionMode("fullscreen");
         // });
-        onIframeLoaded(this.props.iframe, () => {
-            this.editor.attachTo(this.props.iframe.contentDocument.body.querySelector("#wrapwrap"));
-        });
         onWillDestroy(() => {
             this.editor.destroy();
             // actionService.setActionMode("current");
@@ -160,11 +159,11 @@ export class SnippetsMenu extends Component {
                 body: _t(
                     "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
                 ),
-                confirm: () => this.reloadIframeAndCloseEditor(),
+                confirm: () => this.props.closeEditor(),
                 cancel: () => {},
             });
         } else {
-            this.reloadIframeAndCloseEditor();
+            this.props.closeEditor();
         }
     }
 
@@ -183,20 +182,14 @@ export class SnippetsMenu extends Component {
             async (dirtyEl) => {
                 await this.editor.shared.media.savePendingImages(dirtyEl);
                 const cleanedEl = this.editor.shared.dirty.handleDirtyElement(dirtyEl);
-                await this.saveView(cleanedEl);
+                if (this.props.isTranslation) {
+                    await this.saveTranslationElement(cleanedEl);
+                } else {
+                    await this.saveView(cleanedEl);
+                }
             }
         );
         await Promise.all(saveProms);
-        await this.reloadIframeAndCloseEditor();
-    }
-
-    async reloadIframeAndCloseEditor() {
-        this.ui.block();
-        this.props.iframe.contentWindow.location.reload();
-        await new Promise((resolve) => {
-            onIframeLoaded(this.props.iframe, resolve);
-        });
-        this.ui.unblock();
         this.props.closeEditor();
     }
 
@@ -215,7 +208,7 @@ export class SnippetsMenu extends Component {
     /**
      * Saves one (dirty) element of the page.
      *
-     * @param {HTMLElement} el - the element to save
+     * @param {HTMLElement} el - the element to save.
      */
     async saveView(el) {
         const viewID = Number(el.dataset["oeId"]);
@@ -234,6 +227,27 @@ export class SnippetsMenu extends Component {
             }
         );
         return result;
+    }
+    /**
+     * If the element holds a translation, saves it. Otherwise, fallback to the
+     * standard saving but with the lang kept.
+     *
+     * @param {HTMLElement} el - the element to save.
+     */
+    async saveTranslationElement(el) {
+        if (el.dataset["oeTranslationSourceSha"]) {
+            const translations = {};
+            translations[this.websiteService.currentWebsite.metadata.lang] = {
+                [el.dataset["oeTranslationSourceSha"]]: el.innerHTML,
+            };
+            return this.orm.call(el.dataset["oeModel"], "web_update_field_translations", [
+                [Number(el.dataset["oeId"])],
+                el.dataset["oeField"],
+                translations,
+            ]);
+        }
+        // TODO: check what we want to modify in translate mode
+        return this.saveView(el);
     }
 
     onBeforeUnload(event) {

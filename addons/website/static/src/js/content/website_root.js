@@ -64,6 +64,9 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * @override
      */
     _getPublicWidgetsRegistry: function (options) {
+        // TODO: remove me, it is just to deactivate the public widgets for the
+        // moment.
+        return [];
         var registry = this._super.apply(this, arguments);
         if (options.editableMode) {
             const toPick = Object.keys(registry).filter((key) => {

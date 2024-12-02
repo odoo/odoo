@@ -15,9 +15,15 @@
             </div>
         </div>
         <div class="o-snippets-tabs d-flex justify-content-between mt-2 p-2 text-uppercase flex-shrink-0">
-            <span class="px-2 cursor-pointer pb-1 pe-auto" t-att-class="{'active': state.activeTab === 'blocks'}" t-on-click="() => this.setTab('blocks')">Blocks</span>
-            <span class="px-2 cursor-pointer pb-1" t-att-class="{'active': state.activeTab === 'customize'}" t-on-click="() => this.setTab('customize')">Customize</span>
-            <span class="px-2 cursor-pointer pb-1" t-att-class="{'active': state.activeTab === 'theme'}" t-on-click="() => this.setTab('theme')">Theme</span>
+            <button class="px-2 cursor-pointer pb-1 pe-auto bg-transparent text-white border-0" t-att-class="{'active': state.activeTab === 'blocks'}" t-on-click="() => this.setTab('blocks')" t-att-disabled="props.isTranslation">
+                <span>BLOCKS</span>
+            </button>
+            <button class="px-2 cursor-pointer pb-1 bg-transparent text-white border-0" t-att-class="{'active': state.activeTab === 'customize'}" t-on-click="() => this.setTab('customize')">
+                <span>CUSTOMIZE</span>
+            </button>
+            <button class="px-2 cursor-pointer pb-1 bg-transparent text-white border-0" t-att-class="{'active': state.activeTab === 'theme'}" t-on-click="() => this.setTab('theme')" t-att-disabled="props.isTranslation">
+                <span>THEME</span>
+            </button>
         </div>
         <div class="overflow-auto flex-grow-1 pt-1">
             <t t-if="state.activeTab === 'blocks'">
