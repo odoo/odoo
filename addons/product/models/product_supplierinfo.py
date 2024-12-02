@@ -100,3 +100,6 @@ class SupplierInfo(models.Model):
     def write(self, vals):
         self._sanitize_vals(vals)
         return super().write(vals)
+
+    def _get_filtered_seller(self, params):
+        return self.filtered(lambda s: s.partner_id.active and (not s.product_id or s.product_id == self))
