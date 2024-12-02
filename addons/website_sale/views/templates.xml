@@ -31,6 +31,39 @@
         </xpath>
     </template>
 
+        <!-- Insert JSON-LD markup data for SEO. -->
+    <template id="website_sale_layout" inherit_id="website.layout" priority="1">
+        <head position="inside">
+            <!-- Company markup data, in all pages. -->
+            <t t-set="base_url" t-value="website.get_base_url()"/>
+            <script t-if="res_company and website" type="application/ld+json" >
+{
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "<t t-out="res_company.name"/>",
+    "logo": "<t t-out="'%s/logo.png?company=%s' % (base_url, res_company.id)"/>",
+    "url": "<t t-out="base_url"/>"
+}
+            </script>
+
+             <!-- Product markup data, on product pages. -->
+            <script
+                t-if="product_markup_data" type="application/ld+json" t-out="product_markup_data"
+            />
+        </head>
+    </template>
+
+    <template id="product_category_extra_link" name="Product Category Extra Link">
+        <button  class="btn btn-link btn-sm pe-0" disabled="disabled">
+            <t t-if="len(categories) == 1">Category:</t>
+            <t t-else="">Categories:</t>
+        </button>
+        <t t-foreach="categories" t-as="category">
+            <button class="btn btn-link btn-sm p-0 text-wrap" t-out="category.name"
+                t-attf-onclick="location.href='/shop/category/#{slug(category)}';return false;"/>
+        </t>
+    </template>
+
     <template id="template_header_mobile" inherit_id="website.template_header_mobile">
         <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]//li" position="before">
             <t t-call="website_sale.header_cart_link">
@@ -184,7 +217,6 @@
         <form
             class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
-            itemscope="itemscope" itemtype="http://schema.org/Product"
         >
             <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None)) + selected_attributes_hash" />
             <t t-set="image_type" t-value="product._get_suitable_image_size(ppr, td_product['x'], td_product['y'])"/>
@@ -194,12 +226,11 @@
                 <a
                     t-att-href="product_href"
                     class="oe_product_image_link d-block position-relative"
-                    itemprop="url"
                     contenteditable="false"
                 >
                     <t t-set="image_holder" t-value="product._get_image_holder()"/>
                     <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': image_type, 'itemprop': 'image', 'class': 'h-100 w-100 position-absolute'}"
+                        t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'h-100 w-100 position-absolute'}"
                         class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
 
                     <t t-set="bg_color" t-value="td_product['ribbon'].bg_color"/>
@@ -215,7 +246,12 @@
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
                 <div class="o_wsale_product_information_text">
                     <h6 class="o_wsale_products_item_title mb-2 text-break">
-                        <a class="text-decoration-none" itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
+                        <a
+                            class="text-decoration-none"
+                            t-att-href="product_href"
+                            t-att-content="product.name"
+                            t-field="product.name"
+                        />
                         <a t-if="not product.website_published" role="button" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">
                             Unpublished
                         </a>
@@ -224,20 +260,21 @@
                 <div class="o_wsale_product_sub d-flex justify-content-between align-items-end gap-2 flex-wrap">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="o_wsale_product_btn d-flex gap-2"/>
-                    <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                    <div class="product_price">
                         <span class="h6 mb-0"
                               t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
                               t-out="template_price_vals['price_reduce']"
                               t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                         <span class="h6 mb-0" t-elif="any(ptav.price_extra for ptav in product.attribute_line_ids.product_template_value_ids)">&amp;nbsp;</span>
                         <span class="h6 mb-0" t-else="" t-field="website.prevent_zero_price_sale_text"/>
-                        <t t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)">
+                        <t
+                            t-if="'base_price' in template_price_vals and (template_price_vals['base_price'] &gt; template_price_vals['price_reduce']) and (template_price_vals['price_reduce'] or not website.prevent_zero_price_sale)"
+                            name="product_base_price"
+                        >
                             <del t-attf-class="text-muted me-1 h6 mb-0" style="white-space: nowrap;">
                                 <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                             </del>
                         </t>
-                        <span itemprop="price" style="display:none;" t-esc="template_price_vals['price_reduce']" />
-                        <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                     </div>
                 </div>
             </div>
@@ -250,7 +287,7 @@
         </xpath>
         <xpath expr="//*[hasclass('o_wsale_products_item_title')]" position="after">
             <div class="oe_subdescription mb-2 text-muted small" contenteditable="false">
-                <div itemprop="description" t-field="product.description_sale"/>
+                <div t-field="product.description_sale"/>
             </div>
         </xpath>
     </template>
@@ -1247,7 +1284,7 @@
 
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
-            <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale o_wsale_product_page">
+            <div id="wrap" class="js_sale o_wsale_product_page">
                 <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS</t>
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" t-att-data-editor-message="editor_message"/>
                 <section id="product_detail"
@@ -1315,9 +1352,7 @@
                         </div>
                         <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
                             <t t-set="base_url" t-value="website.get_base_url()"/>
-                            <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
-                            <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
+                            <h1 t-field="product.name">Product Name</h1>
                             <t t-if="is_view_active('website_sale.product_comment')">
                                 <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
                                     <t t-call="portal_rating.rating_widget_stars_static">
@@ -1460,7 +1495,11 @@
                         </div>
                     </div>
                 </section>
-                <div itemprop="description" t-field="product.website_description" class="oe_structure oe_empty mt16" id="product_full_description"/>
+                <div
+                    id="product_full_description"
+                    t-field="product.website_description"
+                    class="oe_structure oe_empty mt16"
+                />
                 <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" t-att-data-editor-message="editor_message"/>
             </div>
         </t>
@@ -1536,7 +1575,7 @@
     </template>
 
     <template id="alternative_products" name="Alternative Products" inherit_id="website_sale.product" active="True">
-        <div itemprop="description" position="after">
+        <div t-field="product.website_description" position="after">
             <div class="oe_structure oe_structure_solo oe_unremovable oe_unmovable" id="oe_structure_website_sale_recommended_products" t-ignore="true" t-if="product.alternative_product_ids">
                 <section data-snippet="s_dynamic_snippet_products"
                     class="oe_unmovable oe_unremovable s_dynamic_snippet_products o_wsale_alternative_products s_dynamic pt32 pb32 o_colored_level s_product_product_borderless_1"
@@ -1708,19 +1747,20 @@
     </template>
 
     <template id="product_price">
-        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}">
+        <div
+            name="product_price"
+            t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
+        >
             <div name="product_price_container" class="css_editable_mode_hidden h3">
                 <span class="oe_price"
                       style="white-space: nowrap;"
                       t-out="combination_info['price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <span itemprop="price" style="display:none;" t-out="combination_info['price']"/>
-                <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
                 <span t-attf-class="text-muted oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                       style="text-decoration: line-through; white-space: nowrap;"
                       t-esc="combination_info['list_price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                      itemprop="listPrice"
+                      name="product_list_price"
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del
@@ -3387,17 +3427,6 @@
                 </p>
             </t>
         </xpath>
-    </template>
-
-    <template id="product_category_extra_link" name="Product Category Extra Link">
-        <button  class="btn btn-link btn-sm pe-0" disabled="disabled">
-            <t t-if="len(categories) == 1">Category:</t>
-            <t t-else="">Categories:</t>
-        </button>
-        <t t-foreach="categories" t-as="category">
-            <button class="btn btn-link btn-sm p-0 text-wrap" t-out="category.name"
-                t-attf-onclick="location.href='/shop/category/#{slug(category)}';return false;"/>
-        </t>
     </template>
 
     <template id="sale_order_re_order_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
