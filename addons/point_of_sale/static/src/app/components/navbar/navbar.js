@@ -53,6 +53,7 @@ export class Navbar extends Component {
         if (
             !this.ui.isSmall &&
             this.inputRef &&
+            this.inputRef.el &&
             document.activeElement !== this.inputRef.el &&
             !this.pos.getOrder()?.getSelectedOrderline() &&
             this.noOpenDialogs() &&
