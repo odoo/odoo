@@ -1,15 +1,16 @@
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dialog } from "@web/core/dialog/dialog";
-import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { today } from "@web/core/l10n/dates";
 
 import { Component, useState } from "@odoo/owl";
 
-export class MailComposerScheduleDialog extends Component {
-    static template = "mail.MailComposerScheduleDialog";
+export class ScheduledDateDialog extends Component {
+    static template = "mail.ScheduledDateDialog";
     static props = {
         close: Function,
-        isNote: Boolean,
-        schedule: Function,
+        isRemovable: { type: Boolean },
+        save: Function,
+        scheduledDate: { type: luxon.DateTime, optional: true },
     };
     static components = {
         DateTimeInput,
@@ -18,12 +19,29 @@ export class MailComposerScheduleDialog extends Component {
 
     setup() {
         const now = luxon.DateTime.now();
+        this.tomorrowMorning = today().plus({ days: 1 }).set({ hour: 8 });
+        this.tomorrowAfternoon = this.tomorrowMorning.set({ hour: 13 });
+        this.mondayMorning = today()
+            .plus({ days: (1 - today().weekday + 7) % 7 || 7 })
+            .set({ hour: 8 });
+
         this.state = useState({
             customDateTime: now
                 .plus({ hours: 1 })
                 .set({ minutes: Math.ceil(now.minute / 5) * 5, seconds: 0, milliseconds: 0 }),
-            selectedOption: "morning",
+            selectedOption: undefined,
         });
+
+        if (!this.props.scheduledDate || this.props.scheduledDate.equals(this.tomorrowMorning)) {
+            this.state.selectedOption = "morning";
+        } else if (this.props.scheduledDate.equals(this.tomorrowAfternoon)) {
+            this.state.selectedOption = "afternoon";
+        } else if (this.props.scheduledDate.equals(this.mondayMorning)) {
+            this.state.selectedOption = "monday";
+        } else {
+            this.state.selectedOption = "custom";
+            this.state.customDateTime = this.props.scheduledDate;
+        }
         this.dateTimeFormat = {
             day: "numeric",
             hour: "numeric",
@@ -41,20 +59,6 @@ export class MailComposerScheduleDialog extends Component {
         };
     }
 
-    get mondayMorning() {
-        return today()
-            .plus({ days: (1 - today().weekday + 7) % 7 || 7 })
-            .set({ hour: 8 });
-    }
-
-    get tomorrowAfternoon() {
-        return today().plus({ days: 1 }).set({ hour: 13 });
-    }
-
-    get tomorrowMorning() {
-        return today().plus({ days: 1 }).set({ hour: 8 });
-    }
-
     get scheduledDate() {
         if (this.state.selectedOption === "morning") {
             return this.tomorrowMorning;
@@ -67,8 +71,13 @@ export class MailComposerScheduleDialog extends Component {
         }
     }
 
-    async schedule() {
-        await this.props.schedule(serializeDateTime(this.scheduledDate));
+    clear() {
+        this.props.save(false);
+        this.props.close();
+    }
+
+    save() {
+        this.props.save(this.scheduledDate);
         this.props.close();
     }
 }
