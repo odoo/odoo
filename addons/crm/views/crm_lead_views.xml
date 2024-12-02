@@ -518,6 +518,7 @@
             <field name="arch" type="xml">
                 <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
                     archivable="false" sample="1" js_class="crm_kanban">
+                    <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="probability"/>
                     <field name="active"/>
                     <field name="company_currency"/>
