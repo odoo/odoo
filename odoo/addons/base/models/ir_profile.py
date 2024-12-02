@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.tools.misc import str2bool
 from odoo.tools.profiler import make_session
 from odoo.tools.speedscope import Speedscope
 
@@ -49,16 +50,27 @@ class IrProfile(models.Model):
         return self.sudo().search(domain).unlink()
 
     def _compute_speedscope(self):
+        # The params variable is done to control input from the user
+        # When expanding this, it should be select from an enum to input only the correct values
+        params = {
+            'constant_time' : str2bool(request.httprequest.args.get('constant_time', False)),
+            'aggregate_sql' : str2bool(request.httprequest.args.get('aggregate_sql', False)),
+            'combined_profile' : str2bool(request.httprequest.args.get('combined_profile', False)),
+            'use_context' : str2bool(request.httprequest.args.get('use_execution_context', False)),
+            'sql_no_gap_profile' : str2bool(request.httprequest.args.get('sql_no_gap_profile', False)),
+            'sql_density_profile' : str2bool(request.httprequest.args.get('sql_density_profile', False)),
+            'frames_profile' : str2bool(request.httprequest.args.get('frames_profile', False)),
+        }
         for execution in self:
             sp = Speedscope(init_stack_trace=json.loads(execution.init_stack_trace))
             if execution.sql:
-                sp.add('sql', json.loads(execution.sql))
+                sp.add('sql', json.loads(execution.sql), params['aggregate_sql'])
             if execution.traces_async:
                 sp.add('frames', json.loads(execution.traces_async))
             if execution.traces_sync:
                 sp.add('settrace', json.loads(execution.traces_sync))
 
-            result = json.dumps(sp.add_default().make())
+            result = json.dumps(sp.add_default(**params).make(**params))
             execution.speedscope = base64.b64encode(result.encode('utf-8'))
 
     def _compute_speedscope_url(self):

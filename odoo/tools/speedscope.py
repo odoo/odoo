@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import reprlib
+from .func import filter_kwargs
 
 shortener = reprlib.Repr()
 shortener.maxstring = 150
@@ -23,13 +24,13 @@ class Speedscope:
         self.frame_count = 0
         self.profiles = []
 
-    def add(self, key, profile):
+    def add(self, key, profile, aggregate_sql=False):
         for entry in profile:
             self.caller_frame = self.init_caller_frame
             self.convert_stack(entry['stack'] or [])
             if 'query' in entry:
                 query = entry['query']
-                full_query = entry['full_query']
+                full_query = entry['full_query'] if not aggregate_sql else query
                 entry['stack'].append((f'sql({shorten(query)})', full_query, None))
         self.profiles_raw[key] = profile
 
@@ -44,13 +45,13 @@ class Speedscope:
             stack[index] = (method, line, number,)
             self.caller_frame = frame
 
-    def add_output(self, names, complete=True, display_name=None, use_context=True, **params):
+    def add_output(self, names, complete=True, display_name=None, use_context=True, constant_time=False, **params):
         entries = []
         display_name = display_name or ','.join(names)
         for name in names:
             entries += self.profiles_raw[name]
         entries.sort(key=lambda e: e['start'])
-        result = self.process(entries, use_context=use_context, **params)
+        result = self.process(entries, use_context=use_context, constant_time=constant_time)
         if not result:
             return self
         start = result[0]['at']
@@ -77,30 +78,32 @@ class Speedscope:
         self.profiles.append({
             "name": display_name,
             "type": "evented",
-            "unit": "seconds",
+            "unit": "entries" if constant_time else "seconds",
             "startValue": 0,
             "endValue": end - start,
             "events": result
         })
         return self
 
-    def add_default(self):
+    def add_default(self,**params):
         if len(self.profiles_raw) > 1:
-            self.add_output(self.profiles_raw, display_name='Combined')
-            self.add_output(self.profiles_raw, display_name='Combined no context', use_context=False)
+            if params['combined_profile']:
+                self.add_output(self.profiles_raw, display_name='Combined', **params)
         for key, profile in self.profiles_raw.items():
             sql = profile and profile[0].get('query')
             if sql:
-                self.add_output([key], hide_gaps=True, display_name=f'{key} (no gap)')
-                self.add_output([key], continuous=False, complete=False, display_name=f'{key} (density)')
+                if params['sql_no_gap_profile']:
+                    self.add_output([key], hide_gaps=True, display_name=f'{key} (no gap)', **params)
+                if params['sql_density_profile']:
+                    self.add_output([key], continuous=False, complete=False, display_name=f'{key} (density)',**params)
 
-            else:
-                self.add_output([key], display_name=key)
+            elif params['frames_profile']:
+                    self.add_output([key], display_name=key,**params)
         return self
 
-    def make(self):
+    def make(self, **params):
         if not self.profiles:
-            self.add_default()
+            self.add_default(**params)
         return {
             "name": self.name,
             "activeProfileIndex": 0,
