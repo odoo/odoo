@@ -71,7 +71,7 @@ def get_webhook_request_payload():
         payload = request.get_json_data()
     except ValueError:
         payload = {**request.httprequest.args}
-    return payload
+    return payload or {}
 
 
 class BaseAutomation(models.Model):
@@ -568,13 +568,12 @@ class BaseAutomation(models.Model):
         eval_context = {
             'datetime': safe_eval.datetime,
             'dateutil': safe_eval.dateutil,
+            'payload': payload,
             'time': safe_eval.time,
             'uid': self.env.uid,
             'user': self.env.user,
             'model': model,
         }
-        if payload is not None:
-            eval_context['payload'] = payload
         return eval_context
 
     def _get_cron_interval(self, automations=None):
