@@ -44,15 +44,11 @@ class ProjectCollaborator(models.Model):
 
             When the first collaborator is added in the model then we need to enable the feature.
             In the inverse case, if no collaborator is stored in the model then we disable the feature.
-            To enable/disable the feature, we just need to enable/disable the ir.model.access and ir.rule
+            In order to enable/disable the feature, we just need to enable/disable the ir.access
             added to portal user that we do not want to give when we know the project sharing is unused.
 
             :param active: contains boolean value, True to enable the project sharing feature, otherwise we disable the feature.
         """
-        access_project_sharing_portal = self.env.ref('project.access_project_sharing_task_portal').sudo()
+        access_project_sharing_portal = self.env.ref('project.access_project_task_group_portal').sudo()
         if access_project_sharing_portal.active != active:
-            access_project_sharing_portal.write({'active': active})
-
-        task_portal_ir_rule = self.env.ref('project.project_task_rule_portal_project_sharing').sudo()
-        if task_portal_ir_rule.active != active:
-            task_portal_ir_rule.write({'active': active})
+            access_project_sharing_portal.active = active
