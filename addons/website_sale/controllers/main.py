@@ -650,8 +650,34 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _prepare_product_values(self, product, category, search, **kwargs):
         ProductCategory = request.env['product.public.category']
+        seo_product_page = [request.website.get_product_seo_data(product)]
         if category:
             category = ProductCategory.browse(int(category)).exists()
+            base_url = request.website.get_base_url()
+            # Add category to SEO data.
+            seo_product_page.append({
+                '@context': 'https://schema.org',
+                '@type': 'BreadcrumbList',
+                'itemListElement': [
+                    {
+                        '@type': 'ListItem',
+                        'position': 1,
+                        'name': 'All Products',
+                        'item': f'{base_url}/shop',
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 2,
+                        'name': category.name,
+                        'item': f'{base_url}/shop/category/{self.env["ir.http"]._slug(category)}',
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 3,
+                        'name': product.name,
+                    }
+                ]
+            })
         keep = QueryURL(
             '/shop',
             **self._product_get_query_url_kwargs(
@@ -675,6 +701,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ],
             'product': product,
             'view_track': view_track,
+            'seo_product_page': json_scriptsafe.dumps(seo_product_page, indent=2),
         }
 
     @route(['/shop/change_pricelist/<model("product.pricelist"):pricelist>'], type='http', auth="public", website=True, sitemap=False)
