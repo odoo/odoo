@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="config_speedscope_index">
+        <t t-call="web.layout">
+            <div class="container mt-5">
+                <h1>Custom Page</h1>
+
+                <!-- Single Form -->
+                <form id="dynamicForm" method="get">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="constant_time" name="constant_time" value="True" />
+                        <label class="form-check-label" for="constant_time">Constant Time</label>
+                    </div>
+                    <!-- add more variable here -->
+
+                    <input type="hidden" name="profile_id" t-att-value="profile.id" />
+                    
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary" onclick="submitForm('/web/speedscope/download')">Download</button>
+                        <button type="button" class="btn btn-secondary" onclick="submitForm('/web/speedscope')">Open</button>
+                    </div>
+                </form>
+            </div>
+
+            <script>
+                function submitForm(actionUrl) {
+                    // Get form element
+                    const form = document.getElementById('dynamicForm');
+                    
+                    // Get form inputs
+                    const formData = new FormData(form);
+
+                    const profileID = formData.get('profile_id')
+                    formData.delete('profile_id')
+                    
+
+                    // Construct query string
+                    const queryString = new URLSearchParams(formData).toString();
+                    
+                    // Construct full URL
+                    const fullUrl = `${actionUrl}/${profileID}?${queryString}`;
+                    
+                    // Redirect to the dynamically constructed URL
+                    window.location.href = fullUrl;
+                }
+            </script>
+        </t>
+    </template>
+</odoo>
