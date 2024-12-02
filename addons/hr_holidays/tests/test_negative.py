@@ -18,7 +18,7 @@ class TestNegative(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Limited with negative',
             'leave_validation_type': 'no_validation',
-            'requires_allocation': 'yes',
+            'requires_allocation': True,
             'company_id': cls.company.id,
             'allows_negative': True,
             'max_allowed_negative': 5,

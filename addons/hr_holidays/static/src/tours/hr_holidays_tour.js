@@ -83,13 +83,14 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
-            trigger: 'button[name="action_approve"]',
+            trigger: 'button[name="action_validate"]',
             content: _t("Let's approve it"),
             tooltipPosition: "bottom",
             run: "click",
         },
         {
-            trigger: `tr.o_data_row:first:not(:has(button[name="action_approve"])),table tbody:not(tr.o_data_row)`,
+            isActive: ["auto"],
+            trigger: `tr.o_data_row:first:not(:has(button[name="action_validate"])),table tbody:not(tr.o_data_row)`,
             content: "Verify leave is approved",
         },
     ],

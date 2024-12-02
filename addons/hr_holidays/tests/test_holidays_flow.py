@@ -8,6 +8,7 @@ from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tools import date_utils, mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -25,16 +26,16 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         HolidayStatusManagerGroup = HolidaysStatus.with_user(self.user_hrmanager_id)
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
         })
         self.holidays_status_hr = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'hr',
         })
         self.holidays_status_manager = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedManager',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'leave_validation_type': 'manager',
         })
 
@@ -86,8 +87,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
             holiday_status_paid_time_off = self.env['hr.leave.type'].create({
                 'name': 'Paid Time Off',
-                'requires_allocation': 'yes',
-                'employee_requests': 'no',
+                'requires_allocation': True,
+                'employee_requests': False,
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
@@ -126,13 +127,13 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             HolidayStatusManagerGroup = HolidaysStatus.with_user(self.user_hrmanager_id)
             HolidayStatusManagerGroup.create({
                 'name': 'WithMeetingType',
-                'requires_allocation': 'no',
+                'requires_allocation': False,
             })
 
             self.holidays_status_limited = HolidayStatusManagerGroup.create({
                 'name': 'Limited',
-                'requires_allocation': 'yes',
-                'employee_requests': 'no',
+                'requires_allocation': True,
+                'employee_requests': False,
                 'allocation_validation_type': 'hr',
                 'leave_validation_type': 'both',
                 'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)]
@@ -206,10 +207,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             # I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.
             hol3.action_refuse()
             self.assertEqual(hol3.state, 'refuse', 'hr_holidays: refuse should lead to refuse state')
-            # Reset to confirm.
-            hol3.action_reset_confirm()
-            self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
-            # I validate the holiday request by clicking on "To Approve" button.
+            # Validate it again
             hol3.action_validate()
             self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
             # Check left days for casual leave: 19 days left
@@ -236,8 +234,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
 
         holiday_status_paid_time_off = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'requires_allocation': 'yes',
-            'employee_requests': 'no',
+            'requires_allocation': True,
+            'employee_requests': False,
             'allocation_validation_type': 'hr',
             'leave_validation_type': 'both',
             'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],

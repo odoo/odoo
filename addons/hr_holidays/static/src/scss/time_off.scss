@@ -1,3 +1,25 @@
+.modal-content {
+    .o_hr_leave_form {
+        .o_form_sheet_bg {
+            padding-right: 0;
+            overflow: hidden;
+            .o_form_statusbar {
+                padding-right: 16px;
+            }
+            .ribbon {
+                height: 100%;
+            }
+        }
+        .o_form_sheet {
+            padding-top: 0;
+            padding-right: 16px;
+            padding-bottom: 0;
+        }
+        .o_hr_leave_content {
+            padding-top: 8px;
+        }
+    }
+}
 .o_hr_leave_form {
     .o_form_sheet {
         padding-top: 0;
@@ -22,12 +44,16 @@
         .o_hr_leave_subtitle {
             font-size: 1.2rem;
         }
-        .o_hr_leave_column {
-            padding: 16px;
+        .col_left {
+            padding-top: 16px;
         }
         .col_right {
-            background-color: map-get($grays, '200');
-            padding-top: 28px;
+            .sub_table {
+                background-color: map-get($grays, '200');
+                border-radius: 0.25rem;
+            }
+            padding-top: 16px;
+            padding-bottom: 16px;
         }
         .o_hr_leave_date {
             display: flex;
@@ -41,3 +67,157 @@
         }
     }
 }
+
+.o_cw_popover_holidays {
+    @extend .o_cw_popover;
+    max-width: 448px !important;
+    min-width: 250px;
+    width: fit-content;
+}
+.o_kanban_renderer {
+    .o_kanban_record.o_hr_holidays_kanban {
+        min-height: 105px;
+        .ribbon {
+            --Ribbon-wrapper-width: 6.7rem;
+            span {
+                --Ribbon-left-position-default: 0.3rem;
+            }
+            & .o_medium {
+                font-size: $font-size-sm !important;
+            }
+        }
+    }
+}
+
+.o_holidays_view_kanban .o_kanban_renderer{
+
+    .o_holidays_kanban_card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        .o_hr_holidays_value {
+            display: flex;
+            .o_hr_holidays_name {
+                display: flex;
+                flex-direction: column;
+                align-items: baseline;
+            }
+            .o_hr_holidays_card {
+                flex-direction: column;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+            }
+        }
+        .o_hr_holidays_button {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1;
+        }
+    }
+
+
+    .ribbon {
+        --Ribbon-wrapper-width: 6.77rem;
+        span {
+            --Ribbon-left-position-default: 0.3rem;
+        }
+        & .o_medium {
+            font-size: $font-size-sm !important;
+        }
+    }
+
+    &.o_kanban_grouped {
+        --KanbanGroup-width: 440px;
+        .ribbon {
+            z-index: 1;
+        }
+        .o_kanban_header {
+            z-index: 2 !important;
+        }
+        main {
+            padding-left: 4px !important;
+            .o_hr_holidays_value {
+                width: 90%;
+                flex-direction: column;
+                .o_hr_holidays_card {
+                    width: 100%;
+                    flex-direction: row !important;
+                }
+                .o_hr_holidays_name {
+                    width: 100%;
+                }
+            }
+            .o_hr_holidays_button{
+                bottom: 10px;
+                right: 15px;
+                justify-content: end !important;
+                position: absolute;
+                width: 30%;
+            }
+        }
+    }
+
+    &.o_kanban_ungrouped {
+        padding: 0px;
+        .o_kanban_record {
+            width: 100%;
+            min-height: 6.5rem;
+            margin: 0px;
+        }
+        .o_hr_holidays_value {
+            flex-direction: row;
+            .o_hr_holidays_name {
+                gap: 2;
+            }
+        }
+    }
+
+    @media only screen and (min-width:768px) and (max-width: 860px){
+        &.o_kanban_ungrouped .o_hr_holidays_button {
+            flex-direction: column !important;
+            justify-content: center !important;
+            div {
+                width: 100%;
+                justify-content: center !important;
+                display: flex;
+            }
+        }
+    }
+
+    @media only screen and (max-width:767px) {
+        .ribbon {
+            z-index: 1;
+        }
+        main {
+            padding-left: 4px !important;
+            .o_holidays_kanban_card {
+                flex-direction: column !important;
+                .o_hr_holidays_button{
+                    bottom: 10px;
+                    right: 15px;
+                    justify-content: end !important;
+                    position: absolute;
+                    width: 30%;
+                }
+                .o_hr_holidays_value {
+                    width: 90%;
+                    flex-direction: column !important;
+                    .o_hr_holidays_card {
+                        width: 100%;
+                        flex-direction: row !important;
+                    }
+                    .o_hr_holidays_name {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: row !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+

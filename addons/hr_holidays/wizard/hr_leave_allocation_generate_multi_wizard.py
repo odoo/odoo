@@ -30,7 +30,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag')
     allocation_type = fields.Selection([
         ('regular', 'Regular Allocation'),
-        ('accrual', 'Accrual Allocation')
+        ('accrual', 'Based on Accrual Plan')
     ], string="Allocation Type", default="regular", required=True)
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
@@ -57,7 +57,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     def _get_employees_from_allocation_mode(self):
         self.ensure_one()
         if self.allocation_mode == 'employee':
-            employees = self.employee_ids
+            employees = self.employee_ids or self.env['hr.employee'].search([('company_id', 'in', self.env.companies)])
         elif self.allocation_mode == 'category':
             employees = self.category_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)
         elif self.allocation_mode == 'company':

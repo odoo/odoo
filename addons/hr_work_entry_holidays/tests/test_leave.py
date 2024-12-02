@@ -8,7 +8,7 @@ from freezegun import freeze_time
 
 from odoo import SUPERUSER_ID
 from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
-from odoo.tests import tagged
+from odoo.tests import tagged, new_test_user
 
 @tagged('test_leave')
 class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
@@ -133,8 +133,6 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
     def test_work_entry_generation_company_time_off(self):
         existing_leaves = self.env['hr.leave'].search([])
         existing_leaves.action_refuse()
-        existing_leaves.action_reset_confirm()
-        existing_leaves.unlink()
         start = date(2022, 8, 1)
         end = date(2022, 8, 31)
         self.contract_cdi.generate_work_entries(start, end)
@@ -181,13 +179,13 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
         leave_type_paid, leave_type_unpaid = self.env['hr.leave.type'].create([{
             'name': 'Paid leave type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'hour',
             'work_entry_type_id': entry_type_paid.id,
         },
         {
             'name': 'Unpaid leave type',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'request_unit': 'hour',
             'work_entry_type_id': entry_type_unpaid.id,
         }])

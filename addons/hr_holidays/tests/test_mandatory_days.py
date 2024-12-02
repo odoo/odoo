@@ -42,7 +42,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Unlimited',
             'leave_validation_type': 'hr',
-            'requires_allocation': 'no',
+            'requires_allocation': False,
             'company_id': cls.company.id,
         })
 
@@ -118,10 +118,14 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = datetime(2021, 11, 1)
             leave_form.request_date_to = datetime(2021, 11, 1)
-            self.assertFalse(leave_form.has_mandatory_day)
+
+            leave_form.save() # need to be saved to have access to record
+            self.assertFalse(leave_form.record.has_mandatory_day)
 
             leave_form.request_date_to = datetime(2021, 11, 5)
-            self.assertTrue(leave_form.has_mandatory_day)
+
+            leave_form.save() # need to be saved to have access to record
+            self.assertTrue(leave_form.record.has_mandatory_day)
 
     @freeze_time('2021-10-15')
     def test_department_mandatory_days(self):

@@ -1,22 +1,37 @@
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-import { HrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
+import { HrPresenceStatus, hrPresenceStatus } from "@hr/components/hr_presence_status/hr_presence_status";
 import { HrPresenceStatusPrivate, hrPresenceStatusPrivate } from "@hr/components/hr_presence_status_private/hr_presence_status_private";
 
 const patchHrPresenceStatus = () => ({
-    get icon() {
-        if (this.value.startsWith("presence_holiday")) {
-            return "fa-plane";
+
+    get label() {
+        if (this.value.includes("holiday")) {
+            return super.label + _t(", back on ") + this.props.record.data['leave_date_to'].toLocaleString(
+                {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                }
+            )
         }
-        return super.icon;
+        return super.label
     },
 
-    get color() {
-        if (this.value.startsWith("presence_holiday")) {
-            return `${this.value === "presence_holiday_present" ? "text-success" : "o_icon_employee_absent"}`;
+    get string() {
+        if (this.value.includes("holiday")) {
+            return "On leave";
         }
-        return super.color;
+        return super.string
     },
+
+    get style() {
+        if (this.value.includes("holiday")) {
+            return this.styleFunction("brown", 'orange', 'orange');
+        }
+        return super.style
+    }
 });
 
 // Applies common patch on both components
@@ -27,14 +42,27 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 patch(HrPresenceStatusPrivate.prototype, {
     get label() {
         return this.props.record.data.current_leave_id
-            ? this.props.record.data.current_leave_id[1]
+            ? this.props.record.data.current_leave_id[1] + _t(", back on ") + this.props.record.data['leave_date_to'].toLocaleString(
+                {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                }
+            )
             : super.label;
     }
+});
+
+Object.assign(hrPresenceStatus, {
+    fieldDependencies: [
+        ...(hrPresenceStatus.fieldDependencies || []),
+        { name: "leave_date_to", type:"date"}
+    ],
 });
 
 Object.assign(hrPresenceStatusPrivate, {
     fieldDependencies: [
         ...(hrPresenceStatusPrivate.fieldDependencies || []),
-        { name: "current_leave_id", type:"many2one"}
+        { name: "current_leave_id", type:"many2one"},
     ],
 });

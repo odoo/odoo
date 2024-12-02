@@ -15,7 +15,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Accrual Time Off',
             'time_type': 'leave',
-            'requires_allocation': 'yes',
+            'requires_allocation': True,
             'allocation_validation_type': 'no',
         })
         cls.accrual_plan = cls.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({

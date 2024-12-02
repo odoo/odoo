@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
-
+from calendar import monthrange
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
@@ -11,9 +11,6 @@ from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
-
-
-MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12}
 
 
 class HrLeaveAllocation(models.Model):
@@ -26,15 +23,15 @@ class HrLeaveAllocation(models.Model):
 
     def _default_holiday_status_id(self):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes')]
+            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', True)]
         else:
-            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes'), ('employee_requests', '=', 'yes')]
+            domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', True), ('employee_requests', '=', True)]
         return self.env['hr.leave.type'].search(domain, limit=1)
 
     def _domain_holiday_status_id(self):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            return [('requires_allocation', '=', 'yes')]
-        return [('employee_requests', '=', 'yes')]
+            return [('requires_allocation', '=', True)]
+        return [('employee_requests', '=', True)]
 
     def _domain_employee_id(self):
         domain = [('company_id', 'in', self.env.companies.ids)]
@@ -97,14 +94,14 @@ class HrLeaveAllocation(models.Model):
         help='This area is automatically filled by the user who validates the allocation with second level (If time off type need second validation)')
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
+    can_validate = fields.Boolean('Can Validate', compute='_compute_can_validate')
+    can_refuse = fields.Boolean('Can Refuse', compute='_compute_can_refuse')
     type_request_unit = fields.Selection([
         ('hour', 'Hours'),
         ('half_day', 'Half Day'),
         ('day', 'Day'),
     ], compute="_compute_type_request_unit")
-    department_id = fields.Many2one(
-        'hr.department', compute='_compute_department_id', store=True, string='Department',
-        readonly=False)
+    department_id = fields.Many2one('hr.department', compute='_compute_department_id', store=True, string='Department', readonly=False)
     # accrual configuration
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
     # lastcall is only updated on accrual date. On other dates such as carryover date,
@@ -123,6 +120,7 @@ class HrLeaveAllocation(models.Model):
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
+    available_leaves = fields.Float(compute='_compute_leaves', string='Time off Taken')
     expiring_carryover_days = fields.Float("The number of carried over days that will expire on carried_over_days_expiration_date")
     carried_over_days_expiration_date = fields.Date("Carried over days expiration date")
     _duration_check = models.Constraint(
@@ -201,6 +199,7 @@ class HrLeaveAllocation(models.Model):
             allocation.max_leaves = allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days
             origin = allocation._origin
             allocation.leaves_taken = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['leaves_taken']
+            allocation.available_leaves = allocation.max_leaves - allocation.leaves_taken
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
@@ -224,18 +223,40 @@ class HrLeaveAllocation(models.Model):
                 else float_round(allocation.number_of_days_display, precision_digits=2)),
                 _('hours') if allocation.type_request_unit == 'hour' else _('days'))
 
-    @api.depends('state')
+    @api.depends('state', 'employee_id')
     def _compute_can_approve(self):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         for allocation in self:
+            # To avoid double validation button (approve, validate)
+            if is_officer:
+                allocation.can_approve = False
+                continue
             try:
-                if allocation.state == 'confirm' and allocation.validation_type == 'both':
-                    allocation._check_approval_update('validate1')
-                else:
-                    allocation._check_approval_update('validate')
+                allocation._check_approval_update('validate1')
             except (AccessError, UserError):
                 allocation.can_approve = False
             else:
                 allocation.can_approve = True
+
+    @api.depends('state', 'employee_id')
+    def _compute_can_validate(self):
+        for allocation in self:
+            try:
+                allocation._check_approval_update('validate')
+            except (AccessError, UserError):
+                allocation.can_validate = False
+            else:
+                allocation.can_validate = True
+
+    @api.depends('state', 'employee_id')
+    def _compute_can_refuse(self):
+        for allocation in self:
+            try:
+                allocation._check_approval_update('refuse')
+            except (AccessError, UserError):
+                allocation.can_refuse = False
+            else:
+                allocation.can_refuse = True
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -311,7 +332,10 @@ class HrLeaveAllocation(models.Model):
         elif carryover_time == 'allocation':
             carryover_date = date(date_from.year, self.date_from.month, self.date_from.day)
         else:
-            carryover_date = date(date_from.year, MONTHS_TO_INTEGER[accrual_plan.carryover_month], accrual_plan.carryover_day)
+            month = int(accrual_plan.carryover_month)
+            # 2020/2/31 will be changed to 2020/2/29
+            day = min(monthrange(date_from.year, month)[1], int(accrual_plan.carryover_day))
+            carryover_date = date(date_from.year, month, day)
         if date_from > carryover_date:
             carryover_date += relativedelta(years=1)
         return carryover_date
@@ -622,6 +646,46 @@ class HrLeaveAllocation(models.Model):
         fake_allocation.invalidate_recordset()
         return res
 
+    def _get_all_possible_states(self):
+        self.ensure_one()
+        state_result = {
+            'confirm' : set(),
+            'validate1': set(),
+            'validate': set(),
+            'refuse': set(),
+        }
+        validation_type = self.validation_type
+
+        user_employees = self.env.user.employee_ids
+        is_own_leave = self.employee_id in user_employees
+
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        is_time_off_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_responsible')
+
+        if is_officer:
+            if validation_type == 'both':
+                state_result['confirm'].add('validate1')
+                state_result['validate'].add('validate1')
+                state_result['refuse'].add('validate1')
+            state_result['validate1'].update({'confirm', 'validate', 'refuse'})
+            state_result['confirm'].update({'validate', 'refuse'})
+            state_result['validate'].update({'confirm', 'refuse'})
+            state_result['refuse'].update({'confirm', 'validate'})
+            return state_result
+
+        if is_time_off_manager:
+            if validation_type != 'hr':
+                state_result['confirm'].add('refuse')
+                state_result['validate'].add('refuse')
+            if validation_type == 'both':
+                state_result['confirm'].add('validate1')
+                state_result['validate1'].add('refuse')
+            elif validation_type == 'manager':
+                state_result['confirm'].add('validate')
+                state_result['refuse'].add('validate')
+
+        return state_result
+
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -699,7 +763,7 @@ class HrLeaveAllocation(models.Model):
             if not self._context.get('import_file'):
                 allocation.activity_update()
             if allocation.validation_type == 'no_validation' and allocation.state == 'confirm':
-                allocation.action_approve()
+                allocation.action_validate()
         return allocations
 
     def write(self, values):
@@ -749,7 +813,7 @@ class HrLeaveAllocation(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_leaves(self):
-        if any(allocation.holiday_status_id.requires_allocation == 'yes' and allocation.leaves_taken > 0 for allocation in self):
+        if any(allocation.holiday_status_id.requires_allocation and allocation.leaves_taken > 0 for allocation in self):
             raise UserError(_('You cannot delete an allocation request which has some validated leaves.'))
 
     def copy(self, default=None):
@@ -776,21 +840,22 @@ class HrLeaveAllocation(models.Model):
         return True
 
     def action_approve(self):
-
-        if any(allocation.state not in ['confirm', 'validate1'] and allocation.validation_type != 'no_validation' for allocation in self):
-            raise UserError(_('Allocation must be "To Approve" or "Second Approval" in order to approve it.'))
-
-        current_employee = self.env.user.employee_id
-        single_validate_allocs = self.filtered(lambda alloc: alloc.state == 'confirm' and alloc.validation_type != 'both')
-        first_validate_allocs = self.filtered(lambda alloc: alloc.state == 'confirm' and alloc.validation_type == 'both')
-        second_validate_allocs = self.filtered(lambda alloc: alloc.state == 'validate1' and alloc.validation_type == 'both')
-
-        single_validate_allocs.write({'state': 'validate', 'approver_id': current_employee.id})
-        first_validate_allocs.write({'state': 'validate1', 'approver_id': current_employee.id})
-        second_validate_allocs.write({'state': 'validate', 'second_approver_id': current_employee.id})
-
+        if any(not allocation.can_approve for allocation in self):
+            raise UserError(_('Allocation must be "To Approve" in order to approve it.'))
+        self.write({'state': 'validate1', 'approver_id': self.env.user.employee_id.id})
         self.activity_update()
+        return True
 
+    def action_validate(self):
+        if any(not allocation.can_validate for allocation in self):
+            raise UserError(_('Allocation must be "To Approve" or "Second Approval" in order to validate it.'))
+        current_employee = self.env.user.employee_id
+        both_allocation = self.filtered(lambda allocation: allocation.validation_type == 'both')
+        both_allocation.write(
+            {'state': 'validate', 'approver_id': current_employee.id, 'second_approver_id': current_employee.id}
+        )
+        (self - both_allocation).write({'state': 'validate', 'approver_id': current_employee.id})
+        self.activity_update()
         return True
 
     def action_refuse(self):
@@ -819,6 +884,11 @@ class HrLeaveAllocation(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
         for allocation in self:
+            dict_all_possible_state = allocation._get_all_possible_states()
+
+            if state not in dict_all_possible_state.get(allocation.state, {}):
+                raise UserError(_("bebou"))
+
             val_type = allocation.holiday_status_id.sudo().allocation_validation_type
             if state == 'confirm' or is_manager or val_type == 'no_validation':
                 continue
