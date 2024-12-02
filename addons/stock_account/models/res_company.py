@@ -16,3 +16,9 @@ class ResCompany(models.Model):
         default='standard',
         required=True,
     )
+
+    def action_create_am_svls(self):
+        self.ensure_one()
+        svls = self.env['stock.valuation.layer'].search([('company_id', '=', self.id)])
+        svls._create_grouped_accounting_entries()
+

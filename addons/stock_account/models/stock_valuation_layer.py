@@ -263,3 +263,63 @@ class StockValuationLayer(models.Model):
         account_moves = self.env['account.move'].sudo().create(am_vals_list)
         if account_moves:
             account_moves._post()
+
+    def _create_grouped_accounting_entries(self):
+        to_group_vals = []
+        for svl in self:
+            if svl.account_move_id:
+                continue
+            if svl.currency_id.is_zero(svl.value):
+                continue
+            move = svl.stock_move_id
+            if not move:
+                move = svl.stock_valuation_layer_id.stock_move_id
+            am_vals = move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            for am_val in am_vals:
+                journal = am_val['journal_id']
+                for line_compose in am_val['line_ids']:
+                    line = line_compose[2] # [(0, 0,
+                    to_group_vals += [{
+                        'account_id': line['account_id'],
+                        'balance': line['balance'],
+                        'journal_id': journal,
+                        'svl': svl,
+                    }]
+
+        move_vals = []
+        for journal, account_move_vals in groupby(to_group_vals, lambda x: x['journal_id']):
+            svl = self.env['stock.valuation.layer']
+            lines = []
+            for account, to_sum_vals in groupby(account_move_vals, lambda x: x['account_id']):
+                debit = 0
+                credit = 0
+                for to_sum in to_sum_vals:
+                    if to_sum['balance'] > 0:
+                        debit += to_sum['balance']
+                    else:
+                        credit += to_sum['balance']
+                    svl |= to_sum['svl']
+                if debit != 0:
+                    lines.append({
+                        'account_id': account,
+                        'balance': debit,
+                        'ref': 'Stock Valuation poc',
+                    })
+                if credit != 0:
+                    lines.append({
+                        'account_id': account,
+                        'balance': credit,
+                        'ref': 'Stock Valuation poc',
+                    })
+            move_vals += [{
+                'journal_id': journal,
+                'line_ids': [(0, 0, l) for l in lines],
+                'date': fields.Date.today(),
+                'ref': 'stock_val',
+                #'stock_move_id': self.id, TODO: field should be deprecated
+                'stock_valuation_layer_ids': [(6, None, svl.ids)],
+                'move_type': 'entry',
+                'is_storno': self.env.context.get('is_returned') and self[0].company_id.account_storno,
+                'company_id': self[0].company_id.id,
+            }]
+        self.env['account.move'].sudo().create(move_vals)
