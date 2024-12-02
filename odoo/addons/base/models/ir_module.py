@@ -476,8 +476,7 @@ class IrModuleModule(models.Model):
         """
         modules_to_remove = self.mapped('name')
         self.env['ir.model.data']._module_data_uninstall(modules_to_remove)
-        # we deactivate prefetching to not try to read a column that has been deleted
-        self.with_context(prefetch_fields=False).write({'state': 'uninstalled', 'latest_version': False})
+        self.write({'state': 'uninstalled', 'latest_version': False})
         return True
 
     def _remove_copied_views(self):
