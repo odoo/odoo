@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
 from dateutil.relativedelta import relativedelta, MO, FR
+
+from odoo.exceptions import UserError
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -54,7 +55,7 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         hol3_user_group = hol3_employee_group.with_user(self.user_hruser_id)
         hol3_user_group.action_refuse()
         self.employee_emp.department_id = self.hr_dept # Change department
-        self.assertEqual(hol3_employee_group.department_id, self.rd_dept, 'hr_holidays: refused passed leave request should stay in previous department if employee change department')
+        self.assertEqual(hol3_user_group.department_id, self.rd_dept, 'hr_holidays: refused passed leave request should stay in previous department if employee change department')
 
         # Refused future leave request change department
         self.employee_emp.department_id = self.rd_dept

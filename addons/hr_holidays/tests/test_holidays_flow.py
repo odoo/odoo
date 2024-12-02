@@ -8,6 +8,7 @@ from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tools import date_utils, mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -206,10 +207,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             # I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.
             hol3.action_refuse()
             self.assertEqual(hol3.state, 'refuse', 'hr_holidays: refuse should lead to refuse state')
-            # Reset to confirm.
-            hol3.action_reset_confirm()
-            self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
-            # I validate the holiday request by clicking on "To Approve" button.
+            # Validate it again
             hol3.action_validate()
             self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
             # Check left days for casual leave: 19 days left

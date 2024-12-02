@@ -1,3 +1,25 @@
+.modal-content {
+    .o_hr_leave_form {
+        .o_form_sheet_bg {
+            padding-right: 0;
+            overflow: hidden;
+            .o_form_statusbar {
+                padding-right: 16px;
+            }
+            .ribbon {
+                height: 100%;
+            }
+        }
+        .o_form_sheet {
+            padding-top: 0;
+            padding-right: 16px;
+            padding-bottom: 0;
+        }
+        .o_hr_leave_content {
+            padding-top: 8px;
+        }
+    }
+}
 .o_hr_leave_form {
     .o_form_sheet {
         padding-top: 0;
@@ -22,12 +44,16 @@
         .o_hr_leave_subtitle {
             font-size: 1.2rem;
         }
-        .o_hr_leave_column {
-            padding: 16px;
+        .col_left {
+            padding-top: 16px;
         }
         .col_right {
-            background-color: map-get($grays, '200');
-            padding-top: 28px;
+            .sub_table {
+                background-color: map-get($grays, '200');
+                border-radius: 0.25rem;
+            }
+            padding-top: 16px;
+            padding-bottom: 16px;
         }
         .o_hr_leave_date {
             display: flex;
@@ -38,6 +64,21 @@
             @include media-breakpoint-down(md) {
                 flex-direction: row;
             }
+        }
+    }
+}
+
+.o_cw_popover_holidays {
+    @extend .o_cw_popover;
+    max-width: 448px !important;
+    min-width: 250px;
+    width: fit-content;
+}
+.o_kanban_renderer {
+    .o_kanban_record.o_hr_holidays_kanban {
+        min-height: 100px;
+        .ribbon {
+            --Ribbon-wrapper-width: 7.5rem;
         }
     }
 }
