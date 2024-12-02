@@ -4,6 +4,7 @@ import json
 
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, Response, route
+import urllib.parse
 
 class Profiling(Controller):
 
@@ -20,15 +21,26 @@ class Profiling(Controller):
         except UserError as e:
             return Response(response='error: %s' % e, status=500, mimetype='text/plain')
 
-    @route(['/web/speedscope', '/web/speedscope/<model("ir.profile"):profile>'], type='http', sitemap=False, auth='user')
-    def speedscope(self, profile=None):
-        # don't server speedscope index if profiling is not enabled
-        if not request.env['ir.profile']._enabled_until():
-            return request.not_found()
+    @route([
+        '/web/speedscope',
+        '/web/speedscope/<model("ir.profile"):profile>',
+    ], type='http', sitemap=False, auth='user', readonly=True)
+    def speedscope(self, profile=None, action=False, **kwargs):
+        if profile and isinstance(profile, str):
+            profile = request.env['ir.profile'].browse(int(profile))
+        if not kwargs and not action:
+            context = {
+                'profile': profile,
+            }
+            return request.render('web.config_speedscope_index', context)
         icp = request.env['ir.config_parameter']
         context = {
             'profile': profile,
             'url_root': request.httprequest.url_root,
             'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")
         }
-        return request.render('web.view_speedscope_index', context)
+        if profile and action == 'download_json':
+            url_params = urllib.parse.urlencode(kwargs)
+            return request.redirect(f'/web/content/ir.profile/{profile.id}/speedscope?download=true&filename=profile_{profile.id}.json{"&" + url_params if url_params else ""}')
+        response = request.render('web.view_speedscope_index', context)
+        return response
