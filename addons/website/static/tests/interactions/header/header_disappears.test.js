@@ -1,0 +1,97 @@
+import { expect, test } from "@odoo/hoot";
+
+import {
+    startInteractions,
+    setupInteractionWhiteList,
+} from "../../core/helpers";
+
+import {
+    setupTest,
+    setupEnd,
+    customScroll,
+    getTemplateWithoutHideOnScroll,
+    getTemplateWithHideOnScroll,
+    checkHeader
+} from "./header_utils";
+
+setupInteractionWhiteList("website.header_disappears");
+
+test("header_disappears is started when there is an element header.o_header_disappears", async () => {
+    const { core } = await startInteractions(getTemplateWithoutHideOnScroll("o_header_disappears"));
+    expect(core.interactions.length).toBe(1);
+});
+
+const behavior1 = {
+    visibility: true,
+    paddingTop: "",
+    transform: "",
+    classList: "o_header_disappears,o_top_fixed_element",
+};
+
+const behavior2 = {
+    visibility: true,
+    paddingTop: "50px",
+    transform: "translate(0px, 0px)",
+    classList: "o_header_affixed,o_header_disappears,o_header_is_scrolled,o_top_fixed_element",
+};
+
+const behavior3 = {
+    visibility: false,
+    paddingTop: "50px",
+    transform: "translate(0px, -100%)",
+    classList: "o_header_affixed,o_header_disappears,o_header_is_scrolled",
+};
+
+test("[scroll] Template without o_header_hide_on_scroll", async () => {
+    const { core, el } = await startInteractions(getTemplateWithoutHideOnScroll("o_header_disappears"));
+    const wrapwrap = el.querySelector("#wrapwrap");
+    const header = el.querySelector("header");
+    const main = el.querySelector("main")
+    setupTest(core, wrapwrap);
+
+    await setupEnd();
+    expect(checkHeader(header, main, core, behavior1)).toBe(true);
+    await customScroll(wrapwrap, 0, 10);
+    expect(checkHeader(header, main, core, behavior2)).toBe(true);
+    await customScroll(wrapwrap, 10, 60);
+    expect(checkHeader(header, main, core, behavior2)).toBe(true);
+    await customScroll(wrapwrap, 60, 190);
+    expect(checkHeader(header, main, core, behavior2)).toBe(true);
+    await customScroll(wrapwrap, 190, 210);
+    expect(checkHeader(header, main, core, behavior3)).toBe(true);
+    await customScroll(wrapwrap, 210, 400);
+    expect(checkHeader(header, main, core, behavior3)).toBe(true);
+    await customScroll(wrapwrap, 400, 310);
+    expect(checkHeader(header, main, core, behavior3)).toBe(true);
+    await customScroll(wrapwrap, 310, 290);
+    expect(checkHeader(header, main, core, behavior2)).toBe(true);
+    await customScroll(wrapwrap, 290, 0);
+    expect(checkHeader(header, main, core, behavior1)).toBe(true);
+});
+
+test("[scroll] Template with o_header_hide_on_scroll", async () => {
+    const { core, el } = await startInteractions(getTemplateWithHideOnScroll("o_header_disappears"));
+    const wrapwrap = el.querySelector("#wrapwrap");
+    const header = el.querySelector("header");
+    const main = el.querySelector("main")
+    setupTest(core, wrapwrap);
+
+    await setupEnd();
+    expect(checkHeader(header, main, core, behavior1)).toBe(true);
+    await customScroll(wrapwrap, 0, 10);
+    expect(checkHeader(header, main, core, behavior2)).toBe(true);
+    await customScroll(wrapwrap, 10, 60);
+    expect(checkHeader(header, main, core, behavior2)).toBe(true);
+    await customScroll(wrapwrap, 60, 190);
+    expect(checkHeader(header, main, core, behavior2)).toBe(true);
+    await customScroll(wrapwrap, 190, 210);
+    expect(checkHeader(header, main, core, behavior3)).toBe(true);
+    await customScroll(wrapwrap, 210, 400);
+    expect(checkHeader(header, main, core, behavior3)).toBe(true);
+    await customScroll(wrapwrap, 400, 310);
+    expect(checkHeader(header, main, core, behavior3)).toBe(true);
+    await customScroll(wrapwrap, 310, 290);
+    expect(checkHeader(header, main, core, behavior2)).toBe(true);
+    await customScroll(wrapwrap, 290, 0);
+    expect(checkHeader(header, main, core, behavior1)).toBe(true);
+});

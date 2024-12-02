@@ -1,25 +1,16 @@
 import { Interaction } from "@website/core/interaction";
 import { registry } from "@web/core/registry";
 
-// TODO - Handle extraMenuUpdateCallbacks
 class FaqHorizontal extends Interaction {
     static selector = ".s_faq_horizontal";
 
     setup() {
         this.titles = this.el.getElementsByClassName('s_faq_horizontal_entry_title');
-        // this.updateTitlesPositionBound = this.updateTitlesPosition.bind(this);
-        // extraMenuUpdateCallbacks.push(this.updateTitlesPositionBound);
+        this.registerCleanup(this.services.menu_callback.registerCallback(this.updateTitlesPosition.bind(this)));
     }
 
     start() {
         this.updateTitlesPosition();
-    }
-
-    destroy() {
-        // const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateTitlesPositionBound);
-        // if (indexCallback >= 0) {
-        //     extraMenuUpdateCallbacks.splice(indexCallback, 1);
-        // }
     }
 
     updateTitlesPosition() {

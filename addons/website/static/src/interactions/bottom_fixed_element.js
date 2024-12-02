@@ -58,7 +58,6 @@ class BottomFixedElement extends Interaction {
                     y: bcr.y,
                 })
                 if (!!hiddenButtonEl.length) {
-                    console.log("found a button");
                     if (bottomFixedEl.classList.contains("o_bottom_fixed_element_move_up")) {
                         bottomFixedEl.style.marginBottom = window.innerHeight - hiddenButtonEl.getBoundingClientRect().top + 5 + 'px';
                     } else {

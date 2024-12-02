@@ -2,8 +2,7 @@ import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
 import { patch } from "@web/core/utils/patch";
 import { isVisible } from "@web/core/utils/ui";
-// TODO Restore integration with menu.
-// import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
+
 import { closestScrollableY, isScrollableY } from "@web/core/utils/scrolling";
 import { AnchorSlide } from "@website/interactions/anchor_slide";
 
@@ -48,11 +47,9 @@ const prev = (element, selector) => {
 };
 
 export class TableOfContent extends Interaction {
-    static selector="section .s_table_of_content_navbar_sticky";
+    static selector = "section .s_table_of_content_navbar_sticky";
     dynamicContent = {
     };
-    // TODO Support edit-mode enabled.
-    static disabledInEditableMode = false;
 
     setup() {
         this.scrollBound = this.process.bind(this);
@@ -68,23 +65,15 @@ export class TableOfContent extends Interaction {
         this.tocElement = this.el.querySelector('.s_table_of_content_navbar');
         this.previousPosition = -1;
         this.updateTableOfContentNavbarPosition();
-        this.updateTableOfContentNavbarPositionBound = this.updateTableOfContentNavbarPosition.bind(this);
-        // TODO Restore integration with menu.
-        // extraMenuUpdateCallbacks.push(this.updateTableOfContentNavbarPositionBound);
+
+        this.registerCleanup(this.services.menu_callback.registerCallback(this.updateTableOfContentNavbarPosition.bind(this)));
     }
 
     start() {
         this.addListener(this.scrollTarget, "scroll", this.scrollBound);
     }
-    
+
     destroy() {
-        // TODO Restore integration with menu.
-        /*
-        const indexCallback = extraMenuUpdateCallbacks.indexOf(this.updateTableOfContentNavbarPositionBound);
-        if (indexCallback >= 0) {
-            extraMenuUpdateCallbacks.splice(indexCallback, 1);
-        }
-        */
         this.el.style.top = "";
         const navbarEl = this.el.querySelector(".s_table_of_content_navbar");
         if (navbarEl) {
@@ -245,4 +234,10 @@ patch(AnchorSlide.prototype, {
     },
 });
 
-registry.category("website.active_elements").add("website.table_of_content", TableOfContent);
+registry
+    .category("website.active_elements")
+    .add("website.table_of_content", TableOfContent);
+
+registry
+    .category("website.edit_active_elements")
+    .add("website.table_of_content", TableOfContent);

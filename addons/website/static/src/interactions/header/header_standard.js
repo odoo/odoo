@@ -1,0 +1,74 @@
+import { BaseHeader } from "@website/interactions/header/base_header";
+import { registry } from "@web/core/registry";
+
+export class HeaderStandard extends BaseHeader {
+    static selector = "header.o_header_standard:not(.o_header_sidebar)";
+
+    setup() {
+        super.setup();
+        this.transitionPoint = 300;
+        this.transitionPossible = false;
+    }
+
+    /**
+     * Checks if the size of the header will decrease by adding the
+     * 'o_header_is_scrolled' class. If so, we do not add this class if the
+     * remaining scroll height is not enough to stay above 'this.transitionPoint'
+     * after the transition, otherwise it causes the scroll position to move up
+     * again below 'this.transitionPoint' and trigger an infinite loop.
+     *
+     * @todo header effects should be improved in the future to not ever change
+     * the page scroll-height during their animation. The code would probably be
+     * simpler but also prevent having weird scroll "jumps" during animations
+     * (= depending on the logo height after/before scroll, a scroll step (one
+     * mousewheel event for example) can be bigger than other ones).
+     *
+     * @returns {boolean}
+     */
+    canTransition() {
+        const scrollEl = this.scrollingElement;
+        const remainingScroll = (scrollEl.scrollHeight - scrollEl.clientHeight) - this.transitionPoint;
+        const clonedHeader = this.el.cloneNode(true);
+        scrollEl.append(clonedHeader);
+        clonedHeader.classList.add('o_header_is_scrolled', 'o_header_affixed', 'o_header_no_transition');
+        const endHeaderHeight = clonedHeader.offsetHeight;
+        clonedHeader.remove();
+        const requiredScroll = this.getHeaderHeight() - endHeaderHeight;
+        return requiredScroll > 0 ? remainingScroll > requiredScroll : true;
+    }
+
+    onScroll() {
+        super.onScroll();
+
+        const scroll = this.scrollingElement.scrollTop;
+
+        const isScrolled = (scroll > this.transitionPoint);
+        if (this.isScrolled !== isScrolled) {
+            this.transitionPossible = this.canTransition() || !isScrolled;
+            if (this.transitionPossible) {
+                this.adaptToHeaderChangeLoop(1);
+            }
+        }
+
+        const reachPosition1 = (scroll > this.getHeaderHeight() + this.topGap);
+        const reachPosition2 = (scroll > this.transitionPoint + this.topGap) && this.transitionPossible;
+
+        this.atTop = !reachPosition1;
+
+        reachPosition2
+            ? this.transformShow()
+            : reachPosition1
+                ? this.transformHide()
+                : this.transformShow()
+        void this.el.offsetWidth; // Force a paint refresh
+
+        this.hideEl?.classList.toggle("hidden", reachPosition1);
+
+        this.cssAffixed = reachPosition1;
+        this.isScrolled = reachPosition2;
+    }
+}
+
+registry
+    .category("website.active_elements")
+    .add("website.header_standard", HeaderStandard);
