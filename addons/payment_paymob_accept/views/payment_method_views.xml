@@ -1,0 +1,28 @@
+<odoo>
+    <record id="payment_method_tree_inherit" model="ir.ui.view">
+        <field name="name">payment.method.tree.inherit</field>
+        <field name="model">payment.method</field>
+        <field name="inherit_id" ref="payment.payment_method_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="description" optional="hide" invisible="integration_id == 0"/>
+                <field name="integration_id" optional="hide" invisible="integration_id == 0"/>
+                <field name="image" widget="image" options="{'size': (30, 30)}" optional="hide" invisible="integration_id == 0"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="payment_method_form_inherit" model="ir.ui.view">
+        <field name="name">payment.method.form.inherit</field>
+        <field name="model">payment.method</field>
+        <field name="inherit_id" ref="payment.payment_method_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <group invisible="integration_id == 0">
+                    <field name="description" placeholder="Enter a description"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

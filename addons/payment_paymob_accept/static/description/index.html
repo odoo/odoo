@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paymob Checkout for Odoo</title>
+</head>
+<body style="font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0;">
+    <header style="padding: 20px; text-align: center;">
+        <h1 style="color: #004a9e;">Paymob Checkout for Odoo</h1>
+    </header>
+    <main style="padding: 20px;">
+        <section id="about-paymob" style="margin-bottom: 40px;">
+            <h2 style="color: #004a9e;">About Paymob</h2>
+            <p>
+                Paymob is the leading financial services enabler in MENA delivering cutting-edge financial technologies to customers in the region. Its omnichannel gateway offers more than 50 payment solutions and empowers close to 350,000 merchants with access to innovative financial services. 
+            </p>
+            <p>
+                Paymob was the first fintech company to receive the Central Bank of Egypt’s (CBE) Payments Facilitator license in 2018. The company launched in Pakistan in 2021 and in the UAE in 2022. Paymob received Saudi Payments PTSP certification in May 2023 enabling it to launch its operation in KSA. In December 2023 Paymob was a granted PSP license in Oman. 
+            </p>
+            <p>
+                The Company is backed by global and regional investors including PayPal Ventures, Global Ventures, Kora Capital, Clay Point Capital, EBRD, Endeavor Catalyst, FMO, A15, and Nclude. </p>
+            </p>
+        </section>
+
+        <section id="why-paymob" style="margin-bottom: 40px;">
+            <h2 style="color: #004a9e;">Why should you choose Paymob Checkout?</h2>
+            <p>
+                Paymob Checkout is a secure, pre-built payment solution and the easiest way to integrate payments into your Woo store. 
+            </p>
+            <p>
+                We offer quick onboarding, seamless integration, and access to 20+ global and local payment methods, including Apple Pay and Google Pay. Enjoy quick payment options, superior customer service, and fast settlements. 
+            </p>
+        </section>
+
+        <section id="key-features" style="margin-bottom: 40px;">
+            <h2 style="color: #004a9e;">Key Features</h2>
+            <ul style="margin-top: 20px; padding-left: 0; list-style-type: none !important;">
+                <li>
+                    <b>Highest payment success rates:</b>
+                    <p style="margin-left: 20px;">We deliver industry-leading payment success rates, ensuring smoother transactions every time.</p>
+                </li>
+                <li>
+                    <b>3DS OTP authentication:</b>
+                    <p style="margin-left: 20px;">Our 3DS one-time password (OTP) is embedded directly into the checkout, eliminating the need for redirection during authentication.</p>
+                </li>
+                <li>
+                    <b>Super-secure payments:</b>
+                    <p style="margin-left: 20px;">PCI-compliant, supporting 3D Secure transactions to protect cardholder data.</p>
+                </li>
+                <li>
+                    <b>Mobile-optimized design:</b>
+                    <p style="margin-left: 20px;">Built with a mobile-first approach.</p>
+                </li>
+                <li>
+                    <b>Fully customizable checkout:</b>
+                    <p style="margin-left: 20px;">Personalize the checkout experience by adding logos, business details (address & phone number), customizing the background, and much more.</p>
+                </li>
+                <li>
+                    <b>Multiple Currency Support:</b>
+                    <p style="margin-left: 20px;">Accept payments in various currencies.</p>
+                </li>
+                <li>
+                    <b>Card Tokenization:</b>
+                    <p style="margin-left: 20px;">Securely store card details for easy and safe future transactions.</p>
+                </li>
+                <li>
+                    <b>Retry payment feature:</b>
+                    <p style="margin-left: 20px;">If the initial transaction fails, users can attempt payment up to three times, increasing their chances of success.</p>
+                </li>
+                <li>
+                    <b>Settlements:</b>
+                    <p style="margin-left: 20px;">We offer settlements within one business day (T+1) for most payment methods and instant settlements in select countries. For BNPL and more details on settlements and refunds, please see the FAQ section below.</p>
+                </li>
+                <li>
+                    <b>Insights at a glance: dashboards for data-driven decisions:</b>
+                    <ul style="margin-top: 10px; padding-left: 20px; list-style-type: none !important;">
+                        <li><p style="margin-left: 20px;">View transaction details and analytics.</p></li>
+                        <li><p style="margin-left: 20px;">Initiate refunds directly from the dashboard.</p></li>
+                        <li><p style="margin-left: 20px;">Check settlement summaries and available balance.</p></li>
+                        <li><p style="margin-left: 20px;">Download reports on payments, settlements, and refunds.</p></li>
+                        <li><p style="margin-left: 20px;">Control checkout customization.</p></li>
+                        <li><p style="margin-left: 20px;">Manage your API Keys & Payment Methods.</p></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        
+        <section id="how-to-use" style="margin-bottom: 40px;">
+            <h2 style="color: #004a9e;">How to Use</h2>
+            <ol>
+                <li>Go to the Odoo Apps menu and search for "Paymob", Install the Paymob plugin.
+                In the list of providers, activate Paymob.
+                    <div>
+                        <img src="./assets/img/provider_list.jpg" alt="Provider List" style="display: block; margin: 20px auto; max-width: 70%; height: auto;">
+                    </div>
+                </li>
+                <li>Enter your Paymob credentials based on the mode you selected.
+                    <div>
+                        <img src="./assets/img/odoo_credentials.jpg" alt="Paymob Credentials" style="display: block; margin: 20px auto; max-width: 70%; height: auto;">
+                    </div>
+                    <p>To get your credentials, go to your Paymob account dashboard and navigate to <b>Settings</b>.</p>
+                    <div>
+                        <img src="./assets/img/paymob_credentials.jpg" alt="Paymob Account Dashboard Credentials" style="display: block; margin: 20px auto; max-width: 70%; height: auto;">
+                    </div>
+                </li>
+                <li>For Paymob to notify Odoo about the payment status, set the <b>Notification URL</b> in your integration from the account dashboard to:
+                <code style="background-color: #f4f4f4; padding: 5px; border-radius: 5px;">&lt;your-website&gt;/payment/paymob/return</code>
+                <div>
+                    <img src="./assets/img/notifiaction_url.jpg" alt="Paymob Account Dashboard Notification URL" style="display: block; margin: 20px auto; max-width: 70%; height: auto;">
+                </div>
+                </li>
+                <li>To enable tokenized payments (saving cards for future use):
+                <p>Go to your Paymob account and navigate to <b>Checkout Customization</b> Enable the <b>Show Save Card</b> option.</p>
+                <div>
+                    <img src="./assets/img/save_card.jpg" alt="Enable Show Save Card" style="display: block; margin: 20px auto; max-width: 70%; height: auto;">
+                </div>
+                </li>
+                <li>Authorized Sales Setup:</li>
+                <p>If your integration supports <b>is_auth</b>, you can receive authorized transactions in Odoo.</p>
+            </ol>
+        </section>
+    </main>
+</body>
+</html>

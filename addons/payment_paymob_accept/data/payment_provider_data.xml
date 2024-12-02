@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment_provider_paymob" model="payment.provider">
+        <field name="name">Paymob</field>
+        <field name="code">paymob</field>
+        <field name="image_128" type="base64" file="payment_paymob_accept/static/description/icon.png"/>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="module_id" ref="base.module_payment_paymob_accept"/>
+    </record>
+
+</odoo>

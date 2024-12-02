@@ -1,0 +1,29 @@
+<odoo>
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">payment.provider.form.paymob</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <group name="paymob_credentials" invisible="code != 'paymob'">
+                    <field name="paymob_public_key" 
+                           required="code == 'paymob' and state != 'disabled'" 
+                           readonly="state == 'disabled'"/>
+                    <field name="paymob_secret_key" 
+                           required="code == 'paymob' and state != 'disabled'" 
+                           password="True" 
+                           readonly="state == 'disabled'"/>
+                    <field name="paymob_api_key" 
+                           required="code == 'paymob' and state != 'disabled'" 
+                           password="True" 
+                           readonly="state == 'disabled'"/>
+                    <button name="validate_keys" 
+                            type="object" 
+                            string="Validate" 
+                            class="oe_highlight" 
+                            invisible="state == 'disabled'"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
