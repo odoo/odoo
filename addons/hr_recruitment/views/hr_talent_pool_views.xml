@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_talent_pool_view_form" model="ir.ui.view">
+        <field name="name">hr.talent.pool.view.form</field>
+        <field name="model">hr.talent.pool</field>
+        <field name="arch" type="xml">
+            <form string="talent pool">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="pool_manager" />
+                            <field name="tags" />
+                        </group>
+                        <group>
+                            <field name="color" />
+                            <field name="company_id" />
+                        </group>
+                        <label for="description"/>
+                        <field name="description" string="Description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_talent_pool_view_list" model="ir.ui.view">
+        <field name="name">hr.talent.pool.view.list</field>
+        <field name="model">hr.talent.pool</field>
+        <field name="arch" type="xml">
+            <list string="talent pool" multi_edit="1" sample="1">
+                <field name="name" />
+                <field name="pool_manager" />
+                <field name="no_of_talents" />
+                <field name="tags" />
+                <field name="company_id" />
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_talent_pool_view_kanban" model="ir.ui.view">
+        <field name="name">hr.talent.pool.view.kanban</field>
+        <field name="model">hr.talent.pool</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color" multi_edit="1" sample="1">
+                <field name="name" />
+                <field name="pool_manager" />
+                <field name="company_id" />
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" type="object" class="dropdown-item">Talents</a>
+                        <a role="menuitem" type="archive" class="dropdown-item">Archive</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
+                    <t t-name="card">
+                        <field name="name" />
+                        <field name="pool_manager" />
+                        <field name="company_id" />
+                        <footer class="justify-content-end">
+                            <field name="no_of_talents" />
+                            <span>Talents</span>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_hr_talent_pool" model="ir.actions.act_window">
+        <field name="name">Talent Pool</field>
+        <field name="path">talent-pool</field>
+        <field name="res_model">hr.talent.pool</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No talent pools yet
+            </p>
+        </field>
+    </record>
+</odoo>
