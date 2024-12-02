@@ -850,8 +850,11 @@ class TestBatchPicking02(TransactionCase):
         })
         batch.action_confirm()
         action = batch.action_done()
+        # Picking_1 should be detached from the batch after the wizard and picking_2 are validated.
+        self.assertEqual(batch.picking_ids, picking_1 | picking_2)
         Form.from_action(self.env, action).save().process_cancel_backorder()
         self.assertEqual(batch.state, 'done')
+        self.assertEqual(batch.picking_ids, picking_2)
 
     def test_backorder_batching(self):
         """

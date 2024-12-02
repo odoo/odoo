@@ -16401,6 +16401,30 @@ test("two pages, go page 2, record deleted meanwhile (grouped case)", async () =
     expect(".o_group_header .o_pager").toHaveCount(0);
 });
 
+test("select records range with shift click on several page", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+        <list limit="3">
+            <field name="foo"/>
+            <field name="int_field"/>
+        </list>`,
+    });
+
+    await contains(`.o_data_row .o_list_record_selector input:eq(0)`).click();
+    expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeChecked();
+
+    expect(`.o_list_selection_box .o_list_select_domain`).toHaveCount(0);
+    expect(`.o_list_selection_box`).toHaveText("1\nselected");
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(1);
+    // click the pager next button
+    await contains(".o_pager_next").click();
+    // shift click the first record of the second page
+    await contains(`.o_data_row .o_list_record_selector input`).click({ shiftKey: true });
+    expect(`.o_list_selection_box`).toHaveText("1\nselected\n Select all 4");
+});
+
 test("open record, with invalid record in list", async () => {
     // in this scenario, the record is already invalid in db, so we should be allowed to
     // leave it
