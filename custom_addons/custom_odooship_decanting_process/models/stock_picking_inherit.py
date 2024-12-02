@@ -6,6 +6,8 @@ from odoo.exceptions import UserError, ValidationError
 import json
 import requests
 import logging
+
+
 _logger = logging.getLogger(__name__)
 
 class StockPicking(models.Model):
@@ -108,22 +110,88 @@ class StockPicking(models.Model):
 
         return True
 
-    def button_validate(self):
+    def button_validate_picking(self):
         """
-        Overrides the button_validate method to handle special cases for incoming pickings.
-        If the picking_type_code is 'incoming', and the state is 'ready', it directly sets the state to 'done'.
-        If the state is 'draft', it raises a validation error.
+        Sends SKU details to the specified API endpoint for each product line in the picking.
+        Updates the state to 'done' if the operation is successful.
         """
+
         for picking in self:
-            # Check if this is an incoming receipt
+            # Validate that required fields are present
             if picking.picking_type_code == 'incoming':
                 if picking.state == 'draft':
                     # Raise an error if the user tries to validate from draft state
                     raise UserError("You cannot validate an incoming receipt from the 'Draft' state.")
-                elif picking.state == 'ready':
-                    # If in ready state, directly mark as done
-                    picking.state = 'done'
-                    return
+            if not picking.tenant_code_id or not picking.site_code_id:
+                raise ValidationError(
+                    _("Tenant Code and Site Code must be specified for this operation.")
+                )
+
+            if not picking.move_ids_without_package:
+                raise ValidationError(_("No product lines found to send."))
+
+            # Build the payload
+            product_lines = []
+            for line in picking.move_ids_without_package:
+                product_lines.append({
+                    "product_id": line.product_id.default_code,
+                    "name": line.product_id.name,
+                    "product_uom_qty": line.product_uom_qty,
+                    "quantity": line.product_uom_qty,
+                    "remaining_quantity": line.remaining_qty,
+                    "delivery_receipt_state": line.delivery_receipt_state or "N/A",
+                    "product_packaging_id":line.product_packaging_id.name,
+                    "product_packaging_qty":line.product_packaging_qty,
+                })
+
+            payload = {
+                "receipt_number": picking.name,
+                "partner_id":picking.partner_id.name,
+                "tenant_code": picking.tenant_code_id.name,
+                "site_code": picking.site_code_id.name,
+                "origin": picking.origin or "N/A",
+                "product_lines": product_lines,
+            }
+            # Define the URLs for Shiperoo Connect
+            is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
+            api_url = (
+                "https://shiperooconnect-prod.automation.shiperoo.com/api/discrepency_receiver"
+                if is_production == 'True'
+                else "https://shiperooconnect.automation.shiperoo.com/api/discrepency_receiver"
+            )
+            json_data = json.dumps(payload, indent=4)
+            _logger.info(f"Sending payload to {api_url}: {json_data}")
+
+            # Send the payload to the API
+            headers = {'Content-Type': 'application/json'}
+            try:
+                response = requests.post(api_url, headers=headers, data=json_data)
+                _logger.info(f"Response Status Code: {response.status_code}, Response Body: {response.text}")
+
+                if response.status_code != 200:
+                    raise UserError(f"Failed to send data: {response.status_code} - {response.text}")
+
+            except requests.exceptions.RequestException as e:
+                _logger.error(f"Error communicating with API: {str(e)}")
+                raise UserError(f"Error communicating with API: {str(e)}")
+
+            # If no errors, update the state to 'done'
+            picking.state = 'done'
+            _logger.info(f"Picking {picking.name} has been successfully processed and marked as done.")
+
+        return True
+
+    def button_validate(self):
+        """
+        Overrides the button_validate method to handle special cases for incoming pickings.
+        If the picking_type_code is 'incoming', and the state is 'draft', it raises a validation error.
+        """
+        for picking in self:
+            # Check if this is an incoming receipt
+            if picking.picking_type_code == 'incoming':  # Directly compare with 'incoming'
+                if picking.state == 'draft':
+                    # Raise an error if the user tries to validate from the draft state
+                    raise UserError("You cannot validate an incoming receipt from the 'Draft' state.")
 
         # Call the super method for other cases
         return super(StockPicking, self).button_validate()
