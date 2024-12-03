@@ -40,6 +40,7 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     @api.model
+<<<<<<< 18.0:addons/l10n_hu_edi/models/account_move_send.py
     def _l10n_hu_edi_cron_update_status(self):
         final_states = [False, 'confirmed', 'confirmed_warning', 'rejected', 'cancel_pending', 'cancelled']
         invoices_pending = self.env['account.move'].search([('l10n_hu_edi_state', 'not in', final_states)])
@@ -49,6 +50,18 @@ class AccountMoveSend(models.AbstractModel):
             # Trigger cron again in 10 minutes.
             self.env.ref('l10n_hu_edi.ir_cron_update_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=10))
 
+||||||| 600c7098335865b0b79900fd9fb85c64da327ee5:addons/l10n_hu_edi/wizard/account_move_send.py
+=======
+    def _prepare_invoice_pdf_report(self, invoice, invoice_data): 
+        # EXTENDS 'account'
+        # If we want to re-generate the PDF, we need to unlink the previous one.
+        if invoice.country_code == 'HU':
+            invoice.invoice_pdf_report_file = False
+            invoice.invoice_pdf_report_id = False
+        return super()._prepare_invoice_pdf_report(invoice, invoice_data)
+
+    @api.model
+>>>>>>> 4a64656d670388a4b59d056e5eb14e59062682f4:addons/l10n_hu_edi/wizard/account_move_send.py
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
