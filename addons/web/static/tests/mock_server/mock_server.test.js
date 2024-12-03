@@ -962,6 +962,72 @@ test("performRPC: read_group, group by datetime with number granularity", async 
     }
 });
 
+test("performRPC: read_group, measure max date(time)", async () => {
+    await makeMockServer();
+    await expect(
+        ormRequest({
+            model: "bar",
+            method: "read_group",
+            kwargs: {
+                fields: ["datetime:max", "date:max"],
+                domain: [],
+                groupby: [],
+            },
+        })
+    ).resolves.toEqual([
+        {
+            __count: 6,
+            __domain: [],
+            datetime: "2019-12-30 12:34:56",
+            date: "2019-12-30",
+        },
+    ]);
+});
+
+test("performRPC: read_group, measure min date(time)", async () => {
+    await makeMockServer();
+    await expect(
+        ormRequest({
+            model: "bar",
+            method: "read_group",
+            kwargs: {
+                fields: ["datetime:min", "date:min"],
+                domain: [],
+                groupby: [],
+            },
+        })
+    ).resolves.toEqual([
+        {
+            __count: 6,
+            __domain: [],
+            datetime: "2016-04-11 12:34:56",
+            date: "2016-04-11",
+        },
+    ]);
+});
+
+test("performRPC: read_group, measure date(time) not matching any record", async () => {
+    await makeMockServer();
+    await expect(
+        ormRequest({
+            model: "bar",
+            method: "read_group",
+            kwargs: {
+                fields: ["datetime:min", "date:min"],
+                domain: [["date", "=", false]],
+                groupby: [],
+            },
+        })
+    ).resolves.toEqual([
+        {
+            __count: 0,
+            __domain: [["date", "=", false]],
+            datetime: false,
+            date: false,
+        },
+    ]);
+});
+
 test("performRPC: read_group, group by m2m", async () => {
     await makeMockServer();
 
