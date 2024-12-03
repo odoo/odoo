@@ -46,3 +46,4 @@ Sylvain Legal sylvain.legal@akretion.com https://github.com/legalsylvain
 Thiago Moreira de Souza Arrais thiago.moreira@akretion.com.br https://github.com/thiagomds
 Valentin Chemiere valentin.chemiere@akretion.com https://github.com/viggor
 Vianney da Costa vianney.dacosta@akretion.com.br https://launchpad.net/~vianneydc
+Kevin Roche kevin.roche@akretion.com https://github.com/Kev-Roche
