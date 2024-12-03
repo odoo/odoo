@@ -117,7 +117,6 @@ class MrpBatchProduce(models.TransientModel):
             for production in reversed(productions):
                 production.qty_producing = production.product_uom_qty
                 production.set_qty_producing()
-                production.move_raw_ids.picked = True
 
         if mark_done:
             return productions.with_context(from_wizard=True).button_mark_done()
