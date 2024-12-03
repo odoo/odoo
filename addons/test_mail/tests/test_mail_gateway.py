@@ -408,7 +408,7 @@ class TestMailgateway(MailGatewayCommon):
         self.assertNotSentEmail()  # No notification / bounce should be sent
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.tests')
-    def test_message_process_email_partner_find(self):
+    def test_message_process_email_author_partner_find(self):
         """ Finding the partner based on email, based on partner / user / follower """
         self.alias.write({'alias_force_thread_id': self.test_record.id})
         from_1 = self.env['res.partner'].create({'name': 'Brice Denisse', 'email': 'from.test@example.com'})
@@ -2242,6 +2242,64 @@ class TestMailGatewayLoops(MailGatewayCommon):
             f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
             [customer_email],
             subject=f'Re: Re: Re: Should Bounce (initial)')
+
+
+@tagged('mail_gateway', 'mail_tools')
+class TestMailGatewayRecipients(MailGatewayCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.test_partners = cls.env['res.partner'].create([
+            {
+                'email': '"Test Format" <test.format@test.example.com>',
+                'name': 'Format',
+            }, {
+                'email': '"Test Multi" <test.multi@test.example.com>, test.multi.2@test.example.com',
+                'name': 'Multi',
+            }, {
+                'email': '"Test Case" <TEST.CASE@test.example.com>',
+                'name': 'Case',
+            },
+        ])
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_gateway_recipients_finding(self):
+        """ Incoming email: find or create partners. """
+        for additional_to, exp_partners in zip(
+            [
+                'test.format@test.example.com',
+                'TEST.FORMAT@test.example.com',
+                '"Another Name" <test.format@test.example.com',
+                'test.multi@test.example.com',
+                'test.case@test.example.com',
+            ],
+            [
+                self.test_partners[0],
+                self.test_partners[0],  # case should not impact
+                self.test_partners[0],  # other format should not impact
+                self.test_partners[1],
+                self.test_partners[2],  # case should not impact (lower versus stored upper)
+            ],
+        ):
+            with self.subTest(additional_to=additional_to):
+                with self.mock_mail_gateway():
+                    record = self.format_and_process(
+                        MAIL_TEMPLATE, self.email_from,
+                        f'{self.alias.alias_full_name}, {additional_to}',
+                        subject=f'Test To {additional_to}',
+                )
+                self.assertEqual(record.message_ids[0].partner_ids, exp_partners)
+
+                with self.mock_mail_gateway():
+                    record = self.format_and_process(
+                        MAIL_TEMPLATE, self.email_from,
+                        f'{self.alias.alias_full_name}',
+                        cc=additional_to,
+                        subject=f'Test Cc {additional_to}',
+                )
+                self.assertEqual(record.message_ids[0].partner_ids, exp_partners)
 
 
 @tagged('mail_gateway', 'mail_thread')
