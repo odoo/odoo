@@ -1055,7 +1055,7 @@ def patch():
 
     if hasattr(urls, 'url_join'):
         # URLs are already patched
-        return
+        return {}
     # see https://github.com/pallets/werkzeug/compare/2.3.0..3.0.0
     # see https://github.com/pallets/werkzeug/blob/2.3.0/src/werkzeug/urls.py for replacement
     urls.url_decode = url_decode
@@ -1068,3 +1068,6 @@ def patch():
     urls.url_unquote_plus = url_unquote_plus
     urls.url_unparse = url_unparse
     urls.URL = URL
+    return {
+        'werkzeug.urls': urls,
+    }

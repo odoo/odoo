@@ -24,3 +24,8 @@ def patch():
 
     # To remove when corrected in Babel
     babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
+    return {
+        'encodings': encodings,
+        'codecs': codecs,
+        'babel': babel,
+    }

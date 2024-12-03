@@ -52,6 +52,9 @@ def patch():
     try:
         from stdnum import util
     except ImportError:
-        return  # nothing to patch
+        return {} # nothing to patch
 
     util.get_soap_client = new_get_soap_client
+    return {
+        'stdnum.util': util,
+    }

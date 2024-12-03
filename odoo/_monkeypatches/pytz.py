@@ -129,3 +129,6 @@ def patch():
         return original_pytz_timezone(name)
 
     pytz.timezone = timezone
+    return {
+        'pytz': pytz,
+    }

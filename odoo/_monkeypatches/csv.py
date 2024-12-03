@@ -8,3 +8,6 @@ def patch():
     than sorry I guess
     """
     csv.field_size_limit(500 * 1024 * 1024)
+    return {
+        'csv': csv,
+    }

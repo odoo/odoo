@@ -37,3 +37,7 @@ def patch():
                     "Bad result from poll: %r" % state)
     psycopg2.extensions.set_wait_callback(gevent_wait_callback)
     odoo.evented = True
+    return {
+        'gevent': gevent,
+        'psycopg2': psycopg2,
+    }

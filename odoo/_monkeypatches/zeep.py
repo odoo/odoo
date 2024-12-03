@@ -7,3 +7,6 @@ def patch():
     if visitor.tags.notation.localname != 'notation':
         visitor.tags.notation = xsd_ns('notation')
         visitor.SchemaVisitor.visitors[visitor.tags.notation] = visitor.SchemaVisitor.visit_notation
+    return {
+        'zeep.xsd.visitor': visitor,
+    }

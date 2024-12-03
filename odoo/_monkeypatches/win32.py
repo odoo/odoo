@@ -29,3 +29,6 @@ def patch():
                     format_time = format_time.replace(x, y)
                 return format_time
         locale.nl_langinfo = nl_langinfo
+    return {
+        'locale': locale,
+    }

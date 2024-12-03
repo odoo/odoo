@@ -30,3 +30,6 @@ def literal_eval(expr):
 
 def patch():
     ast.literal_eval = literal_eval
+    return {
+        'ast': ast
+    }

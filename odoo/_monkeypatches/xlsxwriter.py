@@ -21,3 +21,6 @@ def patch():
                 return super(PatchedXlsxWorkbook, self).add_worksheet(name, worksheet_class=None)
 
         xlsxwriter.Workbook = PatchedXlsxWorkbook
+    return {
+        'xlsxwriter': xlsxwriter,
+    }

@@ -13,3 +13,6 @@ def patch():
     # this one can be present on windows with the value 'text/plain' which
     # breaks loading js files from an addon's static folder
     mimetypes.add_type('text/javascript', '.js')
+    return {
+        'mimetypes': mimetypes,
+    }

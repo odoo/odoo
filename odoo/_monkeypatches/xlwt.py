@@ -21,3 +21,6 @@ def patch():
                 return super(PatchedWorkbook, self).add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
 
         xlwt.Workbook = PatchedWorkbook
+    return {
+        'xlwt': xlwt,
+    }

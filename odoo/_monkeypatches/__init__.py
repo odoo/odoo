@@ -2,7 +2,6 @@ import os
 import time
 from pathlib import Path
 
-from odoo.modules.migration import load_script
 from . import evented  # noqa: F401
 
 modules = {}
@@ -17,18 +16,25 @@ def set_timezone_utc():
 def patch_all():
     set_timezone_utc()
 
-    # Import all modules in this folder
-    for path in __path__:
-        for file in Path(path).glob('*.py'):
-            module_name = file.stem
-            fq_name = f"{__name__}.{module_name}"
-            if fq_name not in os.sys.modules:
-                patcher_module = load_script(path, fq_name)
+    # Fetch all the modules in this folder
+    mapping = [
+        (module_name, fq_name)
+        for path in __path__
+        for x in Path(path).glob('*.py')
+        if (module_name := x.stem)
+        and not module_name.startswith("__")
+        and (fq_name := f"{__name__}.{module_name}")
+        and fq_name not in os.sys.modules
+    ]
 
-                # Apply the patch on the original module
-                patcher_module.patch()
-
-            # Save some info on the patched module for runtime inspection
-            if module := os.sys.modules.get(module_name):
-                module._patched = patcher_module
-                modules[module_name] = module
+    for module_name, fq_name in mapping:
+        # Import the monkeypatcher module
+        __import__(fq_name)
+        # Retrieve the loaded monkeypatcher module
+        patcher_module = os.sys.modules[fq_name]
+        # Patch the related module
+        patched_modules = patcher_module.patch()
+        # Save some info on the patched module for runtime inspection
+        for fq_name, patched_module in patched_modules.items():
+            patched_module._patched = True
+            modules[fq_name] = patched_module
