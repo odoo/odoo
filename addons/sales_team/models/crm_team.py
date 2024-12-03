@@ -66,7 +66,7 @@ class CrmTeam(models.Model):
                 team = default_team
             elif self.env.company in filtered_teams.company_id:
                 # Prefer the current company if possible
-                team = filtered_teams.filtered(lambda t: t.company_id == self.env.company)[:1]
+                team = filtered_teams.filtered(lambda t: not t.company_id or t.company_id == self.env.company)[:1]
             else:
                 team = filtered_teams[:1]
 
@@ -85,7 +85,7 @@ class CrmTeam(models.Model):
             teams = self.env['crm.team'].search([('company_id', 'in', valid_cids)])
             if self.env.company in teams.company_id:
                 # Prefer the current company if possible
-                teams = teams.filtered(lambda t: t.company_id == self.env.company)
+                teams = teams.filtered(lambda t: not t.company_id or t.company_id == self.env.company)
             # 4- default: based on company rule, first one matching domain
             if teams and domain:
                 team = teams.filtered_domain(domain)[:1]
