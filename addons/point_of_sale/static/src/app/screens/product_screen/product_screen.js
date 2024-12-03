@@ -223,7 +223,7 @@ export class ProductScreen extends Component {
         const partner = await this._getPartnerByBarcode(code);
         if (partner) {
             if (this.currentOrder.getPartner() !== partner) {
-                this.currentOrder.setPartner(partner);
+                this.pos.setPartnerToCurrentOrder(partner);
             }
             return;
         }
