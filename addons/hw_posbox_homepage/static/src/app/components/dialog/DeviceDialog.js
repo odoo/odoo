@@ -32,13 +32,8 @@ export class DeviceDialog extends Component {
         return numDevices === 1 ? formattedDeviceType : `${formattedDeviceType}s`;
     }
 
-    get groupedDevices() {
-        const devices = this.store.base.iot_device_status;
-        return devices.reduce((groupedDevices, nextDevice) => {
-            groupedDevices[nextDevice.type] ??= [];
-            groupedDevices[nextDevice.type].push(nextDevice);
-            return groupedDevices;
-        }, {});
+    get devices() {
+        return this.store.base.devices;
     }
 
     static template = xml`
@@ -47,21 +42,21 @@ export class DeviceDialog extends Component {
                 Devices list
             </t>
             <t t-set-slot="body">
-                <div t-if="Object.keys(groupedDevices).length === 0" class="alert alert-warning fs-6" role="alert">
+                <div t-if="Object.keys(devices).length === 0" class="alert alert-warning fs-6" role="alert">
                     No devices found.
                 </div>
                 <div class="accordion">
-                    <div t-foreach="Object.keys(groupedDevices)" t-as="deviceType" t-key="deviceType" class="accordion-item">
+                    <div t-foreach="Object.keys(devices)" t-as="deviceType" t-key="deviceType" class="accordion-item">
                         <h2 class="accordion-header" t-att-id="'heading-' + deviceType">
                             <button class="accordion-button px-3 d-flex gap-3 collapsed" type="button" data-bs-toggle="collapse" t-att-data-bs-target="'#collapse-' + deviceType" t-att-aria-controls="'collapse-' + deviceType">
                                 <span t-att-class="'color-primary fa fa-fw fa-2x ' + icons[deviceType]"/>
-                                <span class="fs-5 fw-bold" t-out="groupedDevices[deviceType].length"/>
-                                <span class="fs-5" t-out="formatDeviceType(deviceType, groupedDevices[deviceType].length)"/>
+                                <span class="fs-5 fw-bold" t-out="devices[deviceType].length"/>
+                                <span class="fs-5" t-out="formatDeviceType(deviceType, devices[deviceType].length)"/>
                             </button>
                         </h2>
                         <div t-att-id="'collapse-' + deviceType" class="accordion-collapse collapse" t-att-aria-labelledby="'heading-' + deviceType">
                             <div class="d-flex flex-column p-1 gap-2">
-                                <div t-foreach="groupedDevices[deviceType]" t-as="device" t-key="device.identifier" class="d-flex flex-column bg-light rounded p-2 gap-1">
+                                <div t-foreach="devices[deviceType]" t-as="device" t-key="device.identifier" class="d-flex flex-column bg-light rounded p-2 gap-1">
                                     <span t-out="device.name" class="one-line"/>
                                     <span t-out="device.identifier" class="text-secondary one-line"/>
                                     <div t-if="device.value" class="text-secondary one-line">

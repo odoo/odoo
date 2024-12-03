@@ -2,11 +2,14 @@
 
 import json
 import logging
+import netifaces
+import os
 import platform
 import subprocess
 import threading
 import time
 
+from itertools import groupby
 from pathlib import Path
 from odoo import http
 from odoo.addons.hw_drivers.tools import helpers
@@ -27,6 +30,16 @@ DRIVER_PREFIX = 'driver-'
 AVAILABLE_LOG_LEVELS = ('debug', 'info', 'warning', 'error')
 AVAILABLE_LOG_LEVELS_WITH_PARENT = AVAILABLE_LOG_LEVELS + ('parent',)
 
+CONTENT_SECURITY_POLICY = (
+    "default-src 'none';"
+    "script-src 'self' 'unsafe-eval';"  # OWL requires `unsafe-eval` to render templates
+    "connect-src 'self';"
+    "img-src 'self';"
+    "style-src 'self';"
+    "style-src-attr 'unsafe-inline';"   # Allows style="..." attributes to work
+    "font-src 'self';"
+)
+
 
 class IotBoxOwlHomePage(http.Controller):
     def __init__(self):
@@ -35,11 +48,15 @@ class IotBoxOwlHomePage(http.Controller):
 
     @http.route('/', auth='none', type='http')
     def index(self):
-        return http.Stream.from_path("hw_posbox_homepage/views/index.html").get_response(content_security_policy=None)
+        return http.Stream.from_path("hw_posbox_homepage/views/index.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
     @http.route('/logs', auth='none', type='http')
     def logs_page(self):
-        return http.Stream.from_path("hw_posbox_homepage/views/logs.html").get_response(content_security_policy=None)
+        return http.Stream.from_path("hw_posbox_homepage/views/logs.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
+
+    @http.route('/status', auth='none', type='http')
+    def status_page(self):
+        return http.Stream.from_path("hw_posbox_homepage/views/status_display.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
     # ---------------------------------------------------------- #
     # GET methods                                                #
@@ -107,31 +124,36 @@ class IotBoxOwlHomePage(http.Controller):
 
     @http.route('/hw_posbox_homepage/data', auth="none", type="http", cors='*')
     def get_homepage_data(self):
+        network_interfaces = []
         if platform.system() == 'Linux':
             ssid = helpers.get_ssid()
-            wired = helpers.read_file_first_line('/sys/class/net/eth0/operstate')
-        else:
-            wired = 'up'
-        if wired == 'up':
-            network = 'Ethernet'
-        elif ssid:
-            if helpers.access_point():
-                network = 'Wifi access point'
-            else:
-                network = 'Wifi : ' + ssid
-        else:
-            network = 'Not Connected'
+            interfaces = netifaces.interfaces()
+            for iface_id in interfaces:
+                if 'wlan' in iface_id or 'eth' in iface_id:
+                    is_wifi = 'wlan' in iface_id
+                    iface_obj = netifaces.ifaddresses(iface_id)
+                    ifconfigs = iface_obj.get(netifaces.AF_INET, [])
+                    for conf in ifconfigs:
+                        if conf.get('addr'):
+                            network_interfaces.append({
+                                'id': iface_id,
+                                'is_wifi': is_wifi,
+                                'ssid': ssid if is_wifi else None,
+                                'ip': conf.get('addr'),
+                            })
 
         is_certificate_ok, certificate_details = helpers.get_certificate_status()
 
-        iot_device = []
-        for device in iot_devices:
-            iot_device.append({
-                'name': iot_devices[device].device_name,
-                'value': str(iot_devices[device].data['value']),
-                'type': iot_devices[device].device_type.replace('_', ' '),
-                'identifier': iot_devices[device].device_identifier,
-            })
+        devices = [{
+            'name': device.device_name,
+            'value': str(device.data['value']),
+            'type': device.device_type,
+            'identifer': device.device_identifier
+        } for device in iot_devices.values()]
+        device_type_key = lambda device: device['type']
+        grouped_devices = {
+            device_type: list(devices) for device_type, devices in groupby(sorted(devices, key=device_type_key), device_type_key)
+        }
 
         terminal_id = helpers.get_conf('six_payment_terminal')
         six_terminal = terminal_id or 'Not Configured'
@@ -142,11 +164,12 @@ class IotBoxOwlHomePage(http.Controller):
             'hostname': helpers.get_hostname(),
             'ip': helpers.get_ip(),
             'mac': helpers.get_mac_address(),
-            'iot_device_status': iot_device,
+            'devices': grouped_devices,
             'server_status': helpers.get_odoo_server_url() or 'Not Configured',
             'pairing_code': connection_manager.pairing_code,
             'six_terminal': six_terminal,
-            'network_status': network,
+            'is_access_point_up': helpers.access_point(),
+            'network_interfaces': network_interfaces,
             'version': helpers.get_version(),
             'system': platform.system(),
             'is_certificate_ok': is_certificate_ok,
