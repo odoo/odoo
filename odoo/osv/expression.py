@@ -1139,7 +1139,7 @@ class expression(object):
                 push(('id', ANY_IN[operator], sql), model, alias)
 
             elif operator in ('any', 'not any') and field.store and field.auto_join:
-                raise NotImplementedError('auto_join attribute not supported on field %s' % field)
+                assert False, f'auto_join attribute not supported on field {field}'
 
             elif operator in ('any', 'not any') and field.type == 'many2one':
                 right_ids = comodel._search(right)

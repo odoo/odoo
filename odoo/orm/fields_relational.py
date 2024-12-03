@@ -30,6 +30,7 @@ class _Relational(Field[M], typing.Generic[M]):
     relational = True
     domain: DomainType = []         # domain for searching values
     context: ContextType = {}       # context for searching values
+    auto_join = False               # whether joins are generated upon search
     check_company = False
 
     def __get__(self, records, owner=None):
@@ -164,7 +165,6 @@ class Many2one(_Relational[M]):
     _column_type = ('int4', 'int4')
 
     ondelete = None                     # what to do when value is deleted
-    auto_join = False                   # whether joins are generated upon search
     delegate = False                    # whether self implements delegation
 
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
@@ -596,7 +596,6 @@ class One2many(_RelationalMulti[M]):
     type = 'one2many'
 
     inverse_name = None                 # name of the inverse field
-    auto_join = False                   # whether joins are generated upon search
     copy = False                        # o2m are not copied by default
 
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, inverse_name: str | Sentinel = SENTINEL,
@@ -914,12 +913,13 @@ class Many2many(_RelationalMulti[M]):
     relation = None                     # name of table
     column1 = None                      # column of table referring to model
     column2 = None                      # column of table referring to comodel
-    auto_join = False                   # whether joins are generated upon search
     ondelete = 'cascade'                # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, relation: str | Sentinel = SENTINEL,
                  column1: str | Sentinel = SENTINEL, column2: str | Sentinel = SENTINEL,
                  string: str | Sentinel = SENTINEL, **kwargs):
+        if 'auto_join' in kwargs:
+            raise NotImplementedError("auto_join is not supported on Many2many fields")
         super(Many2many, self).__init__(
             comodel_name=comodel_name,
             relation=relation,
