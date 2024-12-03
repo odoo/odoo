@@ -46,11 +46,18 @@ class TestAPI(MailCommon, TestRecipients):
                 'mobile_number': '+32455000001',
                 'name': 'Wrong email',
             }, {
+                'email_from': 'wrong',
+                'mobile_number': False,
+                'name': 'Duplicate Wrong email',
+            }, {
                 'email_from': False,
                 'name': 'Falsy email',
             }, {
                 'email_from': f'"Other Name" <{cls.test_partner.email_normalized}>',
                 'name': 'Test Partner Email',
+            }, {
+                'customer_id': cls.user_public.partner_id.id,
+                'name': 'Publicly Created',
             },
         ])
 
@@ -132,7 +139,7 @@ class TestAPI(MailCommon, TestRecipients):
         history. """
         existing_partners = self.env['res.partner'].sudo().search([])
         tickets = self.ticket_records.with_user(self.env.user)
-        self.assertEqual(len(tickets), 6)
+        self.assertEqual(len(tickets), 8)
         res = tickets._mail_find_partner_from_emails(
             [ticket.email_from for ticket in tickets],
             force_create=True,
@@ -170,9 +177,23 @@ class TestAPI(MailCommon, TestRecipients):
                 'name': 'Multi Customer',
                 'phone': False,
             }]),
-            (new_wrong, [{'name': 'wrong', 'email': 'wrong', 'company_id': self.env['res.company']}]),
+            (new_wrong, [{
+                'company_id': self.env['res.company'],
+                'email': 'wrong',
+                'mobile': False,
+                'name': 'wrong',
+                'phone': False,
+            }]),
+            (new_wrong, [{
+                'company_id': self.env['res.company'],
+                'email': 'wrong',
+                'mobile': False,
+                'name': 'wrong',
+                'phone': False,
+            }]),
             (self.env['res.partner'], [{}]),
             (self.test_partner, [{}]),
+            (self.env['res.partner'], [{}]),
         ]
         for partners, (exp_partners, exp_values_list) in zip(res, expected_all):
             with self.subTest(ticket_name=exp_partners.name):
