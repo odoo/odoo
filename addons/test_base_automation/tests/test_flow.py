@@ -1,14 +1,14 @@
 # # -*- coding: utf-8 -*-
 # # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
-from unittest.mock import patch
 import sys
+from unittest.mock import patch
 
-from odoo.tools import mute_logger
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests import common, tagged
-from odoo.exceptions import AccessError, ValidationError
 from odoo import Command
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.exceptions import AccessError, ValidationError
+from odoo.tests import Form, common, tagged
+from odoo.tools import mute_logger
 
 
 def create_automation(self, **kwargs):
@@ -935,6 +935,130 @@ class TestCompute(common.TransactionCase):
         cls.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
         })
+
+    def test_automation_form_view(self):
+        f = Form(self.env['base.automation'])
+
+        # Initialize some fields
+        f.name = "Test Automation"
+        f.model_id = self.env.ref('test_base_automation.model_test_base_automation_project')
+        f.trigger = 'on_create_or_write'
+
+        # Changing the model must reset the trigger
+        f.model_id = self.env.ref('test_base_automation.model_base_automation_lead_test')
+        self.assertEqual(f.trigger, False)
+
+        # Some triggers must preset a filter_domain and trigger_field_ids
+        ## State is set to...
+        f.trigger = 'on_state_set'
+        self.assertEqual(f.filter_domain, False)
+        self.assertEqual(f.trigger_field_ids.ids, [])
+        state_field_id = self.env.ref('test_base_automation.field_base_automation_lead_test__state').id
+        f.trg_selection_field_id = self.env['ir.model.fields.selection'].search([
+            ('field_id', '=', state_field_id),
+            ('value', '=', 'pending'),
+        ])
+        self.assertEqual(f.trigger_field_ids.ids, [state_field_id])
+        self.assertEqual(f.filter_domain, "[('state', '=', 'pending')]")
+
+        ## Priority is set to...
+        f.model_id = self.env.ref('test_base_automation.model_test_base_automation_project')
+        f.trigger = 'on_priority_set'
+        self.assertEqual(f.filter_domain, False)
+        self.assertEqual(f.trigger_field_ids.ids, [])
+        priority_field_id = self.env.ref('test_base_automation.field_test_base_automation_project__priority').id
+        f.trg_selection_field_id = self.env['ir.model.fields.selection'].search([
+            ('field_id', '=', priority_field_id),
+            ('value', '=', '2'),
+        ])
+        self.assertEqual(f.trigger_field_ids.ids, [priority_field_id])
+        self.assertEqual(f.filter_domain, "[('priority', '=', '2')]")
+
+        ## Stage is set to...
+        f.model_id = self.env.ref('test_base_automation.model_base_automation_lead_test')
+        f.trigger = 'on_stage_set'
+        stage_field_id = self.env.ref('test_base_automation.field_base_automation_lead_test__stage_id').id
+        self.assertEqual(f.trigger_field_ids.ids, [])
+        self.assertEqual(f.filter_domain, False)
+        new_lead_stage = self.env['test_base_automation.stage'].create({'name': 'New'})
+        f.trg_field_ref = new_lead_stage.id
+        self.assertEqual(f.filter_domain, f"[('stage_id', '=', {new_lead_stage.id})]")
+        self.assertEqual(f.trigger_field_ids.ids, [stage_field_id])
+
+        ## User is set
+        f.trigger = 'on_user_set'
+        self.assertEqual(f.trigger_field_ids.ids, [
+            self.env.ref('test_base_automation.field_base_automation_lead_test__user_id').id
+        ])
+        self.assertEqual(f.filter_domain, "[('user_id', '!=', False)]")
+
+        ## On archive
+        f.trigger = 'on_archive'
+        self.assertEqual(f.trigger_field_ids.ids, [
+            self.env.ref('test_base_automation.field_base_automation_lead_test__active').id
+        ])
+        self.assertEqual(f.filter_domain, "[('active', '=', False)]")
+
+        ## On unarchive
+        f.trigger = 'on_unarchive'
+        self.assertEqual(f.trigger_field_ids.ids, [
+            self.env.ref('test_base_automation.field_base_automation_lead_test__active').id
+        ])
+        self.assertEqual(f.filter_domain, "[('active', '=', True)]")
+
+        ## Tag is set to...
+        f.trigger = 'on_tag_set'
+        a_lead_tag = self.env['test_base_automation.tag'].create({'name': '*AWESOME*'})
+        f.trg_field_ref = a_lead_tag.id
+        self.assertEqual(f.filter_domain, f"[('tag_ids', 'in', [{a_lead_tag.id}])]")
+        self.assertEqual(f.trigger_field_ids.ids, [
+            self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
+        ])
+
+        automation = f.save()
+        self.assertEqual(automation.filter_pre_domain, f"[('tag_ids', 'not in', [{a_lead_tag.id}])]")
+
+    def test_automation_form_view_2(self):
+        a_lead_tag = self.env['test_base_automation.tag'].create({'name': '*AWESOME*'})
+        automation = self.env['base.automation'].create({
+            'name': 'Test Automation',
+            'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
+            'trigger': 'on_tag_set',
+            'trg_field_ref': a_lead_tag.id,
+        })
+        self.assertEqual(automation.filter_pre_domain, f"[('tag_ids', 'not in', [{a_lead_tag.id}])]")
+        self.assertEqual(automation.filter_domain, f"[('tag_ids', 'in', [{a_lead_tag.id}])]")
+        self.assertEqual(automation.trigger_field_ids.ids, [
+            self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
+        ])
+
+        # Change the trigger to "On save" will erase the domains but not the trigger fields
+        f = Form(automation)
+        f.trigger = 'on_create_or_write'
+        automation = f.save()
+        self.assertEqual(automation.filter_pre_domain, False)
+        self.assertEqual(automation.filter_domain, False)
+        self.assertEqual(automation.trigger_field_ids.ids, [
+            self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id
+        ])
+
+        # Change the domain will append each used field to the trigger fields
+        f.filter_domain = "[('priority', '=', True), ('employee', '=', False)]"
+        automation = f.save()
+        self.assertEqual(automation.filter_pre_domain, False)
+        self.assertEqual(automation.filter_domain, "[('priority', '=', True), ('employee', '=', False)]")
+        self.assertSetEqual(set(automation.trigger_field_ids.ids), {
+            self.env.ref('test_base_automation.field_base_automation_lead_test__tag_ids').id,
+            self.env.ref('test_base_automation.field_base_automation_lead_test__priority').id,
+            self.env.ref('test_base_automation.field_base_automation_lead_test__employee').id,
+        })
+
+        # Change the trigger fields will not change the domain
+        f.trigger_field_ids.clear()
+        automation = f.save()
+        self.assertEqual(automation.filter_pre_domain, False)
+        self.assertEqual(automation.filter_domain, "[('priority', '=', True), ('employee', '=', False)]")
+        self.assertEqual(automation.trigger_field_ids.ids, [])
 
     def test_inversion(self):
         """ If a stored field B depends on A, an update to the trigger for A
