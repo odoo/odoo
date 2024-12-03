@@ -60,7 +60,7 @@ class IrCron(models.Model):
     # that would cause database wake-up even if the database has not been
     # loaded yet or was already unloaded (e.g. 'force_db_wakeup' or something)
     # See also odoo.cron
-
+    _name = 'ir.cron'
     _order = 'cron_name'
     _description = 'Scheduled Actions'
     _allow_sudo_commands = False
