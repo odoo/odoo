@@ -693,7 +693,7 @@ publicWidget.registry.CarouselSingleScrollMode = publicWidget.Widget.extend({
     disabledInEditableMode: false,
     events: {
         "slide.bs.carousel": "_onSlide",
-        "slid.bs.carousel": "_onSlideEnd",
+        "slid.bs.carousel": "_onSlid",
     },
 
     /**
@@ -702,15 +702,15 @@ publicWidget.registry.CarouselSingleScrollMode = publicWidget.Widget.extend({
     start() {
         this.carouselInnerEl = this.el.querySelector(".carousel-inner");
         this.wrap = this.el.getAttribute("data-bs-wrap") === "true";
+        this.itemsPerSlide = parseInt(this.el.dataset.itemsPerSlide) || 4;
+        this._loadPrevItemsImages();
+        this._loadNextItemsImages();
+
         return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
     // Handlers
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    // Private
     //--------------------------------------------------------------------------
 
     /**
@@ -720,17 +720,20 @@ publicWidget.registry.CarouselSingleScrollMode = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onSlide(ev){
+    _onSlide(ev) {
+        if(! this._isSlideLoaded(ev.direction)){
+            ev.preventDefault();
+            return
+        }
         // We need to keep the active element at the beginning of the carousel-items elements
         // This allows to have a smooth transition when the carousel is sliding
         if (ev.direction === "right" && this.wrap) {
             const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
-            this.carouselInnerEl.prepend(carouselItemsEls.pop()); // Move the last item to the beginning
+            this.carouselInnerEl.prepend(carouselItemsEls.pop());
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         }
     },
-
     /**
      * Prepare the carousel for the next sliding animation if needed
      * This method is called after a sliding animation has finished
@@ -738,17 +741,85 @@ publicWidget.registry.CarouselSingleScrollMode = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onSlideEnd(ev) {
+    _onSlid(ev) {
         // As for the _onSlide method, we need to keep the active element at the beginning of the
         // carousel-items list in the DOM. So when animation is done,
         // we move the first item (which is not active anymore) to the end
-        if (ev.direction === "left" && this.wrap) {
-            const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
-            this.carouselInnerEl.appendChild(carouselItemsEls[0]); // Move the first item to the end
-            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        if (ev.direction === "left") {
+            if (this.wrap) {
+                const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
+                this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+                this.carouselInnerEl.appendChild(carouselItemsEls[0]);
+                this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+            }
+            this._loadNextItemsImages();
+        }
+        else if (ev.direction === "right" && this.wrap){
+            this._loadPrevItemsImages();
         }
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    /**
+     * Returns if the image that will appear is loaded or not
+     *
+     * @private
+     */
+    _isSlideLoaded(dir) {
+        if (dir === "right") {
+            return Array.from(
+                this.carouselInnerEl.lastElementChild.querySelectorAll("img")
+            ).every(img => img.complete);
+        }
+        if (dir === "left") {
+            return Array.from(
+                this.carouselInnerEl.children[
+                    Math.min(this.itemsPerSlide + 1, this.carouselInnerEl.children.length-1)
+                    ].querySelectorAll("img")
+            ).every(img => img.complete);
+        }
+    },
+    /**
+     * Load images of the carousel-item necessary for the 'prev' animation.
+     *
+     * @private
+     */
+    _loadPrevItemsImages(nItemsToLoad = 1) {
+        const startIndex = Math.max(0, this.carouselInnerEl.children.length - nItemsToLoad);
+        const prevItemsToLoad= Array.from(this.carouselInnerEl.children).slice(startIndex, this.carouselInnerEl.children.length);
+        this._loadItemImages(prevItemsToLoad.reverse());
+    },
+    /**
+     * Load images of the carousel-item necessary for the 'next' animation.
+     *
+     * @private
+     */
+    _loadNextItemsImages(nItemsToLoad = 1) {
+        const endIndex = Math.min((this.itemsPerSlide + nItemsToLoad +1), this.carouselInnerEl.children.length);
+        const nextItemsToLoad = Array.from(this.carouselInnerEl.children).slice(this.itemsPerSlide, endIndex);
+        this._loadItemImages(nextItemsToLoad);
+    },
+    /**
+     * Load images of the carousel-item to enhance sliding animations.
+     *
+     * @private
+     */
+    _loadItemImages(itemsToLoad) {
+        // If the images in an item are not loaded yet due to `loading="lazy"`
+        // and they come into the viewport, the animation may break.
+        // To prevent this, we force images that are likely to come into the
+        // viewport to be loaded eagerly.
+        for (let carouselItemEl of itemsToLoad) {
+            if (carouselItemEl) {
+                carouselItemEl.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    img.setAttribute('loading', 'eager');
+                });
+            }
+        }
+    },
+
 })
 
 registry.Parallax = Animation.extend({
