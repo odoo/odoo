@@ -300,8 +300,6 @@
             ('remove', 'website/static/src/snippets/**/000.js'),
             ('remove', 'website/static/src/snippets/**/options.js'),
             'website/static/src/snippets/**/*.xml',
-            'website/static/src/snippets/s_dynamic_snippet_carousel/000.js',
-            'website/static/src/snippets/s_dynamic_snippet_carousel/000.xml',
             'website/static/src/snippets/s_embed_code/000.js',
             'website/static/src/snippets/s_image_gallery/000.js',
             'website/static/src/snippets/s_searchbar/000.js',

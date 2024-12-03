@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { DynamicSnippetCarousel } from "@website/snippets/s_dynamic_snippet_carousel/000";
+import { DynamicSnippetCarousel } from "@website/snippets/s_dynamic_snippet_carousel/dynamic_snippet_carousel";
 
 export class DynamicSnippetProducts extends DynamicSnippetCarousel {
     static selector = ".s_dynamic_snippet_products";
