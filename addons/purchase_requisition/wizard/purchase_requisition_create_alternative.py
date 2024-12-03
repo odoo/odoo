@@ -62,15 +62,21 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             'origin': self.origin_po_id.origin,
         }
         if self.copy_products and self.origin_po_id:
-            vals['order_line'] = [Command.create(self._get_alternative_line_value(line)) for line in self.origin_po_id.order_line]
+            product_tmpl_ids_with_description = set(self.env['product.supplierinfo'].search_fetch([
+                ('product_tmpl_id', 'in', self.origin_po_id.order_line.product_id.product_tmpl_id.ids),
+                ('partner_id', '=', self.partner_id.id),
+                '|', ('product_code', '!=', False), ('product_name', '!=', False)
+            ], ['product_tmpl_id']).product_tmpl_id.ids)
+            vals['order_line'] = [Command.create(self._get_alternative_line_value(line, product_tmpl_ids_with_description)) for line in self.origin_po_id.order_line]
         return vals
 
     @api.model
-    def _get_alternative_line_value(self, order_line):
+    def _get_alternative_line_value(self, order_line, product_tmpl_ids_with_description):
+        has_product_description = order_line.product_id.product_tmpl_id.id in product_tmpl_ids_with_description
         return {
             'product_id': order_line.product_id.id,
             'product_qty': order_line.product_qty,
             'product_uom_id': order_line.product_uom_id.id,
             'display_type': order_line.display_type,
-            **({'name': order_line.name} if order_line.display_type in ('line_section', 'line_note') else {}),
+            **({'name': order_line.name} if order_line.display_type in ('line_section', 'line_note') or not has_product_description else {}),
         }
