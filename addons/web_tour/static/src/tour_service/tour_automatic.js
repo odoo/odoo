@@ -106,6 +106,9 @@ export class TourAutomatic {
             transitionConfig.disabled = false;
             tourState.clear();
             pointer.stop();
+            //No need to catch error yet.
+            window.addEventListener("error", (ev) => ev.preventDefault());
+            window.addEventListener("unhandledrejection", (ev) => ev.preventDefault());
         };
 
         this.macro = new Macro({
