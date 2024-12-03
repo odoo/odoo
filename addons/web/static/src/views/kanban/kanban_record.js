@@ -304,12 +304,8 @@ export class KanbanRecord extends Component {
         const { archInfo, openRecord, deleteRecord, record, archiveRecord } = this.props;
         const { type } = params;
         switch (type) {
-            // deprecated, records are always in edit mode in form views now, use "open" instead
-            case "edit": {
-                return openRecord(record, { mode: "edit" });
-            }
             case "open": {
-                return openRecord(record);
+                return openRecord(record, { mode: "edit" });
             }
             case "archive": {
                 return archiveRecord(record, true);
