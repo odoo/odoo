@@ -31,8 +31,7 @@ export class ConfirmationPage extends Component {
                 setTimeout(async () => {
                     try {
                         await this.printer.print(OrderReceipt, {
-                            data: this.selfOrder.orderExportForPrinting(this.confirmedOrder),
-                            formatCurrency: this.selfOrder.formatMonetary.bind(this.selfOrder),
+                            order: this.confirmedOrder,
                         });
                         if (!this.selfOrder.has_paper) {
                             this.updateHasPaper(true);
