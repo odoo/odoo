@@ -230,7 +230,7 @@ export class MoveNodePlugin extends Plugin {
         }
 
         this.moveWidget = this.document.createElement("div");
-        this.moveWidget.className = "oe-sidewidget-move fa fa-sort";
+        this.moveWidget.className = "oe-sidewidget-move fa fa-grip-vertical";
         this.widgetContainer.append(this.moveWidget);
 
         let moveWidgetOffsetTop = 0;
