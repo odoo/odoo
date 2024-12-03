@@ -19,7 +19,6 @@ import { toInterpolatedStringExpression, ViewCompiler } from "@web/views/view_co
 const ACTION_TYPES = ["action", "object"];
 const SPECIAL_TYPES = [
     ...ACTION_TYPES,
-    "edit",
     "open",
     "delete",
     "url",

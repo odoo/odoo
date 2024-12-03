@@ -5261,7 +5261,7 @@ test("clicking on a link triggers correct event", async () => {
             <kanban>
                 <templates>
                     <t t-name="card">
-                        <a type="edit">Edit</a>
+                        <a type="open">Edit</a>
                     </t>
                 </templates>
             </kanban>`,
