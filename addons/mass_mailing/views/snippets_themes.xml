@@ -339,9 +339,9 @@ after backport. They will now be removed in master.
     <xpath expr="//div[hasclass('o_we_image_options')]" position="replace">
         <div data-selector="span.fa, i.fa, img">
             <we-select string="Alignment" data-state-to-first-class="true">
-                <we-button data-select-class="float-start" title="Align Left">Left</we-button>
-                <we-button data-select-class="" title="Align Center">Center</we-button>
-                <we-button data-select-class="float-end" title="Align Right">Right</we-button>
+                <we-button data-select-class="me-auto float-start" title="Align Left">Left</we-button>
+                <we-button data-select-class="mx-auto d-block" title="Align Center">Center</we-button>
+                <we-button data-select-class="ms-auto float-end" title="Align Right">Right</we-button>
             </we-select>
 
             <t t-call="mass_mailing.snippet_options_border_line_widgets">
