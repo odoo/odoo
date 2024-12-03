@@ -1000,7 +1000,7 @@ class expression(object):
                 and field.index == 'btree_not_null'
                 and not isinstance(right, (SQL, Query))
                 and not (field.type in ('datetime', 'date') and len(path) > 1)  # READ_GROUP_NUMBER_GRANULARITY is not supported
-                and model.env['ir.default']._evaluate_condition_with_fallback(model._name, leaf) is False
+                and model.env['ir.default']._evaluate_condition_with_fallback(model._name, *leaf) is False
             ):
                 push('&', model, alias)
                 sql_col_is_not_null = SQL('%s.%s IS NOT NULL', SQL.identifier(alias), SQL.identifier(field.name))
@@ -1146,8 +1146,7 @@ class expression(object):
                 if operator == 'any':
                     push((left, 'in', right_ids), model, alias)
                 else:
-                    for dom_leaf in ('|', (left, 'not in', right_ids), (left, '=', False)):
-                        push(dom_leaf, model, alias)
+                    push((left, 'not in', right_ids), model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
             elif operator in ('any', 'not any') and field.type in ('many2many', 'one2many'):
@@ -1354,8 +1353,7 @@ class expression(object):
                         operator = dict_op[operator]
                     if operator in NEGATIVE_TERM_OPERATORS:
                         res_ids = comodel._search([('display_name', TERM_OPERATORS_NEGATION[operator], right)])
-                        for dom_leaf in ('|', (left, 'not in', res_ids), (left, '=', False)):
-                            push(dom_leaf, model, alias)
+                        push((left, 'not in', res_ids), model, alias)
                     else:
                         res_ids = comodel._search([('display_name', operator, right)])
                         push((left, 'in', res_ids), model, alias)
@@ -1365,28 +1363,9 @@ class expression(object):
                     push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
             # -------------------------------------------------
-            # BINARY FIELDS STORED IN ATTACHMENT
-            # -> check for null only
-            # -------------------------------------------------
-
-            elif field.type == 'binary' and field.attachment:
-                if operator in ('=', '!=') and not right:
-                    sub_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    sql = SQL(
-                        "(SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s)",
-                        model._name, left,
-                    )
-                    push(('id', sub_op, sql), model, alias)
-                else:
-                    _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
-                                  field.string, left, operator, reprlib.repr(right))
-                    push(TRUE_LEAF, model, alias)
-
-            # -------------------------------------------------
             # OTHER FIELDS
             # -> datetime fields: manage time part of the datetime
             #    column when it is not there
-            # -> manage translatable fields
             # -------------------------------------------------
 
             else:
@@ -1408,34 +1387,6 @@ class expression(object):
                     else:
                         push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
-                elif field.translate and (isinstance(right, str) or right is False) and left == field.name and \
-                    self._has_trigram and field.index == 'trigram' and operator in ('=', 'like', 'ilike', '=like', '=ilike'):
-                    right = right or ''
-                    sql_operator = SQL_OPERATORS[operator]
-                    need_wildcard = operator in WILDCARD_OPERATORS
-
-                    if need_wildcard and not right:
-                        push_result(SQL("FALSE") if operator in NEGATIVE_TERM_OPERATORS else SQL("TRUE"))
-                        continue
-                    push_result(model._condition_to_sql(alias, left, operator, right, self.query))
-
-                    if not need_wildcard:
-                        right = field.convert_to_column(right, model, validate=False)
-
-                    # a prefilter using trigram index to speed up '=', 'like', 'ilike'
-                    # '!=', '<=', '<', '>', '>=', 'in', 'not in', 'not like', 'not ilike' cannot use this trick
-                    if operator == '=':
-                        _right = value_to_translated_trigram_pattern(right)
-                    else:
-                        _right = pattern_to_translated_trigram_pattern(right)
-
-                    if _right != '%':
-                        # combine both generated SQL expressions (above and below) with an AND
-                        push('&', model, alias)
-                        sql_column = SQL('%s.%s', SQL.identifier(alias), SQL.identifier(field.name))
-                        indexed_value = self._unaccent(SQL("jsonb_path_query_array(%s, '$.*')::text", sql_column))
-                        _sql_operator = SQL('LIKE') if operator == '=' else sql_operator
-                        push_result(SQL("%s %s %s", indexed_value, _sql_operator, self._unaccent(SQL("%s", _right))))
                 else:
                     push_result(model._condition_to_sql(alias, left, operator, right, self.query))
 
