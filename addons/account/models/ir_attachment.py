@@ -1,6 +1,7 @@
-from odoo import api, models
+from odoo import models
 from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
 
+import contextlib
 from lxml import etree
 from struct import error as StructError
 import io
@@ -25,145 +26,113 @@ class IrAttachment(models.Model):
     # EDI
     # -------------------------------------------------------------------------
 
-    def _decode_edi_xml(self, filename, content):
-        """Decodes an xml into a list of one dictionary representing an attachment.
-        :returns:           A list with a dictionary.
+    def _unwrap_pdf(self, content, filename):
+        """ Unwrap any embedded files that can be found in the given PDF.
+
+        :param content: The bytes content of the PDF.
+        :param filename: The filename of the PDF (used for logging).
+
+        :return: a list of tuples (content, filename), one for each embedded file.
         """
-        try:
-            xml_tree = etree.fromstring(content)
-        except Exception as e:
-            _logger.info('Error when reading the xml file "%s": %s', filename, e)
-            return []
+        with io.BytesIO(content) as buffer:
+            try:
+                pdf_reader = OdooPdfFileReader(buffer, strict=False)
+            except Exception as e:
+                # Malformed pdf
+                _logger.info('Error when reading the pdf file "%s": %s', filename, e)
+                return []
 
-        to_process = []
-        if xml_tree is not None:
-            to_process.append({
-                'attachment': self,
-                'filename': filename,
-                'content': content,
-                'xml_tree': xml_tree,
-                'sort_weight': 10,
-                'type': 'xml',
-            })
-        return to_process
+            # Process embedded files.
+            try:
+                return pdf_reader.getAttachments()
 
-    def _decode_edi_pdf(self, filename, content):
-        """Decodes a pdf and unwrap sub-attachment into a list of dictionary each representing an attachment.
-        :returns:           A list of dictionary for each attachment.
+            except (NotImplementedError, StructError, PdfReadError) as e:
+                _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", filename, e)
+                return []
+
+    def _identify_and_unwrap_file(self, file_data):
+        """ Identify the provided file and extract any sub-files.
+
+        If the type is identified, will set the 'type' key on `file_data`.
+
+        :param file_data: a dict representing a file to be identified and unwrapped, with the following keys:
+            * filename:                  The name of the attachment.
+            * content:                   The content of the attachment.
+            * attachment:                The associated ir.attachment if any
+            * xml_tree:                  (optional) The tree of the xml if the file is an xml.
+            * root_type:                 (optional) The type of the parent file if this is a sub-file.
+
+        :return: a list of `file_data` dicts, one for each identified/extracted file,
+                 with the same keys as `file_data` and the following additional keys:
+            * type:         (optional) The type of the file if identified.
+            * priority:     (optional) The priority with which the file should be decoded.
         """
-        try:
-            buffer = io.BytesIO(content)
-            pdf_reader = OdooPdfFileReader(buffer, strict=False)
-        except Exception as e:
-            # Malformed pdf
-            _logger.info('Error when reading the pdf file "%s": %s', filename, e)
-            return []
+        # If the file is a PDF, unwrap any embedded attachments.
+        if 'pdf' in file_data['attachment'].mimetype or file_data['filename'].endswith('.pdf'):
+            embedded_files_data = []
+            for embedded_filename, embedded_content in self._unwrap_pdf(file_data):
+                embedded_file_data = {
+                    'filename': embedded_filename,
+                    'content': embedded_content,
+                    'root_type': 'pdf',
+                    'attachment': file_data['attachment'],
+                }
+                with contextlib.suppress(etree.ParseError):
+                    embedded_file_data['xml_tree'] = etree.fromstring(embedded_content)
+                embedded_files_data += self._identify_and_unwrap_file(embedded_file_data)
+            return [{**file_data, 'type': 'pdf'}, *embedded_files_data]
 
-        # Process embedded files.
-        to_process = []
-        try:
-            for xml_name, xml_content in pdf_reader.getAttachments():
-                embedded_files = self.env['ir.attachment']._decode_edi_xml(xml_name, xml_content)
-                for file_data in embedded_files:
-                    file_data['sort_weight'] += 1
-                    file_data['originator_pdf'] = self
-                to_process.extend(embedded_files)
-        except (NotImplementedError, StructError, PdfReadError) as e:
-            _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", filename, e)
+        # If the file didn't match any known format, we just pass it on as-is.
+        return [file_data]
 
-        # Process the pdf itself.
-        to_process.append({
-            'filename': filename,
-            'content': content,
-            'pdf_reader': pdf_reader,
-            'attachment': self,
-            'on_close': buffer.close,
-            'sort_weight': 20,
-            'type': 'pdf',
-        })
+    def _is_xml(self):
+        # XML attachments received by mail have a 'text/plain' mimetype (cfr. context key:
+        # 'attachments_mime_plainxml'). Therefore, if content start with '<?xml', it is considered as XML.
+        return (
+            self.name.endswith('.xml')
+            or self.mimetype.endswith('/xml')
+            or 'text/plain' in self.mimetype and (self.raw and self.raw.startswith(b'<?xml'))
+        )
 
-        return to_process
+    def _identify_and_unwrap_edi_attachments(self):
+        """ Identify and unwrap the ir.attachments in `self` into a list of dictionaries, each representing an file.
 
-    def _decode_edi_binary(self, filename, content):
-        """Decodes any file into a list of one dictionary representing an attachment.
-        This is a fallback for all files that are not decoded by other methods.
-        :returns:           A list with a dictionary.
+        :returns:                    A list of dictionaries for each file or sub-file.
+        * filename:                  The name of the file.
+        * content:                   The content of the file.
+        * attachment:                The associated ir.attachment.
+        * xml_tree:                  (optional) The tree of the xml if the file is an xml.
+        * type:                      (optional) The type of document, if it was identified.
+        * root_type:                 (optional) The type of the top-level file (if this is a sub-file) if identified.
+        * priority:                  (optional) The priority with which a file should be applied on a record.
         """
-        return [{
-            'filename': filename,
-            'content': content,
-            'attachment': self,
-            'sort_weight': 100,
-            'type': 'binary',
-        }]
-
-    @api.model
-    def _get_edi_supported_formats(self):
-        """Get the list of supported formats.
-        This function is meant to be overriden to add formats.
-
-        :returns:           A list of dictionary.
-
-        * format:           Optional but helps debugging.
-                            There are other methods that require the attachment
-                            to be an XML other than the standard one.
-        * check:            Function to be called on the attachment to pre-check if decoding will work.
-        * decoder:          Function to be called on the attachment to unwrap it.
-        """
-
-        def is_xml(attachment):
-            # XML attachments received by mail have a 'text/plain' mimetype (cfr. context key:
-            # 'attachments_mime_plainxml'). Therefore, if content start with '<?xml', or if the filename ends with
-            # '.xml', it is considered as XML.
-            is_text_plain_xml = 'text/plain' in attachment.mimetype and (attachment.raw and attachment.raw.startswith(b'<?xml') or attachment.name.endswith('.xml'))
-            return attachment.mimetype.endswith('/xml') or is_text_plain_xml
-
-        return [
-            {
-                'format': 'pdf',
-                'check': lambda attachment: 'pdf' in attachment.mimetype,
-                'decoder': self._decode_edi_pdf,
-            },
-            {
-                'format': 'xml',
-                'check': is_xml,
-                'decoder': self._decode_edi_xml,
-            },
-            {
-                'format': 'binary',
-                'check': lambda attachment: True,
-                'decoder': self._decode_edi_binary,
-            },
-        ]
-
-    def _unwrap_edi_attachments(self):
-        """Decodes ir.attachment and unwrap sub-attachment into a sorted list of
-        dictionary each representing an attachment.
-
-        :returns:           A list of dictionary for each attachment.
-        * filename:         The name of the attachment.
-        * content:          The content of the attachment.
-        * type:             The type of the attachment.
-        * xml_tree:         The tree of the xml if type is xml.
-        * pdf_reader:       The pdf_reader if type is pdf.
-        * attachment:       The associated ir.attachment if any
-        * sort_weight:      The associated weigth used for sorting the arrays
-        """
-        to_process = []
-
+        files_data = []
         for attachment in self:
-            supported_formats = attachment._get_edi_supported_formats()
-            for supported_format in supported_formats:
-                if supported_format['check'](attachment):
-                    to_process += supported_format['decoder'](attachment.name, attachment.raw)
+            file_data = {
+                'filename': attachment.name,
+                'content': attachment.raw,
+                'attachment': attachment,
+            }
 
-        to_process.sort(key=lambda x: x['sort_weight'])
+            # Optimization to already have the etree if the doc is in an XML format
+            if attachment._is_xml():
+                try:
+                    file_data['xml_tree'] = etree.fromstring(attachment.raw)
+                except etree.ParseError as e:
+                    _logger.info('Error when reading the xml file "%s": %s', attachment.name, e)
 
-        return to_process
+            files_data += self._identify_and_unwrap_file(file_data)
+
+        for file_data in files_data:
+            if 'type' in file_data and 'root_type' not in file_data:
+                file_data['root_type'] = file_data['type']
+
+        # Sort by priority
+        files_data.sort(key=lambda x: x.get('priority', 0), reverse=True)
+
+        return files_data
 
     def _post_add_create(self, **kwargs):
-        move_attachments = self.filtered(lambda attachment: attachment.res_model == 'account.move')
-        moves_per_id = self.env['account.move'].browse([attachment.res_id for attachment in move_attachments]).grouped('id')
-        for attachment in move_attachments:
-            moves_per_id[attachment.res_id]._check_and_decode_attachment(attachment)
+        for move_id, attachments in self.filtered(lambda attachment: attachment.res_model == 'account.move').grouped('res_id').items():
+            self.env['account.move'].browse(move_id)._extend_with_attachments(attachments)
         super()._post_add_create(**kwargs)

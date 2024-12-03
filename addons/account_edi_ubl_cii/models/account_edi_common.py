@@ -277,6 +277,12 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        if not (
+            invoice._check_is_draft()
+            and invoice._check_has_no_invoice_lines()
+        ):
+            return
+
         tree = file_data['xml_tree']
 
         # Not able to decode the move_type from the xml.
@@ -326,7 +332,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         attachments = self._import_attachments(invoice, tree)
         if attachments:
-            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
+            invoice.message_post(attachment_ids=attachments.ids)
 
         return True
 
