@@ -1345,6 +1345,13 @@ class ResUsers(models.Model):
             arch = etree.tostring(tree)
         return arch, models
 
+    def _alert_untrusted_location(self):
+        """Deal with new untrusted geoip location detected during login.
+
+        To be overriden.
+        """
+        pass
+
 
 ResUsersPatchedInTest = ResUsers
 
