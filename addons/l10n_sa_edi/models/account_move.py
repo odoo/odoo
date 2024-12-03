@@ -213,7 +213,7 @@ class AccountMove(models.Model):
             """) % (_('The invoice was accepted by ZATCA, but returned warnings. Please, check the response below:'),
                     f"[{status_code}] " if status_code else "",
                     Markup("<br/>").join([Markup("<b>%s</b> : %s") % (m['code'], m['message']) for m in response_data['validationResults']['warningMessages']]))
-        self.with_context(no_new_invoice=True).message_post(body=Markup("""
+        self.message_post(body=Markup("""
                 <div role='alert' class='alert alert-%s'>
                     <h4 class='alert-heading'>%s</h4>%s
                 </div>

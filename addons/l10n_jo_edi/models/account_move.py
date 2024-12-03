@@ -236,7 +236,7 @@ class AccountMove(models.Model):
         else:
             self.l10n_jo_edi_error = False
             self.l10n_jo_edi_state = 'sent'
-            self.with_context(no_new_invoice=True).message_post(
+            self.message_post(
                 body=_("E-invoice (JoFotara) submitted successfully."),
                 attachment_ids=self.l10n_jo_edi_xml_attachment_id.ids,
             )

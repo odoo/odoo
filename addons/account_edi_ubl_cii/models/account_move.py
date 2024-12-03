@@ -1,10 +1,10 @@
-import binascii
-
-from base64 import b64decode
 from contextlib import suppress
+from base64 import b64decode
+import binascii
 from lxml import etree
 
 from odoo import _, api, fields, models, Command
+from odoo.tools.mimetypes import guess_mimetype
 
 
 class AccountMove(models.Model):
@@ -85,28 +85,59 @@ class AccountMove(models.Model):
     # EDI
     # -------------------------------------------------------------------------
 
-    @api.model
-    def _get_ubl_cii_builder_from_xml_tree(self, tree):
-        customization_id = tree.find('{*}CustomizationID')
-        if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
-            return self.env['account.edi.xml.cii']
-        ubl_version = tree.find('{*}UBLVersionID')
-        if ubl_version is not None:
-            if ubl_version.text == '2.0':
-                return self.env['account.edi.xml.ubl_20']
-            if ubl_version.text in ('2.1', '2.2', '2.3'):
-                return self.env['account.edi.xml.ubl_21']
-        if customization_id is not None:
-            if 'xrechnung' in customization_id.text:
-                return self.env['account.edi.xml.ubl_de']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
-                return self.env['account.edi.xml.ubl_nl']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0':
-                return self.env['account.edi.xml.ubl_a_nz']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0':
-                return self.env['account.edi.xml.ubl_sg']
-            if 'urn:cen.eu:en16931:2017' in customization_id.text:
-                return self.env['account.edi.xml.ubl_bis3']
+    def _get_import_file_type(self, file_data):
+        """ Identify UBL files. """
+        # EXTENDS 'account'
+        if (tree := file_data['xml_tree']) is not None:
+            if etree.QName(tree).localname == 'AttachedDocument':
+                return 'account.edi.xml.ubl.attached_document'
+            if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
+                return 'account.edi.xml.cii'
+            if ubl_version := tree.findtext('{*}UBLVersionID'):
+                if ubl_version == '2.0':
+                    return 'account.edi.xml.ubl_20'
+                if ubl_version in ('2.1', '2.2', '2.3'):
+                    return 'account.edi.xml.ubl_21'
+            if customization_id := tree.findtext('{*}CustomizationID'):
+                if 'xrechnung' in customization_id:
+                    return 'account.edi.xml.ubl_de'
+                if customization_id == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
+                    return 'account.edi.xml.ubl_nl'
+                if customization_id == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0':
+                    return 'account.edi.xml.ubl_a_nz'
+                if customization_id == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0':
+                    return 'account.edi.xml.ubl_sg'
+                if 'urn:cen.eu:en16931:2017' in customization_id:
+                    return 'account.edi.xml.ubl_bis3'
+
+        return super()._get_import_file_type(file_data)
+
+    def _unwrap_attachment(self, file_data, recurse=True):
+        """ Unwrap UBL AttachedDocument files, which are wrappers around an inner file. """
+
+        if file_data['import_file_type'] != 'account.edi.xml.ubl.attached_document':
+            return super()._unwrap_attachment(file_data, recurse)
+
+        content, tree = self._ubl_parse_attached_document(file_data['xml_tree'])
+        if not content:
+            return []
+
+        embedded_file_data = {
+            'name': file_data['name'],
+            'raw': content,
+            'xml_tree': tree,
+            'mimetype': guess_mimetype(content),
+            'attachment': None,
+            'origin_attachment': file_data['origin_attachment'],
+            'origin_import_file_type': file_data['origin_import_file_type'],
+        }
+        embedded_file_data['import_file_type'] = self._get_import_file_type(embedded_file_data)
+
+        embedded = [embedded_file_data]
+        if recurse:
+            embedded.extend(self._unwrap_attachments(embedded, recurse=True))
+
+        return embedded
 
     @api.model
     def _ubl_parse_attached_document(self, tree):
@@ -121,14 +152,14 @@ class AccountMove(models.Model):
         """
         attachment_node = tree.find('{*}Attachment')
         if attachment_node is None:
-            return tree
+            return '', None
 
         attachment_binary_data = attachment_node.find('./{*}EmbeddedDocumentBinaryObject')
         if attachment_binary_data is not None \
                 and attachment_binary_data.attrib.get('mimeCode') in ('application/xml', 'text/xml'):
             with suppress(etree.XMLSyntaxError, binascii.Error):
-                text = b64decode(attachment_binary_data.text)
-                return etree.fromstring(text)
+                content_1 = b64decode(attachment_binary_data.text)
+                return content_1, etree.fromstring(content_1)
 
         external_reference = attachment_node.find('./{*}ExternalReference')
         if external_reference is not None:
@@ -136,20 +167,32 @@ class AccountMove(models.Model):
             mime_code = external_reference.findtext('./{*}MimeCode')
 
             if description and mime_code in ('application/xml', 'text/xml'):
+                content_2 = description.encode('utf-8')
                 with suppress(etree.XMLSyntaxError):
-                    return etree.fromstring(description.encode('utf-8'))
-        return tree
+                    return content_2, etree.fromstring(content_2)
+
+        # If neither EmbeddedDocumentBinaryObject nor ExternalReference/Description can be decoded as an XML,
+        # fall back on the contents of EmbeddedDocumentBinaryObject.
+        return content_1, None
 
     def _get_edi_decoder(self, file_data, new=False):
-        # EXTENDS 'account'
-        if file_data['type'] == 'xml':
-            if etree.QName(file_data['xml_tree']).localname == 'AttachedDocument':
-                file_data['xml_tree'] = self._ubl_parse_attached_document(file_data['xml_tree'])
-            ubl_cii_xml_builder = self._get_ubl_cii_builder_from_xml_tree(file_data['xml_tree'])
-            if ubl_cii_xml_builder is not None:
-                return ubl_cii_xml_builder._import_invoice_ubl_cii
+        def _get_child_models(model):
+            child_models = {model}
+            for child in self.env.registry[model]._inherit_children:
+                child_models.update(_get_child_models(child))
+            return child_models
 
-        return super()._get_edi_decoder(file_data, new=new)
+        importable_models = [
+            *_get_child_models('account.edi.xml.ubl_20'),
+            *_get_child_models('account.edi.xml.cii'),
+        ]
+
+        if file_data['import_file_type'] in importable_models:
+            return {
+                'priority': 20,
+                'decoder': self.env[file_data['import_file_type']]._import_invoice_ubl_cii,
+            }
+        return super()._get_edi_decoder(file_data, new)
 
     def _need_ubl_cii_xml(self, ubl_cii_format):
         self.ensure_one()

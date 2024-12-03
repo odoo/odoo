@@ -736,7 +736,7 @@ Customs form No. 1, 9, etc for Vendor Bills""",
                 move.line_ids._check_tax_lock_date()
                 move.button_cancel()
             except UserError as e:
-                move.with_context(no_new_invoice=True).message_post(
+                move.message_post(
                     body=_(
                         'The invoice has been canceled on MyInvois, '
                         'But the cancellation in Odoo failed with error: %(error)s\n'
