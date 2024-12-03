@@ -51,16 +51,9 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
         if not partner.vat and partner.company_registry:
             # Use company_registry (Company ID) as the VAT replacement
-            vals_list = [{'company_id': partner.company_registry, 'tax_scheme_vals': {'id': 'VAT'}}]
-
-        # The validator for CIUS-RO (which extends the validations from the BIS3 Schematron) asserts a rule where:
-        # [BR-CO-09] if the PartyTaxScheme/TaxScheme/ID == 'VAT', CompanyID must start with a country code prefix.
-        # In Romania however, the CompanyID can be with or without country code prefix and still be perfectly valid.
-        # We have to handle their cases by changing the TaxScheme/ID to 'something other than VAT',
-        # preventing the trigger of the rule and allow Romanian companies without prefixed VAT to use CIUS-RO.
-        for vals in vals_list:
-            if partner.country_code == 'RO' and not (vals['company_id'] or '').upper().startswith('RO'):
-                vals['tax_scheme_vals']['id'] = 'NO_VAT'
+            for vals in vals_list:
+                tax_scheme_id = 'VAT' if partner.company_registry[:2].isalpha() else 'NOT_EU_VAT'
+                vals.update({'company_id': partner.company_registry, 'tax_scheme_vals': {'id': tax_scheme_id}})
 
         return vals_list
 
