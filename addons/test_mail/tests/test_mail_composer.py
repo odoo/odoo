@@ -1260,7 +1260,7 @@ class TestComposerInternals(TestMailComposer):
         # schedule a message in mono-comment mode
         attachment_data = self._generate_attachments_data(1, 'mail.compose.message', 0)[0]
         composer = self.env['mail.compose.message'].with_context(
-            self._get_web_context(self.test_record)
+            self._get_web_context(self.test_record, False, additional_ctx_key=True)
             ).create({
                 'body': '<p>Test Body</p>',
                 'subject': 'Test Subject',
@@ -1289,6 +1289,7 @@ class TestComposerInternals(TestMailComposer):
         self.assertEqual(scheduled_message.author_id, self.partner_employee)
         self.assertEqual(scheduled_message.partner_ids, self.test_record.customer_id)
         self.assertFalse(scheduled_message.is_note)
+        self.assertEqual(scheduled_message.send_context, {'additional_ctx_key': True})
         # attachment transfer
         self.assertEqual(composer_attachment.res_model, scheduled_message._name)
         self.assertEqual(composer_attachment.res_id, scheduled_message.id)

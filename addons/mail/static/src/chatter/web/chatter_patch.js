@@ -331,6 +331,8 @@ patch(Chatter.prototype, {
     onScheduledMessageChanged(thread) {
         // reload messages as well as a scheduled message could have been sent
         this.load(thread, ["scheduledMessages", "messages"]);
+        // sending a message could trigger another action (eg. move so to quotation sent)
+        this.reloadParentView();
     },
 
     onSuggestedRecipientAdded(thread) {
