@@ -54,6 +54,9 @@ class MailScheduledMessage(models.Model):
     # notify parameters (email_from, mail_server_id, force_email_lang,...)
     notification_parameters = fields.Text('Notification parameters')
 
+    # context used when posting the message to trigger some actions (eg. change so state when sending quotation)
+    send_context = fields.Json('Sending Context')
+
     @api.constrains('model')
     def _check_model(self):
         if not all(model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']) for model in self.mapped("model")):
@@ -184,7 +187,9 @@ class MailScheduledMessage(models.Model):
                     raise
                 _logger.info("Posting of scheduled message %s failed: user %s cannot post on the record", scheduled_message.id, message_creator.id)
                 continue
-            self.env[scheduled_message.model].browse(scheduled_message.res_id).with_user(message_creator).message_post(
+            self.env[scheduled_message.model].browse(scheduled_message.res_id).with_context(
+                clean_context(scheduled_message.send_context or {})
+            ).with_user(message_creator).message_post(
                 attachment_ids=list(scheduled_message.attachment_ids.ids),
                 author_id=scheduled_message.author_id.id,
                 body=scheduled_message.body,
