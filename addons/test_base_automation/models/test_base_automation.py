@@ -15,6 +15,7 @@ class BaseAutomationLeadTest(models.Model):
                               ('pending', 'Pending'), ('done', 'Closed')],
                              string="Status", readonly=True, default='draft')
     active = fields.Boolean(default=True)
+    tag_ids = fields.Many2many('test_base_automation.tag')
     partner_id = fields.Many2one('res.partner', string='Partner')
     date_automation_last = fields.Datetime(string='Last Automation', readonly=True)
     employee = fields.Boolean(compute='_compute_employee_deadline', store=True)
