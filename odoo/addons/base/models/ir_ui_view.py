@@ -1603,7 +1603,7 @@ actual arch.
             if special not in ('cancel', 'save', 'add'):
                 self._raise_view_error(_("Invalid special '%(value)s' in button", value=special), node)
         elif type_:
-            if type_ == 'edit': # list_renderer, used in kanban view
+            if type_ != 'action' and type_ != 'object':
                 return
             elif not name:
                 self._raise_view_error(_("Button must have a name"), node)
