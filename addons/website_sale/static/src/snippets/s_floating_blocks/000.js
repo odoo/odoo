@@ -107,9 +107,9 @@ const FloatingBlocks = publicWidget.Widget.extend({
     _computeTransform(blockGap) {
         if (blockGap > 0) {
             const scale = Math.max(this.zoomMax, 1 - blockGap * this.snippetScaleFactor);
-            return `scale(${scale})`;
+            return `scale3d(${scale}, ${scale}, ${scale})`;
         } else {
-            return "scale(1)";
+            return "scale3d(1, 1, 1)";
         }
     },
 
