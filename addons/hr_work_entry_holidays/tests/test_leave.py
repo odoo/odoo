@@ -46,7 +46,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertFalse(work_entry_1.leave_id, "It should not be linked to the leave")
 
         leave_work_entry = self.env['hr.work.entry'].search([('leave_id', '=', leave.id)]) - work_entry_1
-        self.assertTrue(leave_work_entry.work_entry_type_id.is_leave, "It should have created a leave work entry")
+        self.assertFalse(leave_work_entry.work_entry_type_id.is_work, "It should have created a leave work entry")
         self.assertEqual(leave_work_entry[:1].state, 'conflict', "The leave work entry should conflict")
 
     def test_validate_leave_without_overlap(self):
@@ -60,7 +60,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertFalse(work_entry[:1].active, "It should have been archived")
 
         leave_work_entry = self.env['hr.work.entry'].search([('leave_id', '=', leave.id)])
-        self.assertTrue(leave_work_entry.work_entry_type_id.is_leave, "It should have created a leave work entry")
+        self.assertFalse(leave_work_entry.work_entry_type_id.is_work, "It should have created a leave work entry")
         self.assertNotEqual(leave_work_entry[:1].state, 'conflict', "The leave work entry should not conflict")
 
     def test_refuse_leave(self):
@@ -175,8 +175,8 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
     def test_split_leaves_by_entry_type(self):
         entry_type_paid, entry_type_unpaid = self.env['hr.work.entry.type'].create([
-            {'name': 'Paid leave', 'code': 'PAID', 'is_leave': True},
-            {'name': 'Unpaid leave', 'code': 'UNPAID', 'is_leave': True},
+            {'name': 'Paid leave', 'code': 'PAID', 'is_work': False},
+            {'name': 'Unpaid leave', 'code': 'UNPAID', 'is_work': False},
         ])
 
         leave_type_paid, leave_type_unpaid = self.env['hr.leave.type'].create([{

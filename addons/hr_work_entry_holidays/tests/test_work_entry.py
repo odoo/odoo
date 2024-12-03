@@ -155,7 +155,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         date_to = datetime(2023, 2, 28, 23, 59, 59)
         work_entry_type_holiday = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday',
-            'is_leave': True,
+            'is_work': False,
             'code': 'LEAVETEST500'
         })
         self.env['resource.calendar.leaves'].create({
