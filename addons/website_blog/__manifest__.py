@@ -46,6 +46,12 @@
         'web.assets_tests': [
             'website_blog/static/tests/**/*',
         ],
+        'web.assets_unit_tests': [
+            'website_blog/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_blog/static/src/snippets/s_blog_posts/000.js',
+        ],
         'web.assets_frontend': [
             'website_blog/static/src/scss/website_blog.scss',
             'website_blog/static/src/js/contentshare.js',

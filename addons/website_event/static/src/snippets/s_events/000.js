@@ -1,20 +1,20 @@
+import { registry } from "@web/core/registry";
+import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/000";
 import { groupBy } from '@web/core/utils/arrays';
-import publicWidget from '@web/legacy/js/public/public_widget';
-import DynamicSnippet from '@website/snippets/s_dynamic_snippet/000';
 
-const DynamicSnippetEvents = DynamicSnippet.extend({
+export class DynamicSnippetEvents extends DynamicSnippet {
     // While the selector has 'upcoming_snippet' in its name, it now has a filter
     // option to include ongoing events. The name is kept for backward compatibility.
-    selector: '.s_event_upcoming_snippet',
-    disabledInEditableMode: false,
+    static selector = ".s_event_upcoming_snippet";
+    // TODO Support edit mode.
+    static disabledInEditableMode = false;
 
     /**
      * @override
-     * @private
      */
-    _getSearchDomain: function () {
-        let searchDomain = this._super.apply(this, arguments);
-        const filterByTagIds = this.$el.get(0).dataset.filterByTagIds;
+    getSearchDomain() {
+        let searchDomain = super.getSearchDomain(...arguments);
+        const filterByTagIds = this.el.dataset.filterByTagIds;
         if (filterByTagIds) {
             let tagGroupedByCategory = groupBy(JSON.parse(filterByTagIds), 'category_id');
             for (const category in tagGroupedByCategory) {
@@ -23,14 +23,13 @@ const DynamicSnippetEvents = DynamicSnippet.extend({
             }
         }
         return searchDomain;
-    },
+    }
     /**
      * @override
-     * @private
      */
-    _getMainPageUrl() {
+    getMainPageUrl() {
         return "/event";
-    },
-});
+    }
+}
 
-publicWidget.registry.events = DynamicSnippetEvents;
+registry.category("website.active_elements").add("website_event.events", DynamicSnippetEvents);

@@ -1,13 +1,11 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
-import {generateGMapLink, generateGMapIframe} from '@website/js/utils';
-import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
+import { Interaction } from "@website/core/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.Map = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
-    selector: '.s_map',
+import { generateGMapLink, generateGMapIframe } from '@website/js/utils';
 
-    /**
-     * @override
-     */
+export class Map extends Interaction {
+    static selector = ".s_map";
+
     start() {
         if (!this.el.querySelector('.s_map_embedded')) {
             // The iframe is not found inside the snippet. This is probably due
@@ -18,11 +16,12 @@ publicWidget.registry.Map = publicWidget.Widget.extend(ObservingCookieWidgetMixi
             if (dataset.mapAddress) {
                 const iframeEl = generateGMapIframe();
                 this.el.querySelector('.s_map_color_filter').before(iframeEl);
-                this._manageIframeSrc(this.el, generateGMapLink(dataset));
+                this.services.website_cookies.manageIframeSrc(iframeEl, generateGMapLink(dataset));
             }
         }
-        return this._super(...arguments);
-    },
-});
+    }
+}
 
-export default publicWidget.registry.Map;
+registry
+    .category("website.active_elements")
+    .add("website.map", Map);

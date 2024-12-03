@@ -1,33 +1,31 @@
+import { Interaction } from "@website/core/interaction";
+import { registry } from "@web/core/registry";
+
 import { loadBundle } from "@web/core/assets";
-import publicWidget from "@web/legacy/js/public/public_widget";
 import weUtils from "@web_editor/js/common/utils";
 
-const ChartWidget = publicWidget.Widget.extend({
-    selector: '.s_chart',
-    disabledInEditableMode: false,
+class Chart extends Interaction {
 
-    /**
-     * @override
-     * @param {Object} parent
-     * @param {Object} options The default value of the chartbar.
-     */
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
+    static selector = '.s_chart';
+
+    setup() {
+        this.chart = null;
         this.style = window.getComputedStyle(document.documentElement);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        // Convert Theme colors to css color
+    }
+
+    async willStart() {
+        await loadBundle("web.chartjs_lib");
+    }
+
+    start() {
         const data = JSON.parse(this.el.dataset.data);
         data.datasets.forEach(el => {
             if (Array.isArray(el.backgroundColor)) {
-                el.backgroundColor = el.backgroundColor.map(el => this._convertToCssColor(el));
-                el.borderColor = el.borderColor.map(el => this._convertToCssColor(el));
+                el.backgroundColor = el.backgroundColor.map(el => this.convertToCSSColor(el));
+                el.borderColor = el.borderColor.map(el => this.convertToCSSColor(el));
             } else {
-                el.backgroundColor = this._convertToCssColor(el.backgroundColor);
-                el.borderColor = this._convertToCssColor(el.borderColor);
+                el.backgroundColor = this.convertToCSSColor(el.backgroundColor);
+                el.borderColor = this.convertToCSSColor(el.borderColor);
             }
             el.borderWidth = this.el.dataset.borderWidth;
         });
@@ -48,7 +46,6 @@ const ChartWidget = publicWidget.Widget.extend({
             type: "category",
         };
 
-        // Make chart data
         const chartData = {
             type: this.el.dataset.type,
             data: data,
@@ -75,7 +72,6 @@ const ChartWidget = publicWidget.Widget.extend({
             },
         };
 
-        // Add type specific options
         if (this.el.dataset.type === 'radar') {
             chartData.options.scales = {
                 r: radialAxis,
@@ -116,41 +112,22 @@ const ChartWidget = publicWidget.Widget.extend({
         const canvas = this.el.querySelector('canvas');
         window.Chart.Tooltip.positioners.custom = (elements, eventPosition) => eventPosition;
         this.chart = new window.Chart(canvas, chartData);
-        return this._super.apply(this, arguments);
-    },
-
-    willStart: async function () {
-        await loadBundle("web.chartjs_lib");
-    },
-    /**
-     * @override
-     * Discard all library changes to reset the state of the Html.
-     */
-    destroy: function () {
-        if (this.chart) { // The widget can be destroyed before start has completed
+        this.registerCleanup(() => {
             this.chart.destroy();
             this.el.querySelectorAll('.chartjs-size-monitor').forEach(el => el.remove());
-        }
-        this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+        });
+    }
 
     /**
-     * @private
-     * @param {string} color A css color or theme color string
-     * @returns {string} Css color
+     * @param {string} color
+     * @returns {string}
      */
-    _convertToCssColor: function (color) {
+    convertToCSSColor(color) {
         if (!color) {
             return 'transparent';
         }
         return weUtils.getCSSVariableValue(color, this.style) || color;
-    },
-});
+    }
+}
 
-publicWidget.registry.chart = ChartWidget;
-
-export default ChartWidget;
+registry.category("website.active_elements").add("website.chart", Chart);
