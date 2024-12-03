@@ -96,10 +96,6 @@ class WebClient(http.Controller):
     def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite', {'session_info': {'view_info': request.env['ir.ui.view'].get_view_info()}})
 
-    @http.route('/web/tests/legacy/mobile', type='http', auth="none")
-    def test_mobile_suite(self, mod=None, **kwargs):
-        return request.render('web.qunit_mobile_suite', {'session_info': {'view_info': request.env['ir.ui.view'].get_view_info()}})
-
     @http.route('/web/bundle/<string:bundle_name>', auth='public', methods=['GET'], readonly=True)
     def bundle(self, bundle_name, **bundle_params):
         """

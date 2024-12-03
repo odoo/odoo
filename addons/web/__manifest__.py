@@ -519,9 +519,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/legacy_tests/**/*.js',
             ('remove', 'web/static/tests/legacy/legacy_tests/helpers/**/*.js'),
         ],
-        'web.qunit_mobile_suite_tests': [
-            'web/static/tests/legacy/mobile/**/*.js',
-        ],
         'web.assets_clickbot': [
             'web/static/src/webclient/clickbot/clickbot.js',
         ],
