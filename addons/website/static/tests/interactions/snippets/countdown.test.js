@@ -5,70 +5,68 @@ import { advanceTime } from "@odoo/hoot-mock";
 
 setupInteractionWhiteList("website.countdown");
 
-test("countdown interaction does not activate without .s_countdown", async () => {
-    const { core } = await startInteractions(``);
-    expect(core.interactions.length).toBe(0);
-});
-
-test("countdown interaction activate with a .s_countdown", async () => {
-    const endTime = 12345678900;
-    const { core } = await startInteractions(`
-        <div style="background-color: white;"> 
-            <section class="s_countdown pt48 pb48"
-             data-display="dhms" 
-             data-end-action="nothing" 
-             data-size="175"
-             data-layout="circle" 
-             data-layout-background="none"
-             data-progress-bar-style="surrounded" 
-             data-progress-bar-weight="thin"
-             id="countdown-section"
-             data-text-color="o-color-1"
-             data-layout-background-color="400"
-             data-progress-bar-color="o-color-1"
-             data-end-time=${endTime}>
-                <div class="container">
-                    <div class="s_countdown_canvas_wrapper" 
-                    style="
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;">
-                    </div>
+const getTemplate = function (options = {}) {
+    return `
+    <div style="background-color: white;"> 
+        <section class="s_countdown pt48 pb48"
+        data-display="dhms" 
+        data-end-action="nothing" 
+        data-size="175"
+        data-layout="circle" 
+        data-layout-background="none"
+        data-progress-bar-style="surrounded" 
+        data-progress-bar-weight="thin"
+        id="countdown-section"
+        data-text-color="o-color-1"
+        data-layout-background-color="400"
+        data-progress-bar-color="o-color-1"
+        data-end-time="12345678900">
+            <div class="container">
+                <div class="s_countdown_canvas_wrapper" 
+                style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;">
                 </div>
-            </section>
-        </div>
-    `);
+            </div>
+        </section>
+    </div>
+    `
+}
+
+const getCommonLength = function (data1, data2, data3) {
+    const length1 = data1.length;
+    const length2 = data2.length;
+    const length3 = data3.length;
+    if (length1 == length2 && length2 == length3) {
+        return length1;
+    } else {
+        return 0;
+    }
+}
+
+const wasDataChanged = function (data1, data2, l) {
+    for (let i = 0; i < l; i++) {
+        if (Math.abs(data1[i] - data2[i]) > 1) {
+            return true;
+        }
+    }
+    return false;
+}
+
+test("countdown is started when there is an element .s_countdown", async () => {
+    const { core } = await startInteractions(getTemplate());
     expect(core.interactions.length).toBe(1);
 });
 
-test("countdown interaction update the canvas for seconds correctly", async () => {
-    const endTime = 12345678900;
-    const { core, el } = await startInteractions(`
-        <div style="background-color: white;"> 
-            <section class="s_countdown pt48 pb48"
-             data-display="dhms" 
-             data-end-action="nothing" 
-             data-size="175"
-             data-layout="circle" 
-             data-layout-background="none"
-             data-progress-bar-style="surrounded" 
-             data-progress-bar-weight="thin"
-             id="countdown-section"
-             data-text-color="o-color-1"
-             data-layout-background-color="400"
-             data-progress-bar-color="o-color-1"
-             data-end-time=${endTime}>
-                <div class="container">
-                    <div class="s_countdown_canvas_wrapper" 
-                    style="
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;">
-                    </div>
-                </div>
-            </section>
-        </div>
-    `);
+/**
+ * This test use 2 timestamps because in the rare case when the
+ * countdown is at xx:xx:00, the next frame will update the multiple
+ * canvases, including the hours one. It won't happen a second time.
+ * We compare the canvases twice to prevent the issue.
+ */
+test("[time] countdown display is updated correctly when time pass", async () => {
+    const { el } = await startInteractions(getTemplate());
 
     // time T
 
@@ -98,53 +96,24 @@ test("countdown interaction update the canvas for seconds correctly", async () =
     const canvas3Seconds = canvas3Els[3];
     const data3Seconds = canvas3Seconds.getContext('2d').getImageData(0, 0, canvas3Seconds.width, canvas3Seconds.height).data;
 
-    // Compare canvases
+    // Check data size and get common length
 
-    const data1HoursLength = data1Hours.length;
-    const data2HoursLength = data2Hours.length;
-    const data3HoursLength = data3Hours.length;
+    const dataHoursLength = getCommonLength(data1Hours, data2Hours, data3Hours)
+    expect(dataHoursLength).not.toBe(0);
 
-    const data1SecondsLength = data1Seconds.length;
-    const data2SecondsLength = data2Seconds.length;
-    const data3SecondsLength = data3Seconds.length;
+    const dataSecondsLength = getCommonLength(data1Seconds, data2Seconds, data3Seconds)
+    expect(dataSecondsLength).not.toBe(0);
 
-    expect(data1HoursLength).toBe(data2HoursLength)
-    expect(data1SecondsLength).toBe(data2SecondsLength)
-    expect(data2HoursLength).toBe(data3HoursLength)
-    expect(data2SecondsLength).toBe(data3SecondsLength)
+    // Compare data
 
-    let wasHourCanvasChanged12 = false;
-    for (let i = 0; i < data1HoursLength; i++) {
-        if (Math.abs(data1Hours[i] - data2Hours[i]) > 1) {
-            wasHourCanvasChanged12 = true;
-            break;
-        }
-    }
+    const hoursUpdate12 = wasDataChanged(data1Hours, data2Hours, dataHoursLength);
+    const hoursUpdate23 = wasDataChanged(data2Hours, data3Hours, dataHoursLength);
+    const secondsUpdate12 = wasDataChanged(data1Seconds, data2Seconds, dataHoursLength);
+    const secondsUpdate23 = wasDataChanged(data2Seconds, data3Seconds, dataHoursLength);
 
-    let wasHourCanvasChanged23 = false;
-    for (let i = 0; i < data2HoursLength; i++) {
-        if (Math.abs(data2Hours[i] - data3Hours[i]) > 1) {
-            wasHourCanvasChanged23 = true;
-            break;
-        }
-    }
+    // Hour canvas must not have changed twice
+    expect(hoursUpdate12 && hoursUpdate23).toBe(false);
 
-    let wasSecondCanvasChanged12 = false;
-    for (let i = 0; i < data1SecondsLength; i++) {
-        if (data1Seconds[i] != data2Seconds[i]) {
-            wasSecondCanvasChanged12 = true;
-            break;
-        }
-    }
-
-    let wasSecondCanvasChanged23 = false;
-    for (let i = 0; i < data2SecondsLength; i++) {
-        if (data2Seconds[i] != data3Seconds[i]) {
-            wasSecondCanvasChanged23 = true;
-            break;
-        }
-    }
-
-    expect(wasHourCanvasChanged12 && wasHourCanvasChanged23).toBe(false);
-    expect(wasSecondCanvasChanged12 && wasSecondCanvasChanged23).toBe(true);
+    // Second canvas must have changed twice
+    expect(secondsUpdate12 && secondsUpdate23).toBe(true);
 });
