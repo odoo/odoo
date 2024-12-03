@@ -669,9 +669,24 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(mentions_notif), 0, "mentions + normal message = no needaction")
         self.assertEqual(len(nothing_notif), 0, "nothing + normal message = no needaction")
 
-        # sending mention message
-        with self.with_user("employee"):
-            channel_msg = channel.message_post(body="Test @mentions", partner_ids=(all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids, message_type="comment", subtype_xmlid="mail.mt_comment")
+        partner_ids = (
+            all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id
+        ).ids
+        self._reset_bus()
+        with self.assertBusNotificationType(
+            [
+                ((self.cr.dbname, "res.partner", partner_id), "mail.message/inbox")
+                for partner_id in partner_ids
+            ],
+        ):
+            # sending mention message
+            with self.with_user("employee"):
+                channel_msg = channel.message_post(
+                    body="Test @mentions",
+                    partner_ids=partner_ids,
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                )
         all_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", channel_msg.id),
             ("res_partner_id", "=", all_test_user.partner_id.id)
