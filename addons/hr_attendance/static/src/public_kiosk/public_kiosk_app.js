@@ -18,7 +18,15 @@ import { session } from "@web/session";
 
 class kioskAttendanceApp extends Component{
     static template = "hr_attendance.public_kiosk_app";
-    static props = [];
+    static props = {
+        token: { type: String },
+        companyId: { type: Number },
+        companyName: { type: String },
+        employees: { type: Array },
+        departments: { type: Array },
+        kioskMode: { type: String },
+        barcodeSource: { type: String },
+    };
     static components = {
         KioskBarcodeScanner,
         CardLayout,
