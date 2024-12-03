@@ -3,7 +3,7 @@ import { CarouselSlider } from "@website/interactions/carousel_slider";
 
 export class CarouselSliderEdit extends CarouselSlider {
     dynamicContent = Object.assign(this.dynamicContent, {
-        "_root": {
+        _root: {
             "t-on-content_changed": this.onContentChanged,
         },
     });

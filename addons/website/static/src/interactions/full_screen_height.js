@@ -5,10 +5,10 @@ import { isVisible } from "@web/core/utils/ui";
 export class FullScreenHeight extends Interaction {
     static selector = ".o_full_screen_height";
     dynamicContent = {
-        "_window": {
+        _window: {
             "t-on-resize.noupdate": this.debounced(this.updateContent, 250),
         },
-        "_root": {
+        _root: {
             "t-att-style": () => ({
                 "min-height": this.isActive ? `${this.computeIdealHeight()}px !important` : undefined,
             }),

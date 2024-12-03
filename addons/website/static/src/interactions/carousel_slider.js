@@ -9,7 +9,7 @@ export class CarouselSlider extends Interaction {
         "img": {
             "t-on-load": this.computeMaxHeight,
         },
-        "_window": {
+        _window: {
             "t-on-resize": this.debounced(this.computeMaxHeight, 250),
         },
         ".carousel-item": {

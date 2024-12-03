@@ -7,26 +7,26 @@ export class Animation extends Interaction {
     static selector = ".o_animate";
     dynamicSelectors = {
         ...this.dynamicSelectors,
-        "_wrapwrap": () => this.wrapwrapEl,
-        "_scrollingTarget": () => this.scrollingTarget,
+        _wrapwrap: () => this.wrapwrapEl,
+        _scrollingTarget: () => this.scrollingTarget,
     };
     dynamicContent = {
-        "_window": {
+        _window: {
             "t-on-resize": this.scrollWebsiteAnimate,
         },
-        "_wrapwrap": {
+        _wrapwrap: {
             "t-on-shown.bs.modal": this.scrollWebsiteAnimate,
             "t-on-slid.bs.carousel": this.scrollWebsiteAnimate,
             "t-on-shown.bs.tab": this.scrollWebsiteAnimate,
             "t-on-shown.bs.collapse": this.scrollWebsiteAnimate,
         },
-        "_scrollingTarget": {
+        _scrollingTarget: {
             // Setting capture to true allows to take advantage of event
             // bubbling for events that otherwise don’t support it. (e.g. useful
             // when scrolling a modal)
             "t-on-scroll.capture": this.throttledForAnimation(this.scrollWebsiteAnimate),
         },
-        "_root": {
+        _root: {
             "t-att-class": (el) => ({
                 "o_animating": this.isAnimating,
                 "o_animated": this.isAnimated,

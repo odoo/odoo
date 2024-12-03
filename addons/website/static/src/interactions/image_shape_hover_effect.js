@@ -4,13 +4,11 @@ import { Interaction } from "@website/core/interaction";
 export class ImageShapeHoverEffect extends Interaction {
     static selector = "img[data-hover-effect]";
     dynamicContent = {
-        "_root": {
+        _root: {
             "t-on-mouseenter": this.mouseEnter,
             "t-on-mouseleave": this.mouseLeave,
         },
     };
-    // TODO Support edit mode.
-    static disabledInEditableMode = false;
 
     setup() {
         this.lastMouseEvent = Promise.resolve();
@@ -107,19 +105,22 @@ export class ImageShapeHoverEffect extends Interaction {
                 resolve();
                 return;
             }
-            // TODO Handle edit mode
-            // this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("setImgHoverEffectSrc");
-            if (this.editableMode && !this.el.dataset.originalSrcBeforeHover) {
-                this.el.dataset.originalSrcBeforeHover = this.originalImgSrc;
-            }
-            this.el.src = preloadedImg.getAttribute("src");
-            // TODO Handle edit mode
-            // this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("setImgHoverEffectSrc");
+            this.adjustImageSourceFrom(preloadedImageEl);
             this.lastImgSrc = preloadedImg.getAttribute("src");
             this.el.onload = () => {
                 resolve();
             };
         };
+    }
+
+    /**
+     * Overridable method called once the preloadedImageEl is loaded in
+     * setImgSrc.
+     *
+     * @param {HTMLImageElement} preloadedImageEl
+     */
+    adjustImageSourceFrom(preloadedImageEl) {
+        this.el.src = preloadedImageEl.getAttribute("src");
     }
 }
 
