@@ -127,16 +127,6 @@ patch(PosStore.prototype, {
             this.showScreen(this.defaultScreen);
         }
     },
-    getReceiptHeaderData(order) {
-        const json = super.getReceiptHeaderData(...arguments);
-        if (this.config.module_pos_restaurant && order) {
-            if (order.getTable()) {
-                json.table = order.getTable().table_number;
-            }
-            json.customer_count = order.getCustomerCount();
-        }
-        return json;
-    },
     shouldResetIdleTimer() {
         const stayPaymentScreen =
             this.mainScreen.component === PaymentScreen && this.getOrder().payment_ids.length > 0;

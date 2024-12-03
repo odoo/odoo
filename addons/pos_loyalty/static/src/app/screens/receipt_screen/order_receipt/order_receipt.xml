@@ -3,7 +3,7 @@
 
     <t t-name="pos_coupon.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
-            <t t-foreach="props.data.loyaltyStats or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
+            <t t-foreach="order.getLoyaltyPoints() or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                 <!-- Show only if portal_visible. -->
                 <div t-if="_loyaltyStat.program.portal_visible and (_loyaltyStat.points.won || _loyaltyStat.points.spent)" class='loyalty'>
                     <span class="pos-receipt-center-align">
@@ -22,18 +22,18 @@
                     </t>
                 </div>
             </t>
-            <t t-if="props.data.partner">
+            <t t-if="order.parnter_id">
                 <br/>
-                <div>Customer <span t-esc='props.data.partner.name' class='pos-receipt-right-align'/></div>
+                <div>Customer <span t-esc='order.parnter_id.name' class='pos-receipt-right-align'/></div>
             </t>
-            <t t-if="props.data.new_coupon_info and props.data.new_coupon_info.length !== 0">
+            <t t-if="order.new_coupon_info and order.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards">
                     <div>------------------------</div>
                     <br/>
                     <div>
                         Coupon Codes
                     </div>
-                    <t t-foreach="props.data.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
+                    <t t-foreach="order.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
                         <div class="coupon-container">
                             <div style="font-size: 110%;">
                                 <t t-esc="coupon_info['program_name']"/>

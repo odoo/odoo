@@ -10,19 +10,72 @@
                 <div class="position-absolute bottom-0 mb-4 d-none d-lg-flex align-items-center ps-3 pe-2 py-1 rounded-3 text-bg-dark small">Powered by <OdooLogo style="'width: 3rem;'" monochrome="true"/></div>
             </div>
             <div class="o_customer_display_main d-flex flex-column flex-grow-1 overflow-auto">
-                <OrderWidget t-if="!order.finalized" lines="order.lines" t-slot-scope="scope" class="'gap-0 p-0 mx-2 pb-3 bg-view'" style="'scroll-snap-type: y mandatory;'" generalCustomerNote="order.generalCustomerNote or ''">
-                    <Orderline line="scope.line" class="{
-                            'o_customer_display_orderline bg-white fs-3 rounded-0': true,
-                        }"
-                    />
-                    <t t-set-slot="emptyCart">
-                        <div class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
-                            <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Welcome.</h1>
+                <div t-if="Object.keys(order).length and order.lines.length > 0 and !order.finalized" class="d-flex flex-column flex-grow-1 rounded-3 bg-white overflow-hidden">
+                    <div style="scroll-snap-type: y mandatory;" class="gap-0 p-0 mx-2 pb-3 bg-view order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
+                         <li t-foreach="order.lines" t-as="line" t-key="line_index"  class="orderline position-relative d-flex align-items-center p-2 lh-sm cursor-pointer o_customer_display_orderline bg-white fs-3 rounded-0" t-attf-class="{{ line.comboParent ? 'orderline-combo ms-4 fst-italic' : '' }}">
+                            <div class="o_line_container d-flex align-items-center justify-content-center">
+                                <img t-attf-style="border-radius: 1rem;" t-att-src="`/web/image/product.product/${line.productId}/image_128`"/>
+                            </div>
+                            <div class="d-flex flex-column w-100 gap-1">
+                                <div class="d-flex justify-content-between">
+                                    <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
+                                        <span class="text-wrap" t-esc="line.productName"/>
+                                        <t t-slot="product-name"/>
+                                    </div>
+                                    <div class="product-price price fw-bolder" t-esc="line.price" />
+                                </div>
+                                <ul class="info-list d-flex flex-column">
+                                    <li class="price-per-unit">
+                                        <span class="qty px-1 border rounded text-bg-view fw-bolder me-1" t-esc="line.qty"/>
+                                        x
+                                        <t t-if="line.price !== 0">
+                                            <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" />
+                                            <t t-esc="line.unitPrice" />
+                                        </t>
+                                        /
+                                        <t t-if="line.unit" t-esc="line.unit" />
+                                    </li>
+                                    <li t-if="line.price !== 0 and line.discount and line.discount !== '0' and !props.basic_receipt">
+                                        <t t-esc="line.price_without_discount"/> With a <em><t t-esc="line.discount" />% </em> discount
+                                    </li>
+                                    <li t-if="line.customerNote" class="customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25">
+                                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                                        <t t-esc="line.customerNote" />
+                                    </li>
+                                    <div class="internal-note-container d-flex gap-2">
+                                        <t t-foreach="line.internalNote?.split?.('\n') or []" t-as="note" t-key="note_index">
+                                            <li t-if="note.trim() !== ''" t-esc="note" class="internal-note badge mt-2 p-2 rounded-pill bg-info text-info bg-opacity-25" style="font-size: 0.85rem;" />
+                                        </t>
+                                    </div>
+                                    <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
+                                    <t t-slot="default" />
+                                </ul>
+                            </div>
+                        </li>
+                        <div t-if="props.generalCustomerNote"
+                            t-attf-class="{{ props.screenName == 'ReceiptScreen' ? 'mt-1 bg-opacity-75 p-0' : 'customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25 mt-0'}}">
+                            <div class="row flex-wrap w-100 m-0"> <!-- Add w-100 and remove margins -->
+                                <div class="col-auto px-1">
+                                    <i class="fa fa-sticky-note me-1 fa-lg" role="img"
+                                        aria-label="Customer Note" title="Customer Note"/>
+                                </div>
+                                <div class="col ps-0">
+                                    <t t-foreach="props.generalCustomerNote.split('\n')" t-as="subNote"
+                                        t-key="subNote_index">
+                                        <div class="d-inline text-break">
+                                            <t t-esc="subNote"/><br/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
                         </div>
-                    </t>
-                </OrderWidget>
-                <div t-else="" class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
+                    </div>
+                </div>
+                <div t-elif="order.finalized" class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
                     <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Thank you.</h1>
+                </div>
+                <div t-else="" class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
+                    <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Welcome.</h1>
                 </div>
                 <div t-if="order.isScaleScreenVisible">
                     <t t-set-slot="header">

@@ -1460,11 +1460,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.addNewOrder();
         }
     }
-    orderExportForPrinting(order) {
-        const headerData = this.getReceiptHeaderData(order);
-        const baseUrl = this.session._base_url;
-        return order.exportForPrinting(baseUrl, headerData);
-    }
     async printReceipt({
         basic = false,
         order = this.getOrder(),
@@ -1473,9 +1468,7 @@ export class PosStore extends WithLazyGetterTrap {
         await this.printer.print(
             OrderReceipt,
             {
-                data: this.orderExportForPrinting(order),
-                formatCurrency: this.env.utils.formatCurrency,
-                basic_receipt: basic,
+                order,
             },
             { webPrintFallback: true }
         );
@@ -1732,7 +1725,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
         const payload = await makeAwaitable(this.dialog, PartnerList, {
             partner: currentPartner,
-            getPayload: (newPartner) => currentOrder.setPartner(newPartner),
         });
 
         if (payload) {
@@ -1880,20 +1872,6 @@ export class PosStore extends WithLazyGetterTrap {
 
     doNotAllowRefundAndSales() {
         return false;
-    }
-
-    getReceiptHeaderData(order) {
-        const pName = this.config.use_presets && order.preset_id?.identification === "name";
-        const pAddrs = this.config.use_presets && order.preset_id?.identification === "address";
-        return {
-            company: this.company,
-            cashier: _t("Served by %s", order?.getCashierName() || this.getCashier()?.name),
-            header: this.config.receipt_header,
-            orderNameOnTicket: pName,
-            orderName: order.floatingOrderName,
-            addressOnTicket: pAddrs,
-            partnerAddress: pAddrs && order.partner_id.contact_address.split("\n"),
-        };
     }
 
     async showQR(payment) {

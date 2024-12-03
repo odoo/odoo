@@ -55,7 +55,7 @@
             'web_editor/static/src/scss/web_editor.common.scss',
             "point_of_sale/static/src/app/components/numpad/*",
             "point_of_sale/static/src/app/components/product_card/*",
-            "point_of_sale/static/src/app/components/order_widget/*",
+            "point_of_sale/static/src/app/components/order_display/*",
             "point_of_sale/static/src/app/components/orderline/*",
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/css/pos_receipts.css",

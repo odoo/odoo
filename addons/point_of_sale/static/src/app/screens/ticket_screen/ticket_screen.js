@@ -8,7 +8,6 @@ import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/actio
 import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad/back_button/back_button";
 import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
-import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -23,6 +22,7 @@ import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_ref
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 
 const NBR_BY_PAGE = 30;
 
@@ -33,7 +33,7 @@ export class TicketScreen extends Component {
         ActionpadWidget,
         InvoiceButton,
         Orderline,
-        OrderWidget,
+        OrderDisplay,
         CenteredIcon,
         SearchBar,
         Numpad,
