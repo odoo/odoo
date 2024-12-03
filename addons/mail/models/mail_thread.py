@@ -1346,6 +1346,7 @@ class MailThread(models.AbstractModel):
             if thread_id and hasattr(ModelCtx, 'message_update'):
                 thread = ModelCtx.browse(thread_id)
                 thread.message_update(message_dict)
+                message_source = 'email_to_thread'
             else:
                 # if a new thread is created, parent is irrelevant
                 message_dict.pop('parent_id', None)
@@ -1363,6 +1364,7 @@ class MailThread(models.AbstractModel):
                         alias.alias_status = 'valid'
                 thread_id = thread.id
                 subtype_id = thread._creation_subtype().id
+                message_source = 'email_to_alias'
 
             # switch to odoobot for all incoming message creation
             # to have a high-privilege archived user so real_author_id is correctly computed
@@ -1398,7 +1400,7 @@ class MailThread(models.AbstractModel):
             else:
                 # if no author, skip any author subscribe check; otherwise message_post
                 # checks anyway for real author and filters inactive (like odoobot)
-                thread_root = thread_root.with_context(from_alias=True, mail_post_autofollow_author_skip=not message_dict.get('author_id'))
+                thread_root = thread_root.with_context(message_source=message_source, mail_post_autofollow_author_skip=not message_dict.get('author_id'))
                 new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:

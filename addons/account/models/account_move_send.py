@@ -429,7 +429,7 @@ class AccountMoveSend(models.AbstractModel):
             if allow_raising:
                 raise UserError(self._format_error_text(error))
 
-            move.with_context(no_new_invoice=True).message_post(body=self._format_error_html(error))
+            move.message_post(body=self._format_error_html(error))
 
     @api.model
     def _hook_if_success(self, moves_data):
@@ -444,7 +444,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _send_mail(self, move, mail_template, **kwargs):
         """ Send the journal entry passed as parameter by mail. """
-        new_message = move.with_context(no_new_invoice=True).message_post(
+        new_message = move.message_post(
             message_type='comment',
             **kwargs,
             **{  # noqa: PIE804

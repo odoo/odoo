@@ -106,7 +106,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
                 'res_id': invoice.id,
                 'res_model': 'account.move',
             })
-            invoice.message_post(attachment_ids=[attachment.id])
+            invoice.with_context(message_source='webclient').message_post(attachment_ids=[attachment.id])
 
     def _assert_imported_invoice_from_file(self, subfolder, filename, invoice_vals, move_type='in_invoice'):
         """ Create an empty account.move, update the xml file, and then check the invoice values. """
