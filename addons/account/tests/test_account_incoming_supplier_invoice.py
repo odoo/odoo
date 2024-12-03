@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tools.profiler import Profiler
 
 from contextlib import contextmanager
 from unittest.mock import patch
@@ -318,3 +319,12 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({docx: 1}, new=True, from_alias=True)
             self.assertEqual(decoded_files, {docx.name})
+
+    def test_extend_with_attachments_performance(self):
+        input_values = {
+            self._create_dummy_pdf_attachment(): i
+            for i in range(1, 400)
+        }
+
+        with Profiler():
+            self._assert_extend_with_attachments(input_values, new=True, from_alias=True)

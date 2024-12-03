@@ -394,7 +394,7 @@ class AccountMoveSend(models.AbstractModel):
             if allow_raising:
                 raise UserError(self._format_error_text(error))
 
-            move.with_context(no_new_invoice=True).message_post(body=self._format_error_html(error))
+            move.message_post(body=self._format_error_html(error))
 
     @api.model
     def _hook_if_success(self, moves_data):

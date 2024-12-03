@@ -951,27 +951,24 @@ class AccountJournal(models.Model):
             raise UserError(self.env['account.journal']._build_no_journal_error_msg(self.env.company.display_name, [journal_type]))
 
         # As we are coming from the journal, we assume that each attachments
-        # will create an invoice with a tentative to enhance with EDI / OCR..
-        all_invoices = self.env['account.move']
-        for attachment in attachments:
-            invoice = self.env['account.move'].with_context(skip_is_manually_modified=True).create({
-                'journal_id': self.id,
-                'move_type': move_type,
-            })
+        # will create an invoice with a tentative to enhance with EDI / OCR.
 
-            invoice._extend_with_attachments(attachment, new=True)
-
-            all_invoices |= invoice
-
-            invoice.with_context(
-                account_predictive_bills_disable_prediction=True,
-                no_new_invoice=True,
-            ).message_post(attachment_ids=attachment.ids)
-
+        # Create one invoice per attachment.
+        invoice_vals = {
+            'journal_id': self.id,
+            'move_type': move_type,
+        }
+        invoices = self.env['account.move'].with_context(skip_is_manually_modified=True).create([invoice_vals] * len(attachments))
+        for invoice, attachment in zip(invoices, attachments):
+            message = _("This invoice has been created from an upload on the journal.")
+            invoice.with_context(account_predictive_bills_disable_prediction=True).message_post(body=message, attachment_ids=attachment.ids)
             attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+
+        for invoice, attachment in zip(invoices, attachments):
+            invoice._extend_with_attachments(attachment)
             invoice._autopost_bill()
 
-        return all_invoices
+        return invoices
 
     def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.

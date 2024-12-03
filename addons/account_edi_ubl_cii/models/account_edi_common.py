@@ -326,7 +326,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         attachments = self._import_attachments(invoice, tree)
         if attachments:
-            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
+            invoice.message_post(attachment_ids=attachments.ids)
 
         return True
 
