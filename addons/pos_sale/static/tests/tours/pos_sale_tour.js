@@ -362,3 +362,43 @@ registry.category("web_tour.tours").add("PosSettleOrder5", {
             Chrome.clickMenuOption("Backend"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSaleWarning", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Customer 2"),
+            {
+                content: "Check warning popup are displayed",
+                trigger:
+                    '.modal-dialog:has(.modal-header:contains("Warning for Test Customer 2")):has(.modal-body:contains("Cannot afford our services"))',
+            },
+            {
+                trigger: ".modal-footer button",
+                run: "click",
+            },
+            // Check if no customer is selected
+            ProductScreen.customerIsSelected("Customer"),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "1"),
+            ProductScreen.selectedOrderlineHas("Letter Tray", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Customer"),
+            {
+                content: "Check warning popup are displayed",
+                trigger:
+                    '.modal-dialog:has(.modal-header:contains("Warning for Test Customer")):has(.modal-body:contains("Highly infectious disease"))',
+            },
+            {
+                trigger: ".modal-footer button",
+                run: "click",
+            },
+            ProductScreen.customerIsSelected("Test Customer"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

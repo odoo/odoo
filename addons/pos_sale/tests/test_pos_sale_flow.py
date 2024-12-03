@@ -886,6 +886,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosRepairSettleOrder', login="pos_user")
 
+    def test_pos_sale_warnings(self):
+        self.env['res.partner'].create([
+            {'name': 'Test Customer', 'sale_warn': 'warning', 'sale_warn_msg': 'Highly infectious disease'},
+            {'name': 'Test Customer 2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'}
+        ])
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSaleWarning', login="accountman")
+
     def test_downpayment_invoice(self):
         """This test check that users that don't have the pos user group can invoice downpayments"""
         self.env['res.partner'].create({'name': 'Test Partner AAA'})
