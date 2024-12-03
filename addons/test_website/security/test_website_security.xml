@@ -25,4 +25,14 @@
         <field name="group_ids" eval="[(4,ref('test_website.group_test_website_tester'))]"/>
     </record>
     
+    <data noupdate="1">
+        <record id="test_model_publish" model="ir.rule">
+            <field name="name">Public user: read only website published</field>
+            <field name="model_id" ref="test_website.model_test_model"/>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="domain_force">[('website_published','=', True)]</field>
+            <field name="perm_read" eval="True"/>
+        </record>
+    </data>
+
 </odoo>
