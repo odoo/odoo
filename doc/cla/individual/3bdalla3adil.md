@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Abdulla abdullagozer"gmail.com https://github.com/3bdalla3adil
+Abdulla Bashir abdullagozer@gmail.com https://github.com/3bdalla3adil
