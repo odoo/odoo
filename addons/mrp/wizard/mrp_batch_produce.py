@@ -113,11 +113,22 @@ class MrpBatchProduct(models.TransientModel):
             productions_to_set.add(production.id)
 
         productions = self.env['mrp.production'].browse(productions_to_set)
+<<<<<<< 18.0
         if not productions.product_id.tracking == 'serial':
             for production in reversed(productions):
                 production.qty_producing = production.product_uom_qty
                 production.set_qty_producing()
                 production.move_raw_ids.picked = True
+||||||| 43cfc5f75eb49d28a23c35a932ffe41962456f3e
+        for production in productions:
+            production.qty_producing = production.product_uom_qty
+            production.set_qty_producing()
+            production.move_raw_ids.picked = True
+=======
+        for production in productions:
+            production.qty_producing = production.product_uom_qty
+            production.set_qty_producing()
+>>>>>>> 52123db8199d14d05134f030456183649a9fd760
 
         if mark_done:
             return productions.with_context(from_wizard=True).button_mark_done()
