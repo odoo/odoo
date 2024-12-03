@@ -11,6 +11,7 @@ class Integer(Field[int]):
     """ Encapsulates an :class:`int`. """
     type = 'integer'
     _column_type = ('int4', 'int4')
+    falsy_value = 0
 
     aggregator = 'sum'
 
@@ -98,6 +99,7 @@ class Float(Field[float]):
 
     type = 'float'
     _digits = None                      # digits argument passed to class initializer
+    falsy_value = 0.0
     aggregator = 'sum'
 
     def __init__(self, string: str | Sentinel = SENTINEL, digits: str | tuple[int, int] | None | Sentinel = SENTINEL, **kwargs):
@@ -172,6 +174,7 @@ class Monetary(Field[float]):
     type = 'monetary'
     write_sequence = 10
     _column_type = ('numeric', 'numeric')
+    falsy_value = 0.0
 
     currency_field = None
     aggregator = 'sum'

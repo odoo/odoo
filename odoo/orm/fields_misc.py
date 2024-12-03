@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 import copy
 import json
@@ -5,8 +6,14 @@ import typing
 
 from psycopg2.extras import Json as PsycopgJson
 
+from odoo.tools import SQL
+
 from .fields import Field
 from .identifiers import IdType
+
+if typing.TYPE_CHECKING:
+    from .models import BaseModel
+    from odoo.tools import Query
 
 # integer needs to be imported before Id because of `type` attribute clash
 from . import fields_numeric  # noqa: F401
@@ -16,6 +23,7 @@ class Boolean(Field[bool]):
     """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     _column_type = ('bool', 'bool')
+    falsy_value = False
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
@@ -30,6 +38,25 @@ class Boolean(Field[bool]):
 
     def convert_to_export(self, value, record):
         return bool(value)
+
+    def _condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+        if operator not in ('in', 'not in', '=', '!='):
+            return super()._condition_to_sql(field_expr, operator, value, model, alias, query)
+
+        # get field and check access
+        sql_field = model._field_to_sql(alias, field_expr, query)
+
+        # express all conditions as (field_expr, 'in', possible_values)
+        possible_values = (
+            {bool(value)} if operator == '=' else
+            {(not value)} if operator == '!=' else
+            {bool(v) for v in value} if operator == 'in' else
+            {True, False} - {bool(v) for v in value}  # operator == 'not in'
+        )
+        if len(possible_values) != 1:
+            return SQL("TRUE") if possible_values else SQL("FALSE")
+        is_true = True in possible_values
+        return SQL("%s IS TRUE", sql_field) if is_true else SQL("%s IS NOT TRUE", sql_field)
 
 
 class Json(Field):
@@ -92,3 +119,11 @@ class Id(Field[IdType | typing.Literal[False]]):
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        return int(value)
+
+    def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
+        # do not flush, just return the identifier
+        assert self.store, 'id field must be stored'
+        return SQL.identifier(alias, self.name)

@@ -141,12 +141,12 @@ class AccountAccount(models.Model):
     # Form view: show code mapping tab or not
     display_mapping_tab = fields.Boolean(default=lambda self: len(self.env.user.company_ids) > 1, store=False)
 
-    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
-        if fname == 'internal_group':
+    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+        if field_expr == 'internal_group':
             return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
-        if fname == 'code':
+        if field_expr == 'code':
             return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query, flush)
-        if fname == 'placeholder_code':
+        if field_expr == 'placeholder_code':
             query.add_join(
                 'JOIN',
                 'account_first_company',
@@ -181,7 +181,7 @@ class AccountAccount(models.Model):
                 account_first_company_root_id=SQL.identifier('account_first_company', 'root_company_id'),
             )
 
-        return super()._field_to_sql(alias, fname, query, flush)
+        return super()._field_to_sql(alias, field_expr, query, flush)
 
     @api.constrains('reconcile', 'account_type', 'tax_ids')
     def _constrains_reconcile(self):
