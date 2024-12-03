@@ -7,7 +7,7 @@ patch(SelfOrder.prototype, {
         await super.setup(...args);
         this.onlinePaymentStatus = null;
         this.onNotified("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
-            this.models.loadData(this.models, data, [], false);
+            this.models.loadData(data, [], false);
             this.onlinePaymentStatus = status;
             this.paymentError = status === "fail";
 

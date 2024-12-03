@@ -76,7 +76,7 @@ export class SelfOrder extends Reactive {
 
         this.onNotified = getOnNotified(this.bus, this.access_token);
         this.onNotified("PRODUCT_CHANGED", (payload) => {
-            this.models.loadData(this.models, payload);
+            this.models.loadData(payload);
         });
         if (this.config.self_ordering_mode === "kiosk") {
             this.onNotified("STATUS", ({ status }) => {
@@ -91,7 +91,7 @@ export class SelfOrder extends Reactive {
             });
             this.onNotified("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
-                    this.models.loadData(this.models, data);
+                    this.models.loadData(data);
                     const order = this.models["pos.order"].find(
                         (o) => o.access_token === data["pos.order"][0].access_token
                     );
@@ -156,7 +156,7 @@ export class SelfOrder extends Reactive {
 
         const handleMessage = (data) => {
             let message = "";
-            this.models.loadData(this.models, data);
+            this.models.loadData(data);
             const oUpdated = data["pos.order"].find((o) => o.uuid === this.selectedOrderUuid);
 
             if (["paid", "invoiced", "done"].includes(oUpdated?.state)) {
@@ -712,7 +712,7 @@ export class SelfOrder extends Reactive {
                     table_identifier: this.currentOrder?.table_id?.identifier || false,
                 }
             );
-            this.models.loadData(this.models, data);
+            this.models.loadData(data);
             for (const order of data["pos.order"]) {
                 this.subscribeToOrderChannel(order);
             }
@@ -746,7 +746,7 @@ export class SelfOrder extends Reactive {
                 access_token: this.access_token,
                 order_access_tokens: [...accessTokens, ...localAccessToken],
             });
-            this.models.loadData(this.models, data);
+            this.models.loadData(data);
             this.selectedOrderUuid = null;
         } catch (error) {
             this.handleErrorNotification(

@@ -26,7 +26,7 @@ const ProductProductTemplateProxy = new Proxy(ProductProduct, {
             get(target, prop) {
                 const val = Reflect.get(target, prop);
 
-                if (val || target.model.modelFields[prop] || typeof prop === "symbol") {
+                if (val || target.model.fields[prop] || typeof prop === "symbol") {
                     return val;
                 }
 
