@@ -60,26 +60,23 @@
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" create="0" group_create="0" sample="1">
+                    <field name="currency_id"/>
                     <templates>
                         <t t-name="card">
-                            <div class="row mb4">
-                                <div class="col-6">
-                                   <field class="fw-bolder" name="name"/>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <i class="fa fa-clock-o fw-bold" role="img" aria-label="Date" title="Date"/> <field class="fw-bold" name="date"/>
-                                </div>
+                            <div class="d-flex align-items-baseline mb-2">
+                                <field name="partner_id" class="fw-bolder fs-5 me-2" invisible="not partner_id"/>
+                                <field name="journal_id" class="fw-bolder fs-5 me-2" invisible="partner_id"/>
+                                <field name="amount" widget="monetary" class="fw-bolder ms-auto flex-shrink-0"/>
                             </div>
-                            <field name="partner_id"/>
-                            <div class="row">
-                                <div class="col-6">
-                                    <field name="amount" widget='monetary'/>
-                                    <field name="currency_id" invisible="1"/>
+                            <footer class="align-items-end">
+                                <div class="d-flex flex-wrap gap-1 text-muted text-nowrap">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
-                                <div class="col-6">
-                                    <field class="float-end" name="state" widget="label_selection" options="{'classes': {'draft': 'secondary', 'sent': 'success'}}"/>
-                                </div>
-                            </div>
+                                <field name="state" widget="label_selection" class="ms-auto"
+                                    options="{'classes': {'draft': 'default', 'posted': 'success'}}" />
+                            </footer>
                         </t>
                     </templates>
                 </kanban>
