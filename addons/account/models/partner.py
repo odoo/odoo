@@ -793,6 +793,7 @@ class ResPartner(models.Model):
                         n=n,
                     ))
                     self.invalidate_recordset([field])
+                    self.modified([field])
             except (pgerrors.LockNotAvailable, pgerrors.SerializationFailure):
                 _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
 
