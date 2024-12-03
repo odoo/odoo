@@ -7,7 +7,7 @@ import requests
 from threading import Thread
 import time
 
-from odoo.addons.hw_drivers.main import iot_devices, manager
+from odoo.addons.hw_drivers.main import manager
 from odoo.addons.hw_drivers.tools import helpers
 
 _logger = logging.getLogger(__name__)
@@ -27,7 +27,6 @@ class ConnectionManager(Thread):
                 time.sleep(10)
             self.pairing_code = False
             self.pairing_uuid = False
-            self._refresh_displays()
 
     def _connect_box(self):
         data = {
@@ -47,7 +46,6 @@ class ConnectionManager(Thread):
             if all(key in result for key in ['pairing_code', 'pairing_uuid']):
                 self.pairing_code = result['pairing_code']
                 self.pairing_uuid = result['pairing_uuid']
-                self._refresh_displays()
             elif all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
                 self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
         except Exception:
@@ -60,14 +58,6 @@ class ConnectionManager(Thread):
         manager.send_alldevices()
         # Restart to checkout the git branch, get a certificate, load the IoT handlers...
         helpers.odoo_restart(2)
-
-    def _refresh_displays(self):
-        """Refresh all displays to hide the pairing code"""
-        for d in iot_devices:
-            if iot_devices[d].device_type == 'display':
-                iot_devices[d].action({
-                    'action': 'display_refresh'
-                })
 
 
 connection_manager = ConnectionManager()
