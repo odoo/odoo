@@ -1486,4 +1486,11 @@ patch(PosOrder.prototype, {
         }
         return lines;
     },
+
+    _isRefundAndSalesNotAllowed(values, options) {
+        // Allow gift cards to be added to a refund
+        return (
+            super._isRefundAndSalesNotAllowed(values, options) && !options.eWalletGiftCardProgram
+        );
+    },
 });
