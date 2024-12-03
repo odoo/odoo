@@ -769,9 +769,6 @@ function createBetweenOperators(tree) {
         return tree;
     }
     const processedChildren = tree.children.map(createBetweenOperators);
-    if (tree.value === "|") {
-        return { ...tree, children: processedChildren };
-    }
     const children = [];
     for (let i = 0; i < processedChildren.length; i++) {
         const child1 = processedChildren[i];
@@ -781,11 +778,15 @@ function createBetweenOperators(tree) {
             child2 &&
             child2.type === "condition" &&
             formatValue(child1.path) === formatValue(child2.path) &&
-            child1.operator === ">=" &&
-            child2.operator === "<="
+            ((tree.value === "&" && child1.operator === ">=" && child2.operator === "<=") ||
+                (tree.value === "|" && child1.operator === "<" && child2.operator === ">"))
         ) {
             children.push(
-                condition(child1.path, "between", normalizeValue([child1.value, child2.value]))
+                condition(
+                    child1.path,
+                    tree.value === "|" ? "is_not_between" : "between",
+                    normalizeValue([child1.value, child2.value])
+                )
             );
             i += 1;
         } else {
@@ -811,7 +812,10 @@ function createWithinOperators(tree, options = {}) {
         };
     }
     const fieldType = options.getFieldDef?.(tree.path)?.type;
-    if (tree.operator !== "between" || !["date", "datetime"].includes(fieldType)) {
+    if (
+        !["between", "is_not_between"].includes(tree.operator) ||
+        !["date", "datetime"].includes(fieldType)
+    ) {
         return tree;
     }
 
@@ -835,13 +839,13 @@ function createWithinOperators(tree, options = {}) {
     if (isTodayExpr(newTree.value[0], fieldType)) {
         const delta = getProcessedDelta(newTree.value[1]);
         if (delta) {
-            newTree.operator = "within";
+            newTree.operator = tree.operator === "between" ? "within" : "is_not_within";
             newTree.value = [...delta, fieldType];
         }
     } else if (isTodayExpr(newTree.value[1], fieldType)) {
         const delta = getProcessedDelta(newTree.value[0], false);
         if (delta) {
-            newTree.operator = "within";
+            newTree.operator = tree.operator === "between" ? "within" : "is_not_within";
             newTree.value = [...delta, fieldType];
         }
     }
@@ -858,20 +862,20 @@ export function removeBetweenOperators(tree) {
         return tree;
     }
     if (tree.type === "condition") {
-        if (tree.operator !== "between") {
+        if (!["between", "is_not_between"].includes(tree.operator)) {
             return tree;
         }
         const { negate, path, value } = tree;
         return connector(
-            "&",
-            [condition(path, ">=", value[0]), condition(path, "<=", value[1])],
+            tree.operator === "between" ? "&" : "|",
+            [
+                condition(path, tree.operator === "between" ? ">=" : "<", value[0]),
+                condition(path, tree.operator === "between" ? "<=" : ">", value[1]),
+            ],
             negate
         );
     }
     const processedChildren = tree.children.map(removeBetweenOperators);
-    if (tree.value === "|") {
-        return { ...tree, children: processedChildren };
-    }
     const newTree = { ...tree, children: [] };
     // after processing a child might have become a connector "&" --> normalize
     for (let i = 0; i < processedChildren.length; i++) {
@@ -885,7 +889,7 @@ export function removeWithinOperators(tree) {
         return tree;
     }
     if (tree.type === "condition") {
-        if (tree.operator !== "within") {
+        if (!["within", "is_not_within"].includes(tree.operator)) {
             return tree;
         }
         const { negate, path, value } = tree;
@@ -901,7 +905,7 @@ export function removeWithinOperators(tree) {
         const reverse = Number.isInteger(value[0]) && value[0] > 0;
         return condition(
             path,
-            "between",
+            tree.operator === "within" ? "between" : "is_not_between",
             reverse ? Object.values(expressions) : Object.values(expressions).reverse(),
             negate
         );
