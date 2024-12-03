@@ -270,4 +270,29 @@ patch(PosStore.prototype, {
             this.numpadMode = "price";
         }
     },
+    setPartnerToCurrentOrder(partner) {
+        if (["warning", "block"].includes(partner.sale_warn)) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Warning for %s", partner.name),
+                body: partner.sale_warn_msg || "",
+            });
+        }
+        // removing partner if it is blocked
+        partner = partner?.sale_warn !== "block" ? partner : false;
+        super.setPartnerToCurrentOrder(partner);
+    },
+    addLineToCurrentOrder(vals, opt = {}, configure = true) {
+        const productTemplate = vals.product_tmpl_id;
+        if (["warning", "block"].includes(productTemplate.sale_line_warn)) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Warning for %s", productTemplate.name),
+                body: productTemplate.sale_line_warn_msg || "",
+            });
+        }
+        // product is not added to the cart if it is blocked
+        if (productTemplate.sale_line_warn !== "block") {
+            return super.addLineToCurrentOrder(vals, opt, configure);
+        }
+        return false;
+    },
 });

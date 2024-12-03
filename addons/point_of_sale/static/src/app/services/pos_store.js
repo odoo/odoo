@@ -1802,6 +1802,10 @@ export class PosStore extends WithLazyGetterTrap {
             preset.computeAvailabilities();
         }
     }
+    // There for override to do something before adding partner to current order from partner list
+    setPartnerToCurrentOrder(partner) {
+        this.getOrder().setPartner(partner);
+    }
     async selectPartner() {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.getOrder();
@@ -1823,11 +1827,7 @@ export class PosStore extends WithLazyGetterTrap {
             partner: currentPartner,
         });
 
-        if (payload) {
-            currentOrder.setPartner(payload);
-        } else {
-            currentOrder.setPartner(false);
-        }
+        this.setPartnerToCurrentOrder(payload || false);
 
         return payload;
     }
