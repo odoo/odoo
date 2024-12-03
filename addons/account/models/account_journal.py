@@ -951,27 +951,27 @@ class AccountJournal(models.Model):
             raise UserError(self.env['account.journal']._build_no_journal_error_msg(self.env.company.display_name, [journal_type]))
 
         # As we are coming from the journal, we assume that each attachments
-        # will create an invoice with a tentative to enhance with EDI / OCR..
-        all_invoices = self.env['account.move']
-        for attachment in attachments:
-            invoice = self.env['account.move'].with_context(skip_is_manually_modified=True).create({
-                'journal_id': self.id,
-                'move_type': move_type,
-            })
+        # will create an invoice with a tentative to enhance with EDI / OCR.
 
-            invoice._extend_with_attachments(attachment, new=True)
+        # Unwrap the attachments and identify for each attachment the main embedded file to be decoded.
+        files_data = attachments._identify_and_unwrap_edi_attachments()
+        main_file_data_by_attachment = [
+            (attachment, file_data_group[0])
+            for attachment, file_data_group in groupby(files_data, lambda x: x['attachment'])
+        ]
 
-            all_invoices |= invoice
-
-            invoice.with_context(
-                account_predictive_bills_disable_prediction=True,
-                no_new_invoice=True,
-            ).message_post(attachment_ids=attachment.ids)
-
+        # Create one invoice per attachment.
+        invoice_vals = {
+            'journal_id': self.id,
+            'move_type': move_type,
+        }
+        invoices = self.env['account.move'].with_context(skip_is_manually_modified=True).create([invoice_vals] * len(main_file_data_by_attachment))
+        for invoice, (attachment, file_data) in zip(invoices, main_file_data_by_attachment):
+            invoice._extend_with_file_data(file_data, new=True)
             attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
             invoice._autopost_bill()
 
-        return all_invoices
+        return invoices
 
     def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.

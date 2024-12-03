@@ -505,18 +505,6 @@ class AccountMove(models.Model):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _get_edi_decoder(self, file_data, new=False):
-        def is_facturae(tree):
-            return tree.tag in [
-                '{http://www.facturae.es/Facturae/2014/v3.2.1/Facturae}Facturae',
-                '{http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml}Facturae',
-            ]
-
-        if file_data['type'] == 'xml' and is_facturae(file_data['xml_tree']):
-            return self._import_invoice_facturae
-
-        return super()._get_edi_decoder(file_data, new=new)
-
     def _import_invoice_facturae(self, invoice, file_data, new=False):
         tree = file_data['xml_tree']
         is_bill = invoice.move_type.startswith('in_')

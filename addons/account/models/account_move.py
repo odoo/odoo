@@ -5,11 +5,13 @@ from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
+import difflib
 from hashlib import sha256
 from json import dumps
 import logging
 from markupsafe import Markup
 import math
+import psycopg2.errors
 import re
 from textwrap import shorten
 
@@ -58,17 +60,6 @@ TYPE_REVERSE_MAP = {
     'in_refund': 'in_invoice',
     'out_receipt': 'out_refund',
     'in_receipt': 'in_refund',
-}
-
-ALLOWED_MIMETYPES = {
-    'text/plain',
-    'text/csv',
-    'application/pdf',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.oasis.opendocument.spreadsheet',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 }
 
 EMPTY = object()
@@ -4002,120 +3993,103 @@ class AccountMove(models.Model):
         with self._disable_recursion({'records': self}, 'ignore_discount_precision'):
             yield
 
-    def _get_edi_decoder(self, file_data, new=False):
-        """To be extended with decoding capabilities.
-        :returns:  Function to be later used to import the file.
-                   Function' args:
-                   - invoice: account.move
-                   - file_data: attachemnt information / value
-                   - new: whether the invoice is newly created
-                   returns True if was able to process the invoice
-        """
-        return None
+    def _extend_with_attachments(self, attachments, check_draft=True, check_no_existing_lines=True):
+        """ Extend/enhance an invoice with one or more attachments.
+        The attachments will be identified, unwrapped and only the file with the
+        highest priority will be used to extend the invoice, using the appropriate
+        decoder.
 
-    def _extend_with_attachments(self, attachments, new=False):
-        """Main entry point to extend/enhance invoices with attachments.
-
-        Either coming from:
-        - The chatter when the user drops an attachment on an existing invoice.
-        - The journal when the user drops one or multiple attachments from the dashboard.
-        - The server mail alias when an alias is configured on the journal.
-
-        It will unwrap all attachments by priority then try to decode until it succeed.
-
+        :param self:        An invoice on which to apply the attachments.
         :param attachments: A recordset of ir.attachment.
-        :param new:         Indicate if the current invoice is a fresh one or an existing one.
         :returns:           True if at least one document is successfully imported
         """
-        def close_file(file_data):
-            if file_data.get('on_close'):
-                file_data['on_close']()
+        self.ensure_one()
+        files_data = attachments._identify_and_unwrap_edi_attachments()
+        self._extend_with_file_data(files_data[0], check_draft, check_no_existing_lines)
 
-        def add_file_data_results(file_data, invoice):
-            passed_file_data_list.append(file_data)
-            attachment = file_data.get('attachment') or file_data.get('originator_pdf')
-            if attachment:
-                if attachments_by_invoice.get(attachment):
-                    attachments_by_invoice[attachment] |= invoice
-                else:
-                    attachments_by_invoice[attachment] = invoice
+    def _extend_invoices_with_commit(self, file_data_by_invoice, check_draft=True, check_no_existing_lines=True):
+        """ Extend the given invoices with the given file_data.
 
-        file_data_list = attachments._unwrap_edi_attachments()
-        attachments_by_invoice = {}
-        invoices = self
-        current_invoice = self
-        passed_file_data_list = []
-        for file_data in file_data_list:
+        ⚠️ If you use this method, try to:
+        (1) do as much work as possible before calling this method, and
+        (2) avoid SerializationErrors *anywhere* in the request. If a SerializationError happens,
+            `retrying` will cause the whole request to be retried, which may cause some things
+            to be duplicated. That may be more or less undesirable, depending on what you're doing.
 
-            # Rogue binaries from mail alias are skipped and unlinked.
-            if (
-                file_data['type'] == 'binary'
-                and self._context.get('from_alias')
-                and not attachments_by_invoice.get(file_data['attachment'])
-                and file_data['attachment'].mimetype not in ALLOWED_MIMETYPES
+        :param files_data_by_invoice: A dict {invoice: file_data} that to each invoice
+                                      associates a file_data dict that should be applied to it.
+        """
+        # We start by committing so that if a rollback occurs in the except block, we don't lose all the progress that
+        # was done before this method was called. If a SerializationError occurs here, no problem - nothing will be
+        # committed and the whole request will be restarted.
+        if not modules.module.current_test:
+            self.env.cr.commit()
+
+        for invoice, file_data in file_data_by_invoice.items():
+            try:
+                # This may trigger both database errors (e.g. SQL constraints)
+                # and Python exceptions (e.g. UserError / ValidationError).
+                # In both cases, we want to throw away what was done and skip the file.
+                invoice._extend_with_file_data(file_data, check_draft, check_no_existing_lines)
+
+            # We don't handle SerializationError. If it happens, then `retrying` will unfortunately retrigger
+            # the whole request. In most cases, since this code is mostly called for importing invoices,
+            # that will just result in duplicate invoices in DB, which is annoying but not the end of the world.
+            except (
+                # Psql errors that can be recovered from by rolling back the transaction
+                psycopg2.errors.DataError,
+                psycopg2.errors.IntegrityError,
+                # Typical Odoo application errors
+                KeyError,
+                ValueError,
+                UserError,
+                ValidationError,
             ):
-                close_file(file_data)
-                continue
+                if not modules.module.current_test:
+                    self.env.cr.rollback()
+                message = _(
+                    "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)",
+                    file_name=file_data['filename'],
+                    decoder=file_data['decoder'].__name__,
+                )
+                self.sudo().message_post(body=message)
+                _logger.exception(message)
 
-            # The invoice has already been decoded by an embedded file.
-            if attachments_by_invoice.get(file_data['attachment']):
-                add_file_data_results(file_data, attachments_by_invoice[file_data['attachment']])
-                close_file(file_data)
-                continue
+            # This commit serves both to commit the changes made by the decoder, if it succeeded,
+            # or to commit the error message on the invoice.
+            if not modules.module.current_test:
+                self.env.commit()
 
-            # When receiving multiple files, if they have a different type, we supposed they are all linked
-            # to the same invoice.
-            if (
-                passed_file_data_list
-                and passed_file_data_list[-1]['filename'] != file_data['filename']
-                and passed_file_data_list[-1]['sort_weight'] != file_data['sort_weight']
-            ):
-                add_file_data_results(file_data, invoices[-1])
-                close_file(file_data)
-                continue
+    def _extend_with_file_data(self, file_data, check_draft=True, check_no_existing_lines=True):
+        """ Apply the file_data on the invoice.
 
-            if passed_file_data_list and not new:
-                add_file_data_results(file_data, invoices[-1])
-                close_file(file_data)
-                continue
+            :param file_data: a file_data dict.
+        """
+        if not file_data.get('decoder'):
+            return
 
-            extend_with_existing_lines = file_data.get('process_if_existing_lines', False)
-            if current_invoice.invoice_line_ids and not extend_with_existing_lines:
-                continue
+        if check_draft and self.state != 'draft':
+            self.with_user(SUPERUSER_ID).message_post(
+                body=_("The invoice is not a draft, it was not updated from the attachment."),
+                message_type='comment',
+            )
+            return
 
-            decoder = (current_invoice or current_invoice.new(self.default_get(['move_type', 'journal_id'])))._get_edi_decoder(file_data, new=new)
-            if decoder or file_data['type'] in ('pdf', 'binary'):
-                try:
-                    with self.env.cr.savepoint():
-                        invoice = current_invoice or self.create({})
-                        existing_lines = invoice.invoice_line_ids
-                        if not decoder and file_data['type'] in ('pdf', 'binary'):
-                            success = False
-                        else:
-                            success = decoder(invoice, file_data, new)
+        if check_no_existing_lines and self.invoice_line_ids and not file_data.get('always_apply'):
+            self.with_user(SUPERUSER_ID).message_post(
+                body=_("The invoice already contains lines, it was not updated from the attachment."),
+                message_type='comment',
+            )
+            return
 
-                        if success or file_data['type'] == 'pdf' or file_data['attachment'].mimetype in ALLOWED_MIMETYPES:
-                            (invoice.invoice_line_ids - existing_lines).is_imported = True
-                            invoice._link_bill_origin_to_purchase_orders(timeout=4)
-                            invoices |= invoice
-                            current_invoice = self.env['account.move']
-                            add_file_data_results(file_data, invoice)
+        existing_lines = self.invoice_line_ids
+        success = file_data['decoder'](self, file_data)
 
-                except RedirectWarning:
-                    raise
-                except Exception:
-                    message = _(
-                        "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)",
-                        file_name=file_data['filename'],
-                        decoder=decoder.__name__,
-                    )
-                    current_invoice.sudo().message_post(body=message)
-                    _logger.exception(message)
+        if success:
+            (self.invoice_line_ids - existing_lines).is_imported = True
+            self._link_bill_origin_to_purchase_orders(timeout=4)
 
-            passed_file_data_list.append(file_data)
-            close_file(file_data)
-
-        return attachments_by_invoice
+        return success
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
@@ -5908,68 +5882,137 @@ class AccountMove(models.Model):
         return move
 
     def _message_post_after_hook(self, new_message, message_values):
+        """ This method processes the attachments of a new mail.message. It handles the 3 following situations:
+            (1) receiving an e-mail from a mail alias. In that case, we potentially want to split the attachments into several invoices.
+            (2) receiving an e-mail / posting a message on an existing invoice via the webclient.
+                In this case, we want to add all the attachments on the invoice only if the sender is an internal user.
+            (3) posting a message on an invoice in application code. In that case, no attachment processing is done by default.
+        """
         # EXTENDS mail mail.thread
-        # When posting a message, check the attachment to see if it's an invoice and update with the imported data.
-        res = super()._message_post_after_hook(new_message, message_values)
-        if not self.env.user._is_internal():
-            return res
-
+        message_source = self.env.context.get('message_source')
         attachments = new_message.attachment_ids
-        attachments_per_invoice = defaultdict(lambda: self.env['ir.attachment'])
 
-        checked_attachment = self._check_and_decode_attachment(attachments)
-        if not checked_attachment:
+        if message_source == 'email_to_alias':
+            # This is a newly-created invoice from a mail alias.
+            # So dispatch the attachments into groups, and create a new invoice for each group beyond the first.
+
+            files_data = attachments._identify_and_unwrap_edi_attachments()
+            file_data_groups = self._group_files_coming_from_mail_alias(files_data)
+
+            invoices = self
+            if len(file_data_groups) > 1:
+                create_vals = (len(file_data_groups) - 1) * [self.copy_data()]
+                invoices |= self.with_context(skip_is_manually_modified=True).create(create_vals)
+
+            for invoice, file_data_group in zip(invoices, file_data_groups):
+                attachments = self.env['ir.attachment'].union(*(file_data['attachment'] for file_data in file_data_group))
+                attachments.write({'res_model': 'account.move', 'res_id': invoice.id})
+
+                if invoice == self:
+                    message_values.update({'attachment_ids': attachments.ids})
+                    res = super()._message_post_after_hook(new_message, message_values)
+                else:
+                    sub_new_message = new_message.copy({'attachment_ids': attachments.ids})
+                    sub_message_values = {
+                        **message_values,
+                        'res_id': invoice.id,
+                        'attachment_ids': attachments.ids,
+                    }
+                    super(AccountMove, invoice)._message_post_after_hook(sub_new_message, sub_message_values)
+
+            # All the invoices are new, so normally this won't trigger serialization errors.
+            file_data_by_invoice = {invoice: file_data_group[0] for invoice, file_data_group in zip(invoices, file_data_groups)}
+            invoice._extend_with_files_data(file_data_by_invoice)
             return res
 
-        for attachment_in_res, invoices in checked_attachment.items():
-            invoices = invoices or self
-            for invoice in invoices:
-                attachments_per_invoice[invoice] |= attachment_in_res
+        elif message_source in ['email_to_thread', 'controller'] and self.env.user._is_internal():
+            # This message was posted on an invoice by an internal user, via e-mail or the webclient, so enhance the invoice with the attachments.
+            self.attachment_ids |= attachments
+            self._extend_with_attachments(attachments)
+            return super()._message_post_after_hook(new_message, message_values)
 
-        for invoice, attachments in attachments_per_invoice.items():
-            if invoice == self:
-                invoice.attachment_ids |= attachments
-                new_message.attachment_ids = attachments.ids
-                message_values.update({'res_id': self.id, 'attachment_ids': [Command.link(attachment.id) for attachment in attachments]})
-                super(AccountMove, invoice)._message_post_after_hook(new_message, message_values)
-            else:
-                sub_new_message = new_message.copy({'attachment_ids': attachments.ids})
-                sub_message_values = {
-                    **message_values,
-                    'res_id': invoice.id,
-                    'attachment_ids': [Command.link(attachment.id) for attachment in attachments],
-                }
-                invoice.attachment_ids |= attachments
-                invoice.message_ids = [Command.set(sub_new_message.id)]
-                super(AccountMove, invoice)._message_post_after_hook(sub_new_message, sub_message_values)
+        else:
+            # The message was created in application code, or was sent on an existing thread by a non-internal user, so don't do anything.
+            return super()._message_post_after_hook(new_message, message_values)
 
-        return res
+    def _group_files_coming_from_mail_alias(self, files_data):
+        """ Heuristic to dispatch incoming files into groups of files that should be attached to different records.
 
-    def _check_and_decode_attachment(self, attachments):
-        if not attachments or self.env.context.get('no_new_invoice'):
-            return False
-        if self.state != 'draft':
-            self.with_user(SUPERUSER_ID).message_post(
-                body=_('The invoice is not a draft, it was not updated from the attachment.'),
-                message_type='comment',
+            :param files_data: A list of dicts, each representing a file, with the following keys:
+            * filename:     The name of the attachment.
+            * content:      The content of the attachment.
+            * attachment:   The associated ir.attachment.
+            * type:         (optional) The type of the file.
+            * root_type:    (optional) The type of the root file, if this is a sub-file.
+
+            :return: A list of lists containing the same `files_data` dicts that have been sorted into groups,
+                     each group corresponding to a single invoice.
+        """
+        # 1. Sort the files_data by root type.
+        files_data = sorted(files_data, lambda file_data: file_data.get('root_type'))
+
+        # 2. Dispatch the files_data into groups.
+        groups = []
+        for file_data in files_data:
+            self._assign_file_data_to_group(file_data, groups)
+
+        # 3. Sort each group by priority.
+        for group in groups:
+            group.sort(lambda file_data: file_data['priority'])
+
+        return groups
+
+    def _assign_file_data_to_group(self, file_data, groups=[]):
+        """ This method is called in a loop to assign a label to a file_data dict, for grouping into groups.
+            This method assumes that the file_data come in an order where they are already sorted by type.
+            Can be overriden to implement a custom grouping behaviour.
+
+            :param file_data: a dict representing the file to be grouped
+            :param group_labels: a list of the labels of the existing groups.
+                                 The method should extend it when it creates a new group.
+
+            :return: The group label which this file should be assigned to.
+        """
+        # Special rule 1: files extracted from the same attachment must be added to the same group.
+        if matching_group := next(filter(
+            groups,
+            lambda group: any(file_data['attachment'] == file['attachment'] for file in group)
+        ), None):
+            matching_group.append(file_data)
+
+        # Special rule 2: images and non-identified files are just added to the first group.
+        file_data_root_type = file_data.get('root_type')
+        if file_data_root_type in [None, 'jpg', 'png']:
+            if not groups:
+                groups.append([])
+            groups[0].append(file_data)
+
+        # General case: add the attachment to a group which doesn't yet have an attachment of the same root type.
+        # If several groups are available, we choose the group which has the highest filename similarity.
+        if groups_with_different_root_type := [
+            group
+            for group in groups
+            if all(file_data_root_type != (file.get('root_type')) for file in group)
+        ]:
+            sorted_by_similarity = sorted(
+                groups_with_different_root_type,
+                lambda group: max(self._get_similarity_score(file_data['filename'], file['filename']) for file in group)
             )
-            return False
+            sorted_by_similarity[0].append(file_data)
 
-        # As we are coming from the mail, we assume that ONE of the attachments
-        # will enhance the invoice thanks to EDI / OCR / .. capabilities
-        move_per_decodable_attachment = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
-        if self.invoice_line_ids and not move_per_decodable_attachment:
-            self.with_user(SUPERUSER_ID).message_post(
-                body=_('The invoice already contains lines, it was not updated from the attachment.'),
-                message_type='comment',
-            )
-            return False
-        attachments_in_invoices = self.env['ir.attachment']
-        for attachment in move_per_decodable_attachment:
-            attachments_in_invoices += attachment
-        # Unlink the unused attachments
-        (attachments - attachments_in_invoices).unlink()
-        return move_per_decodable_attachment
+        # Otherwise, create a new group.
+        groups.append([file_data])
+
+    def _get_similarity_score(self, filename1, filename2):
+        """ Compute a similarity score between two filenames.
+            This is used to group files with similar names together as much as possible
+            when figuring out how to dispatch attachments received in a mail alias.
+
+            Distance is defined as the length of the largest common substring between
+            the two filenames.
+        """
+        matcher = difflib.SequenceMatcher(a=filename1, b=filename2, autojunk=False)
+        return len(matcher.find_longest_match())
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread
