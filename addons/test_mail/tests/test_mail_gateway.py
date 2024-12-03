@@ -408,7 +408,7 @@ class TestMailgateway(MailGatewayCommon):
         self.assertNotSentEmail()  # No notification / bounce should be sent
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.tests')
-    def test_message_process_email_partner_find(self):
+    def test_message_process_email_author_partner_find(self):
         """ Finding the partner based on email, based on partner / user / follower """
         self.alias.write({'alias_force_thread_id': self.test_record.id})
         from_1 = self.env['res.partner'].create({'name': 'Brice Denisse', 'email': 'from.test@example.com'})
@@ -2242,6 +2242,33 @@ class TestMailGatewayLoops(MailGatewayCommon):
             f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
             [customer_email],
             subject=f'Re: Re: Re: Should Bounce (initial)')
+
+
+@tagged('mail_gateway', 'mail_tools')
+class TestMailGatewayRecipients(MailGatewayCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.test_partners = cls.env['res.partner'].create([
+            {
+                'email': '"Test Format" <test.format@test.example.com>',
+                'name': 'Test Partner',
+            },
+        ])
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_gateway_recipients_finding(self):
+        """ Incoming email: find or create partners. """
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE, self.email_from,
+                f'groups@{self.alias_domain}, test.format@test.example.com',
+                subject='Test4',
+        )
+
+        self.assertEqual(record.message_ids[0].partner_ids, self.test_partners[0])
 
 
 @tagged('mail_gateway', 'mail_thread')
