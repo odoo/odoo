@@ -29,7 +29,7 @@ test("can toggle reaction from quick reaction menu", async () => {
     await contains(".o-mail-MessageReaction", { text: "👍1", count: 0 });
 });
 
-test("can open emoji picker from quick reaction menu", async () => {
+test("toggle emoji picker from quick reaction menu", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -37,11 +37,10 @@ test("can open emoji picker from quick reaction menu", async () => {
     await insertText(".o-mail-Composer-input", "Hello world!");
     await press("Enter");
     await click("[title='Add a Reaction']");
-    await click(".o-mail-QuickReactionMenu [title='Open Emoji Picker']");
+    await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await contains(".o-EmojiPicker");
-    await contains(".o-mail-QuickReactionMenu", { count: 0 });
-    await click("[title='Add a Reaction']");
-    await contains(".o-mail-QuickReactionMenu");
+    await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
+    await contains(".o-EmojiPicker", { count: 0 });
 });
 
 test("show default emojis when no frequent emojis are available", async () => {
@@ -58,11 +57,11 @@ test("show default emojis when no frequent emojis are available", async () => {
     for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS) {
         await contains(".o-mail-QuickReactionMenu-emoji", { text: emoji });
     }
-    await click(".o-mail-QuickReactionMenu [title='Open Emoji Picker']");
+    await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await click(".o-Emoji", { text: "🤢" });
     await click("[title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu-emoji", {
-        text: QuickReactionMenu.DEFAULT_EMOJIS[0],
+        text: QuickReactionMenu.DEFAULT_EMOJIS.at(-1),
         count: 0,
     });
     await contains(".o-mail-QuickReactionMenu-emoji", { text: "🤢" });

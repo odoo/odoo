@@ -83,7 +83,7 @@ export const PICKER_PROPS = [
 ];
 
 export class EmojiPicker extends Component {
-    static props = PICKER_PROPS;
+    static props = [...PICKER_PROPS, "class?"];
     static template = "web.EmojiPicker";
 
     categories = null;
