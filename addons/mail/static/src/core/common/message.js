@@ -392,6 +392,7 @@ export class Message extends Component {
                     id: Number(oeId),
                     res_id: this.props.thread.id,
                     model: this.props.thread.model,
+                    thread: this.props.thread,
                 }),
                 this.props.thread
             );
