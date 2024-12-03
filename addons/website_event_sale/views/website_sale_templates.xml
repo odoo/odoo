@@ -2,9 +2,9 @@
 <odoo>
 
     <template id="index_topbar" inherit_id="website_event.index_topbar">
-        <xpath expr="//div[hasclass('o_wevent_index_topbar_filters')]" position="inside">
+        <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
             <t t-call="website_sale.pricelist_list">
-                <t t-set="_classes" t-valuef="d-none d-lg-inline me-2 my-1"/>
+                <t t-set="_classes" t-valuef="d-none d-lg-inline me-2"/>
             </t>
         </xpath>
     </template>
