@@ -1,6 +1,7 @@
 import { Component, useSubEnv } from "@odoo/owl";
 import { defaultOptionComponents } from "./defaultComponents";
 import { useVisibilityObserver, useApplyVisibility } from "../builder_helpers";
+import { DependencyManager } from "../plugins/dependency_manager";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";
@@ -12,6 +13,7 @@ export class OptionsContainer extends Component {
 
     setup() {
         useSubEnv({
+            dependencyManager: new DependencyManager(),
             getEditingElement: () => this.props.editingElement,
             weContext: {},
         });

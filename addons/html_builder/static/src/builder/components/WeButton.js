@@ -1,5 +1,10 @@
 import { Component } from "@odoo/owl";
-import { clickableWeWidgetProps, useClickableWeWidget, WeComponent } from "../builder_helpers";
+import {
+    clickableWeWidgetProps,
+    useClickableWeWidget,
+    WeComponent,
+    useDependecyDefinition,
+} from "../builder_helpers";
 
 export class WeButton extends Component {
     static template = "html_builder.WeButton";
@@ -7,6 +12,7 @@ export class WeButton extends Component {
     static props = {
         ...clickableWeWidgetProps,
 
+        id: { type: String, optional: true },
         title: { type: String, optional: true },
         label: { type: String, optional: true },
         iconImg: { type: String, optional: true },
@@ -17,7 +23,10 @@ export class WeButton extends Component {
     };
 
     setup() {
-        const { state, call } = useClickableWeWidget();
+        const { state, call, isActive } = useClickableWeWidget();
+        if (this.props.id) {
+            useDependecyDefinition({ id: this.props.id, isActive });
+        }
         this.state = state;
         this.onClick = call.commit;
         this.onMouseenter = call.preview;

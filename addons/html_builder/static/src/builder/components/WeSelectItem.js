@@ -1,11 +1,17 @@
 import { Component, onMounted, useRef } from "@odoo/owl";
-import { clickableWeWidgetProps, useClickableWeWidget, WeComponent } from "../builder_helpers";
+import {
+    clickableWeWidgetProps,
+    useClickableWeWidget,
+    WeComponent,
+    useDependecyDefinition,
+} from "../builder_helpers";
 import { useBus } from "@web/core/utils/hooks";
 
 export class WeSelectItem extends Component {
     static template = "html_builder.WeSelectItem";
     static props = {
         ...clickableWeWidgetProps,
+        id: { type: String, optional: true },
         title: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
@@ -14,6 +20,9 @@ export class WeSelectItem extends Component {
     setup() {
         const item = useRef("item");
         const { state, call, isActive } = useClickableWeWidget();
+        if (this.props.id) {
+            useDependecyDefinition({ id: this.props.id, isActive });
+        }
 
         const setSelectLabel = () => {
             if (isActive()) {
