@@ -86,6 +86,25 @@ export class SplitBillScreen extends Component {
         return `${latestOrderName.slice(0, -1)}${nextChar}`;
     }
 
+    // Calculates the sent quantities for both orders and adjusts for last_order_preparation_change.
+    _getSentQty(ogLine, newLine, orderedQty) {
+        const unorderedQty = ogLine.qty - orderedQty;
+
+        const delta = newLine.qty - unorderedQty;
+        const newQty = delta > 0 ? delta : 0;
+
+        const res = {};
+        res[ogLine.preparationKey] = {
+            quantity: orderedQty - newQty,
+            splitted: newQty,
+        };
+        res[newLine.preparationKey] = {
+            quantity: newQty,
+            original: newQty,
+        };
+        return res;
+    }
+
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
@@ -97,23 +116,27 @@ export class SplitBillScreen extends Component {
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         newOrder.originalSplittedOrder = originalOrder;
 
+        let sentQty = {};
         // Create lines for the new order
         const lineToDel = [];
         for (const line of originalOrder.lines) {
             if (this.qtyTracker[line.uuid]) {
                 const data = line.serialize();
                 delete data.uuid;
-                this.pos.models["pos.order.line"].create(
+                const newLine = this.pos.models["pos.order.line"].create(
                     {
                         ...data,
                         qty: this.qtyTracker[line.uuid],
                         order_id: newOrder.id,
-                        skip_change: true,
                     },
                     false,
                     true
                 );
 
+                const orderedQty =
+                    originalOrder.last_order_preparation_change.lines[line.preparationKey]
+                        ?.quantity || 0;
+                sentQty = { ...sentQty, ...this._getSentQty(line, newLine, orderedQty) };
                 if (line.getQuantity() === this.qtyTracker[line.uuid]) {
                     lineToDel.push(line);
                 } else {
@@ -122,7 +145,9 @@ export class SplitBillScreen extends Component {
             }
         }
 
+        originalOrder.last_order_preparation_change.splittedLines = [];
         for (const line of lineToDel) {
+            originalOrder.last_order_preparation_change.splittedLines.push(line.uuid);
             line.delete();
         }
 
@@ -136,6 +161,26 @@ export class SplitBillScreen extends Component {
             originalOrder.updateLastOrderChange();
             newOrder.updateLastOrderChange();
         }
+
+        Object.keys(originalOrder.last_order_preparation_change.lines).forEach(
+            (linePreparationKey) => {
+                if (sentQty[linePreparationKey]) {
+                    originalOrder.last_order_preparation_change.lines[linePreparationKey] = {
+                        ...originalOrder.last_order_preparation_change.lines[linePreparationKey],
+                        ...sentQty[linePreparationKey],
+                    };
+                }
+            }
+        );
+        Object.keys(newOrder.last_order_preparation_change.lines).forEach((linePreparationKey) => {
+            if (sentQty[linePreparationKey]) {
+                newOrder.last_order_preparation_change.lines[linePreparationKey] = {
+                    ...newOrder.last_order_preparation_change.lines[linePreparationKey],
+                    ...sentQty[linePreparationKey],
+                };
+            }
+        });
+        this.pos.addPendingOrder([originalOrder.id, newOrder.id]);
 
         originalOrder.customer_count -= 1;
         originalOrder.setScreenData({ name: "ProductScreen" });
