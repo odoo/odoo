@@ -239,4 +239,4 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         bill = self.import_attachment(xml_attachment)
 
         self.assertRecordValues(bill.partner_id, [partner_vals])
-        self.assertEqual(bill.partner_id.contact_address_complete, "270 rte d'Arlon, 8010 Strassen, Luxembourg")
+        self.assertEqual(bill.partner_id.contact_address, "270 rte d'Arlon\n\n8010 Strassen \nLuxembourg")
