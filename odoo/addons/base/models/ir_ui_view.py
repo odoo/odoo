@@ -360,7 +360,7 @@ actual arch.
             try:
                 # verify the view is valid xml and that the inheritance resolves
                 if view.inherit_id:
-                    view_arch = etree.fromstring(view.arch)
+                    view_arch = etree.fromstring(view.arch or '<data/>')
                     view._valid_inheritance(view_arch)
                 combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
