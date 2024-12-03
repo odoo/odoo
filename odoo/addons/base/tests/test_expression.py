@@ -1185,7 +1185,7 @@ class TestAutoJoin(TransactionExpressionCase):
         # --------------------------------------------------
 
         patch_auto_join(partner_obj, 'category_id', True)
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaises(AssertionError):
             partner_obj.search([('category_id.name', '=', 'foo')])
 
         # --------------------------------------------------
@@ -2121,7 +2121,7 @@ class TestMany2many(TransactionCase):
 
     def test_autojoin(self):
         self.patch(self.User._fields['groups_id'], 'auto_join', True)
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaises(AssertionError):
             self.User.search([('groups_id.name', '=', 'foo')])
 
     def test_name_search(self):
