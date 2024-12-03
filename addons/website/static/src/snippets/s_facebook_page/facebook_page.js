@@ -11,7 +11,7 @@ export class FacebookPage extends Interaction {
 
     setup() {
         this.previousWidth = 0;
-        const params = pick(this.el.dataset, 'href', 'id', 'height', 'tabs', 'small_header', 'hide_cover');
+        const params = pick(this.el.dataset, "href", "id", "height", "tabs", "small_header", "hide_cover");
         if (!params.href) {
             return;
         }
