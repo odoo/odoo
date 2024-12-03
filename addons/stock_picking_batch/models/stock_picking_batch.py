@@ -170,7 +170,7 @@ class StockPickingBatch(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_done(self):
         if any(batch.state == 'done' for batch in self):
-            raise UserError(_("You cannot delete Done batch transfers."))
+            raise UserError(_("You cannot delete Done batch/wave transfers."))
 
     def onchange(self, values, field_name, field_onchange):
         """Override onchange to NOT to update all scheduled_date on pickings when
