@@ -29,6 +29,7 @@ export {
     isFocusable,
     isInDOM,
     isInViewPort,
+    isInViewWithinScrollable,
     isScrollable,
     isVisible,
     matches,

@@ -1139,6 +1139,21 @@ export function isNodeInViewPort(node) {
 
 /**
  * @param {Window | Node} node
+ * @param container
+ */
+export function isNodeInViewWithinScrollable(node, container) {
+    const element = ensureElement(node);
+    const { x, y } = getNodeRect(element);
+    const containerRect = getNodeRect(container);
+    const containerDimensions = {
+        height: containerRect.height,
+        width: containerRect.width,
+    };
+    return y > 0 && y < containerDimensions.height && x > 0 && x < containerDimensions.width;
+}
+
+/**
+ * @param {Window | Node} node
  * @param {"x" | "y"} [axis]
  */
 export function isNodeScrollable(node, axis) {
@@ -1483,6 +1498,17 @@ export function isInViewPort(target) {
 }
 
 /**
+ * Checks whether a target is *at least partially* visible within its scrollable container.
+ *
+ * @param {Target} target
+ * @returns {boolean}
+ */
+export function isInViewWithinScrollable(target, scrollableContainer) {
+    const scrollableNode = queryOne(scrollableContainer);
+    return queryAll(target, { viewWithin: scrollableNode }).length > 0;
+}
+
+/**
  * Returns whether an element is scrollable.
  *
  * @param {Target} target
@@ -1653,7 +1679,7 @@ export function queryAll(target, options) {
         return queryAll(String.raw(...arguments));
     }
 
-    const { exact, displayed, root, viewPort, visible } = options || {};
+    const { exact, displayed, root, viewPort, visible, viewWithin } = options || {};
 
     /** @type {Node[]} */
     let nodes = [];
@@ -1693,6 +1719,9 @@ export function queryAll(target, options) {
     } else if (displayed) {
         nodes = nodes.filter(isNodeDisplayed);
         prefix = "displayed";
+    } else if (viewWithin) {
+        nodes = nodes.filter((node) => isNodeInViewWithinScrollable(node, viewWithin));
+        prefix = "in view within scrollable";
     }
 
     const count = nodes.length;

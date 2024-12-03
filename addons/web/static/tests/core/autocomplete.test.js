@@ -1,5 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import {
+    isInViewWithinScrollable,
+    isScrollable,
     pointerDown,
     pointerUp,
     queryAllAttributes,
@@ -645,4 +647,68 @@ test("autocomplete always closes on click away", async () => {
     expect(".o-autocomplete--dropdown-item").toHaveCount(2);
     await contains(document.body).click();
     expect(".o-autocomplete--dropdown-item").toHaveCount(0);
+});
+
+test("autocomplete scrolls when moving with arrows", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <style>
+                .o-autocomplete--dropdown-menu {
+                    max-height: 100px;
+                }
+            </style>
+            <AutoComplete
+                value="state.value"
+                sources="sources"
+                onSelect="() => {}"
+                autoSelect="true"
+            />
+        `;
+        static props = ["*"];
+        static components = { AutoComplete };
+        setup() {
+            this.state = useState({
+                value: "",
+            });
+        }
+        get sources() {
+            return [
+                {
+                    options: [
+                        { label: "Never" },
+                        { label: "Gonna" },
+                        { label: "Give" },
+                        { label: "You" },
+                        { label: "Up" },
+                    ],
+                },
+            ];
+        }
+    }
+    const dropdownSelector = ".o-autocomplete--dropdown-menu";
+    const activeItemSelector = ".o-autocomplete--dropdown-item .ui-state-active";
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete input").toHaveCount(1);
+    // Open with arrow key.
+    await contains(".o-autocomplete input").focus();
+    await contains(".o-autocomplete input").press("ArrowDown");
+    expect(".o-autocomplete--dropdown-item").toHaveCount(5);
+    expect(isScrollable(dropdownSelector)).toBe(true);
+    // First element focused and visible (dropdown is not scrolled yet).
+    expect(".o-autocomplete--dropdown-item:first-child a").toHaveClass("ui-state-active");
+    expect(isInViewWithinScrollable(activeItemSelector, dropdownSelector)).toBe(true);
+    // Navigate with the arrow keys. Go to the last item.
+    expect(isInViewWithinScrollable(".o-autocomplete--dropdown-item:contains('Up')", dropdownSelector)).toBe(false);
+    await contains(".o-autocomplete--input").press("ArrowUp");
+    await contains(".o-autocomplete--input").press("ArrowUp");
+    expect(activeItemSelector).toHaveText("Up");
+    expect(isInViewWithinScrollable(activeItemSelector, dropdownSelector)).toBe(true);
+    // Navigate to an item that is not currently visible.
+    expect(isInViewWithinScrollable(".o-autocomplete--dropdown-item:contains('Never')", dropdownSelector)).toBe(false);
+    for (let i=0; i < 4; i++) {
+        await contains(".o-autocomplete--input").press("ArrowUp");
+    }
+    expect(activeItemSelector).toHaveText("Never");
+    expect(isInViewWithinScrollable(activeItemSelector, dropdownSelector)).toBe(true);
+    expect(isInViewWithinScrollable(".o-autocomplete--dropdown-item:last", dropdownSelector)).toBe(false);
 });
