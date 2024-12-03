@@ -104,6 +104,10 @@ export class MassMailingWysiwyg extends Wysiwyg {
         super.onToggleFullscreen(isFullscreen);
         const iframe = this.$iframe?.[0];
         if (iframe && iframe.isConnected) {
+            iframe.parentElement.classList.toggle(
+                "o_mass_mailing_iframe_ancestor_fullscreen",
+                isFullscreen
+            );
             const body = iframe.contentWindow.document.body;
             const scrollingElement = isFullscreen ? body : iframe;
             body.classList.toggle("o_mass_mailing_iframe_body_fullscreen", isFullscreen);

@@ -209,7 +209,7 @@ msgstr "%(count1)s/%(count2)s "
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s Dashboard"
-msgstr ""
+msgstr "لوحة بيانات %(name)s "
 
 #. module: project
 #. odoo-python
@@ -254,7 +254,7 @@ msgstr "%s (نسخة)"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "%s closed tasks"
-msgstr ""
+msgstr "%s مهام مغلقة "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -386,6 +386,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                مرحباً <t t-out=\"partner.name or ''\">براندن فريمان</t>،<br><br>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                مرحباً،<br><br>\n"
+"            </t>\n"
+"            هلّا تفضلت ببضع دقائق من وقتك لتقييم خدماتنا المتعلقة بالمهمة <strong t-out=\"object.name or ''\">التخطيط والميزانية</strong>\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                المسندة إلى <strong t-out=\"object._rating_get_operator().name or ''\">ميتشل آدمن</strong>.<br>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>أخبرنا عن رأيك عن خدمتنا</strong><br>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(اضغط على إحدى تلك الوجوه المبتسمة)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            نحن نقدّر ملاحظاتك، حيث إنها تساعدنا على التحسن باستمرار.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">لقد تم إرسال استطلاع العميل لأنه قد تم نقل مهمتك إلى مرحلة <b t-out=\"object.stage_id.name or ''\">قيد التنفيذ</b> </span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">يتم إرسال استطلاع الرضا هذا <b t-out=\"object.project_id.rating_status_period or ''\">أسبوعياً</b> طالما أن المهمة في مرحلة <b t-out=\"object.stage_id.name or ''\">قيد التنفيذ</b>.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br>مع أطيب التحيات،</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">شركتك</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -1200,7 +1275,7 @@ msgstr "محجوب من قِبَل "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked Tasks"
-msgstr ""
+msgstr "المهام التي تم حجبها "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action_blocking_tasks
@@ -2286,7 +2361,7 @@ msgstr "مرحباً "
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Hide closed tasks"
-msgstr ""
+msgstr "إخفاء المهام التي تم إغلاقها "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -4271,7 +4346,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Show closed tasks"
-msgstr ""
+msgstr "إظهار المهام التي تم إغلاقها "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4412,7 +4487,7 @@ msgstr "الولاية "
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
 msgid "State readonly"
-msgstr ""
+msgstr "الحالة للقراءة فقط "
 
 #. module: project
 #. odoo-javascript
@@ -5045,7 +5120,7 @@ msgstr "نصيحة: أنشئ المهام من رسائل البريد الوا�
 #: model:digest.tip,name:project.digest_tip_project_3
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
-msgstr ""
+msgstr "نصيحة: الحقول الخاصة بالمشروع  "
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -5137,7 +5212,7 @@ msgstr "الإجمالي"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "Total Costs"
-msgstr ""
+msgstr "إجمالي التكاليف "
 
 #. module: project
 #. odoo-javascript

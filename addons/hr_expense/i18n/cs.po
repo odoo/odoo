@@ -3,6 +3,7 @@
 # 	* hr_expense
 # 
 # Translators:
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -43,7 +44,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "%(date_from)s - %(date_to)s"
-msgstr ""
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -389,7 +390,7 @@ msgstr "Přílohy"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr ""
+msgstr "Přílohy výdajů"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_base
@@ -1366,7 +1367,7 @@ msgstr "Nové"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New Expense Report, paid by %(paid_by)s"
-msgstr ""
+msgstr "Nový výkaz výdaje, zaplacen od %(paid_by)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -1489,7 +1490,7 @@ msgstr "Počet zpráv s chybou při doručení"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
 msgid "Numbers computed from your personal expenses."
-msgstr ""
+msgstr "Čísla vypočítaná z vašich osobních výdajů."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -2123,6 +2124,27 @@ msgid ""
 "The work email of some employees is missing. Please add it on the employee "
 "form"
 msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Employee(s) should have a bank account set."
+msgstr "Zaměstnanci by měli mít nastavený bankovní účet."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Go to Employee(s)"
+msgstr "Přejít na zaměstnance"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Employee(s)"
+msgstr "Zaměstnanci"
 
 #. module: hr_expense
 #. odoo-python

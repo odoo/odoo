@@ -1867,6 +1867,7 @@ class Request:
         # for matching the controller endpoint
         try:
             self.registry, cr_readonly = self._open_registry()
+            threading.current_thread().dbname = self.registry.db_name
             self.env = odoo.api.Environment(cr_readonly, self.session.uid, self.session.context)
             try:
                 rule, args = self.registry['ir.http']._match(self.httprequest.path)

@@ -1380,6 +1380,8 @@ msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
+"Trascina e rilascia il file PDF della richiesta di preventivo nell'elenco di"
+" preventivi in Odoo. Goditi l'automazione!"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
@@ -1577,6 +1579,8 @@ msgid ""
 "In selected purchase order to merge these details must be same\n"
 "Vendor, currency, destination, dropship address and agreement"
 msgstr ""
+"Per abbinare i dettagli dell'ordine di acquisto selezionato, è necessario avere\n"
+"lo stesso fornitore, la stessa valuta, la stessa destinazione, lo stesso indirizzo per il dropshipping e lo stesso accordo."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
@@ -1633,7 +1637,7 @@ msgstr "È in ordine d'acquisto"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
 #: model:ir.model.fields,field_description:purchase.field_account_move__is_purchase_matched
 msgid "Is Purchase Matched"
-msgstr ""
+msgstr "Acquisto abbinato"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1711,7 +1715,7 @@ msgstr "Livelli di approvazione *"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_amount_untaxed
 msgid "Line Amount Untaxed"
-msgstr ""
+msgstr "Riga importo imponibile"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
@@ -2166,11 +2170,13 @@ msgid ""
 "Please select at least two purchase orders with state RFQ and RFQ sent to "
 "merge."
 msgstr ""
+"Seleziona almento due ordini di acquisto con gli stati RdP e RdP inviata da "
+"abbinare."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
 msgid "Pol"
-msgstr ""
+msgstr "Riga OdA"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -2259,7 +2265,7 @@ msgstr "Prezzo UdM prodotto"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
-msgstr ""
+msgstr "Qtà UdM prodotto"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2310,7 +2316,7 @@ msgstr "Contratti di acquisto"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
 msgid "Purchase Amount Untaxed"
-msgstr ""
+msgstr "Importo imponibile acquisto"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2323,7 +2329,7 @@ msgstr "Analisi acquisti"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Purchase Bill Lines"
-msgstr ""
+msgstr "Righe fattura fornitore acquisto"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2356,7 +2362,7 @@ msgstr "Tempo di risposta per acquisti"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
-msgstr ""
+msgstr "Vista abbinamento riga acquisto e riga fattura fornitore"
 
 #. module: purchase
 #. odoo-python
@@ -2644,13 +2650,13 @@ msgstr "RdP inviata"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
-msgstr ""
+msgstr "RdP abbinata con %(oldest_rfq_name)s e %(cancelled_rfq)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %s"
-msgstr ""
+msgstr "RdP abbinata con %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -2899,6 +2905,8 @@ msgstr "Token di sicurezza"
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Select Vendor Bill lines to add to a Purchase Order"
 msgstr ""
+"Seleziona le righe della fattura fornitore da aggiungere ad un ordine di "
+"acquisto"
 
 #. module: purchase
 #. odoo-javascript
@@ -3166,13 +3174,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The RFQ has been acknowledged by %s."
-msgstr ""
+msgstr "La RdP è stata confermata da %s."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The RFQ has been declined by %s."
-msgstr ""
+msgstr "La RdP è stata rifiutata da %s."
 
 #. module: purchase
 #. odoo-python
@@ -3204,6 +3212,8 @@ msgid ""
 "The vendor asked to decline this confirmed RfQ, if you agree on that, cancel"
 " this PO"
 msgstr ""
+"Il fornitore ha chiesto di annullare la RdP confermata, se sei d'accordo, "
+"annulla l'ordine di acquisto"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3221,6 +3231,8 @@ msgstr "Al momento non ci sono richieste di preventivo per il tuo account."
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
 msgstr ""
+"Non sono presenti prodotti da aggiungere all'ordine di acquisto. Questi sono"
+" acconti?"
 
 #. module: purchase
 #. odoo-python
@@ -3393,7 +3405,7 @@ msgstr "Vero se la ricezione dell'OdA viene confermata dal fornitore."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_declined
 msgid "True if PO reception is declined by the vendor."
-msgstr ""
+msgstr "Vero se la ricezione dell'OdA viene rifiutata dal fornitore."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed
@@ -3418,6 +3430,8 @@ msgid ""
 "Unable to cancel purchase order(s): %s. You must first cancel their related "
 "vendor bills."
 msgstr ""
+"Impossibile annullare l'ordine di acquisto: %s. Annulla prima le relative "
+"fatture fornitore."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
@@ -3549,6 +3563,8 @@ msgstr "Fattura fornitore"
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Vendor Bill lines can only be added to one Purchase Order."
 msgstr ""
+"Le righe della fattura fornitore possono essere aggiunte solo ad un ordine "
+"di acquisto."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -3728,6 +3744,8 @@ msgstr ""
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "You can't select lines from multiple Vendor Bill to do the matching."
 msgstr ""
+"Non puoi selezionare righe da più fatture fornitore per effettuare "
+"l'abbinamento."
 
 #. module: purchase
 #. odoo-python
@@ -3768,6 +3786,8 @@ msgstr ""
 msgid ""
 "You must select at least one Purchase Order line to match or create bill."
 msgstr ""
+"Devi selezionare almeno una riga dell'ordine di acquisto per abbinare o "
+"creare fatture."
 
 #. module: purchase
 #. odoo-python

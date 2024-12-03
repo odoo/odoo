@@ -10790,6 +10790,32 @@ msgid ""
 "with pain.008.001.02 specification) to send to your bank in order to\n"
 "collect a set of payments.\n"
 "\n"
+"To be eligible for this payment method, a customer must have first\n"
+"returned a mandate to the company, giving their consent to use direct debit.\n"
+"This consent must have been encoded as a 'customer mandate' in Odoo.\n"
+"\n"
+"You also need to meet the following requirements in order to properly\n"
+"generate an SDD file:\n"
+"- Your company account must be set to a valid IBAN number\n"
+"- Your company must have been given a creditor identifier (this can be done in Settings - General Settings - Accounting section)\n"
+"- Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"- Every customer for whom you generate a payment must have a valid IBAN account number.\n"
+"\n"
+"Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"To register a payment for open invoices, you can use the dedicated\n"
+"'SEPA Direct Debit' option by selecting a bank account in the 'Register\n"
+"Payment' wizard. An error message will appear if no valid mandate is\n"
+"available for generating a payment on the selected invoice.\n"
+msgstr ""
+
+#. module: base
+msgid ""
+"\n"
+"This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"with pain.008.001.02 specification) to send to your bank in order to\n"
+"collect a set of payments.\n"
+"\n"
 "To be elligible for this payment method, a customer must have first\n"
 "returned a mandate to the company, giving his consent to use direct debit.\n"
 "This consent must have been encoded as a 'customer mandate' into Odoo.\n"
@@ -11567,7 +11593,7 @@ msgid ""
 "This module provides management of your IoT Boxes inside Odoo.\n"
 msgstr ""
 "\n"
-"このモジュールでOdoo内のIoTボックスの管理をすることができます。\n"
+"このモジュールでOdoo内のIoT Boxの管理をすることができます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap
@@ -11804,7 +11830,7 @@ msgstr ""
 "- 除去日\n"
 "- アラート日\n"
 "\n"
-"また、食品産業において、例えば、除去戦略、使用期限ファーストアウト(FEFO)の、広く使用されている実装がされています。\n"
+"また、食品業界において、例えば、除去戦略、使用期限ファーストアウト(FEFO)の、広く使用されている実装がされています。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -24052,7 +24078,7 @@ msgstr "連邦州は国に属し、連絡先の住所の一部となります。
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping (Legacy)"
-msgstr ""
+msgstr "Fedex配送 (レガシー)"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.CNH
@@ -26904,7 +26930,7 @@ msgstr "業界"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr "産業"
+msgstr "インダストリー"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
@@ -34887,7 +34913,7 @@ msgstr "POS準備画面"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_preparation_display
 msgid "PoS Preparation Display HR"
-msgstr "POS準備ディスプレイ人事"
+msgstr "POS準備画面人事"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_preparation_display
@@ -37898,6 +37924,8 @@ msgid ""
 " install the new \"Fedex Shipping\" module and uninstall this one as soon as"
 " possible. This integration will stop working in 2024"
 msgstr ""
+"これは、サポートが終了したFedExとのレガシー統合です。 新しい \"FedEx配送 "
+"\"モジュールをインストールし、できるだけ早くこのモジュールをアンインストールして下さい。この統合は2024年に機能しなくなります。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest

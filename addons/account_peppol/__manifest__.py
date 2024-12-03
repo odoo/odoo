@@ -18,6 +18,7 @@
     },
     'data': [
         'data/cron.xml',
+        'data/mail_templates_email_layouts.xml',
         'data/res_partner_data.xml',
         'security/ir.model.access.csv',
         'views/account_journal_dashboard_views.xml',

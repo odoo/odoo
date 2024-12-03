@@ -15211,11 +15211,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"No debe seleccionar la plantilla del plan de cuentas de SYSCOHADA de forma "
-"directa. Seleccione la plantilla del plan contable de su país."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
@@ -15803,7 +15801,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "La divisa alternativa si se trata de un asiento multidivisa."
+msgstr "La moneda alterna si se trata de un asiento multimoneda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
@@ -16437,10 +16435,10 @@ msgid ""
 " master budgets and the budgets are defined, the project managers can set "
 "the planned amount on each analytic account."
 msgstr ""
-"Esto permite a los contadores manejar presupuestos analíticos y cruzados. "
-"Una vez que se definen los presupuestos maestros y los presupuestos, los "
-"administradores del proyecto pueden establecer el importe planeado en cada "
-"cuenta analítica."
+"Esto permite que los contadores gestionen presupuestos analíticos y "
+"cruzados. Una vez que se definen los presupuestos maestros y los "
+"presupuestos, los administradores del proyecto pueden establecer la cantidad"
+" planeada en cada cuenta analítica."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -16622,7 +16620,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
-msgstr "Esta línea y sus hijas se ocultarán cuando todas sus columnas sean 0."
+msgstr ""
+"Esta línea y sus líneas dependientes se ocultarán cuando todas sus columnas "
+"sean 0."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -16821,8 +16821,8 @@ msgid ""
 "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
-"Para mantener la pista de auditoría, no puede eliminar los asientos contables una vez que los haya registrado.\n"
-"En su lugar, puede cancelar el asiento contable."
+"Para mantener mantener la auditoría en orden, no puede eliminar los asientos contables una vez que los haya registrado.\n"
+"Mejor cancele el asiento contable."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -16837,9 +16837,9 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s"
 " in order to validate it."
 msgstr ""
-"Para registrar pagos con %(method_name)s, la cuenta bancaria del "
-"beneficiario debe ser validada de forma manual. Deberá ir a la cuenta "
-"bancaria de %(partner)s para llevarlo a cabo."
+"Para registrar pagos con %(method_name)s, deberá validar la cuenta bancaria "
+"del beneficiario de forma manual. Vaya a la cuenta bancaria de %(partner)s "
+"para realizar el proceso."
 
 #. module: account
 #. odoo-python
@@ -17187,8 +17187,8 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
-"No se puede crear un estado de cuenta debido a que faltan transacciones. Tal"
-" vez quiera volver a ordenar las transacciones antes de continuar."
+"No es posible crear un estado de cuenta ya que faltan transacciones. Revise "
+"las transacciones de nuevo antes de continuar."
 
 #. module: account
 #. odoo-python
@@ -17847,7 +17847,7 @@ msgstr "Advertencias en facturas"
 msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
-msgstr "Es necesario que este documento tenga una empresa. Elija una."
+msgstr "Es necesario que este documento tenga una empresa, elija una."
 
 #. module: account
 #. odoo-python
@@ -17856,8 +17856,8 @@ msgid ""
 "We cannot find a chart of accounts for this company, you should configure it. \n"
 "Please go to Account Configuration and select or install a fiscal localization."
 msgstr ""
-"No podemos encontrar un plan de cuentas para esta empresa. Debe configurarlo.\n"
-"Por favor, diríjase a la configuración de cuenta y seleccione o instale una localización fiscal."
+"No podemos encontrar un plan de cuentas para esta empresa, configure uno.\n"
+"Vaya a la configuración de la cuenta y seleccione o instale una localización fiscal."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -18057,12 +18057,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"No puede archivar un diario que contiene asientos contables en estado de borrador.\n"
+"No puede archivar un diario que contenga asientos contables en estado de borrador.\n"
 "\n"
 "Para continuar:\n"
-"1. Haga clic en el botón \"asientos contables\" ubicado en la parte superior derecha en el formulario del diario.\n"
+"1. Haga clic en el botón \"asientos contables\" ubicado en la parte superior derecha del formulario del diario.\n"
 "2. Filtre los asientos en estado de borrador.\n"
-"3. Seleccione todos y publique o elimínelos a través del menú de acción."
+"3. Seleccione todos y publique o elimínelos mediante el menú de acción."
 
 #. module: account
 #. odoo-python
@@ -18367,8 +18367,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"No puede crear una posición fiscal con un NIF extranjero dentro de su país "
-"fiscal sin asignarle un estado."
+"No puede crear una posición fiscal con un número de identificación fiscal "
+"extranjero dentro de su país fiscal sin asignarle un estado."
 
 #. module: account
 #. odoo-python
@@ -18994,9 +18994,9 @@ msgid ""
 "third party in the context of any claim for damages filed against the client"
 " by an end consumer."
 msgstr ""
-"no puede, en ningún caso, ser requerido por el cliente para comparecer como "
-"tercero en el contexto de un reclamo por daños presentado contra el cliente "
-"por un consumidor final."
+"no puede, por ningún motivo, ser requerido por el cliente para comparecer "
+"como una parte tercera en caso de que un consumidor final presente un "
+"reclamo contra el cliente por daños."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -19196,9 +19196,9 @@ msgid ""
 " to its registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
-"debe ser notificado de cualquier reclamo mediante una carta enviada por "
-"correo certificado a su oficina registrada en un plazo de 8 días desde la "
-"entrega de los bienes o la prestación de los servicios."
+"debe recibir notificación de cualquier reclamo mediante una carta que se "
+"enviará por correo certificado a su oficina registrada en un plazo de 8 días"
+" desde la entrega de los bienes o la prestación de los servicios."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax

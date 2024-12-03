@@ -3,12 +3,11 @@
 # 	* account
 # 
 # Translators:
-# Martin Trigaux, 2024
 # Jordy Blankestijn <jblankestijn@erpopen.nl>, 2024
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,14 +71,14 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Groep van BTW's: de BTW is een set van sub BTW's.\n"
-"    - Vast: Het BTW bedrag is gelijk ongeacht de prijs.\n"
-"    - Percentage: Het BTW bedrag is een percentage van de prijs:\n"
+"    - Groep van btw's: de btw is een set van sub btw's.\n"
+"    - Vast: Het btw-bedrag is gelijk ongeacht de prijs.\n"
+"    - Percentage: Het btw-bedrag is een percentage van de prijs:\n"
 "        Bijv. 100 * (1 + 10%) = 110 (niet inbegrepen in de prijs)\n"
 "        Bijv. 110 / (1 + 10%) = 100 (Percentage van de prijs)\n"
-"    - Percentage is inclusief BTW: Het BTW bedrag is een gedeelte van de prijs:\n"
-"        Bijv. 180 / (1 - 10%) = 200 (exclusief BTW)\n"
-"        Bijv. 200 * (1 - 10%) = 180 (inclusief BTW)\n"
+"    - Percentage is inclusief btw: Het btw-bedrag is een gedeelte van de prijs:\n"
+"        Bijv. 180 / (1 - 10%) = 200 (exclusief btw)\n"
+"        Bijv. 200 * (1 - 10%) = 180 (inclusief btw)\n"
 "        "
 
 #. module: account
@@ -1015,7 +1014,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                                        BTW\n"
+"                                        Btw\n"
 "                                      </span>"
 
 #. module: account
@@ -1324,13 +1323,13 @@ msgstr "<span>Rapportages</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>Tax 0%</span>"
-msgstr "<span>BTW 0%</span>"
+msgstr "<span>Btw 0%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
-msgstr "<span>BTW </span>"
+msgstr "<span>Btw</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1352,7 +1351,7 @@ msgstr "<span>Dit is een voorbeeld van je algemene voorwaarden.</span>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<span>This payment has the same partner, amount and date as </span>"
 msgstr ""
-"<span>Het bedrag, de relatie en de datum van deze betaling zijn identiek aan"
+"<span>Het bedrag, de partner en de datum van deze betaling zijn identiek aan"
 " die van </span>"
 
 #. module: account
@@ -1541,7 +1540,7 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this region."
 msgstr ""
-"In deze regio bestaat al een fiscale positie met een buitenlandse BTW."
+"In deze regio bestaat al een fiscale positie met een buitenlandse btw."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1635,9 +1634,9 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
-"Een afronding per regel is aanbevolen indien je prijzen inclusief BTW zijn. "
+"Een afronding per regel is aanbevolen indien je prijzen inclusief btw zijn. "
 "Hierdoor is de som van alle subtotalen gelijk aan de totale som inclusief "
-"BTW."
+"btw."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1678,7 +1677,7 @@ msgstr "Een tijdelijk nummer kan niet worden gebruikt bij een echte matching"
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "Een waarschuwing kan worden ingesteld op een relatie (factuur)"
+msgstr "Een waarschuwing kan worden ingesteld op een partner (factuur)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__aba_routing
@@ -1688,7 +1687,7 @@ msgstr "ABA/Routing"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
 msgid "Abnormal Amount Partner"
-msgstr "Abnormaal bedrag relatie"
+msgstr "Abnormaal bedrag partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
@@ -1699,7 +1698,7 @@ msgstr "Waarschuwing abnormaal bedrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
 msgid "Abnormal Date Partner"
-msgstr "Abnormale datum relatie"
+msgstr "Abnormale datum partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
@@ -1978,13 +1977,13 @@ msgstr "Grootboeklabels"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_tree
 msgid "Account Tax"
-msgstr "BTW-rekening"
+msgstr "Btw-rekening"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr "BTW-groepen"
+msgstr "Btw-groepen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -2080,7 +2079,7 @@ msgstr "Rekening op product"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 msgid "Account on which to post the tax amount"
-msgstr "Rekening waarop het BTW-bedrag moet worden geboekt"
+msgstr "Rekening waarop het btw-bedrag moet worden geboekt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
@@ -2105,7 +2104,7 @@ msgid ""
 "used to keep track of the tax base amount."
 msgstr ""
 "De grootboekrekening welke wordt ingesteld op regels aangemaakt met het "
-"kasstelsel stelsel, om zo de BTW grondslag te kunnen bijhouden."
+"kasstelsel stelsel, om zo de btw grondslag te kunnen bijhouden."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -2135,10 +2134,10 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
-"Tussenrekening gebruikt voor BTW bedrag voor BTW op basis van kasstelsel. "
-"Het bevat het BTW bedrag zolang de originele factuur niet is afgeletterd; "
+"Tussenrekening gebruikt voor btw-bedrag voor btw op basis van kasstelsel. "
+"Het bevat het btw-bedrag zolang de originele factuur niet is afgeletterd; "
 "bij aflettering wordt dit bedrag op deze rekening geannuleerd en op de "
-"gewone BTW rekening gezet."
+"gewone btw-rekening gezet."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2554,7 +2553,7 @@ msgstr "Geavanceerde instellingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr "Beïnvloed grondslag van daarop volgende BTW's"
+msgstr "Beïnvloed grondslag van daarop volgende btw's"
 
 #. module: account
 #. odoo-javascript
@@ -2690,7 +2689,7 @@ msgstr "Sta beheer kassa afronding toe"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "Sta toe om BTW's te configureren op kasstelsel methode"
+msgstr "Sta toe om btw's te configureren op kasstelsel methode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
@@ -2877,7 +2876,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "An Off-Balance account can not have taxes"
-msgstr "Een rekening welke niet is opgenomen in de balans kan geen BTW hebben"
+msgstr "Een rekening welke niet is opgenomen in de balans kan geen btw hebben"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
@@ -3005,7 +3004,7 @@ msgstr "Analytische nauwkeurigheid"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_reporting
 msgid "Analytic Report"
-msgstr "Kostenplaatsen"
+msgstr "Analytische rapportage"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_analytic_reporting
@@ -3061,7 +3060,7 @@ msgstr "Toepassen"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply VAT of the EU country to which goods and services are delivered."
 msgstr ""
-"BTW toepassen van het EU-land waaraan goederen en diensten worden geleverd."
+"Btw toepassen van het EU-land waaraan goederen en diensten worden geleverd."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
@@ -3076,7 +3075,7 @@ msgstr "Alleen toepassen als het land van leveren overeenkomt."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 msgid "Apply only if partner has a VAT number."
-msgstr "Alleen toepassen als relatie een BTW nummer heeft."
+msgstr "Alleen toepassen als de partner een btw-nummer heeft."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -3084,8 +3083,8 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (VAT/Country) are met."
 msgstr ""
-"Pas automatisch BTW & boekhoudkundige mapping toe op facturen als aan de "
-"overeenstemmingscriteria (BTW/land) is voldaan."
+"Pas automatisch btw & boekhoudkundige mapping toe op facturen als aan de "
+"overeenstemmingscriteria (btw/land) is voldaan."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -3297,7 +3296,7 @@ msgstr "Standaarddagboek voor automatische invoer"
 #. module: account
 #: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
 msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "Automatische BTW mapping (AvaTax)"
+msgstr "Automatische btw-mapping (AvaTax)"
 
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
@@ -3308,7 +3307,7 @@ msgstr "Automatische reeks"
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,help:account.field_res_users__autopost_bills
 msgid "Automatically post bills for this trusted partner"
-msgstr "Automatisch facturen posten voor deze vertrouwde relatie"
+msgstr "Automatisch facturen posten voor deze vertrouwde partner"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -3343,7 +3342,7 @@ msgstr "Beschikbaar dagboek"
 #: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
 msgid "Available Partner Bank"
-msgstr "Beschikbare bank van relatie"
+msgstr "Beschikbare bank van partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
@@ -3485,7 +3484,7 @@ msgid ""
 msgstr ""
 "Bankrekeningnummer waarop de factuur wordt betaald. Een bedrijfsbankrekening"
 " als dit een klantfactuur of leveranciers creditfactuur is, anders een "
-"relatie bankrekeningnummer."
+"partnerbankrekeningnummer."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
@@ -3644,7 +3643,7 @@ msgstr "Basis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_base_affected
 msgid "Base Affected by Previous Taxes"
-msgstr "Basis beïnvloed door eerdere BTW's"
+msgstr "Basis beïnvloed door eerdere btw's"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_base_amount
@@ -3655,7 +3654,7 @@ msgstr "Grondslag"
 #: model:ir.model.fields,field_description:account.field_res_company__account_cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr "Ontvangen BTW grondslagrekening"
+msgstr "Ontvangen btw grondslagrekening"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
@@ -3684,8 +3683,8 @@ msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
 "Based on Payment: the tax is due as soon as the payment of the invoice is received."
 msgstr ""
-"Gebaseerd op facturen: De BTW is verschuldigd zodra de factuur is bevestigd.\n"
-"Gebaseerd op betalingen: De BTW is verschuldigd wanneer de betaling op de factuur is ontvangen."
+"Gebaseerd op facturen: De btw is verschuldigd zodra de factuur is bevestigd.\n"
+"Gebaseerd op betalingen: De btw is verschuldigd wanneer de betaling op de factuur is ontvangen."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
@@ -4113,7 +4112,7 @@ msgstr "Kasbasis oorsprong"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.1_caba
 msgid "Cash Basis Taxes"
-msgstr "Kasstelsel BTW"
+msgstr "Kasstelsel btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
@@ -4166,7 +4165,7 @@ msgstr "Betalingskortingsverlies"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
 msgid "Cash Discount Tax Reduction"
-msgstr "Betalingskorting BTW-vermindering"
+msgstr "Betalingskorting btw-vermindering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
@@ -4362,7 +4361,7 @@ msgstr "Controleren"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Check Partner(s) Email(s)"
-msgstr "Controleer het e-mailadres van de relatie(s)"
+msgstr "Controleer het e-mailadres van de partner(s)"
 
 #. module: account
 #. odoo-python
@@ -4405,7 +4404,7 @@ msgid ""
 "associated with this tag in tax report computation."
 msgstr ""
 "Vink dit vakje aan om de absolute waarde van het saldo van de regels die aan"
-" dit label zijn gekoppeld in de berekening van het BTW-rapport te negeren."
+" dit label zijn gekoppeld in de berekening van het btw-rapport te negeren."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -4437,13 +4436,13 @@ msgstr "Onderliggende regels"
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Children Taxes"
-msgstr "Onderliggende/sub BTW"
+msgstr "Onderliggende/sub btw"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_sales_tax
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 msgid "Choose a default sales tax for your products."
-msgstr "Kies een algemene verkoop BTW voor je producten."
+msgstr "Kies een algemene verkoop btw voor je producten."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -4575,7 +4574,7 @@ msgstr "Bedrijven"
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
 #: model:ir.model.fields,field_description:account.field_res_users__ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Bedrijven die referenen aan relatie"
+msgstr "Bedrijven die referenen aan partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__company_id
@@ -4668,7 +4667,7 @@ msgstr "Bedrijf Storno Boekhouding"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_vat_placeholder
 msgid "Company Vat Placeholder"
-msgstr "Bedrijf BTW Plaatshouder"
+msgstr "Bedrijf btw Plaatshouder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -4686,7 +4685,7 @@ msgstr "Bedrijf gerelateerd aan dit dagboek"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Complete the partner data with email"
-msgstr "Vul de relatiegegevens in met e-mail"
+msgstr "Vul de partnergegevens in met e-mail"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -4894,7 +4893,7 @@ msgstr "Tegenboeking regels"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr "Landen waarvoor het bedrijf een BTW-nummer heeft"
+msgstr "Landen waarvoor het bedrijf een btw-nummer heeft"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4943,7 +4942,7 @@ msgstr "Naam land"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
 msgid "Country for which this tag is available, when applied on taxes."
-msgstr "Land waarvoor deze regel beschikbaar is, indien toegepast op BTW."
+msgstr "Land waarvoor deze regel beschikbaar is, indien toegepast op btw."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -5069,12 +5068,12 @@ msgstr "Maak een nieuwe leverancier in je adresboek"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
 msgid "Create a new tax"
-msgstr "Maak een nieuwe BTW"
+msgstr "Maak een nieuwe btw"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_group
 msgid "Create a new tax group"
-msgstr "Een nieuwe BTW-groep maken"
+msgstr "Een nieuwe btw-groep maken"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__use_sections
@@ -5364,7 +5363,7 @@ msgstr "Creditdagboek items die afgeletterd zijn met dit dagboek item."
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
 #: model:ir.model.fields,help:account.field_res_users__credit_limit
 msgid "Credit limit specific to this partner."
-msgstr "Kredietlimiet specifiek voor deze relatie."
+msgstr "Kredietlimiet specifiek voor deze partner."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -5917,13 +5916,13 @@ msgstr "Standaard Kassa-debiteurenrekening"
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__purchase_tax_id
 msgid "Default Purchase Tax"
-msgstr "Standaard BTW op inkopen"
+msgstr "Standaard btw op inkopen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__sale_tax_id
 msgid "Default Sale Tax"
-msgstr "Standaard BTW op verkopen"
+msgstr "Standaard btw op verkopen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_price_include
@@ -5938,7 +5937,7 @@ msgstr "Standaard verkoopprijs is inclusief"
 #: model:ir.model.fields,field_description:account.field_account_account__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Taxes"
-msgstr "Standaard BTW"
+msgstr "Standaard btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__use_invoice_terms
@@ -6159,9 +6158,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
-"Bepaalt waar de BTW selecteerbaar is. Opmerking: 'Geen' betekent dat een BTW"
+"Bepaalt waar de btw selecteerbaar is. Opmerking: 'Geen' betekent dat een btw"
 " niet op zichzelf kan worden gebruikt, maar wel in een groep. 'correctie' "
-"wordt gebruikt om wijzigingen in BTW te doen."
+"wordt gebruikt om wijzigingen in btw te doen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -6488,12 +6487,12 @@ msgstr "Distributie voor credits"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
-msgstr "Verdeling wanneer de BTW wordt gebruikt voor een creditfactuur"
+msgstr "Verdeling wanneer de btw wordt gebruikt voor een creditfactuur"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
 msgid "Distribution when the tax is used on an invoice"
-msgstr "Verdeling wanneer de BTW wordt gebruikt voor een factuur"
+msgstr "Verdeling wanneer de btw wordt gebruikt voor een factuur"
 
 #. module: account
 #: model:account.account,name:account.1_dividends
@@ -6554,7 +6553,7 @@ msgid ""
 "Entry."
 msgstr ""
 "Vooruitbetalingen die op deze rekening zijn geboekt, worden in aanmerking "
-"genomen door de BTW-afsluiting."
+"genomen door de btw-afsluiting."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
@@ -6709,7 +6708,7 @@ msgstr "Dubbele betaling"
 #: model:ir.model.fields,field_description:account.field_res_partner__duplicated_bank_account_partners_count
 #: model:ir.model.fields,field_description:account.field_res_users__duplicated_bank_account_partners_count
 msgid "Duplicated Bank Account Partners Count"
-msgstr "Gedupliceerde bankrekeningrelaties tellen mee"
+msgstr "Gedupliceerde partnerbankrekeningen tellen mee"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6835,7 +6834,7 @@ msgstr "Bewerken"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_totals
 #: model:ir.model.fields,help:account.field_account_move__tax_totals
 msgid "Edit Tax amounts if you encounter rounding issues."
-msgstr "Bewerk BTW-bedragen als je afrondingsproblemen ondervindt."
+msgstr "Bewerk btw-bedragen als je afrondingsproblemen ondervindt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6898,7 +6897,7 @@ msgstr "PEPPOL inschakelen"
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
 #: model:ir.model.fields,help:account.field_res_config_settings__account_use_credit_limit
 msgid "Enable the use of credit limit on partners."
-msgstr "Schakel het gebruik van kredietlimiet voor relaties in."
+msgstr "Schakel het gebruik van kredietlimiet voor partners in."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -7425,7 +7424,7 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"Fiscale posities worden gebruikt om BTW en rekeningen voor bepaalde klanten "
+"Fiscale posities worden gebruikt om btw en rekeningen voor bepaalde klanten "
 "of verkooporders / facturen aan te passen. De standaardwaarde komt van de "
 "klant."
 
@@ -7510,7 +7509,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:account.field_res_company__message_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Partners)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_type_icon
@@ -7559,7 +7558,7 @@ msgstr "Forceer"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr "Forceer om te beheren als prijzen inclusief BTW."
+msgstr "Forceer om te beheren als prijzen inclusief btw."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -7589,23 +7588,23 @@ msgstr "Wisselkoersverlies"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr "Buitenlandse BTW-ID"
+msgstr "Buitenlandse btw-ID"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr "Buitenlandse BTW landen"
+msgstr "Btw buitenlandse landen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
 msgid "Foreign Vat Header Mode"
-msgstr "Buitenlandse BTW-kopmodus"
+msgstr "Buitenlandse btw-kopmodus"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Foreign tax account (%s)"
-msgstr "Buitenlandse BTW-rekening (%s)"
+msgstr "Buitenlandse btw-rekening (%s)"
 
 #. module: account
 #. odoo-python
@@ -7680,7 +7679,7 @@ msgstr "Van label"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
 msgid "From previous tax period"
-msgstr "Uit vorig BTW-tijdvak"
+msgstr "Uit vorig btw-tijdvak"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -7769,7 +7768,7 @@ msgstr "Gegenereerde boekingen"
 #. module: account
 #: model:account.report,name:account.generic_tax_report
 msgid "Generic Tax report"
-msgstr "Algemeen BTW-rapport"
+msgstr "Algemeen btw-rapport"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7857,17 +7856,17 @@ msgstr "Groep op naam?"
 #. module: account
 #: model:account.report,name:account.generic_tax_report_account_tax
 msgid "Group by: Account > Tax "
-msgstr "Groeperen op: Rekening > BTW "
+msgstr "Groeperen op: Rekening > btw "
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report_tax_account
 msgid "Group by: Tax > Account "
-msgstr "Groeperen op: BTW > Rekening "
+msgstr "Groeperen op: btw > Rekening "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
 msgid "Group of Taxes"
-msgstr "Groep van BTW"
+msgstr "Groep van btw"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8056,7 +8055,7 @@ msgstr "Horizontale splitsing"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr "Hoe het BTW totaal berekend is in orders en facturen"
+msgstr "Hoe het btw-totaal berekend is in orders en facturen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
@@ -8247,7 +8246,7 @@ msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
 "provided they accept it."
 msgstr ""
-"Indien ingesteld, zullen BTW’s met een hogere volgorde dan deze worden "
+"Indien ingesteld, zullen btw’s met een hogere volgorde dan deze worden "
 "beïnvloed, op voorwaarde dat ze deze accepteren."
 
 #. module: account
@@ -8256,7 +8255,7 @@ msgid ""
 "If set, taxes with a lower sequence might affect this one, provided they try"
 " to do it."
 msgstr ""
-"Indien ingesteld, kunnen BTW’s met een lagere volgorde hierop van invloed "
+"Indien ingesteld, kunnen btw’s met een lagere volgorde hierop van invloed "
 "zijn, op voorwaarde dat ze dit proberen."
 
 #. module: account
@@ -8292,8 +8291,8 @@ msgid ""
 "will be displayed after the 'Untaxed amount' subtotal."
 msgstr ""
 "Indien ingesteld, wordt deze waarde op documenten gebruikt als het label van"
-" een subtotaal exclusief deze BTW-groep voordat deze wordt weergegeven. "
-"Indien niet ingesteld, wordt de BTW-groep weergegeven na het subtotaal "
+" een subtotaal exclusief deze btw-groep voordat deze wordt weergegeven. "
+"Indien niet ingesteld, wordt de btw-groep weergegeven na het subtotaal "
 "‘Onbelast bedrag’."
 
 #. module: account
@@ -8362,7 +8361,7 @@ msgid ""
 "of where you are located."
 msgstr ""
 "Als je goederen en diensten verkoopt aan klanten in een ander EU-land, moet "
-"je BTW in rekening brengen op basis van het afleveradres. Deze regel is van "
+"je btw in rekening brengen op basis van het afleveradres. Deze regel is van "
 "toepassing ongeacht waar je zich bevindt."
 
 #. module: account
@@ -8533,7 +8532,7 @@ msgstr "Toevoegen aan analytische kostprijs"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include_override
 msgid "Included in Price"
-msgstr "Inclusief BTW"
+msgstr "Inclusief btw"
 
 #. module: account
 #. odoo-javascript
@@ -8616,7 +8615,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr "Geeft aan dat deze boeking een BTW regel is"
+msgstr "Geeft aan dat deze boeking een btw-regel is"
 
 #. module: account
 #. odoo-javascript
@@ -8948,7 +8947,7 @@ msgstr "Factuurwidget voor uitstaande credits en debets"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Factuur relatie weergavenaam"
+msgstr "Factuur partner weergavenaam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -9028,7 +9027,7 @@ msgstr ""
 msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
-msgstr "Facturen en creditfacturen moeten minstens één regel voor BTW hebben."
+msgstr "Facturen en creditfacturen moeten minstens één regel voor btw hebben."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10134,7 +10133,7 @@ msgstr "Hoofdvaluta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__commercial_partner_id
 msgid "Main Partner"
-msgstr "Hoofdrelatie"
+msgstr "Hoofdpartner"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
@@ -10185,9 +10184,9 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Handmatig: Krijg betaald via elke methode buiten Odoo.\n"
-"Betaalproviders: Elke betaalprovider heeft zijn eigen Betaalmethode. Vraag een transactie op/naar een kaart aan dankzij een betalingstoken dat door de relatie is opgeslagen bij online aankopen of abonnementen.\n"
+"Betaalproviders: Elke betaalprovider heeft zijn eigen Betaalmethode. Vraag een transactie op/naar een kaart aan dankzij een betalingstoken dat door de partner is opgeslagen bij online aankopen of abonnementen.\n"
 "Batchstorting: Verzamel meerdere klantcheques tegelijk en genereer een batchstorting en dien deze in bij je bank. Module account_batch_payment is noodzakelijk.\n"
-"SEPA Direct Debit: Krijg betaald in de SEPA-zone dankzij een mandaat dat je relatie je hebt gegeven. Module account_sepa is noodzakelijk.\n"
+"SEPA Direct Debit: Krijg betaald in de SEPA-zone dankzij een mandaat dat je partner je hebt gegeven. Module account_sepa is noodzakelijk.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_line_ids
@@ -10212,11 +10211,11 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Handmatig: Betaal of word betaald met elke methode buiten Odoo.\n"
-"Betaalproviders: Elke betaalprovider heeft zijn eigen Betaalmethode. Vraag een transactie op/naar een kaart aan dankzij een betalingstoken dat door de relatie is opgeslagen bij online aankopen of abonnementen.\n"
+"Betaalproviders: Elke betaalprovider heeft zijn eigen Betaalmethode. Vraag een transactie op/naar een kaart aan dankzij een betalingstoken dat door de partner is opgeslagen bij online aankopen of abonnementen.\n"
 "Cheque: Betaal rekeningen met een cheque en print deze vanuit Odoo.\n"
 "Batchstorting: Verzamel meerdere klantcheques tegelijk en genereer een batchstorting en dien deze in bij je bank. Module account_batch_payment is noodzakelijk.\n"
 "SEPA Credit Transfer: Betaal in de SEPA-zone door een SEPA Credit Transfer-bestand in te dienen bij je bank. Module account_sepa is noodzakelijk.\n"
-"SEPA Direct Debit: Krijg betaald in de SEPA-zone dankzij een mandaat dat je relatie je hebt gegeven. Module account_sepa is noodzakelijk.\n"
+"SEPA Direct Debit: Krijg betaald in de SEPA-zone dankzij een mandaat dat je partner je hebt gegeven. Module account_sepa is noodzakelijk.\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -10345,7 +10344,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 msgid "Matching partners"
-msgstr "Overeenkomende relaties"
+msgstr "Overeenkomende partners"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -10400,7 +10399,7 @@ msgstr "Accounts samenvoegen"
 #. module: account
 #: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Relaties samenvoegen wizard"
+msgstr "Partners samenvoegen wizard"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
@@ -10486,7 +10485,7 @@ msgstr "Ontbrekende 'active_model' in context."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__missing_account_partners
 msgid "Missing Account Partners"
-msgstr "Ontbrekende bankrekeningrelaties"
+msgstr "Ontbrekende bankrekeningpartners"
 
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_1
@@ -10522,7 +10521,7 @@ msgstr "Modelnaam"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__biggest_tax
 msgid "Modify tax amount"
-msgstr "Bewerken BTW bedrag"
+msgstr "Bewerken btw-bedrag"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_module_module
@@ -10686,7 +10685,7 @@ msgstr "Benodigde voorwaarden Dirty"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_negate
 msgid "Negate Tax Balance"
-msgstr "Negeer BTW evenwicht"
+msgstr "Negeer btw-saldo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
@@ -10890,7 +10889,7 @@ msgid ""
 "this date."
 msgstr ""
 "Er zijn geen gebruikers die de boekingen kunnen wijzigen gerelateerd aan een"
-" BTW voorafgaand of op deze datum."
+" btw voorafgaand of op deze datum."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -11070,7 +11069,7 @@ msgstr "Aantal acties"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__nb_unmodified_bills
 msgid "Number of bills previously unmodified from this partner"
-msgstr "Aantal ongewijzigde facturen van deze relatie"
+msgstr "Aantal ongewijzigde facturen van deze partner"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
@@ -11263,7 +11262,7 @@ msgstr "Zodra de factuur gereed is, bevestigt je deze."
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
-"Een of meer bankrekeningen die bij deze relatie zijn ingesteld, worden ook "
+"Een of meer bankrekeningen die bij deze partner zijn ingesteld, worden ook "
 "gebruikt door andere"
 
 #. module: account
@@ -11315,7 +11314,7 @@ msgstr "Alleen facturen konden afgedrukt worden."
 msgid ""
 "Only one payment will be created by partner (bank), instead of one per bill."
 msgstr ""
-"Er wordt slechts één betaling per relatie (bank) aangemaakt in plaats van "
+"Er wordt slechts één betaling per partner (bank) aangemaakt in plaats van "
 "één per factuur."
 
 #. module: account
@@ -11457,7 +11456,7 @@ msgstr "Originele sluitingsdatum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
-msgstr "Initiator BTW-groep"
+msgstr "Initiator btw-groep"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -11475,17 +11474,17 @@ msgstr "Initiator bankafschriftregel"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Originator Tax"
-msgstr "Herkomst van de BTW"
+msgstr "Herkomst van de btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
 msgid "Originator Tax Distribution Line"
-msgstr "Initiator BTW verdelingsregel"
+msgstr "Initiator btw verdelingsregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
 msgid "Originator tax group"
-msgstr "Herkomst BTW groep"
+msgstr "Herkomst btw-groep"
 
 #. module: account
 #. odoo-javascript
@@ -11765,25 +11764,25 @@ msgstr "Gedeeltelijk betaald"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_various_payment_tree
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
-msgstr "Relatiecontracten"
+msgstr "Contracten partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_credit
 #: model:ir.model.fields,field_description:account.field_account_move__partner_credit
 msgid "Partner Credit"
-msgstr "Relatie krediet"
+msgstr "Krediet partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_credit_warning
 #: model:ir.model.fields,field_description:account.field_account_move__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "Relatiekredietwaarschuwing"
+msgstr "Kredietwaarschuwing partner"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
@@ -11794,22 +11793,22 @@ msgstr "Saldilijst per klant/leverancier"
 #: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__use_partner_credit_limit
 msgid "Partner Limit"
-msgstr "Relatielimiet"
+msgstr "Limiet partner"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "Relatiemapping"
+msgstr "Mapping partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr "Relatiemappingregels"
+msgstr "Mappingregels partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
 msgid "Partner Name"
-msgstr "Relatienaam"
+msgstr "Naam partner"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_partners_reports_menu
@@ -11820,29 +11819,29 @@ msgstr "Klant/leverancier rapportages"
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_type
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_type
 msgid "Partner Type"
-msgstr "Relatiesoort"
+msgstr "Type partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_vat_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_vat_placeholder
 msgid "Partner Vat Placeholder"
-msgstr "Relatie BTW Plaatshouder"
+msgstr "Btw-plaatshouder partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
 msgid "Partner is Set"
-msgstr "Relatie is ingesteld"
+msgstr "Partner is ingesteld"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Relatiemapping voor aflettermodellen"
+msgstr "Mapping partners voor aflettermodellen"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Partner(s) should have an email address."
-msgstr "Relatie(s) moet(en een e-mailadres hebben."
+msgstr "Partner(s) moet(en) een e-mailadres hebben."
 
 #. module: account
 #. odoo-python
@@ -11851,19 +11850,19 @@ msgstr "Relatie(s) moet(en een e-mailadres hebben."
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Partners"
-msgstr "Relaties"
+msgstr "Partners"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_missing_account_list_view
 msgid "Partners Missing a bank account"
-msgstr "Relaties met ontbrekende bankrekening"
+msgstr "Partners met ontbrekende bankrekening"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
-"Relaties die worden gebruikt in gehashte vermeldingen kunnen niet "
+"Partners die worden gebruikt in gehashte vermeldingen kunnen niet "
 "samengevoegd worden."
 
 #. module: account
@@ -12203,7 +12202,7 @@ msgstr ""
 msgid ""
 "Payments related to partners with no bank account specified will be skipped."
 msgstr ""
-"Betalingen die gelinkt zijn aan relaties zonder opgegeven bankrekening "
+"Betalingen die gelinkt zijn aan partners zonder opgegeven bankrekening "
 "worden overgeslagen."
 
 #. module: account
@@ -12314,7 +12313,7 @@ msgstr "Stel een strikt positieve afrondingswaarde in."
 msgid ""
 "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
-"Stel minstens één van de afletter-teksten in om een relatiemapping te maken."
+"Stel minstens één van de afletter-teksten in om een partnermapping te maken."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12688,13 +12687,13 @@ msgstr "Inkoopvertegenwoordiger"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
-msgstr "Inkoop BTW"
+msgstr "Btw Inkoop"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr "Btw inkoop"
+msgstr "Btw Inkoop"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -13030,7 +13029,7 @@ msgstr "Gerelateerde boekingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__related_taxes_amount
 msgid "Related Taxes Amount"
-msgstr "Bedrag gerelateerde BTW"
+msgstr "Bedrag gerelateerde btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__document_type
@@ -13129,7 +13128,7 @@ msgstr "Vereist bankrekening klant"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
 msgid "Res Partner Bank"
-msgstr "Res Relatie Bank"
+msgstr "Res Bank Partner"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
@@ -13189,7 +13188,7 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_scope
 msgid "Restrict the use of taxes to a type of product."
-msgstr "Beperk het gebruik van BTW tot een soort product."
+msgstr "Beperk het gebruik van btw tot een soort product."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
@@ -13501,19 +13500,19 @@ msgstr "Verkoopbetaalbewijs aangemaakt"
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
-msgstr "Verkoop BTW"
+msgstr "Btw Verkoop"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__taxes_id
 msgid "Sales Taxes"
-msgstr "Btw verkoop"
+msgstr "Btw Verkoop"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 msgid "Sales tax"
-msgstr "Verkoop BTW"
+msgstr "Btw Verkoop"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_user_id
@@ -13638,7 +13637,7 @@ msgstr "Verklaringen zoeken"
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Search Taxes"
-msgstr "Zoek BTW"
+msgstr "Zoek btw"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13779,7 +13778,7 @@ msgstr "Selecteer een leveranciersfactuur"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Select first partner"
-msgstr "Selecteer eerst een relatie"
+msgstr "Selecteer eerst een partner"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -13798,7 +13797,7 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"Selecteer dit als de BTW kasstelsel moet gebruiken. Dit maakt een boeking "
+"Selecteer dit als de btw-kasstelsel moet gebruiken. Dit maakt een boeking "
 "aan bij het afletteren."
 
 #. module: account
@@ -14071,7 +14070,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr ""
-"Zet actief naar onwaar om de BTW te verbergen zonder de BTW te verwijderen."
+"Zet actief naar onwaar om de btw te verbergen zonder de btw te verwijderen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14081,7 +14080,7 @@ msgstr "Instellen als gecontroleerd"
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_sales_tax
 msgid "Set taxes"
-msgstr "Stel BTW in"
+msgstr "Stel btw in"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_chart_of_accounts
@@ -14171,7 +14170,7 @@ msgstr "Toon kortingsdetails"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
-msgstr "Toon forceer inclusief BTW"
+msgstr "Toon forceer inclusief btw"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -14193,7 +14192,7 @@ msgstr "Toon naam waarschuwing"
 #: model:ir.model.fields,field_description:account.field_account_payment__show_partner_bank_account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_partner_bank_account
 msgid "Show Partner Bank Account"
-msgstr "Toon bankrekening relatie"
+msgstr "Toon bankrekening partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_payment_difference
@@ -14221,7 +14220,7 @@ msgstr "Toon niet-afgeletterde rekeningafschriftregel"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Show active taxes"
-msgstr "Toon actieve BTW"
+msgstr "Toon actieve btw"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -14238,7 +14237,7 @@ msgstr "Toon conceptboekingen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Show inactive taxes"
-msgstr "Toon inactieve BTW"
+msgstr "Toon inactieve btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__display_on_invoice
@@ -14593,7 +14592,7 @@ msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its"
 " impact on financial reports."
 msgstr ""
-"Labels die aan deze regel zijn toegewezen door de BTW die deze heeft "
+"Labels die aan deze regel zijn toegewezen door de btw die deze heeft "
 "gemaakt, indien aanwezig. Het bepaalt de impact op financiële rapportages."
 
 #. module: account
@@ -14602,7 +14601,7 @@ msgstr ""
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
 msgstr ""
-"Labels die moeten worden ingesteld op de basis- en BTW-boekingsregels die "
+"Labels die moeten worden ingesteld op de basis- en btw-boekingsregels die "
 "voor dit product zijn gemaakt."
 
 #. module: account
@@ -14635,7 +14634,7 @@ msgstr "Doelregel"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Tax"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_15
@@ -14643,50 +14642,50 @@ msgstr "BTW"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax 15%"
-msgstr "BTW 15%"
+msgstr "Btw 15%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__advance_tax_payment_account_id
 msgid "Tax Advance Account"
-msgstr "BTW voorschotrekening"
+msgstr "Btw voorschotrekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_calculation_rounding_method
 msgid "Tax Calculation Rounding Method"
-msgstr "BTW afrondingsmethode"
+msgstr "Btw afrondingsmethode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_rec_id
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr "BTW kasstelsel boeking van"
+msgstr "Btw kasstelsel boeking van"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "BTW kasstelsel dagboek"
+msgstr "Btw kasstelsel dagboek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
 msgid "Tax Closing Entry"
-msgstr "BTW afsluitboeking"
+msgstr "Btw afsluitboeking"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
 msgid "Tax Computation"
-msgstr "BTW berekening"
+msgstr "Btw-berekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_country_id
 #: model:ir.model.fields,field_description:account.field_account_move__tax_country_id
 msgid "Tax Country"
-msgstr "BTW land"
+msgstr "Btw land"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_country_code
 #: model:ir.model.fields,field_description:account.field_account_move__tax_country_code
 msgid "Tax Country Code"
-msgstr "BTW landcode"
+msgstr "Btw landcode"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_excluded
@@ -14698,12 +14697,12 @@ msgstr "Exclusief BTW"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 msgid "Tax Exigibility"
-msgstr "BTW-plichtigheid"
+msgstr "Btw-plichtigheid"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Tax Grid"
-msgstr "BTW-rubriek"
+msgstr "Btw-rubriek"
 
 #. module: account
 #. odoo-python
@@ -14718,13 +14717,13 @@ msgstr "Btw-rubriek"
 #: model:ir.model,name:account.model_account_tax_group
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_group_id
 msgid "Tax Group"
-msgstr "BTW-groep"
+msgstr "Btw-groep"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_group
 #: model:ir.ui.menu,name:account.menu_action_tax_group
 msgid "Tax Groups"
-msgstr "BTW groepen"
+msgstr "Btw-groepen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__vat
@@ -14736,18 +14735,18 @@ msgstr "Btw nr."
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
-msgstr "Inclusief BTW"
+msgstr "Inclusief btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__force_tax_included
 msgid "Tax Included in Price"
-msgstr "Prijs inclusief BTW"
+msgstr "Prijs inclusief btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr "BTW blokkeerdatum bericht"
+msgstr "Btw blokkeerdatum bericht"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
@@ -14758,82 +14757,82 @@ msgstr "Btw-map"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "Vervangingstabel BTW"
+msgstr "Vervangingstabel btw"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "BTW mapping van de fiscale positie"
+msgstr "Btw-mapping van de fiscale positie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
 msgid "Tax Name"
-msgstr "BTW naam"
+msgstr "Btw naam"
 
 #. module: account
 #: model:account.account,name:account.1_tax_paid
 msgid "Tax Paid"
-msgstr "BTW betaald"
+msgstr "Btw betaald"
 
 #. module: account
 #: model:account.account,name:account.1_tax_payable
 msgid "Tax Payable"
-msgstr "Te betalen BTW"
+msgstr "Te betalen btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__tax_payable_account_id
 msgid "Tax Payable Account"
-msgstr "BTW te betalen rekening"
+msgstr "Btw te betalen rekening"
 
 #. module: account
 #: model:account.account,name:account.1_tax_receivable
 msgid "Tax Receivable"
-msgstr "Te ontvangen BTW"
+msgstr "Te ontvangen btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__tax_receivable_account_id
 msgid "Tax Receivable Account"
-msgstr "BTW te ontvangen rekening"
+msgstr "Btw te ontvangen rekening"
 
 #. module: account
 #: model:account.account,name:account.1_tax_received
 msgid "Tax Received"
-msgstr "Ontvangen BTW"
+msgstr "Ontvangen btw"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
 msgid "Tax Repartition Line"
-msgstr "BTW verdelingsregel"
+msgstr "Btw verdelingsregel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__tax_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__tax_lock_date
 msgid "Tax Return Lock Date"
-msgstr "Vergrendelingsdatum BTW-aangifte"
+msgstr "Vergrendelingsdatum btw-aangifte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Scope"
-msgstr "BTW over"
+msgstr "Btw over"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_tax_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax_signed
 msgid "Tax Signed"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__tax_string
 #: model:ir.model.fields,field_description:account.field_product_template__tax_string
 msgid "Tax String"
-msgstr "BTW string"
+msgstr "Btw string"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
-msgstr "BTW-labels"
+msgstr "Btw-labels"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
@@ -14844,7 +14843,7 @@ msgstr "Snelkoppeling btw-labelformule"
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr "BTW-soort"
+msgstr "Btw-soort"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_calculation_rounding_method
@@ -14852,7 +14851,7 @@ msgstr "BTW-soort"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_calculation_rounding_method
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr "BTW afrondingsmethode"
+msgstr "Btw-afrondingsmethode"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__tax_payable_account_id
@@ -14877,29 +14876,29 @@ msgstr ""
 msgid ""
 "Tax distribution line that caused the creation of this move line, if any"
 msgstr ""
-"BTW verdelingsregel die de aanmaak van deze boekingsregel heeft veroorzaakt,"
+"Btw-verdelingsregel die de aanmaak van deze boekingsregel heeft veroorzaakt,"
 " indien aanwezig"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "Tax names must be unique!"
-msgstr "BTW-namen moeten uniek zijn!"
+msgstr "Btw-namen moeten uniek zijn!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
 msgid "Tax on Product"
-msgstr "BTW op product"
+msgstr "Btw op product"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
 msgid "Tax to Apply"
-msgstr "Toe te passen BTW"
+msgstr "Toe te passen btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__is_used
 msgid "Tax used"
-msgstr "BTW gebruikt"
+msgstr "Btw gebruikt"
 
 #. module: account
 #. odoo-python
@@ -14916,12 +14915,12 @@ msgstr "BTW gebruikt"
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Taxes Applied"
-msgstr "BTW toegepast"
+msgstr "Btw toegepast"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__taxes_legal_notes
@@ -14941,7 +14940,7 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal"
 " item if they share some tag."
 msgstr ""
-"BTW die verschuldigd zijn op betaling en op factuur kunnen niet worden "
+"Btw die verschuldigd zijn op betaling en op factuur kunnen niet worden "
 "gecombineerd voor hetzelfde boekingsregel als ze een label delen."
 
 #. module: account
@@ -14956,7 +14955,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
 msgstr ""
-"BTW, fiscale posities, grootboekschema & financiële rapportages voor je land"
+"Btw, fiscale posities, grootboekschema & financiële rapportages voor je land"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -14965,8 +14964,8 @@ msgid ""
 "tax-related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
 msgstr ""
-"Technisch veld met de landen waarvoor dit bedrijf BTW-gerelateerde functies "
-"gebruikt (vandaar de landen waarvoor l10n-modules BTW-gerelateerde velden "
+"Technisch veld met de landen waarvoor dit bedrijf btw-gerelateerde functies "
+"gebruikt (vandaar de landen waarvoor l10n-modules btw-gerelateerde velden "
 "moeten weergeven)."
 
 #. module: account
@@ -15187,12 +15186,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"Het Syscohada-rekeningschemesjabloon mag niet rechtstreeks worden "
-"geselecteerd. In plaats daarvan moet je rechtstreeks de grafieksjabloon voor"
-" je land selecteren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
@@ -15201,8 +15197,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"Het BTW-nummer. Waarden hier worden gevalideerd op basis van het "
-"landformaat. Je kunt '/' gebruiken om aan te geven dat de relatie niet "
+"Het btw-nummer. Waarden hier worden gevalideerd op basis van het "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat de partner niet "
 "belastingplichtig is."
 
 #. module: account
@@ -15306,7 +15302,7 @@ msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or left empty."
 msgstr ""
-"Het toepassingsgebied voor BTW in een groep moet gelijk zijn aan dezelfde "
+"Het toepassingsgebied voor btw in een groep moet gelijk zijn aan dezelfde "
 "groep of leeg gelaten worden."
 
 #. module: account
@@ -15350,7 +15346,7 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
-"De kasbasisposten die zijn gemaakt op basis van de BTW op deze post, bij het"
+"De kasbasisposten die zijn gemaakt op basis van de btw op deze post, bij het"
 " afletteren van de regels."
 
 #. module: account
@@ -15411,7 +15407,7 @@ msgstr "Het land waarvoor deze fiscale eenheid geldt."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__country_id
 msgid "The country for which this tax is applicable."
-msgstr "Het land waarvoor deze BTW geldt."
+msgstr "Het land waarvoor deze btw geldt."
 
 #. module: account
 #. odoo-python
@@ -15420,7 +15416,7 @@ msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
 msgstr ""
-"Het land dat is ingesteld op de buitenlandse BTW-fiscale positie moet "
+"Het land dat is ingesteld op de buitenlandse btw-fiscale positie moet "
 "overeenkomen met het land dat op het rapport is ingesteld."
 
 #. module: account
@@ -15429,7 +15425,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr ""
-"Het land waarvandaan de BTW-aangiften voor dit bedrijf worden gebruikt"
+"Het land waarvandaan de btw-aangiften voor dit bedrijf worden gebruikt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -15596,7 +15592,7 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
-"De fiscale positie bepaald de BTW/rekeningen gebruikt voor dit contact."
+"De fiscale positie bepaald de btw/rekeningen gebruikt voor dit contact."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -15626,7 +15622,7 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
-"De volgende reguliere expressie is ongeldig om een relatiemapping te maken: "
+"De volgende reguliere expressie is ongeldig om een partnermapping te maken: "
 "%s"
 
 #. module: account
@@ -15705,7 +15701,7 @@ msgstr ""
 msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
-msgstr "De boeking van waaruit deze kasstelsel BTW boeking is aangemaakt."
+msgstr "De boeking van waaruit deze kasstelsel btw-boeking is aangemaakt."
 
 #. module: account
 #. odoo-python
@@ -15808,7 +15804,7 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 msgid "The partner cannot be deleted because it is used in Accounting"
 msgstr ""
-"De relatie kan niet worden verwijderd omdat deze wordt gebruikt in "
+"De partner kan niet worden verwijderd omdat deze wordt gebruikt in "
 "Boekhouding"
 
 #. module: account
@@ -15817,7 +15813,7 @@ msgstr ""
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
 msgstr ""
-"De relaties van het dagboek bedrijf en de gerelateerde bankrekeningen komen "
+"De partners van het dagboekbedrijf en de gerelateerde bankrekeningen komen "
 "niet overeen."
 
 #. module: account
@@ -16039,7 +16035,7 @@ msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
 msgstr ""
-"Het volgordeveld wordt gebruikt om de volgorde te bepalen waarin de BTW "
+"Het volgordeveld wordt gebruikt om de volgorde te bepalen waarin de btw "
 "worden toegepast."
 
 #. module: account
@@ -16181,7 +16177,7 @@ msgstr ""
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
 msgstr ""
-"Het BTW-nummer van je bedrijf in de regio die door deze fiscale positie in "
+"Het btw-nummer van je bedrijf in de regio die door deze fiscale positie in "
 "kaart wordt gebracht."
 
 #. module: account
@@ -16189,7 +16185,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 msgid "The tax group must have the same country_id as the tax using it."
 msgstr ""
-"De BTW-groep moet dezelfde country_id hebben als de BTW die deze gebruikt."
+"De btw-groep moet dezelfde country_id hebben als de btw die deze gebruikt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -16306,7 +16302,7 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
-"Er is geen BTW kasstelsel dagboek gedefinieerd voor dit bedrijf: '%s'\n"
+"Er is geen btw-kasstelsel dagboek gedefinieerd voor dit bedrijf: '%s'\n"
 "Configureer het onder Boekhouding/Configuratie/Instellingen"
 
 #. module: account
@@ -16342,7 +16338,7 @@ msgstr "Dit kwartaal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
-msgstr "Dit BTW-tijdvak"
+msgstr "Dit btw-tijdvak"
 
 #. module: account
 #. odoo-python
@@ -16381,7 +16377,7 @@ msgid ""
 "for the current partner"
 msgstr ""
 "Deze rekening wordt gebruikt in plaats van de standaardrekening als "
-"betaalrekening voor de huidige relatie"
+"betaalrekening voor de huidige partner"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_receivable_id
@@ -16391,7 +16387,7 @@ msgid ""
 "account for the current partner"
 msgstr ""
 "Deze rekening zal in plaats van de standaardrekening worden gebruikt als "
-"debiteurenrekening voor de huidige relatie"
+"debiteurenrekening voor de huidige partner"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
@@ -16486,9 +16482,9 @@ msgid ""
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
-"Dit item bevat een of meer BTW's die niet compatibel zijn met de fiscale "
+"Dit item bevat een of meer btw's die niet compatibel zijn met de fiscale "
 "land. Controleer het fiscale land van het bedrijf in de instellingen en het "
-"belastingland in de BTW-configuratie."
+"belastingland in de btw-configuratie."
 
 #. module: account
 #. odoo-python
@@ -16497,8 +16493,8 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
 msgstr ""
-"Deze invoer bevat BTW's die niet verenigbaar zijn met de fiscale positie. "
-"Controleer het land dat is ingesteld in fiscale positie en in de BTW-"
+"Deze invoer bevat btw's die niet verenigbaar zijn met de fiscale positie. "
+"Controleer het land dat is ingesteld in fiscale positie en in de btw-"
 "configuratie."
 
 #. module: account
@@ -16555,7 +16551,7 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
-"Dit is de standaard kredietlimiet die wordt gebruikt voor relaties die geen "
+"Dit is de standaard kredietlimiet die wordt gebruikt voor partners die geen "
 "specifieke limiet hebben."
 
 #. module: account
@@ -16752,7 +16748,7 @@ msgstr "Tip: Stop met het najagen van de documenten die je nodig hebt"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "To"
-msgstr "Aan"
+msgstr "Naar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__to_check
@@ -16828,7 +16824,7 @@ msgid ""
 msgstr ""
 "Om betalingen te registreren met %(payment_method)s, moet de ontvangende "
 "bankrekening handmatig worden gevalideerd. Je moet naar de bankrekening van "
-"de relatie gaan om deze te bevestigen."
+"de partner gaan om deze te bevestigen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -16864,7 +16860,7 @@ msgstr "Totaal"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_total_amount
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_total_amount
 msgid "Total (Tax inc.)"
-msgstr "Totaal (incl. BTW)"
+msgstr "Totaal (incl. btw)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -17308,13 +17304,13 @@ msgstr "Niet-afgeletterde transacties"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "Untaxed Amount"
-msgstr "Excl. BTW"
+msgstr "Excl. btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr "Totaal excl. BTW"
+msgstr "Totaal excl. btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_in_currency_signed
@@ -17330,7 +17326,7 @@ msgstr "Onbelast bedrag in valuta"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 msgid "Untaxed amount"
-msgstr "Excl. BTW"
+msgstr "Excl. btw"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -17441,7 +17437,7 @@ msgstr "Storno-boekhouding gebruiken"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
 msgid "Use Tax Units"
-msgstr "Fiscale BTW eenheid gebruiken"
+msgstr "Fiscale btw-eenheid gebruiken"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting
@@ -17464,7 +17460,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "Use in tax closing"
-msgstr "Gebruik bij BTW-afsluiting"
+msgstr "Gebruik bij btw-afsluiting"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
@@ -17597,7 +17593,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "VAT required"
-msgstr "BTW verplicht"
+msgstr "Btw verplicht"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -17772,7 +17768,7 @@ msgstr "Bekijk"
 #: code:addons/account/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "View Partner(s)"
-msgstr "Bekijk relatie(s)"
+msgstr "Bekijk partner(s)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -17947,7 +17943,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With Partner matching"
-msgstr "Met aflettering relatie"
+msgstr "Met aflettering partner"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -17957,7 +17953,7 @@ msgstr "Met overgebleven"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With tax"
-msgstr "Met BTW"
+msgstr "Met btw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__wizard_id
@@ -18164,7 +18160,7 @@ msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
 msgstr ""
-"Je kunt het bedrijf van je BTW niet wijzigen, omdat er een aantal boekingen "
+"Je kunt het bedrijf van je btw niet wijzigen, omdat er een aantal boekingen "
 "aan zijn gekoppeld."
 
 #. module: account
@@ -18349,7 +18345,7 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Je kunt geen fiscale positie aanmaken met een buitenlandse BTW binnen je "
+"Je kunt geen fiscale positie aanmaken met een buitenlandse btw binnen je "
 "fiscale land zonder er een staat aan toe te kennen."
 
 #. module: account
@@ -18383,7 +18379,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete a tax line as it would impact the tax report"
 msgstr ""
-"Je kunt een BTW-regel niet verwijderen, omdat dit van invloed is op de BTW-"
+"Je kunt een btw-regel niet verwijderen, omdat dit van invloed is op de btw-"
 "aangifte"
 
 #. module: account
@@ -18441,8 +18437,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
-"Je kunt deze instelling niet inactief maken omdat sommige van je BTW regels "
-"op kasstelsel zijn. Pas eerst je BTW regels aan voordat je deze installing "
+"Je kunt deze instelling niet inactief maken omdat sommige van je btw-regels "
+"op kasstelsel zijn. Pas eerst je btw-regels aan voordat je deze installing "
 "inactief maakt."
 
 #. module: account
@@ -18542,7 +18538,7 @@ msgid ""
 "You cannot modify the account number or partner of an account that has been "
 "trusted."
 msgstr ""
-"Je kan het rekeningnummer of een relatie van een vertrouwde rekening niet "
+"Je kan het rekeningnummer of een partner van een vertrouwde rekening niet "
 "wijzigen."
 
 #. module: account
@@ -18570,7 +18566,7 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"Je kunt de BTW met betrekking tot een geboekte boekingsregel niet wijzigen, "
+"Je kunt de btw met betrekking tot een geboekte boekingsregel niet wijzigen, "
 "hiervoor moet je de boeking terugzetten naar concept."
 
 #. module: account
@@ -18620,7 +18616,7 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
-"Je kunt de rekeningen \"%s\" die op een BTW-verdelingsregel zijn ingesteld "
+"Je kunt de rekeningen \"%s\" die op een btw-verdelingsregel zijn ingesteld "
 "niet verwijderen/deactiveren."
 
 #. module: account
@@ -18643,7 +18639,7 @@ msgstr "Je kunt een geblokkeerde boeking niet resetten."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr "Je kunt een BTW kasstelselsboeking niet terugzetten naar concept."
+msgstr "Je kunt een btw kasstelselsboeking niet terugzetten naar concept."
 
 #. module: account
 #. odoo-python
@@ -18697,7 +18693,7 @@ msgstr "Je kunt een vervallen rekening niet gebruiken."
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr ""
-"Het is niet mogelijk om BTW regels te gebruiken bij rekeningen welke niet op"
+"Het is niet mogelijk om btw-regels te gebruiken bij rekeningen welke niet op"
 " de balans staan"
 
 #. module: account
@@ -18801,7 +18797,7 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Je dienst de 'wisselkoers winst- of verliesrekening' instellen in de "
+"Je moet de 'wisselkoers winst- of verliesrekening' instellen in de "
 "bedrijfsinstellingen, om automatisch de boekingen in verband met "
 "wisselkoersverschillen te kunnen maken."
 
@@ -19148,7 +19144,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "is not from the same country as the partner ("
-msgstr "is niet van hetzelfde land als de relatie ("
+msgstr "is niet van hetzelfde land als de partner ("
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_enabled_tax_country_ids
@@ -19184,7 +19180,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
-msgstr "van BTW"
+msgstr "van btw"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -19261,12 +19257,12 @@ msgstr "het bovenliggende bedrijf"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
-msgstr "aan"
+msgstr "t/m"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "to create the taxes for this country."
-msgstr "om de BTW's voor dit land te maken."
+msgstr "om de btw's voor dit land te maken."
 
 #. module: account
 #. odoo-python
