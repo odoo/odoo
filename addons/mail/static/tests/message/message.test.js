@@ -548,7 +548,7 @@ test("Can open emoji picker after edit mode", async () => {
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await click(".o-mail-Message a", { text: "save" });
     await click("[title='Add a Reaction']");
-    await click(".o-mail-QuickReactionMenu [title='Open Emoji Picker']");
+    await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await contains(".o-EmojiPicker");
 });
 
@@ -567,7 +567,7 @@ test("Can add a reaction", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-mail-QuickReactionMenu [title='Open Emoji Picker']");
+    await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await click(".o-Emoji", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
 });
