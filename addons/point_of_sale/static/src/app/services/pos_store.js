@@ -608,11 +608,7 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         // Handle refund constraints
-        if (
-            order.doNotAllowRefundAndSales() &&
-            order._isRefundOrder() &&
-            (!values.qty || values.qty > 0)
-        ) {
+        if (order._isRefundAndSalesNotAllowed(values, options)) {
             this.dialog.add(AlertDialog, {
                 title: _t("Refund and Sales not allowed"),
                 body: _t("It is not allowed to mix refunds and sales"),
