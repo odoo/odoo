@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
-import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/000";
+import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snippet";
 
 
 export class DynamicSnippetCarousel extends DynamicSnippet {

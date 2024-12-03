@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/000";
+import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snippet";
 import { groupBy } from '@web/core/utils/arrays';
 
 export class DynamicSnippetEvents extends DynamicSnippet {

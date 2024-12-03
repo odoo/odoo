@@ -82,13 +82,13 @@ export class DynamicSnippet extends Interaction {
         if (this.isConfigComplete()) {
             const nodeData = this.el.dataset;
             const filterFragments = await rpc(
-                '/website/snippet/filters',
+                "/website/snippet/filters",
                 Object.assign({
-                        'filter_id': parseInt(nodeData.filterId),
-                        'template_key': nodeData.templateKey,
-                        'limit': parseInt(nodeData.numberOfRecords),
-                        'search_domain': this.getSearchDomain(),
-                        'with_sample': this.editableMode,
+                        "filter_id": parseInt(nodeData.filterId),
+                        "template_key": nodeData.templateKey,
+                        "limit": parseInt(nodeData.numberOfRecords),
+                        "search_domain": this.getSearchDomain(),
+                        "with_sample": this.editableMode,
                     },
                     this.getRpcParameters(),
                     JSON.parse(this.el.dataset?.customTemplateData || "{}")
@@ -127,8 +127,8 @@ export class DynamicSnippet extends Interaction {
             chunkSize: chunkSize,
             data: this.data,
             unique_id: this.uniqueId,
-            extraClasses: dataset.extraClasses || '',
-            columnClasses: dataset.columnClasses || '',
+            extraClasses: dataset.extraClasses || "",
+            columnClasses: dataset.columnClasses || "",
         };
     }
     render() {
@@ -166,7 +166,7 @@ export class DynamicSnippet extends Interaction {
         // extension, because: why not?
         // (TODO review + See interaction with "slider" public widget).
         this.waitForTimeout(() => {
-            templateAreaEl.querySelectorAll('.carousel').forEach(carouselEl => {
+            templateAreaEl.querySelectorAll(".carousel").forEach(carouselEl => {
                 if (carouselEl.dataset.bsInterval === "0") {
                     delete carouselEl.dataset.bsRide;
                     delete carouselEl.dataset.bsInterval;
@@ -189,7 +189,7 @@ export class DynamicSnippet extends Interaction {
      * Returns the main URL of the module related to the active filter.
      */
     getMainPageUrl() {
-        return '';
+        return "";
     }
 
     //------------------------------------- -------------------------------------
