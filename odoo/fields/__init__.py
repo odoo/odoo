@@ -18,3 +18,4 @@ from odoo.orm.fields_binary import Binary, Image
 
 from odoo.orm.commands import Command
 from odoo.orm.models import NO_ACCESS
+from odoo.orm.utils import parse_field_expr

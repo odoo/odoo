@@ -1,17 +1,27 @@
+from __future__ import annotations
+
 import base64
 import binascii
 import contextlib
 import itertools
+import reprlib
+import typing
 import warnings
 from operator import attrgetter
 
 import psycopg2
 
 from odoo.exceptions import CacheMiss, UserError
-from odoo.tools import human_size, image_process, lazy_property
+from odoo.tools import SQL, human_size, image_process, lazy_property
 from odoo.tools.mimetypes import guess_mimetype
 
-from .fields import Field
+from .fields import Field, _logger
+from .utils import SQL_OPERATORS
+
+if typing.TYPE_CHECKING:
+    from odoo.tools import Query
+
+    from .models import BaseModel
 
 # http://initd.org/psycopg/docs/usage.html#binary-adaptation
 # Received data is returned as buffer (in Python 2) or memoryview (in Python 3).
@@ -210,6 +220,26 @@ class Binary(Field):
                     ])
             else:
                 atts.unlink()
+
+    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+        if not self.attachment or field_expr != self.name:
+            return super().condition_to_sql(field_expr, operator, value, model, alias, query)
+        # check permission
+        model._check_field_access(self, 'read')
+        # only the operation (field, "in", {False}) is supported
+        if (operator in ('in', 'not in') and set(value) == {False}) or (operator in ('=', '!=') and not value):
+            return SQL(
+                "%s%s(SELECT res_id FROM ir_attachment WHERE res_model = %s AND res_field = %s)",
+                model._field_to_sql(alias, 'id', query),
+                SQL_OPERATORS['not in' if operator in ('in', '=') else 'in'],
+                model._name,
+                self.name,
+            )
+        _logger.error(
+            "Binary field '%s' stored in attachment: ignore %s %s %s",
+            self.string, self, operator, reprlib.repr(value),
+        )
+        return SQL("TRUE")
 
 
 class Image(Binary):

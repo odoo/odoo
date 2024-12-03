@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 import itertools
 import logging
@@ -15,22 +16,29 @@ from odoo.exceptions import UserError
 from odoo.netsvc import COLOR_PATTERN, DEFAULT, GREEN, RED, ColoredFormatter
 from odoo.tools import SQL, html_normalize, html_sanitize, sql
 from odoo.tools.misc import SENTINEL, Sentinel
-from odoo.tools.sql import pg_varchar
+from odoo.tools.sql import pattern_to_translated_trigram_pattern, pg_varchar, value_to_translated_trigram_pattern
 from odoo.tools.translate import html_translate
 
 from .fields import Field, _logger
+from .utils import COLLECTION_TYPES, SQL_OPERATORS
+
+if typing.TYPE_CHECKING:
+    from .models import BaseModel
+    from odoo.tools import Query
 
 
-class _String(Field[str | typing.Literal[False]]):
+class BaseString(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
     size = None                         # maximum size of values (deprecated)
+    is_text = True
+    falsy_value = ''
 
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         # translate is either True, False, or a callable
         if 'translate' in kwargs and not callable(kwargs['translate']):
             kwargs['translate'] = bool(kwargs['translate'])
-        super(_String, self).__init__(string=string, **kwargs)
+        super().__init__(string=string, **kwargs)
 
     _related_translate = property(attrgetter('translate'))
 
@@ -280,8 +288,69 @@ class _String(Field[str | typing.Literal[False]]):
         # Maybe we can use Cache.update(records.with_context(cache_update_raw=True), self, new_translations_list, dirty=True)
         cache.update_raw(records, self, new_translations_list, dirty=True)
 
+    def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
+        sql_field = super().to_sql(model, alias, flush)
+        if self.translate:
+            langs = self.get_translation_fallback_langs(model.env)
+            sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
+            if len(sql_field_langs) == 1:
+                return sql_field_langs[0]
+            return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
+        return sql_field
 
-class Char(_String):
+    def to_raw_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
+        """Return the `SQL` object that accesses directly the field.  In the
+        case of translated fields, this returns the ``jsonb`` dictionary as a whole.
+        """
+        return Field.to_sql(self, model, alias, flush)
+
+    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+        # build the condition
+        base_condition = super().condition_to_sql(field_expr, operator, value, model, alias, query)
+
+        # faster SQL for index trigrams
+        if (
+            self.translate
+            and value
+            and operator in ('=', 'in', 'like', 'ilike', '=like', '=ilike')
+            and self.index == 'trigram'
+            and model.pool.has_trigram
+            and (
+                isinstance(value, str)
+                or (isinstance(value, COLLECTION_TYPES) and all(isinstance(v, str) for v in value))
+            )
+        ):
+            # a prefilter using trigram index to speed up '=', 'like', 'ilike'
+            # '!=', '<=', '<', '>', '>=', 'in', 'not in', 'not like', 'not ilike' cannot use this trick
+            if operator == '=':
+                operator = 'in'
+                value = [value]
+            if operator == 'in' and len(value) == 1:
+                value = value_to_translated_trigram_pattern(next(iter(value)))
+            elif operator != 'in':
+                value = pattern_to_translated_trigram_pattern(value)
+            else:
+                value = '%'
+
+            if value == '%':
+                return base_condition
+
+            raw_sql_field = self.to_raw_sql(model, alias)
+            sql_left = SQL("jsonb_path_query_array(%s, '$.*')::text", raw_sql_field)
+            sql_operator = SQL_OPERATORS['like' if operator == 'in' else operator]
+            sql_right = SQL("%s", self.convert_to_column(value, model, validate=False))
+            unaccent = model.env.registry.unaccent
+            return SQL(
+                "(%s%s%s AND %s)",
+                unaccent(sql_left),
+                sql_operator,
+                unaccent(sql_right),
+                base_condition,
+            )
+        return base_condition
+
+
+class Char(BaseString):
     """ Basic string field, can be length-limited, usually displayed as a
     single-line string in clients.
 
@@ -341,7 +410,7 @@ class Char(_String):
         return depends, depends_context
 
 
-class Text(_String):
+class Text(BaseString):
     """ Very similar to :class:`Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
 
@@ -356,7 +425,7 @@ class Text(_String):
     _column_type = ('text', 'text')
 
 
-class Html(_String):
+class Html(BaseString):
     """ Encapsulates an html code content.
 
     :param bool sanitize: whether value must be sanitized (default: ``True``)
@@ -388,7 +457,7 @@ class Html(_String):
     strip_classes = False               # whether to strip classes attributes
 
     def _get_attrs(self, model_class, name):
-        # called by _setup_attrs(), working together with _String._setup_attrs()
+        # called by _setup_attrs(), working together with BaseString._setup_attrs()
         attrs = super()._get_attrs(model_class, name)
         # Shortcut for common sanitize options
         # Outgoing and incoming emails should not be sanitized with the same options.
