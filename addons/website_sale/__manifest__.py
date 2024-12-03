@@ -173,7 +173,14 @@
             'website_sale/static/tests/interactions/**/*',
         ],
         'web.assets_unit_tests_setup': [
-            'website_sale/static/src/snippets/s_dynamic_snippet_products/000.js',
+            'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
+            # TODO Find out why these do not work:
+            #'website_sale/static/src/snippets/**/*.js',
+            # ('remove', 'website_sale/static/src/snippets/**/options.js'),
+            # TODO Re-activate when testing edit mode
+            #('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
+            # TODO Remove when all 000 have been adapted
+            #('remove', 'website_sale/static/src/snippets/**/000.js'),
         ],
     },
     'license': 'LGPL-3',
