@@ -400,7 +400,7 @@
                     <filter name="draft" string="RFQs" domain="[('state', 'in', ('draft', 'sent', 'to approve'))]"/>
                     <separator/>
                     <filter name="approved" string="Purchase Orders" domain="[('state', 'in', ('purchase', 'done'))]"/>
-                    <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
+                    <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]" invisible="1"/>
                     <separator/>
                     <filter name="order_date" string="Order Date" date="date_order"/>
                     <filter name="draft_rfqs" string="New" domain="[('state', '=', 'draft')]"/>
@@ -832,18 +832,6 @@
             <p class="o_view_nocontent_smiling_face">
                 No purchase order were made for this product yet!
             </p>
-        </field>
-    </record>
-
-    <record id="action_purchase_batch_bills" model="ir.actions.server">
-        <field name="name">Create Vendor Bills</field>
-        <field name="model_id" ref="purchase.model_purchase_order"/>
-        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name='group_ids' eval="[(4, ref('account.group_account_invoice'))]"/>
-        <field name="state">code</field>
-        <field name="code">
-            if records:
-                action = records.action_create_invoice()
         </field>
     </record>
 
