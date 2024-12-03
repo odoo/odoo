@@ -271,7 +271,7 @@ class PropertiesCase(TestPropertiesMixin):
             ''' SELECT "test_new_api_message"."id",
                        "test_new_api_message"."attributes"
                 FROM "test_new_api_message"
-                WHERE ("test_new_api_message"."id" IN %s)
+                WHERE "test_new_api_message"."id" IN %s
             ''',
             ''' SELECT "test_new_api_message"."id",
                        "test_new_api_message"."discussion",
@@ -287,7 +287,7 @@ class PropertiesCase(TestPropertiesMixin):
                        "test_new_api_message"."write_uid",
                        "test_new_api_message"."write_date"
                 FROM "test_new_api_message"
-                WHERE ("test_new_api_message"."id" IN %s)
+                WHERE "test_new_api_message"."id" IN %s
             ''',
             # read the definition on the definition record
             ''' SELECT "test_new_api_discussion"."id",
@@ -301,7 +301,7 @@ class PropertiesCase(TestPropertiesMixin):
                        "test_new_api_discussion"."write_uid",
                        "test_new_api_discussion"."write_date"
                 FROM "test_new_api_discussion"
-                WHERE ("test_new_api_discussion"."id" IN %s)
+                WHERE "test_new_api_discussion"."id" IN %s
             ''',
             # check the many2one existence
             ''' SELECT "test_new_api_partner"."id"
@@ -315,7 +315,7 @@ class PropertiesCase(TestPropertiesMixin):
                        "test_new_api_partner"."write_uid",
                        "test_new_api_partner"."write_date"
                 FROM "test_new_api_partner"
-                WHERE ("test_new_api_partner"."id" IN %s)
+                WHERE "test_new_api_partner"."id" IN %s
             ''',
         ]
 
