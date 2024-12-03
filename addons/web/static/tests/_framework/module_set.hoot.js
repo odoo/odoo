@@ -262,9 +262,7 @@ const runTests = async () => {
     const errors = loader.findErrors(loader.factories.keys());
     delete errors.unloaded; // Only a few modules have been loaded yet => irrelevant
     if (Object.keys(errors).length) {
-        throw new Error(
-            `Error(s) while loading modules for tests:\n${JSON.stringify(errors, null, 4)}`
-        );
+        return loader.reportErrors(errors);
     }
 
     // Sort modules to accelerate loading time

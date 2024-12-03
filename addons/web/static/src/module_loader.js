@@ -59,7 +59,7 @@
             this.factories.set(name, {
                 deps,
                 fn: factory,
-                ignoreMissingDeps: globalThis.__odooIgnoreMissingDependencies || lazy,
+                ignoreMissingDeps: globalThis.__odooIgnoreMissingDependencies,
             });
             if (!lazy) {
                 this.addJob(name);
@@ -120,7 +120,7 @@
                 }
             }
 
-            const cycle = findCycle(unloaded, new Set());
+            const cycle = findCycle(moduleNames, new Set());
             const errors = {};
             if (cycle) {
                 errors.cycle = cycle;
