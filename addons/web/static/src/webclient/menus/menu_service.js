@@ -22,7 +22,7 @@ function makeFetchLoadMenus() {
 }
 
 function makeMenus(env, menusData, fetchLoadMenus) {
-    let currentAppId;
+    let currentAppId = browser.sessionStorage.getItem("current_app_id");
     function _getMenu(menuId) {
         return menusData[menuId];
     }
@@ -30,6 +30,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
         menu = typeof menu === "number" ? _getMenu(menu) : menu;
         if (menu && menu.appID !== currentAppId) {
             currentAppId = menu.appID;
+            browser.sessionStorage.setItem("current_app_id", currentAppId);
             env.bus.trigger("MENUS:APP-CHANGED");
         }
     }
