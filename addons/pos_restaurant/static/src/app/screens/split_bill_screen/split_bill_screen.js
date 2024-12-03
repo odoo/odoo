@@ -1,13 +1,13 @@
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component, onWillDestroy, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
-import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
+import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
-    static components = { Orderline, OrderWidget };
+    static components = { Orderline, OrderDisplay };
     static props = {
         disallow: { type: Boolean, optional: true },
     };
@@ -17,6 +17,11 @@ export class SplitBillScreen extends Component {
         this.ui = useState(useService("ui"));
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
+
+        onWillDestroy(() => {
+            // Removing on all lines because the current order change during the split
+            this.pos.models["pos.order.line"].map((l) => (l.uiState.splitQty = false));
+        });
     }
 
     get currentOrder() {
@@ -55,6 +60,7 @@ export class SplitBillScreen extends Component {
 
             this.priceTracker[line.uuid] =
                 (line.getPriceWithTax() / line.qty) * this.qtyTracker[line.uuid];
+            this.setLineQtyStr(line);
         }
     }
 
@@ -144,14 +150,9 @@ export class SplitBillScreen extends Component {
         this.back();
     }
 
-    getLineData(line) {
+    setLineQtyStr(line) {
         const splitQty = this.qtyTracker[line.uuid];
-
-        if (!splitQty) {
-            return line.getDisplayData();
-        }
-
-        return { ...line.getDisplayData(), qty: `${splitQty} / ${line.getQuantityStr()}` };
+        line.uiState.splitQty = `${splitQty} / ${line.getQuantityStr()}`;
     }
 
     back() {

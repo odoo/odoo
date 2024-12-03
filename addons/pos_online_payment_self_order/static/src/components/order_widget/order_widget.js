@@ -1,8 +1,8 @@
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
+import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 
-patch(OrderWidget.prototype, {
+patch(OrderDisplay.prototype, {
     get buttonToShow() {
         const buttonName = this.router.activeSlot === "product_list" ? _t("Order") : _t("Pay");
         const type = this.selfOrder.config.self_ordering_mode;

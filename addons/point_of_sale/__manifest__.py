@@ -195,6 +195,7 @@
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'web/static/src/webclient/company_service.js',
+            'point_of_sale/static/src/customer_display/customer_display_adapter.js',
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",
@@ -213,11 +214,11 @@
         'point_of_sale.customer_display_assets': [
             ('include', 'point_of_sale.base_app'),
             "point_of_sale/static/src/app/components/odoo_logo/*",
-            "point_of_sale/static/src/app/components/order_widget/*",
             "point_of_sale/static/src/app/components/orderline/*",
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
+            ('remove', 'point_of_sale/static/src/customer_display/customer_display_adapter.js'),
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),

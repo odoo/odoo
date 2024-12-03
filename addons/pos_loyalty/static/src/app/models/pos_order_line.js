@@ -87,10 +87,4 @@ patch(PosOrderline.prototype, {
             "fst-italic": this.is_reward_line,
         };
     },
-    getDisplayData() {
-        if (!this.order_id) {
-            return;
-        }
-        return super.getDisplayData();
-    },
 });

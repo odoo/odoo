@@ -8,16 +8,6 @@ import {
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 
 patch(PosOrder.prototype, {
-    exportForPrinting(baseUrl, headerData) {
-        const result = super.exportForPrinting(...arguments);
-        if (this.getPartner()) {
-            result.partner = this.getPartner();
-        }
-        if (this.company.country_id?.code === "IN") {
-            result.l10n_in_hsn_summary = this._prepareL10nInHsnSummary();
-        }
-        return result;
-    },
     _prepareL10nInHsnSummary() {
         const fiscalPosition = this.fiscal_position_id;
         const baseLines = [];

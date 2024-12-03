@@ -919,23 +919,6 @@ export class SelfOrder extends Reactive {
     showDownloadButton(order) {
         return this.config.self_ordering_mode === "mobile" && order.state === "paid";
     }
-    getReceiptHeaderData(order) {
-        // FIXME - We should extract this methods from PoS to be allowed to use it here.
-        return {
-            company: this.company,
-            cashier: _t("Self-Order"),
-            header: this.config.receipt_header,
-            trackingNumber: order.trackingNumber,
-            bigTrackingNumber: true,
-            pickingService: this.config.self_ordering_service_mode,
-            tableTracker: order.table_stand_number,
-        };
-    }
-    orderExportForPrinting(order) {
-        const headerData = this.getReceiptHeaderData(order);
-        const baseUrl = this.session._base_url;
-        return order.exportForPrinting(baseUrl, headerData);
-    }
     async downloadReceipt(order) {
         const link = document.createElement("a");
         const currentDate = formatDateTime(luxon.DateTime.now(), {
@@ -946,8 +929,7 @@ export class SelfOrder extends Reactive {
         const png = await this.renderer.toCanvas(
             OrderReceipt,
             {
-                data: this.orderExportForPrinting(order),
-                formatCurrency: this.formatMonetary.bind(this),
+                order: order,
             },
             {}
         );

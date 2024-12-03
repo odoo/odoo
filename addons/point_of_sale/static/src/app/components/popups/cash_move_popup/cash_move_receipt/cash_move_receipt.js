@@ -8,7 +8,7 @@ export class CashMoveReceipt extends Component {
         reason: String,
         translatedType: String,
         formattedAmount: String,
-        headerData: Object,
         date: String,
+        order: Object,
     };
 }

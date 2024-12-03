@@ -18,8 +18,7 @@ patch(ControlButtons.prototype, {
     async clickPrintBill() {
         // Need to await to have the result in case of automatic skip screen.
         (await this.printer.print(OrderReceipt, {
-            data: this.pos.orderExportForPrinting(this.pos.getOrder()),
-            formatCurrency: this.env.utils.formatCurrency,
+            order: this.pos.getOrder(),
         })) || this.dialog.add(BillScreen);
     },
     clickTableGuests() {

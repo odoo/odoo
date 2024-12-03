@@ -1,19 +1,19 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
-import { OrderWidget } from "@point_of_sale/app/components/order_widget/order_widget";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { parseFloat } from "@web/views/fields/parsers";
+import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 
 export class OrderSummary extends Component {
     static template = "point_of_sale.OrderSummary";
     static components = {
         Orderline,
-        OrderWidget,
+        OrderDisplay,
     };
     static props = {};
 

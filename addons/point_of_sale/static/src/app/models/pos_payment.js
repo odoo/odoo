@@ -55,14 +55,6 @@ export class PosPayment extends Base {
         this.ticket += value;
     }
 
-    exportForPrinting() {
-        return {
-            amount: this.getAmount(),
-            name: this.payment_method_id.name,
-            ticket: this.ticket,
-        };
-    }
-
     isElectronic() {
         return Boolean(this.getPaymentStatus());
     }
