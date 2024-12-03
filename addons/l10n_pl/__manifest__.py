@@ -27,7 +27,6 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
     'data': [
         'security/ir.model.access.csv',
         'data/l10n_pl.l10n_pl_tax_office.csv',
-        'data/res.country.state.csv',
         'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
         'views/account_move_views.xml',
