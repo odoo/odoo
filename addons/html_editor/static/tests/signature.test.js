@@ -5,6 +5,8 @@ import { defineModels, fields, models, serverState } from "@web/../tests/web_tes
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText, undo } from "./_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { SignaturePlugin } from "@html_editor/others/signature_plugin";
 class ResUsers extends models.Model {
     _name = "res.users";
 
@@ -19,7 +21,9 @@ class ResUsers extends models.Model {
 defineModels([ResUsers]);
 
 test("apply 'Signature' command", async () => {
-    const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+    const { el, editor } = await setupEditor("<p>ab[]cd</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, SignaturePlugin] },
+    });
     await insertText(editor, "/signature");
     await animationFrame();
     expect(".active .o-we-command-name").toHaveText("Signature");
@@ -30,7 +34,9 @@ test("apply 'Signature' command", async () => {
 });
 
 test("undo a 'Signature' command", async () => {
-    const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+    const { el, editor } = await setupEditor("<p>ab[]cd</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, SignaturePlugin] },
+    });
     await insertText(editor, "test");
     await insertText(editor, "/signature");
     await press("enter");

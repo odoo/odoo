@@ -39,7 +39,6 @@ import { PowerButtonsPlugin } from "./main/power_buttons_plugin";
 import { PositionPlugin } from "./main/position_plugin";
 import { PowerboxPlugin } from "./main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "./main/powerbox/search_powerbox_plugin";
-import { SignaturePlugin } from "./main/signature_plugin";
 import { StarPlugin } from "./main/star_plugin";
 import { TablePlugin } from "./main/table/table_plugin";
 import { TableResizePlugin } from "./main/table/table_resize_plugin";
@@ -59,6 +58,7 @@ import { FilePlugin } from "@html_editor/others/embedded_components/plugins/file
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
+import { SignaturePlugin } from "./others/signature_plugin";
 
 /**
  * @typedef { Object } SharedMethods
@@ -129,7 +129,6 @@ export const MAIN_PLUGINS = [
     ShortCutPlugin,
     PowerboxPlugin,
     SearchPowerboxPlugin,
-    SignaturePlugin,
     StarPlugin,
     TablePlugin,
     TableUIPlugin,
@@ -169,6 +168,8 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
 ];
 
 export const DYNAMIC_PLACEHOLDER_PLUGINS = [DynamicPlaceholderPlugin, QWebPlugin];
+
+export const SIGNATURE_PLUGIN = [SignaturePlugin];
 
 export const EXTRA_PLUGINS = [
     ...COLLABORATION_PLUGINS,
