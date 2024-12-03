@@ -517,23 +517,49 @@ class AccountMove(models.Model):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _get_edi_decoder(self, file_data, new=False):
+    def _get_import_file_type(self, file_data):
+        """ Identify Factura-E files. """
+        # EXTENDS 'account'
         def is_facturae(tree):
             return tree.tag in [
                 '{http://www.facturae.es/Facturae/2014/v3.2.1/Facturae}Facturae',
                 '{http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml}Facturae',
             ]
 
-        if file_data['type'] == 'xml' and is_facturae(file_data['xml_tree']):
-            return self._import_invoice_facturae
+        if file_data['xml_tree'] is not None and is_facturae(file_data['xml_tree']):
+            return 'l10n_es.facturae'
 
-        return super()._get_edi_decoder(file_data, new=new)
+        return super()._get_import_file_type(file_data)
+
+    def _unwrap_attachment(self, file_data, recurse=True):
+        """ Divide a Facturae file into constituent invoices and create a new attachment for each invoice after the first. """
+        # EXTENDS 'account'
+        if file_data['import_file_type'] != 'l10n_es.facturae':
+            return super()._unwrap_attachment(file_data, recurse)
+
+        embedded = self._split_xml_into_new_attachments(file_data, tag='Invoice')
+        if embedded and recurse:
+            embedded.extend(self._unwrap_attachments(embedded, recurse=True))
+        return embedded
+
+    def _get_edi_decoder(self, file_data, new=False):
+        # EXTENDS 'account'
+        if file_data['import_file_type'] == 'l10n_es.facturae':
+            return {
+                'priority': 20,
+                'decoder': self._import_invoice_facturae,
+            }
+        return super()._get_edi_decoder(file_data, new)
 
     def _import_invoice_facturae(self, invoice, file_data, new=False):
         tree = file_data['xml_tree']
         is_bill = invoice.move_type.startswith('in_')
         partner = self._import_get_partner(tree, is_bill)
-        self._import_invoice_facturae_invoices(invoice, partner, tree)
+
+        # Only decode the first invoice of the Factura-e file.
+        tree = tree.xpath('//Invoice')[0]
+
+        self._import_invoice_facturae_invoice(invoice, partner, tree)
 
     def _import_get_partner(self, tree, is_bill):
         # If we're dealing with a vendor bill, then the partner is the seller party, if an invoice then it's the buyer.
@@ -574,23 +600,6 @@ class AccountMove(models.Model):
             partner = self.env['res.partner'].create(partner_vals)
             partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
         return partner
-
-    def _import_invoice_facturae_invoices(self, invoice, partner, tree):
-        invoices = tree.xpath('//Invoice')
-        if not invoices:
-            return
-
-        self._import_invoice_facturae_invoice(invoice, partner, invoices[0])
-
-        # There might be other invoices inside the facturae.
-        for node in invoices[1:]:
-            other_invoice = invoice.create({
-                'journal_id': invoice.journal_id.id,
-                'move_type': invoice.move_type
-            })
-            with other_invoice._get_edi_creation():
-                self._import_invoice_facturae_invoice(other_invoice, partner, node)
-                other_invoice.message_post(body=_("Created from attachment in %s", invoice._get_html_link()))
 
     def _import_invoice_facturae_invoice(self, invoice, partner, tree):
         logs = []

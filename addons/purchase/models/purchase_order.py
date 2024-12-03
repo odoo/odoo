@@ -714,10 +714,7 @@ class PurchaseOrder(models.Model):
             raise ValidationError(_("You can only upload a bill for a single vendor at a time."))
         invoices.with_context(skip_is_manually_modified=True)._extend_with_attachments(attachments, new=True)
 
-        invoices.with_context(
-            account_predictive_bills_disable_prediction=True,
-            no_new_invoice=True,
-        ).message_post(attachment_ids=attachments.ids)
+        invoices.message_post(attachment_ids=attachments.ids)
 
         attachments.write({'res_model': 'account.move', 'res_id': invoices.id})
         return self.action_view_invoice(invoices)

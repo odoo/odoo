@@ -1031,28 +1031,18 @@ class AccountJournal(models.Model):
         if not self:
             raise UserError(self.env['account.journal']._build_no_journal_error_msg(self.env.company.display_name, [journal_type]))
 
-        # As we are coming from the journal, we assume that each attachments
-        # will create an invoice with a tentative to enhance with EDI / OCR..
-        all_invoices = self.env['account.move']
-        for attachment in attachments:
-            invoice = self.env['account.move'].with_context(skip_is_manually_modified=True).create({
-                'journal_id': self.id,
-                'move_type': move_type,
-            })
+        # Create one invoice per group.
+        invoices = self.env['account.move'] \
+            .with_context(
+                default_journal_id=self.id,
+                skip_is_manually_modified=True,
+            ) \
+            ._create_records_from_attachments(attachments)
 
-            invoice.with_context(skip_is_manually_modified=True)._extend_with_attachments(attachment, new=True)
-
-            all_invoices |= invoice
-
-            invoice.with_context(
-                account_predictive_bills_disable_prediction=True,
-                no_new_invoice=True,
-            ).message_post(attachment_ids=attachment.ids)
-
-            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+        for invoice in invoices:
             invoice._autopost_bill()
 
-        return all_invoices
+        return invoices
 
     def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.

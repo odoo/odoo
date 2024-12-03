@@ -317,12 +317,11 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     def test_import_multiple_invoices(self):
         with file_open("l10n_es_edi_facturae/tests/data/import_multiple_invoices.xml", "rt") as f:
-            imported_xml = lxml.etree.fromstring(f.read().encode())
+            content = f.read().encode()
 
-        moves = self.env['account.move'].create({'move_type': 'out_invoice'})
-        moves._import_invoice_facturae(moves, {'xml_tree': imported_xml})
-
-        moves += self.env['account.move'].search([('ref', '=', 'INV/2023/00006'), ('company_id', '=', self.company_data['company'].id)], limit=1)
+        attachment = self.env['ir.attachment'].create({'name': 'invoice.xml', 'raw': content})
+        sale_journal = self.company_data['default_journal_sale'].with_context(default_move_type='out_invoice')
+        moves = sale_journal._create_document_from_attachment(attachment.ids)
 
         currency = self.env['res.currency'].search([('name', '=', 'EUR')])
 
@@ -384,10 +383,11 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
     def test_import_withheld_taxes(self):
         with file_open("l10n_es_edi_facturae/tests/data/import_withholding_invoice.xml", "rt") as f:
-            imported_xml = lxml.etree.fromstring(f.read().encode())
+            content = f.read().encode()
+        attachment = self.env['ir.attachment'].create({'name': 'invoice.xml', 'raw': content})
 
-        move = self.env['account.move'].create({'move_type': 'out_invoice'})
-        move._import_invoice_facturae(move, {'xml_tree': imported_xml})
+        sale_journal = self.company_data['default_journal_sale'].with_context(default_move_type='out_invoice')
+        move = sale_journal._create_document_from_attachment(attachment.ids)
 
         self.assertRecordValues(move, [
             {

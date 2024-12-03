@@ -96,7 +96,7 @@ class AccountMoveSend(models.AbstractModel):
         for invoice in invoices_hu:
             # Log outcome in chatter
             formatted_message = self._format_error_html(invoice.l10n_hu_edi_messages)
-            invoice.with_context(no_new_invoice=True).message_post(body=formatted_message)
+            invoice.message_post(body=formatted_message)
 
             # Update invoice_data with errors
             blocking_level = invoice.l10n_hu_edi_messages.get('blocking_level')
