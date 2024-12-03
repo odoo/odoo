@@ -21,18 +21,18 @@ import { addLoadingEffect } from "@web/core/utils/ui";
 import { scrollTo } from "@web_editor/js/common/scrolling";
 const DEBOUNCE = 400;
 const { DateTime } = luxon;
-import wUtils from '@website/js/utils';
+import wUtils from "@website/js/utils";
 
 // TODO Editor behavior.
 /*
 publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
-    selector: '.s_website_form form, form.s_website_form', // !compatibility
+    selector: ".s_website_form form, form.s_website_form", // !compatibility
     disabledInEditableMode: false,
     start: function () {
         if (this.editableMode) {
             // We do not initialize the datetime picker in edit mode but want the dates to be formated
-            this.el.querySelectorAll('.s_website_form_input.datetimepicker-input').forEach(el => {
-                const value = el.getAttribute('value');
+            this.el.querySelectorAll(".s_website_form_input.datetimepicker-input").forEach(el => {
+                const value = el.getAttribute("value");
                 if (value) {
                 const format =
                     el.closest(".s_website_form_field").dataset.type === "date"
@@ -88,7 +88,7 @@ export class Form extends Interaction {
         this.preFillValues = {};
     }
     async willStart() {
-        if (!this.el.classList.contains('s_website_form_no_recaptcha')) {
+        if (!this.el.classList.contains("s_website_form_no_recaptcha")) {
             this.recaptchaLoaded = true;
             await this.recaptcha.loadLibs();
         }
@@ -106,8 +106,8 @@ export class Form extends Interaction {
 
         // Prepare visibility data and update field visibilities
         const visibilityFunctionsByFieldName = new Map();
-        for (const fieldEl of this.el.querySelectorAll('[data-visibility-dependency]')) {
-            const inputName = fieldEl.querySelector('.s_website_form_input').name;
+        for (const fieldEl of this.el.querySelectorAll("[data-visibility-dependency]")) {
+            const inputName = fieldEl.querySelector(".s_website_form_input").name;
             if (!visibilityFunctionsByFieldName.has(inputName)) {
                 visibilityFunctionsByFieldName.set(inputName, []);
             }
@@ -171,7 +171,7 @@ export class Form extends Interaction {
                 // take priority over set default values. The 'email_to'
                 // field is however treated as an exception at the moment
                 // so that values set by users are always used.
-                if (name === 'email_to' && fieldEl.value
+                if (name === "email_to" && fieldEl.value
                         // The following value is the default value that
                         // is set if the form is edited in any way. (see the
                         // @website/js/form_editor_registry module in editor
@@ -180,7 +180,7 @@ export class Form extends Interaction {
                         // unless explicitely manipulated by the user or on
                         // custom form addition but that seems risky to
                         // change as a stable fix.
-                        && fieldEl.value !== 'info@yourcompany.example.com') {
+                        && fieldEl.value !== "info@yourcompany.example.com") {
                     continue;
                 }
 
@@ -191,7 +191,7 @@ export class Form extends Interaction {
                     newValue = this.preFillValues[fieldEl.dataset.fillWith];
                 }
                 if (newValue) {
-                    this.initialValues.set(fieldEl, fieldEl.getAttribute('value'));
+                    this.initialValues.set(fieldEl, fieldEl.getAttribute("value"));
                     fieldEl.value = newValue;
                 }
             }
@@ -200,14 +200,14 @@ export class Form extends Interaction {
         this.updateContent();
 
         if (session.geoip_phone_code) {
-            this.el.querySelectorAll('input[type="tel"]').forEach(telField => {
+            this.el.querySelectorAll(`input[type="tel"]`).forEach(telField => {
                 if (!telField.value) {
-                    telField.value = '+' + session.geoip_phone_code;
+                    telField.value = "+" + session.geoip_phone_code;
                 }
             });
         }
         // Check disabled states
-        this.inputEls = this.el.querySelectorAll('.s_website_form_field.s_website_form_field_hidden_if .s_website_form_input');
+        this.inputEls = this.el.querySelectorAll(".s_website_form_field.s_website_form_field_hidden_if .s_website_form_input");
         for (const inputEl of this.inputEls) {
             this.disabledStates[inputEl] = inputEl.disabled;
         }
@@ -222,16 +222,16 @@ export class Form extends Interaction {
 
     destroy() {
         // TODO Find out which event this is about.
-        // this.$el.find('button').off('click');
+        // this.$el.find("button").off("click");
 
         // Empty inputs
         this.resetForm();
 
         // Apply default values
-        this.el.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]').forEach(el => {
-            let value = el.getAttribute('value');
+        this.el.querySelectorAll(`input[type="text"], input[type="email"], input[type="number"]`).forEach(el => {
+            let value = el.getAttribute("value");
             if (value) {
-                if (el.classList.contains('datetimepicker-input')) {
+                if (el.classList.contains("datetimepicker-input")) {
                     const format =
                         el.closest(".s_website_form_field").dataset.type === "date"
                             ? formatDate
@@ -241,7 +241,7 @@ export class Form extends Interaction {
                 el.value = value;
             }
         });
-        this.el.querySelectorAll('textarea').forEach(el => el.value = el.textContent);
+        this.el.querySelectorAll("textarea").forEach(el => el.value = el.textContent);
 
         // Remove saving of the error colors
         for (const errorEl of this.el.querySelectorAll(".o_has_error")) {
@@ -269,14 +269,14 @@ export class Form extends Interaction {
         }
 
         // All 'hidden if' fields start with d-none
-        this.el.querySelectorAll('.s_website_form_field_hidden_if:not(.d-none)').forEach(el => el.classList.add('d-none'));
+        this.el.querySelectorAll(".s_website_form_field_hidden_if:not(.d-none)").forEach(el => el.classList.add("d-none"));
 
         // Reset the initial default values.
         for (const [fieldEl, initialValue] of this.initialValues.entries()) {
             if (initialValue) {
-                fieldEl.setAttribute('value', initialValue);
+                fieldEl.setAttribute("value", initialValue);
             } else {
-                fieldEl.removeAttribute('value');
+                fieldEl.removeAttribute("value");
             }
         }
 
@@ -289,7 +289,7 @@ export class Form extends Interaction {
         e.preventDefault(); // Prevent the default submit behavior
          // Prevent users from crazy clicking
         const buttonEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
-        buttonEl.classList.add('disabled'); // !compatibility
+        buttonEl.classList.add("disabled"); // !compatibility
         buttonEl.setAttribute("disabled", "disabled");
         this.restoreBtnLoading = addLoadingEffect(buttonEl);
         this.el.querySelector("#s_website_form_result, #o_website_form_result").replaceChildren(); // !compatibility
@@ -344,7 +344,7 @@ export class Form extends Interaction {
                     formValues[input.name] = [formValues[input.name], input.value];
                 }
             } else {
-                if (input.value !== '') {
+                if (input.value !== "") {
                     formValues[input.name] = input.value;
                 }
             }
@@ -368,9 +368,9 @@ export class Form extends Interaction {
         if (this.recaptchaLoaded) {
             const tokenObj = await this.waitFor(this.recaptcha.getToken("website_form"));
             if (tokenObj.token) {
-                formValues['recaptcha_token_response'] = tokenObj.token;
+                formValues["recaptcha_token_response"] = tokenObj.token;
             } else if (tokenObj.error) {
-                this.updateStatus('error', tokenObj.error);
+                this.updateStatus("error", tokenObj.error);
                 return false;
             }
         }
@@ -403,10 +403,10 @@ export class Form extends Interaction {
                 let successPage = this.el.dataset.successPage;
                 if (!successMode) {
                     successPage = this.el.dataset.success_page; // !compatibility
-                    successMode = successPage ? 'redirect' : 'nothing';
+                    successMode = successPage ? "redirect" : "nothing";
                 }
                 switch (successMode) {
-                    case 'redirect': {
+                    case "redirect": {
                         let hashIndex = successPage.indexOf("#");
                         if (hashIndex > 0) {
                             // URL containing an anchor detected: extract
@@ -428,7 +428,7 @@ export class Form extends Interaction {
                                 successPage = successPage.replace("#", "/#");
                                 hashIndex++;
                             }
-                            if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + '#'))) {
+                            if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + "#"))) {
                                 successPage = successPage.substring(hashIndex);
                             }
                         }
@@ -453,14 +453,14 @@ export class Form extends Interaction {
                         window.location.href = successPage;
                         return;
                     }
-                    case 'message': {
+                    case "message": {
                         // Prevent double-clicking on the send button and
                         // add a upload loading effect (delay before success
                         // message)
                         await delay(DEBOUNCE);
 
-                        this.el.classList.add('d-none');
-                        this.el.parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
+                        this.el.classList.add("d-none");
+                        this.el.parentElement.querySelector(".s_website_form_end_message").classList.remove("d-none");
                         break;
                     }
                     default: {
@@ -469,7 +469,7 @@ export class Form extends Interaction {
                         // message)
                         await this.waitFor(delay(DEBOUNCE));
 
-                        this.updateStatus('success');
+                        this.updateStatus("success");
                         break;
                     }
                 }
@@ -480,7 +480,7 @@ export class Form extends Interaction {
         })
         .catch(error => {
             this.updateStatus(
-                'error',
+                "error",
                 error.status && error.status === 413 ? _t("Uploaded file is too large.") : "",
             );
         });
@@ -520,7 +520,7 @@ export class Form extends Interaction {
                 // checkbox to be checked, instead of looking at other
                 // checkboxes with the same name and only requiring one
                 // of them to be valid.
-                if (inputEl.required && inputEl.type === 'checkbox') {
+                if (inputEl.required && inputEl.type === "checkbox") {
                     // Considering we are currently processing a single
                     // field, we can assume that all checkboxes in the
                     // inputs variable have the same name
@@ -528,7 +528,7 @@ export class Form extends Interaction {
                     // filter neither on required, nor on checkbox and
                     // checking the validity of the group of checkbox is
                     // currently done for each checkbox of that group...
-                    const checkboxes = inputEls.filter(el => el.required && el.type === 'checkbox');
+                    const checkboxes = inputEls.filter(el => el.required && el.type === "checkbox");
                     return !checkboxes.some((checkbox) => checkbox.checkValidity());
 
                 // Special cases for dates and datetimes
@@ -592,15 +592,15 @@ export class Form extends Interaction {
     }
 
     updateStatus(status, message) {
-        if (status !== 'success') { // Restore send button behavior if result is an error
+        if (status !== "success") { // Restore send button behavior if result is an error
             const buttonEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
             buttonEl.removeAttribute("disabled");
             buttonEl.classList.remove("disabled"); // !compatibility
             this.restoreBtnLoading();
         }
-        const resultEl = this.el.querySelector('#s_website_form_result, #o_website_form_result'); // !compatibility
+        const resultEl = this.el.querySelector("#s_website_form_result, #o_website_form_result"); // !compatibility
 
-        if (status === 'error' && !message) {
+        if (status === "error" && !message) {
             message = _t("An error has occured, the form has not been sent.");
         }
 
@@ -652,7 +652,7 @@ export class Form extends Interaction {
      * @returns {string[]} List of user's field that have to be fetched.
      */
     getUserPreFillFields() {
-        return ['name', 'phone', 'email', 'commercial_company_name'];
+        return ["name", "phone", "email", "commercial_company_name"];
     }
     /**
      * Compares the value with the comparable (and the between) with
@@ -666,44 +666,44 @@ export class Form extends Interaction {
      *      is between or !between
      * @returns {boolean}
      */
-    compareTo(comparator, value = '', comparable, between) {
+    compareTo(comparator, value = "", comparable, between) {
         // Value can be null when the compared field is supposed to be
         // visible, but is not yet retrievable from the FormData() because
         // the field was conditionally hidden. It can be considered empty.
         if (value === null) {
-            value = '';
+            value = "";
         }
 
         switch (comparator) {
-            case 'contains':
+            case "contains":
                 return value.includes(comparable);
-            case '!contains':
+            case "!contains":
                 return !value.includes(comparable);
-            case 'equal':
-            case 'selected':
+            case "equal":
+            case "selected":
                 return value === comparable;
-            case '!equal':
-            case '!selected':
+            case "!equal":
+            case "!selected":
                 return value !== comparable;
-            case 'set':
+            case "set":
                 return value;
-            case '!set':
+            case "!set":
                 return !value;
-            case 'greater':
+            case "greater":
                 return parseFloat(value) > parseFloat(comparable);
-            case 'less':
+            case "less":
                 return parseFloat(value) < parseFloat(comparable);
-            case 'greater or equal':
+            case "greater or equal":
                 return parseFloat(value) >= parseFloat(comparable);
-            case 'less or equal':
+            case "less or equal":
                 return parseFloat(value) <= parseFloat(comparable);
-            case 'fileSet':
-                return value.name !== '';
-            case '!fileSet':
-                return value.name === '';
+            case "fileSet":
+                return value.name !== "";
+            case "!fileSet":
+                return value.name === "";
         }
 
-        const format = value.includes(':')
+        const format = value.includes(":")
             ? localization.dateTimeFormat
             : localization.dateFormat;
         // Date & Date Time comparison requires formatting the value
@@ -713,23 +713,23 @@ export class Form extends Interaction {
         value = dateTime.isValid ? dateTime.toUnixInteger() : NaN;
 
         comparable = parseInt(comparable);
-        between = parseInt(between) || '';
+        between = parseInt(between) || "";
         switch (comparator) {
-            case 'dateEqual':
+            case "dateEqual":
                 return value === comparable;
-            case 'date!equal':
+            case "date!equal":
                 return value !== comparable;
-            case 'before':
+            case "before":
                 return value < comparable;
-            case 'after':
+            case "after":
                 return value > comparable;
-            case 'equal or before':
+            case "equal or before":
                 return value <= comparable;
-            case 'between':
+            case "between":
                 return value >= comparable && value <= between;
-            case '!between':
+            case "!between":
                 return !(value >= comparable && value <= between);
-            case 'equal or after':
+            case "equal or after":
                 return value >= comparable;
         }
     }
