@@ -4,10 +4,10 @@
 <template id="index" name="Our References">
     <t t-call="website.layout">
         <div id="wrap">
-            <div class="container my-4">
-                <div class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
-                    <h4 class="my-0 me-auto pe-sm-4">Our references</h4>
-                    <div class="o_wcrm_search d-flex w-100 w-lg-auto">
+            <div class="container mb-3">
+                <section class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
+                    <h2 class="me-auto mb-0 h4">Our references</h2>
+                    <div class="o_wcrm_search d-flex w-100 w-lg-25">
                         <form action="" method="get" class="flex-grow-1">
                             <div class="input-group" role="search">
                                 <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="post.get('search', '')"/>
@@ -22,7 +22,7 @@
                             <i class="fa fa-sliders"/>
                         </button>
                     </div>
-                </div>
+                </section>
                 <!-- Off canvas filters on mobile-->
                 <div id="o_wc_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
                     <div class="offcanvas-header">
@@ -33,7 +33,7 @@
                         <div class="accordion accordion-flush">
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button border-top collapsed"
+                                    <button class="accordion-button collapsed"
                                         type="button"
                                         data-bs-toggle="collapse"
                                         data-bs-target=".o_wc_offcanvas_industry"
@@ -64,7 +64,7 @@
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button border-top collapsed"
+                                    <button class="accordion-button collapsed"
                                         type="button"
                                         data-bs-toggle="collapse"
                                         data-bs-target=".o_wc_offcanvas_country"
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mt-4">
+                <div class="row">
                     <div class="my-5 py-5 text-center" t-if="not partners">
                         <h5>No results found for "<span t-out="post.get('search', '')"/>"</h5>
                         <a href="/customers">See all customers</a>
@@ -196,11 +196,11 @@
 <template id="opt_industry_list" inherit_id="website_customer.index" name="Filter on Industry" priority="20">
     <xpath expr="//div[hasclass('o_wcrm_search')]" position="before">
         <div class="dropdown d-none d-lg-block">
-            <a role="button" href="#" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open industries dropdown">
+            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by industry" aria-label="Filter by industry" aria-expanded="false">
                 <t t-foreach="industries" t-as="industry_dict">
                     <label class="cursor-pointer" t-if="industry_dict['industry_id'] and industry_dict['industry_id'][0] == current_industry_id and true or false" t-out="industry_dict['industry_id'][1]"/>
                 </t>
-            </a>
+            </button>
             <div class="dropdown-menu">
                 <t t-foreach="industries" t-as="industry_dict">
                     <t t-if="industry_dict['industry_id']">
@@ -216,13 +216,13 @@
 <template id="opt_country_list" inherit_id="website_customer.index" name="Filter on Countries" priority="30">
     <xpath expr="//div[hasclass('o_wcrm_search')]" position="before">
         <div class="dropdown d-none d-lg-block">
-            <a role="button" href="#" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle btn btn-light" aria-expanded="true" aria-label="Open countries dropdown">
+            <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
                 <t t-foreach="countries" t-as="country_dict">
                     <label class="cursor-pointer" t-if="country_dict['country_id'] and current_country_id == country_dict['country_id'][0]">
                         <t t-out="country_dict['country_id'][1]"/>
                     </label>
                 </t>
-            </a>
+            </button>
             <div class="dropdown-menu">
                 <t t-foreach="countries" t-as="country_dict">
                     <t t-if="country_dict['country_id']">
@@ -237,7 +237,7 @@
 
 
 <template id="opt_tag_list" inherit_id="website_customer.index" name="Filter on Tags" priority="40">
-    <xpath expr="//div[hasclass('o_wcrm_filters_top')]" position="after">
+    <xpath expr="//section[hasclass('o_wcrm_filters_top')]" position="after">
         <div class="d-flex align-items-center gap-2 my-4" t-if="len(tags)">
             <a class="badge text-bg-info" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                 <span class="fa fa-1x fa-tags"/> All
@@ -255,9 +255,9 @@
     <div id="wrap">
         <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS</t>
         <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_1" t-att-data-editor-message="editor_message"/>
-        <div class="container my-4">
+        <div class="container mb-3">
             <div class="row">
-                <div class="mb-3" t-if="not edit_page">
+                <div class="mt-4 mb-3" t-if="not edit_page">
                     <a t-attf-href="/customers" aria-label="Back to references list"><i class="fa fa-chevron-left me-2"/>Back to references</a>
                 </div>
                 <t t-call="website_partner.partner_detail">
