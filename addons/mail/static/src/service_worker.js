@@ -1,6 +1,9 @@
 /* eslint-env serviceworker */
 /* eslint-disable no-restricted-globals */
 
+const MESSAGE_TYPE = {
+    UNEXPECTED_CALL_TERMINATION: "UNEXPECTED_CALL_TERMINATION",
+};
 const PUSH_NOTIFICATION_TYPE = {
     CALL: "CALL",
     CANCEL: "CANCEL",
@@ -9,7 +12,19 @@ const PUSH_NOTIFICATION_ACTION = {
     ACCEPT: "ACCEPT",
     DECLINE: "DECLINE",
 };
-async function openDiscussChannel(channelId, action, { joinCall = false } = {}) {
+
+/**
+ * @param {number} channelId id of the mail discuss channel
+ * @param [action] odoo client action
+ * @param [joinCall] whether we want to join a call on that channel
+ * @param [canOpenNewWindow] whether we open a new window if none is found
+ * @param {Client | ServiceWorker | MessagePort} [source] if set, will not open the channel on the source
+ * @return {Promise<void>}
+ */
+async function openDiscussChannel(
+    channelId,
+    { action = "", joinCall = false, canOpenNewWindow = true, source } = {}
+) {
     const discussURLRegexes = [
         new RegExp("/odoo/discuss"),
         new RegExp(`/odoo/\\d+/action-${action}`),
@@ -20,21 +35,26 @@ async function openDiscussChannel(channelId, action, { joinCall = false } = {}) 
         type: "window",
         includeUncontrolled: true,
     })) {
+        if (source && source.id === client.id) {
+            continue;
+        }
         if (!targetClient || discussURLRegexes.some((r) => r.test(new URL(client.url).pathname))) {
             targetClient = client;
         }
     }
-    if (!targetClient) {
+    if (targetClient) {
+        targetClient.postMessage({ action: "OPEN_CHANNEL", data: { id: channelId, joinCall } });
+        targetClient.focus().catch();
+        return;
+    }
+    if (canOpenNewWindow) {
         const url = new URL(`/odoo/action-${action}`, location.origin);
         url.searchParams.set("active_id", `discuss.channel_${channelId}`);
         if (joinCall) {
             url.searchParams.set("call", "accept");
         }
         await self.clients.openWindow(url.toString());
-        return;
     }
-    await targetClient.focus();
-    targetClient.postMessage({ action: "OPEN_CHANNEL", data: { id: channelId, joinCall } });
 }
 
 self.addEventListener("notificationclick", (event) => {
@@ -60,7 +80,8 @@ self.addEventListener("notificationclick", (event) => {
                 return;
             }
             event.waitUntil(
-                openDiscussChannel(res_id, action, {
+                openDiscussChannel(res_id, {
+                    action,
                     joinCall: event.action === PUSH_NOTIFICATION_ACTION.ACCEPT,
                 })
             );
@@ -120,4 +141,11 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
         mode: "cors",
         credentials: "include",
     });
+});
+self.addEventListener("message", ({ data, source }) => {
+    switch (data.name) {
+        case MESSAGE_TYPE.UNEXPECTED_CALL_TERMINATION:
+            openDiscussChannel(data.channelId, { joinCall: true, canOpenNewWindow: false, source });
+            break;
+    }
 });
