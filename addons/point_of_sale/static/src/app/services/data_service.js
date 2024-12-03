@@ -147,7 +147,7 @@ export class PosData extends Reactive {
 
         const preLoadData = await this.preLoadData(data);
         const missing = await this.missingRecursive(preLoadData);
-        const results = this.models.loadData(this.models, missing, [], true);
+        const results = this.models.loadData(missing, [], true);
         for (const data of Object.values(results)) {
             for (const record of data) {
                 if (record.raw.JSONuiState) {
@@ -243,8 +243,8 @@ export class PosData extends Reactive {
         delete data["pos.order"];
         delete data["pos.order.line"];
 
-        this.models.loadData(this.models, data, this.modelToLoad);
-        this.models.loadData(this.models, { "pos.order": order, "pos.order.line": orderlines });
+        this.models.loadData(data, this.modelToLoad);
+        this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
     }
 
     async loadFieldsAndRelations() {
@@ -291,15 +291,9 @@ export class PosData extends Reactive {
             };
         }
 
-        const { models, records, indexedRecords, baseData } = createRelatedModels(
-            relations,
-            modelClasses,
-            this.opts
-        );
+        const { models, baseData } = createRelatedModels(relations, modelClasses, this.opts);
 
         this.baseData = baseData;
-        this.records = records;
-        this.indexedRecords = indexedRecords;
         this.fields = fields;
         this.relations = relations;
         this.models = models;
@@ -471,7 +465,7 @@ export class PosData extends Reactive {
             ) {
                 const data = await this.missingRecursive({ [model]: result });
                 this.synchronizeServerDataInIndexedDB(data);
-                const results = this.models.loadData(this.models, data);
+                const results = this.models.loadData(data);
                 result = results[model];
             } else if (type === "write") {
                 const baseData = Object.assign(this.baseData[model][ids[0]], values);
@@ -672,7 +666,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        const results = this.models.loadData(this.models, data, [], true);
+        const results = this.models.loadData(data, [], true);
         return results;
     }
 
@@ -708,7 +702,7 @@ export class PosData extends Reactive {
         // Delete all children records before main record
         this.indexedDB.delete(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
-            this.indexedDB.delete(item.model.modelName, [item.uuid]);
+            this.indexedDB.delete(item.model.name, [item.uuid]);
             item.delete();
         }
 

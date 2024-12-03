@@ -69,7 +69,7 @@ export class ConfirmationPage extends Component {
             access_token: this.selfOrder.access_token,
             order_access_tokens: [this.props.orderAccessToken],
         });
-        this.selfOrder.models.loadData(this.selfOrder.models, data);
+        this.selfOrder.models.loadData(data);
         const order = this.selfOrder.models["pos.order"].find(
             (o) => o.access_token === this.props.orderAccessToken
         );
