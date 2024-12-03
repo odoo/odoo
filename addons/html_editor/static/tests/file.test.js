@@ -7,6 +7,8 @@ import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom"
 import { execCommand } from "./_helpers/userCommands";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { DocumentPlugin } from "@html_editor/others/document_plugin";
+import { getContent } from "./_helpers/selection";
+import { isZwnbsp } from "@html_editor/utils/dom_info";
 
 const config = {
     Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
@@ -121,5 +123,50 @@ describe("powerbutton", () => {
         await mockedUpload;
         // Check that file card (embedded component) was inserted in the editable.
         expect('.odoo-editor-editable [data-embedded="file"]').toHaveCount(1);
+    });
+});
+
+describe("zero width no-break space", () => {
+    test("file card should be padded with zero-width no-break spaces", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>", { config });
+        patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        // wait for the embedded component to be mounted
+        await waitFor('[data-embedded="file"] .o_file_name:contains("file.txt")');
+        // Check that file card is padded with ZWNBSP on both sides.
+        const fileCard = queryOne('[data-embedded="file"]');
+        expect(isZwnbsp(fileCard.previousSibling)).toBe(true);
+        expect(isZwnbsp(fileCard.nextSibling)).toBe(true);
+    });
+
+    test("should not add two contiguous ZWNBSP between two file cards", async () => {
+        const { editor, el } = await setupEditor("<p>[]<br></p>", {
+            config: { ...config, resources: undefined }, // turn off embedded component rendering },
+        });
+        let mockUpload = patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        await mockUpload;
+        // patch again to get new Promise
+        mockUpload = patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        await mockUpload;
+        let content = getContent(el);
+        // replace embedded component root with a <FILE/> placeholder for readability
+        content = content.replace(/<span data-embedded="file".*?<\/span>/g, "<FILE/>");
+        expect(content).toBe("<p>\ufeff<FILE/>\ufeff<FILE/>\ufeff[]</p>");
+    });
+
+    test("should not add two contiguous ZWNBSP between two file cards (2)", async () => {
+        const { el } = await setupEditor(
+            '<p>abc<span data-embedded="file"></span>x[]<span data-embedded="file"></span></p>',
+            { config: { ...config, resources: undefined } } // turn off embedded component rendering },
+        );
+        expect(getContent(el)).toBe(
+            '<p>abc\ufeff<span data-embedded="file"></span>\ufeffx[]\ufeff<span data-embedded="file"></span>\ufeff</p>'
+        );
+        press("Backspace");
+        expect(getContent(el)).toBe(
+            '<p>abc\ufeff<span data-embedded="file"></span>\ufeff[]<span data-embedded="file"></span>\ufeff</p>'
+        );
     });
 });
