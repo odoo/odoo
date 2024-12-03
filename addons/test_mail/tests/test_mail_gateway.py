@@ -1854,7 +1854,10 @@ class TestMailgateway(MailCommon):
 
         self.assertEqual(set(records.mapped('email_from')), {self.email_from})
 
-        for email_from in (self.email_from, self.email_from.upper()):
+        for email_from, exp_to in [
+            (self.email_from, formataddr(("Sylvie Lelitre", "test.sylvie.lelitre@agrolait.com"))),
+            (self.email_from.upper(), formataddr(("SYLVIE LELITRE", "test.sylvie.lelitre@agrolait.com"))),
+        ]:
             with self.mock_mail_gateway():
                 self.format_and_process(
                     MAIL_TEMPLATE,
@@ -1870,7 +1873,7 @@ class TestMailgateway(MailCommon):
                 new_record,
                 msg='The loop should have been detected and the record should not have been created')
 
-            self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>', [email_from])
+            self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>', [exp_to])
             self.assertIn('-loop-detection-bounce-email@', self._mails[0]['references'],
                 msg='The "bounce email" tag must be in the reference')
 
