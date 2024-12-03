@@ -28,13 +28,10 @@ export class QuickReactionMenu extends Component {
         this.store = useState(useService("mail.store"));
         this.picker = useEmojiPicker(
             null,
-            { onSelect: this.toggleReaction.bind(this) },
+            { onSelect: this.toggleReaction.bind(this), class: "overflow-hidden rounded-2" },
             {
-                arrow: false,
-                position: "bottom-start",
+                position: "bottom-middle",
                 popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
-                onPositioned: (el, { direction, variant }) =>
-                    el.classList.add(`o-popover--${direction[0]}${variant[0]}`),
             }
         );
         this.dropdown = useState(useDropdownState());
@@ -52,9 +49,12 @@ export class QuickReactionMenu extends Component {
         onPatched(() => void this.state.emojiLoaded);
     }
 
-    openPicker() {
-        this.dropdown.close();
-        this.picker.open(this.toggle);
+    togglePicker() {
+        if (this.picker.isOpen) {
+            this.picker.close();
+        } else {
+            this.picker.open(this.toggle);
+        }
     }
 
     getEmojiShortcode(emoji) {
@@ -81,6 +81,7 @@ export class QuickReactionMenu extends Component {
             this.frequentEmojiService.incrementEmojiUsage(emoji);
         }
         this.dropdown.close();
+        this.picker.close();
     }
 
     get attClass() {
