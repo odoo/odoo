@@ -758,6 +758,7 @@ class ResPartner(models.Model):
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
                     self.invalidate_recordset([field])
+                    self.modified([field])
             except DatabaseError as e:
                 # 55P03 LockNotAvailable
                 # 40001 SerializationFailure
