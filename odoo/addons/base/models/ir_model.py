@@ -1323,7 +1323,7 @@ class IrModelFields(models.Model):
         elif field_data['ttype'] == 'monetary':
             # be sure that custom monetary field are always instanciated
             if not self.pool.loaded and \
-                not (field_data['currency_field'] and self._is_manual_name(field_data['currency_field'])):
+                field_data['currency_field'] and not self._is_manual_name(field_data['currency_field']):
                 return
             attrs['currency_field'] = field_data['currency_field']
         # add compute function if given
