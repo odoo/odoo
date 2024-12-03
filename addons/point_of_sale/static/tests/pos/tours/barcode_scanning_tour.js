@@ -83,6 +83,16 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("GS1BarcodeScanningTourFallback", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.scan_barcode("08431673020126"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("BarcodeScanPartnerTour", {
     steps: () =>
         [
