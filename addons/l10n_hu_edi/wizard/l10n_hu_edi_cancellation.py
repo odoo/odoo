@@ -39,7 +39,7 @@ class L10n_Hu_EdiCancellation(models.TransientModel):
                 self.invoice_id._l10n_hu_edi_query_status(connection)
 
         formatted_message = self.env['account.move.send']._format_error_html(self.invoice_id.l10n_hu_edi_messages)
-        self.invoice_id.with_context(no_new_invoice=True).message_post(body=formatted_message)
+        self.invoice_id.message_post(body=formatted_message)
 
         if self.env['account.move.send']._can_commit():
             self.env.cr.commit()

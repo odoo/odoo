@@ -1394,7 +1394,7 @@ class MailThread(models.AbstractModel):
             else:
                 # if no author, skip any author subscribe check; otherwise message_post
                 # checks anyway for real author and filters inactive (like odoobot)
-                thread_root = thread_root.with_context(from_alias=True, mail_post_autofollow_author_skip=not message_dict.get('author_id'))
+                thread_root = thread_root.with_context(mail_post_autofollow_author_skip=not message_dict.get('author_id'))
                 new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:

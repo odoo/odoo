@@ -12,7 +12,7 @@ class SaleEdiCommon(models.AbstractModel):
     # Import order
     # -------------------------------------------------------------------------
 
-    def _import_order_ubl(self, order, file_data):
+    def _import_order_ubl(self, order, file_data, new):
         """ Common importing method to extract order data from file_data.
 
         :param order: Order to fill details from file_data.

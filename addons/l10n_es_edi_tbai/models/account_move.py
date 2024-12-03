@@ -164,7 +164,7 @@ class AccountMove(models.Model):
 
     def _l10n_es_tbai_post_document_in_chatter(self, message, cancel=False):
         test_suffix = '(test mode)' if self.company_id.l10n_es_tbai_test_env else ''
-        self.with_context(no_new_invoice=True).message_post(
+        self.message_post(
             body=Markup("<pre>TicketBAI: posted {document_type} XML {test_suffix}\n{message}</pre>").format(
                 document_type='emission' if not cancel else 'cancellation',
                 test_suffix=test_suffix,

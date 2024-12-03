@@ -283,6 +283,9 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        if invoice.invoice_line_ids:
+            return invoice._reason_cannot_decode_has_invoice_lines()
+
         tree = file_data['xml_tree']
 
         # Not able to decode the move_type from the xml.
@@ -332,9 +335,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         attachments = self._import_attachments(invoice, tree)
         if attachments:
-            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
-
-        return True
+            invoice.message_post(attachment_ids=attachments.ids)
 
     def _import_attachments(self, invoice, tree):
         # Import the embedded PDF in the xml if some are found

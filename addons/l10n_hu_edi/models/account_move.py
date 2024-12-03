@@ -206,7 +206,7 @@ class AccountMove(models.Model):
         for invoice in invoices_to_query:
             # Log invoice status in chatter.
             formatted_message = self.env['account.move.send']._format_error_html(invoice.l10n_hu_edi_messages)
-            invoice.with_context(no_new_invoice=True).message_post(body=formatted_message)
+            invoice.message_post(body=formatted_message)
 
         if self.env['account.move.send']._can_commit():
             self.env.cr.commit()

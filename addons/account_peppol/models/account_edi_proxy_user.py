@@ -152,7 +152,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if 'is_in_extractable_state' in move._fields:
             move.is_in_extractable_state = False
 
-        move._extend_with_attachments(attachment, new=True)
+        move._extend_with_attachments(move._to_files_data(attachment), new=True)
         move._message_log(
             body=_(
                 "Peppol document (UUID: %(uuid)s) has been received successfully",

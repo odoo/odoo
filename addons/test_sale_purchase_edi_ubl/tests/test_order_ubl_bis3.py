@@ -48,7 +48,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
         """ Test default current partner set on product if no matching partner found. """
         xml_attachment = self.get_xml_attachment_of_po([])
         self.purchase_company.sudo().name = "New company"
-        so = self.env['sale.order']._create_order_from_attachment(xml_attachment.ids)
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         # Should set current user partner if no matching company found
         self.assertEqual(so.partner_id, self.env.user.partner_id)
         # Should create an activity if some details are missing on SO
@@ -72,7 +72,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
             },
         ]
         xml_attachment = self.get_xml_attachment_of_po(line_vals)
-        so = self.env['sale.order']._create_order_from_attachment(xml_attachment.ids)
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         # Should able to confirm order
         so.action_confirm()
         self.assertEqual(so.partner_id, self.purchase_company.partner_id)
@@ -104,7 +104,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
             'product_qty': 5.0,
         }]
         xml_attachment = self.get_xml_attachment_of_po(line_vals)
-        so = self.env['sale.order']._create_order_from_attachment(xml_attachment.ids)
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         # Update lines vals depending on sale order field names
         for line in line_vals:
             line_product = self.env['product.product'].browse(line['product_id'])
@@ -123,7 +123,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
         }]
         xml_attachment = self.get_xml_attachment_of_po(line_vals)
         self.displace_prdct.active = False
-        so = self.env['sale.order']._create_order_from_attachment(xml_attachment.ids)
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         with self.assertRaises(UserError):
             # Raise user error if line does not have product set
             so.action_confirm()
@@ -136,6 +136,6 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
     def test_import_payment_terms(self):
         payment_term = self.env.ref('account.account_payment_term_30days')
         xml_attachment = self.get_xml_attachment_of_po([], payment_term_id=payment_term.id)
-        so = self.env['sale.order']._create_order_from_attachment(xml_attachment.ids)
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         # Should have same payment term as PO
         self.assertEqual(so.payment_term_id, payment_term)

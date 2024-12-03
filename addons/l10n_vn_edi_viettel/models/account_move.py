@@ -522,11 +522,11 @@ class AccountMove(models.Model):
 
             self.button_cancel()
 
-            self.with_context(no_new_invoice=True).message_post(
+            self.message_post(
                 body=_('The invoice has been canceled for reason: %(reason)s', reason=reason),
             )
         except UserError as e:
-            self.with_context(no_new_invoice=True).message_post(
+            self.message_post(
                 body=_('The invoice has been canceled on sinvoice for reason: %(reason)s'
                        'But the cancellation in Odoo failed with error: %(error)s', reason=reason, error=e),
             )
