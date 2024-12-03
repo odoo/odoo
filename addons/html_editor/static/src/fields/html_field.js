@@ -4,6 +4,7 @@ import {
     DYNAMIC_PLACEHOLDER_PLUGINS,
     EMBEDDED_COMPONENT_PLUGINS,
     MAIN_PLUGINS,
+    SIGNATURE_PLUGIN,
 } from "@html_editor/plugin_sets";
 import {
     MAIN_EMBEDDINGS,
@@ -52,9 +53,11 @@ export class HtmlField extends Component {
         codeview: { type: Boolean, optional: true },
         editorConfig: { type: Object, optional: true },
         embeddedComponents: { type: Boolean, optional: true },
+        signatureCommand: { type: Boolean, optional: true, default: false },
     };
     static defaultProps = {
         dynamicPlaceholder: false,
+        signatureCommand: false,
     };
     static components = {
         Wysiwyg,
@@ -209,6 +212,7 @@ export class HtmlField extends Component {
                 ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
                 ...(this.props.dynamicPlaceholder ? DYNAMIC_PLACEHOLDER_PLUGINS : []),
                 ...(this.props.embeddedComponents ? EMBEDDED_COMPONENT_PLUGINS : []),
+                ...(this.props.signatureCommand ? SIGNATURE_PLUGIN : []),
             ],
             classList: this.classList,
             onChange: this.onChange.bind(this),
@@ -326,6 +330,7 @@ export const htmlField = {
             sandboxedPreview: Boolean(options.sandboxedPreview),
             cssReadonlyAssetId: options.cssReadonly,
             codeview: Boolean(odoo.debug && options.codeview),
+            signatureCommand: options.signatureCommand,
         };
     },
 };
