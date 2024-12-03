@@ -34,6 +34,7 @@ from . import account_cash_rounding
 from . import account_incoterms
 from . import decimal_precision
 from . import digest
+from . import edi_mixin
 from . import res_users
 from . import ir_attachment
 from . import ir_actions_report
