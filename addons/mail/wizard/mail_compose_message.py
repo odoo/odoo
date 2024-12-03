@@ -10,6 +10,7 @@ from odoo import _, api, fields, models, Command, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.mail import is_html_empty, email_normalize, email_split_and_format
+from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.parser import parse_res_ids
 
 
@@ -659,6 +660,8 @@ class MailComposeMessage(models.TransientModel):
         if any(wizard.composition_mode != 'comment' or wizard.composition_batch for wizard in self):
             raise UserError(_("A message can only be scheduled in monocomment mode"))
         create_values = []
+        # some actions might be triggered on message post based on some context keys
+        cleaned_ctx = clean_context(self.env.context)
         for wizard in self:
             res_id = wizard._evaluate_res_ids()[0]
             post_values = self._prepare_mail_values([res_id])[res_id]
@@ -673,6 +676,7 @@ class MailComposeMessage(models.TransientModel):
                 'partner_ids': post_values.pop('partner_ids'),
                 'res_id': res_id,
                 'scheduled_date': post_values.pop('scheduled_date'),
+                'send_context': cleaned_ctx,
                 'subject': post_values.pop('subject'),
                 'notification_parameters': json.dumps(post_values),  # last to not include popped post_values
             })
