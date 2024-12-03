@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="res_partner_view_buttons" model="ir.ui.view">
+        <field name="name">res.partner.view.buttons</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="sale.res_partner_view_buttons" />
+        <field name="arch" type="xml">
+            <xpath expr="//separator" position="attributes">
+                <attribute name="string">Warning on Sale</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
