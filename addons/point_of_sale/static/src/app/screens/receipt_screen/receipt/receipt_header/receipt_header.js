@@ -3,14 +3,14 @@ import { Component } from "@odoo/owl";
 export class ReceiptHeader extends Component {
     static template = "point_of_sale.ReceiptHeader";
     static props = {
-        data: {
-            type: Object,
-            shape: {
-                company: Object,
-                header: { type: [String, { value: false }], optional: true },
-                cashier: { type: String, optional: true },
-                "*": true,
-            },
-        },
+        order: Object,
     };
+
+    get order() {
+        return this.props.order;
+    }
+
+    get partnerAddress() {
+        return this.order.partner_id.contact_address.split("\n");
+    }
 }

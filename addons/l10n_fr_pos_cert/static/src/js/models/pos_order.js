@@ -9,12 +9,4 @@ patch(PosOrder.prototype, {
         const french_countries = ["FR", "MF", "MQ", "NC", "PF", "RE", "GF", "GP", "TF"];
         return french_countries.includes(this.company.country_id?.code);
     },
-    exportForPrinting(baseUrl, headerData) {
-        const result = super.exportForPrinting(...arguments);
-        result.l10n_fr_hash = this.l10n_fr_hash;
-        if (this.is_french_country()) {
-            result.pos_qr_code = false;
-        }
-        return result;
-    },
 });

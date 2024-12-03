@@ -82,13 +82,11 @@ export class ReceiptScreen extends Component {
         this.pos.showScreen(this.nextScreen);
     }
 
-    generateTicketImage = async (isBasicReceipt = false) =>
+    generateTicketImage = async () =>
         await this.renderer.toJpeg(
             OrderReceipt,
             {
-                data: this.pos.orderExportForPrinting(this.pos.getOrder()),
-                formatCurrency: this.env.utils.formatCurrency,
-                basic_receipt: isBasicReceipt,
+                order: this.pos.getOrder(),
             },
             { addClass: "pos-receipt-print p-3" }
         );

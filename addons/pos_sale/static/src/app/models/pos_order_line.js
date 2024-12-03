@@ -24,7 +24,7 @@ patch(PosOrderline.prototype, {
         }
         return false;
     },
-    getDisplayData() {
+    get saleDetails() {
         let down_payment_details = [];
 
         // FIXME: This is a hack to handle the case where the down_payment_details is a stringified JSON.
@@ -33,15 +33,11 @@ patch(PosOrderline.prototype, {
         } catch {
             down_payment_details = this.down_payment_details;
         }
-        return {
-            ...super.getDisplayData(),
-            so_reference: this.sale_order_origin_id?.name,
-            details: down_payment_details?.map?.((detail) => ({
-                product_uom_qty: detail.product_uom_qty,
-                product_name: detail.product_name,
-                total: formatCurrency(detail.total, this.currency),
-            })),
-        };
+        return down_payment_details?.map?.((detail) => ({
+            product_uom_qty: detail.product_uom_qty,
+            product_name: detail.product_name,
+            total: formatCurrency(detail.total, this.currency),
+        }));
     },
     /**
      * Set quantity based on the give sale order line.

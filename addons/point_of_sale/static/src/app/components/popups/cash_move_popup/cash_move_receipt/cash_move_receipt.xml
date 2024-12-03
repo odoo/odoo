@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.CashMoveReceipt">
         <div class="pos-receipt">
-            <ReceiptHeader data="props.headerData" />
+            <ReceiptHeader order="props.order" />
             <div class="pos-receipt-center-align">
                 CASH
                 <t t-esc="props.translatedType.toUpperCase()" />

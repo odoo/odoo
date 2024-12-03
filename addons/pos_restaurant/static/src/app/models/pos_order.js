@@ -18,29 +18,18 @@ patch(PosOrder.prototype, {
     getTable() {
         return this.table_id;
     },
-    amountPerGuest(numCustomers = this.customer_count) {
-        if (numCustomers === 0) {
-            return 0;
-        }
-        return this.getTotalDue() / numCustomers;
-    },
-    exportForPrinting(baseUrl, headerData) {
-        return {
-            ...super.exportForPrinting(...arguments),
-            set_tip_after_payment: this.config.set_tip_after_payment,
-            isRestaurant: this.config.module_pos_restaurant,
-            headerData: {
-                ...headerData,
-                trackingNumber: this.config.module_pos_restaurant ? this.tracking_number : null,
-            },
-        };
-    },
     get isBooked() {
         const res = super.isBooked;
         if (this.config.module_pos_restaurant) {
             return super.isBooked || !this.isDirectSale;
         }
         return res;
+    },
+    amountPerGuest(numCustomers = this.customer_count) {
+        if (numCustomers === 0) {
+            return 0;
+        }
+        return this.getTotalDue() / numCustomers;
     },
     setBooked(booked) {
         this.uiState.booked = booked;

@@ -5,8 +5,8 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
-import { deduceUrl } from "@point_of_sale/utils";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { CustomerDisplayPosAdapter } from "@point_of_sale/customer_display/customer_display_adapter";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -39,7 +39,6 @@ export class Chrome extends Component {
         if (this.pos.config.customer_display_type === "none") {
             return;
         }
-        this.customerDisplayChannel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
         effect(
             batched(
                 ({
@@ -68,52 +67,16 @@ export class Chrome extends Component {
     }
 
     sendOrderToCustomerDisplay(selectedOrder, scaleData) {
-        const customerDisplayData = selectedOrder.getCustomerDisplayData();
-        customerDisplayData.isScaleScreenVisible = this.pos.isScaleScreenVisible;
-        if (scaleData) {
-            customerDisplayData.scaleData = {
-                productName: scaleData.productName,
-                uomName: scaleData.uomName,
-                uomRounding: scaleData.uomRounding,
-                productPrice: scaleData.productPrice,
-            };
-        }
-        customerDisplayData.weight = this.pos.scaleWeight;
-        customerDisplayData.tare = this.pos.scaleTare;
-        customerDisplayData.totalPriceOnScale = this.pos.totalPriceOnScale;
-
-        if (this.pos.config.customer_display_type === "local") {
-            this.customerDisplayChannel.postMessage(customerDisplayData);
-        }
-        if (this.pos.config.customer_display_type === "remote") {
-            this.pos.data.call("pos.config", "update_customer_display", [
-                [this.pos.config.id],
-                customerDisplayData,
-                this.pos.config.access_token,
-            ]);
-        }
-        if (this.pos.config.customer_display_type === "proxy") {
-            const proxyIP = this.pos.getDisplayDeviceIP();
-            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    params: {
-                        action: "set",
-                        data: customerDisplayData,
-                    },
-                }),
-            }).catch(() => {
-                console.log("Failed to send data to customer display");
-            });
-        }
+        const adapter = new CustomerDisplayPosAdapter();
+        adapter.formatOrderData(selectedOrder);
+        adapter.addScaleData(this.pos.isScaleScreenVisible, scaleData);
+        adapter.data.weight = this.pos.scaleWeight;
+        adapter.data.tare = this.pos.scaleTare;
+        adapter.data.totalPriceOnScale = this.pos.totalPriceOnScale;
+        adapter.dispatch(this.pos);
     }
 
     // GETTERS //
-
     get showCashMoveButton() {
         return Boolean(this.pos.config.cash_control);
     }
