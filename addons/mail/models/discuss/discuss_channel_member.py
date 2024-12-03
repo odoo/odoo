@@ -402,9 +402,12 @@ class DiscussChannelMember(models.Model):
         json_web_token = jwt.sign(claims, key=key, ttl=60 * 60 * 8, algorithm=jwt.Algorithm.HS256)  # 8 hours
         return {"url": sfu_server_url, "channelUUID": sfu_channel_uuid, "jsonWebToken": json_web_token}
 
-    def _rtc_leave_call(self):
+    def _rtc_leave_call(self, session_id=None):
         self.ensure_one()
         if self.rtc_session_ids:
+            if session_id:
+                self.rtc_session_ids.filtered(lambda rec: rec.id == session_id).unlink()
+                return
             self.rtc_session_ids.unlink()
         else:
             self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
