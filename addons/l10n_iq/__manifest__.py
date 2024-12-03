@@ -15,7 +15,7 @@ Activates:
     "depends": [
         "account",
     ],
-    "data": ["data/res.country.state.csv"],
+    "data": [],
     "demo": ["demo/demo_company.xml"],
     "license": "LGPL-3",
 }
