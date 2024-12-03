@@ -42,7 +42,7 @@ msgstr ""
 "\n"
 "    * Define los siguientes informes:\n"
 "        * Cuenta de pérdidas y ganancias (§ 231 UGB Gesamtkostenverfahren)\n"
-"        * Balance general (§ 224 UGB)\n"
+"        * Balance de situación (§ 224 UGB)\n"
 "\n"
 
 #. module: base
@@ -1525,7 +1525,7 @@ msgstr ""
 "\n"
 "Informes contables para Ecuador\n"
 "==============================\n"
-"* Agrega el informe de balance general adaptado para Ecuador\n"
+"* Agrega el informe de balance de situación adaptado para Ecuador\n"
 "* Agrega la cuenta de pérdidas y ganancias adaptado para Ecuador\n"
 
 #. module: base
@@ -1572,7 +1572,7 @@ msgid ""
 msgstr ""
 "\n"
 "Informes contables de Alemania\n"
-"Contiene el balance general, pérdidas y ganancias, IVA y declaración de IVA del contacto. \n"
+"Contiene el balance de situación, pérdidas y ganancias, IVA y declaración de IVA del contacto. \n"
 "También agrega opciones de exportación DATEV al libro mayor\n"
 
 #. module: base
@@ -1639,7 +1639,7 @@ msgid ""
 msgstr ""
 "\n"
 "Informes contables para Kazajistán\n"
-"Contiene el balance general y la cuenta de pérdidas y ganancias\n"
+"Contiene el balance de situación y la cuenta de pérdidas y ganancias\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_reports
@@ -1665,7 +1665,7 @@ msgstr ""
 "\n"
 "Informes contables para Lituania\n"
 "\n"
-"Contiene el balance general y la cuenta de pérdidas y ganancias\n"
+"Contiene el balance de situación y la cuenta de pérdidas y ganancias\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports
@@ -1917,7 +1917,7 @@ msgstr ""
 "\n"
 "Informes contables para Turquía\n"
 "\n"
-"- Balance general\n"
+"- Balance de situación\n"
 "- Cuenta de pérdidas y ganancias\n"
 
 #. module: base
@@ -1955,7 +1955,7 @@ msgstr ""
 "\n"
 "Informes contables para Zambia\n"
 "================================\n"
-"    - Informes financieros (balance general, estado de resultados y informe fiscal)\n"
+"    - Informes financieros (balance de situación, estado de resultados y informe fiscal)\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_reports
@@ -3210,7 +3210,7 @@ msgstr ""
 "Brasil - Informes contables (l10n_br_reports)\n"
 "---------------------------------------------\n"
 "Agrega un informe de impuestos simple para ayudar a revisar la cantidad de impuestos por grupo de impuestos\n"
-"en un periodo establecido. También agrega la cuenta pérdidas y ganancias y el balance general\n"
+"en un periodo establecido. También agrega la cuenta pérdidas y ganancias y el balance de situación\n"
 "para el mercado brasileño.\n"
 "\n"
 "AvaTax Brasil (l10n_br_avatax)\n"
@@ -4298,7 +4298,7 @@ msgstr ""
 "Informes contables para Chipre\n"
 "=========================\n"
 "- Estado de resultados\n"
-"- Balance general\n"
+"- Balance de situación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cz
@@ -4896,7 +4896,7 @@ msgstr ""
 "    - Informe de ventas\n"
 "    - Informe de compras\n"
 "\n"
-"Cuenta de pérdidas y ganancias + balance general\n"
+"Cuenta de pérdidas y ganancias + balance de situación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi_ubl_cii
@@ -6487,7 +6487,7 @@ msgstr ""
 "Informes contables para Letonia\n"
 "=========================\n"
 "- Estado de resultados\n"
-"- Balance general\n"
+"- Balance de situación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -6662,7 +6662,7 @@ msgstr ""
 "Informes contables para Malta\n"
 "=========================\n"
 "- Ganancias y pérdidas\n"
-"- Balance general\n"
+"- Balance de situación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mt
@@ -7592,8 +7592,8 @@ msgstr ""
 "Informes contables de Mongolia.\n"
 "====================================================\n"
 "- Cuenta de pérdidas y ganancias\n"
-"- Balance general\n"
-"- Estados de flujo de caja\n"
+"- Balance de situación\n"
+"- Estados de flujos de efectivo\n"
 "- Liquidación de IVA\n"
 "- Informe sobre impuestos de la empresa\n"
 "\n"
@@ -10847,6 +10847,32 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
+msgid ""
+"\n"
+"This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+"with pain.008.001.02 specification) to send to your bank in order to\n"
+"collect a set of payments.\n"
+"\n"
+"To be eligible for this payment method, a customer must have first\n"
+"returned a mandate to the company, giving their consent to use direct debit.\n"
+"This consent must have been encoded as a 'customer mandate' in Odoo.\n"
+"\n"
+"You also need to meet the following requirements in order to properly\n"
+"generate an SDD file:\n"
+"- Your company account must be set to a valid IBAN number\n"
+"- Your company must have been given a creditor identifier (this can be done in Settings - General Settings - Accounting section)\n"
+"- Your company must have defined a journal to receive SDD payments (again, in 'settings' of accounting module)\n"
+"- Every customer for whom you generate a payment must have a valid IBAN account number.\n"
+"\n"
+"Odoo will let you know if any of these requirements are not satisfied.\n"
+"\n"
+"To register a payment for open invoices, you can use the dedicated\n"
+"'SEPA Direct Debit' option by selecting a bank account in the 'Register\n"
+"Payment' wizard. An error message will appear if no valid mandate is\n"
+"available for generating a payment on the selected invoice.\n"
+msgstr ""
+
+#. module: base
 msgid ""
 "\n"
 "This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
