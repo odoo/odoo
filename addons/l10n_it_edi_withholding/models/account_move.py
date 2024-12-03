@@ -300,18 +300,17 @@ class AccountMove(models.Model):
 
         return messages_to_log
 
-    def _l10n_it_edi_import_invoice(self, invoice, data, is_new):
+    def _l10n_it_edi_import_invoice(self, file_data):
         """ Handle the case where ENASARCO pension fund contribution should be applied on the invoice globally.
         In this case, there should only be one element with ENASARCO and these conditions should be fulfilled:
          - AliquotaIVA is defined
          - PrezzoUnitario == 0.0
          - a corresponding DatiRiepilogo with the same AliquotaIVA and a ImponibileImporto
         """
-        res = super()._l10n_it_edi_import_invoice(invoice=invoice, data=data, is_new=is_new)
+        res = super()._l10n_it_edi_import_invoice(self, file_data)
         if not res:
             return
-        self = res
-        tree = data['xml_tree']
+        tree = file_data['xml_tree']
         global_enasarco_lines = []
         for additional_data_element in tree.xpath('//AltriDatiGestionali'):
             data_kind = additional_data_element.xpath('./TipoDato')[0].text.lower()
@@ -335,8 +334,7 @@ class AccountMove(models.Model):
                 to_remove_index = int(get_float(parent_element, './NumeroLinea')) - 1
                 self.invoice_line_ids[to_remove_index].unlink()
                 self.invoice_line_ids.tax_ids |= enasarco_tax
-
-        return self
+        return True
 
     def _get_l10_it_edi_get_taxable_amount_from_summary_data(self, element):
         taxable_amount = 0.0
