@@ -59,7 +59,12 @@
             'website_event/static/tests/interactions/**/*',
         ],
         'web.assets_unit_tests_setup': [
-            'website_event/static/src/snippets/s_events/000.js',
+            'website_event/static/src/snippets/**/*.js',
+            ('remove', 'website_event/static/src/snippets/**/options.js'),
+            # TODO Re-activate when testing edit mode
+            ('remove', 'website_event/static/src/snippets/**/*.edit.js'),
+            # TODO Remove when all 000 have been adapted
+            ('remove', 'website_event/static/src/snippets/**/000.js'),
         ],
         'web.assets_frontend': [
             'website_event/static/src/js/tours/**/*',
