@@ -202,6 +202,7 @@ export class BaseHeader extends Interaction {
             // Ensure the header height stays the same
             return this.hideElHeight + this.el.getBoundingClientRect().height;
         }
+        this.hideElHeight = this.hideEl?.getBoundingClientRect().height;
         return this.el.getBoundingClientRect().height;
     }
 
