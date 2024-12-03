@@ -140,6 +140,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                 self.test_record,
                 scheduled_date='2022-12-24 14:00:00',
                 partner_ids=self.test_record.customer_id,
+                send_context={"mail_post_autofollow": True},
             ).id
             # cron should be triggered at scheduled date
             self.assertEqual(capt.records['call_at'], FieldDatetime.to_datetime('2022-12-24 14:00:00'))
@@ -153,5 +154,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
             self.assertEqual(len(self.test_record.message_ids), 1)
             self.assertEqual(len(self._new_mails), 1)
             self.assertEqual(self._new_mails[0].state, 'sent')
+            # customer should be a follower of the thread (mail_post_autofollow context key)
+            self.assertIn(self.test_record.customer_id, self.test_record.message_partner_ids)
             # scheduled message shouldn't exist anymore
             self.assertFalse(self.env['mail.scheduled.message'].search([['id', '=', scheduled_message_id]]))
