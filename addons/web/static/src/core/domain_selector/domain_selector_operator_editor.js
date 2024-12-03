@@ -37,7 +37,7 @@ export function getDomainDisplayedOperators(fieldDef) {
             ];
         case "date":
         case "datetime":
-            return ["=", "!=", ">", ">=", "<", "<=", "between", "within", "set", "not_set"];
+            return ["=", "!=", ">", ">=", "<", "<=", "between", "is_not_between", "within", "is_not_within", "set", "not_set"];
         case "integer":
         case "float":
         case "monetary":
