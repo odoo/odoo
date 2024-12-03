@@ -12,7 +12,7 @@ registerWebsitePreviewTour('test_can_publish_partner', {
     url: '/partners',
 }, () => [{
     content: 'Open grade filter',
-    trigger: ':iframe .dropdown a.dropdown-toggle:contains("All Categories")',
+    trigger: ':iframe .dropdown button.dropdown-toggle:contains("All Categories")',
     run: "click",
 }, {
     content: 'Filter on Grade Test', // needed if there are demo data
@@ -43,7 +43,7 @@ registerWebsitePreviewTour('test_cannot_publish_partner', {
     url: '/partners',
 }, () => [{
     content: 'Open grade filter',
-    trigger: ':iframe .dropdown a.dropdown-toggle:contains("All Categories")',
+    trigger: ':iframe .dropdown button.dropdown-toggle:contains("All Categories")',
     run: "click",
 }, {
     content: 'Filter on Grade Test', // needed if there are demo data
