@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.WeTextInput">
-    <WeComponent>
+    <WeComponent dependencies="props.dependencies">
         <div class="d-flex flex-row flex-nowrap align-items-center" t-att-data-action-id="props.action" style="width: 60px">
             <input
                 type="text"

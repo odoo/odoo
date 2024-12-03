@@ -724,3 +724,112 @@ describe("WeColorpicker", () => {
         expect(".options-container .o_we_color_preview").toHaveCount(1);
     });
 });
+describe("dependencies", () => {
+    test("a button should not be visible if its dependency isn't (with undo)", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <WeButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</WeButton>
+                <WeButton attributeAction="'my-attribute1'" attributeActionValue="'y'"  id="'id2'">b2</WeButton>
+                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'id1'">b3</WeButton>
+                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'2'" dependencies="'id2'">b4</WeButton>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+        await contains(
+            "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
+        ).click();
+        expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+        await contains(
+            "[data-attribute-action='my-attribute1'][data-attribute-action-value='y']"
+        ).click();
+        expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "y");
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).toBeDisplayed();
+        await contains(".fa-undo").click();
+        expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+        await contains(".fa-undo").click();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+    });
+    test("a button should not be visible if the dependency is active", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <WeButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</WeButton>
+                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'!id1'">b3</WeButton>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).toBeDisplayed();
+        await contains(
+            "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
+        ).click();
+        expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+    });
+    test("a button should not be visible if the dependency is active (when a dependency is added after a dependent)", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'id'">b1</WeButton>
+                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'2'" dependencies="'!id'">b2</WeButton>
+                <WeRow label="'dependency'">
+                    <WeButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id'">b3</WeButton>
+                </WeRow>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).toBeDisplayed();
+        await contains(
+            "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
+        ).click();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+    });
+});

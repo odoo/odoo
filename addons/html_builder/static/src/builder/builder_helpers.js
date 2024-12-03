@@ -8,6 +8,7 @@ import {
     useState,
     useSubEnv,
     xml,
+    onWillDestroy,
 } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
@@ -36,15 +37,26 @@ export class WithSubEnv extends Component {
 export class WeComponent extends Component {
     static template = xml`<t t-if="this.state.isVisible"><t t-slot="default"/></t>`;
     static props = {
+        dependencies: { type: [String, { type: Array, element: String }], optional: true },
         slots: { type: Object },
     };
 
     setup() {
-        this.state = useDomState((editingElement) => {
-            return {
-                isVisible: !!editingElement,
+        const isDependenciesVisible = useDependencies(this.props.dependencies);
+        const isVisible = () =>
+            !!this.env.getEditingElement() && (!this.props.dependencies || isDependenciesVisible());
+        this.state = useDomState(() => ({
+            isVisible: isVisible(),
+        }));
+        if (this.props.dependencies?.length) {
+            const listener = () => {
+                this.state.isVisible = isVisible();
             };
-        });
+            this.env.dependencyManager.addEventListener("dependency-added", listener);
+            onWillDestroy(() => {
+                this.env.dependencyManager.removeEventListener("dependency-added", listener);
+            });
+        }
     }
 }
 
@@ -80,6 +92,32 @@ export function useWeComponent() {
         newEnv.weContext = { ...comp.env.weContext, ...weContext };
     }
     useSubEnv(newEnv);
+}
+export function useDependecyDefinition({ id, isActive }) {
+    const comp = useComponent();
+    comp.env.dependencyManager.add(id, isActive);
+    onWillDestroy(() => {
+        comp.env.dependencyManager.removeByValue(isActive);
+    });
+}
+
+export function useDependencies(dependencies) {
+    const env = useEnv();
+    const isDependenciesVisible = () => {
+        const deps = Array.isArray(dependencies) ? dependencies : [dependencies];
+        return deps.filter(Boolean).every((dependencyId) => {
+            const match = dependencyId.match(/(!)?(.*)/);
+            const inverse = !!match[1];
+            const id = match[2];
+            const isActiveFn = env.dependencyManager.get(id);
+            if (!isActiveFn) {
+                return false;
+            }
+            const isActive = isActiveFn();
+            return inverse ? !isActive : isActive;
+        });
+    };
+    return isDependenciesVisible;
 }
 
 const actionsRegistry = registry.category("website-builder-actions");
@@ -118,6 +156,9 @@ export function useClickableWeWidget() {
                 editingElement: comp.env.getEditingElement(),
                 param: actionParam,
                 value: actionValue,
+                // todo: should not be necessary if the actions are registred
+                // through a plugin resource
+                editor: comp.env.editor,
             });
         }
     }
@@ -173,6 +214,9 @@ export function useInputWeWidget() {
                 editingElement: comp.env.getEditingElement(),
                 param: actionParam,
                 value,
+                // todo: should not be necessary if the actions are registred
+                // through a plugin resource
+                editor: comp.env.editor,
             });
         }
     });
@@ -268,6 +312,7 @@ export function useVisibilityObserver(contentName, callback) {
 export const basicContainerWeWidgetProps = {
     applyTo: { type: String, optional: true },
     preview: { type: Boolean, optional: true },
+    dependencies: { type: [String, Array], optional: true },
     // preview: { type: Boolean, optional: true },
     // reloadPage: { type: Boolean, optional: true },
 

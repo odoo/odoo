@@ -18,9 +18,6 @@ export class BuilderOptionsPlugin extends Plugin {
             .map(([id, option]) => ({ id, ...option }));
         this.builderOptions.sort((a, b) => (a.sequence ?? 0) - (b.sequence ?? 0));
         this.addDomListener(this.editable, "pointerup", (e) => {
-            if (!this.dependencies.selection.getEditableSelection().isCollapsed) {
-                return;
-            }
             this.updateContainers(e.target);
         });
 
@@ -28,13 +25,18 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     onSelectionChange(selection) {
-        if (selection.editableSelection.isCollapsed) {
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
+        let selectionNode;
+        if (selectedNodes.length === 0) {
+            selectionNode = selection.editableSelection.commonAncestorContainer;
+        } else if (selectedNodes.length === 1) {
+            selectionNode = selectedNodes[0];
+        } else {
             // Some elements are not selectable in the editor but still can be
             // a snippet. The selection will be put in the closest selectable element.
             // Therefore if the selection is collapsed, let the pointerup event handle
             return;
         }
-        let selectionNode = selection.editableSelection.commonAncestorContainer;
         if (selectionNode.nodeType === Node.TEXT_NODE) {
             selectionNode = selectionNode.parentElement;
         }

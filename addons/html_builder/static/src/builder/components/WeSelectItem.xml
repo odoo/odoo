@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.WeSelectItem">
-    <WeComponent>
+    <WeComponent dependencies="props.dependencies">
         <div
             class="d-flex flex-column cursor-pointer"
             t-att-class="{'active': this.state.isActive}"
