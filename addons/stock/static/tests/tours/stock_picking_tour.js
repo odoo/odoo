@@ -354,6 +354,11 @@ registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
             run: "click",
         },
         {
+            trigger:
+                ".modal-content .o_data_row:nth-child(3) .o_data_cell[name=quant_id]:contains(LOT002)",
+            run() {},
+        },
+        {
             content: "Modify the quantity of the first line from 10 to 15 to change the demand",
             trigger: ".modal-content .o_data_row:nth-child(3) .o_data_cell[name=quantity]",
             run: "click",
