@@ -7,7 +7,7 @@
 // Menu slide in effect
 //==========================================================
 
-$quick-reaction-menu-slide-in-duration: 0.25s;
+$quick-reaction-menu-slide-in-duration: 0.20s;
 
 @keyframes qrm-menuSlideInAnimation {
     to {
@@ -24,7 +24,7 @@ $quick-reaction-menu-slide-in-duration: 0.25s;
     gap: 1px;
     padding-top: map-get($spacers, 1) / 2;
     padding-bottom: map-get($spacers, 1) / 2;
-    transform: scaleX(0.2);
+    transform: scaleX(0.3);
     transform-origin: left;
     animation: qrm-menuSlideInAnimation $quick-reaction-menu-slide-in-duration cubic-bezier(0.6, 0, 0.4, 1) forwards;
 }
@@ -33,6 +33,7 @@ $quick-reaction-menu-slide-in-duration: 0.25s;
     &.bg-secondary {
         --bg-opacity: .35;
     }
+
     &:hover {
         background-color: rgba($o-action, .1);
         outline: 1px solid rgba($o-action, .2);
@@ -90,10 +91,11 @@ $quick-reaction-menu-emoji-pop-out-duration: 0.15s;
 // Picker grow effect
 //==========================================================
 
-$quick-reaction-menu-picker-grow-duration: 0.3s;
+$quick-reaction-menu-picker-grow-duration: 0.25s;
 
 @keyframes qrm-pickerGrowAnimation {
     to {
+        opacity: 1;
         transform: scale(1);
     }
 }
@@ -101,32 +103,26 @@ $quick-reaction-menu-picker-grow-duration: 0.3s;
 .o-mail-QuickReactionMenu-pickerPopover {
     background-color: unset;
     border: none;
+    box-shadow: none;
 
-    & .o-EmojiPicker {
-        transform: scale(0);
+    --originY: top;
+    --arrowTranslateY: 1px;
+
+    &[data-popper-placement="top"] {
+        --originY: bottom;
+        --arrowTranslateY: -1px;
     }
 
-    &[class*="o-popover--"] {
-        --fromY: top;
-        --fromX: unset;
+    & .popover-arrow {
+        z-index: 1 !important;
+        transform: translateY(var(--arrowTranslateY));
+    }
 
-        &[class*="o-popover--t"] {
-            --fromY: bottom;
-        }
-
-        &.o-popover--te,
-        &.o-popover--be {
-            --fromX: right;
-        }
-
-        &.o-popover--ts,
-        &.o-popover--bs {
-            --fromX: left;
-        }
-
-        & .o-EmojiPicker {
-            transform-origin: var(--fromY) var(--fromX);
-            animation: qrm-pickerGrowAnimation $quick-reaction-menu-picker-grow-duration ease forwards;
-        }
+    & .o-EmojiPicker {
+        opacity: 0;
+        border: var(--popover-border-width) solid var(--popover-border-color);
+        transform: scale(0.8);
+        transform-origin: var(--originY);
+        animation: qrm-pickerGrowAnimation $quick-reaction-menu-picker-grow-duration cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
     }
 }
