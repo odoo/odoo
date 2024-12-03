@@ -178,7 +178,7 @@
                             </div>
                             <footer>
                                 <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-sm btn-primary ms-auto" name="button_immediate_install">Install</button>
-                                <button t-if="installed and is_disabled and !selection_mode" type="edit" class="btn btn-sm btn-secondary ms-auto">Activate</button>
+                                <button t-if="installed and is_disabled and !selection_mode" type="open" class="btn btn-sm btn-secondary ms-auto">Activate</button>
                                 <button t-if="!installed and to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-sm btn-primary ms-auto">Upgrade</button>
                             </footer>
                         </main>
