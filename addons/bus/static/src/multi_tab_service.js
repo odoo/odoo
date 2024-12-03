@@ -188,6 +188,9 @@ export const multiTabService = {
             isOnMainTab() {
                 return _isOnMainTab;
             },
+            get isOnLastTab() {
+                return Object.keys(getItemFromStorage("lastPresenceByTab", {})).length === 0; // Main tab is not included.
+            },
             /**
              * Get value shared between all the tabs.
              *
