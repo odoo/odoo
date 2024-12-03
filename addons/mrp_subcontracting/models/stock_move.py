@@ -58,6 +58,10 @@ class StockMove(models.Model):
             move.show_details_visible = True
         return res
 
+    def _compute_picked(self):
+       subcontracted_moves = self.filtered(lambda m: m.is_subcontract)
+       super(StockMove, self - subcontracted_moves)._compute_picked()
+
     def _set_quantity_done(self, qty):
         to_set_moves = self
         for move in self:
