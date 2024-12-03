@@ -46,7 +46,7 @@ class TestProductPictureController(HttpCase):
 
     def _create_product_images(self):
         with MockRequest(self.product.env, website=self.website):
-            self.WebsiteSaleController.add_product_images(
+            self.WebsiteSaleController.add_product_media(
                 [{'id': attachment.id} for attachment in self.attachments],
                 self.product.id,
                 self.product.product_tmpl_id.id,
@@ -115,7 +115,7 @@ class TestProductPictureController(HttpCase):
         })
         self.assertEqual(0, len(product_template.product_variant_ids))
         with MockRequest(product_template.env, website=self.website):
-            self.WebsiteSaleController.add_product_images(
+            self.WebsiteSaleController.add_product_media(
                 [{'id': self.attachments[0].id}],
                 False,
                 product_template.id,

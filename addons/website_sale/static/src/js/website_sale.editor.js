@@ -2,10 +2,10 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { renderToElement } from "@web/core/utils/render";
+import { CustomMediaDialog } from "@html_editor/others/custom_media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import "@website/js/editor/snippets.options";
 import weUtils from '@web_editor/js/common/utils';
-import { CustomMediaDialog } from "@html_editor/others/custom_media_dialog";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
@@ -561,8 +561,8 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             multiImages: true,
             noDocuments: true,
             noIcons: true,
-            imageSave: this.onImageSave.bind(this),
-            videoSave: this.onVideoSave.bind(this),
+            imageSave: this.onMediaSave.bind(this, 'image'),
+            videoSave: this.onMediaSave.bind(this, 'video'),
             // Kinda hack-ish but the regular save does not get the information we need
             save: async (imgEls) => {
                 extraImageEls = imgEls;
@@ -570,34 +570,25 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         });
     },
 
-    async onImageSave(attachments){
-        for (const index in attachments) {
-            const attachment = attachments[index];
-            if (attachment.mimetype.startsWith("image/")) {
-                if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
-                    continue;
+    async onMediaSave(type, attachments) {
+        if (type === 'image') {
+            for (const index in attachments) {
+                const attachment = attachments[index];
+                if (attachment.mimetype.startsWith("image/")) {
+                    if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
+                        continue;
+                    }
                 }
-                // await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
             }
         }
-        rpc('/shop/product/extra-images', {
-            images: attachments,
+        rpc('/shop/product/extra-media', {
+            media: attachments,
+            type: type,
             product_product_id: this.productProductID,
             product_template_id: this.productTemplateID,
             combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
         }).then(() => {
-            this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector});
-        });
-    },
-
-    async onVideoSave(attachments) {
-        await rpc('/shop/product/video', {
-            video: attachments,
-            product_product_id: this.productProductID,
-            product_template_id: this.productTemplateID,
-            combination_ids: this._getSelectedVariantValues(this.$target.find('.js_add_cart_variants')),
-        }).then(() => {
-            this.trigger_up('request_save', { reload: true });
+            this.trigger_up('request_save', { reload: true, optionSelector: this.data.selector });
         });
     },
 
