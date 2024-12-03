@@ -300,7 +300,6 @@
             ('remove', 'website/static/src/snippets/**/000.js'),
             ('remove', 'website/static/src/snippets/**/options.js'),
             'website/static/src/snippets/**/*.xml',
-            'website/static/src/snippets/s_table_of_content/000.js',
             'website/static/src/snippets/s_table_of_content/000.scss',
             'website/static/src/snippets/s_website_form/000.js',
             'website/static/src/xml/website_form.xml',

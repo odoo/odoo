@@ -6,22 +6,22 @@ import { isVisible } from "@web/core/utils/ui";
 import { closestScrollableY, isScrollableY } from "@web/core/utils/scrolling";
 import { AnchorSlide } from "@website/interactions/anchor_slide";
 
-const CLASS_NAME_DROPDOWN_ITEM = 'dropdown-item';
-const CLASS_NAME_ACTIVE = 'active';
-const SELECTOR_NAV_LIST_GROUP = '.nav, .list-group';
-const SELECTOR_NAV_LINKS = '.nav-link';
-const SELECTOR_NAV_ITEMS = '.nav-item';
-const SELECTOR_LIST_ITEMS = '.list-group-item';
+const CLASS_NAME_DROPDOWN_ITEM = "dropdown-item";
+const CLASS_NAME_ACTIVE = "active";
+const SELECTOR_NAV_LIST_GROUP = ".nav, .list-group";
+const SELECTOR_NAV_LINKS = ".nav-link";
+const SELECTOR_NAV_ITEMS = ".nav-item";
+const SELECTOR_LIST_ITEMS = ".list-group-item";
 const SELECTOR_LINK_ITEMS = `${SELECTOR_NAV_LINKS}, ${SELECTOR_LIST_ITEMS}, .${CLASS_NAME_DROPDOWN_ITEM}`;
-const SELECTOR_DROPDOWN = '.dropdown';
-const SELECTOR_DROPDOWN_TOGGLE = '.dropdown-toggle';
+const SELECTOR_DROPDOWN = ".dropdown";
+const SELECTOR_DROPDOWN_TOGGLE = ".dropdown-toggle";
 
 const getSelector = element => {
-    let hrefAttr = element.getAttribute('href');
-    if (!hrefAttr || !hrefAttr.startsWith('#')) {
+    let hrefAttr = element.getAttribute("href");
+    if (!hrefAttr || !hrefAttr.startsWith("#")) {
         return null;
     }
-    const selector = hrefAttr && hrefAttr !== '#' ? hrefAttr.trim() : null;
+    const selector = hrefAttr && hrefAttr !== "#" ? hrefAttr.trim() : null;
     return selector;
 };
 
@@ -62,7 +62,7 @@ export class TableOfContent extends Interaction {
         this.stripNavbarStyles();
         this.scrollElement = closestScrollableY(this.el.closest(".s_table_of_content")) || this.el.ownerDocument.scrollingElement;
         this.scrollTarget = isScrollableY(this.scrollElement) ? this.scrollElement : this.scrollElement.ownerDocument.defaultView;
-        this.tocElement = this.el.querySelector('.s_table_of_content_navbar');
+        this.tocElement = this.el.querySelector(".s_table_of_content_navbar");
         this.previousPosition = -1;
         this.updateTableOfContentNavbarPosition();
 
@@ -89,8 +89,8 @@ export class TableOfContent extends Interaction {
     stripNavbarStyles() {
         // This is needed for styles added on translations when the master text
         // has no style.
-        for (let el of this.el.querySelectorAll('.s_table_of_content_navbar .table_of_content_link')) {
-            const translationEl = el.querySelector('span[data-oe-translation-state]');
+        for (let el of this.el.querySelectorAll(".s_table_of_content_navbar .table_of_content_link")) {
+            const translationEl = el.querySelector("span[data-oe-translation-state]");
             if (translationEl) {
                 el = translationEl;
             }
@@ -99,7 +99,7 @@ export class TableOfContent extends Interaction {
         }
     }
     updateTableOfContentNavbarPosition() {
-        if (!this.el.querySelector('a.table_of_content_link')) {
+        if (!this.el.querySelector("a.table_of_content_link")) {
             // Do not start the scrollspy if the TOC is empty.
             return;
         }
@@ -158,8 +158,8 @@ export class TableOfContent extends Interaction {
         }
         this.activeTarget = target;
         this.clear();
-        const queries = SELECTOR_LINK_ITEMS.split(',').map(selector => `${selector}[href="${target}"]`);
-        const link = this.tocElement.querySelector(queries.join(','));
+        const queries = SELECTOR_LINK_ITEMS.split(",").map(selector => `${selector}[href="${target}"]`);
+        const link = this.tocElement.querySelector(queries.join(","));
         link.classList.add(CLASS_NAME_ACTIVE);
         if (link.classList.contains(CLASS_NAME_DROPDOWN_ITEM)) {
             link.closest(SELECTOR_DROPDOWN).querySelector(SELECTOR_DROPDOWN_TOGGLE, link.closest(SELECTOR_DROPDOWN)).classList.add(CLASS_NAME_ACTIVE);
@@ -202,7 +202,7 @@ export class TableOfContent extends Interaction {
             this.clear();
         } else {
             for (let i = this.offsets.length; i--;) {
-                const isActiveTarget = this.activeTarget !== this.targets[i] && scrollTop >= this.offsets[i] && (typeof this.offsets[i + 1] === 'undefined' || scrollTop < this.offsets[i + 1]);
+                const isActiveTarget = this.activeTarget !== this.targets[i] && scrollTop >= this.offsets[i] && (typeof this.offsets[i + 1] === "undefined" || scrollTop < this.offsets[i + 1]);
 
                 if (isActiveTarget) {
                     this.activate(this.targets[i]);
