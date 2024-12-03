@@ -879,6 +879,7 @@
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
             <filter name="my_sale_orders_filter" position="after">
+                <filter invisible="1" string="Sales Orders" name="sales" domain="[('state', '=', 'sale')]"/>
                 <separator/>
                 <filter string="To Invoice" name="to_invoice" domain="[('invoice_status','=','to invoice')]" />
                 <filter string="To Upsell" name="upselling" domain="[('invoice_status','=','upselling')]" />
@@ -895,9 +896,8 @@
         <field name="res_model">sale.order</field>
         <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
-        <field name="context">{}</field>
+        <field name="context">{'search_default_sales' : 1}</field>
         <field name="path">orders</field>
-        <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new quotation, the first step of a new sale!
