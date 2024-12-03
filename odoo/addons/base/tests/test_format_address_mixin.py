@@ -31,7 +31,7 @@ class FormatAddressCase(ViewCase):
         self.assertNotIn('"street"', arch)
         self.assertIn('"city"', arch)
         # weird result: <form> inside a <form>
-        self.assertRegex(arch, r"<form>.*<form>.*</form>.*</form>")
+        self.assertRegex(arch, r"<form>.*<form>.*\n*</form>.*\n*</form>")
         # no_address_format context
         arch = self.env[model].with_context(no_address_format=True).get_view(view.id)['arch']
         self.assertIn('"street"', arch)

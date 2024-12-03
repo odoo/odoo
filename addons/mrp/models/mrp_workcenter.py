@@ -185,14 +185,20 @@ class MrpWorkcenter(models.Model):
 
     @api.depends('time_ids', 'time_ids.date_end', 'time_ids.loss_type')
     def _compute_working_state(self):
+        # We search for a productivity line associated to this workcenter having no `date_end`.
+        # If we do not find one, the workcenter is not currently being used. If we find one, according
+        # to its `type_loss`, the workcenter is either being used or blocked.
+        time_log_by_workcenter = {}
+        for time_log in self.env['mrp.workcenter.productivity'].search([
+            ('workcenter_id', 'in', self.ids),
+            ('date_end', '=', False),
+        ]):
+            wc = time_log.workcenter_id
+            if wc not in time_log_by_workcenter:
+                time_log_by_workcenter[wc] = time_log
+
         for workcenter in self:
-            # We search for a productivity line associated to this workcenter having no `date_end`.
-            # If we do not find one, the workcenter is not currently being used. If we find one, according
-            # to its `type_loss`, the workcenter is either being used or blocked.
-            time_log = self.env['mrp.workcenter.productivity'].search([
-                ('workcenter_id', '=', workcenter.id),
-                ('date_end', '=', False)
-            ], limit=1)
+            time_log = time_log_by_workcenter.get(workcenter)
             if not time_log:
                 # the workcenter is not being used
                 workcenter.working_state = 'normal'
@@ -251,7 +257,7 @@ class MrpWorkcenter(models.Model):
     @api.depends('routing_line_ids')
     def _compute_has_routing_lines(self):
         for workcenter in self:
-            workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', '=', workcenter.id)], limit=1)
+            workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', 'in', workcenter.ids)], limit=1)
 
     @api.constrains('default_capacity')
     def _check_capacity(self):
