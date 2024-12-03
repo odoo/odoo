@@ -1,14 +1,19 @@
-import dateutil
 import re
+from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
+
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tools import SQL
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.IGNORECASE)
 # match private methods, to prevent their remote invocation
 regex_private = re.compile(r'^(_.*|init)$')
+
+# types handled as collections
+COLLECTION_TYPES = (list, tuple, AbstractSet)
 
 # read_group stuff
 READ_GROUP_TIME_GRANULARITY = {
@@ -34,6 +39,26 @@ READ_GROUP_NUMBER_GRANULARITY = {
 }
 
 READ_GROUP_ALL_TIME_GRANULARITY = READ_GROUP_TIME_GRANULARITY | READ_GROUP_NUMBER_GRANULARITY
+
+
+# SQL operators with spaces around them
+# hardcoded to avoid changing SQL injection linting
+SQL_OPERATORS = {
+    "=": SQL(" = "),
+    "!=": SQL(" != "),
+    "in": SQL(" IN "),
+    "not in": SQL(" NOT IN "),
+    "<": SQL(" < "),
+    ">": SQL(" > "),
+    "<=": SQL(" <= "),
+    ">=": SQL(" >= "),
+    "like": SQL(" LIKE "),
+    "ilike": SQL(" ILIKE "),
+    "=like": SQL(" LIKE "),
+    "=ilike": SQL(" ILIKE "),
+    "not like": SQL(" NOT LIKE "),
+    "not ilike": SQL(" NOT ILIKE "),
+}
 
 
 def check_method_name(name):
@@ -74,6 +99,18 @@ def check_pg_name(name):
         raise ValidationError("Invalid characters in table name %r" % name)
     if len(name) > 63:
         raise ValidationError("Table name %r is too long" % name)
+
+
+def parse_field_expr(field_expr: str) -> tuple[str, str]:
+    if (property_index := field_expr.find(".")) >= 0:
+        property_name = field_expr[property_index + 1:]
+        check_property_field_value_name(property_name)
+        field_expr = field_expr[:property_index]
+    else:
+        property_name = None
+    if not field_expr:
+        raise ValueError(f"Invalid field expression {field_expr!r}")
+    return field_expr, property_name
 
 
 def expand_ids(id0, ids):

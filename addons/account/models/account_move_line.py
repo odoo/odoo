@@ -1690,10 +1690,11 @@ class AccountMoveLine(models.Model):
                 line._copy_data_extend_business_fields(vals)
         return vals_list
 
-    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+        fname, property_name = fields.parse_field_expr(field_expr)
         if fname != 'payment_date':
-            return super()._field_to_sql(alias, fname, query, flush)
-        return SQL("""
+            return super()._field_to_sql(alias, field_expr, query, flush)
+        sql = SQL("""
             CASE
                  WHEN %(discount_date)s >= %(today)s THEN %(discount_date)s
                  ELSE %(date_maturity)s
@@ -1702,6 +1703,9 @@ class AccountMoveLine(models.Model):
             discount_date=super()._field_to_sql(alias, "discount_date", query, flush),
             date_maturity=super()._field_to_sql(alias, "date_maturity", query, flush),
         )
+        if property_name:
+            sql = self._field[fname].property_to_sql(sql, property_name, self, alias, query)
+        return sql
 
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
         if field_name != 'account_root_id' or set_count:

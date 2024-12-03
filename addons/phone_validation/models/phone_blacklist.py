@@ -66,15 +66,15 @@ class PhoneBlacklist(models.Model):
             values['number'] = sanitized
         return super().write(values)
 
-    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query) -> SQL:
-        if fname == 'number':
+    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query) -> SQL:
+        if field_expr == 'number':
             # sanitize the phone number
             sanitize = self.env.user._phone_format
             if isinstance(value, str):
                 value = sanitize(number=value) or value
             elif isinstance(value, list) and all(isinstance(number, str) for number in value):
                 value = [sanitize(number=number) or number for number in value]
-        return super()._condition_to_sql(alias, fname, operator, value, query)
+        return super()._condition_to_sql(alias, field_expr, operator, value, query)
 
     def add(self, number, message=None):
         sanitized = self.env.user._phone_format(number=number)

@@ -213,16 +213,19 @@ class IrDefault(models.Model):
             for id_ in company_ids
         })
 
-    def _evaluate_condition_with_fallback(self, model_name, condition):
+    def _evaluate_condition_with_fallback(self, model_name, field_expr, operator, value):
         """
         when the field value of the condition is company_dependent without
         customization, evaluate if its fallback value will be kept by
         the condition
         return True/False/None(for unknown)
         """
-        field_name = condition[0].split('.', 1)[0]
+        field_name, _property_name = fields.parse_field_expr(field_expr)
         model = self.env[model_name]
         field = model._fields[field_name]
         fallback = field.get_company_dependent_fallback(model)
-        record = model.new({field_name: field.convert_to_write(fallback, model)})
-        return bool(record.filtered_domain([condition]))
+        try:
+            record = model.new({field_name: field.convert_to_write(fallback, model)})
+            return bool(record.filtered_domain([(field_expr, operator, value)]))
+        except ValueError:
+            return None
