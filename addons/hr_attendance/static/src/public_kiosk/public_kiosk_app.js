@@ -14,7 +14,15 @@ import {KioskPinCode} from "@hr_attendance/components/pin_code/pin_code";
 import {KioskBarcodeScanner} from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
 
 class kioskAttendanceApp extends Component{
-    static props = [];
+    static props = {
+        token: {type : String},
+        companyId: {type : Number},
+        companyName: {type : String},
+        employees: {type : Array},
+        departments: {type : Array},
+        kioskMode: {type : String},
+        barcodeSource: {type : String}
+    };
     static components = {
         KioskBarcodeScanner,
         CardLayout,
