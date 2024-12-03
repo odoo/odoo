@@ -8,12 +8,12 @@
                 <span class="s_floating_blocks_wrapper s_floating_blocks_wrapper_shadow d-contents rounded-3">
                     <section
                         data-name="Card"
-                        class="o_block position-sticky s_col_no_resize d-flex overflow-hidden py-5 px-4 px-lg-5 o_cc o_cc5 oe_img_bg o_bg_img_center o_background_video"
+                        class="o_block position-sticky s_col_no_resize d-flex overflow-hidden py-5 o_cc o_cc5 oe_img_bg o_bg_img_center o_background_video"
                         data-bg-video-src="https://player.vimeo.com/video/329369394?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=1"
                         style="background-image:url(https://i.vimeocdn.com/video/774173730-b7a179626fb9429551c395a423571c56515633a3cdbf18261054f281a022b19d-d?mw=80&amp;q=85)"
                         >
                         <div class="o_we_bg_filter bg-black-25"/>
-                        <div class="o_block_content">
+                        <div class="o_block_content oe_unremovable">
                             <p class="lead">Our new <strong>desks</strong> collection is out!</p>
                             <h2 class="display-4-fs">Meet Your New <br class="d-none d-lg-inline"/>Workspace</h2>
                             <br/>
@@ -22,14 +22,14 @@
                     </section>
                     <section
                         data-name="Card"
-                        class="o_block position-sticky s_col_no_resize parallax d-flex overflow-hidden o_cc o_cc1 py-5 px-4 px-lg-5"
+                        class="o_block position-sticky s_col_no_resize parallax d-flex overflow-hidden o_cc o_cc1 py-5"
                         data-scroll-background-ratio="1.5"
                         >
                         <span
                             class="s_parallax_bg oe_img_bg o_bg_img_center"
                             style="background-image: url('/web/image/website_sale.s_floating_blocks_1'); background-position: top center"
                         />
-                        <div class="o_block_content">
+                        <div class="o_block_content oe_unremovable">
                             <p class="lead">Sofas made to last.</p>
                             <h2 class="display-4-fs">Jump Into <br class="d-none d-lg-inline"/>Comfort!</h2>
                             <br/>
@@ -38,15 +38,15 @@
                     </section>
                     <section
                         data-name="Card"
-                        class="o_block position-sticky s_col_no_resize d-flex parallax overflow-hidden o_cc o_cc5 py-5 px-4 px-lg-5"
+                        class="o_block position-sticky s_col_no_resize d-flex parallax overflow-hidden o_cc o_cc5 py-5"
                         data-scroll-background-ratio="1.5"
                         >
                         <span
                             class="s_parallax_bg oe_img_bg"
                             style="background-image: url('/web/image/website_sale.s_floating_blocks_2'); background-position: 50% 50%;"
                         />
-                        <div class="o_block_content">
-                            <p class="lead">An amazing support</p>
+                        <div class="o_block_content oe_unremovable">
+                            <p class="lead">Amazing support</p>
                             <h2 class="display-4-fs">Get things sorted</h2>
                             <p>
                                 Looking for a quick and easy way to organize repeat orders?<br/>
@@ -73,31 +73,25 @@
         <div data-js="FloatingBlocks" data-selector=".s_floating_blocks">
             <we-row string="Cards">
                 <we-button title="Add a new Card" data-add-card="" data-no-preview="true" class="o_we_bg_success">Add New</we-button>
+                <div class="flex-grow-1"/>
             </we-row>
         </div>
 
         <!-- Apply global cards options to ".s_floating_blocks_wrapper".
              Each Card will inherit these values in CSS -->
         <div data-selector=".s_floating_blocks" data-target=".s_floating_blocks_wrapper">
-            <we-divider/>
+            <hr/>
             <we-title>Cards Design</we-title>
-            <we-range string="Height"
-                class="o_we_sublevel_1"
-                title="Relative to the screen size"
-                data-select-style="0"
-                data-css-property="--floating-boxes-box-ratio-adjust"
-                data-min="0"
-                data-max="1"
-                data-step="0.05"/>
-
+            <div class="py-1 opacity-75">Global options for all inner cards.</div>
             <we-range string="Roundness"
-                class="o_we_sublevel_1"
+                class="o_we_sublevel_1 mt-1"
                 title="Applies to all cards"
                 data-select-class="rounded-0|rounded-1|rounded-2|rounded-3|rounded-4|rounded-5"/>
 
             <we-checkbox string="Shadows"
-                class="o_we_sublevel_1"
+                class="o_we_sublevel_1 mt-1"
                 data-select-class="|s_floating_blocks_wrapper_shadow"
+                data-no-preview="true"
                 title="Applies to all cards"/>
         </div>
     </xpath>
@@ -108,20 +102,23 @@
         <div data-js="FloatingBlocksBlock" data-selector=".s_floating_blocks .o_block"/>
 
         <div data-selector=".s_floating_blocks .o_block" data-target=".o_block_content">
-            <we-title>Hello</we-title>
-            <we-button-group string="Vert. Alignment" title="Vertical Alignment">
-                <we-button title="Align Top"
-                            data-select-class=""
-                            data-img="/website/static/src/img/snippets_options/align_solo_top.svg"/>
-                <we-button title="Align Middle"
-                            data-select-class="align-self-center"
-                            data-img="/website/static/src/img/snippets_options/align_solo_middle.svg"/>
-                <we-button title="Align Bottom"
-                            data-select-class="align-self-end"
-                            data-img="/website/static/src/img/snippets_options/align_solo_bottom.svg"/>
-            </we-button-group>
+            <we-row string="Vert. Alignment" title="Vertical Alignment">
+                <we-button-group>
+                    <we-button title="Align Top"
+                        data-select-class=""
+                        data-img="/website/static/src/img/snippets_options/align_solo_top.svg"/>
+                    <we-button title="Align Middle"
+                        data-select-class="align-self-center"
+                        data-img="/website/static/src/img/snippets_options/align_solo_middle.svg"/>
+                    <we-button title="Align Bottom"
+                        data-select-class="align-self-end"
+                        data-img="/website/static/src/img/snippets_options/align_solo_bottom.svg"/>
+                </we-button-group>
+                <div class="flex-grow-1"/>
+            </we-row>
         </div>
-
+    </xpath>
+    <xpath expr="//div[@data-js='ConditionalVisibility']" position="before">
         <!-- Enable border control -->
         <div data-js="Box" data-selector=".s_floating_blocks .o_block">
             <t t-call="website.snippet_options_border_widgets">

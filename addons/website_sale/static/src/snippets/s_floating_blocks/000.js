@@ -88,7 +88,7 @@ const FloatingBlocks = publicWidget.Widget.extend({
             const blockGap = scrollTop - this.snippetOffset - this.snippetHeight * i;
             const transformValue = this._computeTransform(blockGap, i, this.snippetHeight);
 
-            // Only update if the transform value has changed
+            // Push in batch if the transform value has changed only
             if (this.transformCache.get(block) !== transformValue) {
                 this.transformCache.set(block, transformValue);
                 animationsBatch.push(() => (block.style.transform = transformValue));

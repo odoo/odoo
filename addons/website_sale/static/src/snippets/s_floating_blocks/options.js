@@ -30,14 +30,13 @@ options.registry.FloatingBlocks = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Recount cards number when a card is removed.
-     *
      * @override
      */
     notify(name) {
         this._super(...arguments);
 
         if (name === 'card_removed') {
+            // Recount Cards number when one is removed.
             this.trigger_up('snippet_edition_request', {exec: () => {
                 return this._validateBoxesNumber();
             }});
@@ -49,17 +48,25 @@ options.registry.FloatingBlocks = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Injects a new card.
+     * Injects a new Card.
      */
     addCard() {
         const newCard = renderToElement("website_sale.s_floating_blocks.new_card");
         this.wrapper.appendChild(newCard);
 
         newCard.scrollIntoView({behavior: "smooth"});
-        // Unfortunately `scrollIntoView` doesn't have a callback function.
-        // 'setTimeout' it's a decent compromise for this scenario.
+
+        // 'scrollIntoView' doesn't have a callback function.
+        // Luckily 'setTimeout' it's a decent compromise for our scenario.
         setTimeout(() => {
-            newCard.classList.remove("opacity-0")
+            // Show the newly injected Card
+            newCard.classList.remove("opacity-0");
+
+            // 'oe_unremovable' prevents the unintentional removal of the inner
+            // content '<div>' while typing. The class must be added after that
+            // the element has been placed into the DOM, otherwise it will not
+            // be injected at all.
+            newCard.querySelector(".o_block_content").classList.add("oe_unremovable");
         }, 600);
 
         this._validateBoxesNumber();
