@@ -836,7 +836,6 @@ class MailThread(models.AbstractModel):
 
         message_id = message_dict['message_id']
         email_from = message_dict['email_from']
-        author_id = message_dict.get('author_id')
         model, thread_id, alias = route[0], route[1], route[4]
         record_set = None
 
@@ -868,20 +867,19 @@ class MailThread(models.AbstractModel):
             self._routing_warn(_('model %s does not accept document creation', model), message_id, route, raise_exception)
             return ()
 
-        # Update message author. We do it now because we need it for aliases (contact settings)
-        if not author_id:
-            if record_set:
-                authors = self._mail_find_partner_from_emails([email_from], records=record_set)
-            elif alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
-                records = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
-                authors = self._mail_find_partner_from_emails([email_from], records=records)
-            else:
-                authors = self._mail_find_partner_from_emails([email_from], records=None)
-            if authors:
-                message_dict['author_id'] = authors[0].id
-
         # Alias: check alias_contact settings
         if alias:
+            # Update message author. We do it now because we need it for aliases contact
+            # settings check. Not great to do it in middle of route processing but hey
+            if not message_dict.get('author_id'):
+                link_doc = record_set
+                if not link_doc and alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
+                    link_doc = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
+                link_doc = link_doc if link_doc and hasattr(link_doc, '_partner_find_from_emails_single') else self.env['mail.thread']
+                authors = link_doc._partner_find_from_emails_single([email_from], no_create=True)
+                if authors:
+                    message_dict['author_id'] = authors[0].id
+
             if thread_id:
                 obj = record_set[0]
             elif alias.alias_parent_model_id and alias.alias_parent_thread_id:
@@ -1436,6 +1434,10 @@ class MailThread(models.AbstractModel):
         if self._detect_loop_sender(message, msg_dict, routes):
             return
 
+        # update document-dependant values
+        msg_dict.update(**self._message_parse_post_process(message, msg_dict, routes))
+
+        # process routes
         thread_id = self._message_route_process(message, msg_dict, routes)
         return thread_id
 
@@ -1712,6 +1714,10 @@ class MailThread(models.AbstractModel):
         """ Parses an email.message.Message representing an RFC-2822 email
         and returns a generic dict holding the message details.
 
+        Note that partner finding is delegated to a post processing as it is
+        better done using gateway record as context e.g. to check for
+        followers, ... see '_message_parse_post_process'.
+
         :param message: email to parse
         :type message: email.message.Message
         :param bool save_original: whether the returned dict should include
@@ -1726,7 +1732,6 @@ class MailThread(models.AbstractModel):
               'to': to + delivered-to,
               'cc': cc,
               'recipients': delivered-to + to + cc + resent-to + resent-cc,
-              'partner_ids': partners found based on recipients emails,
               'body': unified_body,
               'references': references,
               'in_reply_to': in-reply-to,
@@ -1779,8 +1784,6 @@ class MailThread(models.AbstractModel):
             ] if address
             for formatted_email in email_split_and_format(address))
         )
-        partner_ids = [x.id for x in self._mail_find_partner_from_emails(email_split(msg_dict['recipients']), records=self) if x]
-        msg_dict['partner_ids'] = partner_ids
         # compute references to find if email_message is a reply to an existing thread
         msg_dict['references'] = decode_message_header(message, 'References')
         msg_dict['in_reply_to'] = decode_message_header(message, 'In-Reply-To').strip()
@@ -1818,6 +1821,29 @@ class MailThread(models.AbstractModel):
                 'is_internal': parent_is_internal and not parent_is_auto_comment
             }
         return {}
+
+    def _message_parse_post_process(self, message, message_dict, routes):
+        """ Parse and process incoming email values that are better computed
+        based on record we are about to create or update. This refers to
+        message author and recipients, which can be preferentially found
+        in document followers when possible. """
+        values = {
+            'author_id': message_dict.get('author_id'),
+            'partner_ids': message_dict.get('partner_ids'),
+        }
+        for model, thread_id, _custom_values, _user_id, alias in routes or ():
+            link_doc = self.env[model].browse(thread_id) if thread_id else self.env[model]
+            if not link_doc and alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
+                link_doc = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
+            link_doc = link_doc if link_doc and hasattr(link_doc, '_partner_find_from_emails_single') else self.env['mail.thread']
+
+            if not values.get('author_id') and message_dict['email_from']:
+                author = link_doc._partner_find_from_emails_single([message_dict['email_from']], no_create=True)
+                if author:
+                    values['author_id'] = author.id
+            if not values.get('partner_ids') and message_dict['recipients']:
+                values['partner_ids'] = link_doc._partner_find_from_emails_single(email_split(message_dict['recipients']), no_create=True).ids
+        return values
 
     def _get_bounced_message_data(self, message, message_dict):
         """Find the original <mail.message> and the bounced email references based on an incoming email.
