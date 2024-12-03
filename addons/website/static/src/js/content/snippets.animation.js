@@ -701,6 +701,7 @@ publicWidget.registry.CarouselSingleScrollMode = publicWidget.Widget.extend({
      */
     start() {
         this.carouselInnerEl = this.el.querySelector(".carousel-inner");
+        this.wrap = this.el.getAttribute("data-bs-wrap") === "true";
         return this._super.apply(this, arguments);
     },
 
@@ -722,7 +723,7 @@ publicWidget.registry.CarouselSingleScrollMode = publicWidget.Widget.extend({
     _onSlide(ev){
         // We need to keep the active element at the beginning of the carousel-items elements
         // This allows to have a smooth transition when the carousel is sliding
-        if (ev.direction === "right") {
+        if (ev.direction === "right" && this.wrap) {
             const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
             this.carouselInnerEl.prepend(carouselItemsEls.pop()); // Move the last item to the beginning
@@ -741,7 +742,7 @@ publicWidget.registry.CarouselSingleScrollMode = publicWidget.Widget.extend({
         // As for the _onSlide method, we need to keep the active element at the beginning of the
         // carousel-items list in the DOM. So when animation is done,
         // we move the first item (which is not active anymore) to the end
-        if (ev.direction === "left") {
+        if (ev.direction === "left" && this.wrap) {
             const carouselItemsEls = Array.from(this.carouselInnerEl.querySelectorAll(".carousel-item"));
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
             this.carouselInnerEl.appendChild(carouselItemsEls[0]); // Move the first item to the end

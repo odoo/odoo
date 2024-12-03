@@ -15,6 +15,7 @@ const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
     _setOptionsDefaultValues: function () {
         this._super.apply(this, arguments);
         this._setOptionValue('carouselInterval', '5000');
+        this._setOptionValue('wrap', 'true');
     },
     /**
      * Take the new template selection into account

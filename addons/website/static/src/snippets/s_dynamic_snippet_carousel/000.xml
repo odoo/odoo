@@ -12,7 +12,7 @@
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.base">
         <div t-att-id="unique_id" t-attf-class="carousel slide #{extraCarouselClass}" t-att-data-items-per-slide="chunkSize"
-             t-att-data-bs-interval="interval" data-bs-ride="carousel">
+             t-att-data-bs-interval="interval" t-att-data-bs-wrap="wrap" data-bs-ride="carousel">
             <!-- Content -->
             <t t-set="slideSize" t-value="rowSize * rowPerSlide" />
             <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/slideSize)).keys())"/>
