@@ -622,45 +622,23 @@ export class PosOrderline extends Base {
             : formatCurrency(this.getDisplayPrice(), this.currency);
     }
 
-    getDisplayData() {
-        const oldUnitPrice = this.getOldUnitDisplayPrice()
-            ? formatCurrency(this.getOldUnitDisplayPrice(), this.currency)
-            : "";
-        const price = this.getPriceString();
-        return {
-            productName: this.getFullProductName(),
-            price: price,
-            qty: this.getQuantityStr(),
-            unit: this.product_id.uom_id ? this.product_id.uom_id.name : "",
-            unitPrice: formatCurrency(this.unitDisplayPrice, this.currency),
-            priceChanged: Boolean(
-                this.price_type !== "original" ||
-                    this.getDiscount() != 0 ||
-                    (oldUnitPrice && oldUnitPrice !== price)
+    get packLotLines() {
+        return this.pack_lot_ids.map(
+            (l) =>
+                `${l.pos_order_line_id.product_id.tracking == "lot" ? "Lot Number" : "SN"} ${
+                    l.lot_name
+                }`
+        );
+    }
+
+    get taxGroupLabels() {
+        return [
+            ...new Set(
+                this.product_id.taxes_id
+                    ?.map((tax) => tax.tax_group_id.pos_receipt_label)
+                    .filter((label) => label)
             ),
-            oldUnitPrice: oldUnitPrice,
-            discount: this.getDiscountStr(),
-            customerNote: this.getCustomerNote() || "",
-            internalNote: this.getNote(),
-            comboParent: this.combo_parent_id?.getFullProductName?.() || "",
-            packLotLines: this.pack_lot_ids.map(
-                (l) =>
-                    `${l.pos_order_line_id.product_id.tracking == "lot" ? "Lot Number" : "SN"} ${
-                        l.lot_name
-                    }`
-            ),
-            price_without_discount: formatCurrency(
-                this.getUnitDisplayPriceBeforeDiscount(),
-                this.currency
-            ),
-            taxGroupLabels: [
-                ...new Set(
-                    this.product_id.taxes_id
-                        ?.map((tax) => tax.tax_group_id.pos_receipt_label)
-                        .filter((label) => label)
-                ),
-            ].join(" "),
-        };
+        ].join(" ");
     }
 
     getDiscount() {

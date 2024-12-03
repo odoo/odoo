@@ -1,9 +1,8 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
-import { omit } from "@web/core/utils/objects";
-import { parseUTCString, qrCodeSrc, random5Chars, uuidv4 } from "@point_of_sale/utils";
+import { serializeDateTime } from "@web/core/l10n/dates";
+import { random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
@@ -11,8 +10,8 @@ import { changesToOrder } from "./utils/order_change";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 
-const { DateTime } = luxon;
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
+const { DateTime } = luxon;
 
 export class PosOrder extends Base {
     static pythonModel = "pos.order";
@@ -119,8 +118,8 @@ export class PosOrder extends Base {
      * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
      */
     get taxTotals() {
-        const currency = this.config.currency_id;
-        const company = this.company_id;
+        const currency = this.currency;
+        const company = this.company;
         const extraValues = { currency_id: currency };
         const orderLines = this.lines;
 
@@ -248,45 +247,6 @@ export class PosOrder extends Base {
         return totalAmountDue;
     }
 
-    exportForPrinting(baseUrl, headerData) {
-        const paymentlines = this.payment_ids
-            .filter((p) => !p.is_change)
-            .map((p) => p.exportForPrinting());
-        return {
-            orderlines: this.getSortedOrderlines().map((l) =>
-                omit(l.getDisplayData(), "internalNote")
-            ),
-            taxTotals: this.taxTotals,
-            label_total: _t("TOTAL"),
-            label_rounding: _t("Rounding"),
-            label_change: _t("CHANGE"),
-            label_discounts: _t("Discounts"),
-            paymentlines,
-            amount_total: this.getTotalWithTax(),
-            total_without_tax: this.getTotalWithoutTax(),
-            amount_tax: this.getTotalTax(),
-            total_paid: this.getTotalPaid(),
-            total_discount: this.getTotalDiscount(),
-            tax_details: this.getTaxDetails(),
-            change: this.amount_return,
-            name: this.pos_reference,
-            general_customer_note: this.general_customer_note || "",
-            invoice_id: null, //TODO
-            cashier: this.getCashierName(),
-            date: formatDateTime(parseUTCString(this.date_order)),
-            pos_qr_code:
-                this.company.point_of_sale_use_ticket_qr_code &&
-                this.finalized &&
-                qrCodeSrc(`${baseUrl}/pos/ticket/`),
-            ticket_code: this.ticket_code,
-            base_url: baseUrl,
-            footer: this.config.receipt_footer,
-            // FIXME: isn't there a better way to handle this date?
-            shippingDate: this.shipping_date && formatDate(DateTime.fromSQL(this.shipping_date)),
-            headerData: headerData,
-            screenName: "ReceiptScreen",
-        };
-    }
     getCashierName() {
         return this.user_id?.name;
     }

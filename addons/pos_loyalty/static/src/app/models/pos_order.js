@@ -146,20 +146,6 @@ patch(PosOrder.prototype, {
             super.waitForPushOrder(...arguments)
         );
     },
-    /**
-     * Add additional information for our ticket, such as new coupons and loyalty point gains.
-     *
-     * @override
-     */
-    exportForPrinting(baseUrl, headerData) {
-        const result = super.exportForPrinting(...arguments);
-        if (this.getPartner()) {
-            result.loyaltyStats = this.getLoyaltyPoints();
-            result.partner = this.getPartner();
-        }
-        result.new_coupon_info = this.new_coupon_info;
-        return result;
-    },
     //@override
     _getIgnoredProductIdsTotalDiscount() {
         const productIds = super._getIgnoredProductIdsTotalDiscount(...arguments);
