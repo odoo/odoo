@@ -15,7 +15,7 @@ export class DynamicSnippetBlogPosts extends DynamicSnippet {
         const searchDomain = super.getSearchDomain(...arguments);
         const filterByBlogId = parseInt(this.el.dataset.filterByBlogId);
         if (filterByBlogId >= 0) {
-            searchDomain.push(['blog_id', '=', filterByBlogId]);
+            searchDomain.push(["blog_id", "=", filterByBlogId]);
         }
         return searchDomain;
     }
