@@ -112,6 +112,11 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
@@ -121,6 +126,11 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             // Check if there is no more order to continue
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
@@ -169,6 +179,11 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4PosCombo", {
             ProductScreen.clickPayButton(),
             ...PaymentScreen.clickPaymentMethod("Bank"),
             ...PaymentScreen.clickValidate(),
+            {
+                ...Dialog.confirm(),
+                content:
+                    "acknowledge printing error ( because we don't have printer in the test. )",
+            },
             ...ReceiptScreen.clickContinueOrder(),
 
             // Check if there is still water in the order
