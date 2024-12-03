@@ -27,6 +27,20 @@ function columnIsAvailable(numberOfColumns) {
     };
 }
 
+function targets(selectionData, editable) {
+    const editableSelection = selectionData.editableSelection;
+    const columnContainer = closestElement(editableSelection.anchorNode, "div.o_text_columns");
+    if (!columnContainer) {
+        return [];
+    }
+    const closestColumn = closestElement(editableSelection.anchorNode, "div[class^='col-']");
+    const blockEl = closestBlock(editableSelection.anchorNode);
+    const elements = [
+        ...columnContainer.querySelectorAll("div[class^='col-'] > :first-child"),
+    ].filter((e) => e.closest("div[class^='col-']") !== closestColumn || blockEl === e);
+    return elements;
+}
+
 export class ColumnPlugin extends Plugin {
     static id = "column";
     static dependencies = ["selection", "history"];
@@ -77,9 +91,8 @@ export class ColumnPlugin extends Plugin {
         ],
         hints: [
             {
-                selector: `.odoo-editor-editable .o_text_columns div[class^='col-'],
-                            .odoo-editor-editable .o_text_columns div[class^='col-']>p:first-child`,
-                text: _t("Empty column"),
+                text: _t('Empty column. Type "/" for commands'),
+                targets,
             },
         ],
         unremovable_node_predicates: isUnremovableColumn,

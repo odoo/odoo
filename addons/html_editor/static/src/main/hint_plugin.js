@@ -59,23 +59,50 @@ export class HintPlugin extends Plugin {
     updateHints() {
         const selectionData = this.dependencies.selection.getSelectionData();
         const editableSelection = selectionData.editableSelection;
-        if (this.hint) {
-            const blockEl = closestBlock(editableSelection.anchorNode);
-            this.removeHint(this.hint);
-            this.removeHint(blockEl);
-        }
-        if (editableSelection.isCollapsed) {
-            for (const hint of this.getResource("hints")) {
-                if (hint.selector) {
-                    const el = closestBlock(editableSelection.anchorNode);
-                    if (el && el.matches(hint.selector) && !isProtected(el) && isEmptyBlock(el)) {
-                        this.makeHint(el, hint.text);
-                        this.hint = el;
+        this.clearHints();
+        for (const hint of this.getResource("hints")) {
+            if (hint.selector) {
+                const el = closestBlock(editableSelection.anchorNode);
+                if (
+                    editableSelection.isCollapsed &&
+                    el &&
+                    el.matches(hint.selector) &&
+                    !isProtected(el) &&
+                    isEmptyBlock(el)
+                ) {
+                    this.makeHint(el, hint.text);
+                    this.hint = el;
+                }
+            } else {
+                if (hint.targets) {
+                    const targets = hint.targets(selectionData, this.editable);
+                    if (!targets.length) {
+                        continue;
+                    }
+                    for (const target of targets) {
+                        if (
+                            target.tagName === "P" &&
+                            !isProtected(target) &&
+                            isEmptyBlock(target)
+                        ) {
+                            this.makeHint(target, hint.text);
+                        } else {
+                            const match = this.getResource("hints").find((hint) =>
+                                target.matches(hint.selector)
+                            );
+                            if (match && !isProtected(target) && isEmptyBlock(target)) {
+                                this.makeHint(target, match.text);
+                            }
+                        }
                     }
                 } else {
                     const target = hint.target(selectionData, this.editable);
                     // Do not replace an existing empty block hint by a temp hint.
-                    if (target && !target.classList.contains("o-we-hint")) {
+                    if (
+                        editableSelection.isCollapsed &&
+                        target &&
+                        !target.classList.contains("o-we-hint")
+                    ) {
                         this.makeHint(target, hint.text);
                         this.hint = target;
                         return;
