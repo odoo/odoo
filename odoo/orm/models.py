@@ -71,7 +71,8 @@ from .fields_textual import Char
 
 from .identifiers import NewId
 from .utils import (
-    OriginIds, check_pg_name, check_object_name, check_property_field_value_name, origin_ids,
+    OriginIds, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, parse_field_expr,
+    COLLECTION_TYPES, SQL_OPERATORS,
     READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY,
 )
 
@@ -1944,7 +1945,7 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields[fname]
 
         if field.type == 'properties':
-            sql_expr = self._read_group_groupby_properties(fname, property_name, query)
+            sql_expr = self._read_group_groupby_properties(field, property_name, query)
 
         elif property_name:
             raise ValueError(f"Property access on non-property field: {groupby_spec!r}")
@@ -1955,7 +1956,7 @@ class BaseModel(metaclass=MetaModel):
         elif field.type == 'many2many':
             alias = self._table
             if field.related and not field.store:
-                __, field, alias = self._traverse_related_sql(alias, field, query)
+                _model, field, alias = self._traverse_related_sql(alias, field, query)
 
             if not field.store:
                 raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
@@ -1987,17 +1988,17 @@ class BaseModel(metaclass=MetaModel):
         else:
             sql_expr = self._field_to_sql(self._table, fname, query)
 
-        if field.type == 'datetime' and (tz := self.env.context.get('tz')):
-            if tz in pytz.all_timezones_set:
-                sql_expr = SQL("timezone(%s, timezone('UTC', %s))", self.env.context['tz'], sql_expr)
-            else:
-                _logger.warning("Grouping in unknown / legacy timezone %r", tz)
-
         if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
             if not granularity:
                 raise ValueError(f"Granularity not set on a date(time) field: {groupby_spec!r}")
             if granularity not in READ_GROUP_ALL_TIME_GRANULARITY:
                 raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
+
+            if granularity in READ_GROUP_NUMBER_GRANULARITY:
+                sql_expr = field.property_to_sql(sql_expr, granularity, self, self._table, query)
+            elif field.type == 'datetime':
+                # set the timezone only
+                sql_expr = field.property_to_sql(sql_expr, 'tz', self, self._table, query)
 
             if granularity == 'week':
                 # first_week_day: 0=Monday, 1=Tuesday, ...
@@ -2008,27 +2009,7 @@ class BaseModel(metaclass=MetaModel):
                     "(date_trunc('week', %s::timestamp - INTERVAL %s) + INTERVAL %s)",
                     sql_expr, interval, interval,
                 )
-            elif spec := READ_GROUP_NUMBER_GRANULARITY.get(granularity):
-                if granularity == 'day_of_week':
-                    """
-                    formula: ((7 - first_day_of_week_in_odoo) + result_from_SQL) %  --> 0 based first day of week
-                                    week start on
-                                monday   sunday    sat
-                                  1     |  7    |  6   <-- first day of week in odoo
-                           SQL | -----------------------
-                    Monday  1  |  0     |  1    |  2
-                    tuesday 2  |  1     |  2    |  3
-                    wed     3  |  2     |  3    |  4
-                    thurs   4  |  3     |  4    |  5
-                    friday  5  |  4     |  5    |  6
-                    sat     6  |  5     |  6    |  0
-                    sun     7  |  6     |  0    |  1
-                    """
-                    first_week_day = int(get_lang(self.env, self.env.context.get('tz')).week_start)
-                    sql_expr = SQL("mod(7 - %s + date_part(%s, %s)::int, 7)", first_week_day, spec, sql_expr)
-                else:
-                    sql_expr = SQL("date_part(%s, %s)::int", spec, sql_expr)
-            else:
+            elif granularity in READ_GROUP_TIME_GRANULARITY:
                 sql_expr = SQL("date_trunc(%s, %s::timestamp)", granularity, sql_expr)
 
             # If the granularity is a part number, the result is a number (double) so no conversion is needed
@@ -2061,8 +2042,7 @@ class BaseModel(metaclass=MetaModel):
                 if operator not in SUPPORTED:
                     raise ValueError(f"Invalid having clause {item!r}: supported comparators are {SUPPORTED}")
                 sql_left = self._read_group_select(left, query)
-                sql_operator = expression.SQL_OPERATORS[operator]
-                stack.append(SQL("%s %s %s", sql_left, sql_operator, right))
+                stack.append(SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], right))
             else:
                 raise ValueError(f"Invalid having clause {item!r}: it should be a domain-like clause")
 
@@ -2821,7 +2801,7 @@ class BaseModel(metaclass=MetaModel):
 
         return model, model._fields[last_fname], alias
 
-    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
         The method also checks that the field is accessible for reading.
@@ -2833,66 +2813,25 @@ class BaseModel(metaclass=MetaModel):
         result to make method :meth:`~odoo.api.Environment.execute_query` flush
         the field before executing the query.
         """
-        property_name = None
-        if '.' in fname:
-            fname, property_name = fname.split('.', 1)
-
+        fname, property_name = parse_field_expr(field_expr)
         field = self._fields.get(fname)
         if not field:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
         if field.related and not field.store:
             model, field, alias = self._traverse_related_sql(alias, field, query)
-            return model._field_to_sql(alias, field.name, query)
-
-        if not field.store or not field.column_type:
-            raise ValueError(f"Cannot convert {field} to SQL because it is not stored")
-
-        if field.type == 'properties' and property_name:
-            return SQL("%s -> %s", self._field_to_sql(alias, fname, query, flush), property_name)
-
-        if property_name:
-            fname = f"{fname}.{property_name}"
-            raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
+            related_expr = field.name if not property_name else f"{field.name}.{property_name}"
+            return model._field_to_sql(alias, related_expr, query)
 
         self._check_field_access(field, 'read')
 
-        field_to_flush = field if flush and fname != 'id' else None
-        sql_field = SQL.identifier(alias, fname, to_flush=field_to_flush)
+        sql = field.to_sql(self, alias, flush)
+        if property_name:
+            sql = field.property_to_sql(sql, property_name, self, alias, query)
+        return sql
 
-        if field.translate:
-            langs = field.get_translation_fallback_langs(self.env)
-            sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
-            if len(sql_field_langs) == 1:
-                return sql_field_langs[0]
-            return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
-
-        if field.company_dependent:
-            sql_field = SQL(
-                "%(column)s->%(company_id)s",
-                column=sql_field,
-                company_id=str(self.env.company.id),
-            )
-            fallback = field.get_company_dependent_fallback(self)
-            fallback = field.convert_to_column(field.convert_to_write(fallback, self), self)
-            if fallback not in (None, 0):  # 0, 0.0, False, None
-                sql_field = SQL(
-                    'COALESCE(%(field)s, to_jsonb(%(fallback)s::%(column_type)s))',
-                    field=sql_field,
-                    fallback=fallback,
-                    column_type=SQL(field._column_type[1]),
-                )
-            if field.type in ('boolean', 'integer', 'float'):
-                return SQL('(%s)::%s', sql_field, SQL(field._column_type[1]))
-            # here the specified value for a company might be NULL e.g. '{"1": null}'::jsonb
-            # the result of current sql_field might be 'null'::jsonb
-            # ('null'::jsonb)::text == 'null'
-            # ('null'::jsonb->>0)::text IS NULL
-            return SQL('(%s->>0)::%s', sql_field, SQL(field._column_type[1]))
-
-        return sql_field
-
-    def _read_group_groupby_properties(self, fname: str, property_name: str, query: Query) -> SQL:
+    def _read_group_groupby_properties(self, field: Field, property_name: str, query: Query) -> SQL:
+        fname = field.name
         definition = self.get_property_definition(f"{fname}.{property_name}")
         property_type = definition.get('type')
         sql_property = self._field_to_sql(self._table, f'{fname}.{property_name}', query)
@@ -2995,157 +2934,36 @@ class BaseModel(metaclass=MetaModel):
         # if the key is not present in the dict, fallback to false instead of none
         return SQL("COALESCE(%s, 'false')", sql_property)
 
-    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
+    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
         """ Return an :class:`SQL` object that represents the domain condition
-        given by the triple ``(fname, operator, value)`` with the given table
-        alias, and in the context of the given query.
+        given by the triple ``(field_expr, operator, value)`` with the given
+        table alias, and in the context of the given query.
 
         The method is also responsible for checking that the field is accessible
         for reading, and should include metadata in the result object to make
         sure that the necessary fields are flushed before executing the final
         SQL query.
         """
-        # sanity checks - should never fail
         assert operator in expression.TERM_OPERATORS, \
-            f"Invalid operator {operator!r} in domain term {(fname, operator, value)!r}"
-        assert fname in self._fields, \
-            f"Invalid field {fname!r} in domain term {(fname, operator, value)!r}"
-        assert not isinstance(value, BaseModel), \
-            f"Invalid value {value!r} in domain term {(fname, operator, value)!r}"
+            f"Invalid operator {operator!r} in domain term {(field_expr, operator, value)!r}"
 
+        # Field.condition_to_sql accepts only simple domains, adapt them here
+        if isinstance(value, Query):
+            operator = 'not any' if operator in expression.NEGATIVE_TERM_OPERATORS else 'any'
+        if operator.endswith('like') and not isinstance(value, str):
+            if '=' in operator and value:
+                raise TypeError(f"Invalid value type for =like comparison in {(field_expr, operator, value)!r}")
+            value = str(value or '')
         if operator == '=?':
             if value is False or value is None:
                 # '=?' is a short-circuit that makes the term TRUE if value is None or False
                 return SQL("TRUE")
             else:
                 # '=?' behaves like '=' in other cases
-                return self._condition_to_sql(alias, fname, '=', value, query)
+                return self._condition_to_sql(alias, field_expr, '=', value, query)
 
-        sql_field = self._field_to_sql(alias, fname, query)
-
-        field = self._fields[fname]
-        is_number_field = field.type in ('integer', 'float', 'monetary') and field.name != 'id'
-        is_char_field = field.type in ('char', 'text', 'html')
-        sql_operator = expression.SQL_OPERATORS[operator]
-
-        if field.type == 'boolean':
-            if operator in ('in', 'not in'):
-                values = {bool(v) for v in value}
-                if len(values) != 1:
-                    return SQL("TRUE") if (operator == 'in') == bool(values) else SQL("FALSE")
-                value = next(iter(values))
-                operator = '=' if operator == 'in' else '!='
-
-            if operator in ('=', '!='):
-                if (operator == '=') == bool(value):
-                    return SQL("(%s IS TRUE)", sql_field)
-                else:
-                    return SQL("(%s IS NOT TRUE)", sql_field)
-
-        if operator in ('in', 'not in'):
-            # Two cases: value is a boolean or a list. The boolean case is an
-            # abuse and handled for backward compatibility.
-            if isinstance(value, bool):
-                _logger.warning("The domain term '%s' should use the '=' or '!=' operator.", (fname, operator, value))
-                if (operator == 'in' and value) or (operator == 'not in' and not value):
-                    return SQL("(%s IS NOT NULL)", sql_field)
-                else:
-                    return SQL("(%s IS NULL)", sql_field)
-
-            elif isinstance(value, SQL):
-                return SQL("(%s %s %s)", sql_field, sql_operator, value)
-
-            elif isinstance(value, Query):
-                return SQL("(%s %s %s)", sql_field, sql_operator, value.subselect())
-
-            elif isinstance(value, (list, tuple)):
-                params = [it for it in value if it is not False and it is not None]
-                check_null = len(params) < len(value)
-                if is_number_field:
-                    if check_null and 0 not in params:
-                        params.append(0)
-                    check_null = check_null or (0 in params)
-                elif is_char_field:
-                    if check_null and '' not in params:
-                        params.append('')
-                    check_null = check_null or ('' in params)
-
-                if params:
-                    if fname != 'id':
-                        params = [field.convert_to_column(p, self, validate=False) for p in params]
-                    sql = SQL("(%s %s %s)", sql_field, sql_operator, tuple(params))
-                else:
-                    # The case for (fname, 'in', []) or (fname, 'not in', []).
-                    sql = SQL("FALSE") if operator == 'in' else SQL("TRUE")
-
-                if (operator == 'in' and check_null) or (operator == 'not in' and not check_null):
-                    sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-                elif operator == 'not in' and check_null:
-                    sql = SQL("(%s AND %s IS NOT NULL)", sql, sql_field)  # needed only for TRUE
-                return sql
-
-            else:  # Must not happen
-                raise ValueError(f"Invalid domain term {(fname, operator, value)!r}")
-
-        if (field.relational or field.name == 'id') and operator in ('=', '!=') and isinstance(value, NewId):
-            _logger.warning("_condition_to_sql: ignored (%r, %r, NewId), did you mean (%r, 'in', recs.ids)?", fname, operator, fname)
-            return SQL("TRUE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("FALSE")
-
-        # comparison with null
-        # except for some basic types, where we need to check the empty value
-        if (field.relational or field.name == 'id') and operator in ('=', '!=') and not value:
-            # if we compare a relation to 0, then compare only to False
-            value = False
-
-        if operator in ('=', '!=') and (value is False or value is None):
-            if is_number_field:
-                value = 0  # generates (fname = 0 OR fname IS NULL)
-            elif is_char_field:
-                value = ''  # generates (fname = '' OR fname IS NULL)
-            elif operator == '=':
-                return SQL("%s IS NULL", sql_field)
-            elif operator == '!=':
-                return SQL("%s IS NOT NULL", sql_field)
-
-        # general case
-        need_wildcard = operator in expression.WILDCARD_OPERATORS
-
-        if isinstance(value, SQL):
-            sql_value = value
-        elif need_wildcard:
-            sql_value = SQL("%s", f"%{value}%")
-        else:
-            sql_value = SQL("%s", field.convert_to_column(value, self, validate=False))
-
-        sql_left = sql_field
-        if operator.endswith('like') and field.type not in ('char', 'text', 'html'):
-            sql_left = SQL("(%s)::text", sql_field)
-        if operator.endswith('ilike'):
-            sql_left = self.env.registry.unaccent(sql_left)
-            sql_value = self.env.registry.unaccent(sql_value)
-
-        if need_wildcard and not value:
-            return SQL("FALSE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("TRUE")
-
-        sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_value)
-        if (
-            bool(value) == (operator in expression.NEGATIVE_TERM_OPERATORS)
-            # exception: don't add for inequalities
-            and operator[:1] not in ('>', '<')
-        ):
-            sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-
-        if not need_wildcard and is_number_field:
-            cmp_value = field.convert_to_record(field.convert_to_cache(value, self), self)
-            if (
-                operator == '>=' and cmp_value <= 0
-                or operator == '<=' and cmp_value >= 0
-                or operator == '<' and cmp_value > 0
-                or operator == '>' and cmp_value < 0
-            ):
-                sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-
-        return sql
+        field = self._fields[parse_field_expr(field_expr)[0]]
+        return field.condition_to_sql(field_expr, operator, value, self, alias, query)
 
     @api.model
     def get_property_definition(self, full_name):
@@ -4178,7 +3996,7 @@ class BaseModel(metaclass=MetaModel):
                     sql = self._field_to_sql(self._table, field.name, query)
                     sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
                 elif field.translate and self.env.context.get('prefetch_langs'):
-                    sql = SQL.identifier(self._table, field.name, to_flush=field)
+                    sql = field.to_raw_sql(self, self._table)
                 else:
                     # flushing is necessary to retrieve the en_US value of fields without a translation
                     sql = self._field_to_sql(self._table, field.name, query, flush=field.translate)
@@ -5558,10 +5376,6 @@ class BaseModel(metaclass=MetaModel):
             order_match = regex_order.match(order_part)
             field_name = order_match['field']
 
-            property_name = order_match['property']
-            if property_name:
-                field_name = f"{field_name}.{property_name}"
-
             direction = (order_match['direction'] or '').upper()
             nulls = (order_match['nulls'] or '').upper()
             if reverse:
@@ -5572,6 +5386,9 @@ class BaseModel(metaclass=MetaModel):
             sql_direction = SQL(direction) if direction in ('ASC', 'DESC') else SQL()
             sql_nulls = SQL(nulls) if nulls in ('NULLS FIRST', 'NULLS LAST') else SQL()
 
+            if property_name := order_match['property']:
+                # field_name is an expression
+                field_name = f"{field_name}.{property_name}"
             term = self._order_field_to_sql(alias, field_name, sql_direction, sql_nulls, query)
             if term:
                 terms.append(term)
@@ -5587,8 +5404,8 @@ class BaseModel(metaclass=MetaModel):
         :param direction: one of ``SQL("ASC")``, ``SQL("DESC")``, ``SQL()``
         :param nulls: one of ``SQL("NULLS FIRST")``, ``SQL("NULLS LAST")``, ``SQL()``
         """
-        # field_name can be a path (for properties by example)
-        fname = field_name.split('.', 1)[0] if '.' in field_name else field_name
+        # field_name is an expression
+        fname, property_name = parse_field_expr(field_name)
         field = self._fields.get(fname)
         if not field:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
@@ -5602,7 +5419,7 @@ class BaseModel(metaclass=MetaModel):
             # figure out the applicable order_by for the m2o
             # special case: ordering by "x_id.id" doesn't recurse on x_id's comodel
             comodel = self.env[field.comodel_name]
-            if field_name.endswith('.id'):
+            if property_name == 'id':
                 coorder = 'id'
                 sql_field = self._field_to_sql(alias, fname, query)
             else:
@@ -5618,9 +5435,9 @@ class BaseModel(metaclass=MetaModel):
             # order on many2one values
             terms = []
             if nulls.code == 'NULLS FIRST':
-                terms.append(SQL("%s IS NOT NULL", self._field_to_sql(alias, field_name, query)))
+                terms.append(SQL("%s IS NOT NULL", sql_field))
             elif nulls.code == 'NULLS LAST':
-                terms.append(SQL("%s IS NULL", self._field_to_sql(alias, field_name, query)))
+                terms.append(SQL("%s IS NULL", sql_field))
 
             # LEFT JOIN the comodel table, in order to include NULL values, too
             coalias = query.make_alias(alias, field_name)
@@ -6598,6 +6415,9 @@ class BaseModel(metaclass=MetaModel):
                 except KeyError as e:
                     raise ValueError(f"Invalid field in filter of {self._name}: {domain!r}") from e
 
+                if comparator in ('any', 'not any') and isinstance(value, Query):
+                    comparator = 'in' if comparator == 'any' else 'not in'
+                    value = set(value)
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     if comparator.endswith('ilike'):
                         # ilike uses unaccent and lower-case comparison
@@ -6635,7 +6455,7 @@ class BaseModel(metaclass=MetaModel):
                     comparator = 'in' if comparator == '=' else 'not in'
                     value = ['', False]
                 if comparator in ('in', 'not in'):
-                    if isinstance(value, (list, tuple)):
+                    if isinstance(value, COLLECTION_TYPES):
                         value = set(value)
                     else:
                         value = {value}
@@ -6652,7 +6472,7 @@ class BaseModel(metaclass=MetaModel):
                     data = record.mapped(key)
                     if isinstance(data, BaseModel) and comparator not in ('any', 'not any'):
                         v = value
-                        if isinstance(value, (list, tuple, set)) and value:
+                        if isinstance(value, COLLECTION_TYPES) and value:
                             v = next(iter(value))
                         if isinstance(v, str):
                             try:

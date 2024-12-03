@@ -7,7 +7,7 @@ from collections import defaultdict
 from operator import attrgetter
 
 from odoo.exceptions import MissingError, UserError
-from odoo.tools import SQL, OrderedSet, sql, unique
+from odoo.tools import SQL, OrderedSet, Query, sql, unique
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
@@ -371,6 +371,38 @@ class Many2one(_Relational[M]):
                 ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
                 cache.set(corecord, invf, ids1)
 
+    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+        if operator not in ('any', 'not any') or field_expr != self.name:
+            # for other operators than 'any', just generate condition based on column type
+            return super().condition_to_sql(field_expr, operator, value, model, alias, query)
+
+        # self.auto_join is handled in expression.py
+
+        # field_expr == self.name and operator in ('any', 'not any')
+        # value is domain, SQL or Query
+        if isinstance(value, list):
+            comodel = model.env[self.comodel_name]
+            subselect = comodel.with_context(active_test=False)._search(value).subselect()
+        if isinstance(value, Query):
+            subselect = value.subselect()
+        elif isinstance(value, SQL):
+            subselect = SQL("(%s)", value)
+        else:
+            raise TypeError(f"condition_to_sql() 'any' operator accepts Domain, SQL or Query, got {value}")
+
+        sql_field = model._field_to_sql(alias, field_expr, query)
+        sql = SQL(
+            "%s%s%s",
+            sql_field,
+            SQL(" IN ") if operator == 'any' else SQL(" NOT IN "),
+            subselect,
+        )
+        if not self.required and operator == 'not any':
+            sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
+        if self.company_dependent:
+            sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
+        return sql
+
 
 class _RelationalMulti(_Relational[M], typing.Generic[M]):
     r"Abstract class for relational fields \*2many."
@@ -568,6 +600,9 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
             # Then, disable sudo and reset the transaction origin user
             return comodel.sudo(False).with_user(comodel.env.transaction.default_env.uid)
         return comodel
+
+    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+        raise NotImplementedError("condition_to_sql for multi-relational fields is handled in expression.py")
 
 
 class One2many(_RelationalMulti[M]):

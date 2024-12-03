@@ -1,19 +1,25 @@
+from __future__ import annotations
+
 import ast
 import contextlib
 import copy
 import json
+import typing
 import uuid
 from collections import defaultdict
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError
 from odoo.osv import expression
-from odoo.tools import OrderedSet, is_list_of
+from odoo.tools import SQL, OrderedSet, is_list_of
 from odoo.tools.misc import has_list_types
 
 from .fields import Field, _logger
 from .models import BaseModel
-from .utils import check_property_field_value_name
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_property_field_value_name, parse_field_expr
+
+if typing.TYPE_CHECKING:
+    from odoo.tools import Query
 
 NoneType = type(None)
 
@@ -569,6 +575,99 @@ class Properties(Field):
         for property_definition in values_list:
             property_definition['value'] = values_dict.get(property_definition['name'])
         return values_list
+
+    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
+        check_property_field_value_name(property_name)
+        return SQL("(%s -> %s)", field_sql, property_name)
+
+    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+        fname, property_name = parse_field_expr(field_expr)
+        if not property_name:
+            raise ValueError(f"Missing property name for {self}")
+        raw_sql_field = model._field_to_sql(alias, fname, query)
+        sql_left = model._field_to_sql(alias, field_expr, query)
+
+        if operator in ('=', '!='):
+            operator = 'in' if operator == '=' else 'not in'
+            value = [value]
+        if operator in ('in', 'not in'):
+            assert isinstance(value, COLLECTION_TYPES)
+            if len(value) == 1 and True in value:
+                # inverse the condition
+                check_null_op_false = "!=" if operator == 'in' else "="
+                value = []
+                operator = 'in' if operator == 'not in' else 'not in'
+            elif False in value:
+                check_null_op_false = "=" if operator == 'in' else "!="
+                value = [v for v in value if v]
+            else:
+                value = list(value)
+                check_null_op_false = None
+
+            sqls = []
+            if check_null_op_false:
+                sqls.append(SQL(
+                    "%s%s'%s'",
+                    sql_left,
+                    SQL_OPERATORS[check_null_op_false],
+                    False,
+                ))
+                if check_null_op_false == '=':
+                    # check null value too
+                    sqls.extend((
+                        SQL("%s IS NULL", raw_sql_field),
+                        SQL("NOT (%s ? %s)", raw_sql_field, property_name),
+                    ))
+            # left can be an array or a single value!
+            # Even if we use the '=' operator, we must check the list subset.
+            # There is an unsupported edge-case where left is a list and we
+            # have multiple values.
+            if len(value) == 1:
+                # check single value equality
+                sql_operator = SQL_OPERATORS['=' if operator == 'in' else '!=']
+                sql_right = SQL("%s", json.dumps(value[0]))
+                sqls.append(SQL("%s%s%s", sql_left, sql_operator, sql_right))
+            if value:
+                sql_not = SQL('NOT ') if operator == 'not in' else SQL()
+                # hackish operator to search values
+                if len(value) > 1:
+                    # left <@ value_list -- single left value in value_list
+                    # (here we suppose left is a single value)
+                    sql_operator = SQL(" <@ ")
+                else:
+                    # left @> value -- value_list in left
+                    sql_operator = SQL(" @> ")
+                sql_right = SQL("%s", json.dumps(value))
+                sqls.append(SQL(
+                    "%s%s%s%s",
+                    sql_not, sql_left, sql_operator, sql_right,
+                ))
+            assert sqls, "No SQL generated for property"
+            if len(sqls) == 1:
+                return sqls[0]
+            combine_sql = SQL(" OR ") if operator == 'in' else SQL(" AND ")
+            return SQL("(%s)", combine_sql.join(sqls))
+
+        sql_operator = SQL_OPERATORS[operator]
+        if operator in ('ilike', 'not ilike'):
+            value = f'%{value}%'
+            unaccent = model.env.registry.unaccent
+        else:
+            unaccent = lambda x: x  # noqa: E731
+
+        if isinstance(value, str):
+            sql_left = SQL("(%s ->> %s)", raw_sql_field, property_name)  # JSONified value
+            sql_right = SQL("%s", value)
+            return SQL(
+                "%s%s%s",
+                unaccent(sql_left), sql_operator, unaccent(sql_right),
+            )
+
+        sql_right = SQL("%s", json.dumps(value))
+        return SQL(
+            "%s%s%s",
+            unaccent(sql_left), sql_operator, unaccent(sql_right),
+        )
 
 
 class PropertiesDefinition(Field):

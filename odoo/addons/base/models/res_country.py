@@ -180,6 +180,15 @@ class ResCountryState(models.Model):
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         result = []
         domain = args or []
+        # accepting 'in' as operator (see odoo/addons/base/tests/test_res_country.py)
+        if operator == 'in':
+            if limit is None:
+                limit = 100  # force a limit
+            for item in name:
+                result.extend(self.name_search(item, args, operator='=', limit=limit - len(result)))
+                if len(result) == limit:
+                    break
+            return result
         # first search by code (with =ilike)
         if operator not in expression.NEGATIVE_TERM_OPERATORS and name:
             states = self.search_fetch(expression.AND([domain, [('code', '=like', name)]]), ['display_name'], limit=limit)
