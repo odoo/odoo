@@ -296,8 +296,10 @@
             'website/static/src/interactions/**/*',
             # TODO Re-activate when testing edit mode
             ('remove', 'website/static/src/interactions/**/*.edit.js'),
+            'website/static/src/snippets/**/*.js',
+            ('remove', 'website/static/src/snippets/**/000.js'),
+            ('remove', 'website/static/src/snippets/**/options.js'),
             'website/static/src/snippets/s_countdown/000.js',
-            'website/static/src/snippets/s_chart/000.js',
             'website/static/src/snippets/s_dynamic_snippet/000.js',
             'website/static/src/snippets/s_dynamic_snippet/000.xml',
             'website/static/src/snippets/s_dynamic_snippet_carousel/000.js',

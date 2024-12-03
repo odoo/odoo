@@ -6,7 +6,7 @@ import weUtils from "@web_editor/js/common/utils";
 
 class Chart extends Interaction {
 
-    static selector = '.s_chart';
+    static selector = ".s_chart";
 
     setup() {
         this.chart = null;
@@ -52,11 +52,11 @@ class Chart extends Interaction {
             options: {
                 plugins: {
                     legend: {
-                        display: this.el.dataset.legendPosition !== 'none',
+                        display: this.el.dataset.legendPosition !== "none",
                         position: this.el.dataset.legendPosition,
                     },
                     tooltip: {
-                        enabled: this.el.dataset.tooltipDisplay === 'true',
+                        enabled: this.el.dataset.tooltipDisplay === "true",
                         position: "custom",
                     },
                     title: {
@@ -72,7 +72,7 @@ class Chart extends Interaction {
             },
         };
 
-        if (this.el.dataset.type === 'radar') {
+        if (this.el.dataset.type === "radar") {
             chartData.options.scales = {
                 r: radialAxis,
             };
@@ -83,7 +83,7 @@ class Chart extends Interaction {
                 y: categoryAxis,
             };
             chartData.options.indexAxis = "y";
-        } else if (['pie', 'doughnut'].includes(this.el.dataset.type)) {
+        } else if (["pie", "doughnut"].includes(this.el.dataset.type)) {
             chartData.options.scales = {};
             chartData.options.plugins.tooltip.callbacks = {
                 label: (tooltipItem) => {
@@ -92,12 +92,12 @@ class Chart extends Interaction {
                     let final = label;
                     if (label) {
                         if (secondLabel) {
-                            final = label + ' - ' + secondLabel;
+                            final = label + " - " + secondLabel;
                         }
                     } else if (secondLabel) {
                         final = secondLabel;
                     }
-                    return final + ':' + tooltipItem.formattedValue;
+                    return final + ":" + tooltipItem.formattedValue;
                 },
             };
         }
@@ -109,12 +109,12 @@ class Chart extends Interaction {
             };
         }
 
-        const canvas = this.el.querySelector('canvas');
+        const canvas = this.el.querySelector("canvas");
         window.Chart.Tooltip.positioners.custom = (elements, eventPosition) => eventPosition;
         this.chart = new window.Chart(canvas, chartData);
         this.registerCleanup(() => {
             this.chart.destroy();
-            this.el.querySelectorAll('.chartjs-size-monitor').forEach(el => el.remove());
+            this.el.querySelectorAll(".chartjs-size-monitor").forEach(el => el.remove());
         });
     }
 
@@ -124,7 +124,7 @@ class Chart extends Interaction {
      */
     convertToCSSColor(color) {
         if (!color) {
-            return 'transparent';
+            return "transparent";
         }
         return weUtils.getCSSVariableValue(color, this.style) || color;
     }
