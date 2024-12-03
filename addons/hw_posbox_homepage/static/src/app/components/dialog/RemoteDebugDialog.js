@@ -57,18 +57,6 @@ export class RemoteDebugDialog extends Component {
         }
     }
 
-    async restartIotBox() {
-        try {
-            await this.store.rpc({
-                url: "/hw_posbox_homepage/restart_iotbox",
-            });
-
-            this.state.waitRestart = true;
-        } catch {
-            console.warn("Error while restarting IoT Box");
-        }
-    }
-
     static template = xml`
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
@@ -103,7 +91,6 @@ export class RemoteDebugDialog extends Component {
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button type="submit" class="btn btn-danger btn-sm" t-on-click="restartIotBox">Restart IOT Box</button>
                 <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
             </t>
         </BootstrapDialog>
