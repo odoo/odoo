@@ -49,6 +49,7 @@ from psycopg2.extras import Json
 import odoo
 from odoo import SUPERUSER_ID, tools
 from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
+from odoo.osv import expression
 from odoo.tools import (
     clean_context, config, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
@@ -61,7 +62,6 @@ from odoo.tools.lru import LRU
 from odoo.tools.misc import LastOrderedSet, ReversedIterable, unquote
 from odoo.tools.translate import _, LazyTranslate
 
-from . import fields
 from . import decorators as api
 from .commands import Command
 from .fields import Field, determine
@@ -70,16 +70,18 @@ from .fields_temporal import Datetime
 from .fields_textual import Char
 
 from .identifiers import NewId
-from .utils import OriginIds, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
-from odoo.osv import expression
+from .utils import (
+    OriginIds, check_pg_name, check_object_name, check_property_field_value_name, origin_ids,
+    READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY,
+)
 
 import typing
 if typing.TYPE_CHECKING:
-    from collections.abc import Reversible
+    from collections.abc import Reversible, Sequence
     from .table_objects import TableObject
     from .environments import Environment
     from .registry import Registry
-    from .types import Self, ValuesType, IdType
+    from .types import Self, DomainType, ValuesType, IdType
 
 
 _lt = LazyTranslate('base')
@@ -117,7 +119,7 @@ def class_name_to_model_name(classname: str) -> str:
 
 
 def parse_read_group_spec(spec: str) -> tuple:
-    """ Return a triplet corresponding to the given groupby/path/aggregate specification. """
+    """ Return a triplet corresponding to the given field/property_name/aggregate specification. """
     res_match = regex_read_group_spec.match(spec)
     if not res_match:
         raise ValueError(
@@ -586,7 +588,7 @@ class BaseModel(metaclass=MetaModel):
         # Assert the name is an existing field in the model, or any model in the _inherits
         # or a custom field (starting by `x_`)
         is_class_field = any(
-            isinstance(getattr(model, name, None), fields.Field)
+            isinstance(getattr(model, name, None), Field)
             for model in [cls] + [self.env.registry[inherit] for inherit in cls._inherits]
         )
         if not (is_class_field or self.env['ir.model.fields']._is_manual_name(name)):
@@ -595,7 +597,7 @@ class BaseModel(metaclass=MetaModel):
             )
 
         # Assert the attribute to assign is a Field
-        if not isinstance(field, fields.Field):
+        if not isinstance(field, Field):
             raise ValidationError("You can only add `fields.Field` objects to a model fields")  # pylint: disable=missing-gettext
 
         if not isinstance(getattr(cls, name, field), Field):
@@ -1599,7 +1601,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     @api.readonly
-    def search_count(self, domain, limit=None):
+    def search_count(self, domain: DomainType, limit: int | None = None) -> int:
         """ search_count(domain[, limit=None]) -> int
 
         Returns the number of records in the current model matching :ref:`the
@@ -1618,7 +1620,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     @api.readonly
     @api.returns('self')
-    def search(self, domain, offset=0, limit=None, order=None) -> Self:
+    def search(self, domain: DomainType, offset=0, limit=None, order=None) -> Self:
         """ search(domain[, offset=0][, limit=None][, order=None])
 
         Search for the records that satisfy the given ``domain``
@@ -1640,7 +1642,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     @api.readonly
     @api.returns('self')
-    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
+    def search_fetch(self, domain: DomainType, field_names: Sequence[str], offset=0, limit=None, order=None) -> Self:
         """ search_fetch(domain, field_names[, offset=0][, limit=None][, order=None])
 
         Search for the records that satisfy the given ``domain``
@@ -1820,7 +1822,7 @@ class BaseModel(metaclass=MetaModel):
         return defaults
 
     @api.model
-    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
+    def _read_group(self, domain: DomainType, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
         """ Get fields aggregations specified by ``aggregates`` grouped by the given ``groupby``
         fields where record are filtered by the ``domain``.
 
@@ -2789,8 +2791,13 @@ class BaseModel(metaclass=MetaModel):
 
         return rows_dict
 
-    def _traverse_related_sql(self, alias: str, field: Field, query: Query):
-        """ Traverse the related `field` and add needed join to the `query`. """
+    def _traverse_related_sql(self, alias: str, field: Field, query: Query) -> tuple[BaseModel, Field, str]:
+        """ Traverse the related `field` and add needed join to the `query`.
+
+        :returns: tuple ``(model, field, alias)``, where ``field`` is the last
+            field in the sequence, ``model`` is that field's model, and
+            ``alias`` is the model's table alias
+        """
         assert field.related and not field.store
         if not (self.env.su or field.compute_sudo or field.inherited):
             raise ValueError(f'Cannot convert {field} to SQL because it is not a sudoed related or inherited field')
@@ -5484,8 +5491,8 @@ class BaseModel(metaclass=MetaModel):
         return original_self.concat(*(data['record'] for data in data_list))
 
     @api.model
-    def _where_calc(self, domain, active_test=True):
-        """Computes the WHERE clause needed to implement an OpenERP domain.
+    def _where_calc(self, domain: DomainType, active_test: bool = True) -> Query:
+        """Computes the WHERE clause for the `_search` method without applying any security rule.
 
         :param list domain: the domain to compute
         :param bool active_test: whether the default filtering of records with
@@ -5517,7 +5524,7 @@ class BaseModel(metaclass=MetaModel):
         return True
 
     @api.model
-    def _apply_ir_rules(self, query, mode='read'):
+    def _apply_ir_rules(self, query: Query, mode: str = 'read') -> None:
         """Add what's missing in ``query`` to implement all appropriate ir.rules
           (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
 
@@ -5735,7 +5742,7 @@ class BaseModel(metaclass=MetaModel):
             self.env[model_name].flush_model(field_names)
 
     @api.model
-    def _search(self, domain, offset=0, limit=None, order=None) -> Query:
+    def _search(self, domain: DomainType, offset=0, limit=None, order=None) -> Query:
         """
         Private implementation of search() method.
 
@@ -5765,7 +5772,7 @@ class BaseModel(metaclass=MetaModel):
 
         return query
 
-    def _as_query(self, ordered=True):
+    def _as_query(self, ordered: bool = True) -> Query:
         """ Return a :class:`Query` that corresponds to the recordset ``self``.
         This method is convenient for making a query object with a known result.
 
