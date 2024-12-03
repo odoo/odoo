@@ -19,10 +19,12 @@
                 </t>
 
                 <app data-string="Point of sale" string="Point of Sale" name="point_of_sale" groups="point_of_sale.group_pos_manager">
-                    <setting type="header" string="Point of Sale">
-                        <field name="pos_config_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
-                        <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="btn btn-link"/>
-                    </setting>
+                    <div style="z-index:1000" class="position-sticky top-0 bg-white">
+                        <setting type="header" string="Point of Sale">
+                            <field name="pos_config_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
+                            <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="btn btn-link"/>
+                        </setting>
+                    </div>
 
                     <div class="o_view_nocontent" invisible="pos_config_id">
                         <div class="o_nocontent_help">
