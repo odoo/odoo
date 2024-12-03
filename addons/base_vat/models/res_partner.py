@@ -680,6 +680,12 @@ class ResPartner(models.Model):
             vat_number = format_func(vat_number)
         return vat_country.upper() + vat_number
 
+    @api.model
+    def _convert_hu_local_to_eu_vat(self, local_vat):
+        if self.__check_tin_hu_companies_re.match(local_vat):
+            return f'HU{local_vat[:8]}'
+        return False
+
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
