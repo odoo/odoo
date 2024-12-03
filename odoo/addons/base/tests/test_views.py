@@ -247,6 +247,10 @@ class TestViewInheritance(ViewCase):
         self.c = self.makeView('C', arch=self.arch_for("C", 'list'))
         self.c.write({'priority': 1})
 
+        self.d = self.makeView("D")
+        self.d1 = self.makeView("D1", self.d.id)
+        self.d1.arch = None
+
     def test_get_inheriting_views(self):
         self.assertEqual(
             self.view_ids['A']._get_inheriting_views(),
@@ -365,6 +369,9 @@ class TestViewInheritance(ViewCase):
             """, inherit_id=base_view.id)
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss)
+
+    def test_no_arch(self):
+        self.d1._check_xml()
 
 
 class TestApplyInheritanceSpecs(ViewCase):
