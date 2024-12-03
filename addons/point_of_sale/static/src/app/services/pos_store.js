@@ -1441,11 +1441,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.getOrder()?.setScreenData({ name, props });
         }
     }
-    orderExportForPrinting(order) {
-        const headerData = this.getReceiptHeaderData(order);
-        const baseUrl = this.session._base_url;
-        return order.exportForPrinting(baseUrl, headerData);
-    }
     async printReceipt({
         basic = false,
         order = this.getOrder(),
@@ -1454,9 +1449,7 @@ export class PosStore extends WithLazyGetterTrap {
         await this.printer.print(
             OrderReceipt,
             {
-                data: this.orderExportForPrinting(order),
-                formatCurrency: this.env.utils.formatCurrency,
-                basic_receipt: basic,
+                order,
             },
             { webPrintFallback: true }
         );
@@ -1659,7 +1652,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
         const payload = await makeAwaitable(this.dialog, PartnerList, {
             partner: currentPartner,
-            getPayload: (newPartner) => currentOrder.setPartner(newPartner),
         });
 
         if (payload) {
@@ -1806,14 +1798,6 @@ export class PosStore extends WithLazyGetterTrap {
 
     doNotAllowRefundAndSales() {
         return false;
-    }
-
-    getReceiptHeaderData(order) {
-        return {
-            company: this.company,
-            cashier: _t("Served by %s", order?.getCashierName() || this.getCashier()?.name),
-            header: this.config.receipt_header,
-        };
     }
 
     async showQR(payment) {

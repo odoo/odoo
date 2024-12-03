@@ -1,36 +1,37 @@
 import { Component } from "@odoo/owl";
+import { formatCurrency } from "@web/core/currency";
 
 export class Orderline extends Component {
     static template = "point_of_sale.Orderline";
     static props = {
+        line: Object,
         class: { type: Object, optional: true },
-        line: {
-            type: Object,
-            shape: {
-                isSelected: { type: Boolean, optional: true },
-                productName: String,
-                price: String,
-                qty: String,
-                unit: { type: String, optional: true },
-                unitPrice: String,
-                discount: { type: String, optional: true },
-                comboParent: { type: String, optional: true },
-                oldUnitPrice: { type: String, optional: true },
-                customerNote: { type: String, optional: true },
-                internalNote: { type: String, optional: true },
-                imageSrc: { type: String, optional: true },
-                packLotLines: { type: Array, optional: true },
-                price_without_discount: { type: String, optional: true },
-                taxGroupLabels: { type: String, optional: true },
-            },
-        },
-        showTaxGroupLabels: { type: Boolean, optional: true },
+        showImage: { type: Boolean, optional: true },
+        showTaxGroup: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
-        basic_receipt: { type: Boolean, optional: true },
+        mode: { type: String, optional: true }, // display, receipt
     };
     static defaultProps = {
-        class: {},
+        showImage: false,
         showTaxGroupLabels: false,
-        basic_receipt: false,
+        mode: "display",
     };
+
+    formatCurrency(amount) {
+        return formatCurrency(amount, this.line.currency);
+    }
+
+    get line() {
+        return this.props.line;
+    }
+
+    get taxGroup() {
+        return [
+            ...new Set(
+                this.line.product_id.taxes_id
+                    ?.map((tax) => tax.tax_group_id.pos_receipt_label)
+                    .filter((label) => label)
+            ),
+        ].join(" ");
+    }
 }

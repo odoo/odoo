@@ -3,28 +3,27 @@
     <t t-name="point_of_sale.OrderReceipt">
         <div class="pos-receipt p-2">
             <t t-set="showTaxGroupLabels" t-value="doesAnyOrderlineHaveTaxLabel()"/>
-            <ReceiptHeader data="props.data.headerData" />
-            <OrderWidget lines="props.data.orderlines" t-slot-scope="scope"
-                generalCustomerNote="props.data.general_customer_note or ''"
-                internalNote="props.data.internalNote or ''" screenName="props.data.screenName">
+            <ReceiptHeader order="order" />
+            <OrderDisplay order="order" t-slot-scope="scope" mode="'receipt'">
                 <t t-set="line" t-value="scope.line"/>
-                <Orderline basic_receipt="props.basic_receipt" line="omit(scope.line, 'customerNote')" class="{ 'px-0': true }" showTaxGroupLabels="showTaxGroupLabels">
+                <Orderline line="line" showTaxGroup="showTaxGroupLabels" mode="'receipt'">
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
                         <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                         <t t-esc="line.customerNote" />
                     </li>
                 </Orderline>
-            </OrderWidget>
-            <t t-if="!props.basic_receipt">
-                <div t-if="props.data.tax_details.length > 0" class="pos-receipt-taxes">
+            </OrderDisplay>
+            <t t-if="!order.config.basic_receipt">
+                <t t-set="taxDetails" t-value="order.getTaxDetails()" />
+                <div t-if="taxDetails.length > 0" class="pos-receipt-taxes">
                     <div class="text-center">--------------------------------</div>
                     <div class="d-flex">
                         <span t-if="showTaxGroupLabels" class="me-2" style="visibility: hidden;">A</span>
                         <span class="fw-bolder">Untaxed Amount</span>
-                        <span t-esc="props.formatCurrency(props.data.total_without_tax)" class="ms-auto"/>
+                        <span t-esc="formatCurrency(order.getTotalWithoutTax())" class="ms-auto"/>
                     </div>
 
-                    <div t-foreach="props.data.tax_details" t-as="tax" t-key="tax.id" class="d-flex">
+                    <div t-foreach="taxDetails" t-as="tax" t-key="tax.id" class="d-flex">
                         <t t-if="showTaxGroupLabels">
                             <span t-if="tax.tax_group_id.pos_receipt_label" t-esc="tax.tax_group_id.pos_receipt_label" class="me-2"/>
                             <span t-else="" class="me-2" style="visibility: hidden;">A</span>
@@ -32,86 +31,88 @@
                         <span>
                             <span t-esc="tax.name"/>
                             on
-                            <span t-esc="props.formatCurrency(tax.base)"/>
+                            <span t-esc="formatCurrency(tax.base)"/>
                         </span>
-                        <span t-esc="props.formatCurrency(tax.amount)" class="ms-auto"/>
+                        <span t-esc="formatCurrency(tax.amount)" class="ms-auto"/>
                     </div>
                 </div>
 
                 <!-- Total -->
+                <t t-set="roundAmount" t-value="order.getRoundingApplied()"/>
+                <t t-set="totalAmount" t-value="order.getTotalWithTax()"/>
                 <div class="text-center">--------------------------------</div>
-                <div class="pos-receipt-amount">
+                <div class="pos-receipt-amount order-total">
                     TOTAL
-                    <span t-esc="props.formatCurrency(props.data.amount_total)" class="pos-receipt-right-align"/>
+                    <span t-esc="formatCurrency(roundAmount)" class="pos-receipt-right-align"/>
                 </div>
-                <t t-if="props.data.rounding_applied">
+                <t t-if="roundAmount">
                     <div class="pos-receipt-amount">
-                    Rounding
-                    <span t-esc='props.formatCurrency(props.data.rounding_applied)' class="pos-receipt-right-align"/>
+                        Rounding
+                        <span t-esc='formatCurrency(roundAmount)' class="pos-receipt-right-align"/>
                     </div>
                     <div class="pos-receipt-amount">
-                    To Pay
-                    <span t-esc='props.formatCurrency(props.data.amount_total + props.data.rounding_applied)' class="pos-receipt-right-align"/>
-                </div>
+                        To Pay
+                        <span t-esc='formatCurrency(roundAmount + roundAmount)' class="pos-receipt-right-align"/>
+                    </div>
                 </t>
 
                 <!-- Payment Lines -->
-
-                <div class="paymentlines text-start" t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
-                    <t t-esc="line.name" />
-                    <span t-esc="props.formatCurrency(line.amount)" class="pos-receipt-right-align"/>
+                <div class="paymentlines text-start" t-foreach="paymentLines" t-as="line" t-key="line_index">
+                    <t t-esc="line.payment_method_id.name" />
+                    <span t-esc="formatCurrency(line.getAmount())" class="pos-receipt-right-align"/>
                 </div>
 
-                <div  t-if="props.data.change != 0" class="pos-receipt-amount receipt-change">
+                <div class="pos-receipt-amount receipt-change">
                     CHANGE
-                    <span t-esc="props.formatCurrency(props.data.change)" class="pos-receipt-right-align"/>
+                    <span t-esc="formatCurrency(order.amount_return)" class="pos-receipt-right-align"/>
                 </div>
 
                 <!-- Extra Payment Info -->
-
-                <t t-if="props.data.total_discount">
+                <t t-set="totalDiscount" t-value="order.getTotalDiscount()" />
+                <t t-if="totalDiscount">
                     <div class="text-center">
                         Discounts
-                        <span t-esc="props.formatCurrency(props.data.total_discount)" class="pos-receipt-right-align"/>
+                        <span t-esc="formatCurrency(totalDiscount)" class="pos-receipt-right-align"/>
                     </div>
                 </t>
 
                 <div class="before-footer" />
 
-                <div t-if="props.data.pos_qr_code">
+                <t t-set="useQrCode" t-value="this.qrCode" />
+                <div t-if="useQrCode">
                     <br/>
                     <div class="pos-receipt-order-data mb-2">
                         Need an invoice for your purchase ?
                     </div>
                 </div>
 
-                <div t-if="['qr_code', 'qr_code_and_url'].includes(props.data.headerData.company.point_of_sale_ticket_portal_url_display_mode) and props.data.pos_qr_code" class="mb-2">
-                    <img id="posqrcode" t-att-src="props.data.pos_qr_code" class="pos-receipt-logo"/>
+                <div t-if="['qr_code', 'qr_code_and_url'].includes(this.header.company.point_of_sale_ticket_portal_url_display_mode) and useQrCode" class="mb-2">
+                    <img id="posqrcode" t-att-src="useQrCode" class="pos-receipt-logo"/>
                 </div>
 
-                <div t-if="props.data.pos_qr_code">
+                <div t-if="useQrCode">
                     <div class="pos-receipt-order-data">
-                        Unique Code: <t t-esc="props.data.ticket_code"/>
+                        Unique Code: <t t-esc="order.ticket_code"/>
                     </div>
                 </div>
 
-                <div t-if="['url', 'qr_code_and_url'].includes(props.data.headerData.company.point_of_sale_ticket_portal_url_display_mode) and props.data.pos_qr_code">
-                    <div class="pos-receipt-order-data" t-attf-class="{{ props.data.ticket_portal_url_display_mode === 'qr_code_and_url' ? 'mt-3' : '' }}">
-                        Portal URL: <t t-out="props.data.base_url"/>/pos/ticket
+                <div t-if="['url', 'qr_code_and_url'].includes(this.header.company.point_of_sale_ticket_portal_url_display_mode) and useQrCode">
+                    <div class="pos-receipt-order-data">
+                        Portal URL: <t t-out="order.session._base_url" />/pos/ticket
                     </div>
                 </div>
             </t>
 
             <!-- Footer -->
-           <div t-if="props.data.footer"  class="pos-receipt-center-align" style="white-space:pre-line">
-               <br/>
-               <t t-esc="props.data.footer" />
+           <div t-if="order.config.receipt_footer" class="pos-receipt-center-align" style="white-space:pre-line">
+                <br/>
+                <t t-esc="order.config.receipt_footer" />
                 <br/>
                 <br/>
             </div>
 
             <div class="after-footer">
-                <t t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
+                <t t-foreach="paymentLines" t-as="line" t-key="line_index">
                     <t t-if="line.ticket">
                         <br />
                         <div class="pos-payment-terminal-receipt">
@@ -122,18 +123,18 @@
             </div>
 
             <br/>
-            <t t-if="props.data.shippingDate">
+            <t t-if="order.shipping_date">
                 <div class="pos-receipt-order-data">
                     Expected delivery:
-                    <div><t t-esc="props.data.shippingDate" /></div>
+                    <div><t t-esc="formattedShippingDate" /></div>
                 </div>
             </t>
 
             <br/>
             <div class="pos-receipt-order-data">
                 <p>Powered by Odoo</p>
-                <div t-esc="props.data.name" />
-                <div id="order-date" t-esc="props.data.date" />
+                <div t-esc="order.pos_reference" />
+                <div id="order-date" t-esc="orderDate" />
             </div>
 
         </div>
