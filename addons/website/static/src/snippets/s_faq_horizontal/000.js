@@ -6,7 +6,7 @@ class FaqHorizontal extends Interaction {
 
     setup() {
         this.titles = this.el.getElementsByClassName('s_faq_horizontal_entry_title');
-        this.registerCleanup(this.services.menu_callback.registerCallback(this.updateTitlesPosition.bind(this)));
+        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTitlesPosition.bind(this)));
     }
 
     start() {
@@ -15,10 +15,8 @@ class FaqHorizontal extends Interaction {
 
     updateTitlesPosition() {
         let position = 16; // Add 1rem equivalent in px to provide a visual gap by default
-        const fixedElements = document.getElementsByClassName('o_top_fixed_element');
-
-        for (const el of fixedElements) {
-            position += el.offsetHeight;
+        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
+            position += el.getBoundingClientRect().bottom;
         }
 
         for (const title of this.titles) {

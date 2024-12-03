@@ -39,17 +39,11 @@ export const checkHeader = function (header, main, core, expectedStatus) {
         || main.style.paddingTop != expectedStatus.paddingTop
         || header.style.transform != expectedStatus.transform
     ) {
-        console.log(visibility, main.style.paddingTop, header.style.transform);
-        console.log(expectedStatus.visibility, expectedStatus.paddingTop, expectedStatus.transform);
-        console.log("=================")
         return false;
     }
     const headerClasses = header.classList.value.split(" ");
     headerClasses.sort();
     if (headerClasses.toString() !== expectedStatus.classList) {
-        console.log(headerClasses);
-        console.log(expectedStatus.classList);
-        console.log("=================")
         return false;
     }
     return true;

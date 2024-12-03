@@ -1054,6 +1054,61 @@ describe("miscellaneous", () => {
         await advanceTime(50);
         expect.verifySteps(["named function"]);
     });
+
+    test("waitForAnimationFrame does not trigger update if interaction is not ready yet", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+
+            async willStart() {
+                await this.waitForAnimationFrame(() => expect.step("waitForAnimationFrame"));
+                expect.step("willstart");
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        expect.step("timeout");
+                        resolve();
+                    }, 100);
+                })
+            }
+            start() {
+                expect.step("start");
+            }
+        }
+        await startInteraction(
+            Test,
+            `<div class="test"></div>`, { waitForStart: false }
+        );
+        expect.verifySteps(["willstart"]);
+        await animationFrame();
+        expect.verifySteps(["waitForAnimationFrame"]);
+        await advanceTime(100);
+        expect.verifySteps(["timeout", "start"]);
+    });
+
+    test("waitForAnimationFrame is autobound to this", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            setup() {
+                this.waitForAnimationFrame(this.fn);
+                this.waitForAnimationFrame(() => {
+                    expect(this instanceof Interaction).toBe(true);
+                    expect.step("anonymous function");
+                });
+            }
+            fn() {
+                expect(this instanceof Interaction).toBe(true);
+                expect.step("named function");
+            }
+        }
+        const { core } = await startInteraction(
+            Test,
+            `<div class="test"></div>`,
+        );
+        expect.verifySteps([]);
+        await animationFrame();
+        expect.verifySteps(["anonymous function"]);
+        await animationFrame();
+        expect.verifySteps(["named function"]);
+    });
 });
 
 describe("dynamic attributes", () => {

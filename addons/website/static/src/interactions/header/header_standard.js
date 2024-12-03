@@ -50,22 +50,22 @@ export class HeaderStandard extends BaseHeader {
             }
         }
 
-        const reachPosition1 = (scroll > this.getHeaderHeight() + this.topGap);
-        const reachPosition2 = (scroll > this.transitionPoint + this.topGap) && this.transitionPossible;
+        const reachHeaderBottom = (scroll > this.getHeaderHeight() + this.topGap);
+        const reachTransitionPoint = (scroll > this.transitionPoint + this.topGap) && this.transitionPossible;
 
-        this.atTop = !reachPosition1;
+        this.atTop = !reachHeaderBottom;
 
-        reachPosition2
+        reachTransitionPoint
             ? this.transformShow()
-            : reachPosition1
+            : reachHeaderBottom
                 ? this.transformHide()
                 : this.transformShow()
         void this.el.offsetWidth; // Force a paint refresh
 
-        this.hideEl?.classList.toggle("hidden", reachPosition1);
+        this.hideEl?.classList.toggle("hidden", reachHeaderBottom);
 
-        this.cssAffixed = reachPosition1;
-        this.isScrolled = reachPosition2;
+        this.cssAffixed = reachHeaderBottom;
+        this.isScrolled = reachTransitionPoint;
     }
 }
 

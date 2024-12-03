@@ -22,7 +22,7 @@ export class BaseHeader extends Interaction {
                 "o_header_affixed": this.cssAffixed,
                 "o_header_is_scrolled": this.isScrolled,
                 "o_header_no_transition": !this.transitionActive,
-            })
+            }),
         },
         ".offcanvas": {
             "t-on-show.bs.offcanvas": this.disableScroll,
@@ -64,6 +64,10 @@ export class BaseHeader extends Interaction {
         this.scrollingElement = document.scrollingElement;
     }
 
+    start() {
+        this.onScroll();
+    }
+
     //--------------------------------------------------------------
     // Event Handlers
     //--------------------------------------------------------------
@@ -79,7 +83,6 @@ export class BaseHeader extends Interaction {
     }
 
     onScroll() {
-
         const scroll = this.scrollingElement.scrollTop;
 
         if (!this.hasScrolled) {
@@ -123,16 +126,13 @@ export class BaseHeader extends Interaction {
     //--------------------------------------------------------------
 
     adaptToHeaderChange() {
-        for (const callback of this.services.menu_callback.updateCallbacks) {
+        for (const callback of this.services.website_menus.updateCallbacks) {
             callback();
         }
         this.adjustMainPadding();
     }
 
     adaptToHeaderChangeLoop(addCount = 0) {
-        if (this.isDestroyed) {
-            return;
-        }
         this.adaptToHeaderChange();
         this.transitionCount = Math.max(0, this.transitionCount + addCount);
 
@@ -140,13 +140,13 @@ export class BaseHeader extends Interaction {
         // transition end, keep updating the main padding top.
         if (this.transitionCount > 0) {
             this.el.classList.add("o_transitioning");
-            window.requestAnimationFrame(() => this.adaptToHeaderChangeLoop());
+            this.waitForAnimationFrame(() => this.adaptToHeaderChangeLoop());
 
             // The normal case would be to have the transitionend event to be
             // fired but we cannot rely on it, so we use a timeout as fallback.
             if (addCount !== 0) {
                 clearTimeout(this.changeLoopTimer);
-                this.changeLoopTimer = setTimeout(() => this.adaptToHeaderChangeLoop(- this.transitionCount), 500);
+                this.changeLoopTimer = this.waitForTimeout(() => this.adaptToHeaderChangeLoop(- this.transitionCount), 500);
             }
         } else {
             // When we detected all transitionend events, we need to stop the

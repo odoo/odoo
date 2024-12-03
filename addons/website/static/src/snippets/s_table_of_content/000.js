@@ -66,7 +66,7 @@ export class TableOfContent extends Interaction {
         this.previousPosition = -1;
         this.updateTableOfContentNavbarPosition();
 
-        this.registerCleanup(this.services.menu_callback.registerCallback(this.updateTableOfContentNavbarPosition.bind(this)));
+        this.registerCleanup(this.services.website_menus.registerCallback(this.updateTableOfContentNavbarPosition.bind(this)));
     }
 
     start() {
@@ -105,7 +105,7 @@ export class TableOfContent extends Interaction {
         }
         let position = 0;
         for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
-            position += el.getBoundingClientRect().height;
+            position += el.getBoundingClientRect().bottom;
         }
         const isHorizontalNavbar = this.el.classList.contains("s_table_of_content_horizontal_navbar");
         this.el.style.top = isHorizontalNavbar ? `${position}px` : "";

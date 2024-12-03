@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 
-registry.category("services").add("menu_callback", {
+registry.category("services").add("website_menus", {
     start() {
         const updateCallbacks = new Set();
         return {

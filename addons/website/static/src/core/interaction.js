@@ -90,28 +90,28 @@ export class Interaction {
      * initialize everything needed by the interaction. The el element is
      * available and can be used. Services are ready and available as well.
      */
-    setup() {}
+    setup() { }
 
     /**
      * If the interaction needs some asynchronous work to be ready, it should
      * be done here. The website framework will wait for this method to complete
      * before applying the dynamic content (event handlers, ...)
      */
-    async willStart() {}
+    async willStart() { }
 
     /**
      * The start function when we need to execute some code after the interaction
      * is ready. It is the equivalent to the "mounted" owl lifecycle hook. At
      * this point, event handlers have been attached.
      */
-    start() {}
+    start() { }
 
     /**
      * All side effects done should be cleaned up here. Note that like all
      * other lifecycle methods, it is not necessary to call the super.destroy
      * method (unless you inherit from a concrete subclass)
      */
-    destroy() {}
+    destroy() { }
 
     // -------------------------------------------------------------------------
     // helpers
@@ -158,6 +158,21 @@ export class Interaction {
                 }
             }
         }, delay);
+    }
+
+    /**
+     * Wait for a animation frame, then execute the given function (unless the
+     * interaction has been destroyed). The dynamic content is then applied.
+     */
+    waitForAnimationFrame(fn) {
+        return window.requestAnimationFrame(() => {
+            if (!this.isDestroyed) {
+                fn.call(this);
+                if (this.isReady) {
+                    this.updateContent();
+                }
+            }
+        });
     }
 
     /**

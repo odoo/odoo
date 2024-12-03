@@ -1,12 +1,17 @@
 import { BaseHeader } from "@website/interactions/header/base_header";
 
 export class BaseHeaderSpecial extends BaseHeader {
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _dropdown: () => this.hideEl?.querySelector(".dropdown-toggle"),
+        _searchbar: () => this.searchbarEl,
+    }
     dynamicContent = {
         ...this.dynamicContent,
-        ".o_header_hide_on_scroll .dropdown-toggle": {
+        _dropdown: {
             "t-on-show.bs.dropdown": this.onDropdownShow,
         },
-        ".o_header_hide_on_scroll :not(.modal-content) > .o_searchbar_form": {
+        _searchbar: {
             "t-on-input": this.onSearchbarInput,
         },
     }
@@ -20,7 +25,7 @@ export class BaseHeaderSpecial extends BaseHeader {
         this.scrollOffset = 200;
         this.scrollingDownward = true;
 
-        this.searchbarEl = this.el.querySelector(".o_header_hide_on_scroll :not(.modal-content) > .o_searchbar_form");
+        this.searchbarEl = this.hideEl?.querySelector(":not(.modal-content) > .o_searchbar_form");
         this.dropdownClickedEl = null;
     }
 
@@ -28,7 +33,7 @@ export class BaseHeaderSpecial extends BaseHeader {
         if (this.isAnimated) {
             this.transitionActive = false;
         }
-        this.onScroll();
+        super.start();
         this.transitionActive = true;
     }
 
