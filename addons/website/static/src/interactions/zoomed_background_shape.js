@@ -26,12 +26,10 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 export class ZoomedBackgroundShape extends Interaction {
     static selector = ".o_we_shape";
     dynamicContent = {
-        "_window": {
+        _window: {
             "t-on-resize": () => this.throttledShapeResize,
         },
     };
-    // TODO Handle edit mode.
-    static disabledInEditableMode = false;
     
     setup() {
         this.throttledShapeResize = throttleForAnimation(() => this.resizeBackgroundShape());
@@ -76,4 +74,8 @@ export class ZoomedBackgroundShape extends Interaction {
 
 registry
     .category("website.active_elements")
+    .add("website.zoomed_background_shape", ZoomedBackgroundShape);
+
+registry
+    .category("website.edit_active_elements")
     .add("website.zoomed_background_shape", ZoomedBackgroundShape);
