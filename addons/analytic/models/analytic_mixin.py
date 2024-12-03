@@ -54,18 +54,18 @@ class AnalyticMixin(models.AbstractModel):
             ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if int(_id) in existing_accounts_ids))
             rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
 
-    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
+    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
         # Don't use this override when account_report_analytic_groupby is truly in the context
         # Indeed, when account_report_analytic_groupby is in the context it means that `analytic_distribution`
         # doesn't have the same format and the table is a temporary one, see _prepare_lines_for_analytic_groupby
-        if fname != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby'):
-            return super()._condition_to_sql(alias, fname, operator, value, query)
+        if field_expr != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby'):
+            return super()._condition_to_sql(alias, field_expr, operator, value, query)
 
         if operator not in ('=', '!=', 'ilike', 'not ilike', 'in', 'not in'):
             raise UserError(_('Operation not supported'))
 
         if operator in ('=', '!=') and isinstance(value, bool):
-            return super()._condition_to_sql(alias, fname, operator, value, query)
+            return super()._condition_to_sql(alias, field_expr, operator, value, query)
 
         if isinstance(value, str) and operator in ('=', '!=', 'ilike', 'not ilike'):
             value = list(self.env['account.analytic.account']._search(
