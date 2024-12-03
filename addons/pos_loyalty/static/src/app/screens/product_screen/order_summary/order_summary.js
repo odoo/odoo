@@ -173,7 +173,7 @@ patch(OrderSummary.prototype, {
                 this.currentOrder.processGiftCard(code, points, expirationDate);
 
                 // update indexedDB
-                this.pos.data.synchronizeLocalDataInIndexedDB(this.pos.data.records);
+                this.pos.data.synchronizeLocalDataInIndexedDB();
             },
         });
     },
