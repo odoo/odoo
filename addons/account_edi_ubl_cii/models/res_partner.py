@@ -7,6 +7,7 @@ from stdnum.fr import siret
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
+from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
 class ResPartner(models.Model):
@@ -168,7 +169,7 @@ class ResPartner(models.Model):
             country_code = partner._deduce_country_code()
             if country_code in format_mapping:
                 partner.ubl_cii_format = format_mapping[country_code]
-            elif country_code in EAS_MAPPING:
+            elif country_code in PEPPOL_DEFAULT_COUNTRIES and country_code in EAS_MAPPING:
                 partner.ubl_cii_format = 'ubl_bis3'
             else:
                 partner.ubl_cii_format = partner.ubl_cii_format
