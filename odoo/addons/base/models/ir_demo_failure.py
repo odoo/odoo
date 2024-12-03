@@ -4,6 +4,7 @@ from odoo import api, fields, models
 class IrDemo_Failure(models.TransientModel):
     """ Stores modules for which we could not install demo data
     """
+    _name = 'ir.demo_failure'
     _description = 'Demo failure'
 
     module_id = fields.Many2one('ir.module.module', required=True, string="Module")
