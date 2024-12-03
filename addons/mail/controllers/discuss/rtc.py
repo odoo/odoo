@@ -78,15 +78,16 @@ class RtcController(http.Controller):
 
     @http.route("/mail/rtc/channel/leave_call", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def channel_call_leave(self, channel_id):
+    def channel_call_leave(self, channel_id, session_id=None):
         """Disconnects the current user from a rtc call and clears any invitation sent to that user on this channel
         :param int channel_id: id of the channel from which to disconnect
+        :param int session_id: id of the leaving session
         """
         member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
         if not member:
             raise NotFound()
         # sudo: discuss.channel.rtc.session - member of current user can leave call
-        member.sudo()._rtc_leave_call()
+        member.sudo()._rtc_leave_call(session_id)
 
     @http.route("/mail/rtc/channel/cancel_call_invitation", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
