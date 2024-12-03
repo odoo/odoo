@@ -52,7 +52,6 @@ class WebSuite(odoo.tests.HttpCase):
         self._check_forbidden_statements('web.assets_unit_tests')
         # Checks that no test is using `only` or `debug` as it prevents other tests to be run
         self._check_only_call('web.qunit_suite_tests')
-        self._check_only_call('web.qunit_mobile_suite_tests')
 
     def _check_forbidden_statements(self, bundle):
         # As we currently are not in a request context, we cannot render `web.layout`.
@@ -101,7 +100,3 @@ class MobileWebSuite(odoo.tests.HttpCase):
     def test_unit_mobile(self):
         # Unit tests suite (mobile)
         self.browser_js('/web/tests?headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
-
-    def test_qunit_mobile(self):
-        # ! DEPRECATED
-        self.browser_js('/web/tests/legacy/mobile?mod=web', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)
