@@ -137,8 +137,10 @@ import glob
 import hashlib
 import hmac
 import inspect
+import ipaddress
 import json
 import logging
+import math
 import mimetypes
 import os
 import re
@@ -233,6 +235,7 @@ def get_default_session():
         'uid': None,
         'session_token': None,
         '_trace': [],
+        '_trusted_location': True,
     }
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
@@ -1173,8 +1176,71 @@ class Session(collections.abc.MutableMapping):
             'last_activity': now
         }
         self['_trace'].append(new_trace)
+        self.update_trusted_location()
         self.is_dirty = True
         return new_trace
+
+    def _localize_ip(self, ip_address):
+        geoip = GeoIP(ip_address)
+        latitude = geoip['latitude']
+        longitude = geoip['longitude']
+        accuracy_radius = geoip['accuracy_radius']
+        return (latitude, longitude, accuracy_radius)
+
+    def _haversine_formula(self, latitude_A, longitude_A, latitude_B, longitude_B):
+        """
+            The haversine formula is used to calculate the distance between two points
+            on a sphere, taking into account their latitudes and longitudes.
+            :return (int): the distance between the two points in kilometers.
+        """
+        latitude_A = math.radians(latitude_A)
+        longitude_A = math.radians(longitude_A)
+        latitude_B = math.radians(latitude_B)
+        longitude_B = math.radians(longitude_B)
+        delta_latitude = latitude_B - latitude_A
+        delta_longitude = longitude_B - longitude_A
+        var_1 = math.sin(delta_latitude / 2) ** 2 \
+            + math.cos(latitude_A) * math.cos(latitude_B) * math.sin(delta_longitude / 2) ** 2
+        var_2 = 2 * math.atan2(math.sqrt(var_1), math.sqrt(1 - var_1))
+        return math.floor(var_2 * 6371)  # 6371 = radius of Earth [km]
+
+    def update_trusted_location(self):
+        """
+            Called after adding a new trace in the session.
+        """
+        if len(self['_trace']) == 1:
+            # Origin location is trusted by default
+            return
+
+        last_trace = self['_trace'][-1]
+        last_ip = ipaddress.ip_address(last_trace['ip_address'])
+        latitude, longitude, accuracy_radius = self._localize_ip(last_trace['ip_address'])
+        if not (latitude and longitude and accuracy_radius):
+            return
+
+        time_ = last_trace['last_activity'] - int(timedelta(days=30).total_seconds())
+        for trace in filter(lambda t: t['last_activity'] >= time_ , self['_trace'][:-1][::-1]):
+            ip_address = ipaddress.ip_address(trace['ip_address'])
+
+            # Optimisation to trust IPv6 addresses
+            if (
+                isinstance(last_ip, ipaddress.IPv6Address) and
+                isinstance(ip_address, ipaddress.IPv6Address) and
+                (int(last_ip) >> 64) == (int(ip_address) >> 64)
+            ):
+                break
+
+            lat, long, acc_rad = self._localize_ip(trace['ip_address'])
+            if not (lat and long and acc_rad):
+                continue
+            distance = self._haversine_formula(lat, long, latitude, longitude)
+            max_distance = max(acc_rad, accuracy_radius) * 1.5
+            # We add a tolerance, because according to the definition of
+            # the ``accuracy_radius`` attribute, the radius has a confidence of 67%.
+            if distance <= max_distance:
+                break  # Trusted location
+        else:
+            self['_trusted_location'] = False
 
 
 # =========================================================
@@ -1269,6 +1335,9 @@ class GeoIP(collections.abc.Mapping):
 
         if item == 'longitude':
             return self.location.longitude
+
+        if item == 'accuracy_radius':
+            return self.location.accuracy_radius
 
         if item == 'region':
             return self.subdivisions[0].iso_code if self.subdivisions else None

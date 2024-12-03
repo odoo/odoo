@@ -24,6 +24,35 @@ TEST_IP_GEOIP_COUNTRY = geoip2.models.Country(
      'traits': {'ip_address': TEST_IP, 'prefix_len': 21},
     }, ['en']
 )
+
+TEST_IPv4_locations = {
+    # IP: (Country, Latitude, Longitude, Accuracy radius [km])
+    '192.0.1.1': ('Belgium', 'Bruges', 51.2608836, 3.0573057, 100),
+    '192.0.1.2': ('Belgium', 'Antwerpen', 51.2605815, 4.1929726, 100),
+    '192.0.1.3': ('Belgium', 'Brussels', 50.8552021, 4.2930167, 100),
+    '192.0.2.1': ('Netherlands', 'Rotterdam', 51.9280632, 4.4084283, 100),
+    '192.0.3.1': ('Germany', 'Frankfurt', 50.1213155, 8.4717592, 100),
+    '192.0.4.1': ('France', 'Toulouse', 43.600798, 1.3504423, 100),
+    '192.0.4.2': ('France', 'Paris', 48.8589384, 2.264635, 100),
+    '192.0.5.1': ('Luxembourg', 'Rambrouch', 49.8398831, 5.7814468, 100),
+    '192.0.6.1': ('United Kingdom', 'London', 51.5287398, -0.266403, 100),
+    '192.0.7.1': ('Italy', 'Rome', 41.9102088, 12.3711918, 100),
+}
+
+TEST_IPv6_locations = {
+    # IP: (Country, Latitude, Longitude, Accuracy radius [km])
+    'fe80:0000:0000:0001:abcd:1234:5678:9abc': ('Belgium', 'Bruges', 51.2608836, 3.0573057, 10),
+    'fe80:0000:0000:0001:bcde:2345:6789:abcd': ('Belgium', 'Antwerpen', 51.2605815, 4.1929726, 10),
+    'fe80:0000:0000:0001:cdef:3456:789a:bcde': ('Belgium', 'Brussels', 50.8552021, 4.2930167, 10),
+    'fe80:0000:0000:0001:def1:4567:89ab:cdef': ('Netherlands', 'Rotterdam', 51.9280632, 4.4084283, 10),
+    'fe80:0000:0000:0002:abcd:1234:5678:9abc': ('Germany', 'Frankfurt', 50.1213155, 8.4717592, 10),
+    'fe80:0000:0000:0003:abcd:1234:5678:9abc': ('France', 'Toulouse', 43.600798, 1.3504423, 10),
+    'fe80:0000:0000:0003:bcde:2345:6789:abcd': ('France', 'Paris', 48.8589384, 2.264635, 10),
+    'fe80:0000:0000:0004:abcd:1234:5678:9abc': ('Luxembourg', 'Rambrouch', 49.8398831, 5.7814468, 10),
+    'fe80:0000:0000:0005:abcd:1234:5678:9abc': ('United Kingdom', 'London', 51.5287398, -0.266403, 10),
+    'fe80:0000:0000:0006:abcd:1234:5678:9abc': ('Italy', 'Rome', 41.9102088, 12.3711918, 10),
+}
+
 USER_AGENT_linux_chrome = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36'
 USER_AGENT_linux_firefox = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0'
 USER_AGENT_android_chrome = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Mobile Safari/537.36'
@@ -33,6 +62,14 @@ class MemoryGeoipResolver:
     def __init__(self):
         self.country_db = {TEST_IP: TEST_IP_GEOIP_COUNTRY}
         self.city_db = {TEST_IP: TEST_IP_GEOIP_CITY}
+
+    def add_locations(self, locations):
+        for ip, (country, city, latitude, longitude, accuracy_radius) in locations.items():
+            self.city_db[ip] = geoip2.models.City({
+                'city': {'names': {'en': city}},
+                'country': {'names': {'en': country}},
+                'location': {'latitude': latitude, 'longitude': longitude, 'accuracy_radius': accuracy_radius},
+            }, ['en'])
 
     def country(self, ip):
         record = self.country_db.get(ip)

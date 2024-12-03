@@ -111,6 +111,10 @@ class ResDeviceLog(models.Model):
                 revoked=False,
             ))
         _logger.info("User %d inserts device log (%s)", user_id, session_identifier)
+        if not request.session.get('_trusted_location', True):
+            _logger.info("User %d used untrusted ip address %s for session identifier %s", user_id, trace['ip_address'], session_identifier)
+            self.env.user._alert_untrusted_location()
+            request.session['_trusted_location'] = True
 
     @api.autovacuum
     def _gc_device_log(self):
