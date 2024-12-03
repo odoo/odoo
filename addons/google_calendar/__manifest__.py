@@ -23,9 +23,6 @@
         'web.qunit_suite_tests': [
             'google_calendar/static/tests/**/*',
         ],
-        'web.qunit_mobile_suite_tests': [
-            'google_calendar/static/tests/google_calendar_mock_server.js',
-        ],
     },
     'license': 'LGPL-3',
 }

@@ -41,9 +41,6 @@ actions(Check in/Check out) performed by them.
         'web.qunit_suite_tests': [
             'hr_attendance/static/tests/hr_attendance_mock_server.js',
         ],
-        'web.qunit_mobile_suite_tests': [
-            'hr_attendance/static/tests/hr_attendance_mock_server.js',
-        ],
         'hr_attendance.assets_public_attendance': [
             # Define attendance variables (takes priority)
             'hr_attendance/static/src/scss/kiosk/primary_variables.scss',
