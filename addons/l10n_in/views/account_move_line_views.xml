@@ -8,6 +8,7 @@
                 <field name="product_id" readonly="1"/>
                 <field name="name" widget="section_and_note_text"/>
                 <field name="l10n_in_hsn_code"/>
+                <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'sale')]"/>
             </list>
         </field>
     </record>
