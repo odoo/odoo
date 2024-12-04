@@ -1274,8 +1274,8 @@ test("download a file with single measure, measure row displayed in table", asyn
     expect.assertions(2);
 
     patchWithCleanup(download, {
-        _download: ({ url, data }) => {
-            data = JSON.parse(data.data);
+        _download: async ({ url, data }) => {
+            data = JSON.parse(await data.data.text());
             expect(url).toBe("/web/pivot/export_xlsx");
             expect(data.measure_headers.length).toBe(4);
             return Promise.resolve();
