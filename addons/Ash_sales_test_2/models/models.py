@@ -161,11 +161,11 @@ class SaleOrder(models.Model):
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 # Send data to external API based on env
-                # release_url = (
-                #     "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
-                #     if is_production == 'True'
-                #     else "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
-                # )
+                release_url = (
+                    "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
+                    if is_production == 'True'
+                    else "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
+                )
                 headers = {
                     "Content-Type": "application/json"
                 }
