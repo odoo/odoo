@@ -1132,7 +1132,7 @@ export class Orderline extends PosModel {
     }
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithoutTax, 0);
+        return allLines.reduce((total, line) => total + line.get_base_price() / line.quantity, 0);
     }
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];

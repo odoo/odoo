@@ -2417,3 +2417,36 @@ class TestUi(TestPointOfSaleHttpCommon):
         coupon = loyalty_program.coupon_ids
         self.assertEqual(len(coupon), 1, "Coupon not generated")
         self.assertEqual(coupon.expiration_date, date.today() + timedelta(days=2), "Coupon not generated with correct expiration date")
+
+    def test_cheapest_product_tax_included(self):
+        tax_01 = self.env['account.tax'].create({
+                "name": "Tax 1",
+                "amount": 10,
+                "price_include": True,
+        })
+
+        self.env['product.product'].create({
+            "name": "Product",
+            "lst_price": 1,
+            "available_in_pos": True,
+            "taxes_id": [(6, 0, [tax_01.id])]
+        })
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'Auto Promo Program - Cheapest Product',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+            })]
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCheapestProductTaxInclude', login="pos_user")
