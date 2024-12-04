@@ -178,6 +178,7 @@ class Product extends models.Model {
     _name = "product";
 
     name = fields.Char();
+    fold = fields.Boolean({ default: false });
 
     _records = [
         { id: 3, name: "hello" },
@@ -4163,7 +4164,7 @@ test("close a column while quick creating a record", async () => {
 
     expect.verifySteps([]); // "get_views" should have already be done
     expect(".o_form_view").toHaveCount(1);
-    expect(".o_column_folded").toHaveCount(0);
+    expect(".o_column_folded").toHaveCount(1);
 });
 
 test("quick create record: open on a column while another column has already one", async () => {
@@ -5441,77 +5442,9 @@ test("auto fold group when reach the limit", async () => {
         Product._records.push({ id: 8 + i, name: `column ${i}` });
         Partner._records.push({ id: 20 + i, foo: "dumb entry", product_id: 8 + i });
     }
+    Product._records[2].fold = true;
+    Product._records[8].fold = true;
 
-    onRpc("web_read_group", function ({ parent }) {
-        const result = parent();
-        result.groups[2].__fold = true;
-        result.groups[8].__fold = true;
-        return result;
-    });
-    onRpc("web_search_read", ({ kwargs }) => {
-        expect.step(`web_search_read domain: ${kwargs.domain}`);
-    });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["product_id"],
-    });
-
-    // we look if column are folded/unfolded according to what is expected
-    expect(getKanbanColumn(1)).not.toHaveClass("o_column_folded");
-    expect(getKanbanColumn(3)).not.toHaveClass("o_column_folded");
-    expect(getKanbanColumn(9)).not.toHaveClass("o_column_folded");
-    expect(getKanbanColumn(2)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(8)).toHaveClass("o_column_folded");
-
-    // we look if columns are actually folded after we reached the limit
-    expect(getKanbanColumn(12)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(13)).toHaveClass("o_column_folded");
-
-    // we look if we have the right count of folded/unfolded column
-    expect(".o_kanban_group:not(.o_column_folded)").toHaveCount(10);
-    expect(".o_kanban_group.o_column_folded").toHaveCount(4);
-
-    expect.verifySteps([
-        "web_search_read domain: product_id,=,3",
-        "web_search_read domain: product_id,=,5",
-        "web_search_read domain: product_id,=,9",
-        "web_search_read domain: product_id,=,10",
-        "web_search_read domain: product_id,=,11",
-        "web_search_read domain: product_id,=,12",
-        "web_search_read domain: product_id,=,13",
-        "web_search_read domain: product_id,=,15",
-        "web_search_read domain: product_id,=,16",
-        "web_search_read domain: product_id,=,17",
-    ]);
-});
-
-test.tags("desktop");
-test("auto fold group when reach the limit (2)", async () => {
-    // this test is similar to the previous one, except that in this one,
-    // read_group sets the __fold key on each group, even those that are
-    // unfolded, which could make subtle differences in the code
-    for (let i = 0; i < 12; i++) {
-        Product._records.push({ id: 8 + i, name: `column ${i}` });
-        Partner._records.push({ id: 20 + i, foo: "dumb entry", product_id: 8 + i });
-    }
-
-    onRpc("web_read_group", function ({ parent }) {
-        const result = parent();
-        for (let i = 0; i < result.groups.length; i++) {
-            result.groups[i].__fold = i == 2 || i == 8;
-        }
-        return result;
-    });
     onRpc("web_search_read", ({ kwargs }) => {
         expect.step(`web_search_read domain: ${kwargs.domain}`);
     });
@@ -12270,11 +12203,7 @@ test("fold a column and drag record on it should not unfold it", async () => {
 
 test.tags("desktop");
 test("drag record on initially folded column should not unfold it", async () => {
-    onRpc("web_read_group", function ({ parent }) {
-        const result = parent();
-        result.groups[1].__fold = true;
-        return result;
-    });
+    Product._records[1].fold = true;
 
     await mountView({
         type: "kanban",
@@ -12426,12 +12355,8 @@ test("quick create record in grouped kanban in a form view dialog", async () => 
 
 test.tags("desktop");
 test("no sample data when all groups are folded then one is unfolded", async () => {
-    onRpc("web_read_group", function ({ parent }) {
-        const result = parent();
-        for (const group of result.groups) {
-            group.__fold = true;
-        }
-        return result;
+    Product._records.forEach((group) => {
+        group.fold = true;
     });
 
     await mountView({
@@ -12459,12 +12384,8 @@ test("no sample data when all groups are folded then one is unfolded", async () 
 
 test.tags("desktop");
 test("no content helper, all groups folded with (unloaded) records", async () => {
-    onRpc("web_read_group", function ({ parent }) {
-        const result = parent();
-        for (const group of result.groups) {
-            group.__fold = true;
-        }
-        return result;
+    Product._records.forEach((group) => {
+        group.fold = true;
     });
 
     await mountView({
@@ -12831,18 +12752,9 @@ test("sample server: _mockWebReadGroup API", async () => {
 
 test.tags("desktop");
 test("scroll on group unfold and progressbar click", async () => {
+    Product._records[1].fold = true;
     onRpc(function ({ method, parent }) {
         expect.step(method);
-        if (method === "web_read_group") {
-            const result = parent();
-            if (result.groups.length) {
-                result.groups[0].__fold = false;
-                if (result.groups[1]) {
-                    result.groups[1].__fold = true;
-                }
-            }
-            return result;
-        }
     });
 
     await mountView({
@@ -13503,11 +13415,7 @@ test("click on empty kanban must shake the NEW button", async () => {
 
 test.tags("mobile");
 test("Should load grouped kanban with folded column", async () => {
-    onRpc("web_read_group", ({ parent }) => {
-        const result = parent();
-        result.groups[1].__fold = true;
-        return result;
-    });
+    Product._records[1].fold = true;
     await mountView({
         type: "kanban",
         resModel: "partner",
