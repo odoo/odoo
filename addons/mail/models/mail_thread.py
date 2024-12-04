@@ -8,6 +8,7 @@ import email
 import email.policy
 import hashlib
 import hmac
+import itertools
 import json
 import lxml
 import logging
@@ -2002,7 +2003,7 @@ class MailThread(models.AbstractModel):
         return email_to_lst, partners
 
     def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
-                                          force_create_partners=False):
+                                          no_create=True):
         """ Get suggested recipients to be managed by Chatter
 
         :returns: list of dictionaries (per suggested recipient) containing:
@@ -2011,6 +2012,9 @@ class MailThread(models.AbstractModel):
             * email:                 str: email of recipient
             * new_partner_values:   dict: data for unknown partner
         """
+        def email_key(email):
+            return email_normalize(email, strict=False) or email.strip()
+
         self.ensure_one()
         email_to_lst, partners = self._message_add_suggested_recipients()
 
@@ -2032,28 +2036,34 @@ class MailThread(models.AbstractModel):
             partners += reply_message.partner_ids
             email_to_lst += [reply_message.email_to or '', reply_message.email_cc or '']
 
+        # flatten emails, as some input are stringified list of emails (e.g. Cc, To)
+        email_to_lst = list(itertools.chain(
+            e for email_input in email_to_lst
+            for e in email_split_and_format(email_input)
+            if e and e.strip()
+        ))
+
         # organize and deduplicate partners, exclude followers, keep ordering
         followers = self.message_partner_ids
         partners = partners - followers
-        # sanitize email inputs, exclude followers, keep ordering, then link to partners
-        skip_emails = (followers + partners).mapped('email_normalized')
-        emails = []
-        for email_input in email_to_lst:
-            emails.extend([
-                e for e in email_split_and_format(email_input)
-                if (email_normalize(email_input) or email_input) not in skip_emails
-            ])
-        partners += self._partner_find_from_emails_single(
-            emails, force_create=force_create_partners,
-        )
+        # sanitize email inputs, exclude followers and aliases, keep ordering, then link to partners
+        skip_emails_normalized = (followers + partners).mapped('email_normalized')
+        if email_to_lst:
+            skip_emails_normalized.extend(
+                self.env['mail.alias'].sudo().search(
+                    [('alias_full_name', 'in', [email_key(e) for e in email_to_lst])]
+                ).mapped('alias_full_name')
+            )
+        email_to_lst = [e for e in email_to_lst if email_key(e) not in skip_emails_normalized]
+        partners += self._partner_find_from_emails_single(email_to_lst, no_create=no_create)
 
         # final filtering
         partners = self.env['res.partner'].browse(tools.misc.unique(
             p.id for p in partners if p not in followers
         ))
         email_to_lst = list(tools.misc.unique(
-            email for email in emails
-            if (email_normalize(email, strict=False) or email) not in (partners.mapped('email_normalized') + partners.mapped('email'))
+            e for e in email_to_lst
+            if email_key(e) not in (partners.mapped('email_normalized') + partners.mapped('email'))
         ))
         # fetch model-related additional information
         emails_normalized_info = self._get_customer_information() if email_to_lst else {}

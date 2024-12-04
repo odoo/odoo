@@ -15,6 +15,7 @@ from functools import partial
 from lxml import html
 from unittest.mock import patch
 
+from odoo import tools
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.bus.models.bus import BusBus, json_dump
@@ -628,10 +629,18 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         call with a dictionary of expected values. """
         for fname, fvalue in fields_values.items():
             with self.subTest(fname=fname, fvalue=fvalue):
-                self.assertEqual(
-                    message[fname], fvalue,
-                    f'Message: expected {fvalue} for {fname}, got {message[fname]}',
-                )
+                # email_{cc, to} are lists, hence order is not important
+                if fname in {'email_cc', 'email_to'}:
+                    self.assertEqual(
+                        sorted(tools.mail.email_split_and_format_normalize(message[fname])),
+                        sorted(tools.mail.email_split_and_format_normalize(fvalue)),
+                        f'Message: expected {fvalue} for {fname}, got {message[fname]}',
+                    )
+                else:
+                    self.assertEqual(
+                        message[fname], fvalue,
+                        f'Message: expected {fvalue} for {fname}, got {message[fname]}',
+                    )
 
     def assertNoMail(self, recipients, mail_message=None, author=None):
         """ Check no mail.mail and email was generated during gateway mock. """
@@ -1054,7 +1063,10 @@ class MailCase(MockEmail):
         if messages is not None:
             base_domain += [('mail_message_id', 'in', messages.ids)]
         notifications = self.env['mail.notification'].sudo().search(base_domain)
-
+        debug_info = '\n-'.join(
+            f'Notif: partner {notif.res_partner_id.id}, type {notif.notification_type}'
+            for notif in notifications
+        )
         done_msgs = self.env['mail.message'].sudo()
         done_notifs = self.env['mail.notification'].sudo()
 
@@ -1098,6 +1110,8 @@ class MailCase(MockEmail):
             # check notifications and prepare assert data
             email_groups = defaultdict(list)
             mail_groups = {'failure': [], 'outgoing': []}
+            if not message_info['notif']:
+                self.assertFalse(message.notification_ids)
             for recipient in message_info['notif']:
                 partner, ntype, ngroup, nstatus = recipient['partner'], recipient['type'], recipient.get('group'), recipient.get('status', 'sent')
                 nis_read, ncheck_send = recipient.get('is_read', False if recipient['type'] == 'inbox' else True), recipient.get('check_send', True)
@@ -1115,7 +1129,7 @@ class MailCase(MockEmail):
                     n.notification_type == ntype
                 )
                 self.assertEqual(len(partner_notif), 1,
-                                 f'Mail: not found notification for {partner} (type: {ntype}, message: {message.id})')
+                                 f'Mail: not found notification for {partner} (type: {ntype}, message: {message.id})\n{debug_info}')
                 self.assertEqual(partner_notif.author_id, partner_notif.mail_message_id.author_id)
                 self.assertEqual(partner_notif.is_read, nis_read)
                 if 'failure_reason' in recipient:
