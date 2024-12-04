@@ -4,7 +4,6 @@ import logging
 import os
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82
 from odoo.osv import expression
 from odoo.tools import email_normalize, email_normalize_all, formataddr
 from odoo.exceptions import AccessError, ValidationError
@@ -433,18 +432,6 @@ class EventRegistration(models.Model):
 
     def _get_registration_summary(self):
         self.ensure_one()
-        if self.event_id.badge_format == "96x82" and self.env.get("iot.device") is not None:
-            badge_printers = self.env["iot.device"].search([("subtype", "=", "label_printer")])
-            iot_printers = badge_printers.mapped(lambda printer: {
-                "id": printer.id,
-                "name": printer.name,
-                "identifier": printer.identifier,
-                "iotIdentifier": printer.iot_id.identifier,
-                "ip": printer.iot_id.ip,
-                "ipUrl": printer.iot_id.ip_url
-            })
-        else:
-            iot_printers = []
         return {
             'id': self.id,
             'name': self.name,
@@ -455,25 +442,5 @@ class EventRegistration(models.Model):
             'event_display_name': self.event_id.display_name,
             'registration_answers': self.registration_answer_ids.filtered('value_answer_id').mapped('display_name'),
             'company_name': self.company_name,
-            'iot_printers': iot_printers,
             'badge_format': self.event_id.badge_format
         }
-
-    def _get_registration_print_details(self):
-        return {
-            'name': self.name,
-            'ticket_name': self.event_ticket_id.name if self.event_ticket_id else None,
-            'ticket_color': self.event_ticket_id.color if self.event_ticket_id else None,
-            'registration_answers': self.registration_answer_choice_ids.mapped('display_name'),
-            'company_name': self.company_name
-        }
-
-    def _generate_esc_label_badges(self):
-        command = setup_printer(layout_96x82)
-
-        attendees_per_event = self.grouped("event_id").items()
-        for (event, attendees) in attendees_per_event:
-            attendees_details = attendees.mapped(lambda attendee: attendee._get_registration_print_details())
-            command.concat(print_event_attendees(event._get_event_print_details(), attendees_details, layout_96x82))
-
-        return command.to_string()
