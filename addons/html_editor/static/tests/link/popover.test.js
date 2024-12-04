@@ -358,6 +358,17 @@ describe("Link creation", () => {
             await contains(".o-we-linkpopover input.o_we_href_input_link").fill("#");
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">#[]</a></p>');
         });
+        test("Should be able to insert button on empty p", async () => {
+            const { editor, el } = await setupEditor("<p>[]</p>");
+            await insertText(editor, "/button");
+            await animationFrame();
+            await click(".o-we-command-name:first");
+
+            await contains(".o-we-linkpopover input.o_we_href_input_link").fill("#");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="#" class="btn btn-fill-primary">#[]</a></p>'
+            );
+        });
         test("Should keep http protocol on valid http url", async () => {
             const { editor, el } = await setupEditor("<p>[]</p>");
             await insertText(editor, "/link");
