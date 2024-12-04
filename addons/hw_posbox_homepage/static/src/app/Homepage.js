@@ -95,8 +95,8 @@ export class Homepage extends Component {
                 <h4 class="text-center m-0">IoT Box - <t t-esc="this.data.hostname" /></h4>
             </div>
             <div t-if="this.store.advanced" class="alert alert-warning" role="alert">
-                <p class="m-0 fw-bold">HTTPS certificate</p>
-                <small>Error code: <t t-esc="this.data.certificate_details" /></small>
+                <p class="m-0 fw-bold">No subscription linked to your IOT</p>
+                <small>Please contact your account manager to take advantage of your IOT's full potential</small>
             </div>
             <SingleData name="'Name'" value="this.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">
