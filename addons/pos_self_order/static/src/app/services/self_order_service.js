@@ -46,7 +46,7 @@ export class SelfOrder extends Reactive {
         this.session = this.models["pos.session"].getFirst();
         this.config = this.models["pos.config"].getFirst();
         this.company = this.models["res.company"].getFirst();
-        this.currency = this.models["res.currency"].getFirst();
+        this.currency = this.config.currency_id;
 
         this.markupDescriptions();
         this.access_token = this.config.access_token;
