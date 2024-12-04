@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
-from datetime import time
+from datetime import datetime, time
 from itertools import chain
-from pytz import utc
+from pytz import timezone, utc
 
 from odoo import fields
 from odoo.osv.expression import normalize_domain, is_leaf, NOT_OPERATOR
@@ -17,6 +17,32 @@ HOURS_PER_DAY = 8
 # This will generate 16th of days
 ROUNDING_FACTOR = 16
 
+HOURS_SELECTION = [
+    ('0', '12:00 AM'), ('0.5', '12:30 AM'),
+    ('1', '1:00 AM'), ('1.5', '1:30 AM'),
+    ('2', '2:00 AM'), ('2.5', '2:30 AM'),
+    ('3', '3:00 AM'), ('3.5', '3:30 AM'),
+    ('4', '4:00 AM'), ('4.5', '4:30 AM'),
+    ('5', '5:00 AM'), ('5.5', '5:30 AM'),
+    ('6', '6:00 AM'), ('6.5', '6:30 AM'),
+    ('7', '7:00 AM'), ('7.5', '7:30 AM'),
+    ('8', '8:00 AM'), ('8.5', '8:30 AM'),
+    ('9', '9:00 AM'), ('9.5', '9:30 AM'),
+    ('10', '10:00 AM'), ('10.5', '10:30 AM'),
+    ('11', '11:00 AM'), ('11.5', '11:30 AM'),
+    ('12', '12:00 PM'), ('12.5', '12:30 PM'),
+    ('13', '1:00 PM'), ('13.5', '1:30 PM'),
+    ('14', '2:00 PM'), ('14.5', '2:30 PM'),
+    ('15', '3:00 PM'), ('15.5', '3:30 PM'),
+    ('16', '4:00 PM'), ('16.5', '4:30 PM'),
+    ('17', '5:00 PM'), ('17.5', '5:30 PM'),
+    ('18', '6:00 PM'), ('18.5', '6:30 PM'),
+    ('19', '7:00 PM'), ('19.5', '7:30 PM'),
+    ('20', '8:00 PM'), ('20.5', '8:30 PM'),
+    ('21', '9:00 PM'), ('21.5', '9:30 PM'),
+    ('22', '10:00 PM'), ('22.5', '10:30 PM'),
+    ('23', '11:00 PM'), ('23.5', '11:30 PM'),
+]
 
 def make_aware(dt):
     """ Return ``dt`` with an explicit timezone, together with a function to
@@ -25,6 +51,12 @@ def make_aware(dt):
     if dt.tzinfo:
         return dt, lambda val: val.astimezone(dt.tzinfo)
     return dt.replace(tzinfo=utc), lambda val: val.astimezone(utc).replace(tzinfo=None)
+
+
+def to_utc(date, hour, tz):
+    hour = float_to_time(float(hour))
+    holiday_tz = timezone(tz)
+    return holiday_tz.localize(datetime.combine(date, hour)).astimezone(utc).replace(tzinfo=None)
 
 
 def string_to_datetime(value):

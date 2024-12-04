@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models, api, _
 from odoo.exceptions import UserError
 
+from odoo.addons.resource.models.utils import to_utc
 
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
@@ -47,6 +48,9 @@ class HrLeave(models.Model):
                 if period_ids_to:
                     max_hour = max(attendance.hour_to for attendance in period_ids_to)
                     date_to = self._to_utc(date_to, max_hour, employee_id)
+                # tz = (self.employee_id or self).tz or self.env.user.tz or 'UTC'
+                # date_from = to_utc(date_from, min_hour, tz)
+                # date_to = to_utc(date_to, max_hour, tz)
                 return date_from, date_to
 
             if self.request_unit_half:
