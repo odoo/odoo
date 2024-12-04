@@ -33,7 +33,7 @@ class RazorpayController(Controller):
 
         # Retrieve the Razorpay data and Odoo metadata from the redirect data.
         provider_id = int(data['provider_id'])
-        authorization_code = data['authorization_code']
+        authorization_code = data.get('authorization_code')
         csrf_token = data['csrf_token']
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
         if not provider_sudo or provider_sudo.code != 'razorpay':
@@ -47,6 +47,8 @@ class RazorpayController(Controller):
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
         redirect_url = f'/odoo/action-{action.id}/{int(provider_sudo.id)}'
+        if not authorization_code: # The user cancelled the authorization.
+            return request.redirect(redirect_url)
         try:
             response_content = provider_sudo._razorpay_make_proxy_request(
                 '/get_access_token', payload={'authorization_code': authorization_code}
