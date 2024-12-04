@@ -609,7 +609,7 @@ export class PosOrderline extends Base {
     }
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.allUnitPrices.priceWithoutTax, 0);
+        return allLines.reduce((total, line) => total + line.getBasePrice() / line.qty, 0);
     }
 
     getOldUnitDisplayPrice() {
