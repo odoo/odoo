@@ -64,6 +64,37 @@
             <field name="is_published" eval="True"/>
         </record>
 
+        <!-- Generic steps used to generate new specific steps -->
+        <record id="website_sale.checkout_step_cart" model="website.checkout.step">
+            <field name="name">Review Order</field>
+            <field name="sequence">0</field>
+            <field name="step_href">/shop/cart</field>
+            <field name="back_button_label">Back to cart</field>
+        </record>
+
+        <record id="website_sale.checkout_step_delivery" model="website.checkout.step">
+            <field name="name">Delivery</field>
+            <field name="sequence">250</field>
+            <field name="step_href">/shop/checkout</field>
+            <field name="main_button_label">Checkout</field>
+            <field name="back_button_label">Back to delivery</field>
+        </record>
+
+        <record id="website_sale.checkout_step_extra" model="website.checkout.step">
+            <field name="name">Extra Info</field>
+            <field name="sequence">500</field>
+            <field name="step_href">/shop/extra_info</field>
+            <field name="main_button_label">Confirm</field>
+            <field name="back_button_label">Back to extra info</field>
+        </record>
+
+        <record id="website_sale.checkout_step_payment" model="website.checkout.step">
+            <field name="name">Payment</field>
+            <field name="sequence">999</field>
+            <field name="step_href">/shop/confirm_order</field>
+            <field name="main_button_label">Confirm</field>
+        </record>
+
     </data>
     <data>
         <!-- Filters for Dynamic Filter -->
