@@ -116,11 +116,11 @@ class SaleOrder(models.Model):
                         product_available_in_source = True
                         break
 
-                if not product_available_in_source:
-                    logger.warning(
-                        f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}.")
-                    all_products_available = False
-                    break
+                # if not product_available_in_source:
+                #     logger.warning(
+                #         f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}.")
+                #     all_products_available = False
+                #     break
 
                 # Collect pickings that include the product
                 product_pickings = pick_only_picking_records.filtered(
