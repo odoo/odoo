@@ -24,6 +24,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
         'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
         'submit': '_onClickConfirmOrder',
+        'input .o_wsale_attribute_search_bar': '_searchAttributeValues',
+        'click .o_wsale_variant_pills_shop': '_onClickPillsAttribute',
+        'click .o_wsale_view_more_btn': '_onToggleViewMoreLabel',
     }),
 
     /**
@@ -350,6 +353,46 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         }
     },
     /**
+     * Search attribute values based on the input text.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _searchAttributeValues(ev) {
+        const input = ev.target;
+        const searchValue = input.value.toLowerCase();
+
+        document.querySelectorAll(`#${input.dataset.containerId} .form-check`).forEach(item =>{
+            const labelText = item.querySelector('.form-check-label').textContent.toLowerCase();
+            item.style.display = labelText.includes(searchValue) ? '' : 'none'
+        });
+    },
+    /**
+     * Highlight selected pill
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickPillsAttribute(ev) {
+        if (ev.target.tagName === "LABEL" || ev.target.tagName === "INPUT") {
+            return;
+        }
+        const checkbox = ev.target.closest('.o_wsale_variant_pills_shop').querySelector("input");
+        checkbox.click();
+    },
+    /**
+     * Toggle the button text between "View More" and "View Less"
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onToggleViewMoreLabel(ev) {
+        const button = ev.target;
+        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+        button.innerHTML = isExpanded ? "View Less" : "View More";
+    },
+    /**
      * When the quantity is changed, we need to query the new price of the product.
      * Based on the pricelist, the price might change when quantity exceeds a certain amount.
      *
@@ -421,9 +464,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             const url = new URL(form.action);
             const searchParams = url.searchParams;
             // Aggregate all attribute values belonging to the same attribute into a single
-            // `attribute_value` search param.
+            // `attribute_values` search param.
             for (const entry of attributeValues.entries()) {
-                searchParams.append('attribute_value', `${entry[0]}-${[...entry[1]].join(',')}`);
+                searchParams.append('attribute_values', `${entry[0]}-${[...entry[1]].join(',')}`);
             }
             // Aggregate all tags into a single `tags` search param.
             if (tags.size) {
