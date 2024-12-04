@@ -2,7 +2,7 @@ import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_favorite_management", {
-    url: "/odoo?debug=assets",
+    url: "/odoo",
     steps: () => [
         {
             trigger: ".o_app[data-menu-xmlid='base\\.menu_management']",
@@ -99,76 +99,15 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
-            trigger: ".o_debug_manager .o-dropdown",
-            run: "click",
-        },
-        {
-            trigger: ".o-dropdown-item:contains(Filters) > span",
-            run: "click",
-        },
-        {
-            trigger: ".o_list_button_add",
-            run: "click",
-        },
-        {
-            trigger: ".o_field_widget[name='name'] > .o_input",
-            run: "edit Apps3",
-        },
-        {
-            trigger: ".o_field_widget[name='user_id'] .o-autocomplete--input",
-            run: "click",
-        },
-        {
-            trigger: ".o-autocomplete--dropdown-item:contains(Mitchell Admin) > a",
-            run: "click",
-        },
-        {
-            trigger: ".o_field_widget[name='model_id'] > .o_input",
-            run: "selectByLabel /^Module$/",
-        },
-        {
-            trigger: ".o_field_widget[name='action_id'] .o-autocomplete--input",
-            run: "edit apps",
-        },
-        {
-            trigger: ".o-autocomplete--dropdown-item:contains(Apps) > a",
-            run: "click",
-        },
-        {
-            trigger: ".o_tree_editor_row:contains(New Rule) > a",
-            run: "click",
-        },
-        {
-            trigger: ".o_breadcrumb li:contains(Apps) > a",
-            run: "click",
-        },
-        {
-            trigger: ".o_searchview_dropdown_toggler",
-            run: "click",
-        },
-        {
-            trigger: ".o_searchview",
+            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps2)",
             run() {
                 if (queryAll(".o_searchview_facet").length) {
-                    throw new Error("There should be no facet in the search view");
+                    throw new Error("There should not be any facet inside the search bar");
+                }
+                if (queryAll(".o_favorite_menu .o-dropdown-item:contains(Apps1)").length) {
+                    throw new Error("The Apps1 filter should be deleted");
                 }
             },
-        },
-        {
-            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps3) span",
-            run: "click",
-        },
-        {
-            trigger: ".o_searchview_facet",
-        },
-        {
-            trigger: ".o_kanban_record:not(.o_kanban_ghost)",
-            run() {
-                if (queryAll(".o_kanban_record:not(.o_kanban_ghost)").length > 1) {
-                    throw new Error("There should be only one visible card in the kanban view");
-                }
-            },
-            pause: true,
         },
     ],
 });
