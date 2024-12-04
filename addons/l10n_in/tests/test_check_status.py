@@ -46,9 +46,10 @@ class TestGSTStatusFeature(TransactionCase):
                 "error": [{"code": "FO8000", "message": "No records found for the provided GSTIN."}],
             },
         }
+        self.env.company.l10n_in_gstin_status_feature = True
 
     @freeze_time('2024-05-20')
-    @mute_logger('odoo.addons.l10n_in_gstin_status.models.res_partner')
+    @mute_logger('odoo.addons.l10n_in.models.res_partner')
     def check_gstin_status(self, partner, expected_status, mock_response, raises_exception=False):
         with patch.object(IapAccount, "_l10n_in_connect_to_server", return_value=mock_response):
             if raises_exception:

@@ -10,7 +10,7 @@
                         string="Create e-Waybill"
                         class="oe_highlight"
                         type="object"
-                        invisible="country_code != 'IN' or state != 'posted' or l10n_in_ewaybill_ids or move_type == 'entry'"
+                        invisible="country_code != 'IN' or not l10n_in_ewaybill_feature_enabled or state != 'posted' or l10n_in_ewaybill_ids or move_type == 'entry'"
                         groups="account.group_account_invoice"
                         data-hotkey="e"/>
             </xpath>
@@ -28,6 +28,7 @@
             </xpath>
         </field>
     </record>
+
     <record id="view_invoice_list_inherit_l10n_in_ewaybill" model="ir.ui.view">
         <field name="name">account.move.list.inherit.l10n.in.ewaybill</field>
         <field name="model">account.move</field>
