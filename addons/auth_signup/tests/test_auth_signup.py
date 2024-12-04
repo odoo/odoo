@@ -64,3 +64,15 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         with self.assertRaises(AccessError):
             partner.with_user(user.id)._get_signup_url()
+
+    def test_copy_multiple_users(self):
+        users = self.env['res.users'].create([
+            {'login': 'testuser1', 'name': 'Test User 1', 'email': 'test1@odoo.com'},
+            {'login': 'testuser2', 'name': 'Test User 2', 'email': 'test2@odoo.com'},
+        ])
+        initial_user_count = self.env['res.users'].search_count([])
+        users.copy()
+        self.assertEqual(
+            self.env['res.users'].search_count([]),
+            initial_user_count + len(users)
+        )
