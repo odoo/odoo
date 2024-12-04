@@ -12,6 +12,7 @@ class StockPicking(models.Model):
         "Indian Ewaybill Number",
         compute='_compute_l10n_in_ewaybill_details'
     )
+    l10n_in_ewaybill_feature_enabled = fields.Boolean(related='company_id.l10n_in_ewaybill_feature')
 
     def _get_l10n_in_ewaybill_form_action(self):
         return self.env.ref('l10n_in_ewaybill.l10n_in_ewaybill_form_action')._get_action_dict()
