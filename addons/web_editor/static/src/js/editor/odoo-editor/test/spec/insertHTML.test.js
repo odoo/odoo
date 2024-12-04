@@ -111,6 +111,22 @@ describe('insert HTML', () => {
                 contentAfter: '<p>abcdefgh</p><p><br>[]</p>',
             });
         });
+        it("should remove <br> when inserting <t> tag", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[]<br></p>`,
+                contentBeforeEdit: `<p placeholder="Type &quot;/&quot; for commands" class="oe-hint oe-command-temporary-hint">[]<br></p>`,
+                stepFunction: async (editor) => {
+                    await editor.execCommand(
+                        "insert",
+                        parseHTML(
+                            `<t t-out="object. or '''abcd'''" contenteditable="false" data-oe-t-inline="true"></t>`
+                        )
+                    );
+                },
+                contentAfterEdit: `<p><t t-out="object. or '''abcd'''" contenteditable="false" data-oe-t-inline="true"></t>[]</p>`,
+                contentAfter: `<p><t t-out="object. or '''abcd'''" data-oe-t-inline="true"></t>[]</p>`,
+            });
+        });
     });
     describe('not collapsed selection', () => {
         it('should delete selection and insert html in its place', async () => {
