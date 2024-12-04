@@ -1549,6 +1549,7 @@ const Wysiwyg = Widget.extend({
                 return;
             }
             $image.transfo({document: this.odooEditor.document});
+            imgTransformBtn.setAttribute('title', 'Click again to reset transformation');
             const mouseup = () => {
                 imgTransformBtn.classList.toggle('active', $image[0].matches('[style*="transform"]'));
             };
@@ -1556,6 +1557,7 @@ const Wysiwyg = Widget.extend({
             const mousedown = mousedownEvent => {
                 if (!$(mousedownEvent.target).closest('.transfo-container').length) {
                     $image.transfo('destroy');
+                    imgTransformBtn.setAttribute('title', 'Transform the picture (click twice to reset transformation)');
                     $(this.odooEditor.document).off('mousedown', mousedown).off('mouseup', mouseup);
                 }
                 if ($(mousedownEvent.target).closest('#image-transform').length) {
