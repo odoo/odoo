@@ -308,7 +308,7 @@ export class Call extends Component {
     resizeCallSpace(collapsed) {
         if (collapsed === undefined) {
             if (!this.state.collapsed && this.isActiveCall) {
-                this.rtc.state.channel.activeRtcSession = undefined;
+                // this.rtc.state.channel.activeRtcSession = undefined;
             }
             this.state.collapsed = !this.state.collapsed;
         } else {

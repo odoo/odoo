@@ -10,37 +10,48 @@
                 'o-collapsed': state.collapsed,
                 'position-relative': !state.isFullscreen
             }">
-            <div class="o-discuss-Call-main d-flex flex-grow-1 align-items-center position-relative overflow-auto" t-att-class="{'flex-column':!state.collapsed}" t-on-mouseleave="onMouseleaveMain">
+            <div class="o-discuss-Call-main d-flex flex-grow-1 align-items-center position-relative overflow-auto" t-att-class="{'flex-column':!state.collapsed}" t-on-mousemove="onMousemoveMain" t-on-mouseleave="onMouseleaveMain">
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden flex-wrap"
                     t-att-class="{'h-100 w-100 justify-content-center': !state.collapsed, 'h-75 w-75 justify-content-start': state.collapsed }"
                     t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
                     t-on-click="() => this.showOverlay()"
-                    t-on-mousemove="onMousemoveMain"
                     t-ref="grid"
                 >
-                    <CallParticipantCard t-foreach="visibleMainCards.slice(0,6)" t-as="cardData" t-key="cardData.key"
-                        cardData="cardData"
-                        className="'o-discuss-Call-mainCardStyle'"
-                        minimized="minimized"
-                        thread="props.thread"
-                    />
-                    <span t-if="visibleMainCards.length > 6" class="fa fa-ellipsis-h ps-1 pe-1"/>
+                    <t t-if="state.collapsed">
+                        <CallParticipantCard t-foreach="visibleCards.slice(0,6)" t-as="cardData" t-key="cardData.key"
+                            cardData="cardData"
+                            className="'o-discuss-Call-mainCardStyle'"
+                            minimized="minimized"
+                            thread="props.thread"
+                        />
+                        <span t-if="visibleCards.length > 6" class="fa fa-ellipsis-h ps-1 pe-1"/>
+                    </t>
+                    <t t-else="">
+                        <CallParticipantCard t-foreach="visibleMainCards.slice(0,6)" t-as="cardData" t-key="cardData.key"
+                            cardData="cardData"
+                            className="'o-discuss-Call-mainCardStyle'"
+                            minimized="minimized"
+                            thread="props.thread"
+                        />
+                        <span t-if="visibleMainCards.length > 6" class="fa fa-ellipsis-h ps-1 pe-1"/>
+                    </t>
                 </div>
                 <!-- Buttons -->
-                <t t-if="hasSidebarButton">
+                <!-- fixes sidebar button problem -->
+                <t t-if="hasSidebarButton and !state.collapsed">
                     <i t-if="state.sidebar" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-right" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
                     <i t-else="" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
                 </t>
                 <div
-                    t-if="state.overlay or !isControllerFloating"
+                    t-if="state.overlay or (!isControllerFloating and !state.collapsed)"
                     class="o-discuss-Call-overlay d-flex w-100 pb-1"
                     t-att-class="{
-                        'o-isFloating position-absolute bottom-0 pb-3': isControllerFloating,
+                        'o-isFloating position-absolute bottom-0 pb-3': isControllerFloating and !state.collapsed,
                         'justify-content-center': !state.collapsed ,
                         'justify-content-end': state.collapsed
                     }">
-                    <div t-on-mousemove="onMousemoveOverlay">
+                    <div>
                         <CallActionList thread="props.thread" compact="props.compact" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
                     </div>
                 </div>
@@ -48,12 +59,12 @@
                     <span class="text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': state.isFullscreen, 'p-2': !state.isFullscreen }" t-foreach="rtc.notifications.values()" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
                 </div>
             </div>
-            <div t-if="!state.isFullscreen" class="bg-black bg-opacity-50 justify-content-center align-items-start">
+            <div t-if="!state.isFullscreen" class="o-resize-Call-Button justify-content-center align-items-start">
                 <button t-on-click="() => this.resizeCallSpace()" t-att-class="{ 'ms-3': !env.inChatWindow, 'ms-0': env.inChatWindow }" class="btn p-3 btn-link">
                     <i class="fa-lg text-danger" t-att-class="{'oi oi-chevron-up': !state.collapsed, 'oi oi-chevron-down': state.collapsed}"/>
                 </button>
             </div>
-            <div t-if="state.sidebar and props.thread.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
+            <div t-if="state.sidebar and props.thread.activeRtcSession and !state.collapsed" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
                 <CallParticipantCard t-foreach="visibleCards" t-as="cardData" t-key="cardData.key"
                     cardData="cardData"
                     className="'o-discuss-Call-sidebarCard w-100'"
@@ -61,7 +72,7 @@
                 />
             </div>
             <CallParticipantCard
-                t-if="props.thread.videoCount > 0 and state.insetCard"
+                t-if="props.thread.videoCount > 0 and state.insetCard and !state.collapsed"
                 cardData="state.insetCard"
                 className="'o-discuss-Call-mainCardStyle'"
                 thread="props.thread"
