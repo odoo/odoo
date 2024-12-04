@@ -6,7 +6,7 @@ import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
 
-const { getDefaultChartJsRuntime, chartFontColor, ChartColors } = spreadsheet.helpers;
+const { getDefaultChartJsRuntime, chartFontColor, ChartColors, formatValue } = spreadsheet.helpers;
 
 export class OdooBarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
@@ -86,6 +86,11 @@ function getBarConfiguration(chart, labels, locale) {
             ticks: {
                 color,
                 // y axis configuration
+                callback: (value) =>
+                    formatValue(value, {
+                        locale,
+                        format: Math.abs(value) >= 1000 ? "#,##" : undefined,
+                    }),
             },
             beginAtZero: true, // the origin of the y axis is always zero
         },
