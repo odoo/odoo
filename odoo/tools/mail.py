@@ -252,8 +252,18 @@ def tag_quote(el):
         # remove single node
         el.set('data-o-mail-quote-node', '1')
         el.set('data-o-mail-quote', '1')
-    if el.getparent() is not None and (el.getparent().get('data-o-mail-quote') or el.getparent().get('data-o-mail-quote-container')) and not el.getparent().get('data-o-mail-quote-node'):
-        el.set('data-o-mail-quote', '1')
+    if el.getparent() is not None and not el.getparent().get('data-o-mail-quote-node'):
+        if el.getparent().get('data-o-mail-quote'):
+            el.set('data-o-mail-quote', '1')
+        # only quoting the elements following the first quote in the container
+        # avoids issues with repeated calls to html_normalize
+        elif el.getparent().get('data-o-mail-quote-container'):
+            if (first_sibling_quote := el.getparent().find("*[@data-o-mail-quote]")) is not None:
+                siblings = el.getparent().getchildren()
+                quote_index = siblings.index(first_sibling_quote)
+                element_index = siblings.index(el)
+                if quote_index < element_index:
+                    el.set('data-o-mail-quote', '1')
     if el.getprevious() is not None and el.getprevious().get('data-o-mail-quote') and not el.text_content().strip():
         el.set('data-o-mail-quote', '1')
 
