@@ -58,7 +58,7 @@ import { withSequence } from "@html_editor/utils/resource";
  */
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["selection", "history"];
+    static dependencies = ["selection", "history", "input"];
     static id = "delete";
     static shared = ["deleteRange", "deleteSelection", "delete"];
     resources = {
