@@ -262,3 +262,14 @@ registry.category("web_tour.tours").add("PosComboSpecificProductProgram", {
             PosLoyalty.finalizeOrder("Cash", "216.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Product"),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
+            Order.hasLine({ productName: "10% on the cheapest product" }),
+            PosLoyalty.orderTotalIs("6.00"),
+        ].flat(),
+});
