@@ -6,6 +6,7 @@ import datetime
 import json
 import unittest
 
+from collections import abc
 from unittest.mock import patch
 
 from odoo.fields import Command, Domain
@@ -120,12 +121,15 @@ class TestPropertiesMixin(TransactionCase):
 class PropertiesCase(TestPropertiesMixin):
 
     def test_properties_field(self):
-        self.assertTrue(isinstance(self.message_1.attributes, dict))
+        self.assertIsInstance(self.message_1.attributes, abc.Mapping)
         # testing assigned value
         self.assertEqual(self.message_1.attributes, {
             'discussion_color_code': 'Test',
             'moderator_partner_id': self.partner.id,
         })
+
+        self.assertEqual(self.message_1.attributes['discussion_color_code'], 'Test')
+        self.assertEqual(self.message_2.attributes['discussion_color_code'], 'blue')
 
         self.assertEqual(self.message_2.attributes, {
             'discussion_color_code': 'blue',
@@ -741,7 +745,7 @@ class PropertiesCase(TestPropertiesMixin):
         ]
 
         self.assertFalse(self.message_2.attributes['discussion_color_code'])
-        self.assertEqual(self.message_2.attributes['moderator_partner_id'], self.partner_2.id)
+        self.assertEqual(self.message_2.attributes['moderator_partner_id'], self.partner_2)
         sql_values = self._get_sql_properties(self.message_2)
         self.assertEqual(
             sql_values,
@@ -1310,6 +1314,8 @@ class PropertiesCase(TestPropertiesMixin):
         values = message.read(['attributes'])[0]['attributes'][0]['value']
         self.assertEqual(values, [(tag.id, None if i >= 5 else tag.name) for i, tag in enumerate(tags.sudo())])
 
+        self.assertEqual(message['attributes']['my_tags'], tags)
+
     def test_properties_field_performance(self):
         self.env.invalidate_all()
         with self.assertQueryCount(5):
@@ -1727,6 +1733,94 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(ve.exception.args[0],
             "The path contained by the field 'Field to Update Path' contains a non-relational field (Properties) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational."
         )
+
+    def test_getitem_property(self):
+        # read a property that exist nowhere
+        with self.assertRaises(KeyError):
+            self.message_3['attributes']['____']
+
+        # read a property that exists, but on the wrong record
+        with self.assertRaises(KeyError):
+            self.message_3['attributes']['moderator_partner_id']
+
+        # read many types
+        self.assertEqual(self.message_1['attributes']['discussion_color_code'], 'Test')
+        self.assertEqual(self.message_1['attributes']['moderator_partner_id'], self.partner)
+
+        self.assertEqual(self.message_2['attributes']['discussion_color_code'], 'blue')
+        self.assertEqual(self.message_2['attributes']['moderator_partner_id'], self.env['test_new_api.partner'])
+
+        with self.assertRaises(KeyError):
+            self.message_1['attributes']['state']
+        with self.assertRaises(KeyError):
+            self.message_2['attributes']['state']
+        self.assertEqual(self.message_3['attributes']['state'], 'Draft')
+
+        self.message_1.attributes = [{
+            'name': 'tags',
+            'type': 'tags',
+            'tags': [['a', 'A', 0], ['b', 'B', 1], ['c', 'C', 2]],
+            'value': ['a', 'b', 'e'],
+            'definition_changed': True,
+        }]
+        self.env.flush_all()
+        self.assertEqual(self.message_1['attributes']['tags'], 'A, B')
+        self.assertEqual(self.message_2['attributes']['tags'], False)
+        with self.assertRaises(KeyError):
+            self.message_3['attributes']['tags']
+
+        self.message_1.attributes = [{
+            'name': 'many2many',
+            'type': 'many2many',
+            'comodel': 'test_new_api.partner',
+            'value': (self.partner | self.partner_2).ids,
+            'definition_changed': True,
+        }]
+        self.env.flush_all()
+        self.assertEqual(self.message_1['attributes']['many2many'], self.partner | self.partner_2)
+        self.assertEqual(self.message_2['attributes']['many2many'], self.env['test_new_api.partner'])
+        with self.assertRaises(KeyError):
+            self.message_3['attributes']['many2many']
+
+        self.message_1.attributes = [{
+            # no comodel
+            'name': 'many2many',
+            'type': 'many2many',
+            'value': (self.partner | self.partner_2).ids,
+            'definition_changed': True,
+        }]
+        self.env.flush_all()
+        self.assertEqual(self.message_1['attributes']['many2many'], False)
+        self.assertEqual(self.message_2['attributes']['many2many'], False)
+        with self.assertRaises(KeyError):
+            self.message_3['attributes']['many2many']
+
+        # call __getitem__ on an empty recordset
+        self.assertEqual(self.env['test_new_api.message']['attributes']['many2many'], False)
+
+        # Test the prefetch on the returned records
+        partner_3 = self.env['test_new_api.partner'].create({})
+        self.message_1.attributes = [{
+            'name': 'many2many',
+            'comodel': 'test_new_api.partner',
+            'type': 'many2many',
+            'value': self.partner.ids,
+            'default': partner_3.ids,
+            'definition_changed': True,
+        }]
+        self.message_2['attributes'] = [{
+            'name': 'many2many',
+            'comodel': 'test_new_api.partner',
+            'type': 'many2many',
+            'value': self.partner_2.ids,
+        }]
+        messages = self.message_1 | self.message_2 | self.message_3
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        with self.assertQueryCount(9):
+            messages[0]['attributes']['many2many']
+            messages[1]['attributes']['many2many']
 
 
 class PropertiesSearchCase(TestPropertiesMixin):
