@@ -389,7 +389,7 @@ class HTML(models.AbstractModel):
             content.append(element.text)
         content.extend(html.tostring(child, encoding='unicode')
                        for child in element.iterchildren(tag=etree.Element))
-        return '\n'.join(content)
+        return ''.join(content)
 
 
 class Image(models.AbstractModel):
