@@ -71,6 +71,7 @@ export const fieldService = {
                         // differentiate definitions with same name but on different parent
                         record_id: record.id,
                         record_name: record.display_name,
+                        ...(definition.comodel ? { relation: definition.comodel } : {}),
                         ...definition,
                     };
                 }
