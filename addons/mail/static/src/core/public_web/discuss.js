@@ -16,11 +16,11 @@ import {
     Component,
     onMounted,
     onWillUnmount,
-    useChildSubEnv,
     useRef,
     useState,
     useExternalListener,
     useEffect,
+    useSubEnv,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
@@ -59,7 +59,7 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
-        useChildSubEnv({
+        useSubEnv({
             inDiscussApp: true,
             messageHighlight: this.messageHighlight,
         });
