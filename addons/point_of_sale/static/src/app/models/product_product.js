@@ -139,9 +139,8 @@ export class ProductProduct extends Base {
             );
         }
 
-        const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
         let price = (list_price || this.lst_price) + (price_extra || 0);
-        const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+        const rule = this.getPricelistRule(pricelist, quantity);
         if (!rule) {
             return price;
         }
@@ -182,6 +181,10 @@ export class ProductProduct extends Base {
         return price;
     }
 
+    getPricelistRule(pricelist, quantity) {
+        const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
+        return rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+    }
     getImageUrl() {
         return (
             (this.image_128 &&

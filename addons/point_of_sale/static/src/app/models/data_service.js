@@ -111,16 +111,36 @@ export class PosData extends Reactive {
             return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
         };
 
+<<<<<<< 18.0
         for (const [model, params] of Object.entries(this.opts.databaseTable)) {
             const nbrRecords = records[model].size;
+||||||| 42a7a9ad9b82ecd75f4264881c6e4492084365da
+        for (const model of this.opts.databaseTable) {
+            const nbrRecords = Object.values(records[model.name]).length;
+=======
+        const dataToDelete = {};
+
+        for (const model of this.opts.databaseTable) {
+            const nbrRecords = Object.values(records[model.name]).length;
+>>>>>>> daed6bac43c786d5caa620612447dd13b814d44e
 
             if (!nbrRecords) {
                 continue;
             }
 
+<<<<<<< 18.0
             const data = dataSorter(this.models[model].getAll(), params.condition, params.key);
             this.indexedDB.create(model, data.put);
             this.indexedDB.delete(model, data.remove);
+||||||| 42a7a9ad9b82ecd75f4264881c6e4492084365da
+            const data = dataSorter(this.models[model.name].getAll(), model.condition, model.key);
+            this.indexedDB.create(model.name, data.put);
+            this.indexedDB.delete(model.name, data.remove);
+=======
+            const data = dataSorter(this.models[model.name].getAll(), model.condition, model.key);
+            this.indexedDB.create(model.name, data.put);
+            dataToDelete[model.name] = data.remove;
+>>>>>>> daed6bac43c786d5caa620612447dd13b814d44e
         }
 
         this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
@@ -129,13 +149,29 @@ export class PosData extends Reactive {
             }
 
             for (const [model, records] of Object.entries(data)) {
+<<<<<<< 18.0
                 const key = this.opts.databaseTable[model].key;
+||||||| 42a7a9ad9b82ecd75f4264881c6e4492084365da
+                const key = this.opts.databaseTable.find((db) => db.name === model).key;
+=======
+                const key = this.opts.databaseTable.find((db) => db.name === model).key;
+                let keysToDelete = [];
+
+                if (dataToDelete[model]) {
+                    const keysInIndexedDB = new Set(records.map((record) => record[key]));
+                    keysToDelete = dataToDelete[model].filter((key) => keysInIndexedDB.has(key));
+                }
+
+>>>>>>> daed6bac43c786d5caa620612447dd13b814d44e
                 for (const record of records) {
                     const localRecord = this.models[model].get(record.id);
-
                     if (!localRecord) {
-                        this.indexedDB.delete(model, [record[key]]);
+                        keysToDelete.push(record[key]);
                     }
+                }
+
+                if (keysToDelete.length) {
+                    this.indexedDB.delete(model, keysToDelete);
                 }
             }
         });
