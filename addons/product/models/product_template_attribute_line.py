@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
@@ -257,6 +257,14 @@ class ProductTemplateAttributeLine(models.Model):
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda ptal: ptal.attribute_id.create_variant != 'no_variant')
+
+    def _is_configurable(self):
+        self.ensure_one()
+        return (
+            len(self.value_ids) >= 2
+            or self.attribute_id.display_type == 'multi'
+            or self.value_ids.is_custom
+        )
 
     @api.readonly
     def action_open_attribute_values(self):
