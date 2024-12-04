@@ -64,7 +64,7 @@ class HrLeaveType(models.Model):
     country_code = fields.Char(related='country_id.code', depends=['country_id'], readonly=True)
     responsible_ids = fields.Many2many(
         'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Notified Time Off Officer',
-        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
+        domain=lambda self: [('all_group_ids', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
                              ('share', '=', False),
                              ('company_ids', 'in', self.env.company.id)],
                              auto_join=True,

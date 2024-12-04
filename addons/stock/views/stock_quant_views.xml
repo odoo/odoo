@@ -6,7 +6,7 @@
         <field name="model_id" ref="model_stock_quant"/>
         <field name="path">physical-inventory</field>
         <field name="state">code</field>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
             action = model.action_view_inventory()
         </field>
@@ -216,7 +216,7 @@
         <field name="name">Inventory</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="state">code</field>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
             action = model.with_context(
                 search_default_internal_loc=1,
@@ -469,7 +469,7 @@ in this location. That leads to a negative stock.
         <field name="binding_model_id" ref="stock.model_stock_quant"/>
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
             action = records.action_set_inventory_quantity()
         </field>
@@ -481,7 +481,7 @@ in this location. That leads to a negative stock.
         <field name="binding_model_id" ref="stock.model_stock_quant"/>
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
+        <field name="group_ids" eval="[(4, ref('stock.group_stock_manager'))]"/>
         <field name="code">
             action = records.action_set_inventory_quantity_zero()
         </field>

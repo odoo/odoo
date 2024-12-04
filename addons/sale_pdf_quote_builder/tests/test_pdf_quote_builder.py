@@ -154,7 +154,7 @@ class TestPDFQuoteBuilder(HttpCaseWithUserDemo, SaleCommon):
         # Line product document should only be accessible by sales user
         self.assertFalse(dialog_param['lines'])
 
-        self.user_demo.groups_id += self.env.ref('sales_team.group_sale_salesman')
+        self.user_demo.group_ids += self.env.ref('sales_team.group_sale_salesman')
         dialog_param = sale_order_user_demo.with_user(
             self.user_demo.id
         ).get_update_included_pdf_params()

@@ -66,8 +66,8 @@ class Form:
     removing records::
 
         with Form(user) as u:
-            u.groups_id.add(env.ref('account.group_account_manager'))
-            u.groups_id.remove(id=env.ref('base.group_portal').id)
+            u.group_ids.add(env.ref('account.group_account_manager'))
+            u.group_ids.remove(id=env.ref('base.group_portal').id)
 
     Finally :class:`~odoo.fields.One2many` are reified as :class:`~O2MProxy`.
 

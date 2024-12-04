@@ -25,7 +25,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [Command.set([self.ref('base.group_user')])],
+            'group_ids': [Command.set([self.ref('base.group_user')])],
         })
         cs = (c1 + c2).with_user(user)
         self.assertEqual([{'id': c2.id, 'name': 'Y'}], cs.read(['name']), "read() should skip deleted records")
@@ -61,7 +61,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [Command.set([self.ref('base.group_user')])],
+            'group_ids': [Command.set([self.ref('base.group_user')])],
         })
 
         partner_model = self.env['ir.model'].search([('model','=','res.partner')])
@@ -163,14 +163,14 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test',
             'login': 'test_m2m_store_trigger',
-            'groups_id': [Command.set([])],
+            'group_ids': [Command.set([])],
         })
         self.assertTrue(user.share)
 
-        group_user.write({'users': [Command.link(user.id)]})
+        group_user.write({'user_ids': [Command.link(user.id)]})
         self.assertFalse(user.share)
 
-        group_user.write({'users': [Command.unlink(user.id)]})
+        group_user.write({'user_ids': [Command.unlink(user.id)]})
         self.assertTrue(user.share)
 
     def test_create_multi(self):

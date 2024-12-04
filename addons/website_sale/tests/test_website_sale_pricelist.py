@@ -203,7 +203,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
     def test_pricelist_combination(self):
         # Enable discounts to view discount in sale_order
-        self.env.user.groups_id += self.env.ref('sale.group_discount_per_so_line')
+        self.env.user.group_ids += self.env.ref('sale.group_discount_per_so_line')
 
         product = self.env['product.product'].create({
             'name': 'Super Product',
@@ -700,7 +700,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # self.c2_pl | self.website  | self.company2 |
         # c2_pl2     | self.website  | self.company2 |
 
-        self.demo_user.groups_id += self.env.ref('sales_team.group_sale_manager')
+        self.demo_user.group_ids += self.env.ref('sales_team.group_sale_manager')
 
         # The test is here: while having access only to self.company2 records,
         # archive should not raise an error

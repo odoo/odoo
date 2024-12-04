@@ -24,14 +24,14 @@ class TestMrpMulticompany(common.TransactionCase):
         cls.user_a = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user a',
-            'groups_id': [(6, 0, [group_user.id, group_mrp_manager.id])],
+            'group_ids': [(6, 0, [group_user.id, group_mrp_manager.id])],
             'company_id': cls.company_a.id,
             'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
         cls.user_b = cls.env['res.users'].create({
             'name': 'user company a with access to company b',
             'login': 'user b',
-            'groups_id': [(6, 0, [group_user.id, group_mrp_manager.id])],
+            'group_ids': [(6, 0, [group_user.id, group_mrp_manager.id])],
             'company_id': cls.company_b.id,
             'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })

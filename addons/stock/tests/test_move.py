@@ -16,7 +16,7 @@ class StockMove(TransactionCase):
         super(StockMove, cls).setUpClass()
         group_stock_multi_locations = cls.env.ref('stock.group_stock_multi_locations')
         group_production_lot = cls.env.ref('stock.group_production_lot')
-        cls.env.user.write({'groups_id': [
+        cls.env.user.write({'group_ids': [
             (4, group_stock_multi_locations.id),
             (4, group_production_lot.id)
         ]})
@@ -1423,7 +1423,7 @@ class StockMove(TransactionCase):
         with correct storage category.
         """
         # Required for `result_package_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category"
@@ -1489,7 +1489,7 @@ class StockMove(TransactionCase):
         be applied on the first one but not the second one due to no space.
         """
         # Required for `result_package_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category"
@@ -1595,7 +1595,7 @@ class StockMove(TransactionCase):
         the first one but not the second one.
         """
         # Required for `result_package_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category",
@@ -1702,7 +1702,7 @@ class StockMove(TransactionCase):
         but not the second one.
         """
         # Required for `result_package_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref("stock.group_tracking_lot")
+        self.env.user.group_ids += self.env.ref("stock.group_tracking_lot")
         # storage category
         storage_category = self.env['stock.storage.category'].create({
             'name': "storage category",
@@ -6176,7 +6176,7 @@ class StockMove(TransactionCase):
         """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
         which returns data used to print delivery slips, with product packagings
         """
-        self.env.user.groups_id += self.env.ref("product.group_stock_packaging")
+        self.env.user.group_ids += self.env.ref("product.group_stock_packaging")
         packaging_of_4 = self.env['product.packaging'].create({
             'name': 'pack of 4',
             'product_id': self.product.id,
@@ -6343,7 +6343,7 @@ class StockMove(TransactionCase):
         `quantity`, the onchange should n't change the destination location L
         """
 
-        self.env.user.write({'groups_id': [(3, self.env.ref('stock.group_stock_multi_locations').id)]})
+        self.env.user.write({'group_ids': [(3, self.env.ref('stock.group_stock_multi_locations').id)]})
         internal_transfer = self.env.ref('stock.picking_type_internal')
 
         picking = self.env['stock.picking'].create({
@@ -6509,7 +6509,7 @@ class StockMove(TransactionCase):
         the user has defined himself the destination location, we should not try
         to apply any putaway rule that would override his choice.
         """
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
         child_location = self.stock_location.child_ids[0]
         in_type = self.env.ref('stock.picking_type_in')

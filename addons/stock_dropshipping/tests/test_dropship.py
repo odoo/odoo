@@ -88,7 +88,7 @@ class TestDropship(common.TransactionCase):
     def test_00_dropship(self):
         self.dropship_product.description_purchase = "description_purchase"
         # Required for `route_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.env.user.group_ids += self.env.ref('stock.group_adv_location')
 
         # Create a sales order with a line of 200 PCE incoming shipment, with route_id drop shipping
         so_form = Form(self.env['sale.order'])
@@ -262,7 +262,7 @@ class TestDropship(common.TransactionCase):
                 })
             ],
         })
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.env.user.group_ids += self.env.ref('stock.group_adv_location')
 
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.customer

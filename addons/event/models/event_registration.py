@@ -364,7 +364,7 @@ class EventRegistration(models.Model):
         public_users = self.env['res.users'].sudo()
         public_groups = self.env.ref("base.group_public", raise_if_not_found=False)
         if public_groups:
-            public_users = public_groups.sudo().with_context(active_test=False).mapped("users")
+            public_users = public_groups.sudo().with_context(active_test=False).mapped("user_ids")
         try:
             is_public = self.sudo().with_context(active_test=False).partner_id.user_ids in public_users if public_users else False
             if self.partner_id and not is_public:

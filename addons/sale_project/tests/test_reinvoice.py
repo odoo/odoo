@@ -49,7 +49,7 @@ class TestReInvoice(TestSaleCommon):
 
     def test_at_cost(self):
         # Required for `analytic_distribution` to be visible in the view
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
@@ -162,7 +162,7 @@ class TestReInvoice(TestSaleCommon):
             second time, increment only the delivered so line.
         """
         # Required for `analytic_distribution` to be visible in the view
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_sales_price'].id,
@@ -234,7 +234,7 @@ class TestReInvoice(TestSaleCommon):
     def test_no_expense(self):
         """ Test invoicing vendor bill with no policy. Check nothing happen. """
         # Required for `analytic_distribution` to be visible in the view
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         # confirm SO
         self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_no'].id,
@@ -288,7 +288,7 @@ class TestReInvoice(TestSaleCommon):
 
     def test_not_recomputing_unit_price_for_expensed_so_lines(self):
         # Required for `analytic_distribution` to be visible in the view
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 
         # create SO line and confirm SO (with only one line)
         sol_1 = self.env['sale.order.line'].create({

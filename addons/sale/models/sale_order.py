@@ -207,7 +207,7 @@ class SaleOrder(models.Model):
         compute='_compute_user_id',
         store=True, readonly=False, precompute=True, index=True,
         tracking=2,
-        domain=lambda self: "[('groups_id', '=', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(
+        domain=lambda self: "[('group_ids', '=', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(
             self.env.ref("sales_team.group_sale_salesman").id
         ))
     team_id = fields.Many2one(

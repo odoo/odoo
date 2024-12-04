@@ -258,7 +258,7 @@ export class DiscussChannel extends models.ServerModel {
                     // Match the ACL rules
                     return (
                         !channel.group_public_id ||
-                        this.env.user.groups_id.includes(channel.group_public_id)
+                        this.env.user.group_ids.includes(channel.group_public_id)
                     );
                 }
                 return Boolean(memberOfCurrentUser);

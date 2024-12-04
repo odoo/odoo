@@ -63,7 +63,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 1)
 
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
                 (4, self.env.ref('sales_team.group_sale_salesman_all_leads').id),
                 (4, self.env.ref('account.group_account_user').id),

@@ -80,7 +80,7 @@ class TestPostInstallProjectSharingWithSms(TestProjectSharingWithSms):
         if not sale_manager_group:
             self.skipTest('`sale_sms` not installed')
         self.user_projectuser.write({
-            'groups_id': [
+            'group_ids': [
                 Command.link(project_user_group.id),
                 Command.link(sale_manager_group.id),
             ]

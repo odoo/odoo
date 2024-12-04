@@ -35,26 +35,26 @@ class TestProjectCommon(TransactionCase):
             'email': 'b.t@example.com',
             'signature': 'SignBert',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]})
+            'group_ids': [(6, 0, [cls.env.ref('base.group_public').id])]})
         cls.user_portal = Users.create({
             'name': 'Chell Gladys',
             'login': 'chell',
             'email': 'chell@gladys.portal',
             'signature': 'SignChell',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]})
+            'group_ids': [(6, 0, [cls.env.ref('base.group_portal').id])]})
         cls.user_projectuser = Users.create({
             'name': 'Armande ProjectUser',
             'login': 'armandel',
             'password': 'armandel',
             'email': 'armande.projectuser@example.com',
-            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
+            'group_ids': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
         })
         cls.user_projectmanager = Users.create({
             'name': 'Bastien ProjectManager',
             'login': 'bastien',
             'email': 'bastien.projectmanager@example.com',
-            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_manager.id])]})
+            'group_ids': [(6, 0, [user_group_employee.id, user_group_project_manager.id])]})
 
         # Test 'Pigs' project
         cls.project_pigs = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({

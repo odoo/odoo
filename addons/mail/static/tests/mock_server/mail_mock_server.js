@@ -1032,7 +1032,7 @@ async function processRequest(request) {
         const domain = [
             "|",
             ["create_uid", "=", this.env.user.id],
-            ["group_ids", "in", this.env.user.groups_id],
+            ["group_ids", "in", this.env.user.all_group_ids],
         ];
         store.add(this.env["mail.canned.response"].search(domain));
     }

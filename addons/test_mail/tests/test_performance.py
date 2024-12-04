@@ -25,7 +25,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
                 "login": "paul",
                 "email": "user.test.paulette@example.com",
                 "notification_type": "inbox",
-                "groups_id": [(6, 0, [cls.env.ref("base.group_user").id])],
+                "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
             }
         )
         cls.user_test_inbox_2 = res_users.create(
@@ -34,7 +34,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
                 "login": "jeannette",
                 "email": "user.test.jeannette@example.com",
                 "notification_type": "inbox",
-                "groups_id": [(6, 0, [cls.env.ref("base.group_user").id])],
+                "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
             }
         )
         cls.user_test_email = res_users.create(
@@ -43,7 +43,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
                 "login": "george",
                 "email": "user.test.georgette@example.com",
                 "notification_type": "email",
-                "groups_id": [(6, 0, [cls.env.ref("base.group_user").id])],
+                "group_ids": [(6, 0, [cls.env.ref("base.group_user").id])],
             }
         )
 
@@ -792,7 +792,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             'email': 'p.p@example.com',
             'signature': '--\nOlivia',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_portal').id])],
         })
 
         cls.container = cls.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
@@ -1591,14 +1591,14 @@ class TestPerformance(BaseMailPerformance):
             'login': 'user_follower_email',
             'email': 'user_follower_email@example.com',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
         cls.user_follower_inbox = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'user_follower_inbox',
             'login': 'user_follower_inbox',
             'email': 'user_follower_inbox@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
         cls.partner_follower = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'partner_follower',
@@ -1616,14 +1616,14 @@ class TestPerformance(BaseMailPerformance):
             'login': 'user_inbox',
             'email': 'user_inbox@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
         cls.user_email = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'user_email',
             'login': 'user_email',
             'email': 'user_email@example.com',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
         cls.partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'partner',

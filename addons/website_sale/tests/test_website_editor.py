@@ -233,7 +233,7 @@ class TestWebsiteSaleEditor(HttpCase):
             'name': 'Restricted Editor',
             'login': 'restricted',
             'password': 'restricted',
-            'groups_id': [Command.set([
+            'group_ids': [Command.set([
                 cls.env.ref('base.group_user').id,
                 cls.env.ref('sales_team.group_sale_manager').id,
                 cls.env.ref('website.group_website_restricted_editor').id

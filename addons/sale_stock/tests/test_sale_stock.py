@@ -1022,7 +1022,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         invoice status of the associated SO should be 'Nothing to Invoice'
         """
         group_auto_done = self.env.ref('sale.group_auto_done_setting')
-        self.env.user.groups_id = [(4, group_auto_done.id)]
+        self.env.user.group_ids = [(4, group_auto_done.id)]
 
         product = self.product_a
         product.invoice_policy = 'delivery'
@@ -1571,7 +1571,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'name': "documents test basic user",
             'login': "dtbu",
             'email': "dtbu@yourcompany.com",
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 self.ref('base.group_user'),
                 self.ref('stock.group_stock_manager'),
                 self.ref('sales_team.group_sale_salesman')])]

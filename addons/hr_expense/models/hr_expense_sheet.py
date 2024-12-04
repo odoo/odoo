@@ -113,7 +113,7 @@ class HrExpenseSheet(models.Model):
         comodel_name='res.users',
         string="Manager",
         compute='_compute_from_employee_id', store=True, readonly=True,
-        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_expense.group_hr_expense_team_approver').id)],
+        domain=lambda self: [('all_group_ids', 'in', self.env.ref('hr_expense.group_hr_expense_team_approver').id)],
         copy=False,
         tracking=True,
     )

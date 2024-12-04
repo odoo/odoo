@@ -23,7 +23,7 @@ class TestProcRule(TransactionCase):
 
     def test_qty_to_order_remainder_decimal(self):
         """Test case for when remainder is decimal"""
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = self.product
         orderpoint_form.location_id = self.env.ref('stock.stock_location_stock')
@@ -162,7 +162,7 @@ class TestProcRule(TransactionCase):
     def test_reordering_rule_1(self):
         # Required for `location_id` to be visible in the view
         self.product.is_storable = True
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = self.product
@@ -209,7 +209,7 @@ class TestProcRule(TransactionCase):
         run another RR
         """
         # Required for `location_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
 
         self.productA = self.env['product.product'].create({
             'name': 'Desk Combination',

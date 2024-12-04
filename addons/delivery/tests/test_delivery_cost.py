@@ -251,7 +251,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
 
         # Create sales order
         # Required to see `pricelist_id` in the view
-        self.env.user.groups_id += self.env.ref('product.group_product_pricelist')
+        self.env.user.group_ids += self.env.ref('product.group_product_pricelist')
         order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
         order_form.partner_id = self.partner
         order_form.fiscal_position_id = fiscal_position

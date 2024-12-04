@@ -42,28 +42,28 @@ class TestForumCommon(common.TransactionCase):
             'login': 'Armande',
             'email': 'armande.employee@example.com',
             'karma': 0,
-            'groups_id': [(6, 0, [group_employee_id])]
+            'group_ids': [(6, 0, [group_employee_id])]
         })
         cls.user_employee_2 = cls.env['res.users'].create({
             'name': 'Merlin Employee',
             'login': 'Merlin',
             'email': 'merlin.employee@example.com',
             'karma': KARMA['ask'],
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
         })
         cls.user_portal = TestUsersEnv.create({
             'name': 'Beatrice Portal',
             'login': 'Beatrice',
             'email': 'beatrice.employee@example.com',
             'karma': 0,
-            'groups_id': [(6, 0, [group_portal_id])]
+            'group_ids': [(6, 0, [group_portal_id])]
         })
         cls.user_public = TestUsersEnv.create({
             'name': 'Cedric Public',
             'login': 'Cedric',
             'email': 'cedric.employee@example.com',
             'karma': 0,
-            'groups_id': [(6, 0, [group_public_id])]
+            'group_ids': [(6, 0, [group_public_id])]
         })
         cls.user_admin = cls.env.ref('base.user_admin')
 

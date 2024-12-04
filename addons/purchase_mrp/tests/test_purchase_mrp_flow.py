@@ -25,7 +25,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         grp_uom = cls.env.ref('uom.group_uom')
         group_user = cls.env.ref('base.group_user')
         group_user.write({'implied_ids': [(4, grp_uom.id)]})
-        cls.env.user.write({'groups_id': [(4, grp_uom.id)]})
+        cls.env.user.write({'group_ids': [(4, grp_uom.id)]})
 
         cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm.id), ('uom_type', '=', 'reference')],
                                                  limit=1)

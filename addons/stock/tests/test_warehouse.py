@@ -704,7 +704,7 @@ class TestWarehouse(TestStockCommon):
 
     def test_toggle_active_warehouse_2(self):
         # Required for `delivery_steps` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.env.user.group_ids += self.env.ref('stock.group_adv_location')
         wh = Form(self.env['stock.warehouse'])
         wh.name = "The attic of Willy"
         wh.code = "WIL"

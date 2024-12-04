@@ -42,7 +42,7 @@ class ResCompany(models.Model):
     def _get_public_user(self):
         self.ensure_one()
         # We need sudo to be able to see public users from others companies too
-        public_users = self.env.ref('base.group_public').sudo().with_context(active_test=False).users
+        public_users = self.env.ref('base.group_public').sudo().with_context(active_test=False).all_user_ids
         public_users_for_website = public_users.filtered(lambda user: user.company_id == self)
 
         if public_users_for_website:

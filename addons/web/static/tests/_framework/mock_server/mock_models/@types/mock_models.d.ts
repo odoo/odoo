@@ -1,5 +1,6 @@
 declare module "mock_models" {
     import { IrModelFields as IrModelFields2 } from "@web/../tests/_framework/mock_server/mock_models/ir_model_fields";
+    import { IrModuleCategory } from "./_framework/mock_server/mock_models/ir_module_category";
     import { ResGroups as ResGroups2 } from "@web/../tests/_framework/mock_server/mock_models/res_groups";
 
     export interface IrModelFields extends IrModelFields2 {}
@@ -8,5 +9,6 @@ declare module "mock_models" {
     export interface Models {
         "ir.model.fields": IrModelFields,
         "res.groups": ResGroups,
+        "ir.module.category": IrModuleCategory,
     }
 }
