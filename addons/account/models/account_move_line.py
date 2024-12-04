@@ -1608,7 +1608,7 @@ class AccountMoveLine(models.Model):
     def name_get(self):
         return [(line.id, " ".join(
             element for element in (
-                line.move_id.name,
+                line.move_id.name != line.name and line.move_id.name,
                 line.ref and f"({line.ref})",
                 line.name or line.product_id.display_name,
             ) if element
