@@ -21,7 +21,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'taxes_id': [(6, 0, [])],
         })
 
-    def _dropship_product1(self):
+    def _dropship_product1(self, **extra_vals):
         # enable the dropship and MTO route on the product
         dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         mto_route = self.env.ref('stock.route_warehouse0_mto')
@@ -70,6 +70,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         for i in range(len(self.purchase_order1.order_line)):
             with move_form.invoice_line_ids.edit(i) as line_form:
                 line_form.tax_ids.clear()
+                line_form.price_unit = extra_vals.get('bill_price_unit', line_form.price_unit)
         self.vendor_bill1 = move_form.save()
         self.vendor_bill1.action_post()
 
@@ -337,3 +338,20 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         self.assertTrue(8 in return_pick_2.move_ids.stock_valuation_layer_ids.mapped('value'))
         self.assertTrue(-8 in return_pick_2.move_ids.stock_valuation_layer_ids.mapped('value'))
+
+    def test_dropship_avco_pdiff(self):
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        self._dropship_product1(bill_price_unit=20)
+        stock_input_account = self.company_data['default_account_stock_in']
+        in_stock_amls = self.env['account.move.line'].search([
+            ('product_id', '=', self.product1.id),
+            ('account_id', '=', stock_input_account.id),
+        ], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            {'debit': 0.0,  'credit': 8.0,  'reconciled': True},
+            {'debit': 20.0, 'credit': 0.0,  'reconciled': True},
+            {'debit': 0.0,  'credit': 12.0, 'reconciled': True},
+        ])
