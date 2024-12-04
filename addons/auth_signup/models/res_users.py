@@ -361,7 +361,6 @@ class ResUsers(models.Model):
         return users
 
     def copy(self, default=None):
-        self.ensure_one()
         if not default or not default.get('email'):
             # avoid sending email to the user we are duplicating
             self = self.with_context(no_reset_password=True)
