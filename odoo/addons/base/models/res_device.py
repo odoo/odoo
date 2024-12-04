@@ -120,19 +120,32 @@ class ResDeviceLog(models.Model):
 
     @api.autovacuum
     def _gc_device_log(self):
-        # Keep the last device log
+        # Keep the last device log (for a maximum of 6 months)
         # (even if the session file no longer exists on the filesystem)
         self.env.cr.execute("""
             DELETE FROM res_device_log log1
-            WHERE EXISTS (
-                SELECT 1 FROM res_device_log log2
-                WHERE
-                    log1.session_identifier = log2.session_identifier
-                    AND log1.platform = log2.platform
-                    AND log1.browser = log2.browser
-                    AND log1.ip_address = log2.ip_address
-                    AND log1.last_activity < log2.last_activity
-            )
+            WHERE
+                EXISTS (
+                    SELECT 1 FROM res_device_log log2
+                    WHERE
+                        log1.session_identifier = log2.session_identifier AND
+                        log1.platform IS NOT DISTINCT FROM log2.platform AND
+                        log1.browser IS NOT DISTINCT FROM log2.browser AND
+                        (
+                            (
+                                log1.ip_address::inet << '::/0' AND
+                                log2.ip_address::inet << '::/0' AND
+                                (log1.ip_address::inet & 'ffff:ffff:ffff:ffff::') = (log2.ip_address::inet & 'ffff:ffff:ffff:ffff::')
+                            ) OR
+                            (
+                                log1.ip_address::inet << '0.0.0.0/0' AND
+                                log2.ip_address::inet << '0.0.0.0/0' AND
+                                log1.ip_address::inet = log2.ip_address::inet
+                            )
+                        ) AND
+                        log1.last_activity < log2.last_activity
+                ) OR
+                log1.last_activity < NOW() - INTERVAL '6 months'
         """)
         _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
 
