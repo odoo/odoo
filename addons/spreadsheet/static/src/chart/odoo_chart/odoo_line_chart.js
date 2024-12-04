@@ -14,6 +14,7 @@ const {
     getFillingMode,
     colorToRGBA,
     rgbaToHex,
+    formatValue,
 } = spreadsheet.helpers;
 
 export class OdooLineChart extends OdooChart {
@@ -122,6 +123,16 @@ function getLineConfiguration(chart, labels, locale) {
             ticks: {
                 color: fontColor,
                 // y axis configuration
+                callback: (value) => {
+                    value = Number(value);
+                    if (isNaN(value)) {
+                        return value;
+                    }
+                    return formatValue(value, {
+                        locale,
+                        format: Math.abs(value) >= 1000 ? "#,##" : undefined,
+                    });
+                },
             },
             beginAtZero: true, // the origin of the y axis is always zero
         },
