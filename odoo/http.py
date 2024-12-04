@@ -1327,6 +1327,7 @@ class HTTPRequest:
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
+        httprequest.max_form_memory_size = 10 * 1024 * 1024  # 10 MB
 
         self.__wrapped = httprequest
         self.__environ = self.__wrapped.environ
