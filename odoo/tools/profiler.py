@@ -128,7 +128,12 @@ class Collector:
             and self.profiler.entry_count() >= self.profiler.entry_count_limit:
             self.profiler.end()
 
+<<<<<<< 98db5a2698c5d9c119141b5fb32540c234125801
         self.add(entry=entry,frame=frame)
+||||||| 625529dff7c833886af99f37f9a05122ad006764
+=======
+        self.add(entry=entry, frame=frame)
+>>>>>>> 84e3805c7779a50040c347634860f1a255e651e6
 
     def _get_stack_trace(self, frame=None):
         """ Return the stack trace to be included in a given entry. """
@@ -551,7 +556,12 @@ class Profiler:
         self.profile_id = None
         self.log = log
         self.sub_profilers = []
+<<<<<<< 98db5a2698c5d9c119141b5fb32540c234125801
         self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
+||||||| 625529dff7c833886af99f37f9a05122ad006764
+=======
+        self.entry_count_limit = int(self.params.get("entry_count_limit", 0))   # the limit could be set using a smarter way
+>>>>>>> 84e3805c7779a50040c347634860f1a255e651e6
         self.done = False
 
         if db is ...:
