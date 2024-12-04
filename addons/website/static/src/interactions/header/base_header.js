@@ -55,6 +55,7 @@ export class BaseHeader extends Interaction {
         this.isScrolled = false;
         this.hasScrolled = false;
         this.closeDropdowns = false;
+        this.forcedScroll = 0;
 
         this.isOverlay = !!this.el.closest(".o_header_overlay, .o_header_overlay_theme");
 
@@ -163,7 +164,7 @@ export class BaseHeader extends Interaction {
 
     transformShow() {
         this.isVisible = true;
-        this.el.style.transform = this.atTop ? "" : `translate(0, -${this.topGap}px)`;
+        this.el.style.transform = this.atTop ? "" : `translate(0, -${this.forcedScroll + this.topGap}px)`;
         this.adaptToHeaderChangeLoop(1);
     }
 

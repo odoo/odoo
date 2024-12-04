@@ -83,53 +83,9 @@ export class BaseHeaderSpecial extends BaseHeader {
             this.toggleCSSAffixed(false);
         }
 
-        if (this.hideEl) {
-            let elHeight = 0;
-            if (this.cssAffixed && this.searchbarEl?.matches(".show")) {
-                // Close the dropdown of the search bar if it's open when
-                // scrolling. Otherwise, the calculated height of the
-                // 'hideEl' element will be incorrect because it will
-                // include the dropdown height.
-                this.searchbarEl.querySelector("input").blur();
-                elHeight = this.hideEl.offsetHeight;
-            } else {
-                elHeight = this.hideEl.scrollHeight;
-            }
-            const scrollDelta = window.matchMedia(`(prefers-reduced-motion: reduce)`).matches
-                ? scroll
-                : Math.floor(scroll / 4);
-            elHeight = Math.max(0, elHeight - scrollDelta);
-            if (elHeight === 0) {
-                this.hideEl.classList.add("hidden");
-                this.hideEl.removeAttribute("style");
-            } else {
-                // When the page hasn't been scrolled yet, we don't set overflow
-                // to hidden. Without this, the dropdowns would be invisible.
-                // (e.g., "user menu" dropdown).
-                this.hideEl.classList.remove("hidden");
-                this.hideEl.style.overflow = this.cssAffixed ? "hidden" : "";
-                this.hideEl.style.height = this.cssAffixed ? `${elHeight}px` : "";
-                let elPadding = parseInt(getComputedStyle(this.hideEl).paddingBlock);
-                if (elHeight < elPadding * 2) {
-                    const heightDifference = elPadding * 2 - elHeight;
-                    elPadding = Math.max(0, elPadding - Math.floor(heightDifference / 2));
-                    this.hideEl.style.setProperty("padding-block", `${elPadding}px`, "important");
-                } else {
-                    this.hideEl.style.paddingBlock = "";
-                }
-                if (this.cssAffixed) {
-                    // The height of the "hideEl" element changes, so the
-                    // height of the header also changes. Therefore, we need
-                    // to get the current height of the header and then to
-                    // update the top padding of the main element.
-                    this.adjustMainPadding();
-                }
-            }
-            if (!this.cssAffixed && this.dropdownClickedEl) {
-                const dropdown = Dropdown.getOrCreateInstance(this.dropdownClickedEl);
-                dropdown.show();
-                this.dropdownClickedEl = null;
-            }
+        if (this.isVisible && this.hideEl) {
+            this.forcedScroll = Math.min(scroll, this.hideElHeight);
+            this.el.style.transform = this.atTop ? "" : `translate(0, -${this.forcedScroll + this.topGap}px)`;
         }
 
         if (this.isAnimated && this.transitionActive) {
