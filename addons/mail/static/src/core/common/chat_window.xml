@@ -17,7 +17,7 @@
                 <div class="d-flex text-truncate">
                     <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
                         <button
-                            class="o-mail-ChatWindow-command o-actionsMenu btn rounded-0 d-flex align-items-center p-1 mx-1 my-0 w-100 rounded-end-0"
+                            class="o-mail-ChatWindow-command o-actionsMenu btn rounded-0 d-flex align-items-center px-2 py-1 my-0 w-100 rounded-end-0"
                             t-att-class="{ 'rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened, 'o-hover': actionsMenuButtonHover.isHover and !parentChannelHover.isHover }"
                             t-att-disabled="state.editingName or state.actionsDisabled"
                             t-att-title="actionsMenuTitleText"
