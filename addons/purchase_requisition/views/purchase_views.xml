@@ -55,7 +55,7 @@
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='approved']" position="after">
-                <filter string="Requisition" name="requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
+                <filter string="Agreement Orders" name="requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
