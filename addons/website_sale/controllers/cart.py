@@ -62,6 +62,7 @@ class Cart(PaymentPortal):
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
 
+        values.update(request.website._get_checkout_step_values('/shop/cart'))
         values.update(self._cart_values(**post))
         return request.render('website_sale.cart', values)
 
