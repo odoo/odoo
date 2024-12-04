@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, onWillStart, onMounted, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useFileUploader } from "@web/core/utils/files";
 import { useService } from "@web/core/utils/hooks";
@@ -10,7 +10,6 @@ import { ImportDataContent } from "../import_data_content/import_data_content";
 import { ImportDataProgress } from "../import_data_progress/import_data_progress";
 import { ImportDataSidepanel } from "../import_data_sidepanel/import_data_sidepanel";
 import { Layout } from "@web/search/layout";
-import { router } from "@web/core/browser/router";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
@@ -56,25 +55,32 @@ export class ImportAction extends Component {
         });
 
         this.uploadFiles = useFileUploader();
-        useDropzone(useRef("root"), async event => {
+        useDropzone(useRef("root"), async (event) => {
             const { files } = event.dataTransfer;
             if (files.length === 0) {
-                this.notification.add(_t("Please upload an Excel (.xls or .xlsx) or .csv file to import."), {
-                    type: "danger",
-                });
+                this.notification.add(
+                    _t("Please upload an Excel (.xls or .xlsx) or .csv file to import."),
+                    {
+                        type: "danger",
+                    }
+                );
             } else if (files.length > 1) {
                 this.notification.add(_t("Please upload a single file."), {
                     type: "danger",
                 });
             } else {
                 const file = files[0];
-                const isValidFile = file.name.endsWith(".csv")
-                                 || file.name.endsWith(".xls")
-                                 || file.name.endsWith(".xlsx");
+                const isValidFile =
+                    file.name.endsWith(".csv") ||
+                    file.name.endsWith(".xls") ||
+                    file.name.endsWith(".xlsx");
                 if (!isValidFile) {
-                    this.notification.add(_t("Please upload an Excel (.xls or .xlsx) or .csv file to import."), {
-                        type: "danger",
-                    });
+                    this.notification.add(
+                        _t("Please upload an Excel (.xls or .xlsx) or .csv file to import."),
+                        {
+                            type: "danger",
+                        }
+                    );
                 } else {
                     await this.uploadFiles(this.uploadFilesRoute, {
                         csrf_token: odoo.csrf_token,
@@ -88,12 +94,6 @@ export class ImportAction extends Component {
         });
 
         onWillStart(() => this.model.init());
-        onMounted(() => this.enter());
-    }
-
-    enter() {
-        const newState = { action: "import", model: this.resModel };
-        router.pushState(newState, { replace: true });
     }
 
     exit(resIds) {
@@ -110,7 +110,7 @@ export class ImportAction extends Component {
         return this.model.importTemplates;
     }
 
-    get uploadFilesRoute () {
+    get uploadFilesRoute() {
         return "/base_import/set_file";
     }
 
