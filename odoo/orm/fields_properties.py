@@ -780,5 +780,5 @@ class PropertiesDefinition(Field):
                     raise ValueError(f'Some tags are duplicated: {", ".join(duplicated)}.')
 
             for property_parameter, allowed_types in cls.PROPERTY_PARAMETERS_MAP.items():
-                if property_definition.get('type') not in allowed_types:
-                    property_definition.pop(property_parameter, None)
+                if property_definition.get('type') not in allowed_types and property_parameter in property_definition:
+                    raise ValueError(f'Invalid property parameter {property_parameter!r}')

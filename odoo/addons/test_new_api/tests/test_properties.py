@@ -183,7 +183,7 @@ class PropertiesCase(TestPropertiesMixin):
         with self.assertRaises(ValueError):
             # too long name
             self.message_1.attributes = [{'name': 'name' * 1000, 'type': 'char', 'definition_changed': True}]
-        
+
         with self.assertRaises(ValueError):
             # missing 'type'
             self.message_1.attributes = [{'name': 'name', 'definition_changed': True}]
