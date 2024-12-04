@@ -6580,20 +6580,22 @@ class BaseModel(metaclass=MetaModel):
                     continue
 
                 # determine the field with the final type for values
-                if key.endswith('.id'):
-                    key = key[:-3]
-                if '.' in key:
-                    fname, rest = key.split('.', 1)
-                    field = self._fields[fname]
-                    if field.relational:
-                        # for relational fields, evaluate as 'any'
-                        # so that negations are applied on the result of 'any' instead
-                        # of on the mapped value
-                        key, comparator, value = fname, 'any', [(rest, comparator, value)]
-                else:
-                    field = self._fields[key]
-                    if key == 'id':
-                        key = ''
+                key = key.removesuffix('.id')
+                try:
+                    if '.' in key:
+                        fname, rest = key.split('.', 1)
+                        field = self._fields[fname]
+                        if field.relational:
+                            # for relational fields, evaluate as 'any'
+                            # so that negations are applied on the result of 'any' instead
+                            # of on the mapped value
+                            key, comparator, value = fname, 'any', [(rest, comparator, value)]
+                    else:
+                        field = self._fields[key]
+                        if key == 'id':
+                            key = ''
+                except KeyError as e:
+                    raise ValueError(f"Invalid field in filter of {self._name}: {domain!r}") from e
 
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     if comparator.endswith('ilike'):
