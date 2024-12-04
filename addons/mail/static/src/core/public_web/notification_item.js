@@ -44,6 +44,9 @@ export class NotificationItem extends Component {
         if (isToday(this.props.datetime)) {
             return this.props.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
         }
+        if (this.props.datetime?.year === DateTime.now().year) {
+            return this.props.datetime?.toLocaleString({ month: "short", day: "numeric" });
+        }
         return this.props.datetime?.toLocaleString(DateTime.DATE_MED);
     }
 
