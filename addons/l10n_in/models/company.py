@@ -36,6 +36,60 @@ class ResCompany(models.Model):
     )
     l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
     l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
+    l10n_in_withholding_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="TDS Account",
+        check_company=True,
+    )
+    l10n_in_withholding_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="TDS Journal",
+        check_company=True,
+    )
+    l10n_in_tan = fields.Char(string="TAN", help="Tax Deduction and Collection Account Number")
+    l10n_in_is_gst_registered = fields.Boolean(string="Registered Under GST", inverse="_inverse_l10n_in_is_gst_registered")
+    l10n_in_tds_feature = fields.Boolean(string="TDS", inverse="_inverse_l10n_in_tds_feature")
+    l10n_in_tcs_feature = fields.Boolean(string="TCS", inverse="_inverse_l10n_in_tcs_feature")
+    l10n_in_gstin_status_feature = fields.Boolean(string="Check GST Number Status")
+    l10n_in_gst_efiling_feature = fields.Boolean(string="GST E-Filing & Matching Feature")
+    l10n_in_gst_api_feature = fields.Boolean(string="Fetch Vendor E-Invoiced Document")
+    l10n_in_enet_batch_payment_feature = fields.Boolean(string="Vendor Payment")
+    l10n_in_edi_feature = fields.Boolean(string="E-Invoicing")
+    l10n_in_ewaybill_feature = fields.Boolean(string="E-Way bill")
+
+    def _inverse_l10n_in_tds_feature(self):
+        for company in self:
+            if company.l10n_in_tds_feature:
+                tds_group_id = self.env['account.chart.template'].ref('tds_group').id
+                tds_taxes = self.env['account.tax'].with_context(active_test=False).search([('tax_group_id', '=', tds_group_id)])
+                tds_taxes.write({'active': True})
+
+    def _inverse_l10n_in_tcs_feature(self):
+        for company in self:
+            if company.l10n_in_tcs_feature:
+                tcs_group_id = self.env['account.chart.template'].ref('tcs_group').id
+                tcs_taxes = self.env['account.tax'].with_context(active_test=False).search([('tax_group_id', '=', tcs_group_id)])
+                tcs_taxes.write({'active': True})
+
+    def _inverse_l10n_in_is_gst_registered(self):
+        for company in self:
+            if company.l10n_in_is_gst_registered:
+                gst_group_refs = [
+                    'sgst_group',
+                    'cgst_group',
+                    'igst_group',
+                    'cess_group',
+                    'gst_group',
+                    'exempt_group',
+                    'nil_rated_group',
+                    'non_gst_supplies_group',
+                ]
+                for ref in gst_group_refs:
+                    gst_group_id = self.env['account.chart.template'].ref(ref).id
+                    gst_taxes = self.env['account.tax'].with_context(active_test=False).search([
+                        ('tax_group_id', '=', gst_group_id)
+                    ])
+                    gst_taxes.write({'active': True})
 
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit_and_l10n_in_pan(self):
