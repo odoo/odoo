@@ -22,6 +22,9 @@ options.registry.MasonryLayout = options.registry.SelectTemplate.extend({
     selectContainerClass(previewMode, widgetValue, params) {
         const containerEl = this.$target[0].firstElementChild;
         const containerClasses = ["container", "container-fluid", "o_container_small"];
+        if (!containerClasses.some(cls => containerEl.classList.contains(cls))) {
+            return;
+        }
         containerEl.classList.remove(...containerClasses);
         containerEl.classList.add(widgetValue);
     },
