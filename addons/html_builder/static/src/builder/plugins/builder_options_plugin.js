@@ -12,6 +12,7 @@ export class BuilderOptionsPlugin extends Plugin {
     setup() {
         // todo: use resources instead of registry
         this.builderOptions = registry.category("sidebar-element-option").getAll();
+        this.builderOptions.sort((a, b) => (a.sequence ?? 0) - (b.sequence ?? 0));
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (!this.dependencies.selection.getEditableSelection().isCollapsed) {
                 return;

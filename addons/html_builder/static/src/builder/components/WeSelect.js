@@ -18,6 +18,7 @@ export class WeSelect extends Component {
         useWeComponent();
         this.dropdown = useDropdownState();
         useSubEnv({
+            actionBus: new EventBus(),
             weSelectBus: new EventBus(),
             weSetSelectLabel: (labelHtml) => {
                 button.el.innerHTML = labelHtml;
