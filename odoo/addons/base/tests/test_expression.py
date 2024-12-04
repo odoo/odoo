@@ -986,16 +986,16 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         """ verify that invalid expressions are refused, even for magic fields """
         Country = self.env['res.country']
 
-        with self.assertRaisesRegex(ValueError, r"^Invalid field res\.country\.does_not_exist in leaf \('does_not_exist', '=', 'foo'\)$"):
-            Country.search([('does_not_exist', '=', 'foo')])
+        with self.assertRaisesRegex(ValueError, r"^Invalid field.*'abcdefg'"):
+            Country.search([('abcdefg', 'in', ['foo'])])
 
-        with self.assertRaisesRegex(AssertionError, "^Invalid field 'name.\"Et plouf\"'"):
+        with self.assertRaisesRegex(ValueError, r"^Invalid field.*'name.\"Et plouf\"'"):
             Country.search([('name."Et plouf"', 'ilike', 'foo')])
 
-        with self.assertRaisesRegex(AssertionError, "^Invalid field 'name.\"Et plouf\"'"):
+        with self.assertRaisesRegex(ValueError, r"^Invalid field.*'name.\"Et plouf\"'"):
             Country.search([('name."Et plouf"', 'in', ['foo'])])
 
-        with self.assertRaisesRegex(KeyError, r"^'does_not_exist'$"):
+        with self.assertRaisesRegex(ValueError, r"'does_not_exist'"):
             Country.search([]).filtered_domain([('does_not_exist', '=', 'foo')])
 
         with self.assertRaisesRegex(ValueError, r"^Invalid leaf \('create_date', '>>', 'foo'\)$"):
