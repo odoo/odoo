@@ -306,12 +306,22 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_modify_posted_move_readonly_fields(self):
         self.test_move.action_post()
 
-        readonly_fields = ('invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id', 'partner_bank_id',
-                           'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
+        readonly_fields = ('invoice_date', 'date', 'partner_id', 'partner_bank_id', 'invoice_payment_term_id', 'currency_id',
+                        'fiscal_position_id', 'invoice_cash_rounding_id')
         for field in readonly_fields:
             with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"), \
                     self.cr.savepoint():
                 self.test_move.write({field: False})
+
+    def test_modify_posted_move_lines_readonly_fields(self):
+        self.test_move.action_post()
+        with self.assertRaisesRegex(UserError, "You cannot modify the following readonly move line fields on a posted move"), \
+                self.cr.savepoint():
+            self.test_move.line_ids.write({
+                'invoice_date': False,
+                'date_maturity': False,
+                'journal_id': False,
+            })
 
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
@@ -725,7 +735,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_misc_prevent_edit_tax_on_posted_moves(self):
         # You cannot remove journal items if the related journal entry is posted.
         def edit_tax_on_posted_moves():
-            self.test_move.line_ids.filtered(lambda l: l.tax_ids).write({
+            self.test_move.line_ids.filtered(lambda l: l.tax_ids).with_context(skip_readonly_check=True).write({
                 'balance': 1000.0,
                 'tax_ids': False,
             })
