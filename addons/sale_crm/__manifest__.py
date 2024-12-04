@@ -18,13 +18,13 @@ modules.
     """,
     'depends': ['sale', 'crm'],
     'data': [
-        'security/ir.model.access.csv',
         'data/crm_lead_merge_template.xml',
         'views/partner_views.xml',
         'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
         'views/crm_team_views.xml',
-        'wizard/crm_opportunity_to_quotation_views.xml'
+        'wizard/crm_opportunity_to_quotation_views.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'uninstall_hook': 'uninstall_hook',

@@ -1,0 +1,35 @@
+id,model_id,group_id/id,operation,domain,name
+access_survey_survey_group_survey_user,survey.survey,survey.group_survey_user,rwcd,"[
+                '|', ('restrict_user_ids', 'in', user.id), ('restrict_user_ids', '=', False)]",Survey: officer: unrestricted survey or in restricted users
+access_survey_survey_group_survey_manager,survey.survey,survey.group_survey_manager,rwcd,,Survey: manager: all
+access_survey_question_group_survey_user,survey.question,survey.group_survey_user,rwcd,"[
+                '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]",Survey question: officer: unrestricted survey or in restricted users
+access_survey_question_group_survey_manager,survey.question,survey.group_survey_manager,rwcd,,Survey question: manager: all
+access_survey_question_answer_group_survey_user,survey.question.answer,survey.group_survey_user,rwcd,"[
+                '|',
+                    '|', ('question_id.survey_id.restrict_user_ids', 'in', user.id), ('matrix_question_id.survey_id.restrict_user_ids', 'in', user.id),
+                    '|', ('question_id.survey_id.restrict_user_ids', '=', False), ('matrix_question_id.survey_id.restrict_user_ids', '=', False)]
+            ",Survey question answer: officer: unrestricted survey or in restricted users
+access_survey_question_answer_group_survey_manager,survey.question.answer,survey.group_survey_manager,rwcd,,Survey question answer: manager: all
+access_survey_user_input_group_survey_user,survey.user_input,survey.group_survey_user,rwcd,"[
+                '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]",Survey user input: officer: unrestricted survey or in restricted users
+access_survey_user_input_group_survey_manager_rwcd,survey.user_input,survey.group_survey_manager,rwcd,"[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]",Survey user input: manager: all non specialized surveys
+access_survey_user_input_group_survey_manager_rwcd1,survey.user_input,survey.group_survey_manager,rwcd,"[
+                '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]",Survey user input: officer: unrestricted survey or in restricted users
+access_survey_user_input_line_group_survey_user,survey.user_input.line,survey.group_survey_user,r,"[
+                '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]",Survey user input line: officer: unrestricted survey or in restricted users
+access_survey_user_input_line_group_survey_manager_rwcd,survey.user_input.line,survey.group_survey_manager,rwcd,"[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]",Survey user input line: manager: all non specialized surveys
+access_survey_user_input_line_group_survey_manager_rwcd1,survey.user_input.line,survey.group_survey_manager,rwcd,"[
+                '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]",Survey user input line: officer: unrestricted survey or in restricted users
+access_gamification_badge_group_survey_user,gamification.badge,survey.group_survey_user,rwcd,,gamification.badge.survey.user
+access_survey_invite_group_survey_user,survey.invite,survey.group_survey_user,rwc,"['|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                ('survey_id.restrict_user_ids', '=', False)]",Survey invite: officer: unrestricted or in restricted users
+access_survey_invite_group_survey_manager,survey.invite,survey.group_survey_manager,rwc,,Survey invite: manager: all

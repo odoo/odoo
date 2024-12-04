@@ -21,7 +21,6 @@ You can assign several contracts per employee.
     'depends': ['hr'],
     'data': [
         'security/security.xml',
-        'security/ir.model.access.csv',
         'data/hr_contract_data.xml',
         'report/hr_contract_history_report_views.xml',
         'views/hr_contract_views.xml',
@@ -29,6 +28,7 @@ You can assign several contracts per employee.
         'views/resource_calendar_views.xml',
         'views/res_config_settings_views.xml',
         'wizard/hr_departure_wizard_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': ['data/hr_contract_demo.xml'],
     'installable': True,

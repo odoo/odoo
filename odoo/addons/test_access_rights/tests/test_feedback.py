@@ -87,27 +87,25 @@ class TestSudo(Feedback):
 
 
 class TestACLFeedback(Feedback):
-    """ Tests that proper feedback is returned on ir.model.access errors
-    """
+    """ Tests that proper feedback is returned on ir.access errors """
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        ACL = cls.env['ir.model.access']
-        m = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
-        ACL.search([('model_id', '=', m.id)]).unlink()
-        ACL.create({
+        Access = cls.env['ir.access']
+        model = cls.env['ir.model']._get('test_access_right.some_obj')
+        Access.search([('model_id', '=', model.id)]).unlink()
+        Access.create({
             'name': "read",
-            'model_id': m.id,
+            'model_id': model.id,
             'group_id': cls.group1.id,
-            'perm_read': True,
+            'operation': "r",
         })
-        ACL.create({
+        Access.create({
             'name':  "create-and-read",
-            'model_id': m.id,
+            'model_id': model.id,
             'group_id': cls.group0.id,
-            'perm_read': True,
-            'perm_create': True,
+            'operation': "rc",
         })
         cls.record = cls.env['test_access_right.some_obj'].create({'val': 5})
         # values are in cache, clear them up for the test
@@ -157,6 +155,7 @@ Contact your administrator to request access if necessary."""
             r.read(['val'])
         self.assertEqual(ctx.exception.args[0], expected)
 
+
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """
@@ -164,23 +163,19 @@ class TestIRRuleFeedback(Feedback):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.group_user').write({'users': [Command.link(cls.user.id)]})
-        cls.model = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
+        cls.model = cls.env['ir.model']._get('test_access_right.some_obj')
         cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,
         }).with_user(cls.user)
         cls.maxDiff = None
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
-        res = self.env['ir.rule'].create({
+        res = self.env['ir.access'].create({
             'name': name,
             'model_id': self.model.id,
-            'groups': [] if global_ else [Command.link(self.group2.id)],
-            'domain_force': domain,
-            'perm_read': False,
-            'perm_write': False,
-            'perm_create': False,
-            'perm_unlink': False,
-            'perm_' + attr: True,
+            'group_id': False if global_ else self.group2.id,
+            'domain': domain,
+            'for_' + attr: True,
         })
         return res
 
@@ -340,10 +335,10 @@ If you really, really need access, perhaps you can win over your friendly admini
         ChildModel = self.env['test_access_right.child'].sudo()
         self.env['ir.rule'].create({
             'name': 'rule 0',
-            'model_id': self.env['ir.model'].search([('model', '=', ChildModel._name)]).id,
-            'groups': [],
-            'domain_force': '[("parent_id.company_id", "=", user.company_id.id)]',
-            'perm_read': True,
+            'model_id': self.env['ir.model']._get(ChildModel._name).id,
+            'group_id': False,
+            'operation': 'rwcd',
+            'domain': '[("parent_id.company_id", "=", user.company_id.id)]',
         })
         self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]

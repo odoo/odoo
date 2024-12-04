@@ -14,5 +14,5 @@
     """,
     'depends': ['spreadsheet'],
     'license': 'LGPL-3',
-    'data': ['security/ir.model.access.csv'],
+    'data': ['security/ir.access.csv'],
 }

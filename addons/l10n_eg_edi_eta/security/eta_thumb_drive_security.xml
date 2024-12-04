@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
-    <record id="eta_thumb_drive_modify_own" model="ir.rule">
-        <field name="name">Only see/modify own thumb drive</field>
-        <field name="model_id" ref="l10n_eg_edi_eta.model_l10n_eg_edi_thumb_drive"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
-    </record>
-</odoo>

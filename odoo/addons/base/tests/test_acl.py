@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import unittest
 
 from lxml import etree
 
@@ -193,6 +194,7 @@ class TestACL(TransactionCaseWithUserDemo):
 
 class TestIrRule(TransactionCaseWithUserDemo):
 
+    @unittest.skip("No longer relevant")
     def test_ir_rule(self):
         model_res_partner = self.env.ref('base.model_res_partner')
         group_user = self.env.ref('base.group_user')

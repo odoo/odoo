@@ -280,11 +280,11 @@ class TestPermissions(TransactionCaseWithUserDemo):
         a = self.attachment = self.Attachments.create(self.vals)
 
         # prevent create, write and unlink accesses on record
-        self.rule = self.env['ir.rule'].sudo().create({
+        self.rule = self.env['ir.access'].sudo().create({
             'name': 'remove access to record %d' % record.id,
             'model_id': self.env['ir.model']._get_id(record._name),
-            'domain_force': "[('id', '!=', %s)]" % record.id,
-            'perm_read': False
+            'operation': 'wcd',
+            'domain': "[('id', '!=', %s)]" % record.id,
         })
         self.env.flush_all()
         a.invalidate_recordset()
@@ -297,7 +297,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         # check that the information can be read out of the box
         self.attachment.datas
         # prevent read access on record
-        self.rule.perm_read = True
+        self.rule.operation = 'rwcd'
         self.attachment.invalidate_recordset()
         with self.assertRaises(AccessError):
             self.attachment.datas
@@ -332,7 +332,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
         created, updated, or deleted (or copied).
         """
         # enable write permission on linked record
-        self.rule.perm_write = False
+        self.rule.operation = 'cd'
         attachment = self.Attachments.create(self.vals)
         attachment.copy()
         attachment.write({'raw': b'test'})

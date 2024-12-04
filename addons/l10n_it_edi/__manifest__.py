@@ -15,7 +15,6 @@ E-invoice implementation
     'category': 'Accounting/Localizations/EDI',
     'website': 'http://www.odoo.com/',
     'data': [
-        'security/ir.model.access.csv',
         'data/invoice_it_template.xml',
         'data/invoice_it_simplified_template.xml',
         'data/ir_cron.xml',
@@ -23,6 +22,7 @@ E-invoice implementation
         'views/res_config_settings_views.xml',
         'views/l10n_it_view.xml',
         'views/report_invoice.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/account_invoice_demo.xml',

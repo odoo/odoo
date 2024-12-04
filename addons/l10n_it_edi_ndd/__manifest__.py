@@ -16,7 +16,7 @@ Additional module to support the debit notes (nota di debito - NDD) by adding pa
         'views/account_payment_method.xml',
         'views/l10n_it_document_type.xml',
         'data/l10n_it.document.type.csv',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'license': 'LGPL-3',
 }

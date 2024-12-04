@@ -857,8 +857,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env.flush_all()
 
         # alter access rights: regular users cannot read 'records'
-        access = self.env.ref('test_new_api.access_test_new_api_compute_unassigned')
-        access.perm_read = False
+        access = self.env.ref('test_new_api.test_new_api_compute_unassigned_group_user')
+        access.for_read = False
         self.env.flush_all()
 
         # switch to environment with user demo
@@ -1508,8 +1508,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env['ir.default'].set('test_new_api.company', 'tag_id', tag0.id)
 
         # assumption: users don't have access to 'ir.default'
-        accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.default')])
-        accesses.write(dict.fromkeys(['perm_read', 'perm_write', 'perm_create', 'perm_unlink'], False))
+        accesses = self.env['ir.access'].search([('model_id', '=', 'ir.default')])
+        accesses.active = False
 
         # create/modify a record, and check the value for each user
         record = self.env['test_new_api.company'].create({
@@ -1584,10 +1584,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # add ir.rule to prevent access on record
         self.assertTrue(user0._is_internal())
-        rule = self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'model_id': self.env['ir.model']._get_id(record._name),
-            'groups': [self.env.ref('base.group_user').id],
-            'domain_force': str([('id', '!=', record.id)]),
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'rwcd',
+            'domain': str([('id', '!=', record.id)]),
         })
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
@@ -2320,8 +2321,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
         # make discussions unreadable for demo user
-        access = self.env.ref('test_new_api.access_discussion')
-        access.write({'perm_read': False})
+        access = self.env.ref('test_new_api.test_new_api_discussion_group_user')
+        access.write({'for_read': False})
 
         # create an environment for demo user
         env = self.env(user=self.user_demo)
@@ -2345,8 +2346,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_42_new_related(self):
         """ test the behavior of related fields traversing new records. """
         # make discussions unreadable for demo user
-        access = self.env.ref('test_new_api.access_discussion')
-        access.write({'perm_read': False})
+        access = self.env.ref('test_new_api.test_new_api_discussion_group_user')
+        access.write({'for_read': False})
 
         # create an environment for demo user
         env = self.env(user=self.user_demo)
