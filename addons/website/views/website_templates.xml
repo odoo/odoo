@@ -2848,7 +2848,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-center">
             <!-- Large screen views -->
             <t t-foreach="wizard_step" t-as="step">
-                <t t-set="is_current_step" t-value="xmlid in step[0]"/>
+                <p t-field="step.name"/>
+                <!-- TODO-PDA clean this mess (steps list) <t t-set="is_current_step" t-value="xmlid in step[0]"/>
                 <t t-if="is_current_step" t-set="current_step" t-value="step"/>
                 <span t-if="current_step"
                         t-attf-class="#{not is_current_step and 'o_disabled'} d-none d-md-flex no-decoration">
@@ -2871,10 +2872,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                         <span t-if="not step_last"
                                 class="fa fa-angle-right d-inline-block align-middle mx-sm-3 text-muted fs-5"/>
                     </div>
-                </a>
+                </a> -->
             </t>
             <!-- Mobile screen views -->
-            <div class="d-flex d-md-none flex-column align-items-start">
+            <!-- <div class="d-flex d-md-none flex-column align-items-start">
                 <div class="dropdown">
                     <a class="dropdown-toggle fw-bold"
                         role="button"
@@ -2910,10 +2911,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                         class="d-inline-block d-md-none text-muted">
                         Next: <t t-out="next_step[1]['name']"/>
                 </span>
-            </div>
+            </div> -->
         </div>
-        <div class="o_wizard_circle_progress progress d-md-none position-relative rounded-circle ms-3 bg-transparent"
-                t-attf-style="--rightProgress:{{'180' if _steps_in_deg >= 180 else _steps_in_deg}}deg; --leftProgress:{{_steps_in_deg-180 if _steps_in_deg >= 180 else 0}}deg;">
+        <!--<div class="o_wizard_circle_progress progress d-md-none position-relative rounded-circle ms-3 bg-transparent"
+                t-attf-style="rightProgress:{{'180' if _steps_in_deg >= 180 else _steps_in_deg}}deg; leftProgress:{{_steps_in_deg-180 if _steps_in_deg >= 180 else 0}}deg;">
             <span class="o_wizard_circle_progress_left position-absolute start-0 top-0 z-1 overflow-hidden w-50 h-100 ">
                 <span class="progress-bar position-absolute start-100 top-0 w-100 h-100 border border-5 border-start-0 border-primary bg-transparent"/>
             </span>
@@ -2925,7 +2926,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 of
                 <t t-out="len(wizard_step)"/>
             </p>
-        </div>
+        </div>-->
     </div>
 </template>
 
