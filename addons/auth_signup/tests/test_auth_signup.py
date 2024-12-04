@@ -64,3 +64,33 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         with self.assertRaises(AccessError):
             partner.with_user(user.id).signup_url
+
+    def test_users_multiple_copy_data(self):
+        partners = self.env['res.partner'].create([
+            {'name': 'Jagdish Bhagat', 'email': 'jagdish@example.com'},
+            {'name': 'Deepak Kalal', 'email': 'deepak@example.com'},
+            {'name': 'Puneet Superstar', 'email': 'puneet@example.com'},
+        ])
+
+        users = self.env['res.users'].create([
+            {'name': "Jagdish Bhagat", 'login': "jagdish_bhagat", 'partner_id': partners[0].id},
+            {'name': "Deepak Kalal", 'login': "deepak_kalal", 'partner_id': partners[1].id},
+            {'name': "Puneet Superstar", 'login': "puneet_superstar", 'partner_id': partners[2].id},
+        ])
+
+        updated_mail = {
+            'email': 'carry@example.com',
+        }
+
+        duplicate_user_1, duplicate_user_2 = (users[0] + users[1]).copy()
+        duplicate_user_3 = users[2].copy(default=updated_mail)
+
+        self.assertEqual(duplicate_user_1.name, users[0].name + ' (copy)')
+        self.assertEqual(duplicate_user_2.name, users[1].name + ' (copy)')
+
+        self.assertEqual(duplicate_user_1.login, users[0].login + ' (copy)')
+        self.assertEqual(duplicate_user_2.login, users[1].login + ' (copy)')
+
+        self.assertFalse(duplicate_user_1.email)
+        self.assertFalse(duplicate_user_2.email)
+        self.assertTrue(duplicate_user_3.email)
