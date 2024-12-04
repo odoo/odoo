@@ -78,12 +78,7 @@ class PosController(PortalAccount):
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
         # The POS only works in one company, so we enforce the one of the session in the context
-        company = pos_session.company_id
-        session_info = request.env['ir.http'].session_info()
-        session_info['user_context']['allowed_company_ids'] = company.ids
-        session_info['user_companies'] = {'current_company': company.id, 'allowed_companies': {company.id: session_info['user_companies']['allowed_companies'][company.id]}}
-        session_info['nomenclature_id'] = pos_session.company_id.nomenclature_id.id
-        session_info['fallback_nomenclature_id'] = pos_session._get_pos_fallback_nomenclature_id()
+        session_info = pos_session._update_session_info(request.env['ir.http'].session_info())
         context = {
             'from_backend': 1 if from_backend else 0,
             'session_info': session_info,
