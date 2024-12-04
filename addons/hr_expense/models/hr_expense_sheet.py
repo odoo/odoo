@@ -572,7 +572,6 @@ class HrExpenseSheet(models.Model):
 
     def action_approve_expense_sheets(self):
         self._check_can_approve()
-        self._check_bank_account()
         self._validate_analytic_distribution()
         duplicates = self.expense_line_ids.duplicate_expense_ids.filtered(lambda exp: exp.state in {'approved', 'done'})
         if duplicates:
@@ -607,13 +606,12 @@ class HrExpenseSheet(models.Model):
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
         There can be more than one bank_account_id in the expense sheet when registering payment for multiple expenses.
-        The default_partner_bank_id is set to the bank account defined on the employee form.
+        The default_partner_bank_id is set only if there is one available, if more than one the field is left empty.
         :return: An action opening the account.payment.register wizard.
         '''
-        self._check_bank_account()
-        return self.account_move_ids.with_context(
-            default_partner_bank_id=self.employee_id.sudo().bank_account_id.id,
-        ).action_register_payment()
+        return self.account_move_ids.with_context(default_partner_bank_id=(
+            self.employee_id.sudo().bank_account_id.id if len(self.employee_id.sudo().bank_account_id.ids) <= 1 else None
+        )).action_register_payment()
 
     def action_open_expense_view(self):
         self.ensure_one()
@@ -705,12 +703,6 @@ class HrExpenseSheet(models.Model):
             action = self.env['ir.actions.actions']._for_xml_id('hr.open_view_employee_list_my')
             action['domain'] = [('id', 'in', missing_email_employees.ids)]
             raise RedirectWarning(_("The work email of some employees is missing. Please add it on the employee form"), action, _("Show missing work email employees"))
-
-    def _check_bank_account(self):
-        no_bank_employees = self.filtered(lambda sheet: sheet.payment_mode == 'own_account' and not sheet.employee_id.sudo().bank_account_id).mapped('employee_id')
-        if no_bank_employees:
-            action = no_bank_employees._get_records_action(name=_("Employee(s)"))
-            raise RedirectWarning(_("Employee(s) should have a bank account set."), action, _("Go to Employee(s)"))
 
     def _do_submit(self):
         self.approval_state = 'submit'
@@ -840,7 +832,6 @@ class HrExpenseSheet(models.Model):
             'partner_id': self.employee_id.sudo().work_contact_id.id,
             'currency_id': self.currency_id.id,
             'line_ids': [Command.create(expense._prepare_move_lines_vals()) for expense in self.expense_line_ids],
-            'partner_bank_id': self.employee_id.sudo().bank_account_id.id,
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
                 for attachment in self.expense_line_ids.message_main_attachment_id

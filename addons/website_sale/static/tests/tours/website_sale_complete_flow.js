@@ -132,11 +132,11 @@
     },
     {
         content: "Check selected delivery address is same as typed in previous step",
-        trigger: '#delivery_and_billing:contains(SO1 Delivery Street, 33):contains(SO1DeliveryCity):contains(Afghanistan)',
+        trigger: '#delivery_address_row:contains(SO1 Delivery Street, 33):contains(SO1DeliveryCity):contains(Afghanistan)',
     },
     {
         content: "Check selected billing address is same as typed in previous step",
-        trigger: '#delivery_and_billing:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
+        trigger: '#billing_address_row:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
     },
     {
         content: "Click for edit address",
@@ -179,7 +179,7 @@
         tourUtils.confirmOrder(),
     {
         content: "Check selected billing address is same as typed in previous step",
-        trigger: '#delivery_and_billing:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
+        trigger: '#billing_address_row:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
     },
     {
         content: "Select `Wire Transfer` payment method",

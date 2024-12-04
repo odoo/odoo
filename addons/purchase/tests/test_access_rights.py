@@ -125,3 +125,13 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         self.purchase_user.groups_id += group_purchase_manager
         order.with_user(self.purchase_user).button_approve()
         self.assertEqual(order.state, 'purchase')
+
+    def test_create_product_purchase_user(self):
+        uom = self.env.ref('uom.product_uom_gram')
+        self.purchase_user.groups_id += self.env.ref('product.group_product_manager')
+        product = self.env['product.template'].with_user(self.purchase_user).create({
+            'name': 'Test Product UOM Default',
+            'type': 'consu',
+            'uom_id': uom.id,
+        })
+        self.assertTrue(product, "The default purchase UOM should be in the same category as the sale UOM.")

@@ -32,7 +32,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
 
     def test_chatbot_is_forward_operator_child(self):
         self.assertEqual([step.is_forward_operator_child for step in self.chatbot_script.script_step_ids],
-                         [False, False, False, False, False, False, False, True, True, True, False, False, False, False],
+                         [False, False, False, False, False, False, False, True, True, False, True, False, False, False, False],
                          "Steps 'step_no_one_available', 'step_no_operator_dispatch', 'step_just_leaving'"
                          "should be flagged as forward operator child.")
 
@@ -40,7 +40,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
         self.chatbot_script.script_step_ids.invalidate_recordset(['is_forward_operator_child'])
 
         self.assertEqual([step.is_forward_operator_child for step in self.chatbot_script.script_step_ids],
-                         [False, False, False, False, False, False, False, True, False, False, False, False, False, False],
+                         [False, False, False, False, False, False, False, True, False, False, False, False, False, False, False],
                          "Only step 'step_no_one_available' should be flagged as forward operator child.")
 
     def test_chatbot_steps(self):
