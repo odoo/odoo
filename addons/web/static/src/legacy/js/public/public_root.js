@@ -49,6 +49,8 @@ export const PublicRoot = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this.env = env;
         this.publicWidgets = [];
+        this.websiteCore = this.bindService("website_core");
+        this.editMode = false;
     },
     /**
      * @override
@@ -56,7 +58,7 @@ export const PublicRoot = publicWidget.Widget.extend({
     start: function () {
         var defs = [
             this._super.apply(this, arguments),
-            this._startWidgets()
+            this._startWidgets(undefined, { starting: true })
         ];
 
         // Display image thumbnail
@@ -126,6 +128,7 @@ export const PublicRoot = publicWidget.Widget.extend({
      */
     _startWidgets: function ($from, options) {
         var self = this;
+        this.editMode = options?.editableMode;
 
         if ($from === undefined) {
             $from = this.$('#wrapwrap');
@@ -141,6 +144,13 @@ export const PublicRoot = publicWidget.Widget.extend({
         });
 
         this._stopWidgets($from);
+        if (!options?.starting) {
+            // interactions are already started. we only restart them if the
+            // public root is not just starting.
+            const target = $from ? $from[0] : undefined;
+            this.websiteCore.stopInteractions(target);
+            this.websiteCore.startInteractions(target);
+        }
 
         var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {
             const selector = PublicWidget.prototype.selector;
