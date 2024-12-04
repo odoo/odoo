@@ -14,7 +14,7 @@ class EventEvent(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['id', 'name', 'seats_available', 'event_ticket_ids', 'registration_ids', 'seats_limited', 'write_date',
-                'question_ids', 'general_question_ids', 'specific_question_ids', 'badge_format', 'seats_max',
+                'question_ids', 'general_question_ids', 'specific_question_ids', 'seats_max',
                 'is_multi_slots', 'event_slot_ids']
 
     def get_slot_tickets_availability_pos(self, slot_ticket_ids):

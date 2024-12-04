@@ -20,41 +20,12 @@ patch(ReceiptScreen.prototype, {
         ]);
     },
     async printEventBadge() {
-        const registrations = this.pos.getOrder().eventRegistrations;
-
-        const smallBadgeRegistrations = registrations.filter(
-            (reg) => reg.event_id.badge_format === "96x82"
-        );
-        const largeBadgeRegistrations = registrations.filter(
-            (reg) => reg.event_id.badge_format === "96x134"
-        );
-        const nonBadgePrinterRegistrations = registrations.filter(
-            (reg) => !["96x82", "96x134"].includes(reg.event_id.badge_format)
-        );
-
-        if (nonBadgePrinterRegistrations.length > 0) {
-            await this.report.doAction(
-                "event.action_report_event_registration_badge",
-                nonBadgePrinterRegistrations.map((reg) => reg.id)
-            );
-        }
-        if (largeBadgeRegistrations.length > 0) {
-            await this.report.doAction(
-                "event.action_report_event_registration_badge_96x134",
-                largeBadgeRegistrations.map((reg) => reg.id)
-            );
-        }
-        if (smallBadgeRegistrations.length > 0) {
-            await this.report.doAction(
-                "event.action_report_event_registration_badge_96x82",
-                smallBadgeRegistrations.map((reg) => reg.id)
-            );
-        }
+        const registrations = this.pos.getOrder().eventRegistrations.map((reg) => reg.id);
+        await this.report.doAction("event.action_report_event_registration_badge", [registrations]);
 
         // Update the status to "attended" if we print the attendee badge
         if (registrations.length > 0) {
-            const registrationIds = registrations.map((registration) => registration.id);
-            await this.orm.write("event.registration", registrationIds, { state: "done" });
+            await this.orm.write("event.registration", registrations, { state: "done" });
         }
     },
 });

@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
 
     <t t-name="event.EventRegistrationSummaryDialog" >
-        <Dialog t-if="!dialogState.isHidden" size="'md'" title.translate="Home">
+        <Dialog size="'md'" title.translate="Home">
             <div class="row">
                 <div class="col-lg-10 w-100 fs-2">
                     <div t-if="['confirmed_registration', 'unconfirmed_registration'].includes(registrationStatus.value)" class="alert alert-success d-flex justify-content-center" role="alert">
@@ -61,21 +61,9 @@
                     </table>
                 </div>
             </div>
-            <div class="d-flex justify-content-between">
-                <select t-if="useIotPrinter" type="select" class="form-select w-75" t-model.number="printSettings.iotPrinterId" t-on-change="savePrintSettings">
-                    <option value="" disabled="true" t-att-selected="!printSettings.iotPrinterId">Select printer...</option>
-                    <option t-foreach="registration.iot_printers" t-as="printer" t-key="printer.id" t-att-value="printer.id">
-                        <t t-esc="printer.name" />
-                    </option>
-                </select>
-                <div t-if="useIotPrinter" class="form-check">
-                    <input id="autoprint" type="checkbox" class="form-check-input" t-model="printSettings.autoPrint" t-on-change="savePrintSettings"></input>
-                    <label for="autoprint" class="form-check-label">Auto-Print</label>
-                </div>
-            </div>
             <t t-set-slot="footer">
                 <button t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
-                <button t-att-disabled="!hasSelectedPrinter()" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
+                <button id="print_button" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
                 <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit</button>
             </t>
         </Dialog>
