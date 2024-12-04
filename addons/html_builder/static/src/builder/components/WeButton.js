@@ -1,8 +1,9 @@
 import { Component } from "@odoo/owl";
-import { clickableWeWidgetProps, useClickableWeWidget } from "../builder_helpers";
+import { clickableWeWidgetProps, useClickableWeWidget, WeComponent } from "../builder_helpers";
 
 export class WeButton extends Component {
     static template = "html_builder.WeButton";
+    static components = { WeComponent };
     static props = {
         ...clickableWeWidgetProps,
 

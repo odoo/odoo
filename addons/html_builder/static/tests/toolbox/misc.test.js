@@ -28,6 +28,7 @@ test("Open custom tab with Component option", async () => {
                 Test
             </WeRow>`;
         static components = { ...defaultOptionComponents };
+        static props = {};
     }
     addOption({
         selector: ".test-options-target",

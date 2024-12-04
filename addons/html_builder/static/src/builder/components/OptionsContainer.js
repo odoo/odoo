@@ -11,12 +11,12 @@ export class OptionsContainer extends Component {
 
     setup() {
         useSubEnv({
-            editingElement: this.props.editingElement,
+            getEditingElement: () => this.props.editingElement,
             weContext: {},
         });
     }
 
     get title() {
-        return this.env.editingElement.dataset.name;
+        return this.env.getEditingElement().dataset.name;
     }
 }

@@ -30,7 +30,7 @@ describe("WeRow", () => {
         await hover(".hb-row .text-nowrap");
         await waitFor(".o-tooltip", { timeout: 1000 });
         expect(".o-tooltip").toHaveText("my tooltip");
-        await hover(":iframe .test-options-target");
+        await contains(":iframe .test-options-target").hover();
         expect(".o-tooltip").not.toBeDisplayed();
     });
 });
@@ -113,15 +113,15 @@ describe("WeButton", () => {
         expect.verifySteps([]);
     });
     test("prevent preview of a specific action", async () => {
-        addOption({
-            selector: ".test-options-target",
-            actions: {
-                customAction: {
-                    apply: () => {
-                        expect.step(`customAction`);
-                    },
+        addActionOption({
+            customAction: {
+                apply: () => {
+                    expect.step(`customAction`);
                 },
             },
+        });
+        addOption({
+            selector: ".test-options-target",
             template: xml`<WeButton action="'customAction'" preview="false"/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
@@ -167,6 +167,39 @@ describe("WeButton", () => {
         await contains(":iframe .test-options-target").click();
         expect("[data-class-action='my-custom-class1']").toHaveClass("active");
         expect("[data-class-action='my-custom-class2']").not.toHaveClass("active");
+    });
+    test("hide/display base on applyTo", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeRow label="'my label'">
+                <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+            </WeRow>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeRow label="'my label'">
+                <WeButton applyTo="'.my-custom-class'" classAction="'test'"/>
+            </WeRow>`,
+        });
+
+        const { getEditor } = await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        const editor = getEditor();
+        await contains(":iframe .parent-target").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
+        expect("[data-class-action='test']").toHaveCount(0);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").toHaveClass("active");
+        expect("[data-class-action='test']").toHaveCount(1);
+        expect("[data-class-action='test']").not.toHaveClass("active");
     });
 });
 describe("WeButtonGroup", () => {
@@ -223,20 +256,6 @@ describe("WeButtonGroup", () => {
     test("prevent preview of all buttons", async () => {
         addOption({
             selector: ".test-options-target",
-            actions: {
-                customAction1: {
-                    apply: () => expect.step(`customAction1`),
-                },
-                customAction2: {
-                    apply: () => expect.step(`customAction2`),
-                },
-                customAction3: {
-                    apply: () => expect.step(`customAction3`),
-                },
-                customAction4: {
-                    apply: () => expect.step(`customAction3`),
-                },
-            },
             template: xml`
                     <WeButtonGroup preview="false">
                         <WeButton action="'customAction1'"/>
@@ -248,6 +267,26 @@ describe("WeButtonGroup", () => {
                     <WeButtonGroup>
                         <WeButton action="'customAction4'"/>
                     </WeButtonGroup>`,
+        });
+        addActionOption({
+            customAction1: {
+                apply: () => expect.step(`customAction1`),
+            },
+        });
+        addActionOption({
+            customAction2: {
+                apply: () => expect.step(`customAction2`),
+            },
+        });
+        addActionOption({
+            customAction3: {
+                apply: () => expect.step(`customAction3`),
+            },
+        });
+        addActionOption({
+            customAction4: {
+                apply: () => expect.step(`customAction4`),
+            },
         });
         await setupWebsiteBuilder(`
                 <div class="test-options-target">
@@ -263,7 +302,7 @@ describe("WeButtonGroup", () => {
         await contains("[data-action-id='customAction3']").hover();
         expect.verifySteps(["customAction3"]);
         await contains("[data-action-id='customAction4']").hover();
-        expect.verifySteps(["customAction3"]);
+        expect.verifySteps(["customAction4"]);
     });
 });
 describe("WeNumberInput", () => {

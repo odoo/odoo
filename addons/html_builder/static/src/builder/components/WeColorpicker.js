@@ -14,7 +14,7 @@ export class WeColorpicker extends Component {
 
     setup() {
         useWeComponent();
-        const color = getComputedStyle(this.env.editingElement).backgroundColor;
+        const color = getComputedStyle(this.env.getEditingElement()).backgroundColor;
         this.currentColors = {
             backgroundColor: color,
         };
@@ -23,7 +23,7 @@ export class WeColorpicker extends Component {
         this.applyColor = this.env.editor.shared.history.makePreviewableOperation(
             ({ color, mode }) => {
                 this.env.editor.shared.color.colorElement(
-                    this.env.editingElement,
+                    this.env.getEditingElement(),
                     color,
                     "backgroundColor"
                 );
@@ -35,7 +35,7 @@ export class WeColorpicker extends Component {
         if (!this.colorButton.el) {
             return;
         }
-        const color = this.env.editor.shared.color.getElementColors(this.env.editingElement)[
+        const color = this.env.editor.shared.color.getElementColors(this.env.getEditingElement())[
             "backgroundColor"
         ];
         this.env.editor.shared.color.colorElement(this.colorButton.el, color, "backgroundColor");

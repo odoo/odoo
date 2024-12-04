@@ -1,4 +1,4 @@
-import { Component, useComponent, useState, useSubEnv, xml } from "@odoo/owl";
+import { Component, useComponent, useEnv, useState, useSubEnv, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -23,11 +23,33 @@ export class WithSubEnv extends Component {
     }
 }
 
+export class WeComponent extends Component {
+    static template = xml`<t t-if="this.state.isVisible"><t t-slot="default"/></t>`;
+    static props = {
+        slots: { type: Object },
+    };
+
+    setup() {
+        this.state = useDomState(() => {
+            return {
+                isVisible: !!this.env.getEditingElement(),
+            };
+        });
+    }
+}
+
 export function useWeComponent() {
     const comp = useComponent();
     const newEnv = {};
+    const oldEnv = useEnv();
     if (comp.props.applyTo) {
-        newEnv.editingElement = comp.env.editingElement.querySelector(comp.props.applyTo);
+        newEnv.editingElement = oldEnv.getEditingElement().querySelector(comp.props.applyTo);
+        useBus(oldEnv.editorBus, "BEFORE:STEP_ADDED", () => {
+            newEnv.editingElement = oldEnv.getEditingElement().querySelector(comp.props.applyTo);
+        });
+        newEnv.getEditingElement = () => {
+            return newEnv.editingElement;
+        };
     }
     const weContext = {};
     const contextKeys = [
@@ -71,7 +93,7 @@ export function useClickableWeWidget() {
         useBus(comp.env.actionBus, "BEFORE_CALL_ACTIONS", () => {
             for (const [actionId, actionParam, actionValue] of getActions()) {
                 actionsRegistry.get(actionId).clean?.({
-                    editingElement: comp.env.editingElement,
+                    editingElement: comp.env.getEditingElement(),
                     param: actionParam,
                     value: actionValue,
                 });
@@ -83,7 +105,7 @@ export function useClickableWeWidget() {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
         for (const [actionId, actionParam, actionValue] of getActions()) {
             actionsRegistry.get(actionId).apply({
-                editingElement: comp.env.editingElement,
+                editingElement: comp.env.getEditingElement(),
                 param: actionParam,
                 value: actionValue,
             });
@@ -113,9 +135,12 @@ export function useClickableWeWidget() {
         return actions;
     }
     function isActive() {
+        if (!comp.env.getEditingElement()) {
+            return;
+        }
         return getActions().every(([actionId, actionParam, actionValue]) => {
             return actionsRegistry.get(actionId).isActive?.({
-                editingElement: comp.env.editingElement,
+                editingElement: comp.env.getEditingElement(),
                 param: actionParam,
                 value: actionValue,
             });
@@ -134,7 +159,7 @@ export function useInputWeWidget() {
     const applyValue = comp.env.editor.shared.history.makePreviewableOperation((value) => {
         for (const [actionId, actionParam] of getActions()) {
             actionsRegistry.get(actionId).apply({
-                editingElement: comp.env.editingElement,
+                editingElement: comp.env.getEditingElement(),
                 param: actionParam,
                 value,
             });
@@ -144,7 +169,7 @@ export function useInputWeWidget() {
         const [actionId, actionParam] = getActions()[0];
         return {
             value: actionsRegistry.get(actionId).getValue({
-                editingElement: comp.env.editingElement,
+                editingElement: comp.env.getEditingElement(),
                 param: actionParam,
             }),
         };

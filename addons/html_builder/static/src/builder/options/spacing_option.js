@@ -8,7 +8,7 @@ export class SpacingOption extends Component {
         ...defaultOptionComponents,
     };
     setup() {
-        this.target = this.env.editingElement.querySelector(".o_grid_mode");
+        this.target = this.env.getEditingElement().querySelector(".o_grid_mode");
         this.targetComputedStyle = getComputedStyle(this.target);
 
         this.state = useDomState(() => ({

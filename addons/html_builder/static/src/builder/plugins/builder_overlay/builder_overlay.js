@@ -17,6 +17,7 @@ const useDraggableWithoutFollow = makeDraggableHook({
 
 export class BuilderOverlay extends Component {
     static template = "html_builder.BuilderOverlay";
+    static props = ["*"]; // TODO add props
     setup() {
         this.overlay = useRef("overlay");
         this.target = this.props.target;
