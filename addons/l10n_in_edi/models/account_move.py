@@ -21,10 +21,13 @@ class AccountMove(models.Model):
     @api.depends('edi_document_ids')
     def _compute_l10n_in_edi_show_cancel(self):
         for invoice in self:
-            invoice.l10n_in_edi_show_cancel = bool(invoice.edi_document_ids.filtered(
-                lambda i: i.edi_format_id.code == "in_einvoice_1_03"
-                and i.state in ("sent", "to_cancel", "cancelled")
-            ))
+            if invoice.company_id.l10n_in_edi_feature:
+                invoice.l10n_in_edi_show_cancel = bool(invoice.edi_document_ids.filtered(
+                    lambda i: i.edi_format_id.code == "in_einvoice_1_03"
+                    and i.state in ("sent", "to_cancel", "cancelled")
+                ))
+            else:
+                invoice.l10n_in_edi_show_cancel = False
 
     def button_cancel_posted_moves(self):
         """Mark the edi.document related to this move to be canceled."""

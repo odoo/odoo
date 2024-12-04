@@ -37,6 +37,76 @@ class ResCompany(models.Model):
     l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
     l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
 
+    # TDS/TCS settings
+    l10n_in_tds_feature = fields.Boolean(string="TDS", inverse="_inverse_l10n_in_tds_feature")
+    l10n_in_tcs_feature = fields.Boolean(string="TCS", inverse="_inverse_l10n_in_tcs_feature")
+    l10n_in_withholding_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="TDS Account",
+        check_company=True,
+    )
+    l10n_in_withholding_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string="TDS Journal",
+        check_company=True,
+    )
+
+    # GST settings
+    l10n_in_is_gst_registered = fields.Boolean(
+        string="Registered Under GST",
+        compute="_compute_l10n_in_is_gst_registered",
+        inverse="_inverse_l10n_in_is_gst_registered",
+        store=True
+    )
+    l10n_in_gstin_status_feature = fields.Boolean(string="Check GST Number Status")
+
+    def _inverse_l10n_in_tds_feature(self):
+        for company in self:
+            if company.l10n_in_tds_feature:
+                self._activate_l10n_in_taxes(['tds_group'])
+            if company.child_ids:
+                company.child_ids.write({'l10n_in_tds_feature': company.l10n_in_tds_feature})
+
+    def _inverse_l10n_in_tcs_feature(self):
+        for company in self:
+            if company.l10n_in_tcs_feature:
+                self._activate_l10n_in_taxes(['tcs_group'])
+            if company.child_ids:
+                company.child_ids.write({'l10n_in_tcs_feature': company.l10n_in_tcs_feature})
+
+    def _inverse_l10n_in_is_gst_registered(self):
+        for company in self:
+            if company.l10n_in_is_gst_registered:
+                gst_group_refs = [
+                    'sgst_group',
+                    'cgst_group',
+                    'igst_group',
+                    'cess_group',
+                    'gst_group',
+                    'exempt_group',
+                    'nil_rated_group',
+                    'non_gst_supplies_group',
+                ]
+                self._activate_l10n_in_taxes(gst_group_refs)
+                # Set sale and purchase tax accounts when user registered under GST.
+                company.account_sale_tax_id = self.env['account.chart.template'].ref('sgst_sale_5').id
+                company.account_purchase_tax_id = self.env['account.chart.template'].ref('sgst_purchase_5').id
+            if company.child_ids:
+                company.child_ids.write({'l10n_in_is_gst_registered': company.l10n_in_is_gst_registered})
+
+    def _activate_l10n_in_taxes(self, group_refs):
+        for group_ref in group_refs:
+            tax_group_id = self.env['account.chart.template'].ref(group_ref).id
+            taxes = self.env['account.tax'].with_context(active_test=False).search([
+                ('tax_group_id', '=', tax_group_id)
+            ])
+            taxes.write({'active': True})
+
+    @api.depends('vat')
+    def _compute_l10n_in_is_gst_registered(self):
+        for record in self:
+            record.l10n_in_is_gst_registered = record.country_code == "IN" and self.env['res.partner'].check_vat_in(record.vat)
+
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit_and_l10n_in_pan(self):
         for record in self:

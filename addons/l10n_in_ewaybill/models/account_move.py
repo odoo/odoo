@@ -18,6 +18,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_in_ewaybill_details'
     )
     l10n_in_ewaybill_expiry_date = fields.Datetime(compute='_compute_l10n_in_ewaybill_details')
+    l10n_in_ewaybill_feature_enabled = fields.Boolean(related='company_id.l10n_in_ewaybill_feature')
 
     def _get_l10n_in_seller_buyer_party(self):
         res = super()._get_l10n_in_seller_buyer_party()
@@ -54,7 +55,7 @@ class AccountMove(models.Model):
     def _compute_l10n_in_ewaybill_details(self):
         for move in self:
             ewaybill = move.l10n_in_ewaybill_ids and move.l10n_in_ewaybill_ids[0]
-            if move.country_code == 'IN' and move.l10n_in_ewaybill_ids.state == 'generated':
+            if move.country_code == 'IN' and move.company_id.l10n_in_ewaybill_feature and move.l10n_in_ewaybill_ids.state == 'generated':
                 move.l10n_in_ewaybill_name = ewaybill.name
                 move.l10n_in_ewaybill_expiry_date = ewaybill.ewaybill_expiry_date
             else:

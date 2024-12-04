@@ -18,27 +18,31 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('in', 'res.company')
     def _get_in_res_company(self):
-        return {
-            self.env.company.id: {
-                'account_fiscal_country_id': 'base.in',
-                'bank_account_code_prefix': '1002',
-                'cash_account_code_prefix': '1001',
-                'transfer_account_code_prefix': '1008',
-                'account_default_pos_receivable_account_id': 'p10041',
-                'income_currency_exchange_account_id': 'p2013',
-                'expense_currency_exchange_account_id': 'p2117',
-                'account_journal_early_pay_discount_loss_account_id': 'p2132',
-                'account_journal_early_pay_discount_gain_account_id': '2012',
-                'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
-                'fiscalyear_last_month': '3',
-                'account_sale_tax_id': 'sgst_sale_5',
-                'account_purchase_tax_id': 'sgst_purchase_5',
-                'deferred_expense_account_id': 'p10084',
-                'deferred_revenue_account_id': 'p10085',
-                'expense_account_id': 'p2107',
-                'income_account_id': 'p20011',
-            },
+        company = self.env.company
+        parent_company = company.parent_id
+        company_data = {
+            'account_fiscal_country_id': 'base.in',
+            'bank_account_code_prefix': '1002',
+            'cash_account_code_prefix': '1001',
+            'transfer_account_code_prefix': '1008',
+            'account_default_pos_receivable_account_id': 'p10041',
+            'income_currency_exchange_account_id': 'p2013',
+            'expense_currency_exchange_account_id': 'p2117',
+            'account_journal_early_pay_discount_loss_account_id': 'p2132',
+            'account_journal_early_pay_discount_gain_account_id': '2012',
+            'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
+            'fiscalyear_last_month': '3',
+            'deferred_expense_account_id': 'p10084',
+            'deferred_revenue_account_id': 'p10085',
+            'expense_account_id': 'p2107',
+            'income_account_id': 'p20011',
+            'l10n_in_withholding_account_id': 'p100595',
         }
+        if parent_company:
+            company_data['l10n_in_tds_feature'] = parent_company.l10n_in_tds_feature
+            company_data['l10n_in_tcs_feature'] = parent_company.l10n_in_tcs_feature
+            company_data['l10n_in_is_gst_registered'] = parent_company.l10n_in_is_gst_registered
+        return {company.id: company_data}
 
     @template('in', 'account.cash.rounding')
     def _get_in_account_cash_rounding(self):
