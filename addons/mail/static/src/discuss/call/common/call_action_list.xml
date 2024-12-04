@@ -9,7 +9,7 @@
                         <t t-call="discuss.CallActionList.actionButton" />
                     </t>
                     <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
-                        <button t-att-class="`btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-2' : 'p-3' }`" t-att-title="MORE">
+                        <button t-att-class="`btn smaller d-flex border-0 rounded-0 shadow-none opacity-100 opacity-75-hover ${ isSmall ? 'p-0 px-2' : 'px-3' }`" t-att-title="MORE">
                             <div class="fa-stack">
                                 <i class="fa fa-ellipsis-v fa-stack-1x" t-att-class="{ 'fa-lg': !isSmall }"/>
                             </div>
@@ -25,8 +25,8 @@
                         </t>
                     </Dropdown>
                 </t>
-                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn smaller btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
-                    t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+                <button t-if="props.thread.rtcInvitingSession and !isOfActiveCall" class="btn smaller btn-danger d-flex m-1 border-0 shadow-none"
+                    t-att-class="{ 'p-2': isSmall, 'px-3': !isSmall }"
                     aria-label="Reject"
                     title="Reject"
                     t-att-disabled="rtc.state.hasPendingRequest"
@@ -37,9 +37,9 @@
                 </button>
                 <t t-if="props.thread.eq(rtc.state.channel)" t-set="callText">Disconnect</t>
                 <t t-else="" t-set="callText">Join Call</t>
-                <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none"
+                <button class="btn smaller d-flex border-0 shadow-none"
                     t-att-aria-label="callText"
-                    t-att-class="{ 'btn-danger': isOfActiveCall, 'p-2': isSmall, 'p-3': !isSmall, 'btn-success': !isOfActiveCall }"
+                    t-att-class="{ 'btn-danger rounded-end rounded-0': isOfActiveCall, 'p-0 px-2': isSmall, 'px-3': !isSmall, 'btn-success': !isOfActiveCall }"
                     t-att-disabled="rtc.state.hasPendingRequest"
                     t-att-title="callText"
                     t-on-click="onClickToggleAudioCall">
@@ -60,8 +60,8 @@
     </t>
 
     <t t-name="discuss.CallActionList.actionButton">
-        <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
-            t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
+        <button class="btn smaller d-flex border-0 rounded-0 shadow-none opacity-100 opacity-75-hover"
+            t-att-class="{ 'p-0 px-2': isSmall, 'px-3 ': !isSmall, 'rounded-start': action_first }"
             t-att-aria-label="action.name"
             t-att-title="action.name"
             t-on-click="action.select">
