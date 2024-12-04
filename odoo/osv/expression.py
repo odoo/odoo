@@ -371,7 +371,7 @@ def _anyfy_leaves(domain, model):
         path = left.split('.', 1)
         field = model._fields.get(path[0])
         if not field:
-            raise ValueError(f"Invalid field {model._name}.{path[0]} in leaf {item}")
+            raise ValueError(f"Invalid field {path[0]!r} on {model._name} in leaf {item}")
         if len(path) > 1 and field.relational:  # skip properties
             subdomain = [(path[1], operator, right)]
             comodel = model.env[field.comodel_name]
@@ -1390,6 +1390,8 @@ class expression(object):
             # -------------------------------------------------
 
             else:
+                if field.name != left:
+                    raise ValueError(f"Invalid field {left!r}")
                 if field.type == 'datetime' and right:
                     if isinstance(right, str) and len(right) == 10:
                         if operator in ('>', '<='):
