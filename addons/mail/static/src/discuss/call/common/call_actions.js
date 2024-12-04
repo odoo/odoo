@@ -71,7 +71,7 @@ callActionsRegistry
     })
     .add("blur-background", {
         condition: (component) =>
-            !isBrowserSafari() && component.rtc && component.rtc.selfSession?.isCameraOn,
+            !isBrowserSafari() && component.rtc && component.rtc.selfSession?.is_camera_on,
         name: (component) =>
             component.store.settings.useBlur ? _t("Remove Blur") : _t("Blur Background"),
         isActive: (component) => component.store?.settings?.useBlur,

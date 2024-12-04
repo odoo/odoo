@@ -27,7 +27,7 @@
                             <i t-if="!state.editingName" class="fa fa-fw fa-caret-down"/>
                         </button>
                         <t t-set-slot="content">
-                            <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 3)"/>
+                            <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 4)"/>
                             <t t-if="quickActionsInDropdown.length > 0">
                                 <t t-set="groupBefore" t-value="true"/>
                                 <t t-foreach="quickActionsInDropdown" t-as="action" t-key="action.id">
@@ -79,7 +79,7 @@
                 <t t-out="thread.importantCounter"/>
             </div>
             <div class="o-mail-ChatWindow-quickActions d-flex flex-shrink-0 me-2">
-                <t t-foreach="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 3).reverse()" t-as="action" t-key="action.id" t-call="mail.ChatWindow.quickAction">
+                <t t-foreach="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" t-as="action" t-key="action.id" t-call="mail.ChatWindow.quickAction">
                     <t t-if="action_last" t-set="itemClass" t-value="ui.isSmall ? 'mx-2' : ''"/>
                 </t>
             </div>
