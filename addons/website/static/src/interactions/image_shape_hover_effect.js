@@ -105,7 +105,7 @@ export class ImageShapeHoverEffect extends Interaction {
                 resolve();
                 return;
             }
-            this.adjustImageSourceFrom(preloadedImageEl);
+            this.adjustImageSourceFrom(preloadedImg);
             this.lastImgSrc = preloadedImg.getAttribute("src");
             this.el.onload = () => {
                 resolve();

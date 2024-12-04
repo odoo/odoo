@@ -57,7 +57,7 @@ test("[scroll down] s_parallax_bg does not move when the speed is 0", async () =
     const { el } = await startInteractions(getTemplate({ speed: 0 }));
     const spacings = await simulateScrolls(el, el.querySelector(".s_parallax_bg"), el.querySelector("section"))
     for (let i = 0; i < spacings.length - 1; i++) {
-        expect(spacings[i] == spacings[i + 1]).toBe(true);
+        expect(Math.round(spacings[i] - spacings[i + 1])).toBe(0);
     }
 });
 
@@ -65,6 +65,6 @@ test("[scroll down] s_parallax_bg does not move when the speed is 1", async () =
     const { el } = await startInteractions(getTemplate({ speed: 1 }));
     const spacings = await simulateScrolls(el, el.querySelector(".s_parallax_bg"), el.querySelector("section"))
     for (let i = 0; i < spacings.length - 1; i++) {
-        expect(spacings[i] == spacings[i + 1]).toBe(true);
+        expect(Math.round(spacings[i] - spacings[i + 1])).toBe(0);
     }
 });
