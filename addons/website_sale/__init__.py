@@ -14,6 +14,10 @@ def _post_init_hook(env):
         company.terms_type = 'html'
     env['website'].search([]).auth_signup_uninvited = 'b2c'
 
+    existing_websites = env['website'].search([])
+    for website in existing_websites:
+        website._create_checkout_steps()
+
 def uninstall_hook(env):
     ''' Need to reenable the `product` pricelist multi-company rule that were
         disabled to be 'overridden' for multi-website purpose
