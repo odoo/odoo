@@ -1052,6 +1052,43 @@ class Base(models.AbstractModel):
                 translations[self.env.lang or 'en_US'] = values[field_name]
                 self.update_field_translations(field_name, translations)
 
+    def _read_property(self, field_name, property_name=None):
+        """Read the given properties, and execute all checks.
+
+        The goal of that method is to have a similar API than the getter
+        on the standard fields (that can then be used in template, etc).
+        """
+        if self:
+            self.ensure_one()
+
+        if not property_name:
+            return self.read([field_name])[0][field_name] if self else False
+
+        # the definition might not be set on a record, if the property belongs to a different parent
+        definition = self.get_property_definition(f"{field_name}.{property_name}")
+        if not definition:
+            return False
+
+        if definition['type'] in ('many2one', 'many2many') and not definition.get('comodel'):
+            return False
+
+        # all the checks are done on read
+        rec_definitions = self and self.read([field_name])[0][field_name] or []
+        value = next((p['value'] for p in rec_definitions if p['name'] == property_name), False)
+
+        if definition['type'] == 'selection':
+            return next((t[1] for t in (definition.get('selection') or []) if t[0] == value), '')
+        if definition['type'] == 'tags':
+            tags = {t[0]: t[1] for t in (definition.get('tags') or [])}
+            return ', '.join(tags.get(t) for t in (value or []))
+
+        if definition['type'] == 'many2one':
+            return self.env[definition['comodel']].browse(value and value[0])
+        if definition['type'] == 'many2many':
+            return self.env[definition['comodel']].browse([r[0] for r in (value or [])])
+
+        return value
+
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
