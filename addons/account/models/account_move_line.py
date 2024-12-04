@@ -1526,6 +1526,14 @@ class AccountMoveLine(models.Model):
         line_to_write = self
         vals = self._sanitize_vals(vals)
         for line in self:
+            # Disallow modifying readonly move line fields on a posted move
+            move_state = line.move_id.state
+            unmodifiable_fields = (
+                'invoice_date', 'date', 'journal_id', 'company_id', 'move_name', 'product_id', 'partner_id', 'tax_ids', 'date_maturity', 'product_uom_id',
+                'price_unit', 'discount', 'price_subtotal', 'price_total', 'quantity')
+            readonly_fields = [val for val in vals if val in unmodifiable_fields]
+            if not self._context.get('skip_readonly_check') and move_state == "posted" and readonly_fields:
+                raise UserError(_("You cannot modify the following readonly move line fields on a posted move: %s", ', '.join(readonly_fields)))
             if not any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in vals):
                 line_to_write -= line
                 continue
