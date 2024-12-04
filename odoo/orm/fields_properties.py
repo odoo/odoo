@@ -9,7 +9,7 @@ import uuid
 from collections import defaultdict
 from operator import attrgetter
 
-from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.exceptions import AccessError, MissingError
 from odoo.tools import SQL, OrderedSet, is_list_of
 from odoo.tools.misc import has_list_types
 from odoo.tools.translate import _
@@ -18,7 +18,6 @@ from .domains import Domain
 from .fields import Field, _logger
 from .models import BaseModel
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
-
 if typing.TYPE_CHECKING:
     from odoo.tools import Query
 
@@ -144,7 +143,7 @@ class Properties(Field):
     #       }
     #
     def convert_to_record(self, value, record):
-        return False if value is None else copy.deepcopy(value)
+        return Property(value or {}, self, record)
 
     # Read format: the value is a list, where each element is a dict containing
     # the definition of a property, together with the property's corresponding
@@ -165,9 +164,9 @@ class Properties(Field):
     #       }]
     #
     def convert_to_read(self, value, record, use_display_name=True):
-        return self.convert_to_read_multi([value], record)[0]
+        return self.convert_to_read_multi([value], record, use_display_name)[0]
 
-    def convert_to_read_multi(self, values, records):
+    def convert_to_read_multi(self, values, records, use_display_name=True):
         if not records:
             return values
         assert len(values) == len(records)
@@ -175,6 +174,7 @@ class Properties(Field):
         # each value is either False or a dict
         result = []
         for record, value in zip(records, values):
+            value = dict(value)  # Property -> dict
             if definition := self._get_properties_definition(record):
                 value = value or {}
                 assert isinstance(value, dict), f"Wrong type {value!r}"
@@ -188,8 +188,9 @@ class Properties(Field):
         for value in result:
             self._parse_json_types(value, records.env, res_ids_per_model)
 
-        for value in result:
-            self._add_display_name(value, records.env)
+        if use_display_name:
+            for value in result:
+                self._add_display_name(value, records.env)
 
         return result
 
@@ -305,6 +306,9 @@ class Properties(Field):
         :return: Return the default values in the "dict" format
         """
         properties_values = values.get(self.name) or {}
+
+        if isinstance(properties_values, Property):
+            properties_values = dict(properties_values)
 
         if not values.get(self.definition_record):
             # container is not given in the value, can not find properties definition
@@ -670,6 +674,69 @@ class Properties(Field):
             "%s%s%s",
             unaccent(sql_left), sql_operator, unaccent(sql_right),
         )
+
+
+class Property(dict):
+    """Represent a single property.
+
+    An object that implements the value of a :class:`Properties` field in the "record"
+    format, i.e., the result of evaluating an expression like ``record.property_field``.
+    The value behaves as a ``dict``, and individual properties are returned in their
+    expected type, according to ORM conventions.  For instance, the value of a many2one
+    property is returned as a recordset::
+
+        # attributes is a properties field, and 'partner_id' is a many2one property;
+        # partner is thus a recordset
+        partner = record.attributes['partner_id']
+        partner.name
+
+    When the accessed key does not exist, i.e., there is no corresponding property
+    definition for that record, the access raises a :class:`KeyError`.
+    """
+
+    def __init__(self, values, field, record):
+        super().__init__(values)
+        self.record = record
+        self.field = field
+
+    def get(self, key, default=None):
+        if key in self:
+            return self[key]
+        return default
+
+    def __getitem__(self, property_name):
+        """Will make the verification."""
+        if not self.record:
+            return False
+
+        values = self.field.convert_to_read(
+            self.record.env.cache.get(self.record, self.field),
+            self.record,
+            use_display_name=False,
+        )
+        prop = next((p for p in values if p['name'] == property_name), False)
+        if not prop:
+            raise KeyError(self.record.env._("Property doesn't exist"))
+
+        if prop.get('type') == 'many2one' and prop.get('comodel'):
+            return self.record.env[prop.get('comodel')].browse(prop.get('value'))
+
+        if prop.get('type') == 'many2many' and prop.get('comodel'):
+            return self.record.env[prop.get('comodel')].browse(prop.get('value'))
+
+        if prop.get('type') == 'selection' and prop.get('value'):
+            return next((sel[1] for sel in prop.get('selection') if sel[0] == prop['value']), False)
+
+        if prop.get('type') == 'tags' and prop.get('value'):
+            return ', '.join(tag[1] for tag in prop.get('tags') if tag[0] in prop['value'])
+
+        return prop.get('value') or False
+
+    def __setitem__(self, key, value):
+        raise ValueError("You can not write on a single property.")
+
+    def __deepcopy__(self, memo):
+        return Property(copy.deepcopy(dict(self), memo), self.field, self.record)
 
 
 class PropertiesDefinition(Field):
