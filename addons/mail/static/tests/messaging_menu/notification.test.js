@@ -51,7 +51,7 @@ test("basic layout", async () => {
         contains: [
             [".o-mail-NotificationItem-name", { text: "Discussion Channel" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
-            [".o-mail-NotificationItem-date", { text: "Jan 1, 2019" }],
+            [".o-mail-NotificationItem-date", { text: "Jan 1" }],
             [
                 ".o-mail-NotificationItem-text",
                 {
