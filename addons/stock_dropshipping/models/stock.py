@@ -21,6 +21,15 @@ class StockRule(models.Model):
             return False
         return super()._get_partner_id(values, rule)
 
+    @api.depends('action')
+    def _compute_picking_type_code_ids(self):
+        remaining = self.browse()
+        for rule in self:
+            if rule.action == 'buy':
+                rule.picking_type_code_ids = self.env['stock.picking.type'].search([('code', 'in', ['incoming', 'dropship'])])
+            else:
+                remaining |= rule
+        super(StockRule, remaining)._compute_picking_type_code_ids()
 
 class ProcurementGroup(models.Model):
     _inherit = "procurement.group"
