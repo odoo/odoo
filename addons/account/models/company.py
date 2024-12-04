@@ -1057,3 +1057,12 @@ class ResCompany(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
+
+    @api.depends('account_fiscal_country_id')
+    def _compute_company_registry_placeholder(self):
+        super()._compute_company_registry_placeholder()
+        for company in self:
+            if company.account_fiscal_country_id.code:
+                company.company_registry_placeholder = self.env['res.partner']._get_company_registry_placeholder(
+                    company.account_fiscal_country_id.code
+                )

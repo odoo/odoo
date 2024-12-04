@@ -70,6 +70,7 @@ class ResCompany(models.Model):
     website = fields.Char(related='partner_id.website', readonly=False)
     vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
     company_registry = fields.Char(related='partner_id.company_registry', string="Company ID", readonly=False)
+    company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway"), ('Tajawal', 'Tajawal'), ('Fira_Mono', 'Fira Mono')], default="Lato")
@@ -166,6 +167,13 @@ class ResCompany(models.Model):
     def _compute_color(self):
         for company in self:
             company.color = company.root_id.partner_id.color or (company.root_id._origin.id % 12)
+
+    @api.depends('country_id')
+    def _compute_company_registry_placeholder(self):
+        for company in self:
+            company.company_registry_placeholder = self.env['res.partner']._get_company_registry_placeholder(
+                company.country_code
+            )
 
     def _inverse_color(self):
         for company in self:
