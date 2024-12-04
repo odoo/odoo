@@ -14,36 +14,36 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         # ==== Chart of Accounts ====
         cls.purchase_account = ChartTemplate.ref('p2107')
         cls.purchase_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in_withholding.tds_section_194c').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_194c').id
         })
         cls.house_expense_account = ChartTemplate.ref('p2103')
         cls.house_expense_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in_withholding.tds_section_194c').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_194c').id
         })
         cls.internet_account = ChartTemplate.ref('p2105')
         cls.internet_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in_withholding.tds_section_194j').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_194j').id
         })
         cls.rent_account = ChartTemplate.ref('p2111')
         cls.rent_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in_withholding.tds_section_194ib').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tds_section_194ib').id
         })
         cls.sale_account = ChartTemplate.ref('p20011')
         cls.sale_account.write({
-            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in_withholding.tcs_section_206c1g_r').id
+            'l10n_in_tds_tcs_section_id': cls.env.ref('l10n_in.tcs_section_206c1g_r').id
         })
         cls.service_account = ChartTemplate.ref('p20021')
         cls.creditors_account = ChartTemplate.ref('p11211')
 
         # ==== Taxes ====
         cls.tax_194c = ChartTemplate.ref('tds_20_us_194c')
-        cls.tax_194c.write({'l10n_in_section_id': cls.env.ref('l10n_in_withholding.tds_section_194c').id})
+        cls.tax_194c.write({'l10n_in_section_id': cls.env.ref('l10n_in.tds_section_194c').id})
         cls.tax_194j = ChartTemplate.ref('tds_10_us_194j')
-        cls.tax_194j.write({'l10n_in_section_id': cls.env.ref('l10n_in_withholding.tds_section_194j').id})
+        cls.tax_194j.write({'l10n_in_section_id': cls.env.ref('l10n_in.tds_section_194j').id})
         cls.tax_194ib = ChartTemplate.ref('tds_20_us_194ib')
-        cls.tax_194ib.write({'l10n_in_section_id': cls.env.ref('l10n_in_withholding.tds_section_194ib').id})
+        cls.tax_194ib.write({'l10n_in_section_id': cls.env.ref('l10n_in.tds_section_194ib').id})
         cls.tax_206c1g_r = ChartTemplate.ref('tcs_5_us_206c_1g_som')
-        cls.tax_206c1g_r.write({'l10n_in_section_id': cls.env.ref('l10n_in_withholding.tcs_section_206c1g_r').id})
+        cls.tax_206c1g_r.write({'l10n_in_section_id': cls.env.ref('l10n_in.tcs_section_206c1g_r').id})
 
         country_in_id = cls.env.ref("base.in").id
 
