@@ -329,3 +329,29 @@ class AccountMove(models.Model):
             l10n_in_tax_details["%s_amount" % (tax_detail["line_code"])] += tax_detail["tax_amount"]
             l10n_in_tax_details["%s_amount_currency" % (tax_detail["line_code"])] += tax_detail["tax_amount_currency"]
         return l10n_in_tax_details
+
+    def _get_l10n_in_customer_invoice_title(self, proforma=False):
+        """
+        Get the title to display in front of a customer invoice number.
+        The title is generated based on the state of the invoice and the `proforma` parameter.
+
+        :param proforma: Is the invoice a proforma one, defaults to False
+        :type proforma: bool, optional
+        :return: A customer invoice title
+        :rtype: str
+        """
+        self.ensure_one()
+        if not proforma:
+            if self.state == 'posted':
+                return self.journal_id.name
+            elif self.state == 'draft':
+                return _("Draft %(journal_name)s", journal_name=self.journal_id.name)
+            elif self.state == 'cancel':
+                return _("Cancelled %(journal_name)s", journal_name=self.journal_id.name)
+        else:
+            if self.state == 'posted':
+                return _("Proforma %(journal_name)s", journal_name=self.journal_id.name)
+            elif self.state == 'draft':
+                return _("Draft Proforma %(journal_name)s", journal_name=self.journal_id.name)
+            elif self.state == 'cancel':
+                return _("Cancelled Proforma %(journal_name)s", journal_name=self.journal_id.name)

@@ -9,10 +9,82 @@
                 </b>
             </p>
         </xpath>
-        <xpath expr="//t[@t-set='layout_document_title']/span" position="before">
-            <span t-if="o.company_id.country_id.code == 'AE' and o.move_type in ['out_invoice', 'out_refund']">TAX
-            </span>
-        </xpath>
+
+        <t name="invoice_title" position="before">
+            <t name="tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Tax Invoice</t>
+        </t>
+        <t name="invoice_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+        <t name="draft_invoice_title" position="before">
+            <t name="draft_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Draft Tax Invoice</t>
+        </t>
+        <t name="draft_invoice_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+        <t name="cancelled_invoice_title" position="before">
+            <t name="cancelled_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Tax Invoice</t>
+        </t>
+        <t name="cancelled_invoice_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+
+        <t name="credit_note_title" position="before">
+            <t name="tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Tax Credit Note</t>
+        </t>
+        <t name="credit_note_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+        <t name="draft_credit_note_title" position="before">
+            <t name="draft_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Draft Tax Credit Note</t>
+        </t>
+        <t name="draft_credit_note_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+        <t name="cancelled_credit_note_title" position="before">
+            <t name="cancelled_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Tax Credit Note</t>
+        </t>
+        <t name="cancelled_credit_note_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+
+        <t name="proforma_invoice_title" position="before">
+            <t name="proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Proforma Tax Invoice</t>
+        </t>
+        <t name="proforma_invoice_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+        <t name="draft_proforma_invoice_title" position="before">
+            <t name="draft_proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Draft Proforma Tax Invoice</t>
+        </t>
+        <t name="draft_proforma_invoice_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+        <t name="cancelled_proforma_invoice_title" position="before">
+            <t name="cancelled_proforma_tax_invoice_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Proforma Tax Invoice</t>
+        </t>
+        <t name="cancelled_proforma_invoice_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+
+        <t name="proforma_credit_note_title" position="before">
+            <t name="proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Proforma Tax Credit Note</t>
+        </t>
+        <t name="proforma_credit_note_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+        <t name="draft_proforma_credit_note_title" position="before">
+            <t name="draft_proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Draft Proforma Tax Credit Note</t>
+        </t>
+        <t name="draft_proforma_credit_note_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
+        <t name="cancelled_proforma_credit_note_title" position="before">
+            <t name="cancelled_proforma_tax_credit_note_title" t-if="o.company_id.country_id.code == 'AE'">Cancelled Proforma Tax Credit Note</t>
+        </t>
+        <t name="cancelled_proforma_credit_note_title" position="attributes">
+            <attribute name="t-else"/>
+        </t>
 
         <xpath expr="//thead//th[@name='th_taxes']" position="replace">
             <th name="th_taxes"
