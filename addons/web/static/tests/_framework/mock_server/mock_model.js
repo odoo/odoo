@@ -1276,6 +1276,7 @@ export class Model extends Array {
                     model._parent_name = previous._parent_name;
                     model._rec_name = previous._rec_name;
                     model._records = JSON.parse(JSON.stringify(previous._records));
+                    model._related = new Set(previous._related);
                     model._toolbar = JSON.parse(JSON.stringify(previous._toolbar));
                     model._views = { ...previous._views };
                 }
@@ -1402,6 +1403,8 @@ export class Model extends Array {
      *  | "_order"
      *  | "_parent_name"
      *  | "_rec_name"
+     *  | "_records"
+     *  | "_related"
      *  | "_views"> | null
      * } */
     _fields = {};
@@ -1420,6 +1423,8 @@ export class Model extends Array {
     _rec_name = null;
     /** @type {Partial<ModelRecord>[]} */
     _records = [];
+    /** @type {Set<string>} */
+    _related = new Set();
     /** @type {Record<"print" | "action", ActionDefinition[]>} */
     _toolbar = {};
     /** @type {Record<string, string>} */
@@ -1463,6 +1468,7 @@ export class Model extends Array {
             this._parent_name = modelInstance._parent_name;
             this._rec_name = modelInstance._rec_name;
             this._records = modelInstance._records;
+            this._related = modelInstance._related;
             this._views = modelInstance._views;
         }
     }
@@ -2661,9 +2667,14 @@ export class Model extends Array {
      * @param {Record<string, ModelRecord>} [originalRecords={}]
      */
     _applyComputesAndValidate(originalRecords = {}) {
+        // Compute related fields
+        for (const fieldName of this._related) {
+            this._compute_related_field(fieldName);
+        }
+
         // Apply compute functions
-        for (const [fieldName, computeFn] of Object.entries(this._computes)) {
-            computeFn.call(this, fieldName);
+        for (const computeFn of Object.values(this._computes)) {
+            computeFn.call(this);
         }
 
         // Validate record values
@@ -2709,7 +2720,7 @@ export class Model extends Array {
             if (!fieldType) {
                 // The related field is not found on the record, so we
                 // remove the compute function.
-                delete this.env[this._name]._computes[fieldName];
+                this.env[this._name]._related.delete(fieldName);
                 return;
             }
             if (value === undefined) {
