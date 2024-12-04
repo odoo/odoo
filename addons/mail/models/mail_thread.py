@@ -17,6 +17,7 @@ import time
 import threading
 
 from collections import namedtuple
+from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
@@ -410,17 +411,20 @@ class MailThread(models.AbstractModel):
             res["models"][self._name]["has_activities"] = True
         return res
 
-    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
+    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
         if self.env.su or self.env.user._is_internal():
-            return super()._condition_to_sql(alias, fname, operator, value, query)
-        if fname != 'message_partner_ids':
-            return super()._condition_to_sql(alias, fname, operator, value, query)
+            return super()._condition_to_sql(alias, field_expr, operator, value, query)
+        if field_expr != 'message_partner_ids':
+            return super()._condition_to_sql(alias, field_expr, operator, value, query)
         user_partner = self.env.user.partner_id
         allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
-        operand = value if isinstance(value, (list, tuple)) else [value]
+        if isinstance(value, Iterable) and not isinstance(value, str):
+            operand = value
+        else:
+            operand = {value}
         if not allow_partner_ids.issuperset(operand):
             raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
-        return super(MailThread, self.sudo())._condition_to_sql(alias, fname, operator, value, query)
+        return super(MailThread, self.sudo())._condition_to_sql(alias, field_expr, operator, value, query)
 
     # ------------------------------------------------------
     # MODELS / CRUD HELPERS

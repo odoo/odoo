@@ -6,9 +6,9 @@ import logging
 import os
 import re
 
+import odoo.orm.domains as domains
 from lxml import etree
 from odoo import tools
-from odoo.osv.expression import DOMAIN_OPERATORS
 
 _logger = logging.getLogger(__name__)
 
@@ -40,6 +40,11 @@ IGNORED_IN_EXPRESSION = {
     'str',
     'unicode',
     'set',
+}
+DOMAIN_OPERATORS = {
+    domains.DomainNot.OPERATOR,
+    domains.DomainAnd.OPERATOR,
+    domains.DomainOr.OPERATOR,
 }
 
 

@@ -26,6 +26,7 @@ from passlib.context import CryptContext as _CryptContext
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
 from odoo.tools import is_html_empty, partition, frozendict, lazy_property, SQL, SetDefinitions
@@ -716,10 +717,9 @@ class ResUsers(models.Model):
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):
-        if not self.env.su and domain:
-            domain_fields = {term[0] for term in domain if isinstance(term, (tuple, list))}
-            if domain_fields.intersection(USER_PRIVATE_FIELDS):
-                raise AccessError(_('Invalid search criterion'))
+        domain = Domain(domain)
+        if not self.env.su and any(condition.field_expr in USER_PRIVATE_FIELDS for condition in domain.iter_conditions()):
+            raise AccessError(_('Invalid search criterion'))
         return super()._search(domain, offset, limit, order)
 
     @api.model_create_multi
