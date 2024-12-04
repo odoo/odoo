@@ -1996,3 +1996,34 @@ class ProjectTask(models.Model):
         ])
         partners = self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit)
         return Store(partners).get_result()
+
+    # ----------------------------------------------------
+    # Gantt view
+    # ----------------------------------------------------
+
+    @api.model
+    def get_gantt_data(self, domain, groupby, read_specification, limit=None, offset=0, unavailability_fields=[], progress_bar_fields=None, start_date=None, stop_date=None, scale=None):
+        res = super().get_gantt_data(domain, groupby, read_specification, limit=limit, offset=offset, unavailability_fields=unavailability_fields, progress_bar_fields=progress_bar_fields, start_date=start_date, stop_date=stop_date, scale=scale)
+
+        progress_bars = res.get('progress_bars')
+
+        if not progress_bars:
+            return res
+
+        last_group_by = progress_bar_fields[-1]
+        # __default reference the total progress bar
+        progress_bars['__default'] = {
+            False: {
+                "value": 0,
+                "max_value": 0,
+            }
+        }
+
+        for value in progress_bars[last_group_by].values():
+            if not isinstance(value, dict):
+                continue
+
+            progress_bars['__default'][False]["value"] += value.get("value", 0)
+            progress_bars['__default'][False]["max_value"] += value.get("max_value", 0)
+
+        return res
