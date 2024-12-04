@@ -241,7 +241,7 @@ def create_image_attachment(env, image_path, image_name):
 
     :param env: self.env
     :param image_path: the path to the image (e.g. '/web/image/website.s_banner_default_image')
-    :param image_name: the name to give to the image (e.g. 's_banner_default_image.jpg')
+    :param image_name: the name to give to the image (e.g. 's_banner_default_image.webp')
     :return: the image attachment
     """
     Attachments = env['ir.attachment']

@@ -16,7 +16,7 @@ from os.path import join as opj
 from odoo.http import request, Response
 from odoo import http, tools, _
 from odoo.tools.misc import file_open
-from odoo.tools.image import image_data_uri, binary_to_image
+from odoo.tools.image import image_data_uri, binary_to_image, get_webp_size
 
 
 logger = logging.getLogger(__name__)
@@ -482,8 +482,13 @@ class Web_Editor(http.Controller):
             return stream.get_response()
 
         image = stream.read()
-        img = binary_to_image(image)
-        width, height = tuple(str(size) for size in img.size)
+        if record.mimetype == "image/webp":
+            # Currently we're using Pillow 9.0.1, and this version doesn't handle webp
+            # We should upgrade to version >=10.1.0. Thus this workaround.
+            width, height = tuple(str(size) for size in get_webp_size(image))
+        else:
+            img = binary_to_image(image)
+            width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)
         root.attrib.update({'width': width, 'height': height})
         # Update default color palette on shape SVG.
