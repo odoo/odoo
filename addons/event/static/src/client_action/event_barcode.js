@@ -116,16 +116,11 @@ export class EventScanView extends Component {
 
     onClickSelectAttendee() {
         if (this.isMultiEvent) {
-            this.actionService.doAction("event.event_registration_action", {
-                additionalContext: {
-                    is_registration_desk_view: true,
-                },
-            });
+            this.actionService.doAction("event.event_registration_action");
         } else {
             this.actionService.doAction("event.event_registration_action_kanban", {
                 additionalContext: {
                     active_id: this.eventId,
-                    is_registration_desk_view: true,
                     search_default_unconfirmed: true,
                     search_default_confirmed: true,
                 },
