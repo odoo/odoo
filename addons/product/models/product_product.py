@@ -242,6 +242,11 @@ class ProductProduct(models.Model):
             self._check_duplicated_product_barcodes(barcodes_within_company, company_id)
             self._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
 
+    @api.constrains('company_id')
+    def _check_company_id(self):
+        combo_items = self.env['product.combo.item'].sudo().search([('product_id', 'in', self.ids)])
+        combo_items._check_company(fnames=['product_id'])
+
     def _get_invoice_policy(self):
         return False
 
