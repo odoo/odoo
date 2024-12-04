@@ -69,6 +69,9 @@ class PosPaymentMethod(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
+    
+    def pay(self, pos_payment_id):
+        pass
 
     @api.depends('type', 'payment_method_type')
     def _compute_hide_use_payment_terminal(self):
