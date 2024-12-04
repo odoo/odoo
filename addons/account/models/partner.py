@@ -607,6 +607,7 @@ class ResPartner(models.Model):
     duplicated_bank_account_partners_count = fields.Integer(
         compute='_compute_duplicated_bank_account_partners_count',
     )
+    is_coa_installed = fields.Boolean(store=False, default=lambda partner: bool(partner.env.company.chart_template))
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['__count'])
