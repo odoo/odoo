@@ -3,12 +3,10 @@ import { rpc } from "@web/core/network/rpc";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { extraMenuUpdateCallbacks } from "@website/js/content/menu";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import { cartHandlerMixin } from "@website_sale/js/website_sale_utils";
-
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -645,6 +643,10 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         'wheel .o_carousel_product_indicators': '_onMouseWheel',
     },
 
+    init() {
+        this.website_menus = this.bindService("website_menus");
+    },
+
     /**
      * @override
      */
@@ -652,7 +654,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
         await this._super(...arguments);
         this._updateCarouselPosition();
         this.throttleOnResize = throttleForAnimation(this._onSlideCarouselProduct.bind(this));
-        extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
+        this.website_menus.registerCallback(this._updateCarouselPosition.bind(this));
         if (this.$el.find('.carousel-indicators').length > 0) {
             this.$el.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
             $(window).on('resize.carousel_product_slider', this.throttleOnResize);
@@ -746,13 +748,17 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
     selector: '#o_product_page_reviews',
     disabledInEditableMode: false,
 
+    init() {
+        this.website_menus = this.bindService("website_menus");
+    },
+
     /**
      * @override
      */
     async start() {
         await this._super(...arguments);
         this._updateChatterComposerPosition();
-        extraMenuUpdateCallbacks.push(this._updateChatterComposerPosition.bind(this));
+        this.website_menus.registerCallback(this._updateChatterComposerPosition.bind(this));
     },
     /**
      * @override
