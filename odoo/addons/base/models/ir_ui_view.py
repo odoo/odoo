@@ -2156,6 +2156,7 @@ actual arch.
             and node.target == 'apply-inheritance-specs-node-removal'
         )
 
+    @api.readonly
     @api.model
     def render_public_asset(self, template, values=None):
         template_sudo = self._get(template).sudo()
@@ -2784,6 +2785,7 @@ class Base(models.AbstractModel):
             'sortable', 'store', 'string', 'translate', 'trim', 'type', 'groupable',
         ]
 
+    @api.readonly
     def get_formview_id(self, access_uid=None):
         """ Return a view id to open the document ``self`` with. This method is
             meant to be overridden in addons that want to give specific view ids
@@ -2794,6 +2796,7 @@ class Base(models.AbstractModel):
         """
         return False
 
+    @api.readonly
     def get_formview_action(self, access_uid=None):
         """ Return an action to open the document ``self``. This method is meant
             to be overridden in addons that want to give specific view ids for
