@@ -526,14 +526,12 @@ export class PosOrderline extends Base {
 
     display_discount_policy() {
         // Sales dropped `discount_policy`, and we only show discount if applied pricelist rule
-        // is a percentage discount. However we don't have that information in pos
-        // so this is heuristic used to imitate the same behavior.
-        if (
-            this.order_id.pricelist_id &&
-            this.order_id.pricelist_id.item_ids
-                .map((rule) => rule.compute_price)
-                .includes("percentage")
-        ) {
+        // is a percentage discount.
+        const pricelistRule = this.product_id.getPricelistRule(
+            this.order_id.pricelist_id,
+            this.get_quantity()
+        );
+        if (pricelistRule && pricelistRule.compute_price === "percentage") {
             return "without_discount";
         }
         return "with_discount";
