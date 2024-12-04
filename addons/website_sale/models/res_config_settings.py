@@ -137,10 +137,11 @@ class ResConfigSettings(models.TransientModel):
         if self.website_id:
             website = self.with_context(website_id=self.website_id.id).website_id
             extra_step_view = website.viewref('website_sale.extra_info')
+            extra_step = website._get_checkout_specific_step('website_sale.checkout_step_extra')
             buy_now_view = website.viewref('website_sale.product_buy_now')
 
             if extra_step_view.active != self.enabled_extra_checkout_step:
-                extra_step_view.active = self.enabled_extra_checkout_step
+                extra_step_view.active = extra_step.is_published = self.enabled_extra_checkout_step
             if buy_now_view.active != self.enabled_buy_now_button:
                 buy_now_view.active = self.enabled_buy_now_button
 

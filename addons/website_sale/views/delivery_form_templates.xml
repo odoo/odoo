@@ -7,7 +7,7 @@
             - selected_dm_id: The selected delivery method id.
         -->
         <form id="o_delivery_form" class="o_delivery_form mb-4">
-            <h4 class="fs-6 small text-uppercase fw-bolder">Choose a delivery method</h4>
+            <h4 class="fs-6 small fw-bolder">Choose a delivery method</h4>
             <ul t-if="delivery_methods" id="o_delivery_methods" class="list-group">
                 <t t-foreach="delivery_methods" t-as="dm">
                     <li name="o_delivery_method" class="list-group-item text-muted o_outline">

@@ -812,6 +812,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if try_skip_step and can_skip_delivery:
             return request.redirect('/shop/confirm_order')
 
+        checkout_page_values.update(request.website._get_checkout_step_values('/shop/checkout'))
+
         return request.render('website_sale.checkout', checkout_page_values)
 
     def _prepare_checkout_page_values(self, order_sudo, **_kwargs):
@@ -905,6 +907,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             use_delivery_as_billing=use_delivery_as_billing,
             **query_params
         )
+
+        address_form_values.update(request.website._get_checkout_step_values('/shop/address'))
+
         return request.render('website_sale.address', address_form_values)
 
     def _prepare_address_form_values(
@@ -1566,6 +1571,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'partner': order.partner_id.id,
             'order': order,
         }
+
+        values.update(request.website._get_checkout_step_values('/shop/extra_info'))
+
         return request.render("website_sale.extra_info", values)
 
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
@@ -1628,6 +1636,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if render_values['errors']:
             render_values.pop('payment_methods_sudo', '')
             render_values.pop('tokens_sudo', '')
+
+        # As the initial page sending us to payment is /shop/confirm_order
+        render_values.update(request.website._get_checkout_step_values('/shop/confirm_order'))
 
         return request.render("website_sale.payment", render_values)
 
@@ -1901,6 +1912,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             options['ppg'] = 1
         if 'product_page_grid_columns' in options:
             options['product_page_grid_columns'] = int(options['product_page_grid_columns'])
+
+        # Checkout Extra Step
+        if 'extra_step' in options:
+            extra_step = current_website._get_checkout_specific_step(
+                'website_sale.checkout_step_extra'
+            )
+            extra_step.is_published = options.get('extra_step') == 'extra_info_needed'
 
         write_vals = {k: v for k, v in options.items() if k in writable_fields}
         if write_vals:
