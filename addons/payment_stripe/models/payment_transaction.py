@@ -13,7 +13,6 @@ from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -350,6 +349,21 @@ class PaymentTransaction(models.Model):
                 "Stripe: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Stripe data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        payment_intent = notification_data['payment_intent']
+        amount = payment_utils.to_major_currency_units(
+            payment_intent.get('amount'), self.currency_id
+        )
+        currency_code = payment_intent.get('currency').upper()
+        self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on Stripe data.
