@@ -4,8 +4,8 @@
     <t t-name="web.GoogleSlideViewer" t-inherit="web.CharField">
         <xpath expr="//t[@t-else='']" position="after">
             <t t-if="url">
-                <div>
-                    <iframe class="o_embed_iframe w-100"
+                <div class="o_google_slide">
+                    <iframe class="o_google_slide_iframe w-100"
                         alt="Google Slide Viewer"
                         t-att-src="url"
                         t-att-name="props.name"
