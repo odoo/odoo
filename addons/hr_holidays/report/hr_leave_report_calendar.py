@@ -28,7 +28,8 @@ class HrLeaveReportCalendar(models.Model):
         ('validate', 'Approved')
     ], readonly=True)
     description = fields.Char("Description", readonly=True, groups='hr_holidays.group_hr_holidays_user')
-    holiday_status_id = fields.Many2one('hr.leave.type', readonly=True, string="Time Off Type")
+    holiday_status_id = fields.Many2one('hr.leave.type', readonly=True, string="Time Off Type",
+        groups='hr_holidays.group_hr_holidays_user')
 
     is_hatched = fields.Boolean('Hatched', readonly=True)
     is_striked = fields.Boolean('Striked', readonly=True)
@@ -97,7 +98,7 @@ class HrLeaveReportCalendar(models.Model):
                 # Include the time off type name
                 leave.name += f" {leave.leave_id.holiday_status_id.name}"
             # Include the time off duration.
-            leave.name += f": {leave.leave_id.sudo().duration_display}"
+            leave.name += f": {leave.sudo().leave_id.duration_display}"
 
     @api.depends('leave_manager_id')
     def _compute_is_manager(self):
