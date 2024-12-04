@@ -9,6 +9,7 @@ from odoo.tests import tagged
 from odoo.tools import misc
 
 from .common import TestSaEdiCommon
+from odoo.addons.account.models.account_move import SKIP_READONLY_CHECK
 
 _logger = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ class TestEdiZatca(TestSaEdiCommon):
                 (downpayment, "downpayment_invoice"),
                 (final, "final_invoice")
             ):
-                move.with_context(skip_readonly_check=True).write({
+                move.with_context(skip_readonly_check=SKIP_READONLY_CHECK).write({
                     'invoice_date': '2022-09-05',
                     'invoice_date_due': '2022-09-22',
                     'state': 'posted',

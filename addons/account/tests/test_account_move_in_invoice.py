@@ -2,6 +2,7 @@
 # pylint: disable=bad-whitespace
 from freezegun import freeze_time
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.models.account_move import SKIP_READONLY_CHECK
 from odoo.tests import Form, tagged
 from odoo import fields, Command
 from odoo.osv import expression
@@ -2360,7 +2361,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 })
             else:
                 line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
-                reverse_move.with_context(skip_readonly_check=True).write({
+                reverse_move.with_context(skip_readonly_check=SKIP_READONLY_CHECK).write({
                     'line_ids': [
                         Command.update(line.id, {'balance': amount}),
                     ],

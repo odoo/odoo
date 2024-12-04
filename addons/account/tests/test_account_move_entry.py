@@ -5,6 +5,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged, new_test_user
 from odoo import Command, fields
 from odoo.exceptions import UserError, RedirectWarning
+from odoo.addons.account.models.account_move import SKIP_READONLY_CHECK
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
@@ -309,13 +310,35 @@ class TestAccountMove(AccountTestInvoicingCommon):
             draft_moves.unlink()
 
     def test_modify_posted_move_readonly_fields(self):
+        self.test_move.partner_id = self.env['res.partner'].create({'name': 'Belouga'})
+        self.test_move.partner_bank_id = self.env['res.partner.bank'].create({
+            'acc_number': 'BE43798822936101',
+            'partner_id': self.test_move.partner_id.id,
+        })
+        self.test_move.invoice_date = self.test_move.date
+        self.test_move.invoice_payment_term_id = self.env['account.payment.term'].create({'name': 'payment term'})
+        self.test_move.fiscal_position_id = self.env["account.fiscal.position"].create({
+            "name": self.company_data['company'].name,
+            "company_id": self.company_data['company'].id,
+        })
+        self.test_move.invoice_cash_rounding_id = self.cash_rounding_a.id
         self.test_move.action_post()
 
-        readonly_fields = ('invoice_line_ids', 'line_ids', 'invoice_date', 'date', 'partner_id',
-                           'invoice_payment_term_id', 'currency_id', 'fiscal_position_id', 'invoice_cash_rounding_id')
+        readonly_fields = ('invoice_date', 'date', 'partner_id', 'partner_bank_id', 'invoice_payment_term_id', 'currency_id',
+                        'fiscal_position_id', 'invoice_cash_rounding_id')
         for field in readonly_fields:
             with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"):
                 self.test_move.write({field: False})
+
+    def test_modify_posted_move_lines_readonly_fields(self):
+        self.test_move.action_post()
+        with self.assertRaisesRegex(UserError, "You cannot modify the following readonly move line fields on a posted move"), \
+                self.cr.savepoint():
+            self.test_move.line_ids.write({
+                'invoice_date': False,
+                'date_maturity': False,
+                'journal_id': False,
+            })
 
     def test_misc_move_onchange(self):
         ''' Test the behavior on onchanges for account.move having 'entry' as type. '''
@@ -710,7 +733,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_misc_prevent_edit_tax_on_posted_moves(self):
         # You cannot remove journal items if the related journal entry is posted.
         def edit_tax_on_posted_moves():
-            self.test_move.line_ids.filtered(lambda l: l.tax_ids).write({
+            self.test_move.line_ids.filtered(lambda l: l.tax_ids).with_context(skip_readonly_check=SKIP_READONLY_CHECK).write({
                 'balance': 1000.0,
                 'tax_ids': False,
             })
