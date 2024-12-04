@@ -2,11 +2,8 @@ import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
-
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { getTemplate } from "@web/core/templates";
 import { renderToElement } from "@web/core/utils/render";
-
 import { markup } from "@odoo/owl";
 
 export class SearchBar extends Interaction {
@@ -33,7 +30,7 @@ export class SearchBar extends Interaction {
         this.searchType = this.inputEl.dataset.searchType;
         const orderByEl = this.el.querySelector(".o_search_order_by");
         this.order = orderByEl.value;
-        this.limit = parseInt(this.inputEl.dataset.limit);
+        this.limit = parseInt(this.inputEl.dataset.limit) || 5;
         this.wasEmpty = !this.inputEl.value;
         this.linkHasFocus = false;
         if (this.limit) {
@@ -46,7 +43,7 @@ export class SearchBar extends Interaction {
             "displayExtraLink": dataset.displayExtraLink,
             "displayDetail": dataset.displayDetail,
             // Make it easy for customization to disable fuzzy matching on specific searchboxes
-            "allowFuzzy": !!dataset.noFuzzy,
+            "allowFuzzy": !dataset.noFuzzy,
         };
         const form = orderByEl.closest("form");
         for (const fieldEl of form.querySelectorAll("input[type='hidden']")) {
