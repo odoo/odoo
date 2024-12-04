@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale.att_value_dialog">
+    <div class="att-value-dialog">
+        <Dialog>
+            <t t-set-slot="header">
+                <div class="input-group">
+                    <div class="d-flex rounded-pill flex-row align-items-center border">
+                        <div class="position-relative">
+                            <input
+                                t-on-input="onSearchInput"
+                                type="text"
+                                class="rounded-pill border-0"
+                                t-att-placeholder="this.placeholder"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <form class="js_attributes position-relative" method="get">
+                <div class="d-flex flex-column flex-wrap value-container">
+                    <t t-foreach="state.attributeValues" t-as="v" t-key="v.id">
+                        <t t-set="value_id" t-value="`${this.props.attributeId}-${v.id}`"/>
+                        <div class="form-check m-2">
+                            <input
+                                type="checkbox"
+                                name="attribute_value"
+                                class="form-check-input"
+                                t-att-id="value_id"
+                                t-att-value="value_id"
+                                t-attf-checked="{{this.props.attribSet.includes(v.id) or
+                                    this.props.sessionAttValues.includes(v.id)
+                                    ? 'checked'
+                                    : None}}"
+                            />
+                            <label
+                                class="form-check-label fw-normal"
+                                t-on-click.prevent="()=>this._onLabelClick(value_id)"
+                                t-att-for="value_id"
+                                t-out="v.name"
+                            />
+                        </div>
+                    </t>
+                </div>
+            </form>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="(e)=>this._applyFilters(e)">
+                    Apply Filters
+                </button>
+                <button class="btn btn-secondary" t-on-click="props.close">
+                    Close (<t t-out="state.attributeValues.length"/> results)
+                </button>
+            </t>
+        </Dialog>
+    </div>
+    </t>
+</templates>

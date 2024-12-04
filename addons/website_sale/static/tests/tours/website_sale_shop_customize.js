@@ -13,6 +13,11 @@ registerWebsitePreviewTour('shop_customize', {
     () => [
         ...clickOnSave(),
         {
+            content: "open accordion list",
+            trigger: ':iframe form.js_attributes .accordion-button b:contains(Legs Test)',
+            run: "click",
+        },
+        {
             content: "select product attribute Steel",
             trigger: ':iframe form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
             run: "click",
