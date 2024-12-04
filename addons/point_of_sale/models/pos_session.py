@@ -1936,5 +1936,15 @@ class ProcurementGroup(models.Model):
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
         self.env['pos.session']._alert_old_session()
+        if 'scheduler_task_done' in self._context:
+            task_done = self._context.get('scheduler_task_done', {'task_done': 0})['task_done'] + 1
+            self._context['scheduler_task_done']['task_done'] = task_done
+        else:
+            task_done = self._get_scheduler_tasks_to_do()
         if use_new_cursor:
+            self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
             self.env.cr.commit()
+
+    @api.model
+    def _get_scheduler_tasks_to_do(self):
+        return super()._get_scheduler_tasks_to_do() + 1
