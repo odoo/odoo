@@ -81,7 +81,24 @@ export class MailActivity extends models.ServerModel {
         const ResUsers = this.env["res.users"];
 
         for (const activity of this.browse(ids)) {
-            const [data] = this.read(activity.id);
+            const [data] = this._read_format(
+                activity.id,
+                [
+                    "activity_category",
+                    "activity_type_id",
+                    "can_write",
+                    "chaining_type",
+                    "create_date",
+                    "create_uid",
+                    "date_deadline",
+                    "date_done",
+                    "note",
+                    "res_id",
+                    "res_model",
+                    "state",
+                    "summary",
+                ],
+            );
             // simulate computes
             const activityType = data.activity_type_id
                 ? MailActivityType.find((r) => r.id === data.activity_type_id[0])
@@ -100,11 +117,11 @@ export class MailActivity extends models.ServerModel {
             if (data.summary) {
                 data.display_name = data.summary;
             }
-            const [user] = ResUsers.browse(data.user_id[0]);
             data["attachment_ids"] = mailDataHelpers.Store.many(
                 this.env["ir.attachment"].browse(activity.attachment_ids),
                 makeKwArgs({ fields: ["name"] })
             );
+            const [user] = ResUsers.browse(activity.user_id);
             data.persona = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
             store.add(this.browse(activity.id), data);
         }

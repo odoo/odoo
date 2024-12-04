@@ -93,7 +93,6 @@ class MailActivity(models.Model):
         default=lambda self: self.env.user,
         index=True, required=True, ondelete='cascade')
     user_tz = fields.Selection(string='Timezone', related="user_id.tz", store=True)
-    request_partner_id = fields.Many2one('res.partner', string='Requesting Partner')
     state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
@@ -588,7 +587,24 @@ class MailActivity(models.Model):
 
     def _to_store(self, store: Store):
         for activity in self:
-            data = activity.read()[0]
+            data = activity._read_format(
+                [
+                    "activity_category",
+                    "activity_type_id",
+                    "can_write",
+                    "chaining_type",
+                    "create_date",
+                    "create_uid",
+                    "date_deadline",
+                    "date_done",
+                    "note",
+                    "res_id",
+                    "res_model",
+                    "state",
+                    "summary",
+                ],
+                load=False
+            )[0]
             data["mail_template_ids"] = [
                 {"id": mail_template.id, "name": mail_template.name}
                 for mail_template in activity.mail_template_ids
