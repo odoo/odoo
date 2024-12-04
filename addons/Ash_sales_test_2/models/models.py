@@ -140,8 +140,9 @@ class SaleOrder(models.Model):
                     'default_code': product_default_code,
                     'product_name': product.name,
                     'quantity': product_qty,
-                    'location': f"{location_name} (Automation)" if not manual_location_names else
-                                f"{location_name} (Manual), {', '.join(manual_location_names)} (Manual)",
+                    # 'location': f"{location_name} (Automation)" if not manual_location_names else
+                    #             f"{location_name} (Manual), {', '.join(manual_location_names)} (Manual)",
+                    'location': 'Automation',
                     'system': location_system,
                     'product_class': product.automation_manual_product,
                     'picklist': product_pickings[0] if product_pickings else "No picklist",
@@ -160,11 +161,11 @@ class SaleOrder(models.Model):
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
                 # Send data to external API based on env
-                release_url = (
-                    "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
-                    if is_production == 'True'
-                    else "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
-                )
+                # release_url = (
+                #     "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
+                #     if is_production == 'True'
+                #     else "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
+                # )
                 headers = {
                     "Content-Type": "application/json"
                 }
