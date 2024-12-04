@@ -57581,6 +57581,7 @@
         EvaluationError,
         CellErrorLevel,
         getFillingMode,
+        getChartDatasetFormat,
         rgbaToHex,
         colorToRGBA,
         positionToZone,

@@ -6,7 +6,13 @@ import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
 
-const { getDefaultChartJsRuntime, chartFontColor, ChartColors } = spreadsheet.helpers;
+const {
+    getDefaultChartJsRuntime,
+    chartFontColor,
+    ChartColors,
+    formatValue,
+    getChartDatasetFormat,
+} = spreadsheet.helpers;
 
 export class OdooBarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
@@ -38,8 +44,9 @@ chartRegistry.add("odoo_bar", {
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
+    const dataSetFormat = chart.dataSets && getChartDatasetFormat(getters, chart.dataSets);
     const locale = getters.getLocale();
-    const chartJsConfig = getBarConfiguration(chart, labels, locale);
+    const chartJsConfig = getBarConfiguration(chart, labels, { locale, format: dataSetFormat });
     const colors = new ChartColors();
     for (const { label, data } of datasets) {
         const color = colors.next();
@@ -55,7 +62,7 @@ function createOdooChartRuntime(chart, getters) {
     return { background, chartJsConfig };
 }
 
-function getBarConfiguration(chart, labels, locale) {
+function getBarConfiguration(chart, labels, { locale, format }) {
     const color = chartFontColor(chart.background);
     const config = getDefaultChartJsRuntime(chart, labels, color, { locale });
     config.type = chart.type.replace("odoo_", "");
@@ -86,6 +93,16 @@ function getBarConfiguration(chart, labels, locale) {
             ticks: {
                 color,
                 // y axis configuration
+                callback: (value) => {
+                    value = Number(value);
+                    if (isNaN(value)) {
+                        return value;
+                    }
+                    return formatValue(value, {
+                        locale,
+                        format: !format && Math.abs(value) >= 1000 ? "#,##" : format,
+                    });
+                },
             },
             beginAtZero: true, // the origin of the y axis is always zero
         },

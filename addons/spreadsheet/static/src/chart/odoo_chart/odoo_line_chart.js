@@ -14,6 +14,8 @@ const {
     getFillingMode,
     colorToRGBA,
     rgbaToHex,
+    formatValue,
+    getChartDatasetFormat,
 } = spreadsheet.helpers;
 
 export class OdooLineChart extends OdooChart {
@@ -48,8 +50,9 @@ chartRegistry.add("odoo_line", {
 function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
+    const dataSetFormat = chart.dataSets && getChartDatasetFormat(getters, chart.dataSets);
     const locale = getters.getLocale();
-    const chartJsConfig = getLineConfiguration(chart, labels, locale);
+    const chartJsConfig = getLineConfiguration(chart, labels, { locale, format: dataSetFormat });
     const colors = new ChartColors();
     for (let [index, { label, data, cumulatedStart }] of datasets.entries()) {
         const color = colors.next();
@@ -81,7 +84,7 @@ function createOdooChartRuntime(chart, getters) {
     return { background, chartJsConfig };
 }
 
-function getLineConfiguration(chart, labels, locale) {
+function getLineConfiguration(chart, labels, { locale, format }) {
     const fontColor = chartFontColor(chart.background);
     const config = getDefaultChartJsRuntime(chart, labels, fontColor, { locale });
     config.type = chart.type.replace("odoo_", "");
@@ -122,6 +125,16 @@ function getLineConfiguration(chart, labels, locale) {
             ticks: {
                 color: fontColor,
                 // y axis configuration
+                callback: (value) => {
+                    value = Number(value);
+                    if (isNaN(value)) {
+                        return value;
+                    }
+                    return formatValue(value, {
+                        locale,
+                        format: !format && Math.abs(value) >= 1000 ? "#,##" : format,
+                    });
+                },
             },
             beginAtZero: true, // the origin of the y axis is always zero
         },
