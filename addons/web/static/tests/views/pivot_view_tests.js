@@ -1947,8 +1947,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            mockDownload(({ url, data }) => {
-                data = JSON.parse(data.data);
+            mockDownload(async ({ url, data }) => {
+                data = JSON.parse(await data.data.text());
                 assert.strictEqual(url, "/web/pivot/export_xlsx");
                 assert.strictEqual(
                     data.measure_headers.length,
@@ -3616,8 +3616,8 @@ QUnit.module("Views", (hooks) => {
 
         patchDate(2016, 11, 20, 1, 0, 0);
 
-        mockDownload(({ url, data }) => {
-            data = JSON.parse(data.data);
+        mockDownload(async ({ url, data }) => {
+            data = JSON.parse(await data.data.text());
             for (const l of data.col_group_headers) {
                 const titles = l.map((o) => o.title);
                 assert.step(JSON.stringify(titles));
