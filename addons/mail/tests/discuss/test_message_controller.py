@@ -121,9 +121,11 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "params": {
                         "message_id": data1["mail.message"][0]["id"],
-                        "body": "test",
-                        "attachment_ids": [self.attachments[1].id],
-                        "attachment_tokens": ["wrong token"],
+                        "update_data": {
+                            "attachment_ids": [self.attachments[1].id],
+                            "attachment_tokens": ["wrong token"],
+                            "body": "test",
+                        },
                     },
                 }
             ),
@@ -142,9 +144,11 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "params": {
                         "message_id": data1["mail.message"][0]["id"],
-                        "body": "test",
-                        "attachment_ids": [self.attachments[1].id],
-                        "attachment_tokens": [self.attachments[1].access_token],
+                        "update_data": {
+                            "attachment_ids": [self.attachments[1].id],
+                            "attachment_tokens": [self.attachments[1].access_token],
+                            "body": "test",
+                        },
                     },
                 }
             ),
@@ -189,8 +193,10 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "params": {
                         "message_id": data2["mail.message"][0]["id"],
-                        "body": "test",
-                        "attachment_ids": [self.attachments[1].id],
+                        "update_data": {
+                            "attachment_ids": [self.attachments[1].id],
+                            "body": "test",
+                        },
                     },
                 }
             ),

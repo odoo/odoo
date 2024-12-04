@@ -692,7 +692,10 @@ async function mail_message_update_content(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { attachment_ids, body, message_id } = await parseRequestParams(request);
+    const {
+        message_id,
+        update_data: { attachment_ids, body },
+    } = await parseRequestParams(request);
     const [message] = MailMessage.browse(message_id);
     const msg_values = {};
     if (body !== null) {

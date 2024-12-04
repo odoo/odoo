@@ -991,8 +991,7 @@ test("preview for channel should show latest non-deleted message", async () => {
     // Simulate deletion of message-2
     rpc("/mail/message/update_content", {
         message_id: messageId_2,
-        body: "",
-        attachment_ids: [],
+        update_data: { attachment_ids: [], body: "" },
     });
     await contains(".o-mail-NotificationItem-text", { text: "Partner1: message-1" });
 });

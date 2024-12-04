@@ -282,8 +282,7 @@ class MailControllerUpdateCommon(MailControllerCommon):
             route="/mail/message/update_content",
             params={
                 "message_id": message_id,
-                "body": body,
-                "attachment_ids": [],
+                "update_data": {"attachment_ids": [], "body": body},
                 **route_kw,
             },
         )
