@@ -1,7 +1,7 @@
 import { Interaction } from "@website/core/interaction";
 import { registry } from "@web/core/registry";
 
-class SearchModal extends Interaction {
+export class SearchModal extends Interaction {
     static selector = "#o_search_modal_block #o_search_modal";
     dynamicContent = {
         _root: {

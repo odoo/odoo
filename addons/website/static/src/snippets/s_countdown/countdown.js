@@ -401,3 +401,9 @@ class Countdown extends Interaction {
 registry
     .category("website.active_elements")
     .add("website.countdown", Countdown);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.countdown", {
+        Interaction: Countdown,
+    });

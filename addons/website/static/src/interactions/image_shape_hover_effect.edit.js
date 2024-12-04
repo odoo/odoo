@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { ImageShapeHoverEffect } from "./image_shape_hover_effect";
 
-export class ImageShapeHoverEffectEdit extends ImageShapeHoverEffect {
+const ImageShapeHoverEffectEdit = I => class extends I {
     /**
      * @override
      */
@@ -15,8 +15,11 @@ export class ImageShapeHoverEffectEdit extends ImageShapeHoverEffect {
         // TODO Handle edit mode
         // this.options.wysiwyg.odooEditor.observerActive("setImgHoverEffectSrc");
     }
-}
+};
 
 registry
-    .category("website.edit_active_elements")
-    .add("website.image_shape_hover_effect", ImageShapeHoverEffectEdit);
+    .category("website.editable_active_elements_builders")
+    .add("website.image_shape_hover_effect", {
+        Interaction: ImageShapeHoverEffect,
+        mixin: ImageShapeHoverEffectEdit,
+    });

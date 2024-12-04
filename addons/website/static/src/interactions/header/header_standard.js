@@ -72,3 +72,9 @@ export class HeaderStandard extends BaseHeader {
 registry
     .category("website.active_elements")
     .add("website.header_standard", HeaderStandard);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.header_standard", {
+        Interaction: HeaderStandard,
+    });

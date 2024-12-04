@@ -294,8 +294,6 @@
             'website/static/lib/multirange/*.js',
             'website/static/src/core/**/*',
             'website/static/src/interactions/**/*',
-            # TODO Re-activate when testing edit mode
-            ('remove', 'website/static/src/interactions/**/*.edit.js'),
             'website/static/src/snippets/**/*.js',
             ('remove', 'website/static/src/snippets/**/000.js'),
             ('remove', 'website/static/src/snippets/**/options.js'),
@@ -368,6 +366,14 @@
             'website/static/src/xml/website.cookies_bar.xml',
             'website/static/src/js/editor/commands_overridden.js',
             'website/static/src/js/editor/odoo_editor.js',
+            # Fishy: this should not need to be defined here.
+            'google_recaptcha/static/src/js/recaptcha.js',
+            'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.js',
+            'website/static/src/core/**/*.js',
+            'website/static/src/interactions/**/*.js',
+            'website/static/src/snippets/**/*.js',
+            ('remove', 'website/static/src/snippets/**/000.js'),
+            'website/static/lib/multirange/*.js',
         ],
         'website.assets_all_wysiwyg': [
             ('include', 'web_editor.assets_wysiwyg'),

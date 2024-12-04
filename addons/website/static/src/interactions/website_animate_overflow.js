@@ -44,3 +44,9 @@ export class WebsiteAnimateOverflow extends Interaction {
 registry
     .category("website.active_elements")
     .add("website.website_animate_overflow", WebsiteAnimateOverflow);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.website_animate_overflow", {
+        Interaction: WebsiteAnimateOverflow,
+    });

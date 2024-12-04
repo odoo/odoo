@@ -32,11 +32,19 @@ export function buildEditableInteractions(builders) {
         mixinPerInteraction.set(makeEditable.Interaction, makeEditable.mixin || ((C) => C));
     }
     for (const makeEditable of builders) {
+        if (makeEditable.isAbstract) {
+            continue;
+        }
         let I = makeEditable.Interaction;
         // Collect mixins to up to Interaction class in reverse order.
         const mixins = [];
         while (I.name !== "Interaction") {
-            mixins.push(mixinPerInteraction.get(I));
+            const mixin = mixinPerInteraction.get(I);
+            if (mixin === null) {
+                console.log(`No mixin defined for: ${I.name}`);
+            } else {
+                mixins.push(mixin);
+            }
             I = I.__proto__;
         }
         // Apply mixins from top-most class.

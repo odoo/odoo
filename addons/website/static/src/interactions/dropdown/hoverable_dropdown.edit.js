@@ -1,8 +1,7 @@
 import { HoverableDropdown } from "@website/interactions/dropdown/hoverable_dropdown";
 import { registry } from "@web/core/registry";
 
-class HoverableDropdownEdit extends HoverableDropdown {
-
+const HoverableDropdownEdit = I => class extends I {
     /**
      * @param {Event} ev
      */
@@ -13,14 +12,16 @@ class HoverableDropdownEdit extends HoverableDropdown {
             super.onMouseEnter(ev);
         }
     }
-
+    
     /**
      * @param {Event} ev
      */
     onMouseLeave(ev) { }
-
-}
+};
 
 registry
-    .category("website.edit_active_elements")
-    .add("website.hoverable_dropdown", HoverableDropdownEdit);
+    .category("website.editable_active_elements_builders")
+    .add("website.hoverable_dropdown", {
+        Interaction: HoverableDropdown,
+        mixin: HoverableDropdownEdit
+    });

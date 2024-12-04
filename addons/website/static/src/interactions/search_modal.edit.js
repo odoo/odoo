@@ -1,12 +1,15 @@
 import { registry } from "@web/core/registry";
 import { SearchModal } from "./search_modal";
 
-class SearchModalEdit extends SearchModal {
+const SearchModalEdit = I => class extends I {
     dynamicContent = {
         "_root:t-on-show.bs.modal.prevent": () => {},
     }
-}
+};
 
 registry
-    .category("website.edit_active_elements")
-    .add("website.search_modal", SearchModalEdit);
+    .category("website.editable_active_elements_builders")
+    .add("website.search_modal", {
+        Interaction: SearchModal,
+        mixin: SearchModalEdit,
+    });

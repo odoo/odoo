@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { CarouselSlider } from "@website/interactions/carousel_slider";
 
-export class CarouselSliderEdit extends CarouselSlider {
+const CarouselSliderEdit = I => class extends I {
     dynamicContent = Object.assign(this.dynamicContent, {
         _root: {
             "t-on-content_changed": this.onContentChanged,
@@ -13,8 +13,11 @@ export class CarouselSliderEdit extends CarouselSlider {
     onContentChanged() {
         this.computeMaxHeight();
     }
-}
+};
 
 registry
-    .category("website.edit_active_elements")
-    .add("website.carousel_slider", CarouselSliderEdit);
+    .category("website.editable_active_elements_builders")
+    .add("website.carousel_slider", {
+        Interaction: CarouselSlider,
+        mixin: CarouselSliderEdit
+    });

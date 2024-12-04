@@ -14,11 +14,9 @@ export class DynamicSnippet extends Interaction {
     static selector = ".s_dynamic_snippet";
     dynamicContent = {
         "[data-url]": {
-            "t-on-click": this.callToAction, // TODO Disable in edit mode.
+            "t-on-click": this.callToAction,
         },
     };
-    // TODO Support edit-mode enabled.
-    static disabledInEditableMode = false;
 
     setup() {
         /**

@@ -41,5 +41,7 @@ export class CarouselSectionSliderEdit extends Interaction {
 }
 
 registry
-    .category("website.edit_active_elements")
-    .add("website.carousel_section_slider", CarouselSectionSliderEdit);
+    .category("website.editable_active_elements_builders")
+    .add("website.carousel_section_slider", {
+        Interaction: CarouselSectionSliderEdit,
+    });

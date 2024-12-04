@@ -42,3 +42,9 @@ export class FullScreenHeight extends Interaction {
 registry
     .category("website.active_elements")
     .add("website.full_screen_height", FullScreenHeight);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.full_screen_height", {
+        Interaction: FullScreenHeight,
+    });

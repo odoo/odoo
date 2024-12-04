@@ -1,3 +1,4 @@
+import { registry } from "@web/core/registry";
 import { BaseHeader } from "@website/interactions/header/base_header";
 
 export class BaseHeaderSpecial extends BaseHeader {
@@ -151,3 +152,10 @@ export class BaseHeaderSpecial extends BaseHeader {
         }
     }
 }
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.base_header_special", {
+        Interaction: BaseHeaderSpecial,
+        isAbstract: true,
+    });

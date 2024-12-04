@@ -4,7 +4,8 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
 import { Interaction } from "@website/core/interaction";
-import { startInteraction } from "./helpers";
+import { startInteraction, startInteractions } from "./helpers";
+import { registry } from "@web/core/registry";
 
 test("properly handles case where we have no match for wrapwrap", async () => {
     const env = await makeMockEnv();
@@ -219,4 +220,37 @@ test("can start and stop interaction in specific el", async () => {
     core.stopInteractions(p.querySelector(".b"));
     expect(n).toBe(1);
     expect(p).toHaveInnerHTML(`<span class="a test" data-start="true"></span> <span class="b test"></span>`)
+});
+
+// TODO adapt tests to run with new method instead
+test.todo("build edit_active_elements", async () => {
+    const { core } = await startInteractions("");
+    expect(core).not.toBe(null);
+    core.prepareEditActiveElements();
+    const mixinRegistry = registry.category("website.make_editable_active_elements");
+    const editRegistry = registry.category("website.edit_active_elements");
+    expect(editRegistry.getAll().length > 0).toBe(true);
+    const viewDynamicSnippet = mixinRegistry.get("website.dynamic_snippet").Interaction;
+    const editDynamicSnippet = editRegistry.get("website.dynamic_snippet");
+    expect(editDynamicSnippet.__proto__).toBe(viewDynamicSnippet);
+    expect(editDynamicSnippet.prototype.adjustPosition).not.toBe(viewDynamicSnippet.prototype.callToAction);
+    const viewDynamicSnippetCarousel = mixinRegistry.get("website.dynamic_snippet_carousel").Interaction;
+    const editDynamicSnippetCarousel = editRegistry.get("website.dynamic_snippet_carousel");
+    expect(editDynamicSnippetCarousel.__proto__).toBe(viewDynamicSnippetCarousel);
+    expect(editDynamicSnippetCarousel.prototype.adjustPosition).not.toBe(viewDynamicSnippetCarousel.prototype.callToAction);
+});
+
+test.todo("build edit_active_elements with abstract", async () => {
+    const { core } = await startInteractions("");
+    expect(core).not.toBe(null);
+    core.prepareEditActiveElements();
+    const mixinRegistry = registry.category("website.make_editable_active_elements");
+    const editRegistry = registry.category("website.edit_active_elements");
+    expect(editRegistry.getAll().length > 0).toBe(true);
+    expect(editRegistry.contains("website.base_header")).toBe(false);
+    expect(editRegistry.contains("website.base_header_special")).toBe(false);
+    const viewHeaderFixed = mixinRegistry.get("website.header_fixed").Interaction;
+    const editHeaderFixed = editRegistry.get("website.header_fixed");
+    expect(editHeaderFixed.__proto__).toBe(viewHeaderFixed);
+    expect(editHeaderFixed.prototype.adjustPosition).not.toBe(viewHeaderFixed.prototype.adjustPosition);
 });

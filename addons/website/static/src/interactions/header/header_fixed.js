@@ -8,3 +8,9 @@ export class HeaderFixed extends BaseHeaderSpecial {
 registry
     .category("website.active_elements")
     .add("website.header_fixed", HeaderFixed);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.header_fixed", {
+        Interaction: HeaderFixed,
+    });
