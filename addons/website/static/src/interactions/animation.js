@@ -104,7 +104,7 @@ export class Animation extends Interaction {
     /**
      * Gets element top offset by not taking CSS transforms into calculations.
      *
-     * @param {Element} el
+     * @param {HTMLElement} el
      * @param {HTMLElement} [topEl] if specified, calculates the top distance to
      *     this element.
      */

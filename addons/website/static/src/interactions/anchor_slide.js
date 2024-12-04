@@ -11,7 +11,7 @@ export class AnchorSlide extends Interaction {
     };
 
     /**
-     * @param {DOMElement} el the element to scroll to.
+     * @param {HTMLElement} el the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
      * @returns {Promise}
      */
@@ -79,7 +79,7 @@ export class AnchorSlide extends Interaction {
     /**
      *
      * @param {string} hash
-     * @param {DOMElement} anchorEl the element to scroll to.
+     * @param {HTMLElement} anchorEl the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
      */
     manageScroll(hash, anchorEl, scrollValue = "true") {

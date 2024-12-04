@@ -1,7 +1,7 @@
 // Definitely not the right location for this file !!!
 
 /**
- * @param {DOMElement} element
+ * @param {HTMLElement} element
  */
 export function onceAllImagesLoaded(element) {
     const imgEls =
