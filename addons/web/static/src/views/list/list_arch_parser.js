@@ -138,6 +138,7 @@ export class ListArchParser {
                     props: widgetProps,
                     id: `column_${nextId++}`,
                     type: "widget",
+                    label: widgetInfo.widget.label,
                 });
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
