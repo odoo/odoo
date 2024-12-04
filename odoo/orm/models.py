@@ -4725,7 +4725,7 @@ class BaseModel(metaclass=MetaModel):
             if field.type != 'properties':
                 continue
             for record in self:
-                old_value = record[fname]
+                old_value = record[fname]._values
                 if not old_value:
                     continue
 
@@ -4742,7 +4742,7 @@ class BaseModel(metaclass=MetaModel):
             if fname not in self._fields or self._fields[fname].type != 'properties':
                 continue
             field_converter = self._fields[fname].convert_to_cache
-            to_write[fname] = dict(self[fname], **field_converter(values.pop(fname), self, validate=False))
+            to_write[fname] = dict(self[fname]._values, **field_converter(values.pop(fname), self, validate=False))
 
         self.write(values)
         if to_write:

@@ -10,10 +10,16 @@ class Page {
     constructor(resModel, fieldDefs, options = {}) {
         this.resModel = resModel;
         this.fieldDefs = fieldDefs;
-        const { previousPage = null, selectedName = null, isDebugMode } = options;
+        const {
+            previousPage = null,
+            selectedName = null,
+            isDebugMode,
+            readProperty = false,
+        } = options;
         this.previousPage = previousPage;
         this.selectedName = selectedName;
         this.isDebugMode = isDebugMode;
+        this.readProperty = readProperty;
         this.sortedFieldNames = sortBy(Object.keys(fieldDefs), (key) => fieldDefs[key].string);
         this.fieldNames = this.sortedFieldNames;
         this.query = "";
@@ -23,11 +29,21 @@ class Page {
 
     get path() {
         const previousPath = this.previousPage?.path || "";
-        if (this.selectedName) {
+        const name = this.selectedName;
+        if (this.readProperty && this.selectedField && this.selectedField.is_property) {
+            if (this.selectedField.relation) {
+                return `${previousPath}.get('${name}', env['${this.selectedField.relation}'])`;
+            }
+            return `${previousPath}.get('${name}')`;
+        }
+        if (name) {
             if (previousPath) {
-                return `${previousPath}.${this.selectedName}`;
+                // If one property in the path, fallback to `[name]` instead of `.name`
+                return this.propertyInPath
+                    ? `${previousPath}['${name}']`
+                    : `${previousPath}.${name}`;
             } else {
-                return this.selectedName;
+                return name;
             }
         }
         return previousPath;
@@ -44,6 +60,17 @@ class Page {
             return `${prefix}${title}`;
         }
         return _t("Select a field");
+    }
+
+    get propertyInPath() {
+        let page = this.previousPage;
+        while (page) {
+            if (page.selectedField.is_property) {
+                return true;
+            }
+            page = page.previousPage;
+        }
+        return false;
     }
 
     focus(direction) {
@@ -99,6 +126,7 @@ export class ModelFieldSelectorPopover extends Component {
         showDebugInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         path: { optional: true },
+        readProperty: { type: Boolean, optional: true },
         resModel: String,
         showSearchInput: { type: Boolean, optional: true },
         update: Function,
@@ -155,7 +183,10 @@ export class ModelFieldSelectorPopover extends Component {
 
     async followRelation(fieldDef) {
         const { modelsInfo } = await this.keepLast.add(
-            this.fieldService.loadPath(this.state.page.resModel, `${fieldDef.name}.*`)
+            this.fieldService.loadPath(
+                fieldDef.relation || this.state.page.resModel,
+                `${fieldDef.name}.*`
+            )
         );
         this.state.page.selectedName = fieldDef.name;
         const { resModel, fieldDefs } = modelsInfo.at(-1);
@@ -163,6 +194,7 @@ export class ModelFieldSelectorPopover extends Component {
             new Page(resModel, this.filter(fieldDefs, this.state.page.path), {
                 previousPage: this.state.page,
                 isDebugMode: this.props.isDebugMode,
+                readProperty: this.props.readProperty,
             })
         );
     }
@@ -182,6 +214,7 @@ export class ModelFieldSelectorPopover extends Component {
             const fieldDefs = await this.fieldService.loadFields(resModel);
             return new Page(resModel, this.filter(fieldDefs, path), {
                 isDebugMode: this.props.isDebugMode,
+                readProperty: this.props.readProperty,
             });
         }
         const { isInvalid, modelsInfo, names } = await this.fieldService.loadPath(resModel, path);
@@ -193,6 +226,7 @@ export class ModelFieldSelectorPopover extends Component {
                 return new Page(resModel, this.filter(fieldDefs, path), {
                     selectedName: path,
                     isDebugMode: this.props.isDebugMode,
+                    readProperty: this.props.readProperty,
                 });
             }
             default: {
@@ -204,6 +238,7 @@ export class ModelFieldSelectorPopover extends Component {
                         previousPage: page,
                         selectedName: name,
                         isDebugMode: this.props.isDebugMode,
+                        readProperty: this.props.readProperty,
                     });
                 }
                 return page;
