@@ -1105,9 +1105,7 @@ describe("miscellaneous", () => {
         );
         expect.verifySteps([]);
         await animationFrame();
-        expect.verifySteps(["anonymous function"]);
-        await animationFrame();
-        expect.verifySteps(["named function"]);
+        expect.verifySteps(["named function", "anonymous function"]);
     });
 });
 

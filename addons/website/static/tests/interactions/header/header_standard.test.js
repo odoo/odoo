@@ -7,6 +7,7 @@ import {
 
 import {
     setupTest,
+    setupEnd,
     customScroll,
     getTemplateWithoutHideOnScroll,
     getTemplateWithHideOnScroll,
@@ -35,10 +36,10 @@ const behavior2 = {
 };
 
 const behavior3 = {
-    transform: "translate(0px, 0px)",
-    paddingTop: "50px",
-    classList: "o_header_affixed,o_header_is_scrolled,o_header_standard,o_top_fixed_element",
     visibility: true,
+    paddingTop: "50px",
+    transform: "translate(0px, 0px)",
+    classList: "o_header_affixed,o_header_is_scrolled,o_header_standard,o_top_fixed_element",
 };
 
 test("[scroll] Template without o_header_hide_on_scroll", async () => {
@@ -48,6 +49,7 @@ test("[scroll] Template without o_header_hide_on_scroll", async () => {
     const main = el.querySelector("main")
     setupTest(core, wrapwrap);
 
+    await setupEnd();
     expect(checkHeader(header, main, core, behavior1)).toBe(true);
     await customScroll(wrapwrap, 0, 40);
     expect(checkHeader(header, main, core, behavior1)).toBe(true);
@@ -78,6 +80,7 @@ test("[scroll] Template with o_header_hide_on_scroll", async () => {
     const main = el.querySelector("main")
     setupTest(core, wrapwrap);
 
+    await setupEnd();
     expect(checkHeader(header, main, core, behavior1)).toBe(true);
     await customScroll(wrapwrap, 0, 40);
     expect(checkHeader(header, main, core, behavior1)).toBe(true);
