@@ -89,7 +89,6 @@ class WebsiteCore {
         const proms = [];
         for (const [name, I] of this.registry.getEntries()) {
             if (el.matches(I.selector)) {
-                // console.log("starting", name);
                 this._startInteraction(el, I, proms);
             } else {
                 for (const _el of el.querySelectorAll(I.selector)) {
@@ -113,6 +112,7 @@ class WebsiteCore {
         this.activeInteractions.add(el, I);
         if (I.prototype instanceof Interaction) {
             try {
+                console.log(`[colibri] starting ${I.name}`);
                 const interaction = new Colibri(this, I, el);
                 this.interactions.push(interaction);
                 proms.push(interaction.startProm);
@@ -128,6 +128,7 @@ class WebsiteCore {
         const interactions = [];
         for (const interaction of this.interactions.slice().reverse()) {
             if (el === interaction.el || el.contains(interaction.el)) {
+                console.log(`[colibri] stopping ${interaction.constructor.name}`);
                 interaction.destroy();
                 this.activeInteractions.delete(interaction.el, interaction.I);
             } else {
