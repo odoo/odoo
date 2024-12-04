@@ -128,9 +128,7 @@ export class BaseHeader extends Interaction {
     //--------------------------------------------------------------
 
     adaptToHeaderChange() {
-        for (const callback of this.services.website_menus.updateCallbacks) {
-            callback();
-        }
+        this.services.website_menus.triggerCallbacks();
         this.adjustMainPadding();
     }
 
