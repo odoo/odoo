@@ -94,9 +94,110 @@ export class PosData extends Reactive {
             for (const record of data) {
                 const isToRemove = params.condition(record);
 
+<<<<<<< master:addons/point_of_sale/static/src/app/services/data_service.js
                 if (isToRemove === undefined || isToRemove === true) {
                     if (record[params.key]) {
                         remove.push(record[params.key]);
+||||||| 958fbe0d3a52eac8c15e2a7e15d93cc9f8fc6f1a:addons/point_of_sale/static/src/app/models/data_service.js
+                    if (finalizedState === undefined || finalizedState === true) {
+                        if (record[key]) {
+                            acc.remove.push(record[key]);
+                        }
+                    } else {
+                        acc.put.push(dataFormatter(record));
+                    }
+
+                    return acc;
+                },
+                { put: [], remove: [] }
+            );
+        };
+
+        // This methods will add uiState to the serialized object
+        const dataFormatter = (record) => {
+            const serializedData = record.serialize();
+            const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
+            return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
+        };
+
+        for (const [model, params] of Object.entries(this.opts.databaseTable)) {
+            const nbrRecords = records[model].size;
+
+            if (!nbrRecords) {
+                continue;
+            }
+
+            const data = dataSorter(this.models[model].getAll(), params.condition, params.key);
+            this.indexedDB.create(model, data.put);
+            this.indexedDB.delete(model, data.remove);
+        }
+
+        this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
+            if (!data) {
+                return;
+            }
+
+            for (const [model, records] of Object.entries(data)) {
+                const key = this.opts.databaseTable[model].key;
+                for (const record of records) {
+                    const localRecord = this.models[model].get(record.id);
+
+                    if (!localRecord) {
+                        this.indexedDB.delete(model, [record[key]]);
+=======
+                    if (finalizedState === undefined || finalizedState === true) {
+                        if (record[key]) {
+                            acc.remove.push(record[key]);
+                        }
+                    } else {
+                        acc.put.push(dataFormatter(record));
+                    }
+
+                    return acc;
+                },
+                { put: [], remove: [] }
+            );
+        };
+
+        // This methods will add uiState to the serialized object
+        const dataFormatter = (record) => {
+            const serializedData = record.serialize();
+            const uiState = typeof record.uiState === "object" ? record.serializeState() : "{}";
+            return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
+        };
+
+        const dataToDelete = {};
+
+        for (const [model, params] of Object.entries(this.opts.databaseTable)) {
+            const nbrRecords = records[model].size;
+
+            if (!nbrRecords) {
+                continue;
+            }
+
+            const data = dataSorter(this.models[model].getAll(), params.condition, params.key);
+            this.indexedDB.create(model, data.put);
+            dataToDelete[model] = data.remove;
+        }
+
+        this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
+            if (!data) {
+                return;
+            }
+
+            for (const [model, records] of Object.entries(data)) {
+                const key = this.opts.databaseTable[model].key;
+                let keysToDelete = [];
+
+                if (dataToDelete[model]) {
+                    const keysInIndexedDB = new Set(records.map((record) => record[key]));
+                    keysToDelete = dataToDelete[model].filter((key) => keysInIndexedDB.has(key));
+                }
+                for (const record of records) {
+                    const localRecord = this.models[model].get(record.id);
+                    if (!localRecord) {
+                        keysToDelete.push(record[key]);
+>>>>>>> 014e1ad0961aed63c4ad531211788e3016fdd80f:addons/point_of_sale/static/src/app/models/data_service.js
                     }
                 } else {
                     const serializedData = record.serialize();
@@ -108,6 +209,10 @@ export class PosData extends Reactive {
                         id: record.id,
                     };
                     put.push(serializedRecord);
+                }
+
+                if (keysToDelete.length) {
+                    this.indexedDB.delete(model, keysToDelete);
                 }
             }
 

@@ -306,6 +306,158 @@ export class ProductScreen extends Component {
         return this.pos.searchProductWord.trim();
     }
 
+<<<<<<< master
+||||||| 958fbe0d3a52eac8c15e2a7e15d93cc9f8fc6f1a
+    get products() {
+        return this.pos.models["product.product"].getAll();
+    }
+
+    get productsToDisplay() {
+        let list = [];
+
+        if (this.searchWord !== "") {
+            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
+        } else if (this.pos.selectedCategory?.id) {
+            list = this.getProductsByCategory(this.pos.selectedCategory);
+        } else {
+            list = this.products;
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
+        list = list
+            .filter(
+                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
+            )
+            .slice(0, 100);
+
+        return this.searchWord !== ""
+            ? list
+            : list.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const exactMatches = this.products.filter((product) => product.exactMatch(searchWord));
+
+        if (exactMatches.length > 0 && searchWord.length > 2) {
+            return exactMatches;
+        }
+
+        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), this.products, (product) =>
+            unaccent(product.searchString, false)
+        );
+
+        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                const mainProduct = this.pos.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    getProductsByCategory(category) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
+    }
+
+=======
+    get products() {
+        return this.pos.models["product.product"].getAll();
+    }
+
+    get productsToDisplay() {
+        let list = [];
+
+        if (this.searchWord !== "") {
+            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
+        } else if (this.pos.selectedCategory?.id) {
+            list = this.getProductsByCategory(this.pos.selectedCategory);
+        } else {
+            list = this.products;
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.available_in_pos) {
+                filteredList.push(product);
+            }
+        }
+
+        return this.searchWord !== ""
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const exactMatches = this.products.filter((product) => product.exactMatch(searchWord));
+
+        if (exactMatches.length > 0 && searchWord.length > 2) {
+            return exactMatches;
+        }
+
+        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), this.products, (product) =>
+            unaccent(product.searchString, false)
+        );
+
+        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                const mainProduct = this.pos.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    getProductsByCategory(category) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
+    }
+
+>>>>>>> 014e1ad0961aed63c4ad531211788e3016fdd80f
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
