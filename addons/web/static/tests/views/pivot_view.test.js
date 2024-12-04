@@ -1455,8 +1455,8 @@ test("download a file with single measure, measure row displayed in table", asyn
     expect.assertions(2);
 
     patchWithCleanup(download, {
-        _download: ({ url, data }) => {
-            data = JSON.parse(data.data);
+        _download: async ({ url, data }) => {
+            data = JSON.parse(await data.data.text());
             expect(url).toBe("/web/pivot/export_xlsx");
             expect(data.measure_headers.length).toBe(4);
             return Promise.resolve();
@@ -2693,8 +2693,8 @@ test("export data in excel with comparison", async () => {
     mockDate("2016-12-20T1:00:00");
 
     patchWithCleanup(download, {
-        _download: ({ url, data }) => {
-            data = JSON.parse(data.data);
+        _download: async ({ url, data }) => {
+            data = JSON.parse(await data.data.text());
             for (const l of data.col_group_headers) {
                 const titles = l.map((o) => o.title);
                 expect.step(titles);
