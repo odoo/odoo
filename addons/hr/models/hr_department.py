@@ -162,6 +162,7 @@ class Department(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': res_model,
             'view_mode': 'list,kanban,form',
+            'views': [(False, 'list'), (False, 'kanban'), (False, 'form')],
             'search_view_id': [search_view_id, 'search'],
             'context': {
                 'searchpanel_default_department_id': self.id,

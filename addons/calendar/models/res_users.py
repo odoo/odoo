@@ -17,7 +17,6 @@ class Users(models.Model):
          ('confidential', 'Only internal users')],
         compute="_compute_calendar_default_privacy",
         inverse="_inverse_calendar_res_users_settings",
-        compute_sudo=True,
     )
 
     @property
