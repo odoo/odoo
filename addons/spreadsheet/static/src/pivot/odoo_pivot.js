@@ -379,16 +379,19 @@ export class OdooPivot {
         const measure = this.getMeasure(measureId);
         const value = this.model.getPivotCellValue(measure, domain);
         let format;
-        switch (measure.aggregator) {
-            case "count":
-            case "count_distinct":
-                format = "0";
-                break;
-            default:
-                format =
-                    measure.fieldName === "__count"
-                        ? "0"
-                        : this._getPivotFieldFormat(measure.fieldName, value);
+        if (
+            measure.aggregator === "count_distinct" ||
+            measure.aggregator === "count" ||
+            measure.fieldName === "__count"
+        ) {
+            format = "0";
+        } else if (measure.type === "date") {
+            format = this.getters.getLocale().dateFormat;
+        } else if (measure.type === "datetime") {
+            const { dateFormat, timeFormat } = this.getters.getLocale();
+            format = `${dateFormat} ${timeFormat}`;
+        } else {
+            format = this._getPivotFieldFormat(measure.fieldName, value);
         }
         return { value, format };
     }
@@ -559,7 +562,7 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
     }
 }
 
-const MEASURES_TYPES = ["integer", "float", "monetary"];
+const MEASURES_TYPES = ["integer", "float", "monetary", "date", "datetime"];
 
 const granularities = [
     "year",
@@ -582,7 +585,7 @@ pivotRegistry.add("ODOO", {
     dateGranularities: [...granularities],
     datetimeGranularities: [...granularities, "hour_number", "minute_number", "second_number"],
     isMeasureCandidate: (field) =>
-        ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
+        (MEASURES_TYPES.includes(field.type) || field.type === "many2one") &&
         field.name !== "id" &&
         field.store,
     isGroupable: (field) => field.groupable,
