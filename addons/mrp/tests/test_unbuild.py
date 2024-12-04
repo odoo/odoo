@@ -8,13 +8,6 @@ from odoo.exceptions import UserError
 
 
 class TestUnbuild(TestMrpCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.env.ref('base.group_user').write({
-            'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]
-        })
 
     def test_unbuild_standart(self):
         """ This test creates a MO and then creates 3 unbuild
@@ -463,22 +456,21 @@ class TestUnbuild(TestMrpCommon):
         StockQuant = self.env['stock.quant']
         ProductObj = self.env['product.product']
         # Create new QC/Unbuild location
-        warehouse = self.env.ref('stock.warehouse0')
         unbuild_location = self.env['stock.location'].create({
             'name': 'QC/Unbuild',
             'usage': 'internal',
-            'location_id': warehouse.view_location_id.id
+            'location_id': self.warehouse_1.view_location_id.id
         })
 
         # Create a product route containing a stock rule that will move product from QC/Unbuild location to stock
         self.env['stock.route'].create({
             'name': 'QC/Unbuild -> Stock',
             'warehouse_selectable': True,
-            'warehouse_ids': [(4, warehouse.id)],
+            'warehouse_ids': [(4, self.warehouse_1.id)],
             'rule_ids': [(0, 0, {
                 'name': 'Send Matrial QC/Unbuild -> Stock',
                 'action': 'push',
-                'picking_type_id': self.ref('stock.picking_type_internal'),
+                'picking_type_id': self.picking_type_int.id,
                 'location_src_id': unbuild_location.id,
                 'location_dest_id': self.stock_location.id,
             })],
@@ -578,7 +570,8 @@ class TestUnbuild(TestMrpCommon):
         - decimal accuracy of Product UoM > decimal accuracy of Units
         - unbuild a product with a decimal quantity of component
         """
-        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 4
+        with self.with_user('admin'):
+            self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 4
         self.uom_unit.rounding = 0.001
 
         self.bom_1.product_qty = 3
@@ -668,9 +661,7 @@ class TestUnbuild(TestMrpCommon):
         unbuild order are applied on the stock moves
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.user.id)])
+        self.env.user.sudo().sudo().write({'groups_id': [(4, grp_multi_loc.id, 0)]})
         subloc01, subloc02, = self.stock_location.child_ids[:2]
 
         mo, _, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
@@ -686,7 +677,7 @@ class TestUnbuild(TestMrpCommon):
 
         # Transfer the finished product from WH/Stock to `subloc01`
         internal_form = Form(self.env['stock.picking'])
-        internal_form.picking_type_id = warehouse.int_type_id
+        internal_form.picking_type_id = self.warehouse_1.int_type_id
         internal_form.location_id = self.stock_location
         internal_form.location_dest_id = subloc01
         with internal_form.move_ids_without_package.new() as move:
@@ -704,10 +695,19 @@ class TestUnbuild(TestMrpCommon):
         unbuild_order.action_unbuild()
 
         self.assertRecordValues(unbuild_order.produce_line_ids, [
-            # pylint: disable=bad-whitespace
-            {'product_id': p_final.id,  'location_id': subloc01.id,         'location_dest_id': prod_location.id},
-            {'product_id': p2.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
-            {'product_id': p1.id,       'location_id': prod_location.id,    'location_dest_id': subloc02.id},
+            {
+                'product_id': p_final.id,
+                'location_id': subloc01.id,
+                'location_dest_id': self.production_location_id
+            }, {
+                'product_id': p2.id,
+                'location_id': self.production_location_id,
+                'location_dest_id': subloc02.id
+            }, {
+                'product_id': p1.id,
+                'location_id': self.production_location_id,
+                'location_dest_id': subloc02.id
+            },
         ])
 
     def test_compute_product_uom_id(self):
@@ -720,9 +720,8 @@ class TestUnbuild(TestMrpCommon):
         order = self.env['mrp.unbuild'].create({
             'product_id': self.product_4.id,
         })
-        warehouse = self.env.ref('stock.warehouse0')
-        self.assertEqual(order.location_id, warehouse.lot_stock_id)
-        self.assertEqual(order.location_dest_id, warehouse.lot_stock_id)
+        self.assertEqual(order.location_id, self.warehouse_1.lot_stock_id)
+        self.assertEqual(order.location_dest_id, self.warehouse_1.lot_stock_id)
 
     def test_use_unbuilt_sn_in_mo(self):
         """

@@ -58,16 +58,13 @@ class TestWarehouse(TestStockCommon):
         When updating product quantity, new quant should have its location set
         to the stock location of the top warehouse.
         """
-        stock_location = self.env.ref('stock.stock_location_stock')
-        suppliers_location = self.env.ref('stock.stock_location_suppliers')
-
         warehouse = self.env['stock.warehouse'].create({
             'name': 'Mixed locations',
             'code': 'TEST',
             'sequence': 0,
         })
-        warehouse.in_type_id.default_location_dest_id = suppliers_location
-        warehouse.lot_stock_id = stock_location
+        warehouse.in_type_id.default_location_dest_id = self.supplier_location
+        warehouse.lot_stock_id = self.stock_location
 
         quant = self.env['stock.quant'].new({
             'product_id': self.product_1.id,
@@ -75,7 +72,7 @@ class TestWarehouse(TestStockCommon):
         })
         quant._onchange_product_id()
 
-        self.assertEqual(quant.location_id, stock_location)
+        self.assertEqual(quant.location_id.id, self.stock_location.id)
 
     def test_inventory_wizard_as_user(self):
         """ Using the "Update Quantity" wizard as stock user.
@@ -101,9 +98,9 @@ class TestWarehouse(TestStockCommon):
         product.is_storable = True
         picking_out = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': self.warehouse_1.lot_stock_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.customer_location.id,
         })
         customer_move = self.env['stock.move'].create({
             'name': product.name,
@@ -112,13 +109,13 @@ class TestWarehouse(TestStockCommon):
             'product_uom': product.uom_id.id,
             'picking_id': picking_out.id,
             'location_id': self.warehouse_1.lot_stock_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.customer_location.id,
         })
         # simulate create + onchange
         # test move values
         self.assertEqual(customer_move.product_uom, product.uom_id)
         self.assertEqual(customer_move.location_id, self.warehouse_1.lot_stock_id)
-        self.assertEqual(customer_move.location_dest_id, self.env.ref('stock.stock_location_customers'))
+        self.assertEqual(customer_move.location_dest_id, self.customer_location)
 
         # confirm move, check quantity on hand and virtually available, without location context
         customer_move._action_confirm()
@@ -131,7 +128,9 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(product.qty_available, -5.0)
 
         # compensate negative quants by receiving products from supplier
-        receive_move = self._create_move(product, self.env.ref('stock.stock_location_suppliers'), self.warehouse_1.lot_stock_id, product_uom_qty=15)
+        receive_move = self._create_move(
+            product, self.supplier_location, self.warehouse_1.lot_stock_id, product_uom_qty=15
+        )
 
         receive_move._action_confirm()
         receive_move.quantity = 15
@@ -143,7 +142,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(product.virtual_available, 10.0)
 
         # new move towards customer
-        customer_move_2 = self._create_move(product, self.warehouse_1.lot_stock_id, self.env.ref('stock.stock_location_customers'), product_uom_qty=2)
+        customer_move_2 = self._create_move(product, self.warehouse_1.lot_stock_id, self.customer_location, product_uom_qty=2)
 
         customer_move_2._action_confirm()
         product._compute_quantities()
@@ -159,15 +158,13 @@ class TestWarehouse(TestStockCommon):
     def test_inventory_adjustment_and_negative_quants_1(self):
         """Make sure negative quants from returns get wiped out with an inventory adjustment"""
         productA = self.env['product.product'].create({'name': 'Product A', 'is_storable': True})
-        stock_location = self.env.ref('stock.stock_location_stock')
-        customer_location = self.env.ref('stock.stock_location_customers')
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
         self.env['stock.move'].create({
             'name': productA.name,
@@ -175,15 +172,17 @@ class TestWarehouse(TestStockCommon):
             'product_uom_qty': 1,
             'product_uom': productA.uom_id.id,
             'picking_id': picking_out.id,
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
         picking_out.action_confirm()
         picking_out.move_ids.quantity = 1
         picking_out.move_ids.picked = True
         picking_out._action_done()
 
-        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        quant = self.env['stock.quant'].search(
+            [('product_id', '=', productA.id), ('location_id', '=', self.stock_location.id)]
+        )
         self.assertEqual(len(quant), 1)
         stock_return_picking_form = Form(self.env['stock.return.picking']
             .with_context(active_ids=picking_out.ids, active_id=picking_out.ids[0],
@@ -197,22 +196,22 @@ class TestWarehouse(TestStockCommon):
         return_pick.move_ids.picked = True
         return_pick._action_done()
 
-        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        quant = self.env['stock.quant'].search(
+            [('product_id', '=', productA.id), ('location_id', '=', self.stock_location.id)]
+        )
         self.assertEqual(sum(quant.mapped('quantity')), 0)
 
     def test_inventory_adjustment_and_negative_quants_2(self):
         """Make sure negative quants get wiped out with an inventory adjustment"""
         productA = self.env['product.product'].create({'name': 'Product A', 'is_storable': True})
-        stock_location = self.env.ref('stock.stock_location_stock')
-        customer_location = self.env.ref('stock.stock_location_customers')
         location_loss = productA.property_stock_inventory
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
         self.env['stock.move'].create({
             'name': productA.name,
@@ -220,8 +219,8 @@ class TestWarehouse(TestStockCommon):
             'product_uom_qty': 1,
             'product_uom': productA.uom_id.id,
             'picking_id': picking_out.id,
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })
         picking_out.action_confirm()
         picking_out.move_ids.quantity = 1
@@ -229,7 +228,7 @@ class TestWarehouse(TestStockCommon):
         picking_out._action_done()
 
         # Make an inventory adjustment to set the quantity to 0
-        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', self.stock_location.id)])
         self.assertEqual(len(quant), 1, "Wrong number of quants created.")
         self.assertEqual(quant.quantity, -1, "Theoretical quantity should be -1.")
         # Put the quantity back to 0
@@ -244,7 +243,7 @@ class TestWarehouse(TestStockCommon):
 
         # There should be no quant in the stock location
         self.env['stock.quant']._quant_tasks()
-        quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', self.stock_location.id)])
         self.assertEqual(sum(quants.mapped('quantity')), 0)
 
         # There should be one quant in the inventory loss location
@@ -294,9 +293,9 @@ class TestWarehouse(TestStockCommon):
 
         picking_out = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': warehouse_shop.lot_stock_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.customer_location.id,
         })
         self.env['stock.move'].create({
             'name': product.name,
@@ -305,7 +304,7 @@ class TestWarehouse(TestStockCommon):
             'product_uom': product.uom_id.id,
             'picking_id': picking_out.id,
             'location_id': warehouse_shop.lot_stock_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.customer_location.id,
             'warehouse_id': warehouse_shop.id,
             'procure_method': 'make_to_order',
         })
@@ -327,7 +326,7 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(self.env['stock.picking'].search([('location_id', '=', self.env.company.internal_transit_location_id.id), ('partner_id', '=', distribution_partner.id)]))
         self.assertTrue(self.env['stock.picking'].search([('location_dest_id', '=', self.env.company.internal_transit_location_id.id), ('partner_id', '=', distribution_partner.id)]))
 
-    def test_mutiple_resupply_warehouse(self):
+    def test_multiple_resupply_warehouse(self):
         """ Simulate the following situation:
         - 2 shops with stock are resupply by 2 distinct warehouses
         - Shop Namur is resupply by the warehouse stock Namur
@@ -336,8 +335,6 @@ class TestWarehouse(TestStockCommon):
         This test ensure that the move are supplied by the correct distribution
         warehouse.
         """
-        customer_location = self.env.ref('stock.stock_location_customers')
-
         warehouse_distribution_wavre = self.env['stock.warehouse'].create({
             'name': 'Stock Wavre.',
             'code': 'WV',
@@ -377,9 +374,9 @@ class TestWarehouse(TestStockCommon):
         # distribution warehouse Namur.
         picking_out_namur = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': warehouse_shop_namur.lot_stock_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'state': 'draft',
         })
         self.env['stock.move'].create({
@@ -389,7 +386,7 @@ class TestWarehouse(TestStockCommon):
             'product_uom': product.uom_id.id,
             'picking_id': picking_out_namur.id,
             'location_id': warehouse_shop_namur.lot_stock_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'warehouse_id': warehouse_shop_namur.id,
             'procure_method': 'make_to_order',
         })
@@ -417,7 +414,7 @@ class TestWarehouse(TestStockCommon):
         picking_out_namur._action_done()
 
         # Check that the correct quantity has been provided to customer
-        self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 1)
+        self.assertEqual(self.env['stock.quant']._gather(product, self.customer_location).quantity, 1)
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_namur.lot_stock_id).mapped('quantity')), 0)
 
@@ -425,9 +422,9 @@ class TestWarehouse(TestStockCommon):
         # distribution warehouse Wavre.
         picking_out_wavre = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'picking_type_id': self.picking_type_out.id,
             'location_id': warehouse_shop_wavre.lot_stock_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'state': 'draft',
         })
         self.env['stock.move'].create({
@@ -437,7 +434,7 @@ class TestWarehouse(TestStockCommon):
             'product_uom': product.uom_id.id,
             'picking_id': picking_out_wavre.id,
             'location_id': warehouse_shop_wavre.lot_stock_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'warehouse_id': warehouse_shop_wavre.id,
             'procure_method': 'make_to_order',
         })
@@ -465,7 +462,7 @@ class TestWarehouse(TestStockCommon):
         picking_out_wavre._action_done()
 
         # Check that the correct quantity has been provided to customer
-        self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 2)
+        self.assertEqual(self.env['stock.quant']._gather(product, self.customer_location).quantity, 2)
         # Ensure there still no quants in distribution warehouse
         self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
 
@@ -618,7 +615,7 @@ class TestWarehouse(TestStockCommon):
     def test_noleak(self):
         # non-regression test to avoid company_id leaking to other warehouses (see blame)
         partner = self.env['res.partner'].create({'name': 'Chicago partner'})
-        company = self.env['res.company'].create({
+        company = self.env['res.company'].sudo().create({
             'name': 'My Company (Chicago)1',
             'currency_id': self.ref('base.USD')
         })
@@ -801,7 +798,7 @@ class TestWarehouse(TestStockCommon):
         """ Check that the closest warehouse is selected
         in a warehouse within warehouse situation
         """
-        wh = self.env.ref("stock.warehouse0")
+        wh = self.warehouse_2
         test_warehouse = self.warehouse_1
         location = test_warehouse.lot_stock_id
         self.assertEqual(location.warehouse_id, test_warehouse)

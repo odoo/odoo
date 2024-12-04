@@ -27,8 +27,9 @@ class TestWorkcenterOverview(common.TestMrpCommon):
             'type': 'normal',
         })
 
-        lang = self.env['res.lang']._lang_get(self.env.user.lang)
-        lang.week_start = '3'   # Wednesday
+        with self.with_user('admin'):
+            lang = self.env['res.lang']._lang_get(self.env.user.lang)
+            lang.week_start = '3'   # Wednesday
         week_range, date_start, date_stop = self.workcenter_2._get_week_range_and_first_last_days()
         self.assertEqual(next(iter(week_range)), date_start)
         self.assertEqual(date_stop.strftime('%Y-%m-%d'), '2020-04-07')
