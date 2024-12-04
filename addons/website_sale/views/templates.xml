@@ -2311,12 +2311,10 @@
         -->
         <!-- Checkout context:
             - website_sale_order: The current order.
-            - xmlid: The id of the xml templated rendered by the controller.
         -->
-        <t t-set="step_specific_values" t-value="website._get_checkout_steps(xmlid)"/>
         <div t-attf-class="#{_container_classes} d-flex #{_form_send_navigation and 'flex-column flex-lg-row align-items-lg-center' or 'flex-column'} mb-5 mb-lg-0 pt-4">
             <t t-if="website_sale_order and website_sale_order.website_order_line">
-                <t t-if="xmlid == 'website_sale.payment'">
+                <t t-if="current_website_checkout_step_href == '/shop/confirm_order'">
                     <div t-if="not errors and not website_sale_order.amount_total"
                          name="o_website_sale_free_cart">
                         <form name="o_wsale_confirm_order"
@@ -2336,22 +2334,10 @@
                     <t t-elif="not hide_payment_button" t-call="payment.submit_button"/>
                 </t>
                 <t t-else="">
-                    <!-- No need to set href for address template as save address result will redirect
-                    to proper place if all values are properly filled -->
-                    <t
-                        t-if="xmlid == 'website_sale.address'"
-                        t-set="main_button_href"
-                        t-value="False"
-                    />
-                    <t
-                        t-else=""
-                        t-set="main_button_href"
-                        t-value="step_specific_values['main_button_href']"
-                    />
                     <a role="button" name="website_sale_main_button"
                         t-attf-class="#{_cta_classes} btn btn-primary #{not website_sale_order._is_cart_ready() and 'disabled'} #{_form_send_navigation and 'order-lg-3 w-100 w-lg-auto ms-lg-auto' or 'w-100'}"
-                        t-att-href="main_button_href">
-                        <t t-out="step_specific_values['main_button']"/>
+                        t-att-href="next_website_checkout_step_href">
+                        <span t-field="next_website_checkout_step.main_button_label"/>
                         <i class="fa fa-angle-right ms-2 fw-light"/>
                     </a>
                 </t>
@@ -2361,10 +2347,18 @@
                 <span class="px-3">or</span>
                 <hr class="w-100"/>
             </div>
-            <a t-att-href="step_specific_values['back_button_href']" class="text-center">
-                <i class="fa fa-angle-left me-2 fw-light"/>
-                <t t-out="step_specific_values['back_button']"/>
-            </a>
+            <t t-if="previous_website_checkout_step">
+                <a t-att-href="previous_website_checkout_step.step_href" class="text-center">
+                    <i class="fa fa-angle-left me-2 fw-light"/>
+                    <span t-field="previous_website_checkout_step.back_button_label"/>
+                </a>
+            </t>
+            <t t-else="">
+                <a t-att-href="'/shop'" class="text-center">
+                    <i class="fa fa-angle-left me-2 fw-light"/>
+                    Continue shopping
+                </a>
+            </t>
         </div>
     </template>
 
@@ -2403,7 +2397,7 @@
 
     <template id="delivery_address_row">
         <div id="delivery_address_row" class="mb-4">
-            <h4 class="text-uppercase small fs-6 fw-bold">Delivery address</h4>
+            <h4 class="small fs-6 fw-bold">Delivery address</h4>
             <t t-call="website_sale.address_row">
                 <t t-set="address_type" t-value="'delivery'"/>
                 <t t-set="addresses" t-value="delivery_addresses"/>
@@ -2414,7 +2408,7 @@
 
     <template id="billing_address_row">
         <div id="billing_address_row" class="mb-3">
-            <h4 class="text-uppercase small fs-6 fw-bold mt-3">
+            <h4 class="small fs-6 fw-bold mt-3">
                 <t groups="!account.group_delivery_invoice_address">Your address</t>
                 <t groups="account.group_delivery_invoice_address">Billing address</t>
             </h4>

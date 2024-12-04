@@ -92,7 +92,7 @@
                      t-att-class="'collapse' if collapse_payment_methods else ''"
                 >
                     <!-- === Header === -->
-                    <h4 class="fs-6 small text-uppercase fw-bolder">
+                    <h4 class="fs-6 small fw-bolder">
                         <t t-if="not collapse_payment_methods">Choose a payment method</t>
                         <t t-else="">Other payment methods</t>
                         <t t-call="payment.availability_report_button"/>

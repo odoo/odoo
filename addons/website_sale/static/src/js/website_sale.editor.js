@@ -455,6 +455,12 @@ class AttachmentMediaDialog extends MediaDialog {
     }
 }
 
+options.registry.WebsiteSaleCheckoutPage = options.Class.extend({
+    setExtraStep: function (previewMode, widgetValue, params) {
+        return rpc("/shop/config/website", { "extra_step": widgetValue });
+    },
+});
+
 options.registry.WebsiteSaleProductPage = options.Class.extend({
     init() {
         this._super(...arguments);
