@@ -37,6 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_revenue_account_id': 'p10085',
                 'expense_account_id': 'p2107',
                 'income_account_id': 'p20011',
+                'l10n_in_withholding_account_id': 'p100595',
             },
         }
 
@@ -113,3 +114,9 @@ class AccountChartTemplate(models.AbstractModel):
             })
             for zero_tax in ["exempt_sale", "nil_rated_sale"]
         ]
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if template_code == 'in':
+            company = company or self.env.company
+            company._update_l10n_in_is_gst_registered()

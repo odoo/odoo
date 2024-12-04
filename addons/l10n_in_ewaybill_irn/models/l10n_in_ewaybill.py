@@ -123,7 +123,7 @@ class L10nInEwaybill(models.Model):
             error_codes = [error.get('code') for error in response.get('error')]
             if 'no-credit' in error_codes:
                 response['odoo_warning'].append({
-                    'message': self.env['account.edi.format']._l10n_in_edi_get_iap_buy_credits_message()
+                    'message': self.env['account.move']._l10n_in_get_iap_buy_credits_message()
                 })
             if '1005' in error_codes:
                 # Invalid token eror then create new token and send generate request again.
