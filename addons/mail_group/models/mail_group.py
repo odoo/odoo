@@ -291,7 +291,9 @@ class MailGroup(models.Model):
             'author_id': author_id,
             # sanitize then make valid Markup, notably for '_process_attachments_for_post'
             'body': Markup(self._clean_email_body(body)),
+            'email_cc': False,
             'email_from': email_from,
+            'email_to': False,
             'model': self._name,
             'partner_ids': [],
             'res_id': self.id,
@@ -456,15 +458,19 @@ class MailGroup(models.Model):
                 member_body = append_content_to_html(body, footer, plaintext=False)
 
                 mail_values.append({
+                    'author_id': message.mail_message_id.author_id.id,
                     'auto_delete': True,
                     'attachment_ids': message.attachment_ids.ids,
                     'body_html': member_body,
+                    'email_cc': False,
                     'email_from': message.email_from,
                     'email_to': email_member,
                     'headers': json.dumps(headers),
-                    'mail_message_id': message.mail_message_id.id,
+                    'is_notification': True,
+                    'mail_message_id': False,  # make each email independent
                     'message_id': message.mail_message_id.message_id,
                     'model': 'mail.group',
+                    'recipient_ids': False,
                     'reply_to': message.mail_message_id.reply_to,
                     'res_id': self.id,
                     'subject': message.subject,
