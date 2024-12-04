@@ -1,0 +1,38 @@
+id,model_id,group_id/id,operation,domain,name
+access_crm_lead_group_sale_manager,crm.lead,sales_team.group_sale_manager,rwcd,,All Leads
+access_crm_lead_group_sale_salesman,crm.lead,sales_team.group_sale_salesman,rwc,"['|',('user_id','=',user.id),('user_id','=',False)]",Personal Leads
+access_crm_lead_global,crm.lead,,rwcd,"[('company_id', 'in', company_ids + [False])]",CRM Lead Multi-Company
+access_crm_lead_group_sale_salesman_all_leads,crm.lead,sales_team.group_sale_salesman_all_leads,rwc,,All Leads
+access_crm_stage_group_user,crm.stage,base.group_user,r,,crm.stage
+access_crm_stage_group_sale_manager,crm.stage,sales_team.group_sale_manager,rwcd,,crm.stage
+access_res_partner_group_sale_manager,res.partner,sales_team.group_sale_manager,r,,res.partner.crm.manager
+access_res_partner_group_sale_salesman,res.partner,sales_team.group_sale_salesman,rwc,,res.partner.crm.user
+access_res_partner_category_group_sale_manager,res.partner.category,sales_team.group_sale_manager,r,,res.partner.category.crm.manager
+access_res_partner_category_group_sale_salesman,res.partner.category,sales_team.group_sale_salesman,rwc,,res.partner.category.crm.user
+access_crm_lost_reason_group_sale_manager,crm.lost.reason,sales_team.group_sale_manager,rwcd,,crm.lost.reason.manager
+access_crm_lost_reason_group_sale_salesman,crm.lost.reason,sales_team.group_sale_salesman,r,,crm.lost.reason.salesman
+access_crm_lost_reason_group_user,crm.lost.reason,base.group_user,r,,crm.lost.reason.user
+access_crm_activity_report_group_sale_salesman,crm.activity.report,sales_team.group_sale_salesman,r,"['|',('user_id','=',user.id),('user_id','=',False)]",Personal Activities
+access_crm_activity_report_group_sale_salesman_all_leads,crm.activity.report,sales_team.group_sale_salesman_all_leads,r,,All Activities
+access_crm_activity_report_global,crm.activity.report,,rwcd,"[('company_id', 'in', company_ids + [False])]",CRM Lead Multi-Company
+access_calendar_event_group_sale_manager,calendar.event,sales_team.group_sale_manager,rwcd,,calendar.event.manager
+access_calendar_event_group_sale_salesman,calendar.event,sales_team.group_sale_salesman,rwc,,calendar.event
+access_calendar_event_type_group_sale_manager,calendar.event.type,sales_team.group_sale_manager,rwc,,calendar.event.type.manager
+access_calendar_event_type_group_user,calendar.event.type,base.group_user,r,,calendar.event.type.user
+access_calendar_event_type_group_sale_salesman,calendar.event.type,sales_team.group_sale_salesman,r,,calendar.event.type.salesman
+access_mail_activity_type_group_sale_manager,mail.activity.type,sales_team.group_sale_manager,rwcd,,mail.activity.type.sale.manager
+access_crm_lead_scoring_frequency_group_sale_salesman,crm.lead.scoring.frequency,sales_team.group_sale_salesman,r,,access_crm_lead_scoring_frequency
+access_crm_lead_scoring_frequency_group_system,crm.lead.scoring.frequency,base.group_system,r,,access_crm_lead_scoring_frequency_system
+access_crm_lead_scoring_frequency_field_group_sale_salesman,crm.lead.scoring.frequency.field,sales_team.group_sale_salesman,r,,access_crm_lead_scoring_frequency_field
+access_crm_lead_scoring_frequency_field_group_system,crm.lead.scoring.frequency.field,base.group_system,r,,access_crm_lead_scoring_frequency_field_system
+access_crm_lead_lost_group_sale_salesman,crm.lead.lost,sales_team.group_sale_salesman,rwc,,access.crm.lead.lost
+access_crm_lead2opportunity_partner_group_sale_salesman,crm.lead2opportunity.partner,sales_team.group_sale_salesman,rwc,,access.crm.lead2opportunity.partner
+access_crm_lead2opportunity_partner_mass_group_sale_salesman,crm.lead2opportunity.partner.mass,sales_team.group_sale_salesman,rwc,,access.crm.lead2opportunity.partner.mass
+access_crm_merge_opportunity_group_sale_salesman,crm.merge.opportunity,sales_team.group_sale_salesman,rwc,,access.crm.merge.opportunity
+access_crm_recurring_plan_group_sale_manager,crm.recurring.plan,sales_team.group_sale_manager,rwcd,,crm.recurring.plan.access.manager
+access_crm_recurring_plan_group_sale_salesman,crm.recurring.plan,sales_team.group_sale_salesman,r,,crm.recurring.plan.access.salesman
+access_crm_lead_pls_update_group_erp_manager,crm.lead.pls.update,base.group_erp_manager,rwcd,,crm.lead.pls.update.access.system
+access_mail_activity_plan_group_sale_manager_r,mail.activity.plan,sales_team.group_sale_manager,r,,mail.activity.plan.sale.manager
+access_mail_activity_plan_group_sale_manager_wcd,mail.activity.plan,sales_team.group_sale_manager,wcd,"[('res_model', '=', 'crm.lead')]",Manager can manage lead plans
+access_mail_activity_plan_template_group_sale_manager_r,mail.activity.plan.template,sales_team.group_sale_manager,r,,mail.activity.plan.template.sale.manager
+access_mail_activity_plan_template_group_sale_manager_wcd,mail.activity.plan.template,sales_team.group_sale_manager,wcd,"[('plan_id.res_model', '=', 'crm.lead')]",Manager can manage lead plan templates

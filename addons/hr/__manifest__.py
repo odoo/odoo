@@ -20,7 +20,6 @@
     ],
     'data': [
         'security/hr_security.xml',
-        'security/ir.model.access.csv',
         'data/digest_data.xml',
         'data/report_paperformat.xml',
         'wizard/hr_departure_wizard_views.xml',
@@ -42,6 +41,7 @@
         'views/res_users.xml',
         'views/hr_templates.xml',
         'data/hr_data.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_demo.xml'

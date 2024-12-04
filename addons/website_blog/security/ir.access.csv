@@ -1,0 +1,17 @@
+id,model_id,group_id/id,operation,domain,name
+access_blog_blog_group_public,blog.blog,base.group_public,r,"[('active', '=', True)]",Blog: active only
+access_blog_blog_group_portal,blog.blog,base.group_portal,r,"[('active', '=', True)]",Blog: active only
+access_blog_blog_group_user,blog.blog,base.group_user,r,,blog.blog
+access_blog_blog_group_website_designer,blog.blog,website.group_website_designer,rwcd,,blog.blog
+access_blog_post_group_public,blog.post,base.group_public,r,"[('website_published', '=', True)]",Blog Post: public: published only
+access_blog_post_group_portal,blog.post,base.group_portal,r,"[('website_published', '=', True)]",Blog Post: public: published only
+access_blog_post_group_user,blog.post,base.group_user,r,,blog.post
+access_blog_post_group_website_designer,blog.post,website.group_website_designer,rwcd,,blog.post
+access_blog_tag_group_public,blog.tag,base.group_public,r,,blog.tag
+access_blog_tag_group_portal,blog.tag,base.group_portal,r,,blog.tag
+access_blog_tag_group_user,blog.tag,base.group_user,r,,blog.tag
+access_blog_tag_group_website_designer,blog.tag,website.group_website_designer,rwcd,,blog.tag
+access_blog_tag_category_group_public,blog.tag.category,base.group_public,r,,blog.tag.category
+access_blog_tag_category_group_portal,blog.tag.category,base.group_portal,r,,blog.tag.category
+access_blog_tag_category_group_user,blog.tag.category,base.group_user,r,,blog.tag.category
+access_blog_tag_category_group_website_designer,blog.tag.category,website.group_website_designer,rwcd,,blog.tag.category

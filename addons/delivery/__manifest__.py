@@ -13,8 +13,6 @@ The system is able to add and compute the shipping line.
     'depends': ['sale'],
     'data': [
         'data/delivery_data.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rules.xml',
 
         'report/ir_actions_report_templates.xml',
 
@@ -26,6 +24,7 @@ The system is able to add and compute the shipping line.
 
         'wizard/res_config_settings_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': ['data/delivery_demo.xml'],
     'installable': True,

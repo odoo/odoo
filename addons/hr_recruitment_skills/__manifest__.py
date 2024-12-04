@@ -9,12 +9,11 @@
     'summary': 'Manage skills of your employees',
     'depends': ['hr_skills', 'hr_recruitment'],
     'data': [
-        'security/hr_recruitment_skills_security.xml',
         'views/hr_applicant_views.xml',
         'views/hr_candidate_views.xml',
         'views/hr_candidate_skill_views.xml',
         'views/hr_job_views.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

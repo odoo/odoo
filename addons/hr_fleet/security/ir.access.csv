@@ -1,0 +1,9 @@
+id,model_id,group_id/id,operation,domain,name
+access_fleet_vehicle_group_hr_user,fleet.vehicle,hr.group_hr_user,r,"['|', ('driver_employee_id', '!=', False), ('future_driver_employee_id', '!=', False)]",Hr Officer read rights on vehicle with employees assigned
+access_fleet_vehicle_fleet_group_user,fleet.vehicle,fleet.fleet_group_user,rw,"[('driver_employee_id.user_id','=',user.id)]",User can see vehicles from his/her corresponding employee
+access_fleet_vehicle_fleet_group_manager,fleet.vehicle,fleet.fleet_group_manager,rw,"[('driver_employee_id.user_id','=',user.id)]",User can see vehicles from his/her corresponding employee
+access_fleet_vehicle_log_contract_fleet_group_user,fleet.vehicle.log.contract,fleet.fleet_group_user,r,"[('vehicle_id.driver_employee_id.user_id','=',user.id)]",User can see contracts from his/her corresponding employee
+access_fleet_vehicle_log_contract_fleet_group_manager,fleet.vehicle.log.contract,fleet.fleet_group_manager,r,"[('vehicle_id.driver_employee_id.user_id','=',user.id)]",User can see contracts from his/her corresponding employee
+access_fleet_vehicle_log_services_fleet_group_user,fleet.vehicle.log.services,fleet.fleet_group_user,r,"[('vehicle_id.driver_employee_id.user_id','=',user.id)]",User can see vehicle's services from his/her corresponding employee
+access_fleet_vehicle_log_services_fleet_group_manager,fleet.vehicle.log.services,fleet.fleet_group_manager,r,"[('vehicle_id.driver_employee_id.user_id','=',user.id)]",User can see vehicle's services from his/her corresponding employee
+access_fleet_vehicle_odometer_fleet_group_user,fleet.vehicle.odometer,fleet.fleet_group_user,rwcd,"[('vehicle_id.driver_employee_id.user_id','=',user.id)]",User can see vehicle's odometer from his/her corresponding employee

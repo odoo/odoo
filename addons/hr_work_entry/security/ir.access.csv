@@ -1,0 +1,8 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_work_entry_group_hr_user,hr.work.entry,hr.group_hr_user,rwc,,access_hr_work_entry_officer
+access_hr_work_entry_group_system,hr.work.entry,base.group_system,rwcd,,access_hr_work_entry_system
+access_hr_work_entry_type_group_hr_user,hr.work.entry.type,hr.group_hr_user,r,,access_hr_work_entry_type_officer
+access_hr_work_entry_type_group_hr_manager,hr.work.entry.type,hr.group_hr_manager,rwcd,,access_hr_work_entry_type_manager
+access_hr_work_entry_type_global,hr.work.entry.type,,rwcd,"[('country_id', 'in', user.env.companies.mapped('country_id').ids + [False])]",HR Work Entry: Multi Company
+access_hr_user_work_entry_employee_group_hr_user_r,hr.user.work.entry.employee,hr.group_hr_user,r,,access_hr_work_entry_employee
+access_hr_user_work_entry_employee_group_hr_user_wcd,hr.user.work.entry.employee,hr.group_hr_user,wcd,"[('user_id', '=', user.id)]",Work entries/Employee calendar filter: only self

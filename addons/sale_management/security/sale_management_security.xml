@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="group_sale_order_template" model="res.groups">
@@ -6,11 +5,4 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-    <data noupdate="1">
-        <record id="sale_order_template_rule_company" model="ir.rule">
-            <field name="name">Quotation Template multi-company</field>
-            <field name="model_id" ref="model_sale_order_template"/>
-            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-        </record>
-    </data>
-</odoo>
+    </odoo>

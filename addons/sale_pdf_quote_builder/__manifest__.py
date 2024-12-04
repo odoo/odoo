@@ -11,9 +11,6 @@
 
         'report/ir_actions_report.xml',
 
-        'security/ir.model.access.csv',
-        'security/ir_rules.xml',
-
         'views/product_document_views.xml',
         'views/quotation_document_views.xml',
         'views/sale_order_template_views.xml',
@@ -22,6 +19,7 @@
         'views/sale_pdf_quote_builder_menus.xml',
 
         'wizards/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/sale_pdf_quote_builder_demo.xml',

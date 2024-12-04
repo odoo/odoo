@@ -1,0 +1,61 @@
+id,model_id,group_id/id,operation,domain,name
+access_product_product_group_public,product.product,base.group_public,r,,product.product.public
+access_product_product_group_portal,product.product,base.group_portal,r,,product.product.public
+access_product_product_group_user,product.product,base.group_user,r,,product.product.public
+access_product_template_group_public,product.template,base.group_public,r,"[('website_published', '=', True), ('sale_ok', '=', True)]",Public product template
+access_product_template_group_portal,product.template,base.group_portal,r,"[('website_published', '=', True), ('sale_ok', '=', True)]",Public product template
+access_product_template_group_user,product.template,base.group_user,r,,product.template.public
+access_product_category_group_public,product.category,base.group_public,r,,product.category.public
+access_product_category_group_portal,product.category,base.group_portal,r,,product.category.public
+access_product_category_group_user,product.category,base.group_user,r,,product.category.public
+access_product_tag_group_public,product.tag,base.group_public,r,,product.tag.public
+access_product_tag_group_portal,product.tag,base.group_portal,r,,product.tag.public
+access_product_tag_group_user,product.tag,base.group_user,r,,product.tag.public
+access_product_public_category_group_sale_manager,product.public.category,sales_team.group_sale_manager,rwcd,,product.public.category manager
+access_product_public_category_group_public,product.public.category,base.group_public,r,,product.category.public
+access_product_public_category_group_portal,product.public.category,base.group_portal,r,,product.category.public
+access_product_public_category_group_user,product.public.category,base.group_user,r,,product.category.public
+access_product_pricelist_group_public,product.pricelist,base.group_public,r,,product.pricelist.public
+access_product_pricelist_group_portal,product.pricelist,base.group_portal,r,,product.pricelist.public
+access_product_pricelist_group_user,product.pricelist,base.group_user,r,,product.pricelist.public
+access_product_pricelist_global,product.pricelist,,rwcd,"['|', ('company_id', 'in', [False, website.company_id.id]), ('company_id', 'in', company_ids)]",product pricelist company rule
+access_product_pricelist_item_group_public,product.pricelist.item,base.group_public,r,,product.pricelist.item.public
+access_product_pricelist_item_group_portal,product.pricelist.item,base.group_portal,r,,product.pricelist.item.public
+access_product_pricelist_item_group_user,product.pricelist.item,base.group_user,r,,product.pricelist.item.public
+access_product_pricelist_item_global,product.pricelist.item,,rwcd,"['|', ('company_id', 'in', [False, website.company_id.id]), ('company_id', 'in', company_ids)]",product pricelist item company rule
+access_product_ribbon_group_user,product.ribbon,base.group_user,r,,product.ribbon.public
+access_product_ribbon_group_sale_manager,product.ribbon,sales_team.group_sale_manager,rwcd,,product.ribbon.sale_manager
+access_product_attribute_group_public,product.attribute,base.group_public,r,,product.attribute public
+access_product_attribute_group_portal,product.attribute,base.group_portal,r,,product.attribute public
+access_product_attribute_group_user,product.attribute,base.group_user,r,,product.attribute public
+access_product_attribute_value_group_public,product.attribute.value,base.group_public,r,,product.attribute value public
+access_product_attribute_value_group_portal,product.attribute.value,base.group_portal,r,,product.attribute value public
+access_product_attribute_value_group_user,product.attribute.value,base.group_user,r,,product.attribute value public
+access_product_template_attribute_value_group_public,product.template.attribute.value,base.group_public,r,,product.template.attribute value public
+access_product_template_attribute_value_group_portal,product.template.attribute.value,base.group_portal,r,,product.template.attribute value public
+access_product_template_attribute_value_group_user,product.template.attribute.value,base.group_user,r,,product.template.attribute value public
+access_product_attribute_custom_value_group_public,product.attribute.custom.value,base.group_public,r,,product.attribute.custom value
+access_product_attribute_custom_value_group_portal,product.attribute.custom.value,base.group_portal,r,,product.attribute.custom value
+access_product_attribute_custom_value_group_user,product.attribute.custom.value,base.group_user,r,,product.attribute.custom value
+access_product_template_attribute_exclusion_group_public,product.template.attribute.exclusion,base.group_public,r,,product.template.attribute exclusion public
+access_product_template_attribute_exclusion_group_portal,product.template.attribute.exclusion,base.group_portal,r,,product.template.attribute exclusion public
+access_product_template_attribute_exclusion_group_user,product.template.attribute.exclusion,base.group_user,r,,product.template.attribute exclusion public
+access_product_template_attribute_line_group_public,product.template.attribute.line,base.group_public,r,,product.template.attribute line public
+access_product_template_attribute_line_group_portal,product.template.attribute.line,base.group_portal,r,,product.template.attribute line public
+access_product_template_attribute_line_group_user,product.template.attribute.line,base.group_user,r,,product.template.attribute line public
+access_account_fiscal_position_group_portal,account.fiscal.position,base.group_portal,r,,fiscal position public
+access_account_payment_term_group_portal,account.payment.term,base.group_portal,r,,payment term public
+access_account_tax_group_public,account.tax,base.group_public,r,,account.tax
+access_product_image_group_public,product.image,base.group_public,r,,product.image public
+access_product_image_group_portal,product.image,base.group_portal,r,,product.image public
+access_product_image_group_user,product.image,base.group_user,r,,product.image public
+access_product_image_group_website_restricted_editor,product.image,website.group_website_restricted_editor,rwcd,,product.image wbesite restricted_editor
+access_product_image_group_sale_manager,product.image,sales_team.group_sale_manager,rwcd,,product.image sale
+access_website_sale_extra_field_group_public,website.sale.extra.field,base.group_public,r,,access_ecom_extra_field public
+access_website_sale_extra_field_group_portal,website.sale.extra.field,base.group_portal,r,,access_ecom_extra_field public
+access_website_sale_extra_field_group_user,website.sale.extra.field,base.group_user,r,,access_ecom_extra_field public
+access_website_sale_extra_field_group_website_restricted_editor,website.sale.extra.field,website.group_website_restricted_editor,rwcd,,access_ecom_extra_field restricted_editor
+access_website_base_unit_group_public,website.base.unit,base.group_public,r,,website.base.unit public
+access_website_base_unit_group_portal,website.base.unit,base.group_portal,r,,website.base.unit public
+access_website_base_unit_group_user,website.base.unit,base.group_user,r,,website.base.unit public
+access_website_base_unit_group_sale_manager,website.base.unit,sales_team.group_sale_manager,rwcd,,website.base.unit sale manager

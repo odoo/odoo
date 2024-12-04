@@ -18,7 +18,6 @@
     ],
     'data': [
         'security/stock_security.xml',
-        'security/ir.model.access.csv',
 
         'data/digest_data.xml',
         'data/mail_templates.xml',
@@ -87,6 +86,7 @@
         'views/stock_package_level_views.xml',
         'views/stock_package_type_view.xml',
         'views/stock_forecasted.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'application': True,

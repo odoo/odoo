@@ -20,7 +20,6 @@ Key Features
     'depends': ['barcodes', 'base_setup', 'mail', 'phone_validation', 'portal', 'utm'],
     'data': [
         'security/event_security.xml',
-        'security/ir.model.access.csv',
         'views/event_menu_views.xml',
         'views/event_ticket_views.xml',
         'views/event_mail_views.xml',
@@ -41,6 +40,7 @@ Key Features
         'views/event_tag_views.xml',
         'views/event_question_views.xml',
         'views/event_registration_answer_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/res_users_demo.xml',

@@ -1,0 +1,11 @@
+id,model_id,group_id/id,operation,domain,name
+access_card_campaign_tag_marketing_card_group_user,card.campaign.tag,marketing_card.marketing_card_group_user,r,,card.campaign.tag.user
+access_card_campaign_tag_marketing_card_group_manager,card.campaign.tag,marketing_card.marketing_card_group_manager,rwcd,,card.campaign.tag.manager
+access_card_campaign_marketing_card_group_user_rc,card.campaign,marketing_card.marketing_card_group_user,rc,,card.campaign.user
+access_card_campaign_marketing_card_group_user_wd,card.campaign,marketing_card.marketing_card_group_user,wd,"[('user_id', '=', user.id)]",Users may only edit their own card campaigns
+access_card_campaign_marketing_card_group_manager,card.campaign,marketing_card.marketing_card_group_manager,rwcd,,Manager may access and edit any card campaign
+access_card_template_marketing_card_group_user,card.template,marketing_card.marketing_card_group_user,r,,card.template.user
+access_card_template_group_system,card.template,base.group_system,rwcd,,card.template.system
+access_card_card_group_user,card.card,base.group_user,rwc,,card.card.user
+access_card_card_group_public,card.card,base.group_public,r,,card.card.user
+access_card_card_marketing_card_group_manager,card.card,marketing_card.marketing_card_group_manager,rwcd,,card.card.manager
