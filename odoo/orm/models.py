@@ -5833,7 +5833,7 @@ class BaseModel(metaclass=MetaModel):
             # else:
             #     fields_to_copy[name] = field
             related_field_name = field.related.split(".", 1)[0]
-            if field.store and related_field_name not in default and related_field_name not in blacklist and self[related_field_name]:
+            if field.store and related_field_name not in default and related_field_name not in blacklist and self._fields[related_field_name]:
                 fields_to_copy[name] = field
 
         for record in self:
