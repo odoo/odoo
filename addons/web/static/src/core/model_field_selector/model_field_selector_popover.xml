@@ -43,7 +43,7 @@
                                 <t t-if="fieldDef.record_name"> (<t t-esc="fieldDef.record_name" />)</t>
                                 <div t-if="props.isDebugMode" class="o_model_field_selector_popover_item_title text-break text-muted small"><t t-esc="fieldName"/> (<t t-esc="fieldDef.type"/>)</div>
                             </button>
-                            <t t-if="(!fieldDef.is_property and fieldDef.relation and props.followRelations) or fieldDef.type === 'properties'">
+                            <t t-if="(fieldDef.relation and props.followRelations) or fieldDef.type === 'properties'">
                                 <button class="o_model_field_selector_popover_item_relation btn btn-light border-0 border-start rounded-0" t-on-click.stop="() => this.followRelation(fieldDef)">
                                     <i class="oi oi-chevron-right o_model_field_selector_popover_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow" />
                                 </button>

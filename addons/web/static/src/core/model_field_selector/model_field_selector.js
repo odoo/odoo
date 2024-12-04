@@ -14,6 +14,7 @@ export class ModelFieldSelector extends Component {
         path: { optional: true },
         allowEmpty: { type: Boolean, optional: true },
         readonly: { type: Boolean, optional: true },
+        readProperty: { type: Boolean, optional: true },
         showSearchInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
@@ -56,6 +57,7 @@ export class ModelFieldSelector extends Component {
         this.popover.open(currentTarget, {
             resModel: this.props.resModel,
             path: this.props.path,
+            readProperty: this.props.readProperty,
             update: (path, _fieldInfo, debug = false) => {
                 this.newPath = path;
                 if (!debug) {

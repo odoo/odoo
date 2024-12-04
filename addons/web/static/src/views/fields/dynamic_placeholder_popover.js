@@ -38,6 +38,9 @@ export class DynamicPlaceholderPopover extends Component {
         if (!this.isTemplateEditor && !this.allowedQwebExpressions.includes(fullPath)) {
             return false;
         }
+        if (fieldDef.is_property && fieldDef.type === "separator") {
+            return false;
+        }
         return !["one2many", "boolean", "many2many"].includes(fieldDef.type) && fieldDef.searchable;
     }
     closeFieldSelector(isPathSelected = false) {
