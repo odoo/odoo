@@ -1,12 +1,14 @@
 .o-mail-ChatWindow-command {
     @media (hover: none) {
-        .fa-phone {
+        .fa-phone, .fa-video-camera {
             color: $success !important;
         }
     }
     @media (hover: hover) {
-        &:hover .fa-phone {
-            color: $success !important;
+        &:hover {
+            .fa-phone, .fa-video-camera {
+                color: $success !important;
+            }
         }
     }
 }
