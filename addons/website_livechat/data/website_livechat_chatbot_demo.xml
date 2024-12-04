@@ -3,7 +3,7 @@
 
     <!-- Add a Channel Rule to demonstrate our bot on the '/contactus' page -->
 
-    <record id="website_livechat_channel_rule_chatbot" model="im_livechat.channel.rule">
+    <record id="website_livechat_channel_rule_chatbot" model="im_livechat.channel.rule" forcecreate='False'>
         <field name="regex_url">/contactus</field>
         <field name="sequence">5</field>
         <field name="action">auto_popup</field>
