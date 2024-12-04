@@ -235,7 +235,7 @@ export class PosStore extends Reactive {
         this.config = this.data.models["pos.config"].getFirst();
         this.company = this.data.models["res.company"].getFirst();
         this.user = this.data.models["res.users"].getFirst();
-        this.currency = this.data.models["res.currency"].getFirst();
+        this.currency = this.config.currency_id;
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
 
