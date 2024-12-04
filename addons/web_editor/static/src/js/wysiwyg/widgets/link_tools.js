@@ -10,6 +10,7 @@ import {
     useState,
 } from "@odoo/owl";
 import { normalizeCSSColor } from '@web/core/utils/colors';
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * Allows to customize link content and style.
@@ -81,6 +82,7 @@ export class LinkTools extends Link {
             }
             this.props.onDestroy();
         });
+        this.uploadService = useService('uploadLocalFiles');
     }
     /**
      * @override
@@ -165,25 +167,20 @@ export class LinkTools extends Link {
         super.focusUrl(...arguments);
     }
 
-    openDocumentDialog() {
-        this.props.wysiwyg.openMediaDialog({
-            resModel: "ir.ui.view",
-            useMediaLibrary: true,
-            noImages: true,
-            noIcons: true,
-            noVideos: true,
-            save: async (link) => {
-                this.initialNewWindow = this.initialIsNewWindowFromProps;
-                this._updateInitialNewWindowUI();
-                let relativeUrl = link.href.substr(window.location.origin.length);
-                await this._determineAttachmentType(relativeUrl.split("?")[0]);
-                if (this.isLastAttachmentUrl) {
-                    relativeUrl = relativeUrl.replace("&download=true", "");
-                }
-                this.$el[0].querySelector("#o_link_dialog_url_input").value = relativeUrl;
-                this.__onURLInput();
-            },
-        });
+    async uploadFile() {
+        const { upload, getURL } = this.uploadService;
+        const [attachment] = await upload({ resModel: "ir.ui.view" });
+        if (!attachment) {
+            // No file selected or upload failed
+            return;
+        }
+        let relativeUrl = getURL(attachment, { download: true, unique: true });
+        this.initialNewWindow = this.initialIsNewWindowFromProps;
+        this._updateInitialNewWindowUI();
+        this.lastAttachmentId = attachment.id;
+        this.isLastAttachmentUrl = false;
+        this.$el[0].querySelector("#o_link_dialog_url_input").value = relativeUrl;
+        this.__onURLInput();
     }
     //--------------------------------------------------------------------------
     // Private
