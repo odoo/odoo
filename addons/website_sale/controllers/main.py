@@ -212,6 +212,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _shop_get_query_url_kwargs(
         self, category, search, min_price, max_price, order=None, tags=None, attribute_value=None, **post
     ):
+        attribute_value = [
+            '%s-%s' % (val[0], val[1]) for val in request.session.get('attrib_values', [])
+        ]
+
         return {
             'category': category,
             'search': search,
@@ -277,8 +281,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
-        if attrib_list:
-            post['attribute_value'] = attrib_list
+
+        if attrib_values:
+            request.session['attrib_values'] = attrib_values
+        else:
+            request.session.pop('attrib_values', None)
 
         filter_by_tags_enabled = website.is_view_active('website_sale.filter_products_tags')
         if filter_by_tags_enabled:
@@ -664,12 +671,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return product.sudo()._is_add_to_cart_allowed()
 
     def _product_get_query_url_kwargs(self, category, search, **kwargs):
+        attribute_value = [
+            '%s-%s' % (val[0], val[1]) for val in request.session.get('attrib_values', [])
+        ]
+
         return {
             'category': category,
             'search': search,
             'tags': kwargs.get('tags'),
             'min_price': kwargs.get('min_price'),
             'max_price': kwargs.get('max_price'),
+            'attribute_value': attribute_value,
         }
 
     def _prepare_product_values(self, product, category, search, **kwargs):
