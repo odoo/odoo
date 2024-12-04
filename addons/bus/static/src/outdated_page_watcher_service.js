@@ -27,9 +27,11 @@ export class OutdatedPageWatcherService {
                 return;
             }
             if (!this.lastAutovacuumDt || DateTime.now() >= this.nextAutovacuumDt) {
-                const { lastcall, nextcall } = await rpc("/bus/get_autovacuum_info", {
-                    silent: true,
-                });
+                const { lastcall, nextcall } = await rpc(
+                    "/bus/get_autovacuum_info",
+                    {},
+                    { silent: true }
+                );
                 this.lastAutovacuumDt = deserializeDateTime(lastcall);
                 this.nextAutovacuumDt = deserializeDateTime(nextcall);
                 multi_tab.setSharedValue("bus.autovacuum_info", { lastcall, nextcall });
