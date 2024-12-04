@@ -67,3 +67,41 @@ test("basic multi options containers", async () => {
         queryAllTexts(".options-container:nth-child(2) .we-bg-options-container > div > div")
     ).toEqual(["Row 1", "A", "Row 2", "B"]);
 });
+
+test("Snippets options respect sequencing", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+        <WeRow label="'Row 2'">
+            Test
+        </WeRow>`,
+        sequence: 2,
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+        <WeRow label="'Row 1'">
+            Test
+        </WeRow>`,
+        sequence: 1,
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+        <WeRow label="'Row 3'">
+            Test
+        </WeRow>`,
+        sequence: 3,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    expect(queryAllTexts(".options-container .we-bg-options-container > div > div")).toEqual([
+        "Row 1",
+        "Test",
+        "Row 2",
+        "Test",
+        "Row 3",
+        "Test",
+    ]);
+});
