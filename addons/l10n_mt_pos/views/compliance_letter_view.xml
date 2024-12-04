@@ -1,0 +1,20 @@
+<odoo noupdate="1">
+    <!-- Server Action -->
+    <record id="action_generate_compliance_letter" model="ir.actions.server">
+        <field name="name">Generate Compliance Letter</field>
+        <field name="model_id" ref="model_compliance_letter"/>
+        <field name="binding_model_id" ref="model_compliance_letter"/>
+        <field name="state">code</field>
+        <field name="code">
+if record:
+    action = env['compliance.letter'].browse(record.id).generate_letter()
+else:
+    action = env['compliance.letter'].create({}).generate_letter()
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_compliance_letter" name="Compliance Letter"
+              action="l10n_mt_pos.action_generate_compliance_letter"
+              parent="point_of_sale.menu_point_rep" sequence="6" groups="base.group_user"/>
+</odoo>
