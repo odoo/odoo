@@ -109,4 +109,24 @@ export class QuickReactionMenu extends Component {
             )
         );
     }
+
+    get navigationOptions() {
+        return {
+            // Bypass nested dropdown behavior to allow initial focus.
+            onEnabled: null,
+            hotkeys: {
+                arrowright(index, items) {
+                    const target = index === items.length - 1 ? items[0] : items[index + 1];
+                    target.setActive();
+                },
+                arrowleft(index, items) {
+                    const target = index === 0 ? items.at(-1) : items[index - 1];
+                    target.setActive();
+                },
+                // Disable up and down navigation as it does not make sense for horizontal menu.
+                arrowdown: null,
+                arrowup: null,
+            },
+        };
+    }
 }

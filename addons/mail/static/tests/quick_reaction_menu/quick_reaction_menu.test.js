@@ -1,5 +1,3 @@
-import { describe, test } from "@odoo/hoot";
-import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import {
     click,
     contains,
@@ -9,6 +7,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
+import { describe, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
@@ -65,4 +65,40 @@ test("show default emojis when no frequent emojis are available", async () => {
         count: 0,
     });
     await contains(".o-mail-QuickReactionMenu-emoji", { text: "🤢" });
+});
+
+test("navigate quick reaction menu using tab key", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Hello world!");
+    await press("Enter");
+    await click("[title='Add a Reaction']");
+    for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS) {
+        await contains(".o-mail-QuickReactionMenu-emoji:focus", { text: emoji });
+        await press("Tab");
+    }
+    await contains(".o-mail-QuickReactionMenu-emojiPicker:focus");
+});
+
+test("navigate quick reaction menu using arrow keys", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Hello world!");
+    await press("Enter");
+    await click("[title='Add a Reaction']");
+    for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS) {
+        await contains(".o-mail-QuickReactionMenu-emoji:focus", { text: emoji });
+        await press("ArrowRight");
+    }
+    await contains(".o-mail-QuickReactionMenu-emojiPicker:focus");
+    await press("ArrowLeft");
+    for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS.reverse()) {
+        await contains(".o-mail-QuickReactionMenu-emoji:focus", { text: emoji });
+        await press("ArrowLeft");
+    }
+    await contains(".o-mail-QuickReactionMenu-emojiPicker:focus");
 });
