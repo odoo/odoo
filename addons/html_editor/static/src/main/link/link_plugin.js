@@ -146,7 +146,7 @@ export class LinkPlugin extends Plugin {
                 title: _t("Link"),
                 description: _t("Add a link"),
                 icon: "fa-link",
-                run: ({ link } = {}) => this.openLinkTools(link),
+                run: ({ link, type} = {}) => this.openLinkTools(link, type),
             },
             {
                 id: "removeLinkFromSelection",
@@ -199,6 +199,7 @@ export class LinkPlugin extends Plugin {
                 description: _t("Add a button"),
                 categoryId: "navigation",
                 commandId: "openLinkTools",
+                commandParams: { type: "primary" },
             },
         ],
 
@@ -337,7 +338,7 @@ export class LinkPlugin extends Plugin {
      *
      * @param {HTMLElement} [linkElement]
      */
-    openLinkTools(linkElement) {
+    openLinkTools(linkElement, type) {
         this.closeLinkTools();
         if (!this.isLinkAllowedOnSelection()) {
             return this.services.notification.add(
@@ -349,6 +350,7 @@ export class LinkPlugin extends Plugin {
         let cursorsToRestore = this.dependencies.selection.preserveSelection();
         const commonAncestor = closestElement(selection.commonAncestorContainer);
         linkElement = linkElement || findInSelection(selection, "a");
+        this.type = type;
         if (
             linkElement &&
             (!linkElement.contains(selection.anchorNode) ||
@@ -459,6 +461,7 @@ export class LinkPlugin extends Plugin {
                 !this.linkInDocument || !this.linkInDocument.classList.contains("o_link_readonly"),
             canUpload: !this.config.disableFile,
             onUpload: this.config.onAttachmentChange,
+            type: this.type || "",
         };
         this.overlay.open({ props });
     }
