@@ -30,7 +30,7 @@ export class ZoomedBackgroundShape extends Interaction {
             "t-on-resize": () => this.throttledShapeResize,
         },
     };
-    
+
     setup() {
         this.throttledShapeResize = throttleForAnimation(() => this.resizeBackgroundShape());
     }
@@ -43,7 +43,7 @@ export class ZoomedBackgroundShape extends Interaction {
         this.updateShapePosition();
         this.throttledShapeResize.cancel();
     }
-    
+
     /**
      * Updates the left and right offset of the shape.
      *
@@ -53,13 +53,16 @@ export class ZoomedBackgroundShape extends Interaction {
         this.el.style.left = offset;
         this.el.style.right = offset;
     }
-    
+
     resizeBackgroundShape() {
         this.updateShapePosition();
         // Get the decimal part of the shape element width.
         let decimalPart = this.el.getBoundingClientRect().width % 1;
         // Round to two decimal places.
-        decimalPart = Math.round((decimalPart + Number.EPSILON) * 100) / 100;
+        decimalPart = parseFloat(decimalPart.toFixed(2));
+        // If the decimal part was 0.99, it was rounded to 1
+        // In that case we consider there was no decimal part
+        decimalPart = decimalPart == 1 ? 0 : decimalPart;
         // If there is a decimal part. (e.g. Chrome + browser zoom enabled)
         if (decimalPart > 0) {
             // Compensate for the gap by giving an integer width value to the
