@@ -122,7 +122,7 @@
                                 <group>
                                     <field name="worksheet_type" widget="radio"/>
                                     <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" invisible="worksheet_type != 'pdf'" required="worksheet_type == 'pdf'"/>
-                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="embed_viewer" invisible="worksheet_type != 'google_slide'" required="worksheet_type == 'google_slide'"/>
+                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="google_slide_viewer" invisible="worksheet_type != 'google_slide'" required="worksheet_type == 'google_slide'"/>
                                     <field name="note" invisible="worksheet_type != 'text'"/>
                                 </group>
                             </page>
