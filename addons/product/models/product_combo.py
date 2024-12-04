@@ -41,7 +41,7 @@ class ProductCombo(models.Model):
         ):
             combo.combo_item_count = item_count
 
-    @api.depends('combo_item_ids')
+    @api.depends('company_id')
     def _compute_currency_id(self):
         main_company = self.env['res.company']._get_main_company()
         for combo in self:
@@ -71,3 +71,8 @@ class ProductCombo(models.Model):
         for combo in self:
             if len(combo.combo_item_ids.mapped('product_id')) < len(combo.combo_item_ids):
                 raise ValidationError(_("A combo choice can't contain duplicate products."))
+
+    @api.constrains('company_id')
+    def _check_company_id(self):
+        templates = self.env['product.template'].sudo().search([('combo_ids', 'in', self.ids)])
+        templates._check_company(fnames=['combo_ids'])
