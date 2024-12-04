@@ -14,8 +14,21 @@ const {
     getBarChartLegend,
     getChartShowValues,
     getTrendDatasetForBarChart,
+<<<<<<< saas-18.1
     truncateLabel,
 } = chartHelpers;
+||||||| 923a389f1b707f582fb08bd84afe145c41b90fde
+    formatTickValue
+} = spreadsheet.helpers;
+
+const { TREND_LINE_XAXIS_ID } = spreadsheet.constants;
+=======
+    formatValue,
+    formatTickValue,
+} = spreadsheet.helpers;
+
+const { TREND_LINE_XAXIS_ID } = spreadsheet.constants;
+>>>>>>> be776e735dd4a5db1090df66dea41876be431911
 
 export class OdooBarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
@@ -85,7 +98,32 @@ function createOdooChartRuntime(chart, getters) {
                 tooltip: getBarChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
             },
+<<<<<<< saas-18.1
             ...getters.getChartDatasetActionCallbacks(chart),
+||||||| 923a389f1b707f582fb08bd84afe145c41b90fde
+            title: getChartAxisTitleRuntime(chart.axesDesign?.x),
+        },
+        y: {
+            position: chart.verticalAxisPosition,
+            ticks: { color },
+            beginAtZero: true, // the origin of the y axis is always zero
+            title: getChartAxisTitleRuntime(chart.axesDesign?.y),
+=======
+            title: getChartAxisTitleRuntime(chart.axesDesign?.x),
+        },
+        y: {
+            position: chart.verticalAxisPosition,
+            ticks: {
+                color,
+                callback: (value) =>
+                    formatValue(value, {
+                        locale,
+                        format: Math.abs(value) >= 1000 ? "#,##" : undefined,
+                    }),
+            },
+            beginAtZero: true, // the origin of the y axis is always zero
+            title: getChartAxisTitleRuntime(chart.axesDesign?.y),
+>>>>>>> be776e735dd4a5db1090df66dea41876be431911
         },
     };
 

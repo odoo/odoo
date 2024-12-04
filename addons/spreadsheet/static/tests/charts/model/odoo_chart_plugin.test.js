@@ -26,6 +26,16 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 const { toZone } = spreadsheet.helpers;
 
+const fr_FR = {
+    name: "French",
+    code: "fr_FR",
+    thousandsSeparator: " ",
+    decimalSeparator: ",",
+    dateFormat: "dd/mm/yyyy",
+    timeFormat: "hh:mm:ss",
+    formulaArgSeparator: ";",
+};
+
 describe.current.tags("headless");
 defineSpreadsheetModels();
 defineSpreadsheetActions();
@@ -870,6 +880,7 @@ test("Show values is taken into account in the runtime", async () => {
     expect(runtime.chartJsConfig.options.plugins.chartShowValuesPlugin.showValues).toBe(true);
 });
 
+<<<<<<< saas-18.1
 test("Odoo line and bar charts display only horizontal grid lines", async () => {
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_line",
@@ -943,6 +954,26 @@ test("Can configure the chart datasets", async () => {
     definition = model.getters.getChartDefinition(chartId);
     // the second dataset was dropped from the definition since there is now only a single dataset in the data source
     expect(definition.dataSets).toEqual([{ label: "My dataset" }]);
+||||||| 923a389f1b707f582fb08bd84afe145c41b90fde
+=======
+test("Displays correct thousand separator for positive value in Odoo Bar chart Y-axis", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect(runtime.chartJsConfig.options.scales.y?.ticks.callback(60000000)).toBe("60,000,000");
+    expect(runtime.chartJsConfig.options.scales.y?.ticks.callback(-60000000)).toBe("-60,000,000");
+});
+
+test("Thousand separator in Odoo Bar chart Y-axis is locale-dependent", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    model.dispatch("UPDATE_LOCALE", { locale: fr_FR });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect(runtime.chartJsConfig.options.scales.y?.ticks.callback(60000000)).toBe("60 000 000");
+    expect(runtime.chartJsConfig.options.scales.y?.ticks.callback(-60000000)).toBe("-60 000 000");
+>>>>>>> be776e735dd4a5db1090df66dea41876be431911
 });
 
 test("Chart data source is recreated when chart type is updated", async () => {
