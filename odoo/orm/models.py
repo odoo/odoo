@@ -5830,11 +5830,11 @@ class BaseModel(metaclass=MetaModel):
             if not field.related:
                 fields_to_copy[name] = field
                 continue
-            else:
-                fields_to_copy[name] = field
-            # related_field_name = field.related.split(".", 1)[0]
-            # if field.store and related_field_name not in default and related_field_name not in blacklist and self[related_field_name]:
+            # else:
             #     fields_to_copy[name] = field
+            related_field_name = field.related.split(".", 1)[0]
+            if field.store and related_field_name not in default and related_field_name not in blacklist and self[related_field_name]:
+                fields_to_copy[name] = field
 
         for record in self:
             seen_map = self._context['__copy_data_seen']
