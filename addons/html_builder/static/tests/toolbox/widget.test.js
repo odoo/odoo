@@ -272,18 +272,12 @@ describe("WeButtonGroup", () => {
             customAction1: {
                 apply: () => expect.step(`customAction1`),
             },
-        });
-        addActionOption({
             customAction2: {
                 apply: () => expect.step(`customAction2`),
             },
-        });
-        addActionOption({
             customAction3: {
                 apply: () => expect.step(`customAction3`),
             },
-        });
-        addActionOption({
             customAction4: {
                 apply: () => expect.step(`customAction4`),
             },

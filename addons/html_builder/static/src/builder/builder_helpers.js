@@ -3,10 +3,10 @@ import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 
 export function useDomState(getState) {
-    const state = useState(getState());
-    const component = useComponent();
-    useBus(component.env.editorBus, "STEP_ADDED", () => {
-        Object.assign(state, getState());
+    const env = useEnv();
+    const state = useState(getState(env.getEditingElement()));
+    useBus(env.editorBus, "STEP_ADDED", () => {
+        Object.assign(state, getState(env.getEditingElement()));
     });
     return state;
 }
@@ -30,9 +30,9 @@ export class WeComponent extends Component {
     };
 
     setup() {
-        this.state = useDomState(() => {
+        this.state = useDomState((editingElement) => {
             return {
-                isVisible: !!this.env.getEditingElement(),
+                isVisible: !!editingElement,
             };
         });
     }
@@ -43,12 +43,12 @@ export function useWeComponent() {
     const newEnv = {};
     const oldEnv = useEnv();
     if (comp.props.applyTo) {
-        newEnv.editingElement = oldEnv.getEditingElement().querySelector(comp.props.applyTo);
-        useBus(oldEnv.editorBus, "BEFORE:STEP_ADDED", () => {
-            newEnv.editingElement = oldEnv.getEditingElement().querySelector(comp.props.applyTo);
+        let editingElement = oldEnv.getEditingElement().querySelector(comp.props.applyTo);
+        useBus(oldEnv.editorBus, "UPDATE_EDITING_ELEMENT", () => {
+            editingElement = oldEnv.getEditingElement().querySelector(comp.props.applyTo);
         });
         newEnv.getEditingElement = () => {
-            return newEnv.editingElement;
+            return editingElement;
         };
     }
     const weContext = {};
@@ -135,12 +135,13 @@ export function useClickableWeWidget() {
         return actions;
     }
     function isActive() {
-        if (!comp.env.getEditingElement()) {
+        const editingElement = comp.env.getEditingElement();
+        if (!editingElement) {
             return;
         }
         return getActions().every(([actionId, actionParam, actionValue]) => {
             return actionsRegistry.get(actionId).isActive?.({
-                editingElement: comp.env.getEditingElement(),
+                editingElement,
                 param: actionParam,
                 value: actionValue,
             });
@@ -165,11 +166,11 @@ export function useInputWeWidget() {
             });
         }
     });
-    function getState() {
+    function getState(editingElement) {
         const [actionId, actionParam] = getActions()[0];
         return {
             value: actionsRegistry.get(actionId).getValue({
-                editingElement: comp.env.getEditingElement(),
+                editingElement,
                 param: actionParam,
             }),
         };

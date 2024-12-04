@@ -35,10 +35,6 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     changeSidebarTarget(selectedElement) {
-        // if (this.lastSelectedElement === selectedElement) {
-        //     return;
-        // }
-        // this.lastSelectedElement = selectedElement;
         const map = new Map();
         for (const option of this.builderOptions) {
             const { selector } = option;

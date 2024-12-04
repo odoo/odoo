@@ -88,7 +88,7 @@ export class SnippetsMenu extends Component {
                     this.state.canUndo = this.editor.shared.history.canUndo();
                     this.state.canRedo = this.editor.shared.history.canRedo();
                     this.updateInvisibleEls();
-                    editorBus.trigger("BEFORE:STEP_ADDED");
+                    editorBus.trigger("UPDATE_EDITING_ELEMENT");
                     editorBus.trigger("STEP_ADDED");
                 },
                 resources: {
