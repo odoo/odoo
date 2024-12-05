@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -132,8 +133,8 @@ export class LeaveStatsComponent extends Component {
             [
                 ["employee_id", "=", employee[0]],
                 ["state", "=", "validate"],
-                ["date_from", "<=", dateTo],
-                ["date_to", ">=", dateFrom],
+                ["date_from", "<=", serializeDateTime(dateTo)],
+                ["date_to", ">=", serializeDateTime(dateFrom)],
             ],
             ["holiday_status_id"],
             [

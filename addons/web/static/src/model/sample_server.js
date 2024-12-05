@@ -180,8 +180,6 @@ export class SampleServer {
                 group[name] = this._sanitizeNumber(group[name]);
             } else if (func === "array_agg") {
                 group[name] = records.map((r) => r[fieldName]);
-            } else if (func === "array_agg") {
-                group[name] = records.map((r) => r[fieldName]);
             } else if (func === "__count") {
                 group[name] = records.length;
             } else if (func === "count_distinct") {
