@@ -1030,55 +1030,9 @@ export class PosStore extends Reactive {
                 context,
             });
 
-            const modelToAdd = {};
-            const newData = {};
-            for (const [model, records] of Object.entries(data)) {
-                const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
+            
 
-                if (!modelKey) {
-                    modelToAdd[model] = records;
-                    continue;
-                }
-
-                Object.assign(
-                    newData,
-                    this.models.replaceDataByKey(modelKey, { [model]: records })
-                );
-            }
-
-            for (const order of [...orders, ...newData["pos.order"]]) {
-                if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
-                    this.addPendingOrder([order.id]);
-                } else {
-                    this.removePendingOrder(order);
-                }
-            }
-
-            for (const line of newData["pos.order.line"]) {
-                const refundedOrderLine = line.refunded_orderline_id;
-
-                if (refundedOrderLine) {
-                    const order = refundedOrderLine.order_id;
-                    delete order.uiState.lineToRefund[refundedOrderLine.uuid];
-                    refundedOrderLine.refunded_qty += Math.abs(line.qty);
-                }
-            }
-
-            this.models.loadData(modelToAdd);
-            this.postSyncAllOrders(newData["pos.order"]);
-
-            if (modelToAdd["pos.session"].length > 0) {
-                // Replace the original session by the rescue one. And the rescue one will have
-                // a higher id than the original one since it's the last one created.
-                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
-                this.models["pos.order"]
-                    .getAll()
-                    .filter((order) => order.state === "draft")
-                    .forEach((order) => (order.session_id = this.session));
-            }
-
-            return newData["pos.order"];
+            return this._processOrderData(data, orders);
         } catch (error) {
             if (options.throw) {
                 throw error;
@@ -1089,6 +1043,57 @@ export class PosStore extends Reactive {
         } finally {
             orders.forEach((order) => this.syncingOrders.delete(order.id));
         }
+    }
+
+    _processOrderData(data, orders = []) {
+        const modelToAdd = {};
+        const newData = {};
+        for (const [model, records] of Object.entries(data)) {
+            const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
+
+            if (!modelKey) {
+                modelToAdd[model] = records;
+                continue;
+            }
+
+            Object.assign(
+                newData,
+                this.models.replaceDataByKey(modelKey, { [model]: records })
+            );
+        }
+
+        for (const order of [...orders, ...newData["pos.order"]]) {
+            if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
+                this.addPendingOrder([order.id]);
+            } else {
+                this.removePendingOrder(order);
+            }
+        }
+
+        for (const line of newData["pos.order.line"]) {
+            const refundedOrderLine = line.refunded_orderline_id;
+
+            if (refundedOrderLine) {
+                const order = refundedOrderLine.order_id;
+                delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                refundedOrderLine.refunded_qty += Math.abs(line.qty);
+            }
+        }
+
+        this.models.loadData(modelToAdd);
+        this.postSyncAllOrders(newData["pos.order"]);
+
+        if (modelToAdd["pos.session"].length > 0) {
+            // Replace the original session by the rescue one. And the rescue one will have
+            // a higher id than the original one since it's the last one created.
+            const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
+            session.delete();
+            this.models["pos.order"]
+                .getAll()
+                .filter((order) => order.state === "draft")
+                .forEach((order) => (order.session_id = this.session));
+        }
+        return newData["pos.order"];
     }
 
     push_single_order(order) {
@@ -1133,7 +1138,8 @@ export class PosStore extends Reactive {
         ]);
     }
     async loadServerOrders(domain) {
-        const orders = await this.data.searchRead("pos.order", domain);
+        const data = await this.data.call("pos.order", "load_server_orders", [domain]);
+        const orders = this._processOrderData(data);
         for (const order of orders) {
             order.update({
                 config_id: this.config,

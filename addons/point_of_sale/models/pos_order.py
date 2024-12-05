@@ -954,6 +954,15 @@ class PosOrder(models.Model):
 
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
         is_new_session = any(order.get('session_id') not in session_ids for order in orders)
+        return self._get_order_data(pos_order_ids, config_id, is_new_session)
+
+    @api.model
+    def load_server_orders(self, domain):
+        pos_order_ids = self.search(domain)
+        config_id = pos_order_ids[0].config_id.id if pos_order_ids else False
+        return self._get_order_data(pos_order_ids, config_id)
+
+    def _get_order_data(self, pos_order_ids, config_id, is_new_session = False):
         return {
             'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.session': pos_order_ids.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
@@ -962,7 +971,6 @@ class PosOrder(models.Model):
             'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
-
     def _is_the_same_order(self, data, existing_order):
         received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['payment_ids']]
         existing_payments = [(p.amount, p.payment_method_id.id) for p in existing_order.payment_ids]
