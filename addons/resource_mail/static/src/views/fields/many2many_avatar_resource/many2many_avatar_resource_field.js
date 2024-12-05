@@ -12,7 +12,7 @@ import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card
 import { Domain } from "@web/core/domain";
 
 
-class AvatarResourceMany2XAutocomplete extends AvatarMany2XAutocomplete {
+export class AvatarResourceMany2XAutocomplete extends AvatarMany2XAutocomplete {
     get optionsSource() {
         return {
             ...super.optionsSource,
@@ -27,7 +27,7 @@ class AvatarResourceMany2XAutocomplete extends AvatarMany2XAutocomplete {
         return this.orm.call(
             this.props.resModel,
             "search_read",
-            [this.getDomain(request), ["id", "display_name", "resource_type"]],
+            [this.getDomain(request), ["id", "display_name", "resource_type", "color"]],
             {
                 context: this.props.context,
                 limit: this.props.searchLimit + 1,
@@ -53,6 +53,7 @@ class AvatarResourceMany2XAutocomplete extends AvatarMany2XAutocomplete {
             value: result.id,
             resourceType: result.resource_type,
             label: result.display_name,
+            color: result.color,
         };
     }
 }
