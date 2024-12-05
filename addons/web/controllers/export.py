@@ -549,6 +549,10 @@ class ExportFormat(object):
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
         Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
+        for item in domain:
+            if item[0] == Model._active_name and ((item[1] == '=' and not item[2]) or (item[1] == '!=' and item[2])):
+                Model = Model.with_context(active_test=False)
+                break
         if not Model._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
 
