@@ -1,11 +1,15 @@
 import { Plugin } from "../plugin";
-import { isBlock } from "../utils/blocks";
+import { isBlock, closestBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
 import { isTextNode, isVisible } from "../utils/dom_info";
-import { prepareUpdate } from "../utils/dom_state";
-import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
+import { prepareUpdate, isFakeLineBreak } from "../utils/dom_state";
+import { childNodes, closestElement, firstLeaf, lastLeaf, descendants, ancestors } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
+import { isListItem } from "@html_editor/utils/list";
+
+const isInList = (node, editable) => ancestors(node, editable).find(ancestor => isListItem(ancestor));
+const isLineBreak = node => node.nodeName === "BR" && !isFakeLineBreak(node);
 
 /**
  * @typedef { Object } SplitShared
@@ -29,6 +33,7 @@ export class SplitPlugin extends Plugin {
         "splitAroundUntil",
         "splitSelection",
         "isUnsplittable",
+        "splitBlockSegments",
     ];
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
@@ -277,6 +282,108 @@ export class SplitPlugin extends Plugin {
                       focusOffset: startOffset,
                   };
         return this.dependencies.selection.setSelection(selection, { normalize: false });
+    }
+
+    /**
+     * Carefully split around a line break without creating an empty block or
+     * breaking the selection.
+     *
+     * @private
+     * @param {HTMLBRElement} br
+     */
+    splitAtLineBreak(br) {
+        const cursors = this.dependencies.selection.preserveSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
+        const block = closestBlock(br);
+        if (block.isContentEditable) {
+            const brIndex = childNodeIndex(br);
+            const oldParent = br.parentElement;
+            const [before, after] = this.splitElementUntil(
+                br.parentElement,
+                childNodeIndex(br),
+                block.parentElement,
+            );
+            // The line break was replaced with a block break. We need to remove
+            // it since it's now superfluous.
+            br.remove();
+            // Make sure we don't end up with an empty block on either side.
+            fillEmpty(before);
+            fillEmpty(after);
+            // Restore the selection.
+            const pointsToUpdate = [
+                ["anchor", selection.anchorOffset],
+                ["focus", selection.focusOffset],
+            ].filter(point => selection[`${point[0]}Node`] === oldParent);
+            if (pointsToUpdate.length) {
+                const newSelection = { ...selection };
+                for (const [side, offset] of pointsToUpdate) {
+                    if (offset <= brIndex) {
+                        newSelection[`${side}Node`] = before;
+                        newSelection[`${side}Offset`] = 0;
+                    } else {
+                        newSelection[`${side}Node`] = after;
+                        newSelection[`${side}Offset`] = offset - brIndex - 1;
+                    }
+                }
+                this.dependencies.selection.setSelection(newSelection, { normalize: false });
+            } else {
+                cursors.restore();
+            }
+        }
+    }
+    /**
+     * Find the BR that is closest to the selection point, within the same
+     * block, then split around it. The selection point is
+     * (startContainer, startOffset) or (endContainer, endOffset), for side
+     * "start" or "end", respectively.
+     *
+     * @private
+     * @param {"start"|"end"} side
+     */
+    splitEdgeLineBreak(side) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const selectedNodes = this.dependencies.selection.getSelectedNodes();
+        const container = selection[`${side}Container`];
+        const offset = selection[`${side}Offset`];
+        const children = descendants(closestBlock(container));
+        if (side === "end") {
+            children.reverse();
+        }
+        // Find the index of the position of the selection point in the array.
+        const selectionPointIndex = children.findIndex(child => (
+            child === container ||
+            selectedNodes.includes(child) ||
+            (
+                child.parentElement === container &&
+                childNodeIndex(child) === offset
+            )
+        )) + (side === "start" ? 0 : 1);
+        // Find the BR closest to the selection point.
+        const br = children.slice(0, selectionPointIndex).findLast(isLineBreak);
+        if (br && !isInList(br, this.editable)) {
+            this.splitAtLineBreak(br);
+        }
+    }
+    /**
+     * Split in order to isolate any block segment in the selection. A block
+     * segment forms a deliberate line in the content, separated using line
+     * breaks. A line break in a list item cannot create block segments as the
+     * list item visually marks its own segment (with a bullet point).
+     *
+     * eg: `<p>a<br>b<br>[c<br>d<br>e]<br>f<br>g</p>` marks seven line segments
+     * (one per letter). The selection contains 3 line segments, which will be
+     * isolated like this:
+     * `<p>a<br>b</p><p>[c</p><p>d</p><p>e]</p><p>f<br>g</p>`.
+     */
+    splitBlockSegments() {
+        // Split BR before the selection.
+        this.splitEdgeLineBreak("start");
+        // Split selected BRs.
+        this.dependencies.selection.getSelectedNodes().filter(node => (
+            isLineBreak(node) && !isInList(node, this.editable)
+        )).forEach(br => this.splitAtLineBreak(br));
+        // Split BR after the selection.
+        this.splitEdgeLineBreak("end");
     }
 
     onBeforeInput(e) {

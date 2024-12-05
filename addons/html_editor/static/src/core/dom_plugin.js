@@ -411,6 +411,7 @@ export class DomPlugin extends Plugin {
      */
     setTag({ tagName, extraClass = "" }) {
         tagName = tagName.toUpperCase();
+        this.dependencies.split.splitBlockSegments();
         const cursors = this.dependencies.selection.preserveSelection();
         const selectedBlocks = [...this.dependencies.selection.getTraversedBlocks()];
         const deepestSelectedBlocks = selectedBlocks.filter(
