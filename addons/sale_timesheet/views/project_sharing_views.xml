@@ -44,7 +44,12 @@
         <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='remaining_hours']" position="after">
-                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
+                <field name="allow_billable" invisible="1" />
+                <field name="remaining_hours_available" invisible="1"/>
+                <field name="sale_order_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"
+                    attrs="{'column_invisible': ['|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('remaining_hours_available', '=', False)]}" />
             </xpath>
         </field>
     </record>
