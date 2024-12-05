@@ -85,4 +85,4 @@ class TestForumPerformance(UtilPerf):
         number_of_queries = self._get_url_hot_query(self.forum._compute_website_url())
         self.assertEqual(number_of_queries, 24)
         number_of_queries = self._get_url_hot_query(self.forum._compute_website_url(), cache=False)
-        self.assertLessEqual(number_of_queries, 29)
+        self.assertLessEqual(number_of_queries, 28)
