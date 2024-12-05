@@ -13,42 +13,49 @@
 }
 
 // Form view rules to break the default table layout
-@mixin form-break-table($-is-editable: false) {
+@mixin form-break-table() {
     --fieldWidget-margin-bottom: 0;
 
     grid-template-columns: 1fr;
     margin-bottom: $o-form-spacing-unit * 4;
-    row-gap: 0;
 
-    .o_wrap_field {
-        .o_cell {
-            max-width: 100%;
+    .o_cell {
+        max-width: 100%;
 
-            &.o_wrap_label {
-                line-height: $o-label-font-size-factor;
+        &.o_wrap_label {
+            line-height: $o-label-font-size-factor;
+        }
+
+        .o_field_widget {
+            &:not(.o_field_boolean){
+                width: 100%;
             }
 
-            .o_field_widget {
-                &:not(.o_field_boolean){
-                    width: 100%;
-                }
-
-                &.o_field_boolean {
-                    margin-right: 0;
-                }
-            }
-
-            .o_input_dropdown {
-                width: auto;
-                max-width: 100%;
+            &.o_field_boolean {
+                margin-right: 0;
             }
         }
+
+        .o_input_dropdown {
+            width: auto;
+            max-width: 100%;
+        }
+
     }
 
-    @if $-is-editable {
-        .o_address_type, .o_address_format {
-            --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 2};
+    @include media-breakpoint-down(md) {
+        .o_cell:has(+ :is(.o_wrap_label, .o_wrap_field_boolean)),
+        .o_wrap_field_boolean,
+        .o_cell:first-child:last-child {
+            margin-bottom: map-get($spacers, 3);
         }
+    }
+}
+
+
+@mixin editable-form-break-table() {
+    .o_address_type, .o_address_format {
+        --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 2};
     }
 }
 
@@ -461,13 +468,18 @@
         gap: map-get($spacers, 2) $o-horizontal-padding;
         margin-bottom: map-get($spacers, 2);
 
-        .o_cell:first-child:last-child {
-            grid-column: span 2;
-        }
-
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
             &.o_field_widget {
                 width: auto;
+            }
+        }
+    }
+
+    & .o_form_renderer:not(.o_kanban_quick_create_form) .o_inner_group {
+        @include media-breakpoint-up(sm) {
+            .o_cell:first-child:last-child,
+            .o_cell:not(.o_wrap_label):not(.o_wrap_input) {
+                grid-column: span 2;
             }
         }
     }
@@ -778,9 +790,6 @@
             }
         }
 
-        .o_wrap_field:first-child > .o_cell {
-            padding-top: 4px;
-        }
         .oe_subtotal_footer_separator {
             width: 100%;
             text-align: right;
@@ -1077,10 +1086,11 @@
     &.modal-sm .o_form_view {
         .o_inner_group {
             @include form-break-table;
+            row-gap: 0;
         }
 
         .o_form_editable .o_inner_group {
-            @include form-break-table($-is-editable: true);
+            @include editable-form-break-table();
         }
     }
 }
@@ -1130,14 +1140,6 @@
         .o_inner_group {
             margin-bottom: $o-form-spacing-unit * 4;
 
-            // Target XXS form view on mobile devices in portrait mode
-            @include media-breakpoint-down(md) {
-                &:not(.oe_subtotal_footer) > .o_cell {
-                    > .o_field_widget {
-                        --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 4};
-                    }
-                }
-            }
         }
 
         .o_form_label {
@@ -1154,7 +1156,7 @@
     }
 
     .o_form_editable .o_inner_group {
-        @include form-break-table($-is-editable: true);
+        @include editable-form-break-table();
     }
 }
 
