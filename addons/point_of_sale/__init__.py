@@ -3,6 +3,7 @@
 
 from . import models
 from . import controllers
+from . import data
 from . import report
 from . import wizard
 
