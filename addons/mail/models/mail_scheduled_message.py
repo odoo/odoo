@@ -28,6 +28,8 @@ class MailScheduledMessage(models.Model):
     such as 'email_from' and 'force_email_lang'.
     """
     _description = 'Scheduled Message'
+    _order = 'id DESC'
+    _rec_name = 'subject'
 
     # content
     subject = fields.Char('Subject')

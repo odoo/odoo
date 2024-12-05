@@ -63,7 +63,7 @@ for name in POP3_ATTRIBUTES:
 class FetchmailServer(models.Model):
     """Incoming POP/IMAP mail server account"""
     _description = 'Incoming Mail Server'
-    _order = 'priority'
+    _order = 'priority, id DESC'
 
     name = fields.Char('Name', required=True)
     active = fields.Boolean('Active', default=True)

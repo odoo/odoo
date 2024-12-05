@@ -20,6 +20,7 @@ class MailFollowers(models.Model):
     _rec_name = 'partner_id'
     _log_access = False
     _description = 'Document Followers'
+    _order = 'id ASC'
 
     # Note. There is no integrity check on model names for performance reasons.
     # However, followers of unlinked models are deleted by models themselves

@@ -7,6 +7,7 @@ from odoo import _, api, exceptions, fields, models
 class SmsResendRecipient(models.TransientModel):
     _name = 'sms.resend.recipient'
     _description = 'Resend Notification'
+    _order = 'id DESC'
     _rec_name = 'sms_resend_id'
 
     sms_resend_id = fields.Many2one('sms.resend', required=True)
@@ -22,6 +23,7 @@ class SmsResendRecipient(models.TransientModel):
 class SmsResend(models.TransientModel):
     _name = 'sms.resend'
     _description = 'SMS Resend'
+    _order = 'id DESC'
     _rec_name = 'mail_message_id'
 
     @api.model

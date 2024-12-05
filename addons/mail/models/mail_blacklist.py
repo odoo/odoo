@@ -9,6 +9,7 @@ class MailBlacklist(models.Model):
     """ Model of blacklisted email addresses to stop sending emails."""
     _inherit = ['mail.thread']
     _description = 'Mail Blacklist'
+    _order = 'email'
     _rec_name = 'email'
 
     email = fields.Char(string='Email Address', required=True, index='trigram', help='This field is case insensitive.',
