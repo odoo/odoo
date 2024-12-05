@@ -20,7 +20,8 @@ class ResUsers(models.Model):
 
         # Process new email addresses : create new users
         for email in new_emails:
-            default_values = {'login': email, 'name': email.split('@')[0], 'email': email, 'active': True}
+            name, email_normalized = self.env['res.partner']._parse_partner_name(email)
+            default_values = {'login': email_normalized, 'name': name or email_normalized, 'email': email_normalized, 'active': True}
             user = self.with_context(signup_valid=True).create(default_values)
 
         return True
