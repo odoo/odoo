@@ -76,10 +76,9 @@ export class ProductListPage extends Component {
             this.selfOrder.computeAvailableCategories();
         });
     }
-
     scrollTo(ref = null, { behavior = "smooth" } = {}) {
         this.productsList.el.scroll({
-            top: ref?.el ? ref.el.offsetTop - this.productsList.el.offsetTop : 0,
+            top: ref?.el ? ref.el.offsetTop + ref.el.parentElement.parentElement.offsetTop : 0,
             behavior,
         });
     }
