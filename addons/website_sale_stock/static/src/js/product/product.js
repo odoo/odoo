@@ -6,7 +6,7 @@ import { Product } from '@sale/js/product/product';
 patch(Product, {
     props: {
         ...Product.props,
-        free_qty: { type: Number, optional: true },
+        max_quantity: { type: Number, optional: true },
     },
 });
 
