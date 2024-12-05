@@ -111,9 +111,14 @@ export class DiscussCoreCommon {
                         .filter(({ type }) => type === "discuss.channel/leave")
                         .map(({ payload }) => payload.id)
                 );
+                const deletedMessagesIds = notifications
+                    .filter(({ type }) => type === "mail.message/delete")
+                    .flatMap(({ payload }) => payload.message_ids);
                 for (const notif of notifications.filter(
                     ({ payload, type }) =>
-                        type === "discuss.channel/new_message" && !channelsLeft.has(payload.id)
+                        type === "discuss.channel/new_message" &&
+                        !channelsLeft.has(payload.id) &&
+                        !deletedMessagesIds.includes(payload.message.id)
                 )) {
                     this._handleNotificationNewMessage(notif);
                 }
@@ -224,6 +229,9 @@ export class DiscussCoreCommon {
             if (!channel) {
                 return;
             }
+        }
+        if (!channel.is_pinned) {
+            this.threadService.pin(channel);
         }
         this.store.Message.get(messageData.temporary_id)?.delete();
         messageData.temporary_id = null;
