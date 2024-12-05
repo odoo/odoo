@@ -14,6 +14,7 @@ export class OrderReceipt extends Component {
     static props = {
         data: Object,
         formatCurrency: Function,
+        slots: { type: Object, optional: true },
         basic_receipt: { type: Boolean, optional: true },
     };
     static defaultProps = {

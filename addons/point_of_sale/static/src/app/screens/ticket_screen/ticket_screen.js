@@ -23,6 +23,7 @@ import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_ref
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 
 const NBR_BY_PAGE = 30;
 
@@ -34,6 +35,7 @@ export class TicketScreen extends Component {
         InvoiceButton,
         Orderline,
         OrderWidget,
+        OrderReceipt,
         CenteredIcon,
         SearchBar,
         Numpad,
@@ -136,6 +138,10 @@ export class TicketScreen extends Component {
     onClickOrderline(orderline) {
         if (this.state.selectedOrder.uiState.locked) {
             const order = this.getSelectedOrder();
+            if (this.state.selectedOrderlineIds[order.id] === orderline.id) {
+                this.state.selectedOrderlineIds[order.id] = false;
+                return;
+            }
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
         }
