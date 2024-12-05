@@ -4,6 +4,8 @@
 from threading import Thread, Event
 
 from odoo.addons.hw_drivers.main import drivers, iot_devices
+from odoo.addons.hw_drivers.tools.helpers import toggleable
+
 from odoo.tools.lru import LRU
 
 
@@ -44,11 +46,11 @@ class Driver(Thread):
         """
         return False
 
+    @toggleable
     def action(self, data):
         """Helper function that calls a specific action method on the device.
 
-        :param data: the `_actions` key mapped to the action method we want to call
-        :type data: string
+        :param dict data: the `_actions` key mapped to the action method we want to call
         """
         self._actions[data.get('action', '')](data)
 
