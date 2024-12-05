@@ -548,13 +548,20 @@ class PurchaseOrderLine(models.Model):
 
         return name
 
-    def _prepare_account_move_line(self, move=False):
+    def _prepare_account_move_line(self, move=False, **optional_values):
+        """Prepare the values to create the new invoice line for a purchase order line.
+
+        :param move: the invoice for this line
+        :param optional_values: any parameter that should be added to the returned invoice line
+        :rtype: dict
+        """
         self.ensure_one()
         aml_currency = move and move.currency_id or self.currency_id
         date = move and move.date or fields.Date.today()
 
         res = {
             'display_type': self.display_type or 'product',
+            'sequence': self.sequence,
             'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
@@ -567,6 +574,8 @@ class PurchaseOrderLine(models.Model):
         }
         if self.analytic_distribution and not self.display_type:
             res['analytic_distribution'] = self.analytic_distribution
+        if optional_values:
+            res.update(optional_values)
         return res
 
     @api.model
