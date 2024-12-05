@@ -238,7 +238,12 @@ function getBestPosition(popper, target, { container, margin, position }, iframe
     }
 
     // Fallback to default position if no best solution found
-    return getPositioningData();
+    let default_position = getPositioningData();
+    if (!iframe) {
+        default_position.top = default_position.top > 0 ? default_position.top : 0;
+        default_position.left = default_position.left > 0 ? default_position.left : 0;
+    }
+    return default_position;
 }
 
 /**
