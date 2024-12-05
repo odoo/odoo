@@ -1468,9 +1468,7 @@ export class Markup {
 }
 
 export class FormattedString extends String {
-    static RAW = "raw";
-
-    /** @type {string} */
+    /** @type {ArgumentType} */
     type;
 
     /**
@@ -1478,15 +1476,13 @@ export class FormattedString extends String {
      * @param {string} [type]
      */
     constructor(value, type) {
-        if (!type) {
-            if (value instanceof FormattedString) {
-                type = value.type;
-            } else {
-                type = getTypeOf(value);
-            }
+        if (value instanceof FormattedString) {
+            type = value.type;
+        } else if (type === undefined) {
+            type = getTypeOf(value);
         }
 
-        if (type !== FormattedString.RAW) {
+        if (type !== null) {
             value = formatHumanReadable(value);
         }
 
