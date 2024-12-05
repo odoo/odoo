@@ -58,5 +58,17 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
         })
 
         sale_order.action_confirm()
+
+        sale_order2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 20,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': 20,
+                'tax_id': False,
+            })],
+        })
+        sale_order2.action_confirm()
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderIsInvoice', login="accountman")
