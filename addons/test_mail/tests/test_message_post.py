@@ -762,7 +762,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         'res_id': test_record.id,
                         'subtype_id': self.env.ref('mail.mt_comment'),
                     },
-                }
+                },
             ):
             new_message = test_record.message_post(
                 body='Body',
