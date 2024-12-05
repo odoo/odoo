@@ -270,6 +270,9 @@ class MergePartnerAutomatic(models.TransientModel):
             except ValidationError:
                 _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
 
+    def _max_number_of_partner_to_merge(self):
+        return 3
+
     def _merge(self, partner_ids, dst_partner=None, extra_checks=True):
         """ private implementation of merge partner
             :param partner_ids : ids of partner to merge
@@ -285,8 +288,10 @@ class MergePartnerAutomatic(models.TransientModel):
         if len(partner_ids) < 2:
             return
 
-        if len(partner_ids) > 3:
-            raise UserError(_("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
+        max_nb_partner = self._max_number_of_partner_to_merge()
+
+        if len(partner_ids) > max_nb_partner:
+            raise UserError(_("For safety reasons, you cannot merge more than %s contacts together. You can re-open the wizard several times if needed.") % max_nb_partner)
 
         # check if the list of partners to merge contains child/parent relation
         child_ids = self.env['res.partner']
