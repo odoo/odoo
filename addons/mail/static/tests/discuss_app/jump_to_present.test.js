@@ -1,3 +1,7 @@
+import { describe, expect, test } from "@odoo/hoot";
+import { press, queryFirst, tick } from "@odoo/hoot-dom";
+import { serverState } from "@web/../tests/web_test_helpers";
+
 import {
     SIZES,
     click,
@@ -12,11 +16,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
-
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
-import { serverState } from "@web/../tests/web_test_helpers";
-import { press, queryFirst, tick } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
