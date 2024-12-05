@@ -111,6 +111,15 @@ class MrpBom(models.Model):
             self.operation_ids.bom_product_template_attribute_value_ids = False
             self.byproduct_ids.bom_product_template_attribute_value_ids = False
 
+    def action_view_bom_overview(self):
+        action =  {
+            'type': 'ir.actions.client',
+            'tag': 'mrp_bom_report',
+            'context': {'model': 'report.mrp.report_bom_structure','variant_bom_id':self.env.context.get('default_product_id')}
+        }
+        
+        return action
+    
     @api.constrains('active', 'product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_bom_cycle(self):
         subcomponents_dict = dict()
