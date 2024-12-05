@@ -24,7 +24,7 @@ echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
 echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
 # Aliases
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
@@ -51,6 +51,7 @@ odoo_help() {
   echo 'odoo_stop           Stops Odoo service'
   echo 'odoo_restart        Restarts Odoo service'
   echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
+  echo 'devtools            Enables/Disables specific functions for development (more help with devtools help)'
 }
 
 odoo_dev() {
@@ -77,6 +78,33 @@ pip() {
     additional_arg=\"--user\"
   fi
   pip3 \"\$1\" \"\$2\" --break-system-package \"\$additional_arg\"
+}
+
+devtools() {
+  if [[ -z \"\$1\" || -z \"\$2\" || \"\$1\" == \"-h\" ]]; then
+    echo 'Usage: devtools <enable/disable> <general/actions> [action name]'
+    echo ''
+    echo 'Only provide an action name if you want do enable/disable a specific device action.'
+    echo 'If no action name is provided, all actions will be enabled/disabled.'
+    return 1
+  fi
+  write_mode
+  if ! grep -q '^\[devtools\]' /home/pi/odoo.conf; then
+    printf '\n[devtools]\n' >> /home/pi/odoo.conf
+  fi
+  if [ \"\$1\" == \"disable\" ]; then
+    if [[ -z \"\$3\" ]]; then
+      value=\"*\"
+    else
+      value=\"\$3\"
+    fi
+    devtools enable \$2
+    write_mode
+    sed -i \"/^\[devtools\]/a\\\\\$2 = \$value\" /home/pi/odoo.conf
+  elif [ \"\$1\" == \"enable\" ]; then
+    sed -i \"/\[devtools\]/,/\[/{/\$2 =/d}\" /home/pi/odoo.conf
+  fi
+  read_mode
 }
 " | tee -a ~/.bashrc /home/pi/.bashrc
 
