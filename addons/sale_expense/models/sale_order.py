@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
         comodel_name='hr.expense',
         inverse_name='sale_order_id',
         string='Expenses',
-        domain=[('state', '=', 'done')],
+        domain=[('state', 'in', ('posted', 'in_payment', 'paid'))],
         readonly=True,
         copy=False,
     )
