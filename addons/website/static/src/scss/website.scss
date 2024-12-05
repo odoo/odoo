@@ -350,7 +350,7 @@ body {
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
 // bootstrap if possible.
-#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled {
+#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
     .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge {
         $header-text-color: o-website-value('header-text-color');
         // Check if the value is wrapped in quotes (initially it wasn't, and it
@@ -1449,6 +1449,20 @@ header {
     // Prevent the color of the header to impact the color of the nav.
     &.o_header_is_scrolled, &.o_transitioning.o_header_affixed {
         background-color: transparent !important;
+    }
+    // When the page starts scrolling with the "standard" header, there’s a
+    // brief moment where the header has a "translate: transform" applied
+    // without being "affixed" yet. This causes the "off-canvas mobile" navbar
+    // to temporarily increase the page size, creating sometimes a scrolling bug
+    // that prevents further scrolling (e.g. "checkout shop" page on mobile
+    // device). To prevent this bug, we add a "display: none" to the "off-canvas
+    // mobile" navbar so it no longer affects the page dimensions. TODO: Check
+    // if this code can be removed once the "#wrapwrap" element is permanently
+    // removed.
+    &.o_transformed_not_affixed {
+        .o_navbar_mobile {
+            display: none;
+        }
     }
 }
 

@@ -1240,6 +1240,28 @@ class MailCase(MockEmail):
             self.assertEqual(len(bus_notifs), len(channels))
         return bus_notifs
 
+    @contextmanager
+    def assertBusNotificationType(self, expected_pairs):
+        """Check bus notifications type.
+        :param expected_pairs: list of tuples containing the expected bus channel and bus
+        notification type"""
+        try:
+            with self.mock_bus():
+                yield
+        finally:
+            bus_notifs = (
+                self.env["bus.bus"]
+                .sudo()
+                .search([("channel", "in", [json_dump(channel) for channel, _ in expected_pairs])])
+            )
+            notif_types = [
+                (json.loads(notif.message).get("type"), notif.channel) for notif in bus_notifs
+            ]
+            expected_notif_types = [
+                (notif_type, json_dump(channel)) for channel, notif_type in expected_pairs
+            ]
+            self.assertEqual(notif_types, expected_notif_types)
+
     def assertNotified(self, message, recipients_info, is_complete=False):
         """ Lightweight check for notifications (mail.notification).
 

@@ -1875,6 +1875,14 @@ class PosSession(models.Model):
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
+    def _update_session_info(self, session_info):
+        session_info['user_context']['allowed_company_ids'] = self.company_id.ids
+        session_info['user_companies'] = {'current_company': self.company_id.id, 'allowed_companies': {self.company_id.id: session_info['user_companies']['allowed_companies'][self.company_id.id]}}
+        session_info['nomenclature_id'] = self.company_id.nomenclature_id.id
+        session_info['fallback_nomenclature_id'] = self._get_pos_fallback_nomenclature_id()
+        return session_info
+
+
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
