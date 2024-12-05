@@ -1310,15 +1310,6 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
 
 $-transition-duration: 200ms;
 
-// Enable to finish the animation swiftly even when the header
-// reaches the top of the page (the class o_header_affixed is
-// removed at that point).
-.o_header_fixed, .o_header_disappears, .o_header_fade_out {
-    :not(.o_header_no_transition) {
-        transition: transform $-transition-duration;
-    }
-}
-
 // Affixed Header
 .o_header_affixed {
     display: block;
