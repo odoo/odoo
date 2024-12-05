@@ -19,24 +19,27 @@
         >
             <!-- card -->
             <CallParticipantVideo t-if="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
-            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized }" draggable="false">
-                <img alt="Avatar" class="h-100 rounded-circle border-5 o_object_fit_cover" t-att-src="channelMember?.persona.avatarUrl" draggable="false" t-att-class="{
+            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized, 'o-isRemoteVideo': isRemoteVideo }" draggable="false">
+                <img t-if="!showRemoteWarning" alt="Avatar" class="h-100 rounded-circle border-5 o_object_fit_cover" t-att-src="channelMember?.persona.avatarUrl" draggable="false" t-att-class="{
                     'o-isTalking': isTalking,
                     'o-isInvitation': !rtcSession,
                 }"/>
             </div>
             <t t-if="rtcSession">
                 <!-- overlay -->
-                <span class="o-discuss-CallParticipantCard-overlay z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-1">
-                    <span t-if="!props.minimized and !props.inset" class="px-1 rounded-1 text-truncate smaller opacity-75 o-discuss-CallParticipantCard-overlayBottomName" t-esc="name"/>
+                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-1">
+                    <span t-if="!props.minimized and !props.inset" class="px-1 rounded-1 text-truncate smaller opacity-75 w-100 o-discuss-CallParticipantCard-overlayBottomName" t-esc="name"/>
                     <small t-if="rtcSession.is_screen_sharing_on and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded text-bg-danger d-flex align-items-center fw-bolder p-1" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>
+                <span t-if="showRemoteWarning" class="o-discuss-CallParticipantCard-overlay o-proportional-container z-1 w-50 position-absolute d-flex align-items-center justify-content-center overflow-hidden">
+                    <span class="fw-bolder p-1 rounded-1 o-video-text o-proportional-text">Video visible in the call tab</span>
+                </span>
                 <button t-if="popover.isOpen or (isContextMenuAvailable and ((!isMobileOS and rootHover.isHover) or (isMobileOS and !props.minimized)))" t-on-click="onContextMenu" class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle position-absolute border-0 top-0 end-0 smaller p-1" title="Participant options" t-ref="contextMenuAnchor">
                     <i class="fa fa-chevron-down fa-fw"/>
                 </button>
-                <div class="o-discuss-CallParticipantCard-overlay position-absolute bottom-0 end-0 d-flex flex-row-reverse">
+                <div class="o-discuss-CallParticipantCard-overlay position-absolute bottom-0 end-0 d-flex w-25 flex-row-reverse">
                     <span t-if="hasRaisingHand" class="d-flex flex-column justify-content-center me-1 rounded-circle bg-500" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="raising hand" aria-label="raising hand">
                         <i class="fa fa-hand-paper-o"/>
                     </span>
@@ -53,7 +56,7 @@
                     <span t-if="showConnectionState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtcSession.connectionState">
                         <i class="fa fa-exclamation-triangle text-warning"/>
                     </span>
-                    <span t-if="rtcSession.is_screen_sharing_on and !props.minimized and !isOfActiveCall" class="user-select-none rounded text-bg-danger d-flex align-items-center me-1 fw-bolder p-1" title="live" aria-label="live">
+                    <span t-if="showLiveLabel" class="user-select-none rounded o-proportional-text text-bg-danger d-flex align-items-center py-1 px-2 fw-bolder" title="live" aria-label="live">
                         LIVE
                     </span>
                 </div>

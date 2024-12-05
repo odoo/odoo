@@ -75,7 +75,7 @@ export class CallContextMenu extends Component {
     }
 
     async updateStats() {
-        if (this.rtc.selfSession?.eq(this.props.rtcSession)) {
+        if (this.rtc.localSession?.eq(this.props.rtcSession)) {
             if (this.rtc.sfuClient) {
                 const { uploadStats, downloadStats, ...producerStats } =
                     await this.rtc.sfuClient.getStats();
@@ -142,11 +142,6 @@ export class CallContextMenu extends Component {
 
     onChangeVolume(ev) {
         const volume = Number(ev.target.value);
-        this.store.settings.saveVolumeSetting({
-            guestId: this.props.rtcSession?.guestId,
-            partnerId: this.props.rtcSession?.partnerId,
-            volume,
-        });
-        this.props.rtcSession.volume = volume;
+        this.rtc.setVolume(this.props.rtcSession, volume);
     }
 }

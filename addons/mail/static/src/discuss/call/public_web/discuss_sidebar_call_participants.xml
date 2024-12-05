@@ -22,7 +22,7 @@
             'ps-4 pe-2': props.compact === undefined and !compact,
             'px-2': props.compact === false,
             'rounded-3': props.compact === undefined,
-            'opacity-75': props.thread.notEq(rtc.state.channel) and compact,
+            'opacity-75': props.thread.notEq(rtc.channel) and compact,
         }">
             <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!compact" t-on-click="() => state.expanded = !state.expanded">
                 <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !state.expanded, 'oi-chevron-down': state.expanded}" t-att-title="title"/>
