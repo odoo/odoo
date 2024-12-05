@@ -34,6 +34,7 @@ export class FilterValue extends Component {
         this.getters = this.props.model.getters;
         this.relativeDateRangesTypes = RELATIVE_DATE_RANGE_TYPES;
         this.nameService = useService("name");
+        this.fieldService = useService("field");
         this.isValid = false;
         onWillStart(async () => {
             if (this.filter.type !== "relation") {
@@ -41,8 +42,7 @@ export class FilterValue extends Component {
                 return;
             }
             try {
-                const odooDataProvider = this.props.model.config.custom.odooDataProvider;
-                await getFields(odooDataProvider.serverData, this.filter.modelName);
+                await getFields(this.fieldService, this.filter.modelName);
                 this.isValid = true;
             } catch (e) {
                 if (e instanceof ModelNotFoundError) {
