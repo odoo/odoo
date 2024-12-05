@@ -9035,6 +9035,9 @@ test("one2many list with delete control with invisible modifier", async () => {
     expect(".first .o_data_row").toHaveCount(2);
     expect(".first .o_data_row:eq(0) .o_list_record_remove button").toHaveCount(1);
     expect(".first .o_data_row:eq(1) .o_list_record_remove button").toHaveCount(0);
+    await contains(".first .o_data_row:eq(1) td.o_list_record_remove").click();
+    expect(".first .o_data_row").toHaveCount(2);
+
     expect(".second .o_data_row").toHaveCount(2);
     expect(".second .o_data_row .o_list_record_remove button").toHaveCount(2);
 });
