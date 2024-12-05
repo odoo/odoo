@@ -90,7 +90,10 @@ WebsiteSale.include({
             soDate: serializeDateTime(DateTime.now()),
             edit: false,
             isFrontend: true,
-            options: { isMainProductConfigurable: !isOnProductPage },
+            options: {
+                isMainProductConfigurable: !isOnProductPage,
+                showQuantity: Boolean(this.$form[0].querySelector('.show_quantity')),
+            },
             save: async (mainProduct, optionalProducts, options) => {
                 this._trackProducts([mainProduct, ...optionalProducts]);
 

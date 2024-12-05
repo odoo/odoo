@@ -11,6 +11,7 @@ export class ProductList extends Component {
     static props = {
         products: Array,
         areProductsOptional: { type: Boolean, optional: true },
+        options: { type: Object, optional: true },
     };
     static defaultProps = {
         areProductsOptional: false,

@@ -1654,7 +1654,7 @@
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
         <div id="add_to_cart_wrap" position="before">
-            <div t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} me-2 mb-2 align-middle" contenteditable="false">
+            <div t-attf-class="css_quantity show_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} me-2 mb-2 align-middle" contenteditable="false">
                 <a t-attf-href="#" class="btn btn-link js_add_cart_json" aria-label="Remove one" title="Remove one">
                     <i class="fa fa-minus"/>
                 </a>

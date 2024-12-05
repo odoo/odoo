@@ -29,15 +29,16 @@
             </t>
         </td>
         <td
-            t-if="env.showQuantityAndPrice"
             class="o_sale_product_configurator_qty py-3 px-0 text-end"
         >
-            <t t-if="!this.props.optional">
-                <QuantityButtons
-                    quantity="this.props.quantity"
-                    setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
-                    isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
-                />
+        <t t-if="!this.props.optional">
+            <t t-if="this.props.options.showQuantity">
+                    <QuantityButtons
+                        quantity="this.props.quantity"
+                        setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
+                        isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
+                    />
+                </t>
             </t>
             <t t-else="">
                 <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
@@ -51,7 +52,6 @@
             </a>
         </td>
         <td
-            t-if="env.showQuantityAndPrice"
             class="o_sale_product_configurator_price py-3 px-0 text-end"
             name="price"
         >

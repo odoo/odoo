@@ -19,6 +19,7 @@ export class Product extends Component {
         quantity: Number,
         attribute_lines: Object,
         optional: Boolean,
+        options: { type: Object, optional: true },
         imageURL: { type: String, optional: true },
         archived_combinations: Array,
         exclusions: Object,

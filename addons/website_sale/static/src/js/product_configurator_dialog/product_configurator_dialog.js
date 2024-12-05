@@ -14,6 +14,8 @@ patch(ProductConfiguratorDialog, {
             shape: {
                 ...ProductConfiguratorDialog.props.options.shape,
                 isMainProductConfigurable: { type: Boolean, optional: true },
+                showQuantity: { type: Boolean, optional: true },
+                showPrice: { type: Boolean, optional: true },
             },
         },
     },
@@ -38,6 +40,9 @@ patch(ProductConfiguratorDialog.prototype, {
         useSubEnv({
             isFrontend: this.props.isFrontend,
             isMainProductConfigurable: this.props.options?.isMainProductConfigurable ?? true,
+            showQuantityAndPrice: this.props.options?.showQuantityAndPrice ?? true,
+            showQuantity: this.props.options?.shape?.showQuantity ?? true,
+            showPrice: this.props.options?.showPrice ?? true,
         });
     },
 
