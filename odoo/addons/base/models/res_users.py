@@ -1645,7 +1645,7 @@ class ResGroups(models.Model):  # noqa: F811
         groups = super().create(vals_list)
         self._update_user_groups_view()
         # actions.get_bindings() depends on action records
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('actions')
         return groups
 
     def write(self, values):
@@ -1658,14 +1658,14 @@ class ResGroups(models.Model):  # noqa: F811
         if view_values0 != view_values1:
             self._update_user_groups_view()
         # actions.get_bindings() depends on action records
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('actions')
         return res
 
     def unlink(self):
         res = super().unlink()
         self._update_user_groups_view()
         # actions.get_bindings() depends on action records
-        self.env.registry.clear_cache()
+        self.env.registry.clear_cache('actions')
         return res
 
     def _get_hidden_extra_categories(self):
