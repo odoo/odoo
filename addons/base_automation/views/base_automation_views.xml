@@ -45,11 +45,6 @@
                                             required="trigger in ['on_stage_set', 'on_tag_set']"
                                         />
                                         <field name="trg_field_ref_model_name" invisible="1" />
-                                        <field name="trg_date_id" class="oe_inline" string="Date Field"
-                                            options="{'no_open': True, 'no_create': True}"
-                                                invisible="trigger != 'on_time'"
-                                                required="trigger in ['on_time', 'on_time_created', 'on_time_updated']"
-                                        />
                                     </div>
                                     <div class="text-muted" invisible="trigger != 'on_change'"><i class="fa fa-warning"/> Automation rules triggered by UI changes will be executed <em>every time</em> the watched fields change, <em>whether you save or not</em>.</div>
                                 </div>
