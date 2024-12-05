@@ -513,7 +513,7 @@ export class MailMessage extends models.ServerModel {
                 ),
                 thread: mailDataHelpers.Store.one(
                     message.model ? this.env[message.model].browse(message.res_id) : false,
-                    makeKwArgs({ as_thread: true, fields: ["modelName"] })
+                    makeKwArgs({ as_thread: true, fields: ["modelName", "name"] })
                 ),
             });
         }
