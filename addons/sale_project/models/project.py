@@ -344,6 +344,8 @@ class Project(models.Model):
         query.limit = limit
         query.offset = offset
         query_str, params = query.select('DISTINCT sale_line_id')
+        # Prior to executing the query, flush the ORM cache to make sure everything is in the database
+        self.env.flush_all()
         self._cr.execute(query_str, params)
         return [row[0] for row in self._cr.fetchall()]
 
