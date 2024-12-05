@@ -2783,7 +2783,17 @@ class MailThread(models.AbstractModel):
         # SES SMTP may replace Message-Id and In-Reply-To refers an internal ID not stored in Odoo)
         message_sudo = message.sudo()
         if message_sudo.parent_id:
-            references = f'{message_sudo.parent_id.message_id} {message_sudo.message_id}'
+            invalid_parent = message_sudo.parent_id.message_type in ["notification", "user_notification"]
+            real_message = message_sudo.search(
+                [("message_type", "not in", ["notification", "user_notification"]),
+                 ("id", "in", message_sudo.parent_id.child_ids.ids)],
+                limit=1,
+                order="id asc"
+            )
+            if real_message and invalid_parent:
+                references = f'{real_message.message_id} {message_sudo.message_id}'
+            else:
+                references = f'{message_sudo.parent_id.message_id} {message_sudo.message_id}'
         else:
             references = message_sudo.message_id
         # prepare notification mail values
