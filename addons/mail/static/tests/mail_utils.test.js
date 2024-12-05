@@ -1,6 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-
-import { addLink, parseAndTransform } from "@mail/utils/common/format";
+import { press } from "@odoo/hoot-dom";
 import {
     contains,
     defineMailModels,
@@ -9,8 +8,9 @@ import {
     start,
     startServer,
 } from "./mail_test_helpers";
+
+import { addLink, parseAndTransform } from "@mail/utils/common/format";
 import { useSequential } from "@mail/utils/common/hooks";
-import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
