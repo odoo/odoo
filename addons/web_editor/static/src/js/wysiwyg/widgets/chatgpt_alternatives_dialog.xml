@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web_edior.ChatGPTAlternativesDialog">
-    <Dialog size="'lg'" title="'AI Copywriter'">
+    <Dialog size="'lg'" title="'AI Copywriter'" t-on-mousedown="preventDialogMousedown">
         <div class="md-8">
             <div class="mb-3">
                 <t t-foreach="Object.entries(props.alternativesModes)"

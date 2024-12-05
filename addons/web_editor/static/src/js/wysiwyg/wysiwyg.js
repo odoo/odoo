@@ -62,6 +62,7 @@ const closestBlock = OdooEditorLib.closestBlock;
 const getRangePosition = OdooEditorLib.getRangePosition;
 const fillEmpty = OdooEditorLib.fillEmpty;
 const isVisible = OdooEditorLib.isVisible;
+const allowsParagraphRelatedElements = OdooEditorLib.allowsParagraphRelatedElements;
 
 function getJqueryFromDocument(doc) {
     if (doc.defaultView && doc.defaultView.$) {
@@ -1519,6 +1520,18 @@ export class Wysiwyg extends Component {
         const restore = preserveCursor(this.odooEditor.document);
         const params = {
             insert: content => {
+                if ([...(content.children || [])].filter(child => child.nodeName === 'P').length > 1) {
+                    // If several paragraphs are to be inserted into an element
+                    // which doesn't accept paragraph elements, replace the
+                    // original element with a paragraph so as not to leave an
+                    // empty block before the insertion.
+                    this.odooEditor.deleteRange();
+                    const selection = document.getSelection();
+                    const startBlock = closestBlock(selection.anchorNode);
+                    if (!allowsParagraphRelatedElements(startBlock)) {
+                        this.odooEditor.execCommand('setTag', 'p');
+                    }
+                }
                 this.odooEditor.historyPauseSteps();
                 const insertedNodes = this.odooEditor.execCommand('insert', content);
                 this.odooEditor.historyUnpauseSteps();
