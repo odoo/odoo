@@ -504,6 +504,24 @@ describe('Paste', () => {
                     contentAfter: '<p>ax&nbsp; &nbsp; y[]d</p>',
                 });
             });
+            it('should paste a text on line break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc<br>[def]</p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'x');
+                    },
+                    contentAfter: '<p>abc<br>x[]</p>',
+                });
+            });
+            it('should paste a text at line-break when selected text is formatted', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc<br><b>[def]</b></p>',
+                    stepFunction: async editor => {
+                        await pasteText(editor, 'x');
+                    },
+                    contentAfter: '<p>abc<br><b>x[]</b></p>',
+                });
+            });
             it('should paste a text in a span', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a<span class="a">b[cd]e</span>f</p>',
