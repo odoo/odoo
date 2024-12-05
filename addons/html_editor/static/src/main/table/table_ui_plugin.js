@@ -35,6 +35,7 @@ export class TableUIPlugin extends Plugin {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.picker = this.dependencies.overlay.createOverlay(TablePicker, {
             positionOptions: {
+                updatePositionOnResize: false,
                 onPositioned: (picker, position) => {
                     const popperRect = picker.getBoundingClientRect();
                     const { left } = position;
