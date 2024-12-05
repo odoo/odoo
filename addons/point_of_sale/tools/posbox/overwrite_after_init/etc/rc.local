@@ -22,4 +22,7 @@ chown pi:pi /var/run/odoo
 
 /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh &
 
+# Start a virtual framebuffer (mandatory for KeyboardUSBDriver)
+Xvfb :1 -screen 0 1024x768x16 &
+
 exit 0
