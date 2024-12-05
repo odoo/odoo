@@ -1,4 +1,5 @@
-// This is a patch of the font awesome library to add TikTok & Twitter icons.
+// This is a patch of the font awesome library to add TikTok & Twitter icons, as
+// well as the grip-vertical icon.
 @font-face {
     font-family: 'FontAwesome-tiktok-only';
     src: url('../../fonts/tiktok_only.woff');
@@ -10,6 +11,14 @@
 @font-face {
     font-family: 'FontAwesome-twitter-x-only';
     src: url('../../fonts/twitter_x_only.woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'FontAwesome-grip-vertical-only';
+    src: url('../../fonts/grip_vertical_only.woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -39,6 +48,14 @@
 
     &:before {
         content: '\e803';
+    }
+}
+
+.fa.fa-grip-vertical {
+    font-family: 'FontAwesome-grip-vertical-only' !important;
+
+    &:before {
+        content: '\ef58e';
     }
 }
 
