@@ -17,6 +17,7 @@ export class CallActionList extends Component {
         this.store = useState(useService("mail.store"));
         this.rtc = useState(useService("discuss.rtc"));
         this.callActions = useCallActions();
+        this.maxButtonInLine = isMobileOS() ? 3 : 4;
     }
 
     get MORE() {

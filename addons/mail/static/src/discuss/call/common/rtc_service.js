@@ -183,6 +183,11 @@ export class Rtc extends Record {
             return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
         },
     });
+    syncState = Record.one("CallSyncState", {
+        compute() {
+            return {};
+        },
+    });
     selfSession = Record.one("discuss.channel.rtc.session");
     serverInfo;
     /**
@@ -257,6 +262,7 @@ export class Rtc extends Record {
 
     start() {
         const services = this.store.env.services;
+        this.syncState.start();
         this.notification = services.notification;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
@@ -424,6 +430,7 @@ export class Rtc extends Record {
     endCall(channel = this.state.channel) {
         channel.rtcInvitingSession = undefined;
         channel.activeRtcSession = undefined;
+        this.syncState.endHost();
         if (channel.eq(this.state.channel)) {
             this.pttExtService.unsubscribe();
             this.network?.disconnect();
@@ -570,6 +577,15 @@ export class Rtc extends Record {
     }
 
     /**
+     * Sends info about the current (self) rtcSession to the other tabs and remote participants.
+     */
+    _shareOwnInfo() {
+        const info = this.formatInfo();
+        this.syncState.updateInfo(info);
+        this.network?.updateInfo(info);
+    }
+
+    /**
      * @param {import("models").RtcSession} session
      * @param {String} entry
      * @param {Object} [param2]
@@ -643,26 +659,7 @@ export class Rtc extends Record {
                 }
                 return;
             case "info_change":
-                if (!payload) {
-                    return;
-                }
-                for (const [id, info] of Object.entries(payload)) {
-                    const session = this.store["discuss.channel.rtc.session"].get(Number(id));
-                    if (!session) {
-                        return;
-                    }
-                    // `isRaisingHand` is turned into the Date `raisingHand`
-                    this.setRemoteRaiseHand(session, info.isRaisingHand);
-                    delete info.isRaisingHand;
-                    Object.assign(session, {
-                        is_muted: info.isSelfMuted,
-                        is_deaf: info.isDeaf,
-                        isTalking: info.isTalking,
-                        is_camera_on: info.isCameraOn,
-                        is_screen_sharing_on: info.isScreenSharingOn,
-                    });
-                    Object.assign(session, info);
-                }
+                this.syncState.updateSessionInfo(payload);
                 return;
             case "track":
                 {
@@ -718,6 +715,28 @@ export class Rtc extends Record {
                     await this.leaveCall();
                 }
                 return;
+        }
+    }
+
+    updateSessionInfo(payload) {
+        if (!payload) {
+            return;
+        }
+        for (const [id, info] of Object.entries(payload)) {
+            const session = this.store["discuss.channel.rtc.session"].get(Number(id));
+            if (!session) {
+                return;
+            }
+            // `isRaisingHand` is turned into the Date `raisingHand`
+            this.setRemoteRaiseHand(session, info.isRaisingHand);
+            delete info.isRaisingHand;
+            Object.assign(session, {
+                is_muted: info.isSelfMuted,
+                is_deaf: info.isDeaf,
+                isTalking: info.isTalking,
+                is_camera_on: info.isCameraOn,
+                is_screen_sharing_on: info.isScreenSharingOn,
+            });
         }
     }
 
@@ -971,7 +990,7 @@ export class Rtc extends Record {
             return;
         }
         this.selfSession.raisingHand = raise ? new Date() : undefined;
-        await this.network?.updateInfo(this.formatInfo());
+        await this.syncState.updateInfo(this.formatInfo());
     }
 
     /**
@@ -1067,7 +1086,7 @@ export class Rtc extends Record {
             return;
         }
         this.state.audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
-        this.network?.updateInfo(this.formatInfo());
+        this.syncState.updateInfo(this.formatInfo());
     }
 
     /**
