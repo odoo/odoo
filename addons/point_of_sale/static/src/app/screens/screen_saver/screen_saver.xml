@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ScreenSaver">
+        <div class="login-overlay o_attendance_background fixed-top w-100 h-100 p-4 d-flex flex-column" t-on-click="() => this.pos.closeScreen()">
+            <div class="position-absolute top-10 screen-login-header d-flex" t-attf-class="{{ env.isSmall ? 'justify-content-center' : 'justify-content-between'}}">
+                <div class="screen-login-timer d-flex align-items-center gap-2 bg-transparent">
+                    <div class="timer-hours fs-1" t-esc="time.hours" />
+                    <div class="timer-date-container d-flex flex-column smaller">
+                        <div class="timer-day" t-esc="time.day" />
+                        <div class="timer-date" t-esc="time.date" />
+                    </div>
+                </div>
+            </div>
+            <div class="screen-login flex-grow-1 d-flex flex-column">
+                <div class="login-body d-flex flex-column flex-md-row gap-3 m-auto">
+                    <img t-att-height="env.isSmall ? 40 : 182" src="/point_of_sale/static/src/img/odoo_logo_1.png" alt="Logo"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

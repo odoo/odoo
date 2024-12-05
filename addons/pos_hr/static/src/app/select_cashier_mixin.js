@@ -137,7 +137,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
         if (currentScreen === "LoginScreen" && login && employee) {
             const isRestaurant = pos.config.module_pos_restaurant;
             const selectedScreen =
-                pos.previousScreen && pos.previousScreen !== "LoginScreen"
+                pos.previousScreen && !["LoginScreen", "ScreenSaver"].includes(pos.previousScreen)
                     ? pos.previousScreen
                     : isRestaurant
                     ? "FloorScreen"
