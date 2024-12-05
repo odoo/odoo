@@ -15,7 +15,14 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
     @api.model
     def get_html(self, bom_id=False, searchQty=1, searchVariant=False):
-        res = self._get_report_data(bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant)
+        with self.env.cr.savepoint(flush=True) as sp:
+            picking_types_by_company = dict(self.env['stock.picking.type']._read_group(domain=[('code', '=', 'mrp_operation')], groupby=['company_id'], aggregates=['id:recordset']))
+            for company, picking_types in picking_types_by_company.items():
+                picking_types.sequence_id = self.env['ir.sequence'].sudo().create({'name': 'fake_ir_sequence', 'company_id': company.id})
+            self.env.cr.execute("CREATE SEQUENCE fake_sequence START WITH -1 INCREMENT BY -1")
+            res = self.with_context(allow_simulation=True, SQL_OVERRIDDEN_ID="nextval('fake_sequence')")._get_report_data(bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant)
+            sp.close(rollback=True)
+            self.env.invalidate_all(flush=False)
         res['has_attachments'] = self._has_attachments(res['lines'])
         return res
 
@@ -201,7 +208,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return closest_forecasted
 
     @api.model
-    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
+    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False):
         """ Gets recursively the BoM and all its subassemblies and computes availibility estimations for each component and their disponibility in stock.
             Accepts specific keys in context that will affect the data computed :
             - 'minimized': Will cut all data not required to compute availability estimations.
@@ -214,8 +221,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             line_qty = bom.product_qty
         if not product_info:
             product_info = {}
-        if simulated_leaves_per_workcenter is False:
-            simulated_leaves_per_workcenter = defaultdict(list)
 
         company = bom.company_id or self.env.company
         current_quantity = line_qty
@@ -301,8 +306,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             line_quantity = line_quantities.get(line.id, 0.0)
             if line.child_bom_id:
                 component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
-                                               parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock,
-                                               simulated_leaves_per_workcenter=simulated_leaves_per_workcenter)
+                                               parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock)
             else:
                 component = self.with_context(
                     components_closest_forecasted=components_closest_forecasted,
@@ -325,7 +329,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
         if not is_minimized:
 
-            operations = self._get_operation_line(product, bom, float_round(current_quantity, precision_rounding=1, rounding_method='UP'), level + 1, index, bom_report_line, simulated_leaves_per_workcenter)
+            operations = self._get_operation_line(product, bom, float_round(current_quantity, precision_rounding=1, rounding_method='UP'), level + 1, index, bom_report_line)
             bom_report_line['operations'] = operations
             bom_report_line['operations_cost'] = sum(op['bom_cost'] for op in operations)
             bom_report_line['operations_time'] = sum(op['quantity'] for op in operations)
@@ -467,7 +471,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return (duration / 60.0) * workcenter.costs_hour
 
     @api.model
-    def _get_operation_line(self, product, bom, qty, level, index, bom_report_line, simulated_leaves_per_workcenter):
+    def _get_operation_line(self, product, bom, qty, level, index, bom_report_line):
         operations = []
         company = bom.company_id or self.env.company
         operations_planning = {}
@@ -479,7 +483,22 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     line_delay = component.get('availability_delay', 0)
                     max_component_delay = max(max_component_delay, line_delay)
                 date_today = self.env.context.get('from_date', fields.Date.today()) + timedelta(days=max_component_delay)
-                operations_planning = self._simulate_bom_planning(bom, product, datetime.combine(date_today, time.min), qty_to_produce, simulated_leaves_per_workcenter=simulated_leaves_per_workcenter)
+                if self.env.context.get('allow_simulation', False):
+                    production = self.env['mrp.production'].create({
+                        'product_id': product.id,
+                        'bom_id': bom.id,
+                        'product_qty': qty,
+                        'date_start': datetime.combine(date_today, time.min),
+                    })
+                    production.action_confirm()
+                    production.button_plan()
+                    for wo in production.workorder_ids:
+                        operations_planning[wo.operation_id] = {
+                            'date_start': wo.date_start,
+                            'date_finished': wo.date_finished,
+                            'workcenter': wo.workcenter_id,
+                            'duration_expected': wo.duration_expected,
+                        }
                 bom_report_line['simulated'] = True
                 bom_report_line['max_component_delay'] = max_component_delay
         operation_index = 0
@@ -802,78 +821,3 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'availability_state': component['availability_state'],
             'availability_delay': component['availability_delay'],
         }
-
-    def _simulate_bom_planning(self, bom, product, start_date, quantity, simulated_leaves_per_workcenter=False):
-        """ Simulate planning of all the operations depending on the workcenters work schedule.
-        (see '_plan_workorders' & '_link_workorders_and_moves')
-        """
-        bom.ensure_one()
-        if not bom.operation_ids:
-            return {}
-        if not product:
-            product = bom.product_id or bom.product_tmpl_id.product_variant_id
-        planning_per_operation = {}
-        if simulated_leaves_per_workcenter is False:
-            simulated_leaves_per_workcenter = defaultdict(list)
-        if bom.allow_operation_dependencies:
-            final_operations = bom.operation_ids.filtered(lambda o: not o.needed_by_operation_ids)
-            for operation in final_operations:
-                if operation._skip_operation_line(product):
-                    continue
-                self._simulate_operation_planning(operation, product, start_date, quantity, planning_per_operation, simulated_leaves_per_workcenter)
-        else:
-            for operation in bom.operation_ids:
-                if operation._skip_operation_line(product):
-                    continue
-                self._simulate_operation_planning(operation, product, start_date, quantity, planning_per_operation, simulated_leaves_per_workcenter)
-                start_date = planning_per_operation[operation]['date_finished']
-        return planning_per_operation
-
-    def _simulate_operation_planning(self, operation, product, start_date, quantity, planning_per_operation=False, simulated_leaves_per_workcenter=False):
-        """ Simulate planning of an operation depending on its workcenter/alternatives work schedule.
-        (see '_plan_workorder')
-        """
-        operation.ensure_one()
-        if planning_per_operation is False:
-            planning_per_operation = {}
-        if simulated_leaves_per_workcenter is False:
-            simulated_leaves_per_workcenter = defaultdict(list)
-        # Plan operation after its predecessors
-        date_start = max(start_date, datetime.now())
-        for op in operation.blocked_by_operation_ids:
-            if op._skip_operation_line(product):
-                continue
-            if op not in planning_per_operation:
-                self._simulate_operation_planning(op, product, start_date, quantity, planning_per_operation, simulated_leaves_per_workcenter)
-            date_start = max(date_start, planning_per_operation[op]['date_finished'])
-        # Consider workcenter and alternatives
-        workcenters = operation.workcenter_id | operation.workcenter_id.alternative_workcenter_ids
-        best_date_finished = datetime.max
-        best_date_start = best_workcenter = best_duration_expected = None
-        for workcenter in workcenters:
-            if not workcenter.resource_calendar_id:
-                raise UserError(_('There is no defined calendar on workcenter %s.', workcenter.name))
-            # Compute theoretical duration
-            duration_expected = operation._get_duration_expected(product, quantity, product.uom_id, workcenter)
-            # Try to plan on workcenter
-            from_date, to_date = workcenter._get_first_available_slot(date_start, duration_expected, extra_leaves_slots=simulated_leaves_per_workcenter[workcenter])
-            # If the workcenter is unavailable, try planning on the next one
-            if not from_date:
-                continue
-            # Check if this workcenter is better than the previous ones
-            if to_date and to_date < best_date_finished:
-                best_date_start = from_date
-                best_date_finished = to_date
-                best_workcenter = workcenter
-                best_duration_expected = duration_expected
-        # If none of the workcenter are available, raise
-        if best_date_finished == datetime.max:
-            raise UserError(_('Impossible to plan. Please check the workcenter availabilities.'))
-        planning_per_operation[operation] = {
-            'date_start': best_date_start,
-            'date_finished': best_date_finished,
-            'workcenter': best_workcenter,
-            'duration_expected': best_duration_expected,
-        }
-        simulated_leaves_per_workcenter[best_workcenter].append((best_date_start, best_date_finished))
-        return planning_per_operation

@@ -5127,12 +5127,14 @@ class BaseModel(metaclass=MetaModel):
         ids = []                                # ids of created records
         other_fields = OrderedSet()             # non-column fields
 
+        default_id = SQL_DEFAULT if not (default := self.env.context.get('SQL_OVERRIDDEN_ID', None)) else psycopg2.extensions.AsIs(default)
+
         for data_sublist in split_every(INSERT_BATCH_SIZE, data_list):
             stored_list = [data['stored'] for data in data_sublist]
             fnames = sorted({name for stored in stored_list for name in stored})
 
-            columns = []
-            rows = [[] for _ in stored_list]
+            columns = ['id']
+            rows = [[default_id] for _ in stored_list]
             for fname in fnames:
                 field = self._fields[fname]
                 if field.column_type:
@@ -5149,12 +5151,6 @@ class BaseModel(metaclass=MetaModel):
                     # force calling fields.create for properties field because
                     # we might want to update the parent definition
                     other_fields.add(field)
-
-            if not columns:
-                # manage the case where we create empty records
-                columns = ['id']
-                for row in rows:
-                    row.append(SQL_DEFAULT)
 
             cr.execute(SQL(
                 'INSERT INTO %s (%s) VALUES %s RETURNING "id"',

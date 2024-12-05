@@ -4480,7 +4480,7 @@ def select(model, *fnames):
 
 def insert(model, *fnames, rowcount=1):
     """ Return the expected query string to INSERT the given columns. """
-    columns = sorted(fnames + ('create_uid', 'create_date', 'write_uid', 'write_date'))
+    columns = ['id'] + sorted(fnames + ('create_uid', 'create_date', 'write_uid', 'write_date'))
     header = ", ".join(f'"{column}"' for column in columns)
     template = ", ".join("%s" for _index in range(rowcount))
     return f'INSERT INTO "{model._table}" ({header}) VALUES {template} RETURNING "id"'

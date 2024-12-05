@@ -2846,6 +2846,8 @@ class MrpProduction(models.Model):
     def action_start(self):
         self.ensure_one()
         if self.state == "confirmed":
+            if not self.is_planned:
+                self.button_plan()
             self.state = "progress"
 
     def _track_subtype(self, init_values):

@@ -5,7 +5,7 @@ import json
 from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.tools import float_compare, float_repr, float_round, float_is_zero, format_date, get_lang
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from math import log10
 
 
@@ -16,8 +16,16 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     @api.model
     def get_report_values(self, production_id):
         """ Endpoint for HTML display. """
+        with self.env.cr.savepoint(flush=True) as sp:
+            picking_types_by_company = dict(self.env['stock.picking.type']._read_group(domain=[('code', '=', 'mrp_operation')], groupby=['company_id'], aggregates=['id:recordset']))
+            for company, picking_types in picking_types_by_company.items():
+                picking_types.sequence_id = self.env['ir.sequence'].sudo().create({'name': 'fake_ir_sequence', 'company_id': company.id})
+            self.env.cr.execute("CREATE SEQUENCE fake_sequence START WITH -1 INCREMENT BY -1")
+            res = self.with_context(SQL_OVERRIDDEN_ID="nextval('fake_sequence')")._get_report_data(production_id)
+            sp.close(rollback=True)
+            self.env.invalidate_all(flush=False)
         return {
-            'data': self._get_report_data(production_id),
+            'data': res,
             'context': self._get_display_context(),
         }
 
@@ -25,9 +33,16 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         """ Endpoint for PDF display. """
         docs = []
-        for prod_id in docids:
-            doc = self._get_report_data(prod_id)
-            docs.append(self._include_pdf_specifics(doc, data))
+        with self.env.cr.savepoint(flush=True) as sp:
+            picking_types_by_company = dict(self.env['stock.picking.type']._read_group(domain=[('code', '=', 'mrp_operation')], groupby=['company_id'], aggregates=['id:recordset']))
+            for company, picking_types in picking_types_by_company.items():
+                picking_types.sequence_id = self.env['ir.sequence'].sudo().create({'name': 'fake_ir_sequence', 'company_id': company.id})
+            self.env.cr.execute("CREATE SEQUENCE fake_sequence START WITH -1 INCREMENT BY -1")
+            for prod_id in docids:
+                doc = self.with_context(SQL_OVERRIDDEN_ID="nextval('fake_sequence')")._get_report_data(prod_id)
+                docs.append(self._include_pdf_specifics(doc, data))
+            sp.close(rollback=True)
+            self.env.invalidate_all(flush=False)
         return {
             'doc_ids': docids,
             'doc_model': 'mrp.production',
@@ -78,7 +93,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         production = production.with_context(warehouse_id=production.warehouse_id.id)
 
         components = self._get_components_data(production, level=1, current_index='')
-        operations = self._get_operations_data(production, level=1, current_index='')
+        operations = self._get_operations_data(production, level=1, current_index='', components=components)
         initial_mo_cost, initial_bom_cost, initial_real_cost = self._compute_cost_sums(components, operations)
 
         if production.bom_id:
@@ -278,9 +293,25 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
         return workorder.operation_id._compute_operation_cost() * operation_cycle
 
-    def _get_operations_data(self, production, level=0, current_index=False):
+    def _get_operations_data(self, production, level=0, current_index=False, components=[]):
         if production.state == "done":
             return self._get_finished_operation_data(production, level, current_index)
+        operations_planning = {}
+        if not production.is_planned:
+            max_component_date = fields.Datetime.today()
+            for component in components:
+                if component['summary']['receipt']['date']:
+                    max_component_date = max(max_component_date, component['summary']['receipt']['date'])
+            production.date_start = datetime.combine(max_component_date, time.min)
+            production.button_plan()
+            for wo in production.workorder_ids:
+                operations_planning[wo.operation_id] = {
+                    'date_start': wo.date_start,
+                    'date_finished': wo.date_finished,
+                    'workcenter': wo.workcenter_id,
+                    'duration_expected': wo.duration_expected,
+                }
+
         currency = (production.company_id or self.env.company).currency_id
         operation_uom = _("Minutes")
         operations = []
@@ -309,6 +340,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 mo_cost_decorator = 'danger' if isinstance(bom_cost, bool) and not bom_cost else self._get_comparison_decorator(bom_cost, mo_cost, 0.01)
             is_workorder_started = not float_is_zero(wo_duration, precision_digits=2)
 
+            planning = operations_planning.get(workorder.operation_id, None)
             operations.append({
                 'level': level,
                 'index': f"{current_index}W{index}",
@@ -328,6 +360,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'real_cost_decorator': real_cost_decorator,
                 'currency_id': currency.id,
                 'currency': currency,
+                'receipt': self._format_receipt_date('expected', planning['date_finished']) if planning else ''
             })
             total_expected_time += workorder.duration_expected
             total_current_time += wo_duration if is_workorder_started else workorder.duration_expected
@@ -655,7 +688,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             forecast_line['already_used'] = True
             if doc_in._name == 'mrp.production':
                 replenishment['components'] = self._get_components_data(doc_in, replenish_data, level + 2, replenishment_index)
-                replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index)
+                replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index, replenishment['components'])
                 initial_mo_cost, initial_bom_cost, initial_real_cost = self._compute_cost_sums(replenishment['components'], replenishment['operations'])
                 remaining_cost_share, byproducts = self._get_byproducts_data(doc_in, initial_mo_cost, initial_bom_cost, initial_real_cost, level + 2, replenishment_index)
                 replenishment['byproducts'] = byproducts
