@@ -32,7 +32,7 @@ export class HootDebugToolBar extends Component {
             rounded shadow bg-gray-200 dark:bg-gray-800"
         >
             <div class="flex items-center gap-2 px-2">
-                <i class="fa fa-bug text-skip" />
+                <i class="fa fa-bug text-cyan" />
                 <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
                     <button
                         class="bg-btn px-2 py-1"
@@ -61,20 +61,20 @@ export class HootDebugToolBar extends Component {
                         t-attf-class="text-{{ info.className }}"
                         t-esc="info.status"
                     />
-                    <span class="text-muted">-</span>
+                    <span class="text-gray">-</span>
                     assertions:
-                    <span class="flex gap-1 text-pass">
+                    <span class="flex gap-1 text-emerald">
                         <strong t-esc="info.passed" />
                         <span class="hidden sm:inline">passed</span>
                     </span>
                     <t t-if="info.failed">
-                        <span class="text-muted">/</span>
-                        <span class="flex gap-1 text-fail">
+                        <span class="text-gray">/</span>
+                        <span class="flex gap-1 text-rose">
                             <strong t-esc="info.failed" />
                             <span class="hidden sm:inline">failed</span>
                         </span>
                     </t>
-                    <span class="text-muted">-</span>
+                    <span class="text-gray">-</span>
                     time:
                     <span
                         class="text-primary"
@@ -114,7 +114,7 @@ export class HootDebugToolBar extends Component {
     getInfo() {
         const [status, className] = this.getStatus();
         const [assertPassed, assertFailed] = this.groupAssertions(
-            this.props.test.lastResults?.assertions
+            this.props.test.lastResults?.getEvents("assertion")
         );
         return {
             className,
@@ -128,14 +128,14 @@ export class HootDebugToolBar extends Component {
         if (this.props.test.lastResults) {
             switch (this.props.test.status) {
                 case Test.PASSED:
-                    return ["passed", "pass"];
+                    return ["passed", "emerald"];
                 case Test.FAILED:
-                    return ["failed", "fail"];
+                    return ["failed", "rose"];
                 case Test.ABORTED:
-                    return ["aborted", "abort"];
+                    return ["aborted", "amber"];
             }
         }
-        return ["running", "skip"];
+        return ["running", "cyan"];
     }
 
     /**

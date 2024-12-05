@@ -292,7 +292,7 @@ export class MockBroadcastChannel extends BroadcastChannel {
 
 export class MockCookie {
     /** @type {Record<string, string>} */
-    _jar = {};
+    _jar = Object.create(null);
 
     get() {
         return $entries(this._jar)
