@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.tools import SQL
-from odoo.tools.misc import frozendict
 
 
 class AccountMoveLine(models.Model):
@@ -13,7 +11,7 @@ class AccountMoveLine(models.Model):
 
     @api.constrains('account_id', 'display_type')
     def _check_payable_receivable(self):
-        super(AccountMoveLine, self.filtered(lambda line: line.move_id.expense_sheet_id.payment_mode != 'company_account'))._check_payable_receivable()
+        super(AccountMoveLine, self.filtered(lambda line: line.expense_id.payment_mode != 'company_account'))._check_payable_receivable()
 
     def _get_attachment_domains(self):
         attachment_domains = super(AccountMoveLine, self)._get_attachment_domains()
