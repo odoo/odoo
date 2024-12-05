@@ -56,6 +56,20 @@ describe("range not collapsed", () => {
         );
     });
 
+    test("should copy a selection as text/html and application/vnd.odoo.odoo-editor in table", async () => {
+        await setupEditor(
+            "<p>[abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>]"
+        );
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/html")).toBe(
+            "<p>abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>"
+        );
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            "<p>abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>"
+        );
+    });
+
     test("should wrap the selected text with clones of ancestors up to a block element to keep styles (1)", async () => {
         await setupEditor(
             '<p>[<span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">Test</font></span>]</p>'
