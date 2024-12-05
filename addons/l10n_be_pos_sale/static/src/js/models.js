@@ -6,8 +6,20 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 
 patch(Order.prototype, {
     async pay() {
-        const has_origin_order = this.get_orderlines().some(line => line.sale_order_origin_id);
-        if (this.pos.company.country && this.pos.company.country.code === "BE" && has_origin_order) {
+        const orderLines = this.get_orderlines();
+        const has_origin_order = orderLines.some((line) => line.sale_order_origin_id);
+        const has_intracom_taxes = orderLines.some(
+            (line) =>
+                line.tax_ids &&
+                this.pos.intracom_tax_ids &&
+                line.tax_ids.some((tax) => this.pos.intracom_tax_ids.includes(tax))
+        );
+        if (
+            this.pos.company.country &&
+            this.pos.company.country.code === "BE" &&
+            has_origin_order &&
+            has_intracom_taxes
+        ) {
             this.to_invoice = true;
         }
         return super.pay(...arguments);
