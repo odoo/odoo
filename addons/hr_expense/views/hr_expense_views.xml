@@ -625,7 +625,7 @@
             <field name="model">product.product</field>
             <field eval="50" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Product Variants">
+                <tree string="Product Variants" default_order="priority desc, default_code, name, id">
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="product_template_attribute_value_ids" widget="many2many_tags"
@@ -641,7 +641,7 @@
             <field name="name">product.product.expense.categories.tree.view</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <tree class="o_expense_categories">
+                <tree class="o_expense_categories" default_order="priority desc, default_code, name, id">
                     <field name="name" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="description" widget="html" string="Internal Note" optional="show" readonly="1"/>
