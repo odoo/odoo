@@ -302,13 +302,14 @@
             <t t-set="hasX2ManyAction" t-value="isX2Many and (useUnlink ? activeActions.unlink : activeActions.delete)" />
             <t t-if="displayOptionalFields or hasX2ManyAction">
                 <t t-if="hasX2ManyAction">
+                    <t t-set="hasDeleteButton" t-value="this.displayDeleteIcon(record)"/>
                     <td class="o_list_record_remove w-print-0 p-print-0 text-center"
                         t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                        t-on-click.stop="(ev) => this.onRemoveCellClicked(record, ev)"
+                        t-on-click.stop="hasDeleteButton ? (ev) => this.onRemoveCellClicked(record, ev) : () => {}"
                         tabindex="-1"
                     >
                         <button class="fa d-print-none"
-                            t-if="this.displayDeleteIcon(record)"
+                            t-if="hasDeleteButton"
                             t-att-class="{
                                 'fa-trash-o': !useUnlink and activeActions.delete,
                                 'fa-times': useUnlink and activeActions.unlink,
