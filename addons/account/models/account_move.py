@@ -4798,9 +4798,12 @@ class AccountMove(models.Model):
                     "You cannot validate a document with an inactive currency: %s",
                     move.currency_id.name
                 ))
-
             if move.line_ids.account_id.filtered(lambda account: account.deprecated) and not self._context.get('skip_account_deprecation_check'):
                 validation_msgs.add(_("A line of this move is using a deprecated account, you cannot post it."))
+            if (move.fiscal_position_id
+                and not move.invoice_line_ids._validate_tax_alignment_with_fpos(move.company_id)
+            ):
+                validation_msgs.add(_("Taxes on lines are not aligned with the Fiscal Position applied."))
 
             # If the field autocheck_on_post is set, we want the checked field on the move to be checked
             move.checked = move.journal_id.autocheck_on_post
