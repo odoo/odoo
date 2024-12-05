@@ -271,7 +271,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Bypass warning",
-            trigger: ".o_resource_editor_wrapper div:nth-child(2) button:nth-child(3)",
+            trigger: ".o_resource_editor_wrapper div:nth-child(2) button:nth-child(1)",
             run: "click",
         },
         // Test all 3 file type options
