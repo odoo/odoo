@@ -80,7 +80,7 @@ export const viewService = {
         rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
             const { model, method } = ev.detail.data.params;
             if (["ir.ui.view", "ir.filters"].includes(model)) {
-                if (UPDATE_METHODS.includes(method)) {
+                if (UPDATE_METHODS.includes(method) || method === "create_or_replace") {
                     diskCache.invalidate("views");
                 }
             }

@@ -22,6 +22,7 @@ export class BoardController extends Component {
     setup() {
         this.board = useState(this.props.board);
         this.dialogService = useService("dialog");
+        this.diskCache = useService("disk_cache");
         if (this.env.isSmall) {
             this.selectLayout("1", false);
         } else {
@@ -126,7 +127,7 @@ export class BoardController extends Component {
             custom_id: this.board.customViewId,
             arch,
         });
-        this.env.bus.trigger("CLEAR-CACHES");
+        this.diskCache.invalidate("views");
     }
 }
 
