@@ -4,7 +4,7 @@
     <t t-name="discuss.Call">
         <PttAdBanner/>
         <div class="o-discuss-Call user-select-none d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-compact': props.compact,'o-minimized': minimized, 'position-relative': !state.isFullscreen }">
-            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto" t-on-mouseleave="onMouseleaveMain">
+            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto"  t-att-class="{'gap-2 mt-2 mb-3': !props.compact, 'gap-1 mt-1 mb-2': props.compact}" t-on-mouseleave="onMouseleaveMain">
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
                     t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
@@ -32,7 +32,7 @@
                     <i t-if="state.sidebar" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-right" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
                     <i t-else="" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
                 </t>
-                <div t-if="state.overlay or !isControllerFloating" class="o-discuss-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': isControllerFloating }">
+                <div t-if="state.overlay or !isControllerFloating" class="o-discuss-Call-overlay d-flex justify-content-center w-100" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': isControllerFloating }">
                     <div t-on-mousemove="onMousemoveOverlay">
                         <CallActionList thread="props.thread" compact="props.compact" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
                     </div>
