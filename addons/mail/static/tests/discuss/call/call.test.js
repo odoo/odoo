@@ -16,8 +16,8 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { hover, queryFirst } from "@odoo/hoot-dom";
-import { mockUserAgent } from "@odoo/hoot-mock";
+import { hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
+import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
     mockService,
@@ -25,7 +25,6 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
@@ -121,23 +120,18 @@ test("should disconnect when closing page while in call", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            sendBeacon: async (route, data) => {
-                if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
-                    const blobText = await data.text();
-                    const blobData = JSON.parse(blobText);
-                    step(`sendBeacon_leave_call:${blobData.params.channel_id}`);
-                }
-            },
-        },
+    mockSendBeacon(async (route, data) => {
+        if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
+            const blobText = await data.text();
+            const blobData = JSON.parse(blobText);
+            step(`sendBeacon_leave_call:${blobData.params.channel_id}`);
+        }
     });
 
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
     // simulate page close
-    window.dispatchEvent(new Event("pagehide"), { bubble: true });
+    await manuallyDispatchProgrammaticEvent(window, "pagehide");
     await assertSteps([`sendBeacon_leave_call:${channelId}`]);
 });
 
