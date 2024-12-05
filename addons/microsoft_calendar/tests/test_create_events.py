@@ -344,8 +344,10 @@ class TestCreateEvents(TestCommon):
 
         # Create a not synced event (local).
         simple_event_values_updated = self.simple_event_values
-        for date_field in ['start', 'stop']:
-            simple_event_values_updated[date_field] = simple_event_values_updated[date_field].replace(year=datetime.now().year)
+        simple_event_values_updated.update({
+            'start': datetime.now() + timedelta(days=2),
+            'stop': datetime.now() + timedelta(days=2)
+        })  # Event should be created 2 days in the future to be synchronized with Microsoft
         event = self.env["calendar.event"].with_user(self.organizer_user).create(simple_event_values_updated)
 
         # Assert that insert was not called and prepare mock for the synchronization restart.
@@ -516,5 +518,23 @@ class TestCreateEvents(TestCommon):
         self.assertTrue(event, "The event for the not synchronized owner must be created in Odoo.")
 
         # Synchronize the calendar of user A, then make sure insert was not called.
+        event.with_user(self.organizer_user).sudo()._sync_odoo2microsoft()
+        mock_insert.assert_not_called()
+
+    @patch.object(MicrosoftCalendarService, 'insert')
+    def test_do_not_sync_events_older_than_sync_start_date(self, mock_insert):
+        """
+        Ensure that events in Odoo, which are older than the defined lower bound (7 days),
+        are not synchronized with Microsoft Calendar. This prevents unnecessary updates
+        and avoids sending spam to attendees in Microsoft Calendar.
+        """
+        # Create an event in Odoo with a start and end time that is 14 days old
+        self.simple_event_values.update({
+            'start': datetime.now() - timedelta(days=14),
+            'stop': datetime.now() - timedelta(days=14) + timedelta(hours=2),
+        })
+        event = self.env['calendar.event'].with_user(self.attendee_user).create(self.simple_event_values)
+
+        # Execute the synchronization method
         event.with_user(self.organizer_user).sudo()._sync_odoo2microsoft()
         mock_insert.assert_not_called()
