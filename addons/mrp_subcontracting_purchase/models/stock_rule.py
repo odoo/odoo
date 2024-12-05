@@ -25,7 +25,7 @@ class StockRule(models.Model):
             return super()._get_lead_days(product, **values)
 
         delays, delay_description = super(StockRule, self - buy_rule)._get_lead_days(product, **values)
-        extra_delays, extra_delay_description = super(StockRule, buy_rule.with_context(ignore_vendor_lead_time=True))._get_lead_days(product, **values)
+        extra_delays, extra_delay_description = super(StockRule, buy_rule.with_context(ignore_vendor_lead_time=True, global_visibility_days=0))._get_lead_days(product, **values)
         if seller.delay >= bom.produce_delay + bom.days_to_prepare_mo:
             delays['total_delay'] += seller.delay
             delays['purchase_delay'] += seller.delay
