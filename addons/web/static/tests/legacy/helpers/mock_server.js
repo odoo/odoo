@@ -1027,6 +1027,7 @@ export class MockServer {
     }
 
     mockReadGroup(modelName, kwargs) {
+        debugger;
         const fields = this.models[modelName].fields
         const aggregateFields = (group, records) => {
             for (const { fieldName, func, name } of aggregatedFields) {
@@ -1058,7 +1059,6 @@ export class MockServer {
                 }
             }
         };
-
         const { domain, groupby, aggregates, offset, limit, order } = kwargs;
         const records = this.getRecords(modelName, domain);
         const aggregatedFields = aggregates.map((fspec) => {
@@ -1425,7 +1425,7 @@ export class MockServer {
         domain = new Domain([...domain, [fieldName, "!=", false]]).toList();
         const groups = this.mockReadGroup(model, {
             domain,
-            aggregates: [fieldName],
+            aggregates: ['__count'],
             groupby: [fieldName],
             limit,
         });
@@ -1434,7 +1434,7 @@ export class MockServer {
             const [id, display_name] = groupIdName(group[fieldName]);
             const values = { id, display_name };
             if (setCount) {
-                values.__count = group[fieldName + "_count"];
+                values.__count = group.__count;
             }
             domainImage.set(id, values);
         }
@@ -2160,30 +2160,6 @@ export class MockServer {
                   return value > max ? value : max;
               });
     }
-
-    /**
-     * Extract a sorting value for date/datetime fields from read_group when the
-     * date is groupby by a date number (month_number, year_number, ...)
-     *
-     * @param {Object} group
-     * @param {string} fieldName
-     * @returns {number | false}
-     */
-    getDateNumberSortingValue = (group, fieldName) => {
-        let max = -1;
-        let value = false;
-        for (const groupedBy in group) {
-            if (groupedBy.startsWith(fieldName)) {
-                const [, granularity] = groupedBy.split(":");
-                const index = READ_GROUP_NUMBER_GRANULARITY.indexOf(granularity);
-                if (index !== -1 && index > max) {
-                    max = index;
-                    value = group[groupedBy];
-                }
-            }
-        }
-        return value;
-    };
 
     /**
      * Get all records from a model matching a domain.  The only difficulty is

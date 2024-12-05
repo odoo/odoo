@@ -304,32 +304,6 @@ const formatFieldValue = (fields, groupByField, val) => {
 };
 
 /**
- * Extract a sorting value for date/datetime fields from _web_read_group when the
- * date is groupby by a date number (month_number, year_number, ...)
- * The value for the shortest granularity is taken since it is the most specific
- * for a given group.
- *
- * @param {{ __range: Record<string, { from?: string | false; to?: string | false }> }} group
- * @param {string} fieldName
- * @returns {number | false}
- */
-const getDateNumberSortingValue = (group, fieldName) => {
-    let max = -1;
-    let value = false;
-    for (const groupedBy in group) {
-        if (groupedBy.startsWith(fieldName)) {
-            const [, granularity] = groupedBy.split(":");
-            const index = READ_GROUP_NUMBER_GRANULARITY.indexOf(granularity);
-            if (index !== -1 && index > max) {
-                max = index;
-                value = group[groupedBy];
-            }
-        }
-    }
-    return value;
-};
-
-/**
  * Returns the field by which a given model must be ordered.
  * It is either:
  * - the field matching 'fieldNameSpec' (if any, else an error is thrown).

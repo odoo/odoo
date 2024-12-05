@@ -317,15 +317,12 @@ class ProgressBarState {
      * @return string
      */
     _getGroupValue(group) {
-        if (group.groupByField.type === "date" || group.groupByField.type === "datetime") {
-            return group.displayName || "False";
-        }
         if (group.value === true) {
             return "True";
         } else if (group.value === false) {
             return "False";
         }
-        return group.value;
+        return group.serverValue;
     }
 }
 
