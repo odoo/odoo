@@ -44,6 +44,23 @@ class TestMailGroupMessage(TestMailListCommon):
         # 42 -1 as the sender doesn't get an email
         self.assertEqual(len(mails), 41, 'Should have send one and only one email per recipient')
 
+    def test_group_closed(self):
+        """Test that the email will bounce if the group is closed."""
+        self.test_group.is_closed = True
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, self.test_group_member_1.email,
+                self.test_group.alias_id.display_name,
+                subject='Test subject', target_model='mail.group')
+
+        self.assertSentEmail(
+            self.mailer_daemon_email,
+            ['whatever-2a840@postmaster.twitter.com'],
+            subject='Re: Test subject',
+        )
+        self.assertIn('The mailing list you are trying to reach has been closed', self._mails[0]['body'])
+
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail_group.models.mail_group_message')
     def test_email_duplicated(self):
         """ Test gateway does not accept two times same incoming email """
