@@ -37,7 +37,7 @@
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
-                                <t t-else="" t-out="message.dateSimple"/>
+                                <t t-else="" t-out="message.dateSimpleWithDay"/>
                             </small>
                             <small t-if="isPersistentMessageFromAnotherThread" t-on-click.prevent="openRecord" class="ms-1 text-500">
                                 <t t-if="message.thread.model !== 'discuss.channel'">
