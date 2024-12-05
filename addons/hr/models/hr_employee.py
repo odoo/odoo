@@ -652,6 +652,16 @@ class HrEmployee(models.Model):
                self.company_id.resource_calendar_id.tz or\
                'UTC'
 
+    def _get_calendar_tz(self, dt=None):
+        """ Find the effective schedule for the employee at dt --
+        based on their timezone.
+        Return this schedule's timezone """
+        self.ensure_one()
+        if not dt:
+            return self._get_calendars()[self.id].tz or self.tz
+        date = timezone(self._get_tz()).localize(dt).date()
+        return self._get_calendars(date_from=date)[self.id].tz or self.tz
+
     def _get_tz_batch(self):
         # Finds the first valid timezone in his tz, his work hours tz,
         #  the company calendar tz or UTC
