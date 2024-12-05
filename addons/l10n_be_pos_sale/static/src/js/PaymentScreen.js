@@ -28,13 +28,16 @@ patch(PaymentScreen.prototype, {
         }
     },
     checkIsToInvoice() {
-        const has_origin_order = this.currentOrder
-            .get_orderlines()
-            .some((line) => line.sale_order_origin_id);
+        const orderLines = this.currentOrder.get_orderlines();
+        const has_origin_order = orderLines.some((line) => line.sale_order_origin_id);
+        const has_intracom_taxes = orderLines.some((line) =>
+            line.tax_ids?.some((tax) => this.pos.intracom_tax_ids?.includes(tax.id))
+        );
         if (
             this.pos.company.country_id &&
             this.pos.company.country_id.code === "BE" &&
-            has_origin_order
+            has_origin_order &&
+            has_intracom_taxes
         ) {
             return true;
         }
