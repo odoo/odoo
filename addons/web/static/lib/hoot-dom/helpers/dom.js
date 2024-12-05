@@ -909,10 +909,6 @@ export function getCurrentDimensions() {
     return currentDimensions;
 }
 
-export function getDefaultRootNode() {
-    return getDefaultRoot();
-}
-
 /**
  * @param {Node} [node]
  * @returns {Document}

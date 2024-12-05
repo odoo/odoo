@@ -859,6 +859,7 @@ describe("Convert classes to inline styles", () => {
     });
 
     test("convert Bootstrap classes to inline styles", async () => {
+        getFixture().enableAnimations();
         editable.innerHTML = `
             <div class="container"><div class="row"><div class="col">Hello</div></div></div>`;
         getFixture().append(editable); // editable needs to be in the DOM to compute its dynamic styles.
