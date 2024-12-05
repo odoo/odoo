@@ -11,6 +11,7 @@ class PosCategory(models.Model):
 
     hour_until = fields.Float(string='Availability Until', default=24.0, help="The product will be available until this hour.")
     hour_after = fields.Float(string='Availability After', default=0.0, help="The product will be available after this hour.")
+    pos_config_ids = fields.Many2many('pos.config', string='Linked PoS Configurations')
 
     @api.model
     def _load_pos_data_fields(self, config_id):

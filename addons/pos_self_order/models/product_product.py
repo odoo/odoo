@@ -13,6 +13,11 @@ class ProductTemplate(models.Model):
         default=True,
     )
 
+    self_order_visible = fields.Boolean(
+        compute='_compute_self_order_visible',
+        store=True
+    )
+
     def _load_pos_self_data(self, data):
         domain = self._load_pos_data_domain(data)
 
@@ -60,6 +65,15 @@ class ProductTemplate(models.Model):
         for record in self:
             if not record.available_in_pos:
                 record.self_order_available = False
+
+    @api.depends('pos_categ_ids', 'pos_categ_ids.pos_config_ids.self_ordering_mode')
+    def _compute_self_order_visible(self):
+        for product in self:
+            product.self_order_visible = any(
+                config.self_ordering_mode != 'nothing'
+                for categ in product.pos_categ_ids
+                for config in categ.pos_config_ids
+            )
 
     def write(self, vals_list):
         if 'available_in_pos' in vals_list:
