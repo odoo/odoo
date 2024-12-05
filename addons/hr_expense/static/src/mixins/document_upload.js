@@ -87,21 +87,6 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
         });
     }
 
-    displayCreateReport() {
-        const isExpenseSheet = this.model.config.resModel === "hr.expense.sheet";
-        const usesSampleData = this.model.useSampleModel;
-        const records = this.model.root.records;
-        return !usesSampleData && !isExpenseSheet && records.length && records.some(record => record.data.state === "draft");
-    }
-
-    async action_show_expenses_to_submit () {
-        const records = this.model.root.selection;
-        const res = await this.orm.call(this.model.config.resModel, 'get_expenses_to_submit', [records.map((record) => record.resId)]);
-        if (res) {
-            await this.actionService.doAction(res, {});
-        }
-    }
-
     uploadDocument() {
         this.fileInput.el.click();
     }

@@ -4,7 +4,6 @@
         <field name="model">hr.expense.approve.duplicate</field>
         <field name="arch" type="xml">
             <form string="Expense Validate Duplicate">
-                <field name="sheet_ids" invisible="1" />
                 <p>The following approved expenses have similar employee, amount and category than some expenses of this report. Please verify this report does not contain duplicates.</p>
                 <field name="expense_ids" nolabel="1">
                     <list>
@@ -13,13 +12,13 @@
                         <field name="product_id" readonly="1" />
                         <field name="total_amount" readonly="1" />
                         <field name="name" readonly="1" />
-                        <field name="approved_by" readonly="1" widget="many2one_avatar_user"/>
-                        <field name="approved_on" readonly="1" />
+                        <field name="manager_id" readonly="1" widget="many2one_avatar_user"/>
+                        <field name="approval_date" readonly="1" />
                     </list>
                 </field>
                 <footer>
-                    <button string="Refuse" class="btn-primary" name="action_refuse" type="object" invisible="not sheet_ids" data-hotkey="q" />
-                    <button string="Approve" class="btn-secondary" name="action_approve" type="object" invisible="not sheet_ids" data-hotkey="w" />
+                    <button string="Refuse" class="btn-primary" name="action_refuse" type="object" invisible="not expense_ids" data-hotkey="q" />
+                    <button string="Approve" class="btn-secondary" name="action_approve" type="object" invisible="not expense_ids" data-hotkey="w" />
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
            </form>

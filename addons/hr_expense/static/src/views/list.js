@@ -18,7 +18,6 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         super.setup();
         this.orm = useService('orm');
         this.actionService = useService('action');
-        this.isExpenseSheet = this.model.config.resModel === "hr.expense.sheet";
 
         onWillStart(async () => {
             this.userIsExpenseTeamApprover = await user.hasGroup("hr_expense.group_hr_expense_team_approver");
@@ -28,22 +27,17 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
 
     displaySubmit() {
         const records = this.model.root.selection;
-        return records.length && records.every(record => record.data.state === 'draft') && this.isExpenseSheet;
+        return records.length && records.every(record => record.data.state === 'draft');
     }
 
     displayApprove() {
         const records = this.model.root.selection;
-        return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submit') && this.isExpenseSheet;
+        return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submitted');
     }
 
     displayPost() {
         const records = this.model.root.selection;
-        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approve') && this.isExpenseSheet;
-    }
-
-    displayPayment() {
-        const records = this.model.root.selection;
-        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'post' && record.data.payment_state === 'not_paid') && this.isExpenseSheet;
+        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approved');
     }
 
     async onClick (action) {
@@ -51,7 +45,7 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         const recordIds = records.map((a) => a.resId);
         const model = this.model.config.resModel;
         const context = {};
-        if (action === 'action_approve_expense_sheets') {
+        if (action === 'action_approve') {
             context['validate_analytic'] = true;
         }
         const res = await this.orm.call(model, action, [recordIds], {context: context});

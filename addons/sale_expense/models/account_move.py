@@ -8,15 +8,15 @@ class AccountMove(models.Model):
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # EXTENDS sale
-        self.expense_sheet_id._sale_expense_reset_sol_quantities()
+        self.expense_ids._sale_expense_reset_sol_quantities()
         return super()._reverse_moves(default_values_list, cancel)
 
     def button_draft(self):
         # EXTENDS sale
-        self.expense_sheet_id._sale_expense_reset_sol_quantities()
+        self.expense_ids._sale_expense_reset_sol_quantities()
         return super().button_draft()
 
     def unlink(self):
         # EXTENDS sale
-        self.expense_sheet_id._sale_expense_reset_sol_quantities()
+        self.expense_ids._sale_expense_reset_sol_quantities()
         return super().unlink()

@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, fields
+from odoo import Command
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import tagged
@@ -28,31 +28,21 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         init_price = so.amount_total
 
         # create some expense and validate it (expense at cost)
-        # Submit to Manager
-        sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Expense for John Smith 1',
-            'employee_id': self.expense_employee.id,
-            'journal_id': self.company_data['default_journal_purchase'].id,
-        })
-        exp = self.env['hr.expense'].create({
-            'name': 'Air Travel',
+        expense = self.create_expenses({
             'product_id': self.company_data['product_delivery_cost'].id,
             'analytic_distribution': {analytic_account.id: 100},
             'quantity': 11.30,
-            'employee_id': self.expense_employee.id,
-            'sheet_id': sheet.id,
             'sale_order_id': so.id,
         })
-        sheet.action_submit_sheet()
-        # Approve
-        sheet.action_approve_expense_sheets()
-        # Post Expense Entries
-        sheet.action_sheet_move_post()
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+
         # expense should now be in sales order
         self.assertIn(self.company_data['product_delivery_cost'], so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == self.company_data['product_delivery_cost'].id)
         self.assertEqual((sol.price_unit, sol.qty_delivered), (55.0, 11.3), 'Sale Expense: error when invoicing an expense at cost')
-        self.assertEqual(so.amount_total, init_price + exp.total_amount, 'Sale Expense: price of so should be updated after adding expense')
+        self.assertEqual(so.amount_total, init_price + expense.total_amount, 'Sale Expense: price of so should be updated after adding expense')
 
         # create some expense and validate it (expense at sale price)
         init_price = so.amount_total
@@ -66,32 +56,23 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'uom_id': self.env.ref('uom.product_uom_km').id,
             'standard_price': 0.15,
         })
-        # Submit to Manager
-        sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Expense for John Smith 2',
-            'employee_id': self.expense_employee.id,
-            'journal_id': self.company_data['default_journal_purchase'].id,
-        })
-        exp = self.env['hr.expense'].create({
+        expense_2 = self.env['hr.expense'].create({
             'name': 'Car Travel',
             'product_id': prod_exp_2.id,
             'analytic_distribution': {analytic_account.id: 100},
             'quantity': 100,
             'employee_id': self.expense_employee.id,
-            'sheet_id': sheet.id,
             'sale_order_id': so.id,
         })
-        sheet.action_submit_sheet()
-        # Approve
-        sheet.action_approve_expense_sheets()
-        # Post Expense Entries
-        sheet.action_sheet_move_post()
+        expense_2.action_submit()
+        expense_2.action_approve()
+        self.post_expenses_with_wizard(expense_2)
+
         # expense should now be in sales order
         self.assertIn(prod_exp_2, so.mapped('order_line.product_id'), 'Sale Expense: expense product should be in so')
         sol = so.order_line.filtered(lambda sol: sol.product_id.id == prod_exp_2.id)
         self.assertEqual((sol.price_unit, sol.qty_delivered), (prod_exp_2.list_price, 100.0), 'Sale Expense: error when invoicing an expense at cost')
         self.assertEqual(so.amount_untaxed, init_price + (prod_exp_2.list_price * 100.0), 'Sale Expense: price of so should be updated after adding expense')
-        # self.assertTrue(so.invoice_status, 'no', 'Sale Expense: expenses should not impact the invoice_status of the so')
 
         # both expenses should be invoiced
         inv = so._create_invoices()
@@ -99,8 +80,8 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
     def test_expense_multi_id_analytic_distribution(self):
         """
-        Test conversion of analytic_distribution dict into account numbers when a hr.expense.sheet containing
-        a hr.expense with an analytic_distribution having 2+ account ids
+        Test conversion of analytic_distribution dict into account numbers when a hr.expense with an analytic_distribution
+        having 2+ account ids
         """
         expensed_product = self.env['product.product'].create({
             'name': 'test product',
@@ -125,26 +106,17 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'plan_id': self.analytic_plan.id,
         })
 
-        expense_sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Test Expense Report',
-            'employee_id': self.expense_employee.id,
-            'company_id': self.company_data['company'].id,
-            'expense_line_ids': [Command.create({
-                'employee_id': self.expense_employee.id,
-                'product_id': expensed_product.id,
-                'quantity': 1000.00,
-                'date': fields.Date.today(),
-                'company_id': self.company_data['company'].id,
-                'currency_id': self.company_data['currency'].id,
-                'analytic_distribution': {
-                    f'{self.analytic_account_1.id},{self.analytic_account_2.id}': 60,
-                    f'{analytic_account_3.id}': 40,
-                },
-                'sale_order_id': sale_order.id,
-            })],
+        expense = self.create_expenses({
+            'product_id': expensed_product.id,
+            'quantity': 1000.00,
+            'analytic_distribution': {
+                f'{self.analytic_account_1.id},{self.analytic_account_2.id}': 60,
+                f'{analytic_account_3.id}': 40,
+            },
+            'sale_order_id': sale_order.id,
         })
-        expense_sheet.action_submit_sheet()
-        expense_sheet.action_approve_expense_sheets()
-        expense_sheet.action_sheet_move_post()
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
 
-        self.assertTrue(self.env['account.move'].search([('expense_sheet_id', '=', expense_sheet.id)], limit=1))
+        self.assertTrue(self.env['account.move'].search([('expense_ids', '=', expense.id)], limit=1))
