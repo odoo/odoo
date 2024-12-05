@@ -35,8 +35,6 @@
         'website.assets_wysiwyg': [
             'website_blog/static/src/js/options.js',
             'website_blog/static/src/snippets/s_blog_posts/options.js',
-            'website_blog/static/src/interactions/**/*/edit.js',
-            'website_blog/static/src/snippets/**/*/edit.js',
         ],
         'website.assets_editor': [
             'website_blog/static/src/js/tours/website_blog.js',
@@ -66,6 +64,9 @@
             'website_blog/static/src/interactions/**/*',
             ('remove', 'website_blog/static/src/interactions/**/*.edit.js'),
             'website_blog/static/src/scss/website_blog.scss',
+        ],
+        'website.assets_edit_frontend': [
+            'website_blog/static/src/**/*.edit.js',
         ],
     },
     'license': 'LGPL-3',

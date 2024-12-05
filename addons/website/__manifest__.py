@@ -234,6 +234,9 @@
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
         ],
+        'website.assets_edit_frontend': [
+            'website/static/src/**/*.edit.js',
+        ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',
             'website/static/src/scss/options/user_values.scss',
@@ -366,14 +369,6 @@
             'website/static/src/xml/website.cookies_bar.xml',
             'website/static/src/js/editor/commands_overridden.js',
             'website/static/src/js/editor/odoo_editor.js',
-            # Fishy: this should not need to be defined here.
-            'google_recaptcha/static/src/js/recaptcha.js',
-            'website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.js',
-            'website/static/src/core/**/*.js',
-            'website/static/src/interactions/**/*.js',
-            'website/static/src/snippets/**/*.js',
-            ('remove', 'website/static/src/snippets/**/000.js'),
-            'website/static/lib/multirange/*.js',
         ],
         'website.assets_all_wysiwyg': [
             ('include', 'web_editor.assets_wysiwyg'),
