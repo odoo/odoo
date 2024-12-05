@@ -5,6 +5,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScr
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import * as Utils from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ChromeTour", {
@@ -117,5 +118,18 @@ registry.category("web_tour.tours").add("ChromeTour", {
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SearchMoreCustomer", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.inputCustomerSearchbar("1111"),
+            Utils.selectButton("Search more"),
+            ProductScreen.clickCustomer("BPartner"),
+            ProductScreen.isShown(),
         ].flat(),
 });
