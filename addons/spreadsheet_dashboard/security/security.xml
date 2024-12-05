@@ -4,6 +4,9 @@
         <field name="model_id" ref="model_spreadsheet_dashboard"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">[('group_ids', 'in', user.groups_id.ids)]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 </odoo>
 
