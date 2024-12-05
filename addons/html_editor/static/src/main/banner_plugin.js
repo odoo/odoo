@@ -3,6 +3,9 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { closestBlock } from "@html_editor/utils/blocks";
+import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
+import { fillEmpty } from "@html_editor/utils/dom";
 
 function isAvailable(selection) {
     return !closestElement(selection.anchorNode, ".o_editor_banner");
@@ -85,16 +88,31 @@ export class BannerPlugin extends Plugin {
     }
 
     insertBanner(title, emoji, alertClass) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const blockEl = closestBlock(selection.anchorNode);
+        let bannerContentNode;
+        if (paragraphRelatedElements.includes(blockEl.tagName)) {
+            bannerContentNode = this.document.createElement(blockEl.nodeName);
+            bannerContentNode.append(...blockEl.childNodes);
+        } else if (blockEl.nodeName === "LI") {
+            bannerContentNode = this.document.createElement("p");
+            bannerContentNode.append(...blockEl.childNodes);
+            fillEmpty(blockEl);
+        } else {
+            bannerContentNode = this.document.createElement("p");
+            fillEmpty(bannerContentNode);
+        }
         const bannerElement = parseHTML(
             this.document,
             `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="${title}">${emoji}</i>
                 <div class="w-100 px-3" contenteditable="true">
-                    <p><br></p>
+                    ${bannerContentNode.outerHTML}
                 </div>
-            </div`
+            </div>`
         ).childNodes[0];
         this.dependencies.dom.insert(bannerElement);
+        this.dependencies.dom.setTag({ tagName: "P" });
         // If the first child of editable is contenteditable false element
         // a chromium bug prevents selecting the container. Prepend a
         // zero-width space so it's no longer the first child.
@@ -102,8 +120,8 @@ export class BannerPlugin extends Plugin {
             const zws = document.createTextNode("\u200B");
             bannerElement.before(zws);
         }
-        this.dependencies.selection.setCursorStart(
-            bannerElement.querySelector(".o_editor_banner > div > p")
+        this.dependencies.selection.setCursorEnd(
+            bannerElement.querySelector(`.o_editor_banner > div > ${bannerContentNode.tagName}`)
         );
         this.dependencies.history.addStep();
     }
