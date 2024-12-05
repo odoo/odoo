@@ -37,17 +37,19 @@ class DeliveryCarrier(models.Model):
                     _("The delivery method and a warehouse must share the same company")
                 )
 
+    @api.onchange('delivery_type')
+    def _onchange_delivery_type(self):
+        if self.delivery_type == 'in_store':
+            self.integration_level = 'rate'
+            if not self.warehouse_ids:
+                self.is_published = False
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('delivery_type') == 'in_store':
                 vals['integration_level'] = 'rate'
         return super().create(vals_list)
-
-    def write(self, vals):
-        if vals.get('delivery_type') == 'in_store':
-            vals['integration_level'] = 'rate'
-        return super().write(vals)
 
     # === BUSINESS METHODS ===#
 
