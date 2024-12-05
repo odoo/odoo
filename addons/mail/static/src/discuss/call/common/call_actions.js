@@ -15,9 +15,9 @@ callActionsRegistry
         activeClass: "text-danger",
         select: (component) => {
             if (component.rtc.syncState.isMute) {
-                component.rtc.syncState.apply({ isMuted: false, isDeaf: false });
+                component.rtc.syncState.command({ isMuted: false, isDeaf: false });
             } else {
-                component.rtc.syncState.apply({ isMuted: true });
+                component.rtc.syncState.command({ isMuted: true });
             }
         },
         sequence: 10,
@@ -30,10 +30,11 @@ callActionsRegistry
         icon: "fa-deaf",
         activeClass: "text-danger",
         select: (component) =>
-            component.rtc.syncState.apply({ isDeaf: !component.rtc.syncState.isDeaf }),
+            component.rtc.syncState.command({ isDeaf: !component.rtc.syncState.isDeaf }),
         sequence: 20,
     })
     .add("camera-on", {
+        // TODO maybe camera/screen should not be available if syncState.isRemote.
         condition: (component) => component.rtc,
         name: (component) =>
             component.rtc.syncState.isCameraOn ? _t("Stop camera") : _t("Turn camera on"),
@@ -41,7 +42,7 @@ callActionsRegistry
         icon: "fa-video-camera",
         activeClass: "text-success",
         select: (component) =>
-            component.rtc.syncState.apply({ isCameraOn: !component.rtc.syncState.isCameraOn }),
+            component.rtc.syncState.command({ isCameraOn: !component.rtc.syncState.isCameraOn }),
         sequence: 30,
     })
     .add("raise-hand", {
@@ -51,7 +52,7 @@ callActionsRegistry
         isActive: (component) => component.rtc.syncState.raisingHand,
         icon: "fa-hand-paper-o",
         select: (component) =>
-            component.rtc.syncState.apply({ raisingHand: !component.rtc.syncState.raisingHand }),
+            component.rtc.syncState.command({ raisingHand: !component.rtc.syncState.raisingHand }),
         sequence: 50,
     })
     .add("share-screen", {
@@ -64,7 +65,7 @@ callActionsRegistry
         icon: "fa-desktop",
         activeClass: "text-success",
         select: (component) =>
-            component.rtc.syncState.apply({
+            component.rtc.syncState.command({
                 isScreenSharingOn: !component.rtc.syncState.isScreenSharingOn,
             }),
         sequence: 40,

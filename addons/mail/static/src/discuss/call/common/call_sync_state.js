@@ -1,8 +1,14 @@
 import { Record } from "@mail/core/common/record";
 
-const MESSAGE_TYPE = {
-    REQUEST: "REQUEST",
-    SYNC: "SYNC",
+const HOST_MESSAGE = {
+    SESSION_INFO_CHANGE: "SESSION_INFO_CHANGE", // sent with updated state of the remote rtc sessions of the call
+    SYNC_CONTROLS: "SYNC_CONTROLS", // sent with the updated state of controls
+    CLOSE: "CLOSE", // sent when the host ends the call
+};
+
+const CLIENT_MESSAGE = {
+    CONTROL_CHANGE: "CONTROL_CHANGE", // request to change a control (mute, deaf,...)
+    LEAVE: "LEAVE", // request to leave call
 };
 
 export class CallSyncState extends Record {
@@ -13,6 +19,7 @@ export class CallSyncState extends Record {
 
     /** @type {BroadcastChannel} */
     _broadcastChannel = new BroadcastChannel("call_sync_state");
+    _hostId;
     _remotelyHostedChannel;
     rtc = Record.one("Rtc", {
         inverse: "syncState",
@@ -29,15 +36,19 @@ export class CallSyncState extends Record {
         return this.rtc.selfSession;
     }
 
+    get isRemote() {
+        // TODO show message on call view if remote (this call is hosted on another tab).
+        return Boolean(this._remotelyHostedChannel);
+    }
+
     get isHost() {
         return Boolean(this.selfSession);
     }
 
+    // STATE
     get isMute() {
         return this.isMuted || this.isDeaf;
     }
-
-    // STATE
     _isMuted;
     get isMuted() {
         return this.selfSession?.is_muted ?? this._isMuted;
@@ -59,60 +70,102 @@ export class CallSyncState extends Record {
         return this.selfSession?.raisingHand ?? this._raisingHand;
     }
 
-    setup() {
-        super.setup();
+    start() {
         if (!this._broadcastChannel) {
             return;
         }
         this._broadcastChannel.onmessage = this._onMessage.bind(this);
-        this._post({ type: MESSAGE_TYPE.REQUEST });
+        this._post({ type: CLIENT_MESSAGE.CONTROL_CHANGE });
     }
-    async _onMessage({ data: { type, hostedChannelId, changes } }) {
+    host() {
+        this._hostId = this.selfSession.id;
+        this._remotelyHostedChannel = undefined;
+        this._share();
+    }
+    endHost() {
+        this._post({ type: HOST_MESSAGE.CLOSE, hostId: this._hostId });
+    }
+
+    toggleCall(channel) {
+        if (channel.eq(this._remotelyHostedChannel)) {
+            this._post({ type: CLIENT_MESSAGE.LEAVE });
+        } else {
+            this.rtc.toggleCall(...arguments);
+        }
+    }
+
+    updateSessionInfo(changes) {
+        if (!this.isHost) {
+            return;
+        }
+        this.rtc.updateSessionInfo(changes);
+        this._post({ type: HOST_MESSAGE.SESSION_INFO_CHANGE, changes });
+    }
+
+    async _onMessage({ data: { type, hostedChannelId, originSessionId, changes } }) {
         switch (type) {
-            case MESSAGE_TYPE.REQUEST: {
-                if (!this.isHost) {
-                    return;
-                }
-                await this._apply(changes);
-                this._share();
-                return;
-            }
-            case MESSAGE_TYPE.SYNC: {
+            case HOST_MESSAGE.SESSION_INFO_CHANGE:
                 if (this.isHost) {
                     return;
                 }
-                this._remotelyHostedChannel = this.store.Thread.getOrFetch({
+                this.rtc.updateSessionInfo(changes);
+                return;
+            case CLIENT_MESSAGE.CONTROL_CHANGE: {
+                if (!this.isHost) {
+                    return;
+                }
+                await this._localApply(changes);
+                this._share();
+                return;
+            }
+            case HOST_MESSAGE.SYNC_CONTROLS: {
+                if (this.isHost) {
+                    return;
+                }
+                this._hostId = originSessionId;
+                this._remotelyHostedChannel = await this.store.Thread.getOrFetch({
                     model: "discuss.channel",
                     id: hostedChannelId,
                 });
                 await this._sync(changes);
                 return;
             }
+            case HOST_MESSAGE.CLOSE: {
+                if (this._hostId !== originSessionId) {
+                    return;
+                }
+                this._remotelyHostedChannel = null;
+                this._hostId = undefined;
+                return;
+            }
+            case CLIENT_MESSAGE.LEAVE: {
+                if (!this.isHost) {
+                    return;
+                }
+                await this.rtc.leaveCall(this.channel);
+            }
         }
     }
-    async apply(changes) {
+    async command(changes) {
         if (this.isHost) {
-            await this._apply(changes);
+            await this._localApply(changes);
             this._share();
             return;
         }
-        this._requestApply(changes);
+        this._remoteApply(changes);
     }
 
-    _requestApply(changes) {
-        this._post({ type: MESSAGE_TYPE.REQUEST, changes });
+    _remoteApply(changes) {
+        this._post({ type: CLIENT_MESSAGE.CONTROL_CHANGE, changes });
     }
 
-    _sync(changes) {
-        const rtcSessions = changes.rtcSessions;
-        console.log("TODO update rtc sessions of this.channel with:", rtcSessions);
-        delete changes.rtcSessions;
+    _sync(changes = {}) {
         for (const [key, value] of Object.entries(changes)) {
             this[`_${key}`] = value;
         }
     }
 
-    async _apply(changes) {
+    async _localApply(changes = {}) {
         const promises = [];
         for (const [key, value] of Object.entries(changes)) {
             switch (key) {
@@ -153,10 +206,10 @@ export class CallSyncState extends Record {
 
     _share() {
         this._post({
-            type: MESSAGE_TYPE.SYNC,
+            type: HOST_MESSAGE.SYNC_CONTROLS,
             hostedChannelId: this.channel.id,
-            payload: {
-                rtcSessions: [],
+            originSessionId: this.selfSession.id,
+            changes: {
                 isMuted: this.isMuted,
                 isDeaf: this.isDeaf,
                 isCameraOn: this.isCameraOn,

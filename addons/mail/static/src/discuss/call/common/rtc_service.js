@@ -245,6 +245,7 @@ export class Rtc extends Record {
 
     start() {
         const services = this.store.env.services;
+        this.syncState.start();
         this.notification = services.notification;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
@@ -404,6 +405,7 @@ export class Rtc extends Record {
     endCall(channel = this.state.channel) {
         channel.rtcInvitingSession = undefined;
         channel.activeRtcSession = undefined;
+        this.syncState.endHost();
         if (channel.eq(this.state.channel)) {
             this.pttExtService.unsubscribe();
             this.network?.disconnect();
@@ -623,26 +625,7 @@ export class Rtc extends Record {
                 }
                 return;
             case "info_change":
-                if (!payload) {
-                    return;
-                }
-                for (const [id, info] of Object.entries(payload)) {
-                    const session = this.store["discuss.channel.rtc.session"].get(Number(id));
-                    if (!session) {
-                        return;
-                    }
-                    // `isRaisingHand` is turned into the Date `raisingHand`
-                    this.setRemoteRaiseHand(session, info.isRaisingHand);
-                    delete info.isRaisingHand;
-                    Object.assign(session, {
-                        is_muted: info.isSelfMuted,
-                        is_deaf: info.isDeaf,
-                        isTalking: info.isTalking,
-                        is_camera_on: info.isCameraOn,
-                        is_screen_sharing_on: info.isScreenSharingOn,
-                    });
-                    Object.assign(session, info);
-                }
+                this.syncState.updateSessionInfo(payload);
                 return;
             case "track":
                 {
@@ -698,6 +681,28 @@ export class Rtc extends Record {
                     await this.leaveCall();
                 }
                 return;
+        }
+    }
+
+    updateSessionInfo(payload) {
+        if (!payload) {
+            return;
+        }
+        for (const [id, info] of Object.entries(payload)) {
+            const session = this.store["discuss.channel.rtc.session"].get(Number(id));
+            if (!session) {
+                return;
+            }
+            // `isRaisingHand` is turned into the Date `raisingHand`
+            this.setRemoteRaiseHand(session, info.isRaisingHand);
+            delete info.isRaisingHand;
+            Object.assign(session, {
+                is_muted: info.isSelfMuted,
+                is_deaf: info.isDeaf,
+                isTalking: info.isTalking,
+                is_camera_on: info.isCameraOn,
+                is_screen_sharing_on: info.isScreenSharingOn,
+            });
         }
     }
 
@@ -827,6 +832,7 @@ export class Rtc extends Record {
         if (camera) {
             await this.toggleVideo("camera");
         }
+        this.syncState.host();
     }
 
     async rpcLeaveCall(channel) {

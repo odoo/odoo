@@ -49,6 +49,6 @@ export class CallActionList extends Component {
      * @param {MouseEvent} ev
      */
     async onClickToggleAudioCall(ev) {
-        await this.rtc.toggleCall(this.props.thread);
+        await this.rtc.syncState.toggleCall(this.props.thread);
     }
 }
