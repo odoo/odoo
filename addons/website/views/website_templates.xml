@@ -2848,14 +2848,13 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-center">
             <!-- Large screen views -->
             <t t-foreach="wizard_step" t-as="step">
-                <p t-field="step.name"/>
-                <!-- TODO-PDA clean this mess (steps list) <t t-set="is_current_step" t-value="xmlid in step[0]"/>
+                <t t-set="is_current_step" t-value="step.step_href == website_checkout_current_step"/>
                 <t t-if="is_current_step" t-set="current_step" t-value="step"/>
                 <span t-if="current_step"
                         t-attf-class="#{not is_current_step and 'o_disabled'} d-none d-md-flex no-decoration">
                     <div t-attf-class="d-flex align-items-center {{'o_wizard_step_active fw-bold' if is_current_step else 'text-muted'}}">
                         <p class="o_wizard_steplabel text-center mb-0">
-                            <t t-out="step[1]['name']"/>
+                            <span t-field="step.name"/>
                         </p>
                         <span t-if="not step_last"
                                 class="fa fa-angle-right d-inline-block align-middle mx-sm-3 text-muted fs-5"/>
@@ -2863,18 +2862,18 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 </span>
                 <a t-else=""
                     class="d-none d-md-flex no-decoration"
-                    t-att-href="step[1]['current_href']"
-                    t-att-title="step[1]['name']">
+                    t-att-href="step.step_href"
+                    t-att-title="step.name">
                     <div class="d-flex align-items-center o_wizard_step-done">
                         <p class="o_wizard_steplabel text-center mb-0">
-                            <t t-out="step[1]['name']"/>
+                            <span t-field="step.name"/>
                         </p>
                         <span t-if="not step_last"
                                 class="fa fa-angle-right d-inline-block align-middle mx-sm-3 text-muted fs-5"/>
                     </div>
-                </a> -->
+                </a>
             </t>
-            <!-- Mobile screen views -->
+            <!-- TODO-PDA Mobile screen views -->
             <!-- <div class="d-flex d-md-none flex-column align-items-start">
                 <div class="dropdown">
                     <a class="dropdown-toggle fw-bold"
@@ -2913,7 +2912,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 </span>
             </div> -->
         </div>
-        <!--<div class="o_wizard_circle_progress progress d-md-none position-relative rounded-circle ms-3 bg-transparent"
+        <!--TODO-PDA <div class="o_wizard_circle_progress progress d-md-none position-relative rounded-circle ms-3 bg-transparent"
                 t-attf-style="rightProgress:{{'180' if _steps_in_deg >= 180 else _steps_in_deg}}deg; leftProgress:{{_steps_in_deg-180 if _steps_in_deg >= 180 else 0}}deg;">
             <span class="o_wizard_circle_progress_left position-absolute start-0 top-0 z-1 overflow-hidden w-50 h-100 ">
                 <span class="progress-bar position-absolute start-100 top-0 w-100 h-100 border border-5 border-start-0 border-primary bg-transparent"/>

@@ -65,45 +65,34 @@
 
         <record id="website_sale.checkout_step_review" model="website.checkout.step">
             <field name="name">Review Order</field>
-            <field name="xmlid">website_sale.cart</field>
             <field name="sequence">1</field>
-            <field name="current_href">/shop/cart</field>
-            <field name="main_button">Checkout</field>
-            <field name="main_button_href">/shop/checkout</field>
-            <field name="back_button">Continue Shopping</field>
-            <field name="back_button_href">/shop</field>
+            <field name="step_href">/shop/cart</field>
+            <field name="back_button_label">Back to cart</field>
             <field name="is_published" eval="True"/>
-            <!-- TODO-PDA consider next main_button could be Sign In or Checkout-->
+            <!-- TODO-PDA consider next main_button_label could be Sign In or Checkout-->
         </record>
 
         <record id="website_sale.checkout_step_delivery" model="website.checkout.step">
             <field name="name">Delivery</field>
-            <field name="xmlid">website_sale.checkout</field> <!--TODO-PDA quid if website_sale.address? Maybe consider current_href in the template to pass to the get steps instead of xmlid-->
             <field name="sequence">2</field>
-            <field name="current_href">/shop/checkout</field>
-            <field name="main_button">Confirm</field>
-            <field name="main_button_href">/shop/confirm_order</field>
-            <field name="back_button">Back to cart</field>
-            <field name="back_button_href">/shop/cart</field>
+            <field name="step_href">/shop/checkout</field>
+            <field name="main_button_label">Checkout</field>
+            <field name="back_button_label">Back to delivery</field>
             <field name="is_published" eval="True"/>
-            <!--TODO-PDA consider extra step-->
         </record>
 
         <record id="website_sale.checkout_step_extra" model="website.checkout.step">
             <field name="name">Extra Info</field>
-            <field name="xmlid">website_sale.extra_info</field>
             <field name="sequence">3</field>
-            <field name="current_href">/shop/extra_info</field>
+            <field name="step_href">/shop/extra_info</field>
             <!--TODO-PDA consider extra step-->
         </record>
 
         <record id="website_sale.checkout_step_payment" model="website.checkout.step">
             <field name="name">Payment</field>
-            <field name="xmlid">website_sale.payment</field>
             <field name="sequence">4</field>
-            <field name="current_href">/shop/payment</field>
-            <field name="back_button">Back to delivery</field>
-            <field name="back_button_href">/shop/checkout</field>
+            <field name="step_href">/shop/payment</field>
+            <field name="main_button_label">Confirm</field>
             <field name="is_published" eval="True"/>
         </record>
     </data>

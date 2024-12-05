@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class WebsiteCheckoutStep(models.Model):
@@ -8,22 +9,27 @@ class WebsiteCheckoutStep(models.Model):
     _description = 'Website Checkout Step'
     _inherit = ['website.published.multi.mixin']
 
-    # TODO-PDA which ones required?
     name = fields.Char(required=True, translate=True)
-    xmlid = fields.Char()
     # TODO-PDA drag and drop to define the sequence?
     sequence = fields.Integer()
+    step_href = fields.Char(string="Href", required=True)
+    main_button_label = fields.Char(
+        translate=True,
+        help="Display name of the main button going to the step"
+    )
+    back_button_label = fields.Char(
+        translate=True,
+        help="Display name of the back button going to the step"
+    )
 
-    current_href = fields.Char()
+    def _get_next_checkout_step(self, allowed_steps_domain):
+        """ Get the next step in the checkout flow."""
 
-    # TODO-PDA all those fields are dependent of the next step or previous step, to be computed based on current_href or xmlid
-    main_button = fields.Char(translate=True)
-    main_button_href = fields.Char()
-    back_button = fields.Char(translate=True)
-    back_button_href = fields.Char()
+        next_step_domain = expression.AND([allowed_steps_domain, [('sequence', '>', self.sequence)]])
+        return self.search(next_step_domain, order='sequence', limit=1)
 
-    @api.model
-    def get_checkout_steps(self, website_id=None):
-        website_id = website_id or self.env.context.get('website_id')
-        domain = ['|',('website_id', '=', website_id), ('website_id', '=', False), ('is_published', '=', True)]
-        return self.search(domain, order='sequence')
+    def _get_previous_checkout_step(self, allowed_steps_domain):
+        """ Get the previous step in the checkout flow."""
+
+        previous_step_domain = expression.AND([allowed_steps_domain, [('sequence', '<', self.sequence)]])
+        return self.search(previous_step_domain, order='sequence DESC', limit=1)

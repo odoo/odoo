@@ -5,7 +5,7 @@
         <field name="name">website.checkout.step.list</field>
         <field name="model">website.checkout.step</field>
         <field name="arch" type="xml">
-            <list>
+            <list default_order="sequence">
                 <field name="sequence"/>
                 <field name="name"/>
                 <field name="website_id"/>
@@ -23,12 +23,10 @@
                     <group>
                         <field name="sequence"/>
                         <field name="name"/>
-                        <field name="current_href"/>
+                        <field name="step_href"/>
                         <field name="website_id"/>
-                        <field name="main_button"/>
-                        <field name="main_button_href"/>
-                        <field name="back_button"/>
-                        <field name="back_button_href"/>
+                        <field name="main_button_label"/>
+                        <field name="back_button_label"/>
                         <field name="is_published"/>
                     </group>
                 </sheet>
