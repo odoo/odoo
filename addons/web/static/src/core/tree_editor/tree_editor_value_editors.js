@@ -125,6 +125,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "ilike":
         case "not ilike":
             return STRING_EDITOR;
+        case "is_not_between":
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=");
             return {
@@ -141,6 +142,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                 },
             };
         }
+        case "is_not_within":
         case "within": {
             return {
                 component: Within,
