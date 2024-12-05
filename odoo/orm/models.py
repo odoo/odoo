@@ -4086,7 +4086,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if not companies:
             return [('company_id', '=', False)]
-        if isinstance(companies, str):
+        if isinstance(companies, unquote):
             return [('company_id', 'in', unquote(f'{companies} + [False]'))]
         return [('company_id', 'in', to_record_ids(companies) + [False])]
 
