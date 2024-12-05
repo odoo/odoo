@@ -413,7 +413,7 @@ class HrLeaveAllocation(models.Model):
         """
         self.ensure_one()
         datetime_min_time = datetime.min.time()
-        tz = timezone(self.employee_id._get_timezone())
+        tz = timezone(self.employee_id._get_tz())
         start_dt = datetime.combine(start_date, datetime_min_time).replace(tzinfo=tz)
         end_dt = datetime.combine(end_date, datetime_min_time).replace(tzinfo=tz)
         employee_calendar_periods = self.employee_id._get_calendar_periods(start_dt, end_dt)[self.employee_id]
