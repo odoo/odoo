@@ -653,3 +653,8 @@ class Meeting(models.Model):
             if user_id and self.with_user(user_id).sudo()._check_microsoft_sync_status():
                 return user_id
         return self.env.user
+
+    def _is_microsoft_insertion_blocked(self, sender_user):
+        self.ensure_one()
+        has_different_owner = record.user_id and record.user_id != sender_user
+        return has_different_owner

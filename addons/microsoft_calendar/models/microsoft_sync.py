@@ -199,6 +199,9 @@ class MicrosoftSync(models.AbstractModel):
             record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id)
         for record in new_records:
             values = record._microsoft_values(self._get_microsoft_synced_fields())
+            sender_user = record._get_event_user_m()
+            if record._is_microsoft_insertion_blocked(sender_user):
+                continue
             if isinstance(values, dict):
                 record._microsoft_insert(values)
             else:
@@ -568,5 +571,15 @@ class MicrosoftSync(models.AbstractModel):
         It's possible that a user creates an event and sets another user as the organizer. Using self.env.user will
         cause some issues, and it might not be possible to use this user for sending the request, so this method gets
         the appropriate user accordingly.
+        """
+        raise NotImplementedError()
+
+    def _is_microsoft_insertion_blocked(self, sender_user):
+        """
+        Returns True if the record insertion to Microsoft should be blocked.
+        This is a necessary step for ensuring data match between Odoo and Microsoft,
+        as it prevents attendees to synchronize new records on behalf of the owners,
+        otherwise the event ownership would be lost in Outlook and it would block the
+        future record synchronization for the original owner.
         """
         raise NotImplementedError()
