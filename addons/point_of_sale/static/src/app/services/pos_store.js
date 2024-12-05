@@ -950,7 +950,7 @@ export class PosStore extends WithLazyGetterTrap {
         return new Set();
     }
     cashierHasPriceControlRights() {
-        return !this.config.restrict_price_control || this.getCashier()._role == "manager";
+        return !this.config.restrict_price_control || this.getCashier()._role == "admin";
     }
     createNewOrder(data = {}) {
         const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
