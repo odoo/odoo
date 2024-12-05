@@ -87,7 +87,13 @@
                                        t-att-checked="is_checked or None"
                                 />
                                 <label class="form-check-label mt-0" t-attf-for="amount_#{donation_amount_index}">
+                                    <t t-if="currency.position == 'before'">
+                                        <t t-out="currency.symbol"/>
+                                    </t>
                                     <t t-out="donation_amount"/>
+                                    <t t-if="currency.position == 'after'">
+                                        <t t-out="currency.symbol"/>
+                                    </t>
                                     <span t-if="donation_options.get('descriptions')" class="text-muted fst-italic ms-1">
                                         - <t t-out="donation_descriptions[donation_amount_index]"/>
                                     </span>
@@ -99,6 +105,7 @@
                                 t-att-value="amount" t-att-checked="not has_checked or None"/>
                             <label class="form-check-label mt-0 d-block" for="other_amount"/>
                             <t t-call="website_payment.donation_input">
+                                <t t-set="currency" t-value="currency.symbol"/>
                                 <t t-set="amount" t-value="not has_checked and amount or ''"/>
                             </t>
                         </div>
@@ -126,11 +133,20 @@
                type="number"
                class="form-control o_amount_input"
                t-att-min="donation_options.get('minimumAmount')"
-               t-att-max="donation_options.get('maximumAmount')"
+               t-att-max="donation_options.get('customAmount') == 'slider' and donation_options.get('maximumAmount') or undefined"
                t-att-value="amount"
-               placeholder="Custom Amount"
+               placeholder="Amount to donate"
                id="other_amount_value"
         />
+        <p class="text-danger d-none" id="warningMessageId">Please enter valid donation amount.</p>
+        <p class="text-danger d-none" id="warningMinMessageId">
+            <t t-if="donation_options.get('minimumAmount')">
+                The minimum donation amount is <t t-out="currency"/><t t-out="donation_options.get('minimumAmount')"/>
+            </t>
+            <t t-else="">
+                Enter valid number!!
+            </t>
+        </p>
     </template>
 
 </odoo>
