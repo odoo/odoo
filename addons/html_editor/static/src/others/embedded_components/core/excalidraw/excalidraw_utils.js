@@ -16,6 +16,7 @@ import { onWillUnmount, useComponent } from "@odoo/owl";
  */
 export function useMouseResizeListeners(options) {
     const component = useComponent();
+    const document = options.document || document;
     options.onMouseUp = (options.onMouseUp || (() => {})).bind(component);
     options.onMouseDown = (options.onMouseDown || (() => {})).bind(component);
     const onMouseMove = useDebounced(options.onMouseMove || (() => {}), "animationFrame");

@@ -12,6 +12,7 @@ export class ReadonlyEmbeddedExcalidrawComponent extends Component {
     static template = "html_editor.ReadonlyEmbeddedExcalidraw";
     static props = {
         height: { type: String, optional: true },
+        host: { type: Object },
         source: { type: String },
         width: { type: String, optional: true },
     };
@@ -33,6 +34,7 @@ export class ReadonlyEmbeddedExcalidrawComponent extends Component {
         onWillStart(() => this.setupIframe());
 
         this.onHandleMouseDown = useMouseResizeListeners({
+            document: this.props.host.ownerDocument,
             onMouseDown: this.onMouseDown,
             onMouseMove: this.onMouseMove,
             onMouseUp: this.onMouseUp,
@@ -62,9 +64,19 @@ export class ReadonlyEmbeddedExcalidrawComponent extends Component {
         }
         this.displayState.isResizing = true;
         const bounds = this.drawContainer.el.getBoundingClientRect();
+        let offsetY = 0;
+        let offsetX = 0;
+        let frameElement = this.drawContainer.el.ownerDocument.defaultView.frameElement;
+        while (frameElement) {
+            offsetY += frameElement.getBoundingClientRect().top;
+            offsetX += frameElement.getBoundingClientRect().left;
+            frameElement = frameElement.ownerDocument.defaultView.frameElement;
+        }
         this.refPoint = {
             x: bounds.x + bounds.width / 2,
             y: bounds.y,
+            offsetY,
+            offsetX,
         };
     }
 
@@ -72,8 +84,15 @@ export class ReadonlyEmbeddedExcalidrawComponent extends Component {
         event.preventDefault();
         this.state.width = this.isMobile
             ? this.state.width
-            : `${Math.round(Math.max(2 * Math.abs(this.refPoint.x - event.clientX), 300))}px`;
-        this.state.height = `${Math.round(Math.max(event.clientY - this.refPoint.y, 300))}px`;
+            : `${Math.round(
+                  Math.max(
+                      2 * Math.abs(this.refPoint.x - event.clientX - this.refPoint.offsetX),
+                      300
+                  )
+              )}px`;
+        this.state.height = `${Math.round(
+            Math.max(event.clientY - this.refPoint.offsetY - this.refPoint.y, 300)
+        )}px`;
     }
 
     onMouseUp() {
@@ -85,6 +104,6 @@ export const readonlyExcalidrawEmbedding = {
     name: "draw",
     Component: ReadonlyEmbeddedExcalidrawComponent,
     getProps: (host) => {
-        return { ...getEmbeddedProps(host) };
+        return { ...getEmbeddedProps(host), host };
     },
 };
