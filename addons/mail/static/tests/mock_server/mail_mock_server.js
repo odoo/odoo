@@ -200,7 +200,7 @@ async function channel_call_join(request) {
     })
         .add("Rtc", {
             iceServers: false,
-            selfSession: mailDataHelpers.Store.one(DiscussChannelRtcSession.browse(sessionId)),
+            localSession: mailDataHelpers.Store.one(DiscussChannelRtcSession.browse(sessionId)),
         })
         .get_result();
 }
@@ -873,7 +873,7 @@ registerRoute("/mail/thread/recipients/fields", mail_thread_recipients_fields);
 async function mail_thread_recipients_fields(request) {
     return {
         partner_fields: [],
-        primary_email_field: []
+        primary_email_field: [],
     };
 }
 

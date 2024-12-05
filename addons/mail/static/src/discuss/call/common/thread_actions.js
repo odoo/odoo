@@ -9,9 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 threadActionsRegistry
     .add("call", {
         condition(component) {
-            return (
-                component.thread?.allowCalls && !component.thread?.eq(component.rtc.state.channel)
-            );
+            return component.thread?.allowCalls && !component.thread?.eq(component.rtc.channel);
         },
         icon: "fa fa-fw fa-phone",
         iconLarge: "fa fa-fw fa-lg fa-phone",

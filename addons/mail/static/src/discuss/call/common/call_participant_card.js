@@ -21,7 +21,7 @@ import { rpc } from "@web/core/network/rpc";
 const HIDDEN_CONNECTION_STATES = new Set([undefined, "connected", "completed"]);
 
 export class CallParticipantCard extends Component {
-    static props = ["className", "cardData", "thread", "minimized?", "inset?"];
+    static props = ["className", "cardData", "thread", "minimized?", "inset?", "isSidebarItem?"];
     static components = { CallParticipantVideo };
     static template = "discuss.CallParticipantCard";
 
@@ -68,6 +68,37 @@ export class CallParticipantCard extends Component {
         );
     }
 
+    get isRemoteVideo() {
+        if (!this.rtcSession) {
+            return false;
+        }
+        return (
+            this.rtc.isRemote &&
+            (this.rtcSession.is_screen_sharing_on || this.rtcSession.is_camera_on)
+        );
+    }
+
+    get showLiveLabel() {
+        if (this.props.isSidebarItem) {
+            return false;
+        }
+        if (this.props.cardData.type === "screen") {
+            if (this.props.inset) {
+                return true;
+            } else {
+                return (
+                    !this.rtcSession.eq(this.rtcSession.channel.activeRtcSession) &&
+                    !this.props.minimized
+                );
+            }
+        }
+        return false;
+    }
+
+    get showRemoteWarning() {
+        return !this.props.minimized && !this.props.inset && this.isRemoteVideo;
+    }
+
     get rtcSession() {
         return this.props.cardData.session;
     }
@@ -77,7 +108,7 @@ export class CallParticipantCard extends Component {
     }
 
     get isOfActiveCall() {
-        return Boolean(this.rtcSession && this.rtcSession.channel?.eq(this.rtc.state.channel));
+        return Boolean(this.rtcSession && this.rtcSession.channel?.eq(this.rtc.channel));
     }
 
     get showConnectionState() {
