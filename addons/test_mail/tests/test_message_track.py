@@ -415,9 +415,9 @@ class TestTracking(MailCommon):
         })
 
         ContainerModel = self.registry['mail.test.container']
-        self.assertFalse(hasattr(ContainerModel.name, 'track_visibility'))
-        ContainerModel.name.track_visibility = 'always'
-        self.addCleanup(delattr, ContainerModel.name, 'track_visibility')
+        self.assertFalse(hasattr(ContainerModel.name, 'tracking'))
+        ContainerModel.name.tracking = True
+        self.addCleanup(delattr, ContainerModel.name, 'tracking')
         self.patch(ContainerModel, '_track_subtype', lambda self, init_values: 'mail.mt_name_changed' if 'name' in init_values and init_values['name'] == magic_code else False)
         self.patch(ContainerModel, '_track_template', lambda self, changes: {'name': (mail_template, {'composition_mode': 'mass_mail'})} if 'name' in changes else {})
 
