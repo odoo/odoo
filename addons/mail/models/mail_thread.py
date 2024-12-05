@@ -3482,15 +3482,14 @@ class MailThread(models.AbstractModel):
 
         # compute send user and its related signature; try to use self.env.user instead of browsing
         # user_ids if they are the author will give a sudo user, improving access performances and cache usage.
-        signature = ''
-        email_add_signature = msg_vals.get('email_add_signature') if msg_vals and 'email_add_signature' in msg_vals else message.email_add_signature
-        if email_add_signature:
-            author = message.env['res.partner'].browse(msg_vals.get('author_id')) if 'author_id' in msg_vals else message.author_id
-            author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
-            if author_user:
+        author = message.env['res.partner'].browse(msg_vals.get('author_id')) if 'author_id' in msg_vals else message.author_id
+        author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
+        signature, email_add_signature = '', False
+
+        if author_user:
+            email_add_signature = msg_vals.get('email_add_signature', message.email_add_signature)
+            if email_add_signature:
                 signature = author_user.signature
-            elif author.name:
-                signature = Markup("<p>-- <br/>%s</p>") % author.name
 
         if force_email_company:
             company = force_email_company
