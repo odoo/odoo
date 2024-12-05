@@ -1851,6 +1851,23 @@ export class Model extends Array {
                         }
                         break;
                     }
+                    case "date":
+                    case "datetime":
+                        if (records.length === 0) {
+                            group[name] = false;
+                        } else if (func === "max") {
+                            group[name] = [...records].sort((a, b) =>
+                                b[fieldName].localeCompare(a[fieldName])
+                            )[0][fieldName];
+                        } else if (func === "min") {
+                            group[name] = [...records].sort((a, b) =>
+                                a[fieldName].localeCompare(b[fieldName])
+                            )[0][fieldName];
+                        } else {
+                            throw new MockServerError(
+                                `unimplemented aggregation function "${func}" for a ${this._fields[fieldName].type} field`
+                            );
+                        }
                 }
             }
         };

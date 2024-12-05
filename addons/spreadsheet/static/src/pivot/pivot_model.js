@@ -1,6 +1,7 @@
 //@ts-check
 
 import { _t } from "@web/core/l10n/translation";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
 import { PivotModel } from "@web/views/pivot/pivot_model";
@@ -618,13 +619,19 @@ export class OdooPivotModel extends PivotModel {
             .measures.filter((measure) => !measure.computedBy)
             .reduce((measurements, measure) => {
                 const measurementId = this._computeMeasurementId(measure);
-                var measurement = group[measurementId];
+                let measurement = group[measurementId];
                 if (measurement instanceof Array) {
                     // case field is many2one and used as measure and groupBy simultaneously
                     measurement = 1;
-                }
-                if (measure.type === "boolean" && measurement instanceof Boolean) {
+                } else if (measure.type === "boolean" && measurement instanceof Boolean) {
                     measurement = measurement ? 1 : 0;
+                } else if (isDateOrDatetimeField(measure) && typeof measurement === "string") {
+                    measurement = toNumber(
+                        deserializeDateTime(measurement).toFormat("yyyy-MM-dd HH:mm:ss", {
+                            numberingSystem: "latn",
+                        }),
+                        DEFAULT_LOCALE
+                    );
                 }
                 measurements[measurementId] = measurement;
                 return measurements;

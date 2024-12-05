@@ -1723,6 +1723,37 @@ test("Manipulating a computed measure does not trigger a RPC", async () => {
     expect.verifySteps([]);
 });
 
+test("date and datetime can be used as measures", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+        mockRPC: async function (route, args) {
+            if (args.method === "read_group") {
+                expect.step(args.kwargs.fields.join());
+            }
+        },
+    });
+    expect.verifySteps(["probability_avg_id:avg(probability)"]);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            measures: [
+                { id: "date:max", fieldName: "date", aggregator: "max" },
+                { id: "create_date:max", fieldName: "create_date", aggregator: "max" },
+            ],
+        },
+    });
+    setCellContent(model, "A1", '=PIVOT.VALUE(1, "date:max")');
+    setCellContent(model, "A2", '=PIVOT.VALUE(1, "create_date:max")');
+    await animationFrame();
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("12/15/2016");
+    expect(getEvaluatedCell(model, "A2").formattedValue).toBe("12/10/2016 10:59:59 PM");
+    expect.verifySteps(["date_max_id:max(date),create_date_max_id:max(create_date)"]);
+});
+
 test("many2one measures are aggregated with count_distinct by default", async () => {
     const { model, pivotId } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
