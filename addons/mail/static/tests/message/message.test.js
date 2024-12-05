@@ -1168,15 +1168,14 @@ test("not highlighting the message if not mentioning the current user inside the
 test("allow attachment delete on authored message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        name: "BLAH",
+        res_id: channelId,
+        res_model: "discuss.channel",
+    });
     pyEnv["mail.message"].create({
-        attachment_ids: [
-            Command.create({
-                mimetype: "image/jpeg",
-                name: "BLAH",
-                res_id: channelId,
-                res_model: "discuss.channel",
-            }),
-        ],
+        attachment_ids: [attachmentId],
         author_id: serverState.partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",
@@ -1196,15 +1195,14 @@ test("prevent attachment delete on non-authored message in channels", async () =
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        name: "BLAH",
+        res_id: channelId,
+        res_model: "discuss.channel",
+    });
     pyEnv["mail.message"].create({
-        attachment_ids: [
-            Command.create({
-                mimetype: "image/jpeg",
-                name: "BLAH",
-                res_id: channelId,
-                res_model: "discuss.channel",
-            }),
-        ],
+        attachment_ids: [attachmentId],
         author_id: partnerId,
         body: "<p>Test</p>",
         model: "discuss.channel",

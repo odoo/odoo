@@ -61,7 +61,7 @@
                         </div>
                     </t>
                     <div class="flex-grow-1"/>
-                    <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden d-flex" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': showDelete and !env.inComposer }">
+                    <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden d-flex" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': (showDelete or showShowInConversation) and !env.inComposer }">
                         <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
                             <i class="fa fa-spin fa-spinner"/>
                         </div>
@@ -74,6 +74,14 @@
                                 t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove"
                         >
                             <i class="fa fa-trash" role="img" aria-label="Remove"/>
+                        </button>
+                        <button
+                                t-if="showShowInConversation"
+                                class="btn align-items-center justify-content-center d-flex w-100 h-100 rounded-0 border-0"
+                                t-attf-class="{{ env.inComposer ? 'o-inComposer position-absolute btn-primary transition-base justify-content-center' : 'bg-300' }}"
+                                t-on-click.stop="() => this.onClickShowInConversation(attachment)" title="Show in conversation"
+                        >
+                            <i class="fa fa-eye" role="img" aria-label="See in conversation"/>
                         </button>
                         <a t-if="attachment.type === 'url'" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0" t-attf-class="{{ bg-300 }}" t-att-href="attachment.url" target='_blank' title="Open Link">
                             <i class="fa fa-external-link" role="img" aria-label="Open Link"/>

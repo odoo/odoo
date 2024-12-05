@@ -374,3 +374,30 @@ test("img file has proper src in discuss.channel", async () => {
         `.o-mail-AttachmentImage[title='test.png'] img[data-src*='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png']`
     );
 });
+
+test("'Show in conversation' action highlights message related to attachment", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        res_id: channelId,
+        res_model: "discuss.channel",
+        name: "elijah.png",
+        mimetype: "image/png",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "<p>Look at my dog!</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Attachments']");
+    await click(".o-mail-AttachmentImage button[title='Actions']");
+    await click(".o-dropdown-item", { text: "Show in conversation" });
+    await contains(".o-mail-Message.o-highlighted", { text: "Look at my dog!" });
+});
