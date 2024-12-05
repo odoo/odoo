@@ -3,6 +3,7 @@
     <t t-name="point_of_sale.ProductInfoPopup">
         <Dialog title.translate="Product information">
             <ProductInfoBanner productTemplate="props.productTemplate" info="props.info"/>
+            <span t-out="props.productTemplate.getMarkupPublicDescription" />
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.warehouses?.length > 0">
                 <h3 class="section-title">
                     Inventory
