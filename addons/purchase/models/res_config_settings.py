@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from ast import literal_eval
 
 
 class ResConfigSettings(models.TransientModel):
@@ -58,3 +59,11 @@ class ResConfigSettings(models.TransientModel):
             self.po_lock = po_lock
         if self.po_double_validation != po_double_validation:
             self.po_double_validation = po_double_validation
+
+        actions = ['purchase.purchase_rfq', 'purchase.purchase_form_action', 'action_rfq_form']
+        for purchase_action in actions:
+            purchase_rfq_action = self.env.ref(purchase_action, raise_if_not_found=False)
+            if purchase_rfq_action:
+                action_context = literal_eval(purchase_rfq_action['context']) if purchase_rfq_action['context'] else {}
+                action_context = {**action_context, 'is_lock_confirmed_orders': po_lock == 'lock'}
+                purchase_rfq_action['context'] = action_context

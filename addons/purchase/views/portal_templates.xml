@@ -115,9 +115,6 @@
                           <span t-if="order.state == 'cancel'" class="badge rounded-pill text-bg-secondary">
                               <i class="fa fa-fw fa-remove" role="img" aria-label="Cancelled" title="Cancelled"></i><span class="d-none d-md-inline"> Cancelled</span>
                           </span>
-                          <span t-if="order.state == 'done'" class="badge rounded-pill text-bg-success">
-                              <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span>
-                          </span>
                       </td>
                       <td id="order_total" class="text-end"><span t-field="order.amount_total"/></td>
                   </tr>
@@ -220,11 +217,11 @@
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                       <strong>This purchase has been cancelled.</strong>
                   </div>
-                  <div t-if="order.mail_reception_confirmed and order.state not in ['purchase', 'done']" class="alert alert-success alert-dismissible d-print-none" role="alert">
+                  <div t-if="order.mail_reception_confirmed and order.state != 'purchase'" class="alert alert-success alert-dismissible d-print-none" role="alert">
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                       <strong>This quotation has been accepted.</strong>
                   </div>
-                  <div t-if="order.mail_reception_declined and order.state not in ['purchase', 'done']" class="alert alert-warning alert-dismissible d-print-none" role="alert">
+                  <div t-if="order.mail_reception_declined and order.state != 'purchase'" class="alert alert-warning alert-dismissible d-print-none" role="alert">
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                       <strong>This quotation has been declined.</strong>
                   </div>
@@ -265,7 +262,7 @@
                     <t t-if="order.state in ['draft', 'sent']">
                       <strong>Request For Quotation Date:</strong>
                     </t>
-                    <t t-if="order.state in ['purchase', 'done', 'cancel']">
+                    <t t-if="order.state in ['purchase', 'cancel']">
                       <strong>Order Date:</strong>
                     </t>
                     <span t-field="order.date_order" t-options='{"widget": "date"}'/>
@@ -311,7 +308,7 @@
 
               <div class="table-responsive">
                 <table t-att-data-order-id="order.id" t-att-data-token="order.access_token" class="table table-sm" id="purchase_order_table">
-                    <t t-set="display_price_and_taxes" t-value="not update_dates and order.state in ['sent', 'purchase', 'done']"/>
+                    <t t-set="display_price_and_taxes" t-value="not update_dates and order.state in ['sent', 'purchase']"/>
                     <thead class="bg-100">
                         <tr>
                             <th class="text-start">Products</th>
@@ -322,7 +319,7 @@
                                 <span>Taxes</span>
                             </th>
                             <th t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Disc.%</th>
-                            <th class="text-end" t-if="not update_dates and order.state in ['purchase', 'done']" >
+                            <th class="text-end" t-if="not update_dates and order.state == 'purchase'" >
                                 <span>Amount</span>
                             </th>
                         </tr>
@@ -374,7 +371,7 @@
                                     <td t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <div t-field="line.discount" class="text-end"/>
                                     </td>
-                                    <td class="text-end" t-if="not update_dates and order.state in ['purchase', 'done']">
+                                    <td class="text-end" t-if="not update_dates and order.state == 'purchase'">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
                                     </td>
                                 </t>
@@ -392,7 +389,7 @@
                                 </t>
                             </tr>
 
-                            <t t-if="current_section and (line_last or order.order_line[line_index+1].display_type == 'line_section') and order.state in ['purchase', 'done']">
+                            <t t-if="current_section and (line_last or order.order_line[line_index+1].display_type == 'line_section') and order.state == 'purchase'">
                                 <tr class="is-subtotal text-end">
                                     <td colspan="99">
                                         <strong class="mr16">Subtotal</strong>
@@ -408,7 +405,7 @@
                 </table>
               </div>
 
-              <div id="total" t-if="order.state in ['purchase', 'done']" class="row" name="total" style="page-break-inside: avoid;">
+              <div id="total" t-if="order.state == 'purchase'" class="row" name="total" style="page-break-inside: avoid;">
                   <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ms-auto">
                       <t t-call="purchase.purchase_order_portal_content_totals_table"/>
                   </div>
