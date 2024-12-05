@@ -1,0 +1,17 @@
+.o-discuss-PollComponent-showResults {
+    --poll-bg-color: rgba(#{red($o-brand-primary)}, #{green($o-brand-primary)}, #{blue($o-brand-primary)}, 0.2);
+
+    &.o-discuss-PollComponent-winningAnswer {
+        --poll-bg-color: rgba(#{red($o-success)}, #{green($o-success)}, #{blue($o-success)}, 0.2);
+    }
+
+    background: linear-gradient(to right, var(--poll-bg-color), var(--poll-bg-color));
+    border-color: var(--poll-bg-color);
+    background-repeat: no-repeat;
+    background-repeat: no-repeat;
+}
+
+.o-discuss-PollAnswer {
+    background-size: 0%;
+    transition: background-size .6s cubic-bezier(.215, .610, .355, 1);
+}

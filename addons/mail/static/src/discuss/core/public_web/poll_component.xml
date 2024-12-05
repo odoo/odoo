@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.Poll">
+        <div class="card border-light shadow-sm my-2" style="max-width: 500px;">
+            <div class="card-body d-flex flex-column gap-1 p-3">
+                <p class="card-title text-start fw-bold fs-5 mb-0" t-esc="props.poll.question"/>
+                <p class="card-subtitle mb-2 text-muted">Select an answer</p>
+                <div class="o-discuss-PollAnswer rounded" t-foreach="props.poll.answer_ids" t-as="answer" t-key="answer.id" t-att-style="percentageAttStyle(answer)" t-att-class="{'o-discuss-PollComponent-showResults': state.showResults, 'o-discuss-PollComponent-winningAnswer': answer.eq(props.poll.winning_answer_id) }">
+                    <t t-if="state.showResults" t-call="mail.PollAnswer-showingResults"/>
+                    <t t-else="" t-call="mail.PollAnswer-voting"/>
+                </div>
+                <div class="d-flex align-items-center mt-2">
+                    <p class="small text-muted m-0">
+                        <span class="me-1" t-esc="props.poll.number_of_votes"/>
+                        <t t-if="props.poll.number_of_votes > 1">votes</t>
+                        <t t-else="">vote</t>
+                        &#8729;
+                        <t t-if="props.poll.closed">Poll closed</t>
+                        <t t-else="" t-esc="props.poll.remainingTime"/>
+                    </p>
+                    <span class="flex-grow-1"/>
+                    <t t-if="!props.poll.closed">
+                        <t t-if="!props.poll.selfAlreadyVoted">
+                            <t t-if="state.showResults">
+                                <button class="btn btn-secondary" t-on-click="toggleShowResults">Go back to vote</button>
+                            </t>
+                            <t t-else="">
+                                <a href="#" class="me-2" t-on-click="toggleShowResults">View results</a>
+                                <button class="btn btn-primary" t-att-disabled="voteButtonDisabled" t-on-click="onClickVote">Vote</button>
+                            </t>
+                        </t>
+                        <button t-else="" class="btn btn-secondary" t-on-click="props.poll.removeVote">Remove Vote</button>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.PollAnswer-voting">
+        <label class="o-discuss-PollAnswer d-flex justify-content-between p-2 cursor-pointer rounded border" t-att-class="{
+            'border-primary': state.checkedByAnswerId[answer.id],
+            'border-secondary': !state.checkedByAnswerId[answer.id],
+        }">
+            <span class="fw-bold me-1" t-esc="answer.text"/>
+            <input class="form-check-input" t-model="state.checkedByAnswerId[answer.id]" type="checkbox"/>
+        </label>
+    </t>
+    <t t-name="mail.PollAnswer-showingResults">
+        <div class="d-flex justify-content-between p-2 rounded border">
+            <span class="fw-bold me-1" t-esc="answer.text"/>
+            <span class="flex-shrink-0">
+                <span class="fw-bold me-1 smaller">
+                    <t t-esc="answer.voting_partner_ids.length"/>
+                    <t t-if="answer.voting_partner_ids.length > 1"> votes</t>
+                    <t t-else=""> vote</t>
+                </span>
+                <span class="fw-bold">&#8729; <t t-esc="answer.percentage"/> %</span>
+                <i t-if="answer.selectedBySelf" class="ms-1 fa fa-lg fa-check-circle-o" t-att-class="{
+                    'text-success': answer.eq(props.poll.winning_answer_id), 
+                    'text-primary': !answer.eq(props.poll.winning_answer_id) 
+                }"/>
+            </span>
+        </div>
+    </t>
+</templates>

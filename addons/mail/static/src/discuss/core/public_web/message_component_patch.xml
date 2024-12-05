@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.MessagePatch" t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//ActionSwiper" position="after">
+            <Poll t-if="props.message.started_poll_id" poll="props.message.started_poll_id"/>
+            <PollResult t-if="props.message.ended_poll_id" poll="props.message.ended_poll_id"/>
+        </xpath>
+    </t>
+</templates>
