@@ -64,6 +64,10 @@ class ResPartner(models.Model):
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         action['context'] = {}
+        action['views'] = [
+            (False, 'list'), (False, 'form'), (False, 'kanban'), (False, 'graph'),
+            (False, 'pivot'), (False, 'calendar'), (False, 'cohort'), (False, 'activity')
+        ]
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
