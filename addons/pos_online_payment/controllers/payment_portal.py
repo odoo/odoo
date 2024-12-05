@@ -36,7 +36,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     @staticmethod
     def _get_amount_to_pay(order_to_pay_sudo):
-        if order_to_pay_sudo.state in ('paid', 'done', 'invoiced'):
+        if order_to_pay_sudo.state in ('paid', 'done'):
             return 0.0
         amount = order_to_pay_sudo._get_checked_next_online_payment_amount()
         if amount and PaymentPortal._is_valid_amount(amount, order_to_pay_sudo.currency_id):
