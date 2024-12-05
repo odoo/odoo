@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="page_mailing_confirm_unsubscribe">
+        <t t-call="mass_mailing.layout">
+            <div class="container o_unsubscribe_form">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3 mt-4">
+                        <div id="info_state"  class="alert alert-success">
+                            <div class="text-center">
+                                <form action="/mailing/confirm_unsubscribe" method="POST">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
+                                    <input type="hidden" name="document_id" t-att-value="document_id"/>
+                                    <input type="hidden" name="email" t-att-value="email"/>
+                                    <input type="hidden" name="hash_token" t-att-value="hash_token"/>
+                                    <p t-if="unsubscribed_lists">
+                                       Are you sure you want to unsubscribe from the mailing list "<span t-out="unsubscribed_lists"/>"? 
+                                    </p>
+                                    <p t-else="">
+                                        Are you sure you want to unsubscribe from our mailing list?
+                                    </p>
+                                    <button type="submit" class="btn btn-primary">Unsubscribe</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="page_mailing_has_unsubscribed">
+        <t t-call="mass_mailing.layout">
+            <div class="container o_unsubscribe_form">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3 mt-4">
+                        <div id="info_state"  class="alert alert-success">
+                            <div class="text-center">
+                                <p>Successfully unsubscribed!</p>
+                                <a t-att-href="settings_url" class="btn btn-primary">Manage Subscriptions</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="page_mailing_unsubscribe" name="Unsubscribe">
         <t t-call="mass_mailing.layout">
             <t t-call="mass_mailing.unsubscribe_form"/>
