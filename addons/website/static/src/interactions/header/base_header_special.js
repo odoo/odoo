@@ -88,6 +88,12 @@ export class BaseHeaderSpecial extends BaseHeader {
             this.el.style.transform = this.atTop ? "" : `translate(0, -${this.forcedScroll + this.topGap}px)`;
         }
 
+        if (!this.cssAffixed && this.dropdownClickedEl) {
+            const dropdown = Dropdown.getOrCreateInstance(this.dropdownClickedEl);
+            dropdown.show();
+            this.dropdownClickedEl = null;
+        }
+
         if (this.isAnimated && this.transitionActive) {
             const scrollingDownward = (scroll > this.position);
             this.position = scroll;
