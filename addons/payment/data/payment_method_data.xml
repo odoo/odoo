@@ -305,6 +305,27 @@
         />
     </record>
 
+    <record id="payment_method_appota" model="payment.method">
+        <field name="name">Appota</field>
+        <field name="code">appota</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/wallet.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.vn'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.VND'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_atome" model="payment.method">
         <field name="name">Atome</field>
         <field name="code">atome</field>
@@ -1743,6 +1764,26 @@
         />
     </record>
 
+    <record id="payment_method_kfh" model="payment.method">
+        <field name="name">Kuwait Finance House</field>
+        <field name="code">KFH</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.my'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.MYR'),
+                     ])]"
+        />
+    </record>
     <record id="payment_method_linepay" model="payment.method">
         <field name="name">LINE Pay</field>
         <field name="code">linepay</field>
@@ -3069,12 +3110,17 @@
                eval="[Command.set([
                          ref('base.id'),
                          ref('base.ph'),
+                         ref('base.th'),
+                         ref('base.my'),
+                         ref('base.vn'),
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
                          ref('base.IDR'),
-
+                         ref('base.THB'),
+                         ref('base.MYR'),
+                         ref('base.VND'),
                      ])]"
         />
     </record>
@@ -3515,6 +3561,27 @@
         />
     </record>
 
+    <record id="payment_method_vietcapital" model="payment.method">
+        <field name="name">Viet Capital</field>
+        <field name="code">vietcapital</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.vn'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.VND'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_vipps" model="payment.method">
         <field name="name">Vipps</field>
         <field name="code">vipps</field>
@@ -3555,6 +3622,27 @@
                          ref('base.SEK'),
                          ref('base.CHF'),
                          ref('base.USD'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_method_vpbank" model="payment.method">
+        <field name="name">VP Bank</field>
+        <field name="code">vpb</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.vn'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.VND'),
                      ])]"
         />
     </record>
@@ -3625,10 +3713,13 @@
                          ref('base.CNY'),
                          ref('base.HKD'),
                          ref('base.JPY'),
+                         ref('base.JPY'),
+                         ref('base.MYR'),
                          ref('base.NZD'),
                          ref('base.GBP'),
                          ref('base.USD'),
                          ref('base.SGD'),
+                         ref('base.THB'),
                      ])]"
         />
     </record>
@@ -4047,6 +4138,27 @@
         <field name="image" type="base64" file="payment/static/img/unionpay.png"/>
     </record>
 
+    <record id="payment_method_viettelpay" model="payment.method">
+        <field name="name">Viettel Pay</field>
+        <field name="code">viettelpay</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/wallet.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.vn'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.VND'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_visa" model="payment.method">
         <field name="name">VISA</field>
         <field name="code">visa</field>
@@ -4054,6 +4166,48 @@
         <field name="sequence">1000</field>
         <field name="active">False</field>
         <field name="image" type="base64" file="payment/static/img/visa.png"/>
+    </record>
+
+    <record id="payment_method_vnpt" model="payment.method">
+        <field name="name">VNPT Money</field>
+        <field name="code">vnptwallet</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/wallet.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.vn'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.VND'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_method_woori" model="payment.method">
+        <field name="name">Woori Bank</field>
+        <field name="code">woori</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.vn'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.VND'),
+                     ])]"
+        />
     </record>
 
 </odoo>
