@@ -36,7 +36,6 @@ export class TourAutomatic {
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
             .flatMap((step) => {
-                const timeout = (step.timeout || 10000) + this.config.stepDelay;
                 return [
                     {
                         action: async () => {
@@ -50,9 +49,6 @@ export class TourAutomatic {
                                 // eslint-disable-next-line no-debugger
                                 debugger;
                             }
-                            // This delay is important for making the current set of tour tests pass.
-                            // IMPROVEMENT: Find a way to remove this delay.
-                            await new Promise((resolve) => requestAnimationFrame(resolve));
                             if (this.config.stepDelay > 0) {
                                 await delay(this.config.stepDelay);
                             }
@@ -63,7 +59,7 @@ export class TourAutomatic {
                             return this.previousStepIsJustACheck ? 0 : null;
                         },
                         trigger: () => step.findTrigger(),
-                        timeout,
+                        timeout: (step.timeout || 10000) + this.config.stepDelay,
                         action: async () => {
                             if (this.checkForUndeterminisms) {
                                 try {
@@ -113,7 +109,7 @@ export class TourAutomatic {
 
         this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay || 400,
+            checkDelay: this.checkDelay || 300,
             steps: macroSteps,
             onError: (error) => {
                 this.throwError([error]);
