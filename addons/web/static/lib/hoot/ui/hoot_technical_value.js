@@ -96,7 +96,7 @@ export class HootTechnicalValue extends Component {
                 >
                     <t t-if="labelSize[1] > 0">
                         <i
-                            class="fa fa-caret-right flex justify-center w-2 transition"
+                            class="fa fa-caret-right"
                             t-att-class="{ 'rotate-90': state.open }"
                         />
                     </t>

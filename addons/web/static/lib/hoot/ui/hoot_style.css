@@ -37,7 +37,7 @@
 *,
 *::before,
 *::after {
-    border-color: var(--gray-100);
+    border-color: transparent;
     border-style: solid;
     border-width: 0;
     box-sizing: border-box;
@@ -93,6 +93,18 @@ ul {
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+/*---------------------------------------------------------------------------*/
+/* Font awesome default size                                                 */
+/*---------------------------------------------------------------------------*/
+
+.fa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 0.75rem;
+    height: 0.75rem;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -241,7 +253,7 @@ input[type="checkbox"]:checked {
 }
 
 .hoot-info-line {
-    grid-template-columns: 80px auto;
+    grid-template-columns: 1fr auto;
 }
 
 .hoot-any,

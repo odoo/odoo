@@ -15,7 +15,7 @@ import {
     isNodeVisible,
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
-import { isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { addInteractionListener, isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     ElementMap,
     FormattedString,
@@ -43,6 +43,8 @@ import { Test } from "./test";
  *
  * @typedef {string | string[] | ((pass: boolean, raw: typeof String["raw"]) => string | string[])} AssertionMessage
  *
+ * @typedef {InteractionType | "assertion" | "error" | "step"} CaseEventType
+ *
  * @typedef {{
  *  headless: boolean;
  * }} ExpectBuilderParams
@@ -53,6 +55,8 @@ import { Test } from "./test";
  *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
  * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
+ * @typedef {import("@web/../lib/hoot-dom/hoot_dom_utils").InteractionDetails} InteractionDetails
+ * @typedef {import("@web/../lib/hoot-dom/hoot_dom_utils").InteractionType} InteractionType
  * @typedef {import("@odoo/hoot-dom").QueryRectOptions} QueryRectOptions
  * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
@@ -68,15 +72,6 @@ import { Test } from "./test";
  *  name: string;
  *  predicate: () => boolean;
  * }} MatcherSpecifications
- */
-
-/**
- * @template Async
- * @typedef {{
- *  not?: boolean;
- *  rejects?: Async;
- *  resolves?: Async;
- * }} Modifiers
  */
 
 /**
@@ -161,23 +156,12 @@ const formatError = (error) => {
 
 /**
  * @param {string} message
- * @param {boolean} not
+ * @param {number} flags
  */
-const formatMessage = (message, not) =>
-    message.replace(R_NOT, (_, ifTrue, ifFalse) => (not ? ifFalse || "" : ifTrue || ""));
-
-/**
- * @param {string} stack
- */
-const formatStack = (stack) => {
-    let stackLines = String(stack)
-        .split(/\n/g)
-        .slice(isFirefox() ? 1 : 2); // remove `saveStack` (and ´Error´ in chrome)
-    if (stackLines.length > 10) {
-        stackLines = [...stackLines.slice(0, 10), `… ${stackLines.length - 10} more`];
-    }
-    return stackLines.map((v) => Markup.text(v.trim()));
-};
+const formatMessage = (message, flags) =>
+    message.replace(R_NOT, (_, ifTrue, ifFalse) =>
+        flags & FLAGS.not ? ifFalse || "" : ifTrue || ""
+    );
 
 /**
  * @param {Iterable<any> | Record<any, any>} object
@@ -190,6 +174,23 @@ const getLength = (object) => {
         return [...object].length;
     }
     return $keys(object).length;
+};
+
+/**
+ * @param {number} depth amount of lines to remove from the stack
+ */
+const getStack = (depth) => {
+    const error = new Error();
+    if (!isFirefox()) {
+        // remove ´Error´ in chrome
+        depth++;
+    }
+    const lines = error.stack.split(R_LINE_RETURN).slice(depth + 1); // Remove `getStack`
+    const hidden = lines.splice(MAX_STACK_LENGTH);
+    if (hidden.length) {
+        lines.push(`… ${hidden.length} more`);
+    }
+    return lines.join("\n");
 };
 
 /**
@@ -273,7 +274,7 @@ const parseStyle = (styleString) =>
 
 /** @type {StringConstructor["raw"]} */
 const r = (template, ...substitutions) =>
-    new FormattedString(String.raw(template, ...substitutions), FormattedString.RAW);
+    new FormattedString(String.raw(template, ...substitutions), null);
 
 /**
  * @param {unknown} value
@@ -296,10 +297,32 @@ const roundTo = (value, digits) => {
  */
 const scopeError = (method) => new HootError(`cannot call \`${method}()\` outside of a test`);
 
-const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/;
+class CaseEvent {
+    static nextId = 1;
 
+    id = CaseEvent.nextId++;
+    label = "";
+    message = "";
+    /** @type {(string | FormattedString)[]} */
+    messageParts = [];
+    ts = $now();
+    /** @type {CaseEventType} */
+    type;
+}
+
+const R_LINE_RETURN = /\n+/g;
+const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/;
+const R_WHITE_SPACE = /\s+/g;
+
+const FLAGS = {
+    headless: 0b1,
+    not: 0b10,
+    rejects: 0b100,
+    resolves: 0b1000,
+};
 const LABEL_EXPECTED = "Expected:";
 const LABEL_RECEIVED = "Received:";
+const MAX_STACK_LENGTH = 10;
 
 /** @type {Set<Matcher>} */
 const unconsumedMatchers = new Set();
@@ -321,6 +344,8 @@ export function makeExpect(params) {
     function afterTest(options) {
         const { test } = currentResult;
 
+        removeInteractionListener?.();
+
         currentResult.done();
 
         // Expect without matchers
@@ -336,7 +361,7 @@ export function makeExpect(params) {
                 default:
                     times = [unconsumedMatchers.size, r`times`];
             }
-            currentResult.registerAssertion({
+            currentResult.registerEvent("assertion", {
                 label: "expect",
                 message: [r`called`, ...times, r`without calling any matchers`],
                 pass: false,
@@ -345,33 +370,33 @@ export function makeExpect(params) {
         }
 
         // Steps
-        if (currentResult.steps.length) {
-            currentResult.registerAssertion({
+        if (currentResult.currentSteps.length) {
+            currentResult.registerEvent("assertion", {
                 label: "step",
                 message: "unverified steps",
                 pass: false,
-                failedDetails: [Markup.red("Steps:", currentResult.steps)],
+                failedDetails: [Markup.red("Steps:", currentResult.currentSteps)],
             });
         }
 
         // Assertions count
-        if (!currentResult.assertions.length) {
-            currentResult.registerAssertion({
+        if (!currentResult.counts.assertion) {
+            currentResult.registerEvent("assertion", {
                 label: "assertions",
                 message: [r`expected at least`, 1, r`assertion, but none were run`],
                 pass: false,
             });
         } else if (
             currentResult.expectedAssertions &&
-            currentResult.assertions.length !== currentResult.expectedAssertions
+            currentResult.counts.assertion !== currentResult.expectedAssertions
         ) {
-            currentResult.registerAssertion({
+            currentResult.registerEvent("assertion", {
                 label: "assertions",
                 message: [
                     r`expected`,
                     currentResult.expectedAssertions,
                     r`assertions, but`,
-                    currentResult.assertions.length,
+                    currentResult.counts.assertion,
                     r`were run`,
                 ],
                 pass: false,
@@ -379,10 +404,10 @@ export function makeExpect(params) {
         }
 
         // Errors count
-        const errorCount = currentResult.caughtErrors;
+        const errorCount = currentResult.counts.error;
         if (currentResult.expectedErrors) {
             if (currentResult.expectedErrors !== errorCount) {
-                currentResult.registerAssertion({
+                currentResult.registerEvent("assertion", {
                     label: "errors",
                     message: [
                         r`expected`,
@@ -394,10 +419,10 @@ export function makeExpect(params) {
                     pass: false,
                 });
             }
-        } else if (errorCount) {
-            currentResult.registerAssertion({
+        } else if (currentResult.currentErrors.length) {
+            currentResult.registerEvent("assertion", {
                 label: "errors",
-                message: [errorCount, r`unverified error(s)`],
+                message: [currentResult.currentErrors.length, r`unverified error(s)`],
                 pass: false,
             });
         }
@@ -405,7 +430,7 @@ export function makeExpect(params) {
         // "Todo" tag
         if (test?.config.todo) {
             if (currentResult.pass) {
-                currentResult.registerAssertion({
+                currentResult.registerEvent("assertion", {
                     label: "TODO",
                     message: `all assertions passed: remove "todo" test modifier`,
                     pass: false,
@@ -416,7 +441,7 @@ export function makeExpect(params) {
         }
 
         if (options?.aborted) {
-            currentResult.registerAssertion({
+            currentResult.registerEvent("assertion", {
                 label: "aborted",
                 message: "test was aborted, results may not be relevant",
                 pass: false,
@@ -435,7 +460,7 @@ export function makeExpect(params) {
 
             /** @type {import("../hoot_utils").Reporting} */
             const report = {
-                assertions: currentResult.assertions.length,
+                assertions: currentResult.counts.assertion,
                 tests: 1,
             };
             if (!currentResult.pass) {
@@ -484,6 +509,7 @@ export function makeExpect(params) {
         } else {
             currentResult = new CaseResult();
         }
+        removeInteractionListener = addInteractionListener(["event", "query"], onInteraction);
     }
 
     /**
@@ -499,6 +525,17 @@ export function makeExpect(params) {
     }
 
     /**
+     * @param {CustomEvent<InteractionDetails>} event
+     */
+    function onInteraction({ detail, type }) {
+        if (!currentResult) {
+            return;
+        }
+
+        currentResult.registerEvent(type, detail);
+    }
+
+    /**
      * @param {any} value
      */
     function step(value) {
@@ -506,7 +543,7 @@ export function makeExpect(params) {
             throw scopeError("expect.step");
         }
 
-        currentResult.registerStep(value);
+        currentResult.registerEvent("step", value);
     }
 
     /**
@@ -545,13 +582,10 @@ export function makeExpect(params) {
         if (!pass) {
             const fActual = actualErrors.map(formatError);
             const fExpected = errors.map(formatError);
-            const formattedStack = formatStack(new Error().stack);
-            assertion.failedDetails = [
-                ...detailsFromValuesWithDiff(fExpected, fActual),
-                Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
-            ];
+            assertion.failedDetails = detailsFromValuesWithDiff(fExpected, fActual);
+            assertion.stack = getStack(0);
         }
-        currentResult.registerAssertion(assertion);
+        currentResult.registerEvent("assertion", assertion);
     }
 
     /**
@@ -582,13 +616,10 @@ export function makeExpect(params) {
             pass,
         };
         if (!pass) {
-            const formattedStack = formatStack(new Error().stack);
-            assertion.failedDetails = [
-                ...detailsFromValuesWithDiff(steps, actualSteps),
-                Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
-            ];
+            assertion.failedDetails = detailsFromValuesWithDiff(steps, actualSteps);
+            assertion.stack = getStack(0);
         }
-        currentResult.registerAssertion(assertion);
+        currentResult.registerEvent("assertion", assertion);
     }
 
     /**
@@ -613,7 +644,7 @@ export function makeExpect(params) {
             throw scopeError("expect");
         }
 
-        return new Matcher(currentResult, received, {}, params.headless);
+        return new Matcher(currentResult, received, params.headless ? FLAGS.headless : 0);
     }
 
     const enrichedExpect = $assign(expect, {
@@ -631,69 +662,9 @@ export function makeExpect(params) {
     /** @type {CaseResult | null} */
     let currentResult = null;
 
+    let removeInteractionListener;
+
     return [enrichedExpect, expectHooks];
-}
-
-export class Assertion {
-    static nextId = 1;
-
-    id = Assertion.nextId++;
-    /** @type {[any, any][] | null} */
-    failedDetails = null;
-    label = "";
-    message = "";
-    messageParts = [];
-    /** @type {Modifiers<false>} */
-    modifiers = { not: false, rejects: false, resolves: false };
-    pass = false;
-    ts = $now();
-
-    /**
-     * @param {Partial<Assertion & { message: AssertionMessage }>} values
-     */
-    constructor(values) {
-        let { message } = values;
-        delete values.message;
-
-        $assign(this, values);
-
-        if (typeof message === "function") {
-            message = message(this.pass, r);
-        }
-
-        const parts = Array.isArray(message) ? message : [r`${message}`];
-        for (const part of parts) {
-            if (part instanceof ElementMap) {
-                if (typeof part.selector === "string") {
-                    this.messageParts.push(
-                        r`elements matching`,
-                        new FormattedString(part.selector)
-                    );
-                } else {
-                    const elements = part.getElements();
-                    this.messageParts.push(
-                        r`elements`,
-                        new FormattedString(elements.length === 1 ? elements[0] : elements)
-                    );
-                }
-            } else if (part instanceof FormattedString) {
-                this.messageParts.push(
-                    new FormattedString(
-                        formatMessage(part.toString(), this.modifiers.not),
-                        part.type
-                    )
-                );
-            } else if (typeof part === "string") {
-                this.messageParts.push(
-                    new FormattedString(formatMessage(part, this.modifiers.not))
-                );
-            } else {
-                this.messageParts.push(new FormattedString(part));
-            }
-        }
-
-        this.message = this.messageParts.join(" ");
-    }
 }
 
 export class CaseResult {
@@ -701,20 +672,24 @@ export class CaseResult {
     pass = true;
     /** @type {Test | null} */
     test = null;
-    ts = $now();
+    ts = Math.floor($now());
 
-    // Assertions
-    /** @type {Assertion[]} */
-    assertions = [];
+    /** @type {CaseEvent[]} */
+    events = [];
+    /** @type {Record<CaseEventType, number>} */
+    counts = {
+        assertion: 0,
+        error: 0,
+        event: 0,
+        query: 0,
+        step: 0,
+    };
+
     expectedAssertions = 0;
-    /** @type {any[]} */
-    steps = [];
-
-    // Errors
-    caughtErrors = 0;
-    /** @type {Error[]} */
-    errors = [];
     expectedErrors = 0;
+
+    currentErrors = [];
+    currentSteps = [];
 
     /**
      * @param {Test | null} [test]
@@ -726,15 +701,22 @@ export class CaseResult {
     }
 
     consumeErrors() {
-        const errors = this.errors;
-        this.errors = [];
+        const errors = this.currentErrors;
+        this.currentErrors = [];
         return errors;
     }
 
     consumeSteps() {
-        const steps = this.steps;
-        this.steps = [];
+        const steps = this.currentSteps;
+        this.currentSteps = [];
         return steps;
+    }
+
+    /**
+     * @param {CaseEventType} type
+     */
+    getEvents(type) {
+        return this.events.filter((event) => event.type === type);
     }
 
     done() {
@@ -742,27 +724,36 @@ export class CaseResult {
     }
 
     /**
-     * @param {Partial<Assertion>} assertionSpecs
-     */
-    registerAssertion(assertionSpecs) {
-        const assertion = new Assertion(assertionSpecs);
-        this.assertions.push(assertion);
-        this.pass &&= assertion.pass;
-    }
-
-    /**
-     * @param {Error} error
-     */
-    registerError(error) {
-        this.errors.push(error);
-        this.caughtErrors++;
-    }
-
-    /**
+     *
+     * @param {CaseEventType} type
      * @param {any} value
      */
-    registerStep(value) {
-        this.steps.push(deepCopy(value));
+    registerEvent(type, value) {
+        let caseEvent;
+        switch (type) {
+            case "assertion": {
+                caseEvent = new Assertion(value);
+                this.pass &&= caseEvent.pass;
+                break;
+            }
+            case "error": {
+                caseEvent = new CaseError(value);
+                this.currentErrors.push(value);
+                break;
+            }
+            case "event":
+            case "query": {
+                caseEvent = new DOMCaseEvent(type, value);
+                break;
+            }
+            case "step": {
+                caseEvent = new Step(value);
+                this.currentSteps.push(deepCopy(value));
+                break;
+            }
+        }
+        this.events.push(caseEvent);
+        this.counts[type]++;
     }
 }
 
@@ -774,6 +765,11 @@ export class CaseResult {
 export class Matcher {
     /**
      * @private
+     * @type {number}
+     */
+    _flags = 0;
+    /**
+     * @private
      * @type {R}
      */
     _received = null;
@@ -782,32 +778,16 @@ export class Matcher {
      * @type {CaseResult}
      */
     _result;
-    /**
-     * @private
-     */
-    _headless = false;
-    /**
-     * @private
-     * @type {Modifiers<Async>}
-     */
-    _modifiers = {
-        not: false,
-        rejects: false,
-        resolves: false,
-    };
 
     /**
      * @param {CaseResult} result
      * @param {R} received
-     * @param {Modifiers<Async>} modifiers
-     * @param {boolean} headless
+     * @param {number} flags
      */
-    constructor(result, received, modifiers, headless) {
+    constructor(result, received, flags) {
+        this._flags = flags;
         this._result = result;
-
         this._received = received;
-        this._headless = headless;
-        this._modifiers = modifiers;
 
         unconsumedMatchers.add(this);
     }
@@ -827,10 +807,10 @@ export class Matcher {
      *  expect("foo").not.toBe("bar");
      */
     get not() {
-        if (this._modifiers.not) {
+        if (this.flags & FLAGS.not) {
             throw matcherModifierError("not", `matcher is already negated`);
         }
-        return this._clone({ not: true });
+        return this._clone(FLAGS.not);
     }
 
     /**
@@ -843,13 +823,13 @@ export class Matcher {
      *  await expect(Promise.reject("foo")).rejects.toBe("foo");
      */
     get rejects() {
-        if (this._modifiers.rejects || this._modifiers.resolves) {
+        if (this._flags & (FLAGS.rejects | FLAGS.resolves)) {
             throw matcherModifierError(
                 "rejects",
                 `matcher value has already been wrapped in a promise resolver`
             );
         }
-        return this._clone({ rejects: true });
+        return this._clone(FLAGS.rejects);
     }
 
     /**
@@ -862,13 +842,13 @@ export class Matcher {
      *  await expect(Promise.resolve("foo")).resolves.toBe("foo");
      */
     get resolves() {
-        if (this._modifiers.rejects || this._modifiers.resolves) {
+        if (this._flags & (FLAGS.rejects | FLAGS.resolves)) {
             throw matcherModifierError(
                 "resolves",
                 `matcher value has already been wrapped in a promise resolver`
             );
         }
-        return this._clone({ resolves: true });
+        return this._clone(FLAGS.resolves);
     }
 
     //-------------------------------------------------------------------------
@@ -1304,7 +1284,7 @@ export class Matcher {
         ensureArguments(arguments, "any", ["object", null]);
 
         return this._resolve((received) => {
-            const isAsync = this._modifiers.rejects || this._modifiers.resolves;
+            const isAsync = this._flags & (FLAGS.rejects | FLAGS.resolves);
             let returnValue;
             if (isAsync) {
                 returnValue = received;
@@ -1608,7 +1588,7 @@ export class Matcher {
         ensureArguments(arguments, ["string", "string[]"], ["object", null]);
 
         const rawClassNames = ensureArray(className);
-        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(/\s+/g));
+        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE));
 
         return this._resolve((received) => {
             const elMap = new ElementMap(received, (el) => [...el.classList]);
@@ -1983,16 +1963,11 @@ export class Matcher {
 
     /**
      * @private
-     * @param {Modifiers} modifiers
+     * @param {number} flags
      */
-    _clone(modifiers) {
+    _clone(flags) {
         unconsumedMatchers.delete(this);
-        return new this.constructor(
-            this._result,
-            this._received,
-            { ...this._modifiers, ...modifiers },
-            this._headless
-        );
+        return new this.constructor(this._result, this._received, this._flags | flags);
     }
 
     /**
@@ -2002,12 +1977,12 @@ export class Matcher {
      */
     _resolve(specCallback) {
         unconsumedMatchers.delete(this);
-        if (this._modifiers.rejects || this._modifiers.resolves) {
+        if (this._flags & (FLAGS.rejects | FLAGS.resolves)) {
             return Promise.resolve(this._received).then(
                 /** @param {PromiseFulfilledResult<R>} reason */
                 (result) => {
-                    if (this._modifiers.rejects) {
-                        this._result.registerAssertion({
+                    if (this._flags & FLAGS.rejects) {
+                        this._result.registerEvent("assertion", {
                             label: "rejects",
                             message: [
                                 r`expected promise to reject, instead resolved with:`,
@@ -2022,8 +1997,8 @@ export class Matcher {
                 },
                 /** @param {PromiseRejectedResult} reason */
                 (reason) => {
-                    if (this._modifiers.resolves) {
-                        this._result.registerAssertion({
+                    if (this._flags & FLAGS.resolves) {
+                        this._result.registerEvent("assertion", {
                             label: "resolves",
                             message: [
                                 r`expected promise to resolve, instead rejected with:`,
@@ -2061,7 +2036,7 @@ export class Matcher {
             );
         }
 
-        const { not } = this._modifiers;
+        const not = this._flags & FLAGS.not;
         let pass = predicate();
         if (not) {
             pass = !pass;
@@ -2069,25 +2044,22 @@ export class Matcher {
         const assertion = {
             label: name,
             message,
-            modifiers: this._modifiers,
+            flags: this._flags,
             pass,
         };
         if (!pass) {
-            const formattedStack = formatStack(currentStack);
-            assertion.failedDetails = [
-                ...failedDetails(),
-                Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
-            ].filter(Boolean);
+            assertion.failedDetails = failedDetails().filter(Boolean);
+            assertion.stack = currentStack;
         }
-        this._result.registerAssertion(assertion);
+        this._result.registerEvent("assertion", assertion);
     }
 
     /**
      * @private
      */
     _saveStack() {
-        if (!this._headless) {
-            currentStack = new Error().stack;
+        if (!this._flags & FLAGS.headless) {
+            currentStack = getStack(1);
         }
     }
 
@@ -2127,5 +2099,127 @@ export class Matcher {
                     elMap.getValues((val) => detailsFromValuesWithDiff(expected, val)),
             };
         });
+    }
+}
+
+//-----------------------------------------------------------------------------
+// Case events
+//-----------------------------------------------------------------------------
+
+export class Assertion extends CaseEvent {
+    type = "assertion";
+
+    /**
+     * @param {Partial<Assertion & { message: AssertionMessage }>} values
+     */
+    constructor(values) {
+        super();
+
+        this.label = values.label;
+        /** @type {[any, any][] | null} */
+        this.failedDetails = values.failedDetails || null;
+        this.flags = 0;
+        this.pass = values.pass || false;
+        /** @type {string} */
+        this.stack = values.stack;
+
+        let { message } = values;
+        if (typeof message === "function") {
+            message = message(this.pass, r);
+        }
+
+        const parts = Array.isArray(message) ? message : [r`${message}`];
+        for (const part of parts) {
+            if (part instanceof ElementMap) {
+                if (typeof part.selector === "string") {
+                    this.messageParts.push(
+                        r`elements matching`,
+                        new FormattedString(part.selector)
+                    );
+                } else {
+                    const elements = part.getElements();
+                    this.messageParts.push(
+                        r`elements`,
+                        new FormattedString(elements.length === 1 ? elements[0] : elements)
+                    );
+                }
+            } else if (part instanceof FormattedString) {
+                this.messageParts.push(
+                    new FormattedString(
+                        formatMessage(part.toString(), this.flags & FLAGS.not),
+                        part.type
+                    )
+                );
+            } else if (typeof part === "string") {
+                this.messageParts.push(
+                    new FormattedString(formatMessage(part, this.flags & FLAGS.not))
+                );
+            } else {
+                this.messageParts.push(new FormattedString(part));
+            }
+        }
+
+        this.message = this.messageParts.join(" ");
+    }
+
+    /**
+     * @param {keyof typeof FLAGS} name
+     */
+    hasFlag(name) {
+        return this.flags & FLAGS[name];
+    }
+}
+
+export class DOMCaseEvent extends CaseEvent {
+    /**
+     * @param {InteractionType} type
+     * @param {InteractionDetails} details
+     */
+    constructor(type, [name, args, returnValue]) {
+        super();
+
+        this.type = type;
+        this.label = name;
+        if (args.length) {
+            this.messageParts.push(new FormattedString(args[0]));
+        }
+        if (type !== "event" && returnValue) {
+            this.messageParts.push(":", new FormattedString(returnValue));
+        }
+        this.message = this.messageParts.join(" ");
+    }
+}
+
+export class CaseError extends CaseEvent {
+    type = "error";
+
+    /**
+     * @param {Error} error
+     */
+    constructor(error) {
+        super();
+
+        /** @type {Error | null} */
+        this.cause = error.cause || null;
+        this.label = error.name;
+        this.message = error.message;
+        this.messageParts = error.message.split(R_WHITE_SPACE);
+        /** @type {string} */
+        this.stack = error.stack;
+    }
+}
+
+export class Step extends CaseEvent {
+    type = "step";
+    label = "step";
+
+    /**
+     * @param {any} value
+     */
+    constructor(value) {
+        super();
+
+        this.message = new FormattedString(value);
+        this.messageParts = [this.message.toString()];
     }
 }

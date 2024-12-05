@@ -31,39 +31,11 @@ const { customElements, document, getSelection, HTMLElement, WeakSet } = globalT
 // Internal
 //-----------------------------------------------------------------------------
 
-class HootFixtureElement extends HTMLElement {
-    connectedCallback() {
-        currentFixture = this;
-    }
-
-    disconnectedCallback() {
-        currentFixture = null;
-    }
-}
-
-const FIXTURE_COMMON_STYLE = [
-    "position: fixed",
-    "height: 100vh",
-    "width: 100vw",
-    "left: 50%",
-    "top: 50%",
-    "transform: translate(-50%, -50%)",
-];
-const FIXTURE_DEBUG_STYLE = [
-    ...FIXTURE_COMMON_STYLE,
-    "background-color: inherit",
-    "color: inherit",
-    "z-index: 3",
-].join(";");
-const FIXTURE_STYLE = [...FIXTURE_COMMON_STYLE, "opacity: 0", "z-index: -1"].join(";");
-
 const destroyed = new WeakSet();
 let allowFixture = false;
 /** @type {HootFixtureElement | null} */
 let currentFixture = null;
 let shouldPrepareNextFixture = true; // Prepare setup for first test
-
-customElements.define("hoot-fixture", HootFixtureElement);
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -100,20 +72,23 @@ export function makeFixtureManager(runner) {
         }
         if (!currentFixture) {
             // Prepare fixture once to not force layouts/reflows
-            const preFixture = document.createElement("hoot-fixture");
+            /** @type {HootFixtureElement} */
+            const fixture = document.createElement(HootFixtureElement.TAG_NAME);
             if (runner.debug || runner.config.headless) {
-                preFixture.setAttribute("style", FIXTURE_DEBUG_STYLE);
-            } else {
-                preFixture.setAttribute("style", FIXTURE_STYLE);
+                fixture.show();
             }
 
             const { width, height } = getCurrentDimensions();
-            preFixture.style.width = `${width}px`;
-            preFixture.style.height = `${height}px`;
+            if (width !== window.innerWidth) {
+                fixture.style.width = `${width}px`;
+            }
+            if (height !== window.innerHeight) {
+                fixture.style.height = `${height}px`;
+            }
 
-            setupEventActions(preFixture);
+            setupEventActions(fixture);
 
-            document.body.appendChild(preFixture);
+            document.body.appendChild(fixture);
         }
         return currentFixture;
     };
@@ -142,4 +117,66 @@ export function makeFixtureManager(runner) {
         setup: setupFixture,
         get: getFixture,
     };
+}
+
+export class HootFixtureElement extends HTMLElement {
+    static CLASSES = {
+        animations: "allow-animations",
+        show: "show-fixture",
+    };
+    static TAG_NAME = "hoot-fixture";
+
+    static styleElement = document.createElement("style");
+
+    static {
+        customElements.define(this.TAG_NAME, this);
+        this.styleElement.innerText = /* css */ `
+            ${this.TAG_NAME} {
+                position: fixed !important;
+                height: 100vh;
+                width: 100vw;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                opacity: 0;
+                z-index: -1;
+            }
+
+            ${this.TAG_NAME}.${this.CLASSES.show} {
+                background-color: inherit;
+                color: inherit;
+                opacity: 1;
+                z-index: 3;
+            }
+
+            ${this.TAG_NAME}:not(.${this.CLASSES.animations}) * {
+                animation: none !important;
+                transition: none !important;
+            }
+        `;
+    }
+
+    connectedCallback() {
+        currentFixture = this;
+    }
+
+    disconnectedCallback() {
+        currentFixture = null;
+    }
+
+    enableAnimations() {
+        this.classList.add(this.constructor.CLASSES.animations);
+
+        return function disableAnimations() {
+            this.classList.remove(this.constructor.CLASSES.animations);
+        };
+    }
+
+    hide() {
+        this.classList.remove(this.constructor.CLASSES.show);
+    }
+
+    show() {
+        this.classList.add(this.constructor.CLASSES.show);
+    }
 }

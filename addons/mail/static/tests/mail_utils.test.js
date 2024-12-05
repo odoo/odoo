@@ -11,6 +11,7 @@ import {
     startServer,
 } from "./mail_test_helpers";
 import { useSequential } from "@mail/utils/common/hooks";
+import { delay } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -193,7 +194,7 @@ test("isSequential doesn't execute intermediate call.", async () => {
         const i = index;
         return sequential(async () => {
             expect.step(i.toString());
-            return new Promise((r) => setTimeout(() => r(i), 1));
+            return delay(1);
         });
     };
     const result = await Promise.all([sequence(), sequence(), sequence(), sequence(), sequence()]);

@@ -55,12 +55,12 @@ export class HootConfigDropdown extends Component {
                         <t t-foreach="executionOrders" t-as="order" t-key="order.value">
                             <button
                                 type="button"
-                                class="px-1 transition-colors"
-                                t-att-class="{ 'border rounded text-primary border-primary': config.order === order.value }"
+                                class="border rounded transition-colors"
+                                t-att-class="{ 'text-primary border-primary': config.order === order.value }"
                                 t-att-title="order.title"
                                 t-on-click.stop="() => this.setExecutionOrder(order.value)"
                             >
-                                <i class="fa transition" t-att-class="{ [order.icon]: true }"/>
+                                <i class="fa w-5 h-5" t-att-class="{ [order.icon]: true }"/>
                             </button>
                         </t>
                     </div>
@@ -205,7 +205,7 @@ export class HootConfigDropdown extends Component {
 
                     <button
                         type="button"
-                        class="p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
+                        class="flex items-center gap-1 p-1 hover:bg-gray-300 dark:hover:bg-gray-700"
                         title="Toggle the color scheme of the UI"
                         t-on-click.stop="toggleColorScheme"
                     >
