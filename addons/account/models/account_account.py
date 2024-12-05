@@ -383,9 +383,19 @@ class AccountAccount(models.Model):
         return [('id', 'in', self.with_company(self.env.company.root_id).sudo()._search([('code_store', operator, value)]))]
 
     def _inverse_code(self):
+        code_by_record = {record.id: record.code for record in self}
+
         for record, record_root in zip(self, self.with_company(self.env.company.root_id).sudo()):
             # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
-            record_root.code_store = record.code
+            record_root.code_store = code_by_record[record.id]
+
+        # Because changing the code for one company should also change it for all the companies which
+        # share the same root_id, we need to invalidate the cache for all those companies. Because
+        # we can't know which companies share the same root_id unless we do a database search, it's more
+        # efficient to invalidate the cache, which will force recomputation based on `cache_store`.
+        # However, we make sure that we insert back the value for the active company.
+        self.env.cache.invalidate(spec=[(self._fields['code'], code_by_record)])
+        self.env.cache.update(record, self._fields['code'], code_by_record.values(), dirty=False, check_dirty=False)
 
     @api.depends_context('company')
     @api.depends('code')
