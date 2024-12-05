@@ -256,7 +256,9 @@ function* generateEntries(content) {
                 yield [key, directive, value[directive]];
             }
         } else {
-            const [selector, directive] = key.split(":");
+            const lastColon = key.lastIndexOf(":");
+            const selector = key.slice(0, lastColon);
+            const directive = key.slice(lastColon + 1);
             yield [selector, directive, value];
         }
     }
