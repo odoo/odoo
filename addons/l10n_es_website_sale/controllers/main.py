@@ -16,5 +16,5 @@ class L10nESWebsiteSale(WebsiteSale):
         super()._complete_address_values(address_values, address_type, use_same, order_sudo)
         vat_without_country_code = address_values.get('vat', '')[2:]
         address_values.update({
-            'is_company': not vat_without_country_code[0].isdigit() and vat_without_country_code[0] not in ('X', 'Y', 'Z'),
+            'is_company': vat_without_country_code and not vat_without_country_code[0].isdigit() and vat_without_country_code[0] not in ('X', 'Y', 'Z'),
         })
