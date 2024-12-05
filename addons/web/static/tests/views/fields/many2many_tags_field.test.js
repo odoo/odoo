@@ -101,9 +101,7 @@ class Turtle extends models.Model {
 
 defineModels([Partner, PartnerType, Turtle]);
 
-onRpc("has_group", () => {
-    return true;
-});
+onRpc("has_group", () => true);
 
 test.tags("desktop");
 test("Many2ManyTagsField with and without color on desktop", async () => {
@@ -143,7 +141,7 @@ test("Many2ManyTagsField with and without color on desktop", async () => {
     // Show the color list
     expect(".o_colorlist").toHaveCount(0);
     await contains("[name=partner_ids] .o_tag").click();
-    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_colorlist").toHaveCount(2);
     await contains(getFixture()).click();
 
     // Add a tag to second field
@@ -201,7 +199,7 @@ test("Many2ManyTagsField with and without color on mobile", async () => {
     // Show the color list
     expect(".o_colorlist").toHaveCount(0);
     await contains("[name=partner_ids] .o_tag").click();
-    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_colorlist").toHaveCount(2);
     await contains(getFixture()).click();
 
     // Add a tag to second field
@@ -222,7 +220,7 @@ test("Many2ManyTagsField with and without color on mobile", async () => {
 
 test.tags("desktop");
 test("Many2ManyTagsField with color: rendering and edition on desktop", async () => {
-    expect.assertions(26);
+    expect.assertions(23);
 
     Partner._records[0].timmy = [12, 14];
     PartnerType._records.push({ id: 13, name: "red", color: 8 });
@@ -277,25 +275,18 @@ test("Many2ManyTagsField with color: rendering and edition on desktop", async ()
     // save the record (should do the write RPC with the correct commands)
     await clickSave();
 
-    // checkbox 'Hide in Kanban'
+    // 'Hidden in Kanban'
     const badgeElement = queryOne(".o_field_many2many_tags .badge:eq(1)"); // selects 'red' tag
     await contains(badgeElement).click();
-    expect(".o_tag_popover .form-check input").toHaveCount(1);
+    expect(".o_colorlist:eq(1) button").toHaveCount(1);
 
-    expect(".o_tag_popover .form-check input").not.toBeChecked();
+    expect(".o_colorlist:eq(1) button").not.toHaveClass("o_colorlist_selected");
 
-    await contains(".o_tag_popover input[type='checkbox']").click();
+    await contains(".o_colorlist:eq(1)").click();
     expect(badgeElement).toHaveAttribute("data-color", "0");
 
     await contains(badgeElement).click();
-    expect(".o_tag_popover .form-check input").toBeChecked();
-
-    await contains(".o_tag_popover input[type='checkbox']").click();
-
-    expect(badgeElement).toHaveAttribute("data-color", "8");
-
-    await contains(badgeElement).click();
-    expect(".o_tag_popover .form-check input").not.toBeChecked();
+    expect(".o_colorlist:eq(1) button").toHaveClass("o_colorlist_selected");
 });
 
 test.tags("desktop");
@@ -818,16 +809,16 @@ test("Many2ManyTagsField: toggle colorpicker with multiple tags", async () => {
 
     // click on the badge to open colorpicker
     await contains(".o_field_many2many_tags .badge").click();
-    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_colorlist").toHaveCount(2);
 
     await contains(".o_field_many2many_tags [title=silver]").click();
-    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_colorlist").toHaveCount(2);
 
     await contains(".o_field_many2many_tags [title=silver]").click();
     expect(".o_colorpicker").toHaveCount(0);
 
     await contains(".o_field_many2many_tags [title=silver]").click();
-    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_colorlist").toHaveCount(2);
 
     await contains(getFixture()).click();
     expect(".o_colorpicker").toHaveCount(0);
@@ -854,7 +845,7 @@ test("Many2ManyTagsField: toggle colorpicker multiple times", async () => {
     // click on the badge to open colorpicker
     await contains(".o_field_many2many_tags .badge").click();
 
-    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_colorlist").toHaveCount(2);
 
     // click on the badge again to close colorpicker
     await contains(".o_field_many2many_tags .badge").click();
@@ -865,13 +856,13 @@ test("Many2ManyTagsField: toggle colorpicker multiple times", async () => {
     // click on the badge to open colorpicker
     await contains(".o_field_many2many_tags .badge").click();
 
-    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_colorlist").toHaveCount(2);
 
     // click on the colorpicker, but not on a color
     await contains(".o_colorlist").click();
 
     expect(".o_field_many2many_tags .badge").toHaveAttribute("data-color", "0");
-    expect(".o_colorlist").toHaveCount(1);
+    expect(".o_colorlist").toHaveCount(2);
 
     await contains('.o_colorlist button[data-color="2"]').click();
 

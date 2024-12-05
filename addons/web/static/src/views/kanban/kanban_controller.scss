@@ -4,9 +4,6 @@
     margin-bottom: 0px;
     min-width: 9rem;
 
-    // Records colours
-    @include o-kanban-record-color;
-
     $o-kanban-manage-toggle-height: 35px;
 
     // Arbitrary value to place the dropdown-menu exactly below the
@@ -104,7 +101,6 @@
     --KanbanRecord-margin-h: #{$o-kanban-record-margin};
     --KanbanRecord-padding-v: #{$o-kanban-inside-vgutter};
     --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter};
-    --KanbanRecord-gap-v: #{$o-kanban-inner-hmargin};
 
     --KanbanRecord--small-width: #{$o-kanban-small-record-width};
 
@@ -237,7 +233,7 @@
                 cursor: default;
             }
         }
-       
+
         &.o_kanban_hover {
             background-color: var(--KanbanColumn__highlight-background) !important;
             box-shadow: -1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset,

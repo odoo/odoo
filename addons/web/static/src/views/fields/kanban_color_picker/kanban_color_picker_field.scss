@@ -5,11 +5,9 @@
     > li {
         display: inline-block;
         margin: $o-kanban-inner-hmargin $o-kanban-inner-hmargin 0 0;
-        border: 1px solid white;
-        box-shadow: 0 0 0 1px map-get($grays, '300');
 
         > a {
-            display: block;
+            display: inline-block;
 
             &::after {
                 content: "";
@@ -17,11 +15,15 @@
                 width: 20px;
                 height: 15px;
             }
-        }
-
-        // No Color
-        &:first-child > a:after {
-            background: linear-gradient(45deg, rgba($dropdown-bg, 0) 0%, rgba($dropdown-bg, 0) 48%, $danger 48%, $danger 52%, rgba($dropdown-bg, 0) 52%, rgba($dropdown-bg, 0) 100%);
+            &.o_kanban_color_selected, &:active {
+                &::after {
+                    outline: 1px solid $o-gray-800 !important;
+                    outline-offset: 1px;
+                }
+            }
+            &.o_kanban_color_0::after {
+                border: 1px solid $o-gray-800;
+            }
         }
     }
 }
@@ -29,8 +31,12 @@
 @mixin o-kanban-colorpicker-colors {
     @for $size from 2 through length($o-colors) {
         // Note: the first color is not defined as it is the 'no color' for kanban
-        .o_kanban_color_#{$size - 1}:after {
-            background-color: nth($o-colors, $size);
+        .o_kanban_color_#{$size - 1} {
+            $-bg: nth($o-colors, $size);
+            background-color: $-bg;
+            &:hover {
+                box-shadow: 0 0 0 1px $-bg !important;
+            }
         }
     }
 }

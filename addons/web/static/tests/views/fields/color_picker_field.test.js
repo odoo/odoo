@@ -107,14 +107,14 @@ test("color picker in editable list view", async () => {
     expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(1);
     await contains(".o_data_row:nth-child(1) .o_field_color_picker button").click();
     expect(".o_data_row:nth-child(1).o_selected_row").toHaveCount(1);
-    expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(12);
+    expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(13);
     await contains(
         ".o_data_row:nth-child(1) .o_field_color_picker .o_colorlist_item_color_6"
     ).click();
-    expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(12);
+    expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(13);
     await contains(".o_data_row:nth-child(2) .o_data_cell").click();
     expect(".o_data_row:nth-child(1) .o_field_color_picker button").toHaveCount(1);
-    expect(".o_data_row:nth-child(2) .o_field_color_picker button").toHaveCount(12);
+    expect(".o_data_row:nth-child(2) .o_field_color_picker button").toHaveCount(13);
 });
 
 test("column widths: dont overflow color picker in list", async () => {
