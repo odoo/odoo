@@ -274,9 +274,9 @@ class HrExpense(models.Model):
 
             expense.label_currency_rate = _(
                 '1 %(exp_cur)s = %(rate)s %(comp_cur)s',
-                exp_cur=expense.currency_id.name,
+                exp_cur=expense.currency_id.name or self.env.company.currency_id.name,
                 rate=float_repr(expense.currency_rate, 6),
-                comp_cur=expense.company_currency_id.name,
+                comp_cur=expense.company_currency_id.name or self.env.company.currency_id.name,
             )
 
     @api.depends('currency_id', 'company_currency_id')
@@ -287,7 +287,7 @@ class HrExpense(models.Model):
     @api.depends('product_id')
     def _compute_from_product(self):
         for expense in self:
-            expense.product_has_cost = expense.product_id and not expense.company_currency_id.is_zero(expense.product_id.standard_price)
+            expense.product_has_cost = expense.product_id and expense.company_id and not expense.company_currency_id.is_zero(expense.product_id.standard_price)
             expense.product_has_tax = bool(expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id)))
 
     @api.depends('product_id.uom_id')
@@ -438,7 +438,7 @@ class HrExpense(models.Model):
                     company=expense.company_id,
                 )[product_id.id]
             else:
-                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
+                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity and expense.company_id else 0.
 
     def _needs_product_price_computation(self):
         # Hook to be overridden.
