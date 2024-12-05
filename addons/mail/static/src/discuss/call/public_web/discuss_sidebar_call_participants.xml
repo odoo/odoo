@@ -22,7 +22,7 @@
             'ps-4 pe-2': props.compact === undefined and !compact,
             'px-2': props.compact === false,
             'rounded-3': props.compact === undefined,
-            'opacity-75': props.thread.notEq(rtc.state.channel) and compact,
+            'opacity-75': props.thread.notEq(rtc.channel) and compact,
         }">
             <button class="btn btn-link p-1 m-n1 align-self-start" t-if="!compact" t-on-click="() => state.expanded = !state.expanded">
                 <i class="oi o-xxsmaller text-muted me-1" t-att-class="{'oi-chevron-right': !state.expanded, 'oi-chevron-down': state.expanded}" t-att-title="title"/>
