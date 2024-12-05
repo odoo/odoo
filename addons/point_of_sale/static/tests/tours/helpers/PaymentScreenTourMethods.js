@@ -223,6 +223,15 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
                 }
             ]
         }
+        isInvoiceButtonNotChecked() {
+            return [
+                {
+                    content: "check invoice button is checked",
+                    trigger: ".js_invoice:not(.highlight)",
+                    run: () => {},
+                },
+            ];
+        }
     }
 
     class Execute {
