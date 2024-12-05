@@ -19,6 +19,7 @@ const {
     clearTimeout,
     Error,
     Math: { ceil: $ceil, floor: $floor, max: $max, min: $min },
+    parseInt,
     performance,
     Promise,
     requestAnimationFrame,
@@ -69,6 +70,16 @@ const idToTimeout = (id) => Number(id.slice(ID_PREFIX.timeout.length));
  */
 const intervalToId = (id) => ID_PREFIX.interval + String(id);
 
+/**
+ * Converts a given value to a **natural number** (or 0 if failing to do so).
+ *
+ * @param {unknown} value
+ */
+const parseNat = (value) => {
+    const int = parseInt(value, 10);
+    return int > 0 ? int : 0;
+};
+
 const now = () => (freezed ? 0 : $performanceNow()) + timeOffset;
 
 /**
@@ -99,7 +110,7 @@ let timeOffset = 0;
  * @param {number} [frameCount]
  */
 export function advanceFrame(frameCount) {
-    return advanceTime(frameDelay * $max(1, frameCount));
+    return advanceTime(frameDelay * parseNat(frameCount));
 }
 
 /**
@@ -112,6 +123,8 @@ export function advanceFrame(frameCount) {
  * @returns {Promise<number>} time consumed by timers (in ms).
  */
 export function advanceTime(ms) {
+    ms = parseNat(ms);
+
     const targetTime = now() + ms;
     let remaining = ms;
     /** @type {ReturnType<typeof getNextTimerValues>} */
@@ -161,14 +174,14 @@ export function cancelAllTimers() {
     }
 }
 
-export async function cleanupTime() {
+export function cleanupTime() {
     allowTimers = false;
     freezed = false;
 
     cancelAllTimers();
 
     // Wait for remaining async code to run
-    await delay();
+    return delay();
 }
 
 /**
@@ -256,9 +269,7 @@ export function mockedSetInterval(callback, ms, ...args) {
         return 0;
     }
 
-    if (isNaN(ms) || !ms || ms < 0) {
-        ms = 0;
-    }
+    ms = parseNat(ms);
 
     const handler = () => {
         if (allowTimers) {
@@ -283,9 +294,7 @@ export function mockedSetTimeout(callback, ms, ...args) {
         return 0;
     }
 
-    if (isNaN(ms) || !ms || ms < 0) {
-        ms = 0;
-    }
+    ms = parseNat(ms);
 
     const handler = () => {
         mockedClearTimeout(timeoutId);
@@ -311,15 +320,13 @@ export function resetTimeOffset() {
  * @see {@link advanceTime}
  * @returns {Promise<number>} time consumed by timers (in ms).
  */
-export async function runAllTimers() {
+export function runAllTimers() {
     if (!timers.size) {
         return 0;
     }
 
     const endts = $max(...[...timers.values()].map(([, init, delay]) => init + delay));
-    const ms = await advanceTime($ceil(endts - now()));
-
-    return ms;
+    return advanceTime($ceil(endts - now()));
 }
 
 /**
@@ -328,7 +335,8 @@ export async function runAllTimers() {
  * @param {number} frameRate
  */
 export function setFrameRate(frameRate) {
-    if (!Number.isInteger(frameRate) || frameRate <= 0 || frameRate > 1000) {
+    frameRate = parseNat(frameRate);
+    if (frameRate < 1 || frameRate > 1000) {
         throw new Error("frame rate must be an number between 1 and 1000");
     }
     frameDelay = 1000 / frameRate;
