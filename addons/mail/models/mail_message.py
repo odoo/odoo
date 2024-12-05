@@ -1109,10 +1109,13 @@ class MailMessage(models.Model):
                 ),
                 Store.One(
                     "thread",
-                    Store.Attr(
-                        "modelName",
-                        lambda thread: self.env["ir.model"]._get(thread._name).display_name,
-                    ),
+                    [
+                        Store.Attr(
+                            "modelName",
+                            lambda thread: self.env["ir.model"]._get(thread._name).display_name,
+                        ),
+                        "display_name",
+                    ],
                     as_thread=True,
                 ),
             ],
