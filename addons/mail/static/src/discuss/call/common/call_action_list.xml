@@ -4,7 +4,7 @@
     <t t-name="discuss.CallActionList">
         <div class="o-discuss-CallActionList d-flex flex-column justify-content-center" t-attf-class="{{ className }}" t-ref="root">
             <div class="d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
-                <t t-if="isOfActiveCall and rtc.selfSession">
+                <t t-if="isOfActiveCall">
                     <t t-foreach="callActions.actions.slice(0, isMobileOS ? 3 : 4)" t-as="action" t-key="action_index">
                         <t t-call="discuss.CallActionList.actionButton" />
                     </t>

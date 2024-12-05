@@ -168,6 +168,11 @@ export class Rtc extends Record {
             return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
         },
     });
+    syncState = Record.one("CallSyncState", {
+        compute() {
+            return {};
+        },
+    });
     selfSession = Record.one("discuss.channel.rtc.session");
     serverInfo;
     /**
