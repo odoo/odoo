@@ -276,9 +276,9 @@ class GamificationChallenge(models.Model):
         yesterday = fields.Date.to_string(date.today() - timedelta(days=1))
         self.env.cr.execute("""SELECT gg.id
                         FROM gamification_goal as gg
-                        JOIN bus_presence as bp ON bp.user_id = gg.user_id
-                       WHERE gg.write_date <= bp.last_presence
-                         AND bp.last_presence >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
+                        JOIN mail_presence as mp ON mp.user_id = gg.user_id
+                       WHERE gg.write_date <= mp.last_presence
+                         AND mp.last_presence >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
                          AND gg.closed IS NOT TRUE
                          AND gg.challenge_id IN %(challenge_ids)s
                          AND (gg.state = 'inprogress'

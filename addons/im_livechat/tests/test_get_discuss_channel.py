@@ -314,7 +314,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
     def test_only_active_livechats_returned_by_init_messaging(self):
         self.authenticate(None, None)
         operator = new_test_user(self.env, login="John")
-        self.env["bus.presence"].create({"user_id": operator.id, "status": "online"})
+        self.env["mail.presence"].create({"user_id": operator.id, "status": "online"})
         livechat_channel = self.env["im_livechat.channel"].create(
             {"name": "Customer Support", "user_ids": [operator.id]}
         )
