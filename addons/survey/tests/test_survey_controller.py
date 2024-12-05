@@ -103,3 +103,25 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
                 self.assertEqual(response.json()['result'][0], expected_correct_answers)
 
                 user_input.invalidate_recordset() # TDE note: necessary as lots of sudo in controllers messing with cache
+
+    def test_general_print_of_a_survey_with_token_access(self):
+        survey = self.env['survey.survey'].with_user(self.survey_manager).create({
+            'title': 'Test Survey with one question accessible by token',
+            'access_mode': 'token',
+            'users_login_required': False,
+            'users_can_go_back': False,
+        })
+        self.env['survey.question'].with_user(self.survey_manager).create({
+            'title': 'A or B',
+            'survey_id': survey.id,
+            'sequence': 1,
+            'is_page': False,
+            'question_type': 'simple_choice',
+        })
+        self.authenticate(self.survey_manager.login, self.survey_manager.login)
+        req = self.url_open(f'/survey/print/{survey.access_token}')
+        self.assertEqual(req.status_code, 200, "Response should = OK")
+        # Not enough to check status code, cause odoo tend to rollback to main page if it can't open the print
+        self.assertIn("Test Survey with one question accessible by token", str(req.content),
+            "Survey should be printable (even without answers, empty survey should be generated)")
+
