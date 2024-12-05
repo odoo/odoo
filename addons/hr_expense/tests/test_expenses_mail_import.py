@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError
@@ -7,29 +8,29 @@ from odoo.exceptions import UserError
 @tagged('-at_install', 'post_install')
 class TestExpensesMailImport(TestExpenseCommon):
     def test_import_expense_from_email(self):
-        # pylint: disable=bad-whitespace
-        messages = ({
-                        'message_id': "the-world-is-a-ghetto",
-                        'subject': f'{self.product_a.default_code} {self.product_a.standard_price}',
-                        'email_from': self.expense_user_employee.email,
-                        'to': 'catchall@yourcompany.com',
-                        'body': "Don't you know, that for me, and for you",
-                        'attachments': [],
-                    }, {
-                        'message_id': "the-world-is-a-ghetto",
-                        'subject': 'no product code 800',
-                        'email_from': self.expense_user_employee.email,
-                        'to': 'catchall@yourcompany.com',
-                        'body': "Don't you know, that for me, and for you",
-                        'attachments': [],
-                    }, {
-                        'message_id': "test",
-                        'subject': 'product_c my description 100',
-                        'email_from': self.expense_user_employee.email,
-                        'to': 'catchall@yourcompany.com',
-                        'body': "test",
-                        'attachments': [],
-                    }
+        messages = (
+            {
+                'message_id': "the-world-is-a-ghetto",
+                'subject': f'{self.product_a.default_code} {self.product_a.standard_price}',
+                'email_from': self.expense_user_employee.email,
+                'to': 'catchall@yourcompany.com',
+                'body': "Don't you know, that for me, and for you",
+                'attachments': [],
+            }, {
+                'message_id': "the-world-is-a-ghetto",
+                'subject': 'no product code 800',
+                'email_from': self.expense_user_employee.email,
+                'to': 'catchall@yourcompany.com',
+                'body': "Don't you know, that for me, and for you",
+                'attachments': [],
+            }, {
+                'message_id': "test",
+                'subject': 'product_c my description 100',
+                'email_from': self.expense_user_employee.email,
+                'to': 'catchall@yourcompany.com',
+                'body': "test",
+                'attachments': [],
+            }
         )
         expenses = self.env['hr.expense']
         for message in messages:
@@ -69,7 +70,7 @@ class TestExpensesMailImport(TestExpenseCommon):
         }])
 
     def test_import_expense_from_email_employee_without_user(self):
-        """When an employee is not linked to a user, he has to be able to create expenses from email"""
+        """ When an employee is not linked to a user, he has to be able to create expenses from email """
         employee = self.expense_employee
         employee.user_id = False
 
@@ -214,8 +215,8 @@ class TestExpensesMailImport(TestExpenseCommon):
             self.company_data['currency'],
         )
 
-    def test_import_expense_from_mail_get_default_expense_sheet_values_errors(self):
-        # Make sure we get the expected UserError when trying to validate an expense with no product
+    def test_import_expense_from_mail_action_submit_errors(self):
+        """ Make sure we get the expected UserError when trying to validate an expense with no product """
         message = {
             'message_id': "the-world-is-a-ghetto",
             'subject': 'no product code 800',
@@ -226,4 +227,4 @@ class TestExpensesMailImport(TestExpenseCommon):
         }
 
         expense = self.env['hr.expense'].message_new(message)
-        self.assertRaisesRegex(UserError, r"You can not create report without category\.", expense._get_default_expense_sheet_values)
+        self.assertRaisesRegex(UserError, r"You can not submit an expense without a category\.", expense.action_submit)

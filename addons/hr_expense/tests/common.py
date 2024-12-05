@@ -3,7 +3,7 @@ from datetime import datetime
 
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -41,6 +41,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         cls.expense_employee = cls.env['hr.employee'].create({
             'name': 'expense_employee',
             'user_id': cls.expense_user_employee.id,
+            'expense_manager_id': cls.expense_user_manager.id,
             'work_contact_id': cls.expense_user_employee.partner_id.id,
         })
 
@@ -84,40 +85,43 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'name': 'Expense Account 1'
         })
 
-    def create_expense_report(self, values=None):
-        values = values or {}
-        default_values = {
-            'name': 'Test Expense Report',
-            'employee_id': self.expense_employee.id,
-            'company_id': self.company_data['company'].id,
-            'expense_line_ids': [Command.create({
-                'employee_id': self.expense_employee.id,
-                'product_id': self.product_c.id,
-                'total_amount_currency': 1000.00,
-                'tax_ids': [Command.set(self.tax_purchase_a.ids)],
-                'date': self.frozen_today,
-                'company_id': self.company_data['company'].id,
-                'currency_id': self.company_data['currency'].id,
-            })]
-        }
-        return self.env['hr.expense.sheet'].create({**default_values, **values})
+    @classmethod
+    def create_expenses(cls, values=None):
+        if values is None or isinstance(values, dict):
+            values = [values or {}]
 
-    def create_expense(self, values=None):
-        values = values or {}
         default_values = {
-            'employee_id': self.expense_employee.id,
-            'product_id': self.product_c.id,
+            'employee_id': cls.expense_employee.id,
+            'date': cls.frozen_today.isoformat(),
+            'company_id': cls.company_data['company'].id,
+            'currency_id': cls.company_data['currency'].id,
+        }
+
+        default_product_values = {
+            'product_id': cls.product_c.id,
             'total_amount_currency': 1000.00,
-            'tax_ids': [Command.set(self.tax_purchase_a.ids)],
-            'date': self.frozen_today,
-            'company_id': self.company_data['company'].id,
-            'currency_id': self.company_data['currency'].id,
         }
-        return self.env['hr.expense'].create({**default_values, **values})
+        create_values = []
+        for value_dict in values:
+            if 'product_id' not in value_dict:
+                default_values.update(default_product_values)
+            value_dict = {**default_values, **(value_dict or {})}
+            create_values.append(value_dict)
+        return cls.env['hr.expense'].create(create_values).sorted()
 
-    def get_new_payment(self, expense_sheet, amount):
+    @classmethod
+    def post_expenses_with_wizard(cls, expenses, journal=None, date=None):
+        action = expenses.action_post()
+        if action:
+            wizard = expenses.env['hr.expense.post.wizard'].with_context(action['context']).browse(action['res_id'])
+            if journal:
+                wizard.employee_journal_id = journal.id
+            wizard.accounting_date = date or fields.Date.context_today(expenses)
+            wizard.action_post_entry()
+
+    def get_new_payment(self, expenses, amount):
         """ Helper to create payments """
-        ctx = {'active_model': 'account.move', 'active_ids': expense_sheet.account_move_ids.ids}
+        ctx = {'active_model': 'account.move', 'active_ids': expenses.account_move_id.ids}
         with freeze_time(self.frozen_today):
             payment_register = self.env['account.payment.register'].with_context(**ctx).create({
                 'amount': amount,

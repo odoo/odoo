@@ -37,7 +37,7 @@
             <field name="private_country_id" ref="base.be"/>
         </record>
 
-        <!-- ++++++++++++++ Expense sheet for Admin ++++++++++++++-->
+        <!-- ++++++++++++++ Expense for Admin ++++++++++++++-->
         <record id="screen_expense" model="hr.expense">
             <field name="name">Screen</field>
             <field name="employee_id" ref="hr.employee_admin"/>
@@ -45,6 +45,8 @@
             <field name="product_id" ref="product_product_no_cost"/>
             <field eval="289.0" name="total_amount_currency"/>
             <field name="date" eval="time.strftime('%Y')+'-04-03'"/>
+            <field name="payment_mode">company_account</field>
+            <field name="approval_state">submitted</field>
         </record>
 
         <record id="laptop_expense" model="hr.expense">
@@ -62,6 +64,7 @@
             <field name="product_id" ref="expense_product_mileage"/>
             <field name="product_uom_id" ref="uom.product_uom_km"/>
             <field eval="108.84" name="quantity"/>
+            <field name="approval_state">submitted</field>
         </record>
 
         <record id="breakfast_admin_expense" model="hr.expense">
@@ -69,12 +72,6 @@
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="product_id" ref="expense_product_meal"/>
             <field eval="20" name="total_amount_currency"/>
-        </record>
-
-        <record id="travel_ny_sheet" model="hr.expense.sheet">
-            <field name="name">Commercial Travel at New York</field>
-            <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="state">approve</field>
         </record>
 
         <record id="travel_by_air_expense" model="hr.expense">
@@ -85,7 +82,8 @@
             <field eval="700.0" name="total_amount_currency"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-12'"/>
-            <field name="sheet_id" ref="travel_ny_sheet"/>
+            <field name="approval_state">submitted</field>
+            <field name="payment_mode">company_account</field>
         </record>
 
         <record id="hotel_bill_expense" model="hr.expense">
@@ -96,7 +94,7 @@
             <field eval="2000.0" name="total_amount_currency"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-17'"/>
-            <field name="sheet_id" ref="travel_ny_sheet"/>
+            <field name="approval_state">submitted</field>
         </record>
 
         <record id="lunch_customer_bill_expense" model="hr.expense">
@@ -106,7 +104,6 @@
             <field name="product_id" ref="expense_product_meal"/>
             <field eval="152.8" name="total_amount_currency"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-13'"/>
-            <field name="sheet_id" ref="travel_ny_sheet"/>
         </record>
 
         <record id="lunch_bill_expense" model="hr.expense">
@@ -116,16 +113,9 @@
             <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-15'"/>
             <field eval="56.8" name="total_amount_currency"/>
-            <field name="sheet_id" ref="travel_ny_sheet"/>
         </record>
 
-        <!-- ++++++++++++++ Expense sheet for Demo ++++++++++++++-->
-        <record id="customer_meeting_sheet" model="hr.expense.sheet">
-            <field name="name">Customer meeting</field>
-            <field name="employee_id" ref="hr.employee_qdp"/>
-            <field name="state">submit</field>
-        </record>
-
+        <!-- ++++++++++++++ Expense for Demo ++++++++++++++-->
         <record id="travel_demo_by_car_expense" model="hr.expense">
             <field name="name">Travel by Car</field>
             <field name="employee_id" ref="hr.employee_qdp"/>
@@ -134,7 +124,6 @@
             <field name="product_uom_id" ref="uom.product_uom_km"/>
             <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
             <field eval="120.85" name="quantity"/>
-            <field name="sheet_id" ref="customer_meeting_sheet"/>
         </record>
 
         <record id="lunch_demo_customer_bill_expense" model="hr.expense">
@@ -144,16 +133,10 @@
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
             <field eval="152.8" name="total_amount_currency"/>
-            <field name="sheet_id" ref="customer_meeting_sheet"/>
+            <field name="approval_state">approved</field>
         </record>
 
-        <!-- ++++++++++++++ Expense sheet for Keith Byrd ++++++++++++++-->
-        <record id="team_building_sheet" model="hr.expense.sheet">
-            <field name="name">Team Building</field>
-            <field name="employee_id" ref="hr.employee_fme"/>
-            <field name="state">submit</field>
-        </record>
-
+        <!-- ++++++++++++++ Expense for Keith Byrd ++++++++++++++-->
         <record id="pizzas_bill_expense" model="hr.expense">
             <field name="name">Pizzas</field>
             <field name="employee_id" ref="hr.employee_fme"/>
@@ -161,7 +144,6 @@
             <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
             <field eval="154" name="total_amount_currency"/>
-            <field name="sheet_id" ref="team_building_sheet"/>
         </record>
 
         <record id="drinks_bill_expense" model="hr.expense">
@@ -171,7 +153,6 @@
             <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
             <field eval="42.5" name="total_amount_currency"/>
-            <field name="sheet_id" ref="team_building_sheet"/>
         </record>
 
         <record id="paintball_bill_expense" model="hr.expense">
@@ -181,15 +162,10 @@
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
             <field eval="25" name="total_amount_currency"/>
-            <field name="sheet_id" ref="team_building_sheet"/>
+            <field name="approval_state">approved</field>
         </record>
 
         <!-- ++++++++++++++ Expense sheet for Ronnie Hart ++++++++++++++-->
-        <record id="office_furniture_sheet" model="hr.expense.sheet">
-            <field name="name">Office furniture</field>
-            <field name="employee_id" ref="hr.employee_al"/>
-            <field name="state">submit</field>
-        </record>
 
         <record id="chair_bill_expense" model="hr.expense">
             <field name="name">Chairs</field>
@@ -198,7 +174,6 @@
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
             <field eval="55.75" name="total_amount_currency"/>
-            <field name="sheet_id" ref="office_furniture_sheet"/>
         </record>
 
         <record id="lamp_bill_expense" model="hr.expense">
@@ -208,7 +183,7 @@
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
             <field eval="28.99" name="total_amount_currency"/>
-            <field name="sheet_id" ref="office_furniture_sheet"/>
+            <field name="approval_state">refused</field>
         </record>
 
         <!-- ++++++++++++++ Expense for Randall Lewis ++++++++++++++-->
@@ -219,7 +194,7 @@
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-03-15'"/>
             <field eval="450.58" name="total_amount_currency"/>
+            <field name="payment_mode">company_account</field>
         </record>
-
     </data>
 </odoo>
