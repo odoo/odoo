@@ -24,7 +24,7 @@ echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
 echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
 # Aliases
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,web'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
@@ -84,7 +84,7 @@ source ~/.bashrc
 source /home/pi/.bashrc
 
 # copy the odoo.conf file to the overwrite directory
-mv -v "/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "/home/pi/"
+mv -v "/home/pi/odoo/addons/iot_box_image/configuration/odoo.conf" "/home/pi/"
 chown pi:pi "/home/pi/odoo.conf"
 
 apt-get update
