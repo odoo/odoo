@@ -38,10 +38,12 @@ class HrEmployee(models.Model):
         # When a group is created (at module installation), the `res.users` form view is
         # automatically modified to add application accesses. When modifying the view, it
         # reads the related field `expense_manager_id` of `res.users` and retrieve its domain.
-        # This is a problem because the `group_hr_expense_user` record has already been created but
+        # This is a problem because the `group_hr_expense_team_approver` record has already been created but
         # not its associated `ir.model.data` which makes `self.env.ref(...)` fail.
         group = self.env.ref('hr_expense.group_hr_expense_team_approver', raise_if_not_found=False)
-        return [('groups_id', 'in', group.ids)] if group else []
+        return [
+            '|', ('id', 'parent_of', self.ids), ('groups_id', 'in', group.ids)
+        ] if group else [('id', 'parent_of', self.ids)]
 
     expense_manager_id = fields.Many2one(
         comodel_name='res.users',
@@ -56,10 +58,9 @@ class HrEmployee(models.Model):
     def _compute_expense_manager(self):
         for employee in self:
             previous_manager = employee._origin.parent_id.user_id
-            manager = employee.parent_id.user_id
-            if manager and manager.has_group('hr_expense.group_hr_expense_user') \
-                    and (employee.expense_manager_id == previous_manager or not employee.expense_manager_id):
-                employee.expense_manager_id = manager
+            new_manager = employee.parent_id.user_id
+            if new_manager and (employee.expense_manager_id == previous_manager or not employee.expense_manager_id):
+                employee.expense_manager_id = new_manager
             elif not employee.expense_manager_id:
                 employee.expense_manager_id = False
 

@@ -9,10 +9,10 @@ class ProductProduct(models.Model):
     @api.onchange('standard_price')
     def _compute_standard_price_update_warning(self):
         undone_expenses = self.env['hr.expense']._read_group(
-            domain=[('state', 'in', ['draft', 'reported']), ('product_id', 'in', self.ids)],
+            domain=[('state', '=', 'draft'), ('product_id', 'in', self.ids)],
             groupby=['price_unit'],
             )
-        # The following list is composed of all the unit_amounts of expenses that use this product and should NOT trigger a warning.
+        # The following list is composed of all the price_units of expenses that use this product and should NOT trigger a warning.
         # Those are the amounts of any undone expense using this product and 0.0 which is the default unit_amount.
         unit_amounts_no_warning = [self.env.company.currency_id.round(row[0]) for row in undone_expenses]
         for product in self:
@@ -31,7 +31,7 @@ class ProductProduct(models.Model):
             expenses_sudo = self.env['hr.expense'].sudo().search([
                 ('company_id', '=', self.env.company.id),
                 ('product_id', 'in', self.ids),
-                ('state', 'in', ['reported', 'draft']),
+                ('state', '=', 'draft'),
             ])
             for expense_sudo in expenses_sudo:
                 expense_product_sudo = expense_sudo.product_id
