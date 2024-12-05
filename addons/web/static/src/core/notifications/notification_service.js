@@ -44,6 +44,13 @@ export const notificationService = {
          * @param {NotificationOptions} [options]
          */
         function add(message, options = {}) {
+            const isDuplicate = Object.values(notifications).some(
+                (notification) => message === notification.props.message
+            );
+            if (isDuplicate) {
+                // Avoid adding duplicate toasters
+                return;
+            }
             const id = ++notifId;
             const closeFn = () => close(id);
             const props = Object.assign({}, options, { message, close: closeFn });
