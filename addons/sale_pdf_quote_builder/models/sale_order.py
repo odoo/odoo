@@ -3,6 +3,7 @@
 import json
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -19,6 +20,7 @@ class SaleOrder(models.Model):
     quotation_document_ids = fields.Many2many(
         string="Headers/Footers",
         comodel_name='quotation.document',
+        # compute='_compute_quotation_document_ids',
         readonly=False,
         check_company=True,
     )
@@ -26,6 +28,10 @@ class SaleOrder(models.Model):
         string="Customizable PDF Form Fields",
         readonly=False,
     )
+    # selected_document_ids = fields.Many2many(
+    #     string="Selected Quotation Documents",
+    #     comodel_name='quotation.document',
+    # )
 
     # === COMPUTE METHODS === #
 
@@ -38,7 +44,7 @@ class SaleOrder(models.Model):
             ).filtered(lambda doc:
                 self.sale_order_template_id in doc.quotation_template_ids
                 or not doc.quotation_template_ids
-            )
+                       )
 
     @api.depends('available_product_document_ids', 'order_line', 'order_line.available_product_document_ids')
     def _compute_is_pdf_quote_builder_available(self):
@@ -47,6 +53,38 @@ class SaleOrder(models.Model):
                 order.available_product_document_ids
                 or order.order_line.available_product_document_ids
             )
+
+    @api.depends('available_product_document_ids', 'selected_document_ids')
+    def _compute_quotation_document_ids(self):
+        for order in self:
+            order.quotation_document_ids = (
+                order.selected_document_ids
+                & order.available_product_document_ids
+            )
+
+    # === CRUD METHODS === #
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        orders = super().create(vals_list)
+        default_quotes = self.env['quotation.document'].search([('add_by_default', '=', True)])
+        for order in orders:
+            order.quotation_document_ids |= default_quotes & order.available_product_document_ids
+        return orders
+
+    def write(self, vals):
+        res = super().write(vals)
+        for order in self:
+            unavailable_selected_documents = (
+                order.quotation_document_ids - order.available_product_document_ids
+            )
+            if unavailable_selected_documents:
+                raise UserError(_(
+                    "The following headers/footers will not be available for this sale order after "
+                    "your change.\nPlease remove them from the quote before saving again.\n"
+                    + "\n".join(f"- {doc.name}" for doc in unavailable_selected_documents)
+                ))
+        return res
 
     # === ACTION METHODS === #
 
