@@ -1,6 +1,6 @@
 import { Component, EventBus, useRef, useSubEnv } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { basicContainerWeWidgetProps, useWeComponent } from "../builder_helpers";
+import { basicContainerWeWidgetProps, useWeComponent, WeComponent } from "../builder_helpers";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -12,7 +12,9 @@ export class WeSelect extends Component {
     };
     static components = {
         Dropdown,
+        WeComponent,
     };
+
     setup() {
         const button = useRef("button");
         useWeComponent();

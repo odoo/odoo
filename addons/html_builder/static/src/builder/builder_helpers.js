@@ -167,6 +167,10 @@ export function useInputWeWidget() {
         }
     });
     function getState(editingElement) {
+        if (!editingElement) {
+            // TODO try to remove it. We need to move hook in WeComponent
+            return {};
+        }
         const [actionId, actionParam] = getActions()[0];
         return {
             value: actionsRegistry.get(actionId).getValue({

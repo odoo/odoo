@@ -1,5 +1,5 @@
 import { Component, onMounted, useRef } from "@odoo/owl";
-import { clickableWeWidgetProps, useClickableWeWidget } from "../builder_helpers";
+import { clickableWeWidgetProps, useClickableWeWidget, WeComponent } from "../builder_helpers";
 import { useBus } from "@web/core/utils/hooks";
 
 export class WeSelectItem extends Component {
@@ -9,6 +9,8 @@ export class WeSelectItem extends Component {
         title: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
+    static components = { WeComponent };
+
     setup() {
         const item = useRef("item");
         const { state, call, isActive } = useClickableWeWidget();

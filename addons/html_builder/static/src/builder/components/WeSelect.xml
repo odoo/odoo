@@ -2,15 +2,17 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.WeSelect">
-    <!-- Render the SelectItem(s) into an invisible node to ensure the label of the
-    button is being set. -->
-    <div class="d-none"><t t-slot="default" /></div>
-    <Dropdown state="this.dropdown">
-        <button class="btn btn-primary mx-1" t-ref="button" />
-        <t t-set-slot="content">
-            <t t-slot="default" />
-        </t>
-    </Dropdown>
+    <WeComponent>
+        <!-- Render the SelectItem(s) into an invisible node to ensure the label of the
+        button is being set. -->
+        <div class="d-none"><t t-slot="default" /></div>
+        <Dropdown state="this.dropdown">
+            <button class="btn btn-primary mx-1" t-ref="button" />
+            <t t-set-slot="content">
+                <t t-slot="default" />
+            </t>
+        </Dropdown>
+    </WeComponent>
 </t>
 
 </templates>

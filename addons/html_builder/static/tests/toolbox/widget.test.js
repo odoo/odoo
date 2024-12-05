@@ -1,5 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, fill, hover, queryFirst, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click,
+    fill,
+    hover,
+    queryAllTexts,
+    queryFirst,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { addActionOption, addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
@@ -382,6 +390,80 @@ describe("WeNumberInput", () => {
         expect(".o-snippets-top-actions .fa-undo").toBeEnabled();
         expect(".o-snippets-top-actions .fa-repeat").not.toBeEnabled();
     });
+    test("hide/display base on applyTo", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeNumberInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
+        });
+        addActionOption({
+            customAction: {
+                getValue: () => {
+                    return "customValue";
+                },
+            },
+        });
+
+        const { getEditor } = await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        const editor = getEditor();
+        await contains(":iframe .parent-target").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
+        expect("[data-action-id='customAction']").toHaveCount(0);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").toHaveClass("active");
+        expect("[data-action-id='customAction']").toHaveCount(1);
+        expect("[data-action-id='customAction'] input").toHaveValue("customValue");
+    });
+});
+describe("WeTextInput", () => {
+    test("hide/display base on applyTo", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeTextInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
+        });
+        addActionOption({
+            customAction: {
+                getValue: () => {
+                    return "customValue";
+                },
+            },
+        });
+
+        const { getEditor } = await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        const editor = getEditor();
+        await contains(":iframe .parent-target").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
+        expect("[data-action-id='customAction']").toHaveCount(0);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").toHaveClass("active");
+        expect("[data-action-id='customAction']").toHaveCount(1);
+        expect("[data-action-id='customAction'] input").toHaveValue("customValue");
+    });
 });
 describe("WeSelectItem", () => {
     test("call a specific action with some params and value (WeSelectItem)", async () => {
@@ -433,6 +515,74 @@ describe("WeSelectItem", () => {
         await contains(".o-snippets-top-actions .fa-repeat").click();
         expect(".we-bg-options-container .dropdown").toHaveText("B");
     });
+    test("hide/display WeSelect base on applyTo", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`
+                <WeSelect applyTo="'.my-custom-class'">
+                    <WeSelectItem classAction="'a'">A</WeSelectItem>
+                    <WeSelectItem classAction="'b'">B</WeSelectItem>
+                </WeSelect>`,
+        });
+        const { getEditor } = await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target b">b</div></div>`
+        );
+        const editor = getEditor();
+        await contains(":iframe .parent-target").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target b">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
+        expect(".options-container button.dropdown-toggle").toHaveCount(0);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target b my-custom-class">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").toHaveClass("active");
+        expect(".options-container button.dropdown-toggle").toHaveCount(1);
+        expect(".options-container button.dropdown-toggle").toHaveText("B");
+    });
+
+    test("hide/display WeSelectItem base on applyTo", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`
+                <WeSelect>
+                    <WeSelectItem classAction="'a'">A</WeSelectItem>
+                    <WeSelectItem applyTo="'.my-custom-class'" classAction="'b'">B</WeSelectItem>
+                    <WeSelectItem classAction="'c'">C</WeSelectItem>
+                </WeSelect>`,
+        });
+        const { getEditor } = await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        const editor = getEditor();
+        await contains(":iframe .parent-target").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
+        expect(".options-container button.dropdown-toggle").toHaveCount(1);
+        await contains(".options-container button.dropdown-toggle").click();
+        expect(queryAllTexts(".o-dropdown--menu div")).toEqual(["A", "C"]);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").toHaveClass("active");
+        await contains(".options-container button.dropdown-toggle").click();
+        expect(queryAllTexts(".o-dropdown--menu div")).toEqual(["A", "B", "C"]);
+    });
 });
 describe("WeColorpicker", () => {
     test("should apply color to the editing element", async () => {
@@ -447,5 +597,32 @@ describe("WeColorpicker", () => {
         await animationFrame();
         await click(".o-overlay-item [data-color='o-color-1']");
         expect(":iframe .test-options-target").toHaveClass("test-options-target bg-o-color-1");
+    });
+    test("hide/display base on applyTo", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeColorpicker applyTo="'.my-custom-class'"/>`,
+        });
+        const { getEditor } = await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target b">b</div></div>`
+        );
+        const editor = getEditor();
+        await contains(":iframe .parent-target").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target b">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
+        expect(".options-container .o_we_color_preview").toHaveCount(0);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(editor.editable).toHaveInnerHTML(
+            `<div class="parent-target"><div class="child-target b my-custom-class">b</div></div>`
+        );
+        expect("[data-class-action='my-custom-class']").toHaveClass("active");
+        expect(".options-container .o_we_color_preview").toHaveCount(1);
     });
 });
