@@ -70,7 +70,7 @@ export class Popup extends Interaction {
 
     bindPopup() {
         let display = this.modalEl.dataset.display;
-        let delay = this.modalEl.dataset.showAfter;
+        let delay = parseInt(this.modalEl.dataset.showAfter);
 
         if (uiUtils.isSmall()) {
             if (display === "mouseExit") {

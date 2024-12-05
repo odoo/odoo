@@ -158,7 +158,7 @@ export class Interaction {
                     this.updateContent();
                 }
             }
-        }, delay);
+        }, parseInt(delay));
     }
 
     /**
