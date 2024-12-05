@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="event_meet" name="Meeting Rooms">
-    <t t-call="website_event.layout">
-        <t t-set="hide_submenu" t-value="True"/>
-        <div class="o_wevent_online o_wemeet_index h-100">
-            <!-- Navigation-->
-            <t t-call="website_event.navbar"/>
-            <!-- Drag/Drop Area -->
-            <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS</t>
-            <div class="oe_structure oe_empty" id="oe_structure_website_event_location_1" t-att-data-editor-message="editor_message"/>
-            <!-- Content -->
-            <div class="o_wemeet_container container h-100">
-                <div class="row h-100 mb-5">
-                    <t t-call="website_event_meet.community_main"/>
-                    <t t-call="website_event_meet.community_aside"/>
+<template id="event_meet" name="Meeting Rooms" inherit_id="website_event.template_community">
+    <xpath expr="//div[@id='community']" position="after">
+        <t t-call="website_event.layout">
+            <t t-set="hide_submenu" t-value="True"/>
+            <div class="o_wevent_online o_wemeet_index h-100">
+                <!-- Navigation-->
+                <t t-call="website_event.navbar"/>
+                <!-- Drag/Drop Area -->
+                <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES OF ALL EVENTS</t>
+                <div class="oe_structure oe_empty" id="oe_structure_website_event_location_1" t-att-data-editor-message="editor_message"/>
+                <!-- Content -->
+                <div class="o_wemeet_container container h-100">
+                    <div class="row h-100 mb-5">
+                        <t t-call="website_event_meet.community_main"/>
+                        <t t-call="website_event_meet.community_aside"/>
+                    </div>
                 </div>
+                <!-- Drag/Drop Area -->
+                <div class="oe_structure oe_empty mb-5" id="oe_structure_website_event_location_2" t-att-data-editor-message="editor_message"/>
             </div>
-            <!-- Drag/Drop Area -->
-            <div class="oe_structure oe_empty mb-5" id="oe_structure_website_event_location_2" t-att-data-editor-message="editor_message"/>
-        </div>
-    </t>
+        </t>
+    </xpath>
 </template>
 
 <!-- ============================================================ -->
