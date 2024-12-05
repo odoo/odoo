@@ -227,3 +227,28 @@ test("set a collapse selection in a contenteditable false should move it after t
     editor.shared.selection.focusEditable();
     expect(getContent(el)).toBe(`<p>ab<span contenteditable="false">cd</span>[]ef</p>`);
 });
+
+test("preserveSelection's restore should always set the selection, even if it's the same as the current one", async () => {
+    /**
+     * There seems to be a bug in Chrome that renders the selection in a
+     * different position than the one returned by document.getSelection().
+     * Setting the selection (even if it's the same as the current one) seems to
+     * solve the issue.
+     *
+     * A concrete example:
+     * <p>abc <a href="#">some link</a> def[]</p>
+     *     press shift + enter
+     * The selection (in Chrome) is rendered at the following position if
+     * setBaseAndExtent is skipped when setting the selection after a restore:
+     * <p>abc <a href="#">some link</a>[] def<br><br></p>
+     */
+    const { editor } = await setupEditor("<p>ab[]cd</p>");
+    patchWithCleanup(editor.document.getSelection(), {
+        setBaseAndExtent: () => {
+            expect.step("setBaseAndExtent");
+        },
+    });
+    const cursors = editor.shared.selection.preserveSelection();
+    cursors.restore();
+    expect.verifySteps(["setBaseAndExtent"]);
+});
