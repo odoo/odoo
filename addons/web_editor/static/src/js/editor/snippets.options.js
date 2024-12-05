@@ -2577,6 +2577,128 @@ const ListUserValueWidget = UserValueWidget.extend({
     },
 });
 
+const ListOptionsUserValueWidget = UserValueWidget.extend({
+    tagName: 'we-list',
+    events: {
+        'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
+    },
+    /**
+     * @override
+     */
+    isContainer() {
+        return true;
+    },
+    /**
+     * @override
+     */
+    start() {
+        this.listTable = document.createElement('table');
+        const tableWrapper = document.createElement('div');
+        tableWrapper.classList.add('o_we_table_wrapper');
+        tableWrapper.appendChild(this.listTable);
+        this.containerEl.appendChild(tableWrapper);
+        this.el.classList.add('o_we_fw');
+        this._populateDependencyOptions();
+    },
+    /**
+     * @override
+     */
+    setValue() {
+        this._super(...arguments);
+        let currentValues = this._value
+        this.listTable.innerHTML = '';
+        this._populateDependencyOptions(currentValues);
+    },
+    /**
+     * @private
+     * @param {string || integer} id
+     * @param {string} [value]
+     * @param {Object} [recordData]
+     */
+    _addItemToTable(id, value = this.el.dataset.defaultValue || _t("Item"), recordData) {
+        const trEl = document.createElement('tr');
+        let recordDataSelected = false;
+        const inputEl = document.createElement('input');
+        inputEl.type = this.el.dataset.inputType || 'text';
+        inputEl.disabled = true;
+        if (value) {
+            inputEl.value = value;
+        }
+        if (id) {
+            inputEl.name = id;
+        }
+        const inputTdEl = document.createElement('td');
+        inputTdEl.classList.add('o_we_list_record_name');
+        inputTdEl.appendChild(inputEl);
+        trEl.appendChild(inputTdEl);
+        if (recordData) {
+            recordDataSelected = recordData.selected;
+        }
+        const checkboxEl = document.createElement('we-button');
+        checkboxEl.classList.add('o_we_user_value_widget', 'o_we_checkbox_wrapper');
+        checkboxEl.dataset.selectDataAttribute = id;
+        if (recordDataSelected) {
+            checkboxEl.classList.add('active');
+        }
+        const checkbox = document.createElement('we-checkbox');
+        checkboxEl.appendChild(checkbox);
+        const checkboxTdEl = document.createElement('td');
+        checkboxTdEl.appendChild(checkboxEl);
+        trEl.appendChild(checkboxTdEl);
+        this.listTable.appendChild(trEl);
+    },
+    /**
+     * @private
+     */
+    _notifyCurrentState() {
+        const trimmed = (str) => str.trim().replace(/\s+/g, " ");
+        const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
+        this.selected = checkboxes.map(el => {
+            const input = el.parentElement.previousSibling.firstChild;
+            const id = trimmed(input.name);
+            return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
+        });
+        this._value = this.selected.join();
+        this.selected = [];
+        this._onUserValueChange();
+    },
+    /**
+     * @private
+     */
+    _populateDependencyOptions(currentValues = '') {
+        const dependencyName = this.$target[0].dataset.visibilityDependency;
+        if (!dependencyName) {
+            return;
+        }
+        const dependencyEl = this.$target[0].closest('form').querySelector(`.s_website_form_input[name="${CSS.escape(dependencyName)}"]`);
+        currentValues = currentValues.split(',');
+        const prepareOption = (id, display_name) => {
+            const selected = currentValues.includes(id);
+            this._addItemToTable(id, display_name, {selected});
+        };
+        if (dependencyEl.nodeName === 'SELECT') {
+            for (const option of dependencyEl.querySelectorAll('option')) {
+                prepareOption(option.value, option.textContent);
+            }
+        } else if (["radio", "checkbox"].includes(dependencyEl.type)) {
+            const dependencyContainerEl = dependencyEl.closest('.s_website_form_field');
+            const inputsInDependencyContainer = dependencyContainerEl.querySelectorAll('.s_website_form_input');
+            for (const el of inputsInDependencyContainer) {
+                prepareOption(el.value, el?.nextElementSibling?.textContent);
+            }
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onAddItemCheckboxClick: function (ev) {
+        const isActive = ev.currentTarget.classList.contains('active');
+        ev.currentTarget.classList.toggle('active', !isActive);
+        this._notifyCurrentState();
+    },
+});
+
 const RangeUserValueWidget = UnitUserValueWidget.extend({
     tagName: 'we-range',
     events: {
@@ -3316,6 +3438,7 @@ const userValueWidgetsRegistry = {
     'we-select-pager': SelectPagerUserValueWidget,
     'we-many2one': Many2oneUserValueWidget,
     'we-many2many': Many2manyUserValueWidget,
+    'we-list-options': ListOptionsUserValueWidget,
 };
 
 /**
