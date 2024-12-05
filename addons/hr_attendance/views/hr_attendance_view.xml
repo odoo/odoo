@@ -28,12 +28,10 @@
                 <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
                 <field name="in_latitude" string="Latitude (In)" optional="hidden"/>
                 <field name="in_longitude" string="Longitude (In)" optional="hidden"/>
+                <field name="in_location" string="Longitude (In)" optional="hidden"/>
                 <field name="out_latitude" string="Latitude (Out)" optional="hidden"/>
                 <field name="out_longitude" string="Longitude (Out)" optional="hidden"/>
-                <field name="in_city" string="City (In)" optional="hidden"/>
-                <field name="out_city" string="City (Out)" optional="hidden"/>
-                <field name="in_country_name" string="Country (In)" optional="hidden"/>
-                <field name="out_country_name" string="Country (Out)" optional="hidden"/>
+                <field name="out_location" string="Location" optional="hidden"/>
                 <field name="create_uid" optional="hidden"/>
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
@@ -106,16 +104,7 @@
                                 </group>
                             </group>
                             <group invisible="in_mode == 'manual'">
-                                <label for="in_country_name" string="Localisation"/>
-                                <div class="o_row" name="in_location_info">
-                                    <span>
-                                        <field name="in_country_name"/>
-                                    </span>
-                                    <span>
-                                        <field name="in_city" invisible="in_city == 'Unknown'" nolabel="1"/>
-                                    </span>
-                                </div>
-
+                                <field name="in_location"/>
                                 <label for="in_latitude" string="GPS Coordinates"/>
                                 <div>
                                     <div class="o_row">
@@ -146,16 +135,7 @@
                                 </group>
                             </group>
                             <group invisible="out_mode == 'manual'">
-                                <label for="out_country_name" string="Localisation"/>
-                                <div class="o_row" name="out_location_info" >
-                                    <span>
-                                        <field name="out_country_name"/>
-                                    </span>
-                                    <span>
-                                        <field name="out_city" invisible="out_city == 'Unknown'" nolabel="1"/>
-                                    </span>
-                                </div>
-
+                                <field name="out_location"/>
                                 <label for="out_latitude" string="GPS Coordinates"/>
                                 <div>
                                     <div class="o_row">
