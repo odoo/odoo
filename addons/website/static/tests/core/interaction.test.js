@@ -697,6 +697,27 @@ describe("event handling", () => {
         core.interactions[0].interaction.updateContent();
         expect(el.querySelector("span")).toHaveClass("a");
     });
+
+    test("allow pseudo-classes in inline format in dynamicContent", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                ".btn:not(.off):t-on-click": this.doStuff,
+            }
+            doStuff() {
+                expect.step("doStuff");
+            }
+        }
+
+        const { el } = await startInteraction(Test, `<div class="test"><span class="btn"></span><span class="btn off"></span></div>`);
+        expect.verifySteps([]);
+        const btn1 = el.querySelector(".btn:not(.off)");
+        const btn2 = el.querySelector(".btn.off");
+        await click(btn1);
+        expect.verifySteps(["doStuff"]);
+        await click(btn2);
+        expect.verifySteps([]);
+    });
 });
 
 describe("special selectors", () => {
@@ -1451,7 +1472,6 @@ describe("dynamic attributes", () => {
             `<span style="opacity: 1;">coucou</span>`,
         );
     });
-
 });
 
 describe("components", () => {
