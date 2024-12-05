@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
@@ -276,7 +277,11 @@ export class SearchBar extends Component {
 
         const options = await this.orm.call(relation, "name_search", [], {
             args: domain,
-            context: { ...this.env.searchModel.globalContext, ...field.context },
+            context: {
+                ...this.env.searchModel.globalContext,
+                ...field.context,
+                ...makeContext([searchItem.context]),
+            },
             limit: 8,
             name: query.trim(),
         });
