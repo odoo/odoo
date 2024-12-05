@@ -11,6 +11,7 @@ __all__ = [
 
 import logging
 import typing
+import re
 import warnings
 from collections import defaultdict
 from collections.abc import Mapping
@@ -95,6 +96,17 @@ class Environment(Mapping):
     def __getitem__(self, model_name: str) -> BaseModel:
         """ Return an empty recordset from the given model. """
         return self.registry[model_name](self, (), ())
+
+    def __dir__(self):
+        return [k.replace('_', '__').replace('.', '_') for k in self.registry.keys()]
+
+    def __getattr__(self, name):
+        """ If the attribute is not in the class, search the registry """
+        if name not in self and name in self.__dir__():
+            backward = re.sub('([^_])_([^_])', r'\1.\2', name)
+            backward = re.sub(r'__', '_', backward)
+            return self.__getitem__(backward)
+        return super().__getattr__(name)
 
     def __iter__(self):
         """ Return an iterator on model names. """
