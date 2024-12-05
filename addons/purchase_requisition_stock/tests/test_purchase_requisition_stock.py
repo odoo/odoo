@@ -209,7 +209,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # create an alt PO
         action = orig_po.action_create_alternative()
         alt_po_wiz = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
-        alt_po_wiz.partner_id = self.res_partner_1
+        alt_po_wiz.partner_ids = self.res_partner_1
         alt_po_wiz.copy_products = True
         alt_po_wiz = alt_po_wiz.save()
         alt_po_wiz.action_create_alternative()
@@ -282,7 +282,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Create an alternative RFQ for another vendor
         action = orig_po.action_create_alternative()
         alt_po_wizard = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
-        alt_po_wizard.partner_id = vendor_2
+        alt_po_wizard.partner_ids = vendor_2
         alt_po_wizard.copy_products = True
         alt_po_wizard = alt_po_wizard.save()
         alt_po_wizard.action_create_alternative()
@@ -316,7 +316,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Creates an alternative PO
         action = orig_po.action_create_alternative()
         alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
-        alt_po_wizard_form.partner_id = self.res_partner_1
+        alt_po_wizard_form.partner_ids = self.res_partner_1
         alt_po_wizard_form.copy_products = True
         alt_po_wizard = alt_po_wizard_form.save()
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']

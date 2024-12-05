@@ -9,9 +9,7 @@
                     <group>
                         <field name="origin_po_id" invisible="1"/>
                         <group>
-                            <field name="partner_id"/>
-                        </group>
-                        <group>
+                            <field name="partner_ids" widget="many2many_tags" />
                             <field name="copy_products"/>
                         </group>
                         <group groups="purchase.group_warning_purchase" invisible="purchase_warn_msg == ''">

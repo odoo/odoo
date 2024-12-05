@@ -64,3 +64,15 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
         cls.res_partner_1 = cls.env['res.partner'].create({
             'name': 'Wood Corner',
         })
+
+        cls.res_partner_2 = cls.env['res.partner'].create({
+            'name': 'Azure Interior',
+        })
+
+        cls.res_partner_3 = cls.env['res.partner'].create({
+            'name': 'Deco Addict',
+        })
+
+        cls.res_partner_4 = cls.env['res.partner'].create({
+            'name': 'Lumber Inc',
+        })
