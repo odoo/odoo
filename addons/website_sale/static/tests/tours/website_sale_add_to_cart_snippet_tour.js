@@ -29,7 +29,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...selectElementInWeSelectWidget('product_template_picker_opt', 'Product Yes Variant 1', true),
         ...clickOnSave(),
         clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
-        clickOnElement('continue shopping', ':iframe span:contains(Continue Shopping)'),
+        clickOnElement('continue shopping', ':iframe .modal button:contains(Continue Shopping)'),
 
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),
@@ -47,7 +47,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         {
             // wait for the page to load, as the next check was sometimes too fast
             content: "Wait for the redirection to the payment page",
-            trigger: 'body',
+            trigger: ":iframe h3:contains(order overview)",
         },
         assertPathName('/shop/payment', ':iframe a[href="/shop/cart"]'),
 
