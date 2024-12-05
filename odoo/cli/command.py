@@ -1,14 +1,19 @@
 import argparse
+import atexit
 import contextlib
 import re
 import sys
 from inspect import cleandoc
+from contextlib import contextmanager, suppress
 from pathlib import Path
 
 import odoo.init  # import first for core setup
 import odoo.cli
 from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
+from odoo.modules.registry import Registry
+from odoo.service.db import exp_drop
+
 
 
 COMMAND_NAME_RE = re.compile(r'^[a-z][a-z0-9_]*$', re.I)
@@ -51,10 +56,71 @@ class Command:
             )
         return self._parser
 
+<<<<<<< HEAD
     @classmethod
     def is_valid_name(cls, name):
         return re.match(COMMAND_NAME_RE, name)
 
+||||||| parent of 631ad8ee29b ([WIP])
+=======
+    @contextmanager
+    def build_env(self, db_name, allow_create=False, update_module=False):
+        from contextlib import closing
+        from odoo.cli.server import ensure_database
+        if allow_create and ensure_database(db_name):
+            update_module = True
+            atexit.register(exp_drop, db_name)
+            logging.getLogger(self.__module__).info(
+                "%s '%s' was created, as it didn't exist.",
+                'Temporary database' if allow_create else 'Database', db_name)
+        registry = Registry.new(db_name, False, update_module=update_module)
+        with closing(registry.cursor()) as cr:
+            yield odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+
+    @staticmethod
+    def die(message=None):
+        if message:
+            sys.exit(message)
+        sys.exit(0)
+
+
+class SubcommandsMixin():
+    """ Command that has subcommands """
+    subcommands = None
+
+    def run(self, cmdargs):
+        """ Instead of running the command, we run the subcommands """
+        self._config = odoo.tools.config.parse_config(None, setup_logging=True)
+        self.subparsers = self.parser.add_subparsers(dest='subcommand', help='Subcommands help')
+
+        initialized_subcommands = {sc.name: sc for Cls in self.subcommands if (sc := Cls(self))}
+        parsed_args, _unknown = self.parser.parse_known_args(args=cmdargs)
+        if subcommand := initialized_subcommands.get(parsed_args.subcommand):
+            subcommand.run(cmdargs)
+        else:
+            self.parser.print_help()
+            Command.die()
+
+
+class Subcommand:
+    description = None
+
+    @property
+    def name(self):
+        parent_name = self.parent_command.name
+        classname = self.__class__.__name__
+        return classname.lower().replace(parent_name.lower(), "")
+
+    def __init__(self, parent_command):
+        if not getattr(self, 'description', None):
+            logging.warning('No description found for class %s', self.__class__.__name__)
+        self.parent_command = parent_command
+        description = self.description or self.name
+        self.subparsers = self.parent_command.subparsers
+        self.parser = self.subparsers.add_parser(self.name, help=description)
+        self.build_env = self.parent_command.build_env
+
+>>>>>>> 631ad8ee29b ([WIP])
 
 def load_internal_commands():
     """ Load ``commands`` from ``odoo.cli`` """
@@ -77,6 +143,7 @@ def load_addons_commands(command=None):
 
     mapping = {}
     initialize_sys_path()
+<<<<<<< HEAD
     for path in odoo.addons.__path__:
         for fullpath in Path(path).glob(f'*/cli/{command}.py'):
             if (found_command := fullpath.stem) and Command.is_valid_name(found_command):
@@ -87,6 +154,21 @@ def load_addons_commands(command=None):
     for fq_name, fullpath in mapping.items():
         with contextlib.suppress(ImportError):
             load_script(fullpath, fq_name)
+||||||| parent of 631ad8ee29b ([WIP])
+    for module in get_modules():
+        if (Path(get_module_path(module)) / 'cli').is_dir():
+            with contextlib.suppress(ImportError):
+                __import__(f'odoo.addons.{module}')
+    logging.disable(logging.NOTSET)
+    return list(commands)
+=======
+    for module in get_modules():
+        if (Path(get_module_path(module)) / 'cli').is_dir():
+            with suppress(ImportError):
+                __import__(f'odoo.addons.{module}')
+    logging.disable(logging.NOTSET)
+    return list(commands)
+>>>>>>> 631ad8ee29b ([WIP])
 
 
 def find_command(name: str) -> Command | None:
@@ -131,8 +213,14 @@ def main():
     if command := find_command(command_name):
         command().run(args)
     else:
+<<<<<<< HEAD
         message = (
             f"Unknown command {command_name!r}.\n"
             f"Use '{PROG_NAME} --help' to see the list of available commands."
         )
         sys.exit(message)
+||||||| parent of 631ad8ee29b ([WIP])
+        sys.exit(f"Unknown command {command_name!r}")
+=======
+        Command.die(f"Unknown command {command_name!r}")
+>>>>>>> 631ad8ee29b ([WIP])
