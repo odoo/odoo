@@ -10,6 +10,7 @@ import {
     normalizeRem,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { afterEach, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
+import { enableTransitions } from "@odoo/hoot-mock";
 import {
     getGridHtml,
     getRegularGridHtml,
@@ -859,6 +860,7 @@ describe("Convert classes to inline styles", () => {
     });
 
     test("convert Bootstrap classes to inline styles", async () => {
+        enableTransitions();
         editable.innerHTML = `
             <div class="container"><div class="row"><div class="col">Hello</div></div></div>`;
         getFixture().append(editable); // editable needs to be in the DOM to compute its dynamic styles.
