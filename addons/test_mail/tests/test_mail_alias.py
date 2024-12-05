@@ -837,6 +837,21 @@ class TestMailAliasMixin(TestMailAliasCommon):
             Model.search([('alias_email', '=', f'alias.email.1@{self.mail_alias_domain.name}')]), records[1],
             'Search: both part search: search on name + domain')
 
+        company_no_alias = self.env['res.company'].create({
+            'name': 'sneaky company',
+            'alias_domain_id': None,
+        })
+        records = Model.create([
+            {
+                'company_id': company.id
+            }
+            for company in (self.company_admin, company_no_alias, self.company_2)
+        ])
+
+        self.assertEqual(
+            len(records.filtered(lambda r: r.company_id.id == company_no_alias.id).alias_domain_id), 0,
+            "Mixin created from company with no alias domain should not have one set.")
+
     @users('employee')
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_alias_mixin_alias_id_management(self):
