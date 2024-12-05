@@ -488,10 +488,10 @@
         </div>
         <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-xl-6">
             <label class="col-form-label" for="country_id">Country</label>
-            <select name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}" t-att-disabled="None if partner_can_edit_vat else '1'">
+            <select name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}" t-att-disabled="None if partner_can_edit_vat or not country_id or country_id == 'False' else '1'">
                 <option value="">Country...</option>
                 <t t-foreach="countries or []" t-as="country">
-                    <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
+                    <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id and country_id.isdigit() else country.id == partner.country_id.id">
                         <t t-esc="country.name" />
                     </option>
                 </t>

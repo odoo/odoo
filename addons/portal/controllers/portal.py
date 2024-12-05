@@ -186,10 +186,12 @@ class CustomerPortal(Controller):
         })
 
         if post and request.httprequest.method == 'POST':
-            if not partner.can_edit_vat():
+            if not partner.can_edit_vat() and partner.country_id:
                 post['country_id'] = str(partner.country_id.id)
 
             error, error_message = self.details_form_validate(post)
+            if error and not partner.country_id:
+                post['country_id'] = 'False'
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
             if not error:
