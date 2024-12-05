@@ -12,8 +12,13 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
         this._super.apply(this, arguments);
         this.modelNameFilter = 'blog.post';
         this.blogs = {};
+        this.tags = this.$target[0].dataset.filterByTagIds ? this.$target[0].dataset.filterByTagIds.split(",").map(id => parseInt(id)) : [];
     },
-
+    willStart: async function () {
+      await this._super(...arguments);
+      this.allTagIds = await this.orm.searchRead("blog.tag", [], ["id", "name", "display_name"]);
+    },
+    
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -41,6 +46,33 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
             templateKey === 'website_blog.dynamic_filter_template_blog_post_list';
         }
         return this._super.apply(this, arguments);
+    },
+    /**
+     * Reset the tag filter when a new blog filter is selected.
+     * @override
+     */
+    selectDataAttribute: function (previewMode, widgetValue, params) {
+        this._super.apply(this, arguments);
+        if (params.attributeName === "filterByBlogId") {
+            this.tags = [];
+            this.$target[0].dataset.filterByTagIds = [];
+        }
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    setTags(previewMode, widgetValue, params) {
+        this.tags = JSON.parse(widgetValue).map(tag => tag.id);
+        this.$target[0].dataset.filterByTagIds = this.tags.join(",");
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === "setTags") {
+            return JSON.stringify(this.tags.map(id => this.allTagIds.find(tag => tag.id === id)));
+        }
+        return this._super(...arguments);
     },
     /**
      * Fetches blogs.
