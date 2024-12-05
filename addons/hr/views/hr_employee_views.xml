@@ -151,7 +151,7 @@
                                         </div>
                                         <field name="private_car_plate" />
                                     </group>
-                                    <group string="Family Status">
+                                    <group string="Family Status" name="hr_family_group">
                                         <field name="marital"/>
                                         <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
                                         <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
@@ -173,7 +173,7 @@
                                         <field name="work_permit_name" invisible="1"/>
                                         <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name"/>
                                     </group>
-                                    <group string="Citizenship">
+                                    <group string="Citizenship" name="hr_citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id"/>
                                         <field name="ssnid"/>
