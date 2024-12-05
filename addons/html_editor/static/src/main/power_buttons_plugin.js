@@ -53,6 +53,14 @@ export class PowerButtonsPlugin extends Plugin {
         this.createPowerButtons();
     }
 
+    handleCommand(command) {
+        switch (command) {
+            case "CONTENT_UPDATED":
+                this.updatePowerButtons();
+                break;
+        }
+    }
+
     createPowerButtons() {
         /** @returns {HTMLButtonElement} */
         const itemToButton = (/**@type {PowerButton} */ item) => {
