@@ -1395,7 +1395,7 @@ export class PosStore extends Reactive {
         const getOrder = (uuid) => this.models["pos.order"].getBy("uuid", uuid);
         const order = getOrder(uuid);
         await this.sendOrderInPreparation(order, cancelled);
-        order.updateLastOrderChange();
+        getOrder(uuid).updateLastOrderChange();
         await this.syncAllOrders();
         getOrder(uuid).updateSavedQuantity();
     }
