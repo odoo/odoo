@@ -20,6 +20,8 @@ export class Interaction {
      * This static property describes the set of html element targeted by this
      * interaction. An instance will be created for each match when the website
      * framework is initialized.
+     * 
+     * @type {string}
      */
     static selector = "";
 
@@ -28,7 +30,7 @@ export class Interaction {
      * the result of a querySelector. In that case, the directive will simply be
      * ignored.
      *
-     * @type {Object} 
+     * @type {Object.<string, Function>}
      */
     dynamicSelectors = {
         _root: () => this.el,
@@ -55,13 +57,19 @@ export class Interaction {
      * Accepted directives includes: t-on-, t-att-, t-out and t-component
      * 
      * Note that this is not owl! It is similar, to make it easy to learn, but
-     * it is different, the syntax and semantics are somewhat different. 
+     * it is different, the syntax and semantics are somewhat different.
+     *
+     * @type {Object}
      */
     dynamicContent = {};
 
     /**
      * The constructor is not supposed to be defined in a subclass. Use setup
      * instead
+     * 
+     * @param {HTMLElement} el
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Object} metadata
      */
     constructor(el, env, metadata) {
         this.__colibri__ = metadata;
