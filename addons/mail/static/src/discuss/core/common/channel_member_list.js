@@ -30,7 +30,7 @@ export class ChannelMemberList extends Component {
         if (this.store.inPublicPage) {
             return false;
         }
-        if (member.persona.type === "guest") {
+        if (member.persona.type === "guest" || member.persona.is_bot) {
             return false;
         }
         return true;
