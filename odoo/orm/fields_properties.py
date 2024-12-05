@@ -576,24 +576,18 @@ class Properties(Field):
             property_definition['value'] = values_dict.get(property_definition['name'])
         return values_list
 
-    def _split_field_expr(self, field_expr: str) -> (str, str):
+    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
+        if not property_name:
+            return field_sql
+        check_property_field_value_name(property_name)
+        return SQL("(%s -> %s)", field_sql, property_name)
+
+    def condition_to_sql(self, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
         if "." not in field_expr:
             raise ValueError(f"Missing property name for {self}")
         fname, property_name = field_expr.split('.', 1)
-        check_property_field_value_name(property_name)
-        return fname, property_name
-
-    def expression_to_sql(self, model: BaseModel, alias: str, field_expr: str, query: Query) -> SQL:
-        if "." in field_expr:
-            fname, property_name = self._split_field_expr(field_expr)
-            raw_sql_field = super().expression_to_sql(model, alias, fname, query)
-            return SQL("(%s -> %s)", raw_sql_field, property_name)
-        return super().expression_to_sql(model, alias, field_expr, query)
-
-    def condition_to_sql(self, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
-        fname, property_name = self._split_field_expr(field_expr)
-        raw_sql_field = self.expression_to_sql(model, alias, fname, query)
-        sql_left = SQL("(%s -> %s)", raw_sql_field, property_name)
+        raw_sql_field = model._field_to_sql(alias, fname, query)
+        sql_left = model._field_to_sql(alias, field_expr, query)
 
         if operator in ('=', '!='):
             operator = 'in' if operator == '=' else 'not in'

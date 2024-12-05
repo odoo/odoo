@@ -43,7 +43,7 @@ class Boolean(Field[bool]):
         if operator not in ('in', 'not in', '=', '!='):
             return super().condition_to_sql(model, alias, field_expr, operator, value, query)
         # get field and check access
-        sql_field = self.expression_to_sql(model, alias, field_expr, query)
+        sql_field = model._field_to_sql(alias, field_expr, query)
         # make sure value is a set of bool
         if operator in ('=', '!='):
             operator = 'in' if operator == '=' else 'not in'

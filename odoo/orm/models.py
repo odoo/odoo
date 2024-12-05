@@ -1985,7 +1985,7 @@ class BaseModel(metaclass=MetaModel):
             return SQL.identifier(rel_alias, field.column2)
 
         else:
-            sql_expr = field.expression_to_sql(self, self._table, fname, query)
+            sql_expr = self._field_to_sql(self._table, fname, query)
 
         if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
             if not granularity:
@@ -1994,10 +1994,10 @@ class BaseModel(metaclass=MetaModel):
                 raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
 
             if granularity in READ_GROUP_NUMBER_GRANULARITY:
-                sql_expr = field._add_sql_for_property(self, sql_expr, granularity)
+                sql_expr = field.property_to_sql(sql_expr, granularity, self, self._table, query)
             elif field.type == 'datetime':
                 # set the timezone only
-                sql_expr = field._add_sql_for_property(self, sql_expr, '')
+                sql_expr = field.property_to_sql(sql_expr, 'tz', self, self._table, query)
 
             if granularity == 'week':
                 # first_week_day: 0=Monday, 1=Tuesday, ...
@@ -2800,7 +2800,7 @@ class BaseModel(metaclass=MetaModel):
 
         return model, model._fields[last_fname], alias
 
-    def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
         The method also checks that the field is accessible for reading.
@@ -2812,23 +2812,34 @@ class BaseModel(metaclass=MetaModel):
         result to make method :meth:`~odoo.api.Environment.execute_query` flush
         the field before executing the query.
         """
+        fname = get_field_name_from_expression(field_expr)
         field = self._fields.get(fname)
         if not field:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
+        if fname != field_expr:
+            property_name = field_expr[len(fname) + 1:]
+            if not field_expr.startswith(fname + '.') or not property_name:
+                raise ValueError(f"Invalid field expression {field_expr!r} on model {self._name!r}")
+        else:
+            property_name = None
+
         if field.related and not field.store:
             model, field, alias = self._traverse_related_sql(alias, field, query)
-            return model._field_to_sql(alias, field.name, query)
+            related_expr = field.name if not property_name else f"{field.name}.{property_name}"
+            return model._field_to_sql(alias, related_expr, query)
 
         self._check_field_access(field, 'read')
 
-        return field.to_sql(self, alias, flush)
+        sql = field.to_sql(self, alias, flush)
+        sql = field.property_to_sql(sql, property_name, self, alias, query)
+        return sql
 
     def _read_group_groupby_properties(self, field: Field, property_name: str, query: Query) -> SQL:
         fname = field.name
         definition = self.get_property_definition(f"{fname}.{property_name}")
         property_type = definition.get('type')
-        sql_property = field.expression_to_sql(self, self._table, f'{fname}.{property_name}', query)
+        sql_property = self._field_to_sql(self._table, f'{fname}.{property_name}', query)
 
         # JOIN on the JSON array
         if property_type in ('tags', 'many2many'):
@@ -5411,10 +5422,10 @@ class BaseModel(metaclass=MetaModel):
             comodel = self.env[field.comodel_name]
             if field_name.endswith('.id'):
                 coorder = 'id'
-                sql_field = field.expression_to_sql(self, alias, fname, query)
+                sql_field = self._field_to_sql(alias, fname, query)
             else:
                 coorder = comodel._order
-                sql_field = field.expression_to_sql(self, alias, field_name, query)
+                sql_field = self._field_to_sql(alias, field_name, query)
 
             if coorder == 'id':
                 if query.groupby:
@@ -5444,7 +5455,7 @@ class BaseModel(metaclass=MetaModel):
                 terms.append(term)
             return SQL(", ").join(terms)
 
-        sql_field = field.expression_to_sql(self, alias, field_name, query)
+        sql_field = self._field_to_sql(alias, field_name, query)
         if field.type == 'boolean':
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
         if query.groupby:

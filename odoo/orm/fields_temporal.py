@@ -33,29 +33,18 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
     add = staticmethod(date_utils.add)
     subtract = staticmethod(date_utils.subtract)
 
-    def expression_to_sql(self, model: BaseModel, alias: str, field_expr: str, query: Query) -> SQL:
-        if "." in field_expr:
-            fname, property_name = field_expr.split('.', 1)
-            sql_field = super().expression_to_sql(model, alias, fname, query)
-            return self._add_sql_for_property(model, sql_field, property_name)
-        return super().expression_to_sql(model, alias, field_expr, query)
-
-    @classmethod
-    def _add_sql_for_property(cls, model: BaseModel, sql_expr: SQL, property_name: str) -> SQL:
-        """Wrap the SQL expression to extract a property from it.
-
-        :param model: Model of the field
-        :param sql_expr: The SQL expression returning a date
-        :param property_name: Name of the property
-        :return: SQL to get a value from the date
-        """
+    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
+        if not property_name:
+            return field_sql
+        sql_expr = field_sql
         timezone = model.env.context.get('tz')
-        if cls.type == 'datetime' and timezone:
+        if self.type == 'datetime' and timezone:
             if timezone in pytz.all_timezones_set:
                 sql_expr = SQL("timezone(%s, timezone('UTC', %s))", timezone, sql_expr)
             else:
                 _logger.warning("Grouping in unknown / legacy timezone %r", timezone)
-        if not property_name:
+        if property_name == 'tz':
+            # set only the timezone
             return sql_expr
         if property_name not in READ_GROUP_NUMBER_GRANULARITY:
             raise ValueError(f'Error when processing the granularity {property_name} is not supported. Only {", ".join(READ_GROUP_NUMBER_GRANULARITY.keys())} are supported')

@@ -1148,15 +1148,15 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             return SQL('(%s->>0)::%s', sql_field, SQL(self._column_type[1]))
         return sql_field
 
-    def expression_to_sql(self, model: BaseModel, alias: str, field_expr: str, query: Query) -> SQL:
+    def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         expression from the given table alias.
 
         The query object is necessary for fields that need to add tables to the query.
         """
-        if field_expr != self.name:
-            raise ValueError(f"Invalid field expression {field_expr!r} on {self}")
-        return model._field_to_sql(alias, field_expr, query)
+        if not property_name:
+            return field_sql
+        raise ValueError(f"Invalid field property {property_name!r} on {self}")
 
     def condition_to_sql(self, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
         """ Return an :class:`SQL` object that represents the domain condition
@@ -1188,7 +1188,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         return SQL("%s::text", sql_field)
 
     def __condition_to_sql(self, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
-        sql_field = self.expression_to_sql(model, alias, field_expr, query)
+        sql_field = model._field_to_sql(alias, field_expr, query)
 
         def _value_to_column(v):
             return self.convert_to_column(v, model, validate=False)
