@@ -98,6 +98,28 @@ class ir_cron(models.Model):
             self = self.with_context(default_state='code')
         return super(ir_cron, self).default_get(fields_list)
 
+<<<<<<< saas-17.2
+||||||| 347b2eb1aa2ec576e9d228d2dd2019c38160e636
+    @api.onchange('active', 'interval_number')
+    def _onchange_interval_number(self):
+        if self.active and self.interval_number <= 0:
+            self.active = False
+            return {'warning': {
+                'title': _("Scheduled action disabled"),
+                'message': _("This scheduled action has been disabled because its interval number is not a strictly positive value.")}
+            }
+
+=======
+    @api.onchange('active', 'interval_number', 'interval_type')
+    def _onchange_interval_number(self):
+        if self.active and (self.interval_number <= 0 or not self.interval_type):
+            self.active = False
+            return {'warning': {
+                'title': _("Scheduled action disabled"),
+                'message': _("This scheduled action has been disabled because its interval number is not a strictly positive value.")}
+            }
+
+>>>>>>> 0e33f143f9d7293b56a4ad946cf6fb345cb9b90a
     def method_direct_trigger(self):
         self.ensure_one()
         self.check_access_rights('write')
