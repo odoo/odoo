@@ -582,7 +582,7 @@ class MailThread(models.AbstractModel):
         model_fields = {
             name
             for name, field in self._fields.items()
-            if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
+            if getattr(field, 'tracking', None)
         }
 
         return model_fields and set(self.fields_get(model_fields, attributes=()))
@@ -4247,7 +4247,7 @@ class MailThread(models.AbstractModel):
 
         Default value of this method is to return the new responsible of
         documents. This is done using relational fields linking to res.users
-        with track_visibility set. Since OpenERP v7 it is considered as being
+        with tracking set. It is considered as being
         responsible for the document and therefore standard behavior is to
         subscribe the user and send them a notification.
 
@@ -4260,7 +4260,7 @@ class MailThread(models.AbstractModel):
         fnames = []
         field = self._fields.get('user_id')
         user_id = updated_values.get('user_id')
-        if field and user_id and field.comodel_name == 'res.users' and (getattr(field, 'track_visibility', False) or getattr(field, 'tracking', False)):
+        if field and user_id and field.comodel_name == 'res.users' and getattr(field, 'tracking', False):
             user = self.env['res.users'].sudo().browse(user_id)
             try: # avoid to make an exists, lets be optimistic and try to read it.
                 if user.active:
