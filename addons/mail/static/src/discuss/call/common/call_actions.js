@@ -40,8 +40,15 @@ callActionsRegistry
     })
     .add("camera-on", {
         condition: (component) => component.rtc,
-        name: (component) =>
-            component.rtc.selfSession.is_camera_on ? _t("Stop camera") : _t("Turn camera on"),
+        unavailable: (component) => component.rtc?.isRemote,
+        name: (component) => {
+            if (component.rtc?.isRemote) {
+                return _t("Camera is unavailable outside the call tab.");
+            }
+            return component.rtc.selfSession.is_camera_on
+                ? _t("Stop camera")
+                : _t("Turn camera on");
+        },
         isActive: (component) => component.rtc.selfSession?.is_camera_on,
         icon: "fa-video-camera",
         activeClass: "text-success",
@@ -59,10 +66,15 @@ callActionsRegistry
     })
     .add("share-screen", {
         condition: (component) => component.rtc && !isMobileOS(),
-        name: (component) =>
-            component.rtc.selfSession.is_screen_sharing_on
+        unavailable: (component) => component.rtc?.isRemote,
+        name: (component) => {
+            if (component.rtc?.isRemote) {
+                return _t("Screen sharing is unavailable outside the call tab.");
+            }
+            return component.rtc.selfSession.is_screen_sharing_on
                 ? _t("Stop Sharing Screen")
-                : _t("Share Screen"),
+                : _t("Share Screen");
+        },
         isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
         icon: "fa-desktop",
         activeClass: "text-success",
@@ -71,7 +83,10 @@ callActionsRegistry
     })
     .add("blur-background", {
         condition: (component) =>
-            !isBrowserSafari() && component.rtc && component.rtc.selfSession?.is_camera_on,
+            !isBrowserSafari() &&
+            component.rtc &&
+            component.rtc.selfSession?.is_camera_on &&
+            component.rtc?.isHost,
         name: (component) =>
             component.store.settings.useBlur ? _t("Remove Blur") : _t("Blur Background"),
         isActive: (component) => component.store?.settings?.useBlur,
@@ -104,6 +119,9 @@ function transformAction(component, id, action) {
         /** Condition to display this action */
         get condition() {
             return action.condition(component);
+        },
+        get unavailable() {
+            return action.unavailable?.(component);
         },
         /** Name of this action, displayed to the user */
         get name() {

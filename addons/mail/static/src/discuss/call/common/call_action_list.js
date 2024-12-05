@@ -24,7 +24,7 @@ export class CallActionList extends Component {
     }
 
     get isOfActiveCall() {
-        return Boolean(this.props.thread.eq(this.rtc.state?.channel));
+        return Boolean(this.props.thread.eq(this.rtc.channel));
     }
 
     get isSmall() {
