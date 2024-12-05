@@ -234,16 +234,17 @@
             <list string="Event Track" multi_edit="1">
                 <field name="name"/>
                 <field name="active" column_invisible="True"/>
-                <field name="partner_name"/>
+                <field name="partner_name" string="Speaker Name"/>
                 <field name="partner_id" optional="hide"/>
-                <field name="partner_email"/>
-                <field name="partner_phone"/>
+                <field name="partner_email" optional="hide"/>
+                <field name="partner_phone" optional="hide"/>
                 <field name="event_id" column_invisible="context.get('default_event_id')"/>
                 <field name="wishlisted_by_default" optional="hide"/>
                 <field name="wishlist_visitor_count" optional="hide"/>
                 <field name="stage_id"/>
-                <field name="color" widget="color_picker" optional="hide"/>
+                <field name="color" string="Color" widget="color_picker"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
+                <field name="location_id"/>
             </list>
         </field>
     </record>

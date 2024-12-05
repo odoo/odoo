@@ -248,7 +248,7 @@
                     <t t-if="availability_check" t-foreach="tickets" t-as="ticket">
                         <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                             <t t-set="counter" t-value="counter + 1"/>
-                            <div class="modal-body">
+                            <div t-attf-class="#{'modal-body' if event.specific_question_ids else 'd-none'}">
                                 <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Ticket #<span t-out="counter"/> <small class="text-muted">- <span t-out="ticket['name']"/></small></h5>
                                 <div t-if="event.specific_question_ids" class="row">
                                     <t t-foreach="event.specific_question_ids" t-as="question">
