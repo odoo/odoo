@@ -604,6 +604,23 @@ class TestAPI(SavepointCaseWithUserDemo):
         )
 
     @mute_logger('odoo.models')
+    def test_80_partition(self):
+        """ Check partition on recordsets. """
+        ps = self.partners
+        customers = ps.browse([p.id for p in ps if p.employee])
+        others = ps - customers
+
+        # partition on a single field
+        self.assertEqual(ps.partitionned(lambda p: p.employee), (customers, others))
+        self.assertEqual(ps.partitionned('employee'), (customers, others))
+
+        # partition on a sequence of fields
+        self.assertEqual(
+            ps.partitionned(lambda p: p.parent_id.employee),
+            ps.partitionned('parent_id.employee')
+        )
+
+    @mute_logger('odoo.models')
     def test_80_map(self):
         """ Check map on recordsets. """
         ps = self.partners
