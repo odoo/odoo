@@ -22,6 +22,7 @@
                             <group>
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                 <field name="active" widget="boolean_toggle"/>
+                                <field name="has_group" widget="many2many_tags" invisible="redirect_type in ('301','302')" required="true"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>
                         </group>
