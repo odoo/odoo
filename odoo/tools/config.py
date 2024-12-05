@@ -190,7 +190,9 @@ class configmanager:
         group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
         group.add_option("--without-demo", dest="without_demo", my_default=False, type='without_demo', metavar='BOOL', nargs='?', const=True,
-                         help="use with -i/--init, skip installing fake demonstration data (e.g. Mitchel Admin/Azure Interior)")
+                         help="(DEPRECATED) use with -i/--init, skip installing fake demonstration data (e.g. Mitchel Admin/Azure Interior)")
+        group.add_option("--with-demo", dest="with_demo", action="store_true", my_default=False,
+                         help="Enable loading demo data for modules to be installed. Requires -d and -i. Default is %default")
         group.add_option("-P", "--import-partial", dest="import_partial", type='path', my_default='',
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", type='path', my_default='',
@@ -616,7 +618,7 @@ class configmanager:
         ]))
 
         self._runtime_options['init'] = dict.fromkeys(self['init'], True) or {}
-        self._runtime_options['demo'] = dict(self['init']) if not self['without_demo'] else {}
+        self._runtime_options['demo'] = dict(self['init']) if self['with_demo'] else {}
         self._runtime_options['update'] = dict.fromkeys(self['update'], True) or {}
         self._runtime_options['translate_modules'] = sorted(self['translate_modules'])
 
@@ -668,6 +670,13 @@ class configmanager:
                         "to different values. Please remove the first "
                         "one and make sure the second is correct."
                     )
+        if self.options.get('without_demo'):
+            self._warn(
+                "The without-demo option has been deprecated. "
+                "The default behavior is to load without demo data. "
+                "Please use --with-demo if you wish to install demo data.",
+                DeprecationWarning
+            )
 
     @classmethod
     def _is_addons_path(cls, path):
