@@ -54,6 +54,7 @@ odoo_help() {
   echo 'odoo_stop           Stops Odoo service'
   echo 'odoo_restart        Restarts Odoo service'
   echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
+  echo 'devtools            Enables/Disables specific functions for development (more help with devtools help)'
   echo ''
   echo 'Odoo IoT online help: <https://www.odoo.com/documentation/master/applications/general/iot.html>'
 }
@@ -83,6 +84,35 @@ pip() {
     additional_arg=\"--user\"
   fi
   pip3 \"\$1\" \"\$2\" --break-system-package \$additional_arg
+}
+
+devtools() {
+  if [[ -z \"\$1\" || -z \"\$2\" || ! (\"\$1\" == \"enable\" || \"\$1\" == \"disable\") || ! (\"\$2\" == \"general\" || \"\$2\" == \"actions\") || \"\$1\" == \"-h\" ]]; then
+    echo 'Usage: devtools <enable/disable> <general/actions> [action name]'
+    echo ''
+    echo 'Only provide an action name if you want do enable/disable a specific device action.'
+    echo 'If no action name is provided, all actions will be enabled/disabled.'
+    echo 'To enable/disable multiple actions, enclose them in quotes separated by commas.'
+    return 1
+  fi
+  write_mode
+  if ! grep -q '^\[devtools\]' /home/pi/odoo.conf; then
+    printf '\n[devtools]\n' >> /home/pi/odoo.conf
+  fi
+  if [ \"\$1\" == \"disable\" ]; then
+    if [[ -z \"\$3\" ]]; then
+      value=\"*\"
+    else
+      value=\"\$3\"
+    fi
+    # Remove action/general from conf to avoid duplicate keys
+    devtools enable \$2
+    write_mode
+    sed -i \"/^\[devtools\]/a\\\\\$2 = \$value\" /home/pi/odoo.conf
+  elif [ \"\$1\" == \"enable\" ]; then
+    sed -i \"/\[devtools\]/,/\[/{/\$2 =/d}\" /home/pi/odoo.conf
+  fi
+  read_mode
 }
 " | tee -a ~/.bashrc /home/pi/.bashrc
 
