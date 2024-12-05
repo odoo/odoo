@@ -1,25 +1,23 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
 
-from odoo.fields import Datetime
-from odoo.tests.common import TransactionCase
+from odoo.fields import Command, Datetime
+
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
-class TestWebsiteEventSaleCommon(TransactionCase):
+class TestWebsiteEventSaleCommon(WebsiteSaleCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestWebsiteEventSaleCommon, cls).setUpClass()
+        super().setUpClass()
 
-        cls.env.company.country_id = cls.env.ref('base.us')
         cls.currency_test = cls.env['res.currency'].create({
             'name': 'eventX',
             'rounding': 0.01,
             'symbol': 'EX',
         })
-        cls.partner = cls.env['res.partner'].create({'name': 'test'})
         cls.env['res.currency.rate'].search([]).unlink()
         cls.rate = cls.env['res.currency.rate'].create({
             'company_id': cls.env.company.id,
@@ -40,7 +38,7 @@ class TestWebsiteEventSaleCommon(TransactionCase):
             'service_tracking': 'event',
             'list_price': 100,
             'name': 'Event Registration No Company Assigned',
-            'taxes_id': [(6, 0, cls.zero_tax.ids)],
+            'taxes_id': [Command.set(cls.zero_tax.ids)],
         })
 
         cls.event, cls.event_2 = cls.env['event.event'].create([
@@ -74,23 +72,16 @@ class TestWebsiteEventSaleCommon(TransactionCase):
             }
         ])
 
-        cls.current_website = cls.env['website'].get_current_website()
-        cls.pricelist = cls.env['product.pricelist'].create({'name': 'Base Pricelist'})
-
-        cls.so = cls.env['sale.order'].create({
-            'company_id': cls.env.company.id,
-            'partner_id': cls.partner.id,
-            'pricelist_id': cls.pricelist.id,
-        })
-
         def create_pricelist(currency, name):
             return cls.env['product.pricelist'].create({
                 'currency_id': currency.id,
-                'item_ids': [(5, 0, 0), (0, 0, {
-                    'applied_on': '3_global',
-                    'compute_price': 'percentage',
-                    'percent_price': 10,
-                })],
+                'item_ids': [
+                    Command.create({
+                        'applied_on': '3_global',
+                        'compute_price': 'percentage',
+                        'percent_price': 10,
+                    }),
+                ],
                 'name': name,
                 'selectable': True,
             })

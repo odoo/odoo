@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+
 from datetime import datetime
 
 from werkzeug.exceptions import Forbidden, NotFound
@@ -11,15 +12,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
-from odoo.tools import (
-    SQL,
-    clean_context,
-    float_round,
-    groupby,
-    lazy,
-    single_email_re,
-    str2bool,
-)
+from odoo.tools import SQL, clean_context, float_round, groupby, lazy, single_email_re, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 
@@ -29,6 +22,7 @@ from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website_sale.models.website import PRICELIST_SESSION_CACHE_KEY
 
 
 class TableCompute:
@@ -240,6 +234,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
+
         try:
             min_price = float(min_price)
         except ValueError:
@@ -293,20 +288,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
 
+        # Check if we need to refresh the cached pricelist
         now = datetime.timestamp(datetime.now())
-        pricelist = website.pricelist_id
         if 'website_sale_pricelist_time' in request.session:
-            # Check if we need to refresh the cached pricelist
             pricelist_save_time = request.session['website_sale_pricelist_time']
             if pricelist_save_time < now - 60*60:
-                request.session.pop('website_sale_current_pl', None)
-                website.invalidate_recordset(['pricelist_id'])
-                pricelist = website.pricelist_id
+                request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
+                # restart the counter
                 request.session['website_sale_pricelist_time'] = now
-                request.session['website_sale_current_pl'] = pricelist.id
-        else:
-            request.session['website_sale_pricelist_time'] = now
-            request.session['website_sale_current_pl'] = pricelist.id
 
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
@@ -677,7 +666,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'view_track': view_track,
         }
 
-    @route(['/shop/change_pricelist/<model("product.pricelist"):pricelist>'], type='http', auth="public", website=True, sitemap=False)
+    @route(
+        '/shop/change_pricelist/<model("product.pricelist"):pricelist>',
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+    )
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
         redirect_url = request.httprequest.referrer
@@ -694,7 +689,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 min_price = args.get('min_price')
                 max_price = args.get('max_price')
                 if min_price or max_price:
-                    previous_price_list = request.website.pricelist_id
+                    previous_price_list = request.pricelist
                     try:
                         min_price = float(min_price)
                         args['min_price'] = min_price and str(
@@ -710,34 +705,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     except (ValueError, TypeError):
                         pass
                     redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
-            request.session['website_sale_current_pl'] = pricelist.id
-            order_sudo = request.website.sale_get_order()
-            if order_sudo:
-                order_sudo._cart_update_pricelist(pricelist_id=pricelist.id)
+            request.website._apply_pricelist(pricelist)
         return request.redirect(redirect_url or '/shop')
 
-    @route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
+    @route('/shop/pricelist', type='http', auth='public', website=True, sitemap=False)
     def pricelist(self, promo, **post):
         redirect = post.get('r', '/shop/cart')
-        # empty promo code is used to reset/remove pricelist (see `sale_get_order()`)
         if promo:
             pricelist_sudo = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
             if not (pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id)):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
-            request.session['website_sale_current_pl'] = pricelist_sudo.id
-            order_sudo = request.website.sale_get_order()
-            if order_sudo:
-                order_sudo._cart_update_pricelist(pricelist_id=pricelist_sudo.id)
+            request.website._apply_pricelist(pricelist_sudo)
         else:
             # Reset the pricelist if empty promo code is given
-            request.session.pop('website_sale_current_pl', None)
-            order_sudo = request.website.sale_get_order()
-            if order_sudo:
-                pl_before = order_sudo.pricelist_id
-                order_sudo._compute_pricelist_id()
-                if order_sudo.pricelist_id != pl_before:
-                    order_sudo._recompute_prices()
+            request.website._apply_pricelist(request.env['product.pricelist'])
         return request.redirect(redirect)
 
     def _cart_values(self, **post):
@@ -757,12 +739,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
 
-        order = request.website.sale_get_order()
-        if order and order.state != 'draft':
-            request.session['sale_order_id'] = None
-            order = request.website.sale_get_order()
-
-        request.session['website_sale_cart_quantity'] = order.cart_quantity
+        order_sudo = request.cart
 
         values = {}
         if access_token:
@@ -771,24 +748,24 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 raise NotFound()
             if abandoned_order.state != 'draft':  # abandoned cart already finished
                 values.update({'abandoned_proceed': True})
-            elif revive == 'squash' or (revive == 'merge' and not request.session.get('sale_order_id')):  # restore old cart or merge with unexistant
+            elif revive == 'squash' or (revive == 'merge' and not order_sudo):  # restore old cart or merge with unexistant
                 request.session['sale_order_id'] = abandoned_order.id
                 return request.redirect('/shop/cart')
             elif revive == 'merge':
-                abandoned_order.order_line.write({'order_id': request.session['sale_order_id']})
+                abandoned_order.order_line.write({'order_id': order_sudo.id})
                 abandoned_order.action_cancel()
-            elif abandoned_order.id != request.session.get('sale_order_id'):  # abandoned cart found, user have to choose what to do
+            elif abandoned_order.id != order_sudo.id:  # abandoned cart found, user have to choose what to do
                 values.update({'access_token': abandoned_order.access_token})
 
         values.update({
-            'website_sale_order': order,
+            'website_sale_order': order_sudo,
             'date': fields.Date.today(),
             'suggested_products': [],
         })
-        if order:
-            order.order_line.filtered(lambda sol: sol.product_id and not sol.product_id.active).unlink()
-            values['suggested_products'] = order._cart_accessories()
-            values.update(self._get_express_shop_payment_values(order))
+        if order_sudo:
+            order_sudo._verify_cart()
+            values['suggested_products'] = order_sudo._cart_accessories()
+            values.update(self._get_express_shop_payment_values(order_sudo))
 
         values.update(self._cart_values(**post))
         return request.render("website_sale.cart", values)
@@ -799,10 +776,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         no_variant_attribute_value_ids=None, **kwargs
     ):
         """This route is called when adding a product to cart (no options)."""
-        sale_order = request.website.sale_get_order(force_create=True)
-        if sale_order.state != 'draft':
-            request.session['sale_order_id'] = None
-            sale_order = request.website.sale_get_order(force_create=True)
+        sale_order = request.cart or request.website._create_cart()
 
         if product_custom_attribute_values:
             product_custom_attribute_values = json_scriptsafe.loads(product_custom_attribute_values)
@@ -824,8 +798,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             **kwargs
         )
 
-        request.session['website_sale_cart_quantity'] = sale_order.cart_quantity
-
         return request.redirect("/shop/cart")
 
     @route(['/shop/cart/update_json'], type='jsonrpc', auth="public", methods=['POST'], website=True)
@@ -839,13 +811,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             - When adding a product from the wishlist.
             - When adding a product to cart on the same page (without redirection).
         """
-        order = request.website.sale_get_order(force_create=True)
-        if order.state != 'draft':
-            request.website.sale_reset()
-            if kwargs.get('force_create'):
-                order = request.website.sale_get_order(force_create=True)
-            else:
-                return {}
+        order_sudo = request.cart or request.website._create_cart()
 
         if product_custom_attribute_values:
             product_custom_attribute_values = json_scriptsafe.loads(product_custom_attribute_values)
@@ -858,7 +824,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 int(ptav_data['value']) for ptav_data in no_variants_attribute_values_data
             ]
 
-        values = order._cart_update(
+        values = order_sudo._cart_update(
             product_id=product_id,
             line_id=line_id,
             add_qty=add_qty,
@@ -873,40 +839,39 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if line.product_type == 'combo' and line.linked_line_ids:
             for linked_line_id in line.linked_line_ids:
                 if values['quantity'] != linked_line_id.product_uom_qty:
-                    order._cart_update(
+                    order_sudo._cart_update(
                         product_id=linked_line_id.product_id.id,
                         line_id=linked_line_id.id,
                         set_qty=values['quantity'],
                     )
 
-        values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
-        values['notification_info']['warning'] = values.pop('warning', '')
-        request.session['website_sale_cart_quantity'] = order.cart_quantity
-
-        if not order.cart_quantity:
-            request.website.sale_reset()
-            return values
-
-        values['cart_quantity'] = order.cart_quantity
-        values['minor_amount'] = payment_utils.to_minor_currency_units(
-            order.amount_total, order.currency_id
+        values['notification_info'] = self._get_cart_notification_information(
+            order_sudo, [values['line_id']]
         )
-        values['amount'] = order.amount_total
+        values['notification_info']['warning'] = values.pop('warning', '')
+
+        values['cart_quantity'] = order_sudo.cart_quantity
+
+        # Update express checkout form with new amounts
+        values['minor_amount'] = payment_utils.to_minor_currency_units(
+            order_sudo.amount_total, order_sudo.currency_id
+        )
+        values['amount'] = order_sudo.amount_total
 
         if not display:
             return values
 
-        values['cart_ready'] = order._is_cart_ready()
+        values['cart_ready'] = order_sudo._is_cart_ready()
         values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
             "website_sale.cart_lines", {
-                'website_sale_order': order,
+                'website_sale_order': order_sudo,
                 'date': fields.Date.today(),
-                'suggested_products': order._cart_accessories()
+                'suggested_products': order_sudo._cart_accessories()
             }
         )
         values['website_sale.total'] = request.env['ir.ui.view']._render_template(
             "website_sale.total", {
-                'website_sale_order': order,
+                'website_sale_order': order_sudo,
             }
         )
         return values
@@ -919,14 +884,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/cart/quantity'], type='jsonrpc', auth="public", methods=['POST'], website=True)
     def cart_quantity(self):
         if 'website_sale_cart_quantity' not in request.session:
-            return request.website.sale_get_order().cart_quantity
+            return request.cart.cart_quantity
         return request.session['website_sale_cart_quantity']
 
     @route(['/shop/cart/clear'], type='jsonrpc', auth="public", website=True)
     def clear_cart(self):
-        order = request.website.sale_get_order()
-        for line in order.order_line:
-            line.unlink()
+        request.cart.order_line.unlink()
 
     def _get_cart_notification_information(self, order, line_ids):
         """ Get the information about the sale order lines to show in the notification.
@@ -993,7 +956,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: str
         """
         try_skip_step = str2bool(try_skip_step or 'false')
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
         request.session['sale_last_order_id'] = order_sudo.id
 
         if redirection := self._check_cart_and_addresses(order_sudo):
@@ -1088,8 +1051,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         partner_id = partner_id and int(partner_id)
         use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
-        order_sudo = request.website.sale_get_order()
 
+        order_sudo = request.cart
         if redirection := self._check_cart(order_sudo):
             return redirection
 
@@ -1207,7 +1170,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: A JSON-encoded feedback, with either the success URL or an error message.
         :rtype: str
         """
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
         if redirection := self._check_cart(order_sudo):
             return redirection
 
@@ -1557,7 +1520,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :param dict address_values: The address value.
         :return: None
         """
-        pass
 
     @route(
         _express_checkout_route, type='jsonrpc', methods=['POST'], auth="public", website=True,
@@ -1577,7 +1539,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :param dict kwargs: Optional data. This parameter is not used here.
         :return int: The order's partner id.
         """
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
 
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
@@ -1701,8 +1663,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def shop_update_address(self, partner_id, address_type='billing', **kw):
         partner_id = int(partner_id)
 
-        order_sudo = request.website.sale_get_order()
-        if not order_sudo:
+        if not (order_sudo := request.cart):
             return
 
         ResPartner = request.env['res.partner'].sudo()
@@ -1734,7 +1695,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @route(['/shop/confirm_order'], type='http', auth="public", website=True, sitemap=False)
     def shop_confirm_order(self, **post):
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
 
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
@@ -1757,8 +1718,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect("/shop/payment")
 
         # check that cart is valid
-        order = request.website.sale_get_order()
-        redirection = self._check_cart(order)
+        order_sudo = request.cart
+        redirection = self._check_cart(order_sudo)
         open_editor = request.params.get('open_editor') == 'true'
         # Do not redirect if it is to edit
         # (the information is transmitted via the "open_editor" parameter in the url)
@@ -1766,11 +1727,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return redirection
 
         values = {
-            'website_sale_order': order,
+            'website_sale_order': order_sudo,
             'post': post,
             'escape': lambda x: x.replace("'", r"\'"),
-            'partner': order.partner_id.id,
-            'order': order,
+            'partner': order_sudo.partner_id.id,
+            'order': order_sudo,
         }
         return request.render("website_sale.extra_info", values)
 
@@ -1847,7 +1808,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
            did go to a payment.provider website but closed the tab without
            paying / canceling
         """
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
 
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
@@ -1869,35 +1830,38 @@ class WebsiteSale(payment_portal.PaymentPortal):
          - UDPATE ME
         """
         if sale_order_id is None:
-            order = request.website.sale_get_order()
-            if not order and 'sale_last_order_id' in request.session:
+            order_sudo = request.cart
+            if not order_sudo and 'sale_last_order_id' in request.session:
                 # Retrieve the last known order from the session if the session key `sale_order_id`
                 # was prematurely cleared. This is done to prevent the user from updating their cart
                 # after payment in case they don't return from payment through this route.
                 last_order_id = request.session['sale_last_order_id']
-                order = request.env['sale.order'].sudo().browse(last_order_id).exists()
+                order_sudo = request.env['sale.order'].sudo().browse(last_order_id).exists()
         else:
-            order = request.env['sale.order'].sudo().browse(sale_order_id)
-            assert order.id == request.session.get('sale_last_order_id')
+            order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
+            assert order_sudo.id == request.session.get('sale_last_order_id')
 
-        errors = self._get_shop_payment_errors(order)
+        if not order_sudo:
+            return request.redirect('/shop')
+
+        errors = self._get_shop_payment_errors(order_sudo)
         if errors:
             first_error = errors[0]  # only display first error
             error_msg = f"{first_error[0]}\n{first_error[1]}"
             raise ValidationError(error_msg)
 
-        tx_sudo = order.get_portal_last_transaction() if order else order.env['payment.transaction']
-
-        if not order or (order.amount_total and not tx_sudo):
+        tx_sudo = order_sudo.get_portal_last_transaction()
+        if order_sudo.amount_total and not tx_sudo:
             return request.redirect('/shop')
 
-        if order and not order.amount_total and not tx_sudo:
-            if order.state != 'sale':
-                order._validate_order()
+        if not order_sudo.amount_total and not tx_sudo:
+            if order_sudo.state != 'sale':
+                # Only confirm the order if it wasn't already confirmed.
+                order_sudo._validate_order()
 
             # clean context and session, then redirect to the portal page
             request.website.sale_reset()
-            return request.redirect(order.get_portal_url())
+            return request.redirect(order_sudo.get_portal_url())
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()
@@ -2212,5 +2176,5 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website = request.website
         kwargs.update({
             'currency_id': website.currency_id.id,
-            'pricelist_id': website.pricelist_id.id,
+            'pricelist_id': request.pricelist.id,
         })

@@ -279,7 +279,7 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
             'list_price': 100,
             'optional_product_ids': [Command.set(optional_product.ids)],
         })
-        self.env['website'].get_current_website().pricelist_id.write({
+        self.env['website'].get_current_website().get_pricelist_available().write({
             'item_ids': [
                 Command.create({
                     'applied_on': "1_product",

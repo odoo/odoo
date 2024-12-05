@@ -49,10 +49,7 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         :rtype: dict
         :return: A dict containing information about the cart update.
         """
-        order_sudo = request.website.sale_get_order(force_create=True)
-        if order_sudo.state != 'draft':
-            request.session['sale_order_id'] = None
-            order_sudo = request.website.sale_get_order(force_create=True)
+        order_sudo = request.cart or request.website._create_cart()
 
         values = order_sudo._cart_update(
             product_id=combo_product_id,

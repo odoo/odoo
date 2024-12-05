@@ -8,6 +8,10 @@ from odoo.http import request, route
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
+from odoo.addons.website_sale.models.website import (
+    FISCAL_POSITION_SESSION_CACHE_KEY,
+    PRICELIST_SESSION_CACHE_KEY,
+)
 
 
 class WebsiteSaleForm(WebsiteForm):
@@ -20,23 +24,22 @@ class WebsiteSaleForm(WebsiteForm):
         except ValidationError as e:
             return json.dumps({'error_fields': e.args[0]})
 
-        order = request.website.sale_get_order()
-        if not order:
+        if not (order_sudo := request.cart):
             return json.dumps({'error': "No order found; please add a product to your cart."})
 
         if data['record']:
-            order.write(data['record'])
+            order_sudo.write(data['record'])
 
         if data['custom']:
-            order._message_log(
+            order_sudo._message_log(
                 body=nl2br_enclose(data['custom'], 'p'),
                 message_type='comment',
             )
 
         if data['attachments']:
-            self.insert_attachment(model_record, order.id, data['attachments'])
+            self.insert_attachment(model_record, order_sudo.id, data['attachments'])
 
-        return json.dumps({'id': order.id})
+        return json.dumps({'id': order_sudo.id})
 
 
 class Website(main.Website):
@@ -44,7 +47,8 @@ class Website(main.Website):
     def _login_redirect(self, uid, redirect=None):
         # If we are logging in, clear the current pricelist to be able to find
         # the pricelist that corresponds to the user afterwards.
-        request.session.pop('website_sale_current_pl', None)
+        request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
+        request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
         return super()._login_redirect(uid, redirect=redirect)
 
     @route()

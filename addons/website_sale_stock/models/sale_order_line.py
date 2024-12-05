@@ -15,4 +15,4 @@ class SaleOrderLine(models.Model):
         return self.shop_warning
 
     def _get_max_available_qty(self):
-        return self.product_id.free_qty - self.product_id._get_cart_qty()
+        return self.product_id.free_qty - self.product_id._get_cart_qty(order_sudo=self.order_id)

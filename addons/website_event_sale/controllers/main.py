@@ -27,15 +27,11 @@ class WebsiteEventSaleController(WebsiteEventController):
             for event_ticket in request.env['event.event.ticket'].sudo().browse(event_ticket_ids)
         }
 
-        if all(event_ticket.price == 0 for event_ticket in event_ticket_by_id.values()) and not request.website.sale_get_order().id:
+        if all(event_ticket.price == 0 for event_ticket in event_ticket_by_id.values()) and not request.cart.id:
             # all chosen tickets are free AND no existing SO -> skip SO and payment process
             return super()._create_attendees_from_registration_post(event, registration_data)
 
-        order_sudo = request.website.sale_get_order(force_create=True)
-        if order_sudo.state != 'draft':
-            request.website.sale_reset()
-            order_sudo = request.website.sale_get_order(force_create=True)
-
+        order_sudo = request.cart or request.website._create_cart()
         tickets_data = defaultdict(int)
         for data in registration_data:
             event_ticket_id = data.get('event_ticket_id')
@@ -59,8 +55,6 @@ class WebsiteEventSaleController(WebsiteEventController):
                 data['sale_order_id'] = order_sudo.id
                 data['sale_order_line_id'] = cart_data[event_ticket_id]
 
-        request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
-
         return super()._create_attendees_from_registration_post(event, registration_data)
 
     @route()
@@ -68,9 +62,9 @@ class WebsiteEventSaleController(WebsiteEventController):
         res = super().registration_confirm(event, **post)
 
         registrations = self._process_attendees_form(event, post)
-        order_sudo = request.website.sale_get_order()
-        if not order_sudo.id:
-            # order does not contain any lines related to the event, meaning we are confirming only free tickets of this event
+        order_sudo = request.cart
+        if not any(line.event_ticket_id for line in order_sudo.order_line):
+            # order does not contain any tickets, meaning we are confirming a free event
             return res
 
         # we have at least one registration linked to a ticket -> sale mode activate
@@ -78,8 +72,8 @@ class WebsiteEventSaleController(WebsiteEventController):
             if order_sudo.amount_total:
                 request.session['sale_last_order_id'] = order_sudo.id
                 return request.redirect("/shop/checkout")
-            # free tickets -> order with amount = 0: auto-confirm, no checkout
-            elif order_sudo:
+            else:
+                # Free order -> auto confirmation without checkout
                 order_sudo.action_confirm()  # tde notsure: email sending ?
                 request.website.sale_reset()
 

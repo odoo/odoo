@@ -70,7 +70,7 @@ class DeliveryCarrier(models.Model):
         partner_address.geo_localize()  # Calculate coordinates.
 
         pickup_locations = []
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
         for wh in self.warehouse_ids:
             # Prepare the stock data based on either the product or the order.
             if product:  # Called from the product page.

@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
     TestSaleProductAttributeValueCommon,
 )
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install', 'product_attribute')
@@ -70,9 +70,6 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 
     def test_get_combination_info_with_fpos(self):
         # Setup product.
-        current_website = self.env['website'].get_current_website()
-        pricelist = current_website._get_current_pricelist()
-        (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
         product = self.env['product.template'].create({
             'name': 'Test Product',
             'list_price': 2000,
@@ -89,7 +86,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 
         # Setup pricelist: make sure the pricelist has a 10% discount
         self.env['product.pricelist'].search([]).action_archive()
-        pricelist = self.env['product.pricelist'].create({
+        self.env['product.pricelist'].create({
             'name': "test_get_combination_info",
             'company_id': self.env.company.id,
             'website_id': website.id,
@@ -135,7 +132,6 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country
-        website.invalidate_recordset(['fiscal_position_id'])
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
@@ -146,7 +142,6 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 
         # Reset / Safety check
         self.env.user.partner_id.country_id = None
-        website.invalidate_recordset(['fiscal_position_id'])
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "434.78$ + 15% tax")
@@ -154,7 +149,6 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country.id
-        website.invalidate_recordset(['fiscal_position_id'])
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
         self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")

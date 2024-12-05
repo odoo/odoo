@@ -9,8 +9,6 @@ class WebsiteSaleWishlist(Controller):
 
     @route('/shop/wishlist/add', type='jsonrpc', auth='public', website=True)
     def add_to_wishlist(self, product_id, **kw):
-        website = request.website
-        pricelist = website.pricelist_id
         product = request.env['product.product'].browse(product_id)
 
         price = product._get_combination_info_variant()['price']
@@ -23,8 +21,8 @@ class WebsiteSaleWishlist(Controller):
             partner_id = request.env.user.partner_id.id
 
         wish = Wishlist._add_to_wishlist(
-            pricelist.id,
-            pricelist.currency_id.id,
+            request.pricelist.id,
+            request.website.currency_id.id,
             request.website.id,
             price,
             product_id,

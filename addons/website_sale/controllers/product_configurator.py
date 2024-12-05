@@ -118,10 +118,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: dict
         :return: A dict containing information about the cart update.
         """
-        order_sudo = request.website.sale_get_order(force_create=True)
-        if order_sudo.state != 'draft':
-            request.session['sale_order_id'] = None
-            order_sudo = request.website.sale_get_order(force_create=True)
+        order_sudo = request.cart or request.website._create_cart()
 
         # The main product could theoretically have a parent, but we ignore it to avoid
         # circularities in the linked line ids.
@@ -156,7 +153,6 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             order_sudo, line_ids.values()
         )
         values['cart_quantity'] = order_sudo.cart_quantity
-        request.session['website_sale_cart_quantity'] = order_sudo.cart_quantity
 
         return values
 
@@ -304,8 +300,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             request.env.company
         )
         if product_taxes:
-            fiscal_position = request.website.fiscal_position_id.sudo()
-            taxes = fiscal_position.map_tax(product_taxes)
+            taxes = request.fiscal_position.map_tax(product_taxes)
             return request.env['product.template']._apply_taxes_to_price(
                 price, currency, product_taxes, taxes, product_or_template, website=request.website
             )
