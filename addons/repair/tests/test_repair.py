@@ -716,3 +716,46 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(len(res), 1, "The invoice should have one line")
         self.assertEqual(res[0]['product_name'], self.product_storable_serial.display_name, "The product name should be the same")
         self.assertEqual(res[0]['lot_name'], quant.lot_id.name, "The lot name should be the same")
+
+    def test_trigger_orderpoint_from_repair(self):
+        self.assertFalse(self.env['stock.move'].search([('product_id', '=', self.product_storable_no.id)]))
+        route = self.env['stock.route'].create({
+            'name': 'new route',
+            'rule_ids': [(0, False, {
+                'name': 'rule_test',
+                'location_src_id': self.stock_warehouse.lot_stock_id.id,
+                'location_dest_id': self.stock_location_14.id,
+                'company_id': self.env.company.id,
+                'action': 'push',
+                'auto': 'manual',
+                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            })],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake RR',
+            'location_id': self.stock_location_14.id,
+            'product_id': self.product_storable_no.id,
+            'product_min_qty': 0,
+            'product_max_qty': 1,
+        })
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'product_uom': self.product_product_3.uom_id.id,
+            'partner_id': self.res_partner_12.id,
+            'location_id': self.stock_location_14.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_storable_no.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                })
+            ],
+        })
+        repair_order.action_validate()
+        move = self.env['stock.move'].search([
+            ('product_id', '=', self.product_storable_no.id),
+            ('location_dest_id', '=', self.stock_location_14.id,)
+        ])
+        self.assertTrue(move.picking_id)
+        self.assertFalse(move.repair_id)
