@@ -1036,7 +1036,6 @@ class HrExpense(models.Model):
         }
         if not self.env.user.employee_ids:
             return expense_state
-        target_currency = self.env.company.currency_id
         # Counting the expenses to display in the dashboard:
         # - To submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
         # - Under validation: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
@@ -1044,7 +1043,7 @@ class HrExpense(models.Model):
         expenses = self._read_group(
             [
                 ('employee_id', 'in', self.env.user.employee_ids.ids),
-                '|', '&', ('payment_mode', 'in', ('own_account', 'company_account')), ('state', 'in', ('draft', 'reported', 'submitted')),
+                '|', ('state', 'in', ('draft', 'reported', 'submitted')),
                      '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
             ], ['state'], ['total_amount:sum'])
         for state, total_amount_sum in expenses:
