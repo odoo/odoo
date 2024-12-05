@@ -477,6 +477,7 @@ export class Message extends Component {
 
     openReactionMenu(reaction) {
         const message = toRaw(this.props.message);
+        this.store.isReactionMenuOpen = true;
         this.dialog.add(
             MessageReactionMenu,
             { message, initialReaction: reaction },

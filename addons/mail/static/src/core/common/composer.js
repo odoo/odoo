@@ -720,6 +720,9 @@ export class Composer extends Component {
     }
 
     onFocusin() {
+        if (this.store.isReactionMenuOpen) {
+            this.ref.el.blur();
+        }
         const composer = toRaw(this.props.composer);
         composer.isFocused = true;
         composer.thread?.markAsRead();

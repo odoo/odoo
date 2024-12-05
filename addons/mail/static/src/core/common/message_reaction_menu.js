@@ -60,10 +60,9 @@ export class MessageReactionMenu extends Component {
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape":
-                this.props.close();
-                break;
             case "q":
                 this.props.close();
+                this.store.isReactionMenuOpen = false;
                 break;
             default:
                 return;
