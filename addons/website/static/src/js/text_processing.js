@@ -569,3 +569,160 @@ export function getOffsetNode(textEl, offset) {
     }
     return [offsetNode, offset - index];
 }
+
+/**
+ * Used to track and adapt text content with highlights within a container.
+ *
+ * @param {HTMLElement} rootEl The container element.
+ * @param {Function} endAdaptation Returns whether a highlight adaptation
+ * should be canceled or not.
+ * @param {Boolean} cleanOnDisconnect Specifies if we want to convert the
+ * highlights to the minimal form when the observer is disconnected.
+ */
+export function initTextHighlightObserver(
+    rootEl,
+    { endAdaptation = () => false, cleanOnDisconnect = true } = {}
+) {
+    // We need to adapt the text highlights on resize (E.g. custom fonts
+    // loading, layout option changes, window resized...), mainly to take in
+    // consideration the rendered line breaks in text nodes... But after
+    // every adjustment, the `ResizeObserver` will unfortunately immediately
+    // notify a size change once new highlight items are observed leading to
+    // an infinite loop. To avoid that, we use a lock map (`observerLock`)
+    // to block the callback on this first notification for observed items.
+    const observerLock = new Map();
+    const resizeObserver = new window.ResizeObserver(entries => {
+        // Some options, like the popup, trigger a resize after a delay
+        // before the page is saved. This causes the highlights to be added
+        // back to the DOM after the "TextHighlight" widget has been
+        // destroyed. This is why the following line is needed.
+        if (endAdaptation()) {
+            return;
+        }
+        window.requestAnimationFrame(() => {
+            const textHighlightEls = new Set();
+            entries.forEach(entry => {
+                const target = entry.target;
+                if (observerLock.get(target)) {
+                    // Unlock the target, the next resize will trigger a
+                    // highlight adaptation.
+                    return observerLock.set(target, false);
+                }
+                const topTextEl = target.closest(".o_text_highlight");
+                for (const el of topTextEl
+                    ? [topTextEl]
+                    : target.querySelectorAll(":scope .o_text_highlight")) {
+                    textHighlightEls.add(el);
+                }
+            });
+            textHighlightEls.forEach(textHighlightEl => {
+                for (const textHighlightItemEl of _getHighlightItems(textHighlightEl)) {
+                    // Unobserve the highlight lines (they will be replaced
+                    // by new ones after the update).
+                    resizeObserver.unobserve(textHighlightItemEl);
+                }
+                // Adapt the highlight (new items are automatically locked
+                // and observed).
+                switchTextHighlight(textHighlightEl);
+            });
+        });
+    });
+
+    rootEl.addEventListener("text_highlight_added", _onTextHighlightAdded);
+    rootEl.addEventListener("text_highlight_remove", _onTextHighlightRemove);
+    return () => {
+        resizeObserver.disconnect();
+        if (cleanOnDisconnect) {
+            // We only save the highlight information on the main text wrapper,
+            // the full structure will be restored on page load.
+            for (const textHighlightEl of rootEl.querySelectorAll(".o_text_highlight")) {
+                removeTextHighlight(textHighlightEl);
+            }
+        }
+    };
+
+    /**
+     * The `resizeObserver` ignores an element if it has an inline display.
+     * We need to target the closest non-inline parent.
+     *
+     * @private
+     * @param {HTMLElement} el
+     */
+    function _closestToObserve(el) {
+        if (el === rootEl || !el) {
+            return null;
+        }
+        if (window.getComputedStyle(el).display !== "inline") {
+            return el;
+        }
+        return _closestToObserve(el.parentElement);
+    }
+
+    /**
+     * Returns a list of text highlight items (lines) in the provided element.
+     *
+     * @private
+     * @param {HTMLElement} el
+     */
+    function _getHighlightItems(el = rootEl) {
+        return el.querySelectorAll(":scope .o_text_highlight_item");
+    }
+
+    /**
+     * Returns a list of highlight elements to observe.
+     *
+     * @private
+     * @param {HTMLElement} topTextEl
+     */
+    function _getObservedEls(topTextEl) {
+        const closestToObserve = _closestToObserve(topTextEl);
+        return [...(closestToObserve ? [closestToObserve] : []), ..._getHighlightItems(topTextEl)];
+    }
+
+    /**
+     * @private
+     * @param {HTMLElement} topTextEl the element where the "resize" should
+     * be observed.
+     */
+    function _observeHighlightResize(topTextEl) {
+        // The `ResizeObserver` cannot detect the width change on highlight
+        // units (`.o_text_highlight_item`) as long as the width of the entire
+        // `.o_text_highlight` element remains the same, so we need to observe
+        // each one of them and do the adjustment only once for the whole text.
+        for (const highlightItemEl of _getObservedEls(topTextEl)) {
+            resizeObserver.observe(highlightItemEl);
+        }
+    }
+
+    /**
+     * Used to prevent the first callback triggered by `ResizeObserver` on new
+     * observed items.
+     *
+     * @private
+     * @param {HTMLElement} topTextEl the container of observed items.
+     */
+    function _lockHighlightObserver(topTextEl) {
+        for (const targetEl of _getObservedEls(topTextEl)) {
+            observerLock.set(targetEl, true);
+        }
+    }
+
+    /**
+     * @private
+     */
+    function _onTextHighlightAdded({ target }) {
+        _lockHighlightObserver(target);
+        _observeHighlightResize(target);
+    }
+
+    /**
+     * @private
+     */
+    function _onTextHighlightRemove({ target }) {
+        // We don't need to track the removed text highlight items after
+        // highlight adaptations.
+        for (const highlightItemEl of _getHighlightItems(target)) {
+            observerLock.delete(highlightItemEl);
+        }
+    }
+}
