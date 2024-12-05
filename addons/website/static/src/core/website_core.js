@@ -27,7 +27,13 @@ import { Colibri } from "./colibri";
 
 
 class WebsiteCore {
+    /**
+     * 
+     * @param {HTMLElement} el 
+     * @param {Object} env 
+     */
     constructor(el, env) {
+        this.Interactions = [];
         this.el = el;
         this.isActive = false;
         // relation el <--> Interaction
@@ -40,11 +46,13 @@ class WebsiteCore {
         this.registry = null;
     }
 
-    startFromRegistry(registryName) {
-        this.registry = registry.category(registryName);
-        const startProm = this.env.isReady.then(() => {
-            this.startInteractions();
-        });
+    /**
+     * 
+     * @param {Interaction[]} Interactions 
+     */
+    activate(Interactions) {
+        this.Interactions = Interactions;
+        const startProm = this.env.isReady.then(() => this.startInteractions());
         this.proms.push(startProm);
     }
 
@@ -87,7 +95,7 @@ class WebsiteCore {
 
     startInteractions(el = this.el) {
         const proms = [];
-        for (const [name, I] of this.registry.getEntries()) {
+        for (const I of this.Interactions) {
             if (el.matches(I.selector)) {
                 this._startInteraction(el, I, proms);
             } else {
@@ -170,8 +178,9 @@ registry.category("services").add("website_core", {
             // if this is an issue, maybe we should make the wrapwrap configurable
             return null;
         }
+        const Interactions = registry.category("website.active_elements").getAll();
         const websiteCore = new WebsiteCore(el, env);
-        websiteCore.startFromRegistry("website.active_elements");
+        websiteCore.activate(Interactions);
         return websiteCore;
     },
 });

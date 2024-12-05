@@ -11,6 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
 import { App, Component, whenReady } from "@odoo/owl";
 import { RPCError } from '@web/core/network/rpc';
+import { registry } from "@web/core/registry";
 
 const { Settings } = luxon;
 
@@ -22,6 +23,31 @@ function getLang() {
 }
 const lang = cookie.get('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
 
+
+export function buildEditableInteractions(builders) {
+    const result = [];
+
+    const mixinPerInteraction = new Map();
+    for (const makeEditable of builders) {
+        mixinPerInteraction.set(makeEditable.Interaction, makeEditable.mixin || ((C) => C));
+    }
+    for (const makeEditable of builders) {
+        let I = makeEditable.Interaction;
+        // Collect mixins to up to Interaction class in reverse order.
+        const mixins = [];
+        while (I.name !== "Interaction") {
+            mixins.push(mixinPerInteraction.get(I));
+            I = I.__proto__;
+        }
+        // Apply mixins from top-most class.
+        let EI = makeEditable.Interaction;
+        while (mixins.length) {
+            EI = mixins.pop()(EI);
+        }
+        result.push(EI);
+    }
+    return result;
+}
 
 /**
  * Element which is designed to be unique and that will be the top-most element
@@ -49,6 +75,7 @@ export const PublicRoot = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this.env = env;
         this.publicWidgets = [];
+        this.editableInteractions = null;
         this.websiteCore = this.bindService("website_core");
         this.editMode = false;
     },
@@ -128,7 +155,9 @@ export const PublicRoot = publicWidget.Widget.extend({
      */
     _startWidgets: function ($from, options) {
         var self = this;
-        this.editMode = options?.editableMode;
+        const editMode = options?.editableMode || false;
+        const shouldActivateEditInteractions = this.editMode !== editMode;
+        this.editMode = editMode;
 
         if ($from === undefined) {
             $from = this.$('#wrapwrap');
@@ -148,8 +177,17 @@ export const PublicRoot = publicWidget.Widget.extend({
             // interactions are already started. we only restart them if the
             // public root is not just starting.
             const target = $from ? $from[0] : undefined;
+            
             this.websiteCore.stopInteractions(target);
-            this.websiteCore.startInteractions(target);
+            if (shouldActivateEditInteractions) {
+                if (!this.editableInteractions) {
+                    const builders = registry.category("website.editable_active_elements_builders").getAll();
+                    this.editableInteractions = buildEditableInteractions(builders);
+                }
+                this.websiteCore.activate(this.editableInteractions);
+            } else {
+                this.websiteCore.startInteractions(target);
+            }
         }
 
         var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {

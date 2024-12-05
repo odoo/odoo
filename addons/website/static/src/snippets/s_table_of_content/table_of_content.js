@@ -239,5 +239,5 @@ registry
     .add("website.table_of_content", TableOfContent);
 
 registry
-    .category("website.edit_active_elements")
-    .add("website.table_of_content", TableOfContent);
+    .category("website.editable_active_elements_builders")
+    .add("website.table_of_content", { Interaction: TableOfContent });
