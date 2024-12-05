@@ -80,6 +80,7 @@ class StockMove(models.Model):
                 total_invoiced_value += invoice_line.currency_id._convert(
                         invoice_line_value, order.currency_id, order.company_id, invoice_line.move_id.invoice_date, round=False)
                 invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
+            total_invoiced_value += self.company_id.currency_id._convert(self._additional_invoice_value(move_layer), order.currency_id, order.company_id, self.date, round=False)
             # TODO currency check
             remaining_value = total_invoiced_value - receipt_value
             # TODO qty_received in product uom
@@ -103,6 +104,10 @@ class StockMove(models.Model):
         if self.product_id.lot_valuated:
             return dict.fromkeys(self.lot_ids, price_unit)
         return {self.env['stock.lot']: price_unit}
+
+    def _additional_invoice_value(self, layers):
+        """ override to add invoice value not linked to the purchase order line. i.e landed costs"""
+        return 0
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
