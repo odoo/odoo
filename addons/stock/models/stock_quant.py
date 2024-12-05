@@ -179,7 +179,7 @@ class StockQuant(models.Model):
 
     def _search(self, domain, *args, **kwargs):
         domain = [
-            line if not isinstance(line, (list, tuple)) or not line[0].startswith('lot_properties.')
+            line if not isinstance(line, (list, tuple)) or not (isinstance(line[0], str) and line[0].startswith('lot_properties.'))
             else ['lot_id', 'any', [line]]
             for line in domain
         ]
