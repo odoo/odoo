@@ -207,7 +207,7 @@ patch(Wysiwyg.prototype, {
      * @override
      */
     _onScroll(ev) {
-        if (this.options.inIframe) {
+        if (this.options.inIframe || this.options.isStudio) {
             const iframeDocument = this.$iframe[0].contentDocument;
             const scrollInIframe = ev.target === iframeDocument || ev.target.ownerDocument === iframeDocument;
             if (ev.target.contains(this.$iframe[0]))  {
