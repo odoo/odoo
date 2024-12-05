@@ -100,7 +100,9 @@ import { childNodes, descendants, getCommonAncestor } from "../utils/dom_travers
 
 export class HistoryPlugin extends Plugin {
     static id = "history";
-    static dependencies = ["selection", "sanitize"];
+    // baseContainer is a dependency to make sure that it is loaded before the
+    // history (so that handling START_EDITION is done in baseContainer first)
+    static dependencies = ["baseContainer", "selection", "sanitize"];
     static shared = [
         "addExternalStep",
         "addStep",

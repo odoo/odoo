@@ -24,6 +24,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
             }
             this.props.record.data.attachment_ids.linkTo(attachment.id, attachment);
         };
+        config.baseContainer = "DIV";
         return config;
     }
 }

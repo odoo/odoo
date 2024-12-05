@@ -243,6 +243,7 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
     }
 
     // Crop
+    // TODO ABD: investigate this DIV
     const container = document.createElement("div");
     const original = await loadImage(originalSrc);
     // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
@@ -252,6 +253,7 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
 
     // Aspect Ratio
     if (imgAspectRatio) {
+        // TODO ABD: investigate this DIV
         document.createElement("div").appendChild(croppedImg);
         imgAspectRatio = imgAspectRatio.split(":");
         imgAspectRatio = parseFloat(imgAspectRatio[0]) / parseFloat(imgAspectRatio[1]);
@@ -307,7 +309,7 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
                     overlap: 0.1,
                 };
 
-                for (let { origin, sides, flange, overlap } of [upper, lower]) {
+                for (const { origin, sides, flange, overlap } of [upper, lower]) {
                     const [[a, c, e], [b, d, f]] = getAffineApproximation(project, [
                         origin,
                         [origin[0] + sides[0], origin[1]],
