@@ -7,6 +7,7 @@ from base64 import b64decode
 import io
 import win32print
 import ghostscript
+import PyPDF2
 
 from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.driver import Driver
@@ -101,10 +102,26 @@ class PrinterDriver(Driver):
         win32print.EndPagePrinter(self.printer_handle)
         win32print.EndDocPrinter(self.printer_handle)
 
-    def print_report(self, data):
+    def print_report(self, data, layout=None):
         helpers.write_file('document.pdf', data, 'wb')
         file_name = helpers.path_file('document.pdf')
+        file_name_rotated = helpers.path_file('document_rot.pdf')
         printer = self.device_name
+
+        if layout == 'Landscape':
+            pdf_reader = PyPDF2.PdfFileReader(file_name.name)
+            pdf_writer = PyPDF2.PdfFileWriter()
+
+            for pagenum in range(pdf_reader.numPages):
+                page = pdf_reader.getPage(pagenum)
+                page.rotateClockwise(90)
+                pdf_writer.addPage(page)
+
+            bytes_stream = io.BytesIO()
+            pdf_writer.write(bytes_stream)
+            helpers.write_file(file_name_rotated.name, bytes_stream.getvalue(), 'wb')
+
+            file_name = file_name_rotated
 
         args = [
             "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT"
@@ -152,9 +169,10 @@ class PrinterDriver(Driver):
 
     def _action_default(self, data):
         document = b64decode(data['document'])
+        layout = data.get('layout', None)
         mimetype = guess_mimetype(document)
         if mimetype == 'application/pdf':
-            self.print_report(document)
+            self.print_report(document, layout)
         else:
             self.print_raw(document)
 
