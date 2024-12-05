@@ -39,20 +39,22 @@
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
-                <t t-component="props.Renderer"
-                    list="model.root"
-                    archInfo="props.archInfo"
-                    Compiler="props.Compiler"
-                    readonly="true"
-                    forceGlobalClick="props.forceGlobalClick"
-                    deleteRecord.bind="deleteRecord"
-                    openRecord.bind="openRecord"
-                    noContentHelp="props.info.noContentHelp"
-                    scrollTop.bind="scrollTop"
-                    canQuickCreate="canQuickCreate"
-                    quickCreateState="quickCreateState"
-                    progressBarState="progressBarState"
-                />
+                <t t-set-slot="default" t-slot-scope="layout">
+                    <t t-component="props.Renderer"
+                        list="model.root"
+                        archInfo="props.archInfo"
+                        Compiler="props.Compiler"
+                        readonly="true"
+                        forceGlobalClick="props.forceGlobalClick"
+                        deleteRecord.bind="deleteRecord"
+                        openRecord.bind="openRecord"
+                        noContentHelp="props.info.noContentHelp"
+                        scrollTop.bind="scrollTop"
+                        canQuickCreate="canQuickCreate"
+                        quickCreateState="quickCreateState"
+                        progressBarState="progressBarState"
+                    />
+                </t>
             </Layout>
         </div>
     </t>
