@@ -81,7 +81,7 @@ test("counter is taking into account failure notification", async () => {
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
 });
 
-test("rendering with OdooBot has a request (default)", async () => {
+test("rendering with chat push notification default permissions", async () => {
     patchBrowserNotification("default");
     const pyEnv = await startServer();
     const [odoobot] = pyEnv["res.partner"].read(serverState.odoobotId);
@@ -95,10 +95,10 @@ test("rendering with OdooBot has a request (default)", async () => {
             serverState.odoobotId
         }/avatar_128?unique=${deserializeDateTime(odoobot.write_date).ts}']`
     );
-    await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
+    await contains(".o-mail-NotificationItem", { text: "Turn on notifications" });
 });
 
-test("rendering without OdooBot has a request (denied)", async () => {
+test("rendering with chat push notification permissions denied", async () => {
     patchBrowserNotification("denied");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -106,7 +106,7 @@ test("rendering without OdooBot has a request (denied)", async () => {
     await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
-test("rendering without OdooBot has a request (accepted)", async () => {
+test("rendering with chat push notification permissions accepted", async () => {
     patchBrowserNotification("granted");
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -138,7 +138,7 @@ test("respond to notification prompt (granted)", async () => {
     });
 });
 
-test("no 'OdooBot has a request' in mobile app", async () => {
+test("no suggestion to enable chat push notifications in mobile app", async () => {
     patchBrowserNotification("default");
     // simulate Android Odoo App
     mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
@@ -183,9 +183,9 @@ test("rendering with PWA installation request", async () => {
             serverState.odoobotId
         }/avatar_128?unique=${deserializeDateTime(odoobot.write_date).ts}']`
     );
-    await contains(".o-mail-NotificationItem-name", { text: "OdooBot has a suggestion" });
+    await contains(".o-mail-NotificationItem-name", { text: "Install Odoo" });
     await contains(".o-mail-NotificationItem-text", {
-        text: "Come here often? Install Odoo on your device!",
+        text: "Come here often? Install the app for quick and easy access!",
     });
     await click(".o-mail-NotificationItem a.btn-primary");
     await assertSteps(["show prompt"]);
@@ -330,7 +330,7 @@ test("grouped notifications by document", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await click(".o-mail-NotificationItem", {
-        text: "Contact",
+        text: "Email Failure: Contact",
         contains: [".badge", { text: "2" }],
     });
     await contains(".o-mail-ChatWindow");
@@ -386,7 +386,7 @@ test("grouped notifications by document model", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", {
-        text: "Contact",
+        text: "Email Failure: Contact",
         contains: [".badge", { text: "2" }],
     });
     await assertSteps(["do_action"]);
@@ -433,8 +433,10 @@ test("multiple grouped notifications by document model, sorted by the most recen
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 2 });
-    await contains(":nth-child(1 of .o-mail-NotificationItem)", { text: "Companies" });
-    await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Contact" });
+    await contains(":nth-child(1 of .o-mail-NotificationItem)", {
+        text: "Email Failure: Companies",
+    });
+    await contains(":nth-child(2 of .o-mail-NotificationItem)", { text: "Email Failure: Contact" });
 });
 
 test("non-failure notifications are ignored", async () => {
@@ -490,6 +492,7 @@ test("mark failure as read", async () => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({ message_type: "email" });
     pyEnv["discuss.channel"].create({
+        name: "General",
         message_ids: [messageId],
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, seen_message_id: messageId }),
@@ -504,17 +507,23 @@ test("mark failure as read", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Discussion Channel" }],
-            [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
+            [".o-mail-NotificationItem-name", { text: "Email Failure: Discussion Channel" }],
+            [
+                ".o-mail-NotificationItem-text",
+                { text: "An error occurred when sending an email on “General”" },
+            ],
         ],
     });
     await click("[title='Mark As Read']", {
-        parent: [".o-mail-NotificationItem", { text: "Discussion Channel" }],
+        parent: [".o-mail-NotificationItem", { text: "Email Failure: Discussion Channel" }],
     });
-    await contains(".o-mail-NotificationItem", { count: 0, text: "Discussion Channel" });
+    await contains(".o-mail-NotificationItem", {
+        count: 0,
+        text: "Email Failure: Discussion Channel",
+    });
     await contains("o-mail-NotificationItem", {
         count: 0,
-        text: "An error occurred when sending an email",
+        text: "An error occurred when sending an email on “General”",
     });
 });
 
@@ -561,7 +570,9 @@ test("different discuss.channel are not grouped", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { count: 4 });
-    await click(":nth-child(1 of .o-mail-NotificationItem)", { text: "Discussion Channel" });
+    await click(":nth-child(1 of .o-mail-NotificationItem)", {
+        text: "Email Failure: Discussion Channel",
+    });
     await contains(".o-mail-ChatWindow");
 });
 
@@ -1079,7 +1090,7 @@ test("failure notifications are shown before channel preview", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-text", {
-        text: "An error occurred when sending an email",
+        text: "An error occurred when sending an email on “Test”",
         before: [".o-mail-NotificationItem-text", { text: "Partner1: message" }],
     });
 });
@@ -1130,7 +1141,7 @@ test("can open messaging menu even if messaging is not initialized", async () =>
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
+    await contains(".o-mail-NotificationItem", { text: "Turn on notifications" });
 });
 
 test("can open messaging menu even if channels are not fetched", async () => {
@@ -1279,8 +1290,11 @@ test("failure is removed from messaging menu when message is deleted", async () 
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Contact" }],
-            [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
+            [".o-mail-NotificationItem-name", { text: "Email Failure: Contact" }],
+            [
+                ".o-mail-NotificationItem-text",
+                { text: "An error occurred when sending an email on “Mitchell Admin”" },
+            ],
         ],
     });
     pyEnv["mail.message"].unlink([messageId]);

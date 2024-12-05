@@ -13,6 +13,12 @@ patch(Failure.prototype, {
     },
     get body() {
         if (this.type === "snail") {
+            if (this.notifications.length === 1 && this.lastMessage?.thread) {
+                return _t(
+                    "An error occurred when sending a letter with Snailmail on “%(record_name)s”",
+                    { record_name: this.lastMessage.thread.name }
+                );
+            }
             return _t("An error occurred when sending a letter with Snailmail.");
         }
         return super.body;
