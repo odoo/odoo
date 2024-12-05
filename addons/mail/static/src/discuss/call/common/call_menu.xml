@@ -3,7 +3,7 @@
 
     <t t-name="discuss.CallMenu">
         <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
-            <button t-if="rtc.state.channel" class="px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="rtc.state.channel.open">
+            <button t-if="rtc.channel" class="px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="rtc.channel.open">
                 <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center">
                     <span class="position-relative me-2">
                         <i class="me-2 fa fa-fw" t-att-class="icon" />
@@ -11,7 +11,7 @@
                             <i class="o-discuss-CallMenu-dot fa fa-circle text-warning small"/>
                         </small>
                     </span>
-                    <em class="text-truncate" t-esc="rtc.state.channel.displayName"/>
+                    <em class="text-truncate" t-esc="rtc.channel.displayName"/>
                 </div>
             </button>
         </div>

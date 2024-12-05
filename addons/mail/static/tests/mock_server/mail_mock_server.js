@@ -200,7 +200,7 @@ async function channel_call_join(request) {
     })
         .add("Rtc", {
             iceServers: false,
-            selfSession: mailDataHelpers.Store.one(DiscussChannelRtcSession.browse(sessionId)),
+            localSession: mailDataHelpers.Store.one(DiscussChannelRtcSession.browse(sessionId)),
         })
         .get_result();
 }

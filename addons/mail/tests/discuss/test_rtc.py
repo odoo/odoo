@@ -129,7 +129,7 @@ class TestChannelRTC(MailCommon):
                 ],
                 "Rtc": {
                     "iceServers": False,
-                    "selfSession": channel_member.rtc_session_ids.id,
+                    "localSession": channel_member.rtc_session_ids.id,
                     "serverInfo": None,
                 },
             },
@@ -1199,7 +1199,7 @@ class TestChannelRTC(MailCommon):
             ],
         ):
             current_rtc_sessions, outdated_rtc_sessions = channel_member._rtc_sync_sessions(
-                check_rtc_session_ids=[join_call_values["Rtc"]["selfSession"]] + unused_ids
+                check_rtc_session_ids=[join_call_values["Rtc"]["localSession"]] + unused_ids
             )
         self.assertEqual(channel_member.rtc_session_ids, current_rtc_sessions)
         self.assertEqual(unused_ids, outdated_rtc_sessions.ids)
