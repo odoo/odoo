@@ -64,6 +64,8 @@ class Countdown extends Interaction {
         this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
         this.el.querySelector(".s_countdown_canvas_flex")?.remove();
 
+        this.wrapperEl.innerHTML = "";
+
         clearInterval(this.setInterval);
     }
 
