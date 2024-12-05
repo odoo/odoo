@@ -1,8 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+from pytz import UTC
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import lazy
+
+
+GMC_SUPPORTED_UOM = {
+    'oz', 'lb', 'mg', 'g', 'kg',
+    'floz', 'pt', 'qt', 'gal',
+    'ml', 'cl', 'l', 'cbm',
+    'in', 'ft', 'yd', 'cm', 'm',
+    'sqft', 'sqm',
+}
+GMC_SUPPORTED_INTEGER_UOM = {1, 10, 100, 2, 4, 8}
+GMC_SUPPORTED_UOM_COMBINATION = {'75cl', '750ml', '50kg', '1000kg'}
 
 
 class ProductProduct(models.Model):
@@ -148,3 +163,156 @@ class ProductProduct(models.Model):
             self.website_published = True
         else:
             self.website_published = False
+
+    def _get_image_link(self):
+        self.ensure_one()
+        return f"/web/image/product.product/{self.id}/image_1920" if self.image_1920 else ""
+
+    def _get_extra_image_links(self):
+        self.ensure_one()
+        return [
+            f"/web/image/product.image/{extra_image.id}/image_1920"
+            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            if extra_image.image_1920  # only images, no video urls
+        ]
+
+    def _get_gmc_values(self):
+        dict_vals = super()._get_gmc_values()
+
+        domain = f"{request.website.domain.rstrip('/')}/{request.lang.url_code}"
+
+        delivery_carriers = self.env['delivery.carrier'].sudo().search([
+            ('is_published', '=', True),
+        ])
+        all_countries = lazy(lambda: self.env['res.country'].search([]))
+        dummy_partner = self.env['res.partner'].new({})
+        dummy_order = self.env['sale.order'].new({
+            'partner_id': dummy_partner.id,
+            'pricelist_id': request.website.pricelist_id,
+            'order_line': [
+                {
+                    'product_uom_qty': 1.0,
+                }
+            ]
+        })
+        order_line = dummy_order.order_line[0]
+
+        pricelist_id = request.website.pricelist_id.id
+        currency = request.website.currency_id
+
+        def format_product_link(url):
+            return f"{domain}/shop/change_pricelist/{pricelist_id}?r={domain}{url}"
+        def format_price(price):
+            return f"{currency.round(price)} {currency.name}"
+
+        for product, vals in dict_vals.items():
+            combination_info = product.product_tmpl_id._get_combination_info(
+                combination=product.product_template_attribute_value_ids,
+            )
+            if not combination_info['is_combination_possible']:
+                continue
+
+            # Compute best shipping service for each country this product can ship to
+            order_line.product_id = product
+            best_carrier_by_country = defaultdict(lambda: (float('inf'), None))
+            best_free_shipping_threshold = defaultdict(lambda: float('inf'))
+            for carrier in delivery_carriers:
+                for country in (carrier.country_ids or all_countries):
+                    dummy_partner.country_id = country
+                    shipment_rate = carrier.rate_shipment(dummy_order)
+                    if not shipment_rate['success']: 
+                        continue
+                    if currency.is_zero(shipment_rate['price']): # free shipping
+                        best_free_shipping_threshold[country] = 0.0
+                    else:
+                        best_carrier_by_country[country] = min(
+                            best_carrier_by_country[country],
+                            (shipment_rate['price'], carrier)
+                        )
+                        if carrier.free_over:
+                            best_free_shipping_threshold[country] = min(
+                                carrier.amount,
+                                best_free_shipping_threshold[country]
+                            )
+            vals.update({
+                # Required
+                'description': (
+                    product.description_ecommerce or ""
+                ),
+                'link': format_product_link(product.website_url),
+                'image_link': (
+                    domain + image_link if (image_link := product._get_image_link()) else 
+                    ""
+                ),
+                'price': format_price(combination_info['list_price']),
+                'identifier_exists': "no",
+                'shipping': [
+                    {
+                        'country': country.code,
+                        'service': carrier.name,
+                        'price': format_price(best_price),
+                    }
+                    for country, (best_price, carrier) in best_carrier_by_country.items()
+                ],
+
+                # Optional
+                'product_detail': [
+                    (attr.attribute_id.name, attr.name)
+                    for attr in product.product_template_attribute_value_ids
+                ],
+                'is_bundle': "yes" if product.type == 'combo' else "no",
+                'additionnal_image_link': [
+                    domain + link
+                    # supports up to 10 extra images
+                    for link in product._get_extra_image_links()[:10]
+                ],
+                'product_type': [
+                    category.display_name.replace('/', '>')  # google uses a different format
+                    for category in product.public_categ_ids[:5] # up to 5 custom_label
+                ],
+                'custom_label': [
+                    (f'custom_label_{i}', tag_name)
+                    for i, tag_name in zip(
+                        range(5), # supports up to 5 custom label
+                        product.all_product_tag_ids.sorted('sequence').mapped('name')
+                    )
+                ],
+                'free_shipping_threshold': [
+                    {
+                        'country': country.code,
+                        'price_threshold': format_price(best_threshold),
+                    }
+                    for country, best_threshold in best_free_shipping_threshold.items()
+                ],
+            })
+
+            if product.barcode:
+                vals.update({'gtin': product.barcode, 'identifier_exists': "yes"})
+            if len(product.product_tmpl_id.product_variant_ids) > 1:
+                vals['item_group_id'] = product.product_tmpl_id.id
+            if combination_info['has_discounted_price']:
+                vals['sale_price'] = format_price(combination_info['price'])
+                sale_start_date, sale_end_date = combination_info['discounted_price_effective_date']
+                if sale_start_date:
+                    vals['sale_price_effective_date'] = (
+                        f"{UTC.localize(sale_start_date).isoformat(timespec='minutes')}/"
+                        f"{UTC.localize(sale_end_date).isoformat(timespec='minutes')}"
+                    )
+            if (
+                product.base_unit_count is not False
+                and self.env.user.has_group('website_sale.group_show_uom_price')
+            ):
+                base_unit_name = product.base_unit_name or product.uom_name
+                base_unit_count = int(product.base_unit_count)
+                unit_pricing_measure = f"{base_unit_count}{base_unit_name}"
+                if (
+                    base_unit_count in GMC_SUPPORTED_INTEGER_UOM
+                    and base_unit_name in GMC_SUPPORTED_UOM
+                    or unit_pricing_measure in GMC_SUPPORTED_UOM_COMBINATION
+                ):
+                    vals.update({
+                        'unit_pricing_measure': unit_pricing_measure,
+                        'unit_pricing_base_measure': unit_pricing_measure,
+                    })
+            
+        return dict_vals
