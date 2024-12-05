@@ -149,6 +149,12 @@ export class PartnerList extends Component {
                 "phone_mobile_search",
                 "email",
                 "barcode",
+                "street",
+                "zip",
+                "city",
+                "state_id",
+                "country_id",
+                "vat",
             ];
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
