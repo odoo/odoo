@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_tax_invoice_document">
+            <t t-call="web.basic_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)" />
+                <div class="cn-tax-invoice">
+                    <div class="row">
+                        <div class="col-6 offset-3 p-3">
+                            <strong class="text-center cn-fs-25 cn-double-underline">Electronic Tax Invoice</strong>
+                        </div>
+                        <div class="col-3 p-3">
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td>
+                                        <span>Invoice Code:</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span>Invoice No:</span>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.name" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span>Invoice Date:</span>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.invoice_date" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- First Row with Buyer info-->
+                    <div class="row">
+                        <table class="table table-bordered border-dark m-0">
+                            <tr>
+                                <td width="3%">
+                                    <span class="cn-verticaltext">Buyer</span>
+                                </td>
+                                <td width="50%">
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <td>
+                                                <span>Name:</span>
+                                            </td>
+                                            <td>
+                                                <span t-field="o.partner_id" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Taxpayer identification No:</span>
+                                            </td>
+                                            <td>
+                                                <span t-field="o.partner_id.vat" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Address, Phone No:</span>
+                                            </td>
+                                            <td>
+                                                <div class="td-address" t-field="o.partner_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}" />, <span t-field="o.partner_id.phone" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Bank Name and account:</span>
+                                            </td>
+                                            <td>
+                                                <t t-if="o.partner_id.bank_ids" t-foreach="o.partner_id.bank_ids" t-as="bank_id">
+                                                    <span t-field="bank_id.acc_number" />
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td width="3%">
+                                    <span class="cn-verticaltext">Password</span>
+                                </td>
+                                <td width="40%" />
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- Second row with lines -->
+                    <div class="row">
+                        <table class="table table-borderless border border-dark border-top-0 m-0">
+                            <thead>
+                                <tr class="cn-header-text-start">
+                                    <th>Product Name</th>
+                                    <th>Product Code</th>
+                                    <th>Unit of Measure</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                    <th>Taxes</th>
+                                    <th>Tax Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="current_subtotal" t-value="0" />
+                                <t t-set="lines" t-value="o.invoice_line_ids.sorted(key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True)" />
+                                <t t-foreach="lines" t-as="line">
+                                    <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                        <t t-if="line.display_type != 'line_section' and line.display_type != 'line_note'">
+                                            <td>
+                                                <span t-field="line.name" t-options="{'widget': 'text'}" />
+                                            </td>
+                                            <td>
+                                                <span t-field="line.product_id.default_code" />
+                                            </td>
+                                            <td>
+                                                <span t-field="line.product_uom_id" />
+                                            </td>
+                                            <td>
+                                                <span t-field="line.quantity" />
+                                            </td>
+                                            <td>
+                                                <span t-field="line.price_unit" />
+                                            </td>
+                                            <td>
+                                                <span class="cn-inline-price" t-field="line.price_subtotal" />
+                                            </td>
+                                            <td>
+                                                <span t-field="line.tax_ids" />
+                                            </td>
+                                            <td>
+                                                <span class="cn-inline-price" t-field="line.price_total" />
+                                            </td>
+                                        </t>
+                                        <t t-if="line.display_type == 'line_section' or line.display_type == 'line_note'">
+                                            <td colspan="99">
+                                                <span t-field="line.name" t-options="{'widget': 'text'}" />
+                                            </td>
+                                            <t t-set="current_section" t-value="line" />
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Third row with total amount -->
+                    <div class="row">
+                        <div class="col-3 border-start border-end border-dark">
+                            <span>Total (Big Capital)</span>
+                        </div>
+                        <div class="col-6">
+                            <span t-field="o.amount_total_words" />
+                        </div>
+                        <div class="col-3 border-end border-dark">
+                            <span>(Small Capital)</span>
+                            <span class="cn-inline-price" t-field="o.amount_total" />
+                        </div>
+                    </div>
+                    <!-- Fourth row with Seller info -->
+                    <div class="row">
+                        <table class="table table-bordered border-dark m-0">
+                            <tr>
+                                <td width="3%">
+                                    <span class="cn-verticaltext">Seller</span>
+                                </td>
+                                <td width="50%">
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <td>
+                                                <span>Name:</span>
+                                            </td>
+                                            <td>
+                                                <span t-field="o.company_id" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Taxpayer identification No:</span>
+                                            </td>
+                                            <td>
+                                                <span t-field="o.company_id.vat" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Address, Phone No:</span>
+                                            </td>
+                                            <td>
+                                                <span class="ms-8" t-field="o.company_id.street" />
+                                                <span t-field="o.company_id.street2" />
+                                                <span t-field="o.company_id.city" />
+                                                <span t-field="o.company_id.state_id" />
+                                                <span t-field="o.company_id.zip" />
+                                                <span t-field="o.company_id.country_id" />, <span t-field="o.company_id.phone" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>Bank Name and account:</span>
+                                            </td>
+                                            <td>
+                                                <t t-if="o.company_id.bank_ids" t-foreach="o.company_id.bank_ids" t-as="bank_id">
+                                                    <span t-field="bank_id.acc_number" />
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td width="3%">
+                                    <span class="cn-verticaltext">Narration</span>
+                                </td>
+                                <td width="40%">
+                                    <span t-field="o.narration" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- Fifth row with Customer and Approver info -->
+                    <div class="row cn-col-inline" style="page-break-inside: avoid">
+                        <div class="col-3">
+                            <span>Customer:</span>
+                            <span t-field="o.invoice_user_id" />
+                        </div>
+                        <div class="col-3">
+                            <span>Approver:</span>
+                            <span t-field="o.approver_id" />
+                        </div>
+                        <div class="col-3">
+                            <span>Invoice Creator:</span>
+                            <span t-field="o.create_uid" />
+                        </div>
+                        <div class="col-3">
+                            <span>Company Chop:</span>
+                            <img class="cn-company-chop" t-att-src="image_data_uri(o.company_id.company_chop)" alt="Company Chop" />
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <template id="report_tax_invoice">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="l10n_cn.report_tax_invoice_document" t-lang="lang" />
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

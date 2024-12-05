@@ -4,11 +4,13 @@
         <record id="account_move_form_l10n_cn" model="ir.ui.view">
             <field name="name">l10n_cn.account.move.form</field>
             <field name="model">account.move</field>
-            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="inherit_id" ref="account.view_move_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='ref']" position="after">
-                    <field name="move_type" invisible='1'/>
-                    <field name="fapiao" invisible="country_code != 'CN' or move_type not in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund']"/>
+                    <field name="approver_id" invisible="country_code != 'CN'" />
+                    <field name="move_type" invisible="1" />
+                    <field name="fapiao" invisible="country_code != 'CN' or move_type not in ['out_invoice', 'out_refund', 'in_invoice', 'in_refund']" />
+                    <field name="machine_number" invisible="country_code != 'CN'" />
                 </xpath>
             </field>
         </record>
