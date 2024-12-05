@@ -76,11 +76,19 @@ class Many2oneReference(Integer):
 
     _description_model_field = property(attrgetter('model_field'))
 
+    def convert_to_column(self, value, record, values=None, validate=True):
+        return None if not value else int(value)
+
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None
         if isinstance(value, BaseModel):
             value = value._ids[0] if value._ids else None
-        return super().convert_to_cache(value, record, validate)
+        value = super().convert_to_cache(value, record, validate)
+        return None if not value else int(value)
+
+    def convert_to_record(self, value, record):
+        # Return None instead of 0 for empty database values
+        return None if not value else int(value)
 
     def _update_inverses(self, records, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
