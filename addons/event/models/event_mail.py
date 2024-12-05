@@ -298,36 +298,41 @@ class EventMailRegistration(models.Model):
             (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
             reg_mail.scheduler_id.notification_type == 'mail'
         )
-        done = self.browse()
-        for reg_mail in todo:
-            organizer = reg_mail.scheduler_id.event_id.organizer_id
-            company = self.env.company
-            author = self.env.ref('base.user_root').partner_id
-            if organizer.email:
-                author = organizer
-            elif company.email:
-                author = company.partner_id
-            elif self.env.user.email:
-                author = self.env.user.partner_id
+        start = 0
+        end = len(todo)
+        step = 100
+        for i in range(start, end, step):
+            done = self.browse()
+            for reg_mail in todo[i:i+step]:
+                organizer = reg_mail.scheduler_id.event_id.organizer_id
+                company = self.env.company
+                author = self.env.ref('base.user_root').partner_id
+                if organizer.email:
+                    author = organizer
+                elif company.email:
+                    author = company.partner_id
+                elif self.env.user.email:
+                    author = self.env.user.partner_id
 
-            email_values = {
-                'author_id': author.id,
-            }
-            template = None
-            try:
-                template = reg_mail.scheduler_id.template_ref.exists()
-            except MissingError:
-                pass
+                email_values = {
+                    'author_id': author.id,
+                }
+                template = None
+                try:
+                    template = reg_mail.scheduler_id.template_ref.exists()
+                except MissingError:
+                    pass
 
-            if not template:
-                _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mail.registration_id, reg_mail.scheduler_id)
-                continue
+                if not template:
+                    _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mail.registration_id, reg_mail.scheduler_id)
+                    continue
 
-            if not template.email_from:
-                email_values['email_from'] = author.email_formatted
-            template.send_mail(reg_mail.registration_id.id, email_values=email_values)
-            done |= reg_mail
-        done.write({'mail_sent': True})
+                if not template.email_from:
+                    email_values['email_from'] = author.email_formatted
+                template.send_mail(reg_mail.registration_id.id, email_values=email_values)
+                done |= reg_mail
+            done.write({'mail_sent': True})
+            self.env.cr.commit()
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):
