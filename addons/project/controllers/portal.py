@@ -500,12 +500,12 @@ class ProjectCustomerPortal(CustomerPortal):
 
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
-        project_groups = request.env['project.task']._read_group(AND([[('project_id', 'not in', projects.ids)], task_domain or []]),
-                                                                ['project_id'])
+        project_groups = request.env['project.task']._read_group(
+            AND([[('project_id', 'not in', projects.ids), ('project_id', '!=', False)], task_domain or []]),
+            ['project_id'])
         for [project] in project_groups:
-            proj_name = project.sudo().display_name if project else _('Others')
             searchbar_filters.update({
-                str(project.id): {'label': proj_name, 'domain': [('project_id', '=', project.id)]}
+                str(project.id): {'label': project.sudo().display_name, 'domain': [('project_id', '=', project.id)]}
             })
         return searchbar_filters
 
