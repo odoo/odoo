@@ -39,7 +39,7 @@ class TestMembership(TestMembershipCommon):
         self.partner_1.create_membership_invoice(self.membership_1, 75.0)
 
         # checks for invoices
-        invoice = self.env['account.move'].search([('partner_id', '=', self.partner_1.id)], limit=1)
+        invoice = self.env['account.move'].search([('partner_id', '=', self.partner_1.id)], limit=2)[1]
         self.assertEqual(
             invoice.state, 'draft',
             'membership: new subscription should create a draft invoice')
