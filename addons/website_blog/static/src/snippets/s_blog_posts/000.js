@@ -20,6 +20,10 @@ const DynamicSnippetBlogPosts = DynamicSnippet.extend({
         const filterByBlogId = parseInt(this.$el.get(0).dataset.filterByBlogId);
         if (filterByBlogId >= 0) {
             searchDomain.push(['blog_id', '=', filterByBlogId]);
+        } 
+        const filterByTagIds = this.$el.get(0).dataset.filterByTagIds;
+        if (filterByTagIds) {
+            searchDomain.push(["tag_ids", "in", filterByTagIds.split(",").map(e => parseInt(e))]);
         }
         return searchDomain;
     },
