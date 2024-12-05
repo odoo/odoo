@@ -8,7 +8,7 @@ import re
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.exceptions import ValidationError, MissingError
 
 from odoo.addons.spreadsheet.utils.validate_data import fields_in_spreadsheet, menus_xml_ids_in_spreadsheet
@@ -28,6 +28,8 @@ class SpreadsheetMixin(models.AbstractModel):
 
     @api.constrains("spreadsheet_binary_data")
     def _check_spreadsheet_data(self):
+        if not(tools.config['test_enable'] or tools.config['test_file']):
+            return None
         for spreadsheet in self.filtered("spreadsheet_binary_data"):
             try:
                 data = json.loads(base64.b64decode(spreadsheet.spreadsheet_binary_data).decode())
