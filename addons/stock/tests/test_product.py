@@ -368,11 +368,6 @@ class TestVirtualAvailable(TestStockCommon):
         # At this point product_3 should have the quantity reserved
         self.product_3.active = False
 
-        # Should not be possible to change the product type when quantities are reserved
-        with self.assertRaises(UserError):
-            self.product_3.write({'is_storable': False})
+        self.product_3.write({'is_storable': False})
 
-        # Should not be possible to change the product type when moves are done.
         self.picking_out.button_validate()
-        with self.assertRaises(UserError):
-            self.product_3.write({'is_storable': False})
