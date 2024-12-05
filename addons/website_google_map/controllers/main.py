@@ -43,7 +43,7 @@ class GoogleMap(http.Controller):
         limit = post.get('limit') and int(post['limit']) or 80
 
         if domain:  # [] is not allowed
-            domain += [('website_published', '=', True)]
+            domain += [('website_published', '=', True), "&", ("partner_latitude", "!=", 0), ("partner_longitude","!=", 0)]
             partners = PartnerSudo.search(domain, limit=limit)
         else:
             partners = PartnerSudo
