@@ -425,6 +425,10 @@ export class Thread extends Record {
         return {};
     }
 
+    get isReadOnly() {
+        return false;
+    }
+
     executeCommand(command, body = "") {
         return this.store.env.services.orm.call(
             "discuss.channel",

@@ -30,6 +30,7 @@ const threadPatch = {
         this.fetchChannelMutex = new Mutex();
         this.fetchChannelInfoDeferred = undefined;
         this.fetchChannelInfoState = "not_fetched";
+        this.read_only = false;
         this.hasOtherMembersTyping = Record.attr(false, {
             /** @this {import("models").Thread} */
             compute() {
@@ -156,6 +157,9 @@ const threadPatch = {
             },
         });
         this.typingMembers = Record.many("discuss.channel.member", { inverse: "threadAsTyping" });
+    },
+    get isReadOnly() {
+        return this.read_only && !this.store.self.isAdmin;
     },
     _computeOfflineMembers() {
         return this.channel_member_ids.filter(

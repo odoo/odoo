@@ -96,6 +96,13 @@ class DiscussChannel(models.Model):
         "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
         'Group authorization and group auto-subscription are only supported on channels.',
     )
+    read_only = fields.Boolean()
+
+    def _is_read_only(self):
+        if self:
+            self.ensure_one()
+            return self.read_only and not self.env.user._is_admin()
+        return False
 
     # CONSTRAINTS
     @api.constrains("from_message_id")
@@ -901,6 +908,7 @@ class DiscussChannel(models.Model):
                 "last_interest_dt",
                 "member_count",
                 "name",
+                "read_only",
                 "uuid",
             ],
             load=False,
@@ -1341,3 +1349,13 @@ class DiscussChannel(models.Model):
         else:
             msg = _("You are alone in this channel.")
         self.env.user._bus_send_transient_message(self, msg)
+
+    def _get_forbidden_access_extra(self, messages_to_check, operation):
+        forbidden = super()._get_forbidden_access_extra(messages_to_check)
+        # Handle discuss channel read only
+        for document in self:
+            # sudo: we need to check this status, even if the user
+            # cannot read the thread.
+            if operation != "read" and document.sudo()._is_read_only():
+                forbidden += self.env["mail.message"].browse(messages_to_check)
+        return forbidden
