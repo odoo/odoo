@@ -28,7 +28,6 @@ have real delivered quantities in sales orders.
         'views/sale_timesheet_portal_templates.xml',
         'views/project_sharing_views.xml',
         'views/project_portal_templates.xml',
-        'report/timesheets_analysis_views.xml',
         'report/report_timesheet_templates.xml',
         'report/project_report_view.xml',
         'wizard/project_create_invoice_views.xml',
