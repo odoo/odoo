@@ -87,8 +87,8 @@ class StockMoveLine(models.Model):
     description_picking = fields.Text(string="Description picking")
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
     product_packaging_qty = fields.Float(string="Reserved Packaging Quantity", compute='_compute_product_packaging_qty')
-    picking_location_id = fields.Many2one(related='picking_id.location_id')
-    picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
+    picking_location_id = fields.Many2one(related='picking_id.location_id', string="Picking Location From")
+    picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id', string="Picking Location To")
 
     _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
         WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
