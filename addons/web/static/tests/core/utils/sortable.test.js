@@ -1,10 +1,12 @@
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { advanceFrame, animationFrame } from "@odoo/hoot-mock";
+import { advanceFrame, animationFrame, disableAnimations } from "@odoo/hoot-mock";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
+
+beforeEach(disableAnimations);
 
 test("Parameters error handling", async () => {
     const mountListAndAssert = async (setupList) => {
@@ -240,7 +242,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
 
     // Negative horizontal scrolling
 
-    queryFirst(".spacer_horizontal").scrollIntoView({ behavior: "instant" });
+    queryFirst(".spacer_horizontal").scrollIntoView();
     queryFirst(".root").scrollLeft = 16;
     expect(".root").toHaveProperty("scrollLeft", 16, {
         message: "Negative horizontal scrolling: scrollLeft",
@@ -262,7 +264,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
 
     // Positive horizontal scrolling
 
-    queryFirst(".spacer_horizontal").scrollIntoView({ behavior: "instant" });
+    queryFirst(".spacer_horizontal").scrollIntoView();
     expect(".root").toHaveProperty("scrollLeft", 0, {
         message: "Positive horizontal scrolling - scrollLeft",
     });
@@ -283,7 +285,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
 
     // Negative vertical scrolling
 
-    queryFirst(".root").scrollIntoView({ behavior: "instant" });
+    queryFirst(".root").scrollIntoView();
     queryFirst(".root").scrollLeft = 16;
     expect(".root").toHaveProperty("scrollLeft", 16, {
         message: "Negative vertical scrolling - scrollLeft",
@@ -305,7 +307,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
 
     // Positive vertical scrolling
 
-    queryFirst(".spacer_before").scrollIntoView({ behavior: "instant" });
+    queryFirst(".spacer_before").scrollIntoView();
     queryFirst(".root").scrollLeft = 16;
     expect(".root").toHaveProperty("scrollLeft", 16, {
         message: "Positive vertical scrolling - scrollLeft",

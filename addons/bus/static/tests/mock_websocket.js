@@ -1,45 +1,8 @@
-import { WebsocketWorker } from "@bus/workers/websocket_worker";
 import { after } from "@odoo/hoot";
-import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-class WebSocketMock extends EventTarget {
-    constructor() {
-        super();
-        this.readyState = 0;
-
-        queueMicrotask(() => {
-            this.readyState = 1;
-            const openEv = new Event("open");
-            this.onopen(openEv);
-            this.dispatchEvent(openEv);
-        });
-    }
-
-    close(code = 1000, reason) {
-        this.readyState = 3;
-        const closeEv = new CloseEvent("close", {
-            code,
-            reason,
-            wasClean: code === 1000,
-        });
-        this.onclose(closeEv);
-        this.dispatchEvent(closeEv);
-    }
-
-    onclose(closeEv) {}
-    onerror(errorEv) {}
-    onopen(openEv) {}
-
-    send(data) {
-        if (this.readyState !== 1) {
-            const errorEv = new Event("error");
-            this.onerror(errorEv);
-            this.dispatchEvent(errorEv);
-            throw new DOMException("Failed to execute 'send' on 'WebSocket': State is not OPEN");
-        }
-    }
-}
+import { WebsocketWorker } from "@bus/workers/websocket_worker";
+import { browser } from "@web/core/browser/browser";
 
 class SharedWorkerMock extends EventTarget {
     constructor(websocketWorker) {
@@ -69,9 +32,6 @@ let websocketWorker;
  * websocket behavior.
  */
 export function patchWebsocketWorkerWithCleanup(params = {}) {
-    patchWithCleanup(window, {
-        WebSocket: WebSocketMock,
-    });
     patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
     websocketWorker = websocketWorker || new WebsocketWorker();
     websocketWorker.INITIAL_RECONNECT_DELAY = 0;

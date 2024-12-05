@@ -21,6 +21,19 @@ patch(busService, {
     },
 });
 
+class LockedWebSocket extends EventTarget {
+    constructor() {
+        super();
+
+        queueMicrotask(() => {
+            this.dispatchEvent(new Event("error"));
+            this.dispatchEvent(
+                new CloseEvent("close", { code: WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE })
+            );
+        });
+    }
+}
+
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
@@ -235,32 +248,18 @@ export function lockBusServiceStart() {
             return API;
         },
     });
-    return () => unlockDeferred.resolve();
+    return function unlockBusServiceStart() {
+        unlockDeferred.resolve();
+    };
 }
 
 /**
  *  Lock the websocket connection until the returned function is called. Usefull
  *  to simulate server being unavailable.
  *
- * @returns {Function} A function that can be used to unlock the websocket
+ * @returns {() => void} A function that can be used to unlock the websocket
  * connection.
  */
 export function lockWebsocketConnect() {
-    let locked = true;
-    const ogSocket = window.WebSocket;
-    patchWithCleanup(window, {
-        WebSocket: function () {
-            const ws = locked ? new EventTarget() : new ogSocket(...arguments);
-            if (locked) {
-                queueMicrotask(() => {
-                    ws.dispatchEvent(new Event("error"));
-                    ws.dispatchEvent(
-                        new CloseEvent("close", { code: WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE })
-                    );
-                });
-            }
-            return ws;
-        },
-    });
-    return () => (locked = false);
+    return patchWithCleanup(window, { WebSocket: LockedWebSocket });
 }

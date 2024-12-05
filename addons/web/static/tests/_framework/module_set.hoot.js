@@ -32,6 +32,15 @@ const { define, loader } = odoo;
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {Record<any, any>} object
+ */
+const clearObject = (object) => {
+    for (const key in object) {
+        delete object[key];
+    }
+};
+
+/**
  * @param {string[]} entryPoints
  * @param {Set<string>} additionalAddons
  */
@@ -333,6 +342,19 @@ const runTests = async () => {
     }
 
     await stop();
+
+    // Perform final cleanups
+    moduleNamesCache.clear();
+    serverModelCache.clear();
+    clearObject(dependencies);
+    clearObject(dependencyCache);
+    clearObject(globalFetchCache);
+    const templateModule = loader.modules.get(TEMPLATE_MODULE_NAME);
+    if (templateModule) {
+        templateModule.setUrlFilters([]);
+        templateModule.clearProcessedTemplates();
+    }
+
     await __gcAndLogMemory("tests done");
 };
 

@@ -25,6 +25,7 @@ import {
     storageSet,
     stringify,
 } from "../hoot_utils";
+import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
@@ -32,8 +33,8 @@ import { cleanupNetwork } from "../mock/network";
 import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
-import { makeFixtureManager } from "./fixture";
-import { logLevels, logger } from "./logger";
+import { HootFixtureElement, makeFixtureManager } from "./fixture";
+import { LOG_LEVELS, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities } from "./tag";
 import { Test, testError } from "./test";
@@ -1095,6 +1096,11 @@ export class Runner {
             const errorMessage = ["Some tests failed: see above for details"];
             if (this.config.headless) {
                 const link = createUrlFromId(this.state.failedIds, "test");
+                // Tweak parameters to make debugging easier
+                link.searchParams.set("debug", "assets");
+                link.searchParams.set("loglevel", LOG_LEVELS.tests);
+                link.searchParams.delete("debugTest");
+                link.searchParams.delete("headless");
                 errorMessage.push(`Failed tests link: ${link.toString()}`);
             }
             // Use console.dir for this log to appear on runbot sub-builds page
@@ -1704,6 +1710,10 @@ export class Runner {
         }
 
         // Register default hooks
+        this.beforeAll(() => {
+            document.head.appendChild(HootFixtureElement.styleElement);
+            return () => HootFixtureElement.styleElement.remove();
+        });
         this.afterAll(
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
@@ -1712,17 +1722,17 @@ export class Runner {
         );
         this.beforeEach(this.fixture.setup, setupTime);
         this.afterEach(
+            cleanupAnimations,
             cleanupWindow,
             cleanupNetwork,
             cleanupNavigator,
-            this.fixture.cleanup,
             cleanupDOM,
             cleanupTime,
             cleanupDate
         );
 
         if (this.debug) {
-            logger.level = logLevels.DEBUG;
+            logger.level = LOG_LEVELS.debug;
         }
         enableEventLogs(this.debug);
         setFrameRate(this.config.fps);
