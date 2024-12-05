@@ -14,10 +14,10 @@ class AccountRoot(models.Model):
     name = fields.Char(compute='_compute_root')
     parent_id = fields.Many2one('account.root', compute='_compute_root')
 
-    def browse(self, ids=()):
+    def browse(self, ids=(), prefetch_ids=()):
         if isinstance(ids, str):
             ids = (ids,)
-        return super().browse(ids)
+        return super().browse(ids, prefetch_ids)
 
     def _search(self, domain, offset=0, limit=None, order=None) -> Query:
         match domain:

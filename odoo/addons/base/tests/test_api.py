@@ -323,12 +323,12 @@ class TestAPI(SavepointCaseWithUserDemo):
         def diff_prefetch(a, b):
             self.assertNotEqual(set(a._prefetch_ids), set(b._prefetch_ids))
 
-        # the recordset operations below use different prefetch sets
         diff_prefetch(partners, partners.browse())
-        diff_prefetch(partners, partners[0])
-        diff_prefetch(partners, partners[:5])
+        diff_prefetch(partners, partners.browse(partners.ids[0]))
+        same_prefetch(partners, partners.browse(partners.ids[0], partners._prefetch_ids))
+        same_prefetch(partners, partners[0])
+        same_prefetch(partners, partners[:5])
 
-        # the recordset operations below share the prefetch set
         same_prefetch(partners, partners.browse(partners.ids))
         same_prefetch(partners, partners.with_user(self.user_demo))
         same_prefetch(partners, partners.with_context(active_test=False))
@@ -602,6 +602,9 @@ class TestAPI(SavepointCaseWithUserDemo):
             ps.filtered(lambda p: p.parent_id.employee),
             ps.filtered('parent_id.employee')
         )
+
+        # check the prefetch
+        self.assertIs(ps.filtered(lambda rec: False)._prefetch_ids, ps._prefetch_ids)
 
     @mute_logger('odoo.models')
     def test_80_map(self):
