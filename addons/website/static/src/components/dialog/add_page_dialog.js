@@ -9,7 +9,7 @@ import { WebsiteDialog } from '@website/components/dialog/dialog';
 import { Switch } from '@website/components/switch/switch';
 import { applyTextHighlight } from "@website/js/text_processing";
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted } from "@odoo/owl";
-import wUtils from '@website/js/utils';
+import weUtils from "@web_editor/js/common/utils";
 
 const NO_OP = () => {};
 
@@ -181,7 +181,7 @@ export class AddPageTemplatePreview extends Component {
             }
             mainEl.appendChild(wrapEl);
             await ensureJQuery();
-            await wUtils.onceAllImagesLoaded($(wrapEl));
+            await weUtils.onceAllImagesLoaded($(wrapEl));
             // Restore image lazy loading.
             for (const imgEl of lazyLoadedImgEls) {
                 imgEl.setAttribute("loading", "lazy");

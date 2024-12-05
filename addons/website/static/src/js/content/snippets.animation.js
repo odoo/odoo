@@ -9,7 +9,7 @@ import { escape } from "@web/core/utils/strings";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import Class from "@web/legacy/js/core/class";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import wUtils from "@website/js/utils";
+import weUtils from "@web_editor/js/common/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
@@ -1711,7 +1711,7 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
         const imgEls = this.el.querySelectorAll('img[loading="lazy"]');
         for (const imgEl of imgEls) {
             this._updateImgMinHeight(imgEl);
-            wUtils.onceAllImagesLoaded($(imgEl)).then(() => {
+            weUtils.onceAllImagesLoaded($(imgEl)).then(() => {
                 if (this.isDestroyed()) {
                     return;
                 }

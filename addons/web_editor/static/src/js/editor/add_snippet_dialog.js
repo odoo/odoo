@@ -10,6 +10,7 @@ import {
     onMounted,
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
+import weUtils from "@web_editor/js/common/utils";
 
 export class RenameCustomSnippetDialog extends Component {
     static template = "web_editor.RenameCustomSnippetDialog";
@@ -254,20 +255,10 @@ export class AddSnippetDialog extends Component {
 
             // Await images.
             const imageEls = snippetPreviewWrapEl.querySelectorAll("img");
-            // TODO: move onceAllImagesLoaded in web_editor and to use it here
-            await Promise.all(Array.from(imageEls).map(imgEl => {
-                imgEl.setAttribute("loading", "eager");
-                return new Promise(resolve => {
-                    if (imgEl.complete) {
-                        resolve();
-                    } else {
-                        imgEl.onload = () => resolve();
-                        // If the image could not be loaded, we still want the
-                        // "d-none" class to be removed.
-                        imgEl.onerror = () => resolve();
-                    }
-                });
-            }));
+            imageEls.forEach((imgEl) => imgEl.setAttribute("loading", "eager"));
+            // If the image could not be loaded, we still want the
+            // "d-none" class to be removed.
+            await weUtils.onceAllImagesLoaded($(snippetPreviewWrapEl), null, true);
 
             snippetPreviewWrapEl.classList.remove("d-none");
         }
