@@ -92,9 +92,9 @@ export class Colibri {
         return removeListeners;
     }
 
-    mountComponent(nodes, C) {
+    mountComponent(nodes, C, props) {
         for (let node of nodes) {
-            const root = this.core.prepareRoot(node, C);
+            const root = this.core.prepareRoot(node, C, props);
             root.mount();
             this.cleanups.push(() => root.destroy());
         }
@@ -185,7 +185,12 @@ export class Colibri {
             } else if (directive === "t-out") {
                 this.tOuts.push([nodes, value]);
             } else if (directive === "t-component") {
-                this.mountComponent(nodes, value);
+                const { Component } = odoo.loader.modules.get("@odoo/owl");
+                if (Component.isPrototypeOf(value)) {
+                    this.mountComponent(nodes, value);
+                } else {
+                    this.mountComponent(nodes, ...value());
+                }
             } else {
                 const suffix = directive.startsWith("t-")
                     ? ""

@@ -45,7 +45,8 @@ export class Interaction {
      * Its syntax looks like the following:
      * dynamicContent = {
      *      ".some-selector:t-on-click": (ev) => this.onClick(ev),
-     *      ".some-other-selector:t-att-class": () => ({ "some-class": true})
+     *      ".some-other-selector:t-att-class": () => ({ "some-class": true}),
+     *      "_root:t-component": () => [Component, { someProp: "value" }],
      * }
      *
      * A selector is either a standard css selector, or a special keyword
@@ -266,8 +267,12 @@ export class Interaction {
         this.__colibri__.cleanups.push(fn.bind(this));
     }
 
-    mountComponent(el, C) {
-        this.__colibri__.mountComponent([el], C);
+    /**
+     * @param {HTMLElement} el
+     * @param {import("@odoo/owl").Component} C
+     * @param {Object|null} [props]
+     */
+    mountComponent(el, C, props = null) {
+        this.__colibri__.mountComponent([el], C, props);
     }
 }
-

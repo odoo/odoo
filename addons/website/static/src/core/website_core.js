@@ -56,7 +56,7 @@ class WebsiteCore {
         this.proms.push(startProm);
     }
 
-    prepareRoot(el, C) {
+    prepareRoot(el, C, props) {
         if (!this.owlApp) {
             const { App } = odoo.loader.modules.get("@odoo/owl");
             const appConfig = {
@@ -70,12 +70,12 @@ class WebsiteCore {
             };
             this.owlApp = new App(null, appConfig);
         }
-        const root = this.owlApp.createRoot(C, { props: null, env: this.env });
+        const root = this.owlApp.createRoot(C, { props, env: this.env });
         const compElem = document.createElement("owl-component");
         compElem.setAttribute("contenteditable", "false");
         compElem.dataset.oeProtected = "true";
         el.appendChild(compElem);
-        return { 
+        return {
             C,
             root,
             el: compElem,

@@ -1475,7 +1475,6 @@ describe("dynamic attributes", () => {
 });
 
 describe("components", () => {
-
     test("can insert a component with t-component", async () => {
         let isCDestroyed = false;
         class C extends Component {
@@ -1511,6 +1510,44 @@ describe("components", () => {
         );
     });
 
+    test("can insert a component with props with t-component", async () => {
+        let isCDestroyed = false;
+        class C extends Component {
+            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static props = {
+                prop: { optional: true, type: String },
+            };
+
+            setup() {
+                onWillDestroy(() => isCDestroyed = true)
+            }
+        }
+
+        class Test extends Interaction {
+            static selector =".test";
+            dynamicContent = {
+                "_root:t-component": () => [C, {prop: "hello"}],
+            };
+        }
+        const { core, el } = await startInteraction(
+            Test,
+            `<div class="test"></div>`,
+        );
+        expect(el.querySelector(".test").outerHTML).toBe(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component></div>`,
+        );
+        await animationFrame();
+        expect(el.querySelector(".test").outerHTML).toBe(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"><p>component<span>hello</span></p></owl-component></div>`,
+        );
+        expect(isCDestroyed).toBe(false);
+        core.stopInteractions();
+        expect(isCDestroyed).toBe(true);
+        expect(el.querySelector(".test").outerHTML).toBe(
+            `<div class="test"></div>`,
+        );
+    });
+
     test("can insert a component with mountComponent", async () => {
         class C extends Component {
             static template = xml`component`;
@@ -1536,6 +1573,33 @@ describe("components", () => {
         );
     });
 
+    test("can insert a component with props with mountComponent", async () => {
+        class C extends Component {
+            static template = xml`<p>component<span t-out="props.prop"></span></p>`;
+            static props = {
+                prop: { optional: true, type: String },
+            };
+        }
+
+        class Test extends Interaction {
+            static selector = ".test";
+
+            setup() {
+                this.mountComponent(this.el, C, {prop: "with prop"});
+            }
+        }
+        const { el } = await startInteraction(
+            Test,
+            `<div class="test"></div>`,
+        );
+        expect(el.querySelector(".test").outerHTML).toBe(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"></owl-component></div>`,
+        );
+        await animationFrame();
+        expect(el.querySelector(".test").outerHTML).toBe(
+            `<div class="test"><owl-component contenteditable="false" data-oe-protected="true"><p>component<span>with prop</span></p></owl-component></div>`,
+        );
+    });
 });
 
 describe("insert", () => {
