@@ -635,6 +635,23 @@ class Survey(http.Controller):
     def survey_print(self, survey_token, review=False, answer_token=None, **post):
         '''Display an survey in printable view; if <answer_token> is set, it will
         grab the answers of the user_input_id that has <answer_token>.'''
+
+        # Requesting general print of the survey: We need dummy answer when survey is set to participants only
+        if not answer_token:
+            survey_sudo = self._fetch_from_access_token(survey_token, answer_token)[0]
+            try:
+                survey_user = survey_sudo.with_user(request.env.user)
+                user_access = True
+                survey_user.check_access_rights('read', raise_exception=True)
+                survey_user.check_access_rule('read')
+            except:
+                user_access = False
+            else:
+                user_access = True
+            if survey_sudo and user_access and survey_sudo.access_mode == 'token':
+                dummy_answer = survey_sudo._create_answer(user=request.env.user, test_entry=True)
+                answer_token = dummy_answer.access_token
+
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False, check_partner=False)
         if access_data['validity_code'] is not True and (
                 access_data['has_survey_access'] or
