@@ -1,4 +1,4 @@
-import { after, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -109,22 +109,27 @@ test("save filter", async () => {
         expect(irFilter.context).toEqual({ group_by: [], someKey: "foo" });
         return 7; // fake serverSideId
     });
+    mockService("disk_cache", {
+        invalidate(table) {
+            expect.step(`invalidate ${table} cache`);
+        },
+    });
 
-    const component = await mountWithSearch(TestComponent, {
+    await mountWithSearch(TestComponent, {
         resModel: "foo",
         context: { someOtherKey: "bar" }, // should not end up in filter's context
         searchViewId: false,
     });
-    const clearCacheListener = () => expect.step("CLEAR-CACHES");
-    component.env.bus.addEventListener("CLEAR-CACHES", clearCacheListener);
-    after(() => component.env.bus.removeEventListener("CLEAR-CACHES", clearCacheListener));
     expect.verifySteps([]);
 
     await toggleSearchBarMenu();
     await toggleSaveFavorite();
     await editFavoriteName("aaa");
     await saveFavorite();
-    expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_or_replace", "CLEAR-CACHES"]);
+    expect.verifySteps([
+        "/web/dataset/call_kw/ir.filters/create_or_replace",
+        "invalidate views cache",
+    ]);
 });
 
 test("dynamic filters are saved dynamic", async () => {
