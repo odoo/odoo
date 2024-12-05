@@ -54,6 +54,7 @@ odoo_help() {
   echo 'odoo_stop           Stops Odoo service'
   echo 'odoo_restart        Restarts Odoo service'
   echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
+  echo 'devtools            Enables/Disables specific functions for development (more help with devtools help)'
   echo ''
   echo 'Odoo IoT online help: <https://www.odoo.com/documentation/master/applications/general/iot.html>'
 }
@@ -83,6 +84,45 @@ pip() {
     additional_arg=\"--user\"
   fi
   pip3 \"\$1\" \"\$2\" --break-system-package \"\$additional_arg\"
+}
+
+devtools() {
+  help_message() {
+    echo 'Usage: devtools <enable/disable> <general/actions> [action name]'
+    echo ''
+    echo 'Only provide an action name if you want to enable/disable a specific device action.'
+    echo 'If no action name is provided, all actions will be enabled/disabled.'
+    echo 'To enable/disable multiple actions, enclose them in quotes separated by commas.'
+  }
+  case \"\$1\" in
+    enable|disable)
+      case \"\$2\" in
+        general|actions)
+          write_mode
+          if ! grep -q '^\[devtools\]' /home/pi/odoo.conf; then
+            sudo -u odoo bash -c \"printf '\n[devtools]\n' >> /home/pi/odoo.conf\"
+          fi
+          if [ \"\$1\" == \"disable\" ]; then
+            value=\"\${3:-*}\" # Default to '*' if no action name is provided
+            devtools enable \"\$2\" # Remove action/general from conf to avoid duplicate keys
+            write_mode
+            sudo -u odoo sed -i \"/^\[devtools\]/a\\\\\$2 = \$value\" /home/pi/odoo.conf
+          elif [ \"\$1\" == \"enable\" ]; then
+            sudo -u odoo sed -i \"/\[devtools\]/,/\[/{/\$2 =/d}\" /home/pi/odoo.conf
+          fi
+          read_mode
+          ;;
+        *)
+          help_message
+          return 1
+          ;;
+      esac
+      ;;
+    *)
+      help_message
+      return 1
+      ;;
+  esac
 }
 " | tee -a ~/.bashrc /home/pi/.bashrc
 

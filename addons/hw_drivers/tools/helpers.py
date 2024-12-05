@@ -5,7 +5,7 @@ import configparser
 import contextlib
 import datetime
 from enum import Enum
-from functools import cache
+from functools import cache, wraps
 from importlib import util
 import io
 import logging
@@ -62,6 +62,28 @@ class IoTRestart(Thread):
     def run(self):
         time.sleep(self.delay)
         service.server.restart()
+
+
+def toggleable(function):
+    """Decorate a function to enable or disable it based on the value
+    of the associated configuration parameter.
+    """
+    fname = f"<function {function.__module__}.{function.__qualname__}>"
+
+    @wraps(function)
+    def devtools_wrapper(*args, **kwargs):
+        if function.__name__ == 'action':
+            action = args[1].get('action', 'default')  # first argument is self (containing Driver instance), second is 'data'
+            disabled_actions = (get_conf('actions', section='devtools') or '').split(',')
+            if action in disabled_actions or '*' in disabled_actions:
+                _logger.warning("Ignoring call to %s: '%s' action is disabled by devtools", fname, action)
+                return
+        elif get_conf('general', section='devtools'):
+            _logger.warning(f"Ignoring call to {fname}: method is disabled by devtools")
+            return
+
+        return function(*args, **kwargs)
+    return devtools_wrapper
 
 
 if platform.system() == 'Windows':
@@ -133,6 +155,7 @@ def check_certificate():
         return {"status": CertificateStatus.OK, "message": message}
 
 
+@toggleable
 def check_git_branch():
     """Check if the local branch is the same as the connected Odoo DB and
     checkout to match it if needed.
@@ -388,6 +411,7 @@ def delete_iot_handlers():
         _logger.exception('Failed to delete old IoT handlers')
 
 
+@toggleable
 def download_iot_handlers(auto=True):
     """
     Get the drivers from the configured Odoo server
