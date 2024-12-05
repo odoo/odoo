@@ -30,7 +30,8 @@ def create(self, vals_list) -> models.BaseModel:
     if hasattr(self.env.user, '_bus_send'):
         view_ids = self.env['ir.ui.view'].sudo().search([
             ('active', '=', True),
-            ('model', '=', self._name)
+            ('model', '=', self._name),
+            ('type', '=', 'list')
         ])
         for view in view_ids:
             merged_view = f'NOTIFICATION_FROM_NEW_RECORD_TO_REALTIME_SYNC_{self._name}_{view.id}'
