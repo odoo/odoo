@@ -13,7 +13,7 @@ class PosOrderLine(models.Model):
             return super()._get_stock_moves_to_consider(stock_moves, product)
         _dummy, components = bom.explode(product, self.qty)
         ml_product_to_consider = (product.bom_ids and [comp[0].product_id.id for comp in components]) or [product.id]
-        return stock_moves.filtered(lambda ml: ml.product_id.id in ml_product_to_consider and ml.bom_line_id)
+        return stock_moves.filtered(lambda ml: ml.product_id.id in ml_product_to_consider and ml.bom_line_id and ml.bom_line_id.bom_id.id == bom.id)
 
 class PosOrder(models.Model):
     _inherit = "pos.order"
