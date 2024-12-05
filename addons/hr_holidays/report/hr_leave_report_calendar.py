@@ -81,7 +81,7 @@ class LeaveReportCalendar(models.Model):
         records = super()._fetch_query(query, fields)
         if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
             self.env.cache.update(records, self._fields['name'], [
-                record.name.split(':')[-1].strip()
+                record.name.split(':')[-1].strip() if record.name else ''
                 for record in records.with_user(SUPERUSER_ID)
             ])
         return records
