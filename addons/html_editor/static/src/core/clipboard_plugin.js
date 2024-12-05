@@ -171,17 +171,16 @@ export class ClipboardPlugin extends Plugin {
             // just its rows.
             clonedContents = tableClone;
         }
-        const table = closestElement(selection.startContainer, "table");
-        if (clonedContents.firstChild.nodeName === "TABLE" && table) {
+        const startTable = closestElement(selection.startContainer, "table");
+        if (clonedContents.firstChild.nodeName === "TABLE" && startTable) {
             // Make sure the full leading table is copied.
-            clonedContents.firstChild.after(table.cloneNode(true));
+            clonedContents.firstChild.after(startTable.cloneNode(true));
             clonedContents.firstChild.remove();
         }
-        if (clonedContents.lastChild.nodeName === "TABLE") {
+        const endTable = closestElement(selection.endContainer, "table");
+        if (clonedContents.lastChild.nodeName === "TABLE" && endTable) {
             // Make sure the full trailing table is copied.
-            clonedContents.lastChild.before(
-                closestElement(selection.endContainer, "table").cloneNode(true)
-            );
+            clonedContents.lastChild.before(endTable.cloneNode(true));
             clonedContents.lastChild.remove();
         }
         const commonAncestorElement = closestElement(selection.commonAncestorContainer);
