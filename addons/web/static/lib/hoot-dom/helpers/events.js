@@ -247,12 +247,7 @@ const getDefaultRunTimeValue = () => ({
     buttons: 0,
 
     // Modifier keys
-    modifierKeys: {
-        altKey: false,
-        ctrlKey: false,
-        metaKey: false,
-        shiftKey: false,
-    },
+    modifierKeys: {},
 });
 
 /**
@@ -1545,6 +1540,7 @@ const btn = {
     BACK: 3,
     FORWARD: 4,
 };
+const CAPTURE = { capture: true };
 const DEPRECATED_EVENT_PROPERTIES = {
     keyCode: "key",
     which: "key",
@@ -2484,21 +2480,27 @@ export async function setInputRange(target, value, options) {
 }
 
 /**
- * @param {HTMLElement} fixture
+ * @param {HTMLElement} target
  */
-export function setupEventActions(fixture) {
-    if (runTime.pointerDownTimeout) {
-        globalThis.clearTimeout(runTime.pointerDownTimeout);
-    }
+export function setupEventActions(target) {
+    target.addEventListener("click", registerFileInput, CAPTURE);
+    target.addEventListener("focus", registerFileInput, CAPTURE);
+    target.addEventListener("submit", redirectSubmit);
 
-    removeChangeTargetListeners();
+    return function cleanupEventActions() {
+        if (runTime.pointerDownTimeout) {
+            globalThis.clearTimeout(runTime.pointerDownTimeout);
+        }
 
-    fixture.addEventListener("click", registerFileInput, { capture: true });
-    fixture.addEventListener("focus", registerFileInput, { capture: true });
-    fixture.addEventListener("submit", redirectSubmit);
+        removeChangeTargetListeners();
 
-    // Runtime global variables
-    $assign(runTime, getDefaultRunTimeValue());
+        target.removeEventListener("click", registerFileInput, CAPTURE);
+        target.removeEventListener("focus", registerFileInput, CAPTURE);
+        target.removeEventListener("submit", redirectSubmit);
+
+        // Runtime global variables
+        $assign(runTime, getDefaultRunTimeValue());
+    };
 }
 
 /**

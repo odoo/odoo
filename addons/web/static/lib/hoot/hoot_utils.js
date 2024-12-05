@@ -1467,6 +1467,11 @@ export class Markup {
     }
 }
 
+/**
+ * Centralized version of {@link EventTarget} to make cleanups more streamlined.
+ */
+export class MockEventTarget extends EventTarget {}
+
 export class FormattedString extends String {
     static RAW = "raw";
 

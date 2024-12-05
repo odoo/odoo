@@ -233,7 +233,7 @@ export const FAKE_MODEL = {
  * @param {HTMLElement} element
  */
 function instantScrollTo(element) {
-    element.scrollIntoView({ behavior: "instant", block: "center" });
+    element.scrollIntoView({ block: "center" });
 }
 
 /**

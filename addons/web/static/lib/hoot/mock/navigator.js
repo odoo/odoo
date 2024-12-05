@@ -1,6 +1,12 @@
 /** @odoo-module */
 
-import { createMock, HootError, makePublicListeners, MIME_TYPE } from "../hoot_utils";
+import {
+    createMock,
+    HootError,
+    MockEventTarget,
+    makePublicListeners,
+    MIME_TYPE,
+} from "../hoot_utils";
 import { getSyncValue, setSyncValue } from "./sync_values";
 
 /**
@@ -14,7 +20,6 @@ import { getSyncValue, setSyncValue } from "./sync_values";
 const {
     Blob,
     ClipboardItem = class NonSecureClipboardItem {},
-    EventTarget,
     navigator,
     Object: { assign: $assign },
     Set,
@@ -232,7 +237,7 @@ export class MockPermissions {
     }
 }
 
-export class MockPermissionStatus extends EventTarget {
+export class MockPermissionStatus extends MockEventTarget {
     /** @type {typeof currentPermissions[PermissionName]} */
     _permission;
 
