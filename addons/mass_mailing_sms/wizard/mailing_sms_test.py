@@ -13,11 +13,26 @@ class MailingSmsTest(models.TransientModel):
     _description = 'Test SMS Mailing'
 
     def _default_numbers(self):
-        return self.env.user.partner_id.phone_sanitized or ""
+        previous_numbers = self.env['mailing.sms.test'].search([('create_uid', '=', self.env.uid)], order='create_date desc', limit=1).numbers
+        return previous_numbers or self.env.user.partner_id.phone_sanitized or ""
 
     numbers = fields.Text(string='Number(s)', required=True,
                           default=_default_numbers, help='Carriage-return-separated list of phone numbers')
     mailing_id = fields.Many2one('mailing.mailing', string='Mailing', required=True, ondelete='cascade')
+
+    def _prepare_mass_sms_trace_values(self, record, sms_values):
+        trace_code = self.env['mailing.trace']._get_random_code()
+        trace_values = {
+            'mass_mailing_id': self.mailing_id.id,
+            'res_id': record.id,
+            'sms_code': trace_code,
+            'model': record._name,
+            'sms_number': sms_values['number'],
+            'trace_type': 'sms',
+        }
+        unsubscribe_url = self.env['sms.composer']._get_unsubscribe_url(self.mailing_id.id, trace_code)
+        sms_values['body'] = '%s\n%s' % (sms_values['body'], _('STOP SMS: %s', unsubscribe_url))
+        return trace_values
 
     def action_send_sms(self):
         self.ensure_one()
@@ -31,8 +46,14 @@ class MailingSmsTest(models.TransientModel):
         if record:
             # Returns a proper error if there is a syntax error with qweb
             body = self.env['mail.render.mixin']._render_template(body, self.mailing_id.mailing_model_real, record.ids)[record.id]
+        # Include the unsubscribe link if sms_allow_unsubscribe is enabled
+        if self.mailing_id.sms_allow_unsubscribe:
+            sms_values = {'number': sanitized_numbers, 'body': body, 'uuid': ''}  # Example SMS value dictionary
+            trace_values = self._prepare_mass_sms_trace_values(record, sms_values)
+            self.env['mailing.trace'].sudo().create(trace_values)
+            body = sms_values['body']
 
-        new_sms_messages_sudo = self.env['sms.sms'].sudo().create([{'body': body, 'number': number} for number in sanitized_numbers])
+        new_sms_messages_sudo = self.env['sms.sms'].sudo().create([{'body': body, 'number': number} for number in numbers])
         sms_api = SmsApi(self.env)
         sent_sms_list = sms_api._send_sms_batch([{
             'content': body,
@@ -44,19 +65,17 @@ class MailingSmsTest(models.TransientModel):
             error_messages = sms_api._get_sms_api_error_messages()
 
         notification_messages = []
-        if invalid_numbers:
-            notification_messages.append(_('The following numbers are not correctly encoded: %s',
-                ', '.join(invalid_numbers)))
-
+        sms_uuid_to_number_map = {sms.uuid: sms.number for sms in new_sms_messages_sudo}
         for sent_sms in sent_sms_list:
-            if sent_sms.get('state') == 'success':
+            number = sms_uuid_to_number_map.get(sent_sms.get('uuid'))
+            if sent_sms.get('state') == 'success' and number not in invalid_numbers:
                 notification_messages.append(
-                    _('Test SMS successfully sent to %s', sent_sms.get('res_id')))
-            elif sent_sms.get('state'):
+                    _('Test SMS successfully sent to %s', number))
+            else:
                 notification_messages.append(
                     _(
                         "Test SMS could not be sent to %(destination)s: %(state)s",
-                        destination=sent_sms.get("res_id"),
+                        destination=number,
                         state=error_messages.get(sent_sms["state"], _("An error occurred.")),
                     )
                 )
