@@ -61,10 +61,6 @@
         'web.assets_unit_tests_setup': [
             'website_event/static/src/snippets/**/*.js',
             ('remove', 'website_event/static/src/snippets/**/options.js'),
-            # TODO Re-activate when testing edit mode
-            ('remove', 'website_event/static/src/snippets/**/*.edit.js'),
-            # TODO Remove when all 000 have been adapted
-            ('remove', 'website_event/static/src/snippets/**/000.js'),
         ],
         'web.assets_frontend': [
             'website_event/static/src/js/tours/**/*',
@@ -77,7 +73,7 @@
             'website_event/static/src/js/website_event_ticket_details.js',
         ],
         'website.assets_wysiwyg': [
-            '/website_event/static/src/snippets/s_events/options.js',
+            'website_event/static/src/snippets/s_events/options.js',
             'website_event/static/src/snippets/options.js',
         ],
         'website.assets_editor': [
