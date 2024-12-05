@@ -8,16 +8,20 @@ import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting
 
 class Countdown extends Interaction {
     static selector = ".s_countdown";
+    dynamicContent = {
+        ".s_countdown_canvas_wrapper:t-att-class": () => ({
+            "d-flex": true,
+            "justify-content-center": true,
+        }),
+    }
 
     setup() {
-
         // Remove SVG previews (used to simulated canvas)
         this.el.querySelectorAll("svg").forEach(el => {
             el.parentNode.remove();
         })
 
         this.wrapperEl = this.el.querySelector(".s_countdown_canvas_wrapper");
-        this.wrapperEl.classList.add("d-flex", "justify-content-center");
         this.hereBeforeTimerEnds = false;
         this.endAction = this.el.dataset.endAction;
         this.endTime = parseInt(this.el.dataset.endTime);
@@ -58,13 +62,8 @@ class Countdown extends Interaction {
     }
 
     destroy() {
-        this.el.querySelector(".s_countdown_end_redirect_message")?.remove();
         this.el.querySelector(".s_countdown_end_message")?.classList.add("d-none");
-        this.el.querySelector(".s_countdown_text_wrapper")?.remove();
         this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
-        this.el.querySelector(".s_countdown_canvas_flex")?.remove();
-
-        this.wrapperEl.innerHTML = "";
 
         clearInterval(this.setInterval);
     }
@@ -94,11 +93,9 @@ class Countdown extends Interaction {
                 if (!this.el.querySelector(".s_countdown_end_redirect_message").length) {
                     const container = this.el.querySelector("> .container, > .container-fluid, > .o_container_small");
 
-                    container.appendChild(
-                        renderToElement("website.s_countdown.end_redirect_message", {
-                            redirectUrl: redirectUrl,
-                        })
-                    );
+                    this.insert(renderToElement("website.s_countdown.end_redirect_message", {
+                        redirectUrl: redirectUrl,
+                    }), container);
                 }
             }
         } else if (this.endAction === "message" || this.endAction === "message_no_countdown") {
@@ -128,7 +125,7 @@ class Countdown extends Interaction {
         this.timeDiff = [];
         if (this.isUnitVisible("d") && !(this.onlyOneUnit && delta < 86400)) {
             const divEl = this.createCanvasWrapper();
-            this.wrapperEl.appendChild(divEl);
+            this.insert(divEl, this.wrapperEl);
             this.timeDiff.push({
                 canvas: divEl,
                 // There is no logical number of unit (total) on which day units
@@ -140,7 +137,7 @@ class Countdown extends Interaction {
         }
         if (this.isUnitVisible("h") || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
             const divEl = this.createCanvasWrapper();
-            this.wrapperEl.appendChild(divEl);
+            this.insert(divEl, this.wrapperEl);
             this.timeDiff.push({
                 canvas: divEl,
                 total: 24,
@@ -150,7 +147,7 @@ class Countdown extends Interaction {
         }
         if (this.isUnitVisible("m") || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
             const divEl = this.createCanvasWrapper();
-            this.wrapperEl.appendChild(divEl);
+            this.insert(divEl, this.wrapperEl);
             this.timeDiff.push({
                 canvas: divEl,
                 total: 60,
@@ -160,7 +157,7 @@ class Countdown extends Interaction {
         }
         if (this.isUnitVisible("s") || (this.onlyOneUnit && delta < 60)) {
             const divEl = this.createCanvasWrapper();
-            this.wrapperEl.appendChild(divEl);
+            this.insert(divEl, this.wrapperEl);
             this.timeDiff.push({
                 canvas: divEl,
                 total: 60,
@@ -214,7 +211,7 @@ class Countdown extends Interaction {
                 const spanEl = document.createElement("span");
                 spanEl.classList.add("s_countdown_text", "ms-1");
                 this.textWrapperEl.appendChild(spanEl);
-                this.wrapperEl.appendChild(this.textWrapperEl);
+                this.insert(this.textWrapperEl, this.wrapperEl);
             }
             this.textWrapperEl.classList.toggle("d-none", hideCountdown);
 

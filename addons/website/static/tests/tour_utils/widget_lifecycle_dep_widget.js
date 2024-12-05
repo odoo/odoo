@@ -26,7 +26,7 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
         dynamicContent = {
             "_root": {
                 // TODO Adapt naming if still needed.
-                "t-att-class": ({ "public_widget_started": true }),
+                "t-att-class": () => ({ "public_widget_started": true }),
             },
         };
         // TODO Handle edit mode.
