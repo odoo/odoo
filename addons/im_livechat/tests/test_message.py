@@ -5,6 +5,7 @@ from markupsafe import Markup
 
 from odoo import Command, fields
 from odoo.exceptions import AccessError
+from odoo.tools.misc import binary_token
 from odoo.tests.common import users, tagged, HttpCase
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
@@ -140,6 +141,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                 ],
                 "res.partner": self._filter_partners_fields(
                     {
+                        "avatar_128_token": binary_token(self.users[1].partner_id, "avatar_128"),
                         "id": self.users[1].partner_id.id,
                         "is_company": False,
                         "isInternalUser": True,
@@ -244,6 +246,9 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                                 ],
                                 "res.partner": self._filter_partners_fields(
                                     {
+                                        "avatar_128_token": binary_token(
+                                            self.env.user.partner_id, "avatar_128"
+                                        ),
                                         "id": self.env.user.partner_id.id,
                                         "isInternalUser": False,
                                         "is_company": False,
