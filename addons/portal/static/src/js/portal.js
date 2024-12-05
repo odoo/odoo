@@ -1,10 +1,14 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
     events: {
         'change select[name="country_id"]': '_onCountryChange',
+        "click .o_portal_profile_pic_edit": "_onEditProfilePicClick",
+        "change .o_portal_file_upload": "_onFileUploadChange",
+        "click .o_portal_profile_pic_clear": "_onProfilePicClearClick",
     },
 
     /**
@@ -16,6 +20,8 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
         this.$state = this.$('select[name="state_id"]');
         this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
         this._adaptAddressForm();
+        this.notification = this.bindService("notification");
+        this.currentProfileSrc = document.querySelector(".o_wportal_avatar_img").src;
 
         return def;
     },
@@ -46,7 +52,70 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     _onCountryChange: function () {
         this._adaptAddressForm();
     },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onEditProfilePicClick: function (ev) {
+        ev.preventDefault();
+        ev.currentTarget.closest("form").querySelector(".o_portal_file_upload").click();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFileUploadChange: function (ev) {
+        if (!ev.currentTarget.files.length) {
+            return;
+        }
+        const formEl = ev.currentTarget.closest("form");
+        const reader = new FileReader();
+        const file = ev.currentTarget.files[0];
+        const self = this; // Preserve context
+        reader.onload = function (ev) {
+            const img = new Image();
+            img.onload = () => {
+                formEl.querySelector(".o_wportal_avatar_img").src = ev.target.result;
+            };
+            img.onerror = () => {
+                self.notification.add(_t("The selected image is broken or invalid."), {
+                    type: 'danger',
+                });
+                formEl.querySelector("input[type=file]").value = null;
+                formEl.querySelector(".o_wportal_avatar_img").src = self.currentProfileSrc;
+            };
+
+            img.src = ev.target.result;
+        };
+        reader.onerror = () => {
+            this.notification.add(_t("Failed to read the selected image."), {
+                type: 'danger',
+            });
+        };
+
+        reader.readAsDataURL(file);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onProfilePicClearClick: function (ev) {
+        const formEl = ev.currentTarget.closest("form");
+        formEl.querySelector(".o_wportal_avatar_img").src = "/web/static/img/placeholder.png";
+
+        const inputEl = document.createElement("input");
+        inputEl.type = "hidden";
+        inputEl.name = "remove_profile";
+        inputEl.id = "remove_profile";
+        inputEl.value = "true";
+        formEl.appendChild(inputEl);
+    },
 });
+
+export default publicWidget.registry.portalDetails;
 
 export const PortalHomeCounters = publicWidget.Widget.extend({
     selector: '.o_portal_my_home',
