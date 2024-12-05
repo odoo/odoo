@@ -1,7 +1,6 @@
 import { registry } from '@web/core/registry';
 
 registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions', {
-    url: '/survey/start/853ebb30-40f2-43bf-a95a-bbf0e367a365',
     steps: () => [{
         content: 'Click on Start',
         trigger: 'button.btn:contains("Start")',

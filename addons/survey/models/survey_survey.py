@@ -199,7 +199,7 @@ class SurveySurvey(models.Model):
     def _compute_background_image_url(self):
         self.background_image_url = False
         for survey in self.filtered(lambda s: s.background_image and s.access_token):
-            survey.background_image_url = "/survey/%s/get_background_image" % survey.access_token
+            survey.background_image_url = f"/survey/{survey.id}/{survey.access_token}/get_background_image"
 
     @api.depends(
         'question_and_page_ids',
@@ -328,7 +328,7 @@ class SurveySurvey(models.Model):
             if survey.session_code:
                 survey.session_link = werkzeug.urls.url_join(
                     survey.get_base_url(),
-                    '/s/%s' % survey.session_code)
+                    f'/s/{survey.id}/{survey.session_code}')
             else:
                 survey.session_link = werkzeug.urls.url_join(
                     survey.get_base_url(),
@@ -1100,7 +1100,7 @@ class SurveySurvey(models.Model):
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
             'target': 'new',
-            'url': '/survey/test/%s' % self.access_token,
+            'url': f'/survey/test/{self.id}/{self.access_token}',
         }
 
     def action_survey_user_input_completed(self):
@@ -1158,7 +1158,7 @@ class SurveySurvey(models.Model):
             'type': 'ir.actions.act_url',
             'name': "Open Session Manager",
             'target': 'new',
-            'url': '/survey/session/manage/%s' % self.access_token
+            'url': f'/survey/session/manage/{self.id}/{self.access_token}'
         }
 
     def action_end_session(self):
@@ -1173,14 +1173,14 @@ class SurveySurvey(models.Model):
         self.env['bus.bus']._sendone(self.access_token, 'end_session', {})
 
     def get_start_url(self):
-        return '/survey/start/%s' % self.access_token
+        return f'/survey/start/{self.id}/{self.access_token}'
 
     def get_start_short_url(self):
         """ See controller method docstring for more details. """
-        return '/s/%s' % self.access_token[:6]
+        return f'/s/{self.id}/{self.access_token[:6]}'
 
     def get_print_url(self):
-        return '/survey/print/%s' % self.access_token
+        return f'/survey/print/{self.id}/{self.access_token}'
 
     # ------------------------------------------------------------
     # GRAPH / RESULTS

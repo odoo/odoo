@@ -111,6 +111,8 @@
                 class="d-flex flex-grow-1 align-items-center"
                 t-att-data-scoring-type="survey.scoring_type"
                 t-att-data-answer-token="answer.access_token"
+                t-att-data-answer-id="answer.id"
+                t-att-data-survey-id="survey.id"
                 t-att-data-survey-token="survey.access_token"
                 t-att-data-users-can-go-back="survey.users_can_go_back and not answer.is_session_answer"
                 t-att-data-session-in-progress="answer.is_session_answer"
@@ -319,7 +321,7 @@
                             <t t-call="survey.survey_button_retake"/>
                             <p t-if="survey.scoring_type != 'scoring_without_answers'">
                                 <a role="button" class="o_survey_review btn btn-secondary btn-lg"
-                                    t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">
+                                    t-att-href="'/survey/print/%s/%s?answer_token=%s&amp;review=True&amp;answer_id=%s' % (survey.id, survey.access_token, answer.access_token, answer.id)">
                                     Review your answers
                                 </a>
                             </p>
@@ -493,7 +495,7 @@
             <!-- Directly use field or route if the user doesn't have access rights -->
             <div t-if="not env.user.has_group('survey.group_survey_user')"
                 class="o_survey_choice_img d-flex my-3 justify-content-center">
-                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)" class="mw-100 h-auto"/>
+                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s/%s/%s' % (survey.id, answer.id, survey.access_token, answer.access_token, question.id, label.id)" class="mw-100 h-auto"/>
             </div>
             <div t-else=""  t-field="label.value_image"
                 class="o_survey_choice_img d-flex my-3 justify-content-center"

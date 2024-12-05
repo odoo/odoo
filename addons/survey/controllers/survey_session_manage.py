@@ -9,21 +9,37 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.tools import is_html_empty
+from odoo.tools import consteq, is_html_empty
 
 
 class UserInputSession(http.Controller):
-    def _fetch_from_token(self, survey_token):
-        """ Check that given survey_token matches a survey 'access_token'.
-        Unlike the regular survey controller, user trying to access the survey must have full access rights! """
-        return request.env['survey.survey'].search([('access_token', '=', survey_token)])
 
-    def _fetch_from_session_code(self, session_code):
+    def _fetch_from_token(self, survey_token=False, survey_id=False):
+        """ Check that given survey_token matches a survey 'access_token', or 'survey_id'.
+        Unlike the regular survey controller, user trying to access the survey must have full access rights! """
+        if survey_id:
+            survey = request.env['survey.survey'].browse(survey_id).exists()
+        else:
+            survey = request.env['survey.survey'].search([('access_token', '=', survey_token)])
+
+        if survey and not consteq(survey.access_token, survey_token):
+            raise NotFound()
+        return survey
+
+    def _fetch_from_session_code(self, session_code, survey_id):
         """ Matches a survey against a passed session_code, and checks if it is valid.
         If it is valid, returns the start url. Else, the error type."""
-        if not session_code:
+        if not session_code and not survey_id or not session_code:
             return None, {'error': 'survey_wrong'}
-        survey = request.env['survey.survey'].sudo().search([('session_code', '=', session_code)], limit=1)
+
+        if survey_id:
+            survey = request.env['survey.survey'].sudo().browse(survey_id).exists()
+        else:
+            raise NotFound()
+
+        if survey.exists() and not consteq(survey.session_code, session_code):
+            raise NotFound()
+
         if not survey or survey.certification:
             return None, {'error': 'survey_wrong'}
         if survey.session_state in ['ready', 'in_progress']:
@@ -36,8 +52,8 @@ class UserInputSession(http.Controller):
     # SURVEY SESSION MANAGEMENT
     # ------------------------------------------------------------
 
-    @http.route('/survey/session/manage/<string:survey_token>', type='http', auth='user', website=True)
-    def survey_session_manage(self, survey_token, **kwargs):
+    @http.route('/survey/session/manage/<int:survey_id>/<string:survey_token>', type='http', auth='user', website=True)
+    def survey_session_manage(self, survey_token, survey_id=False, **kwargs):
         """ Main route used by the host to 'manager' the session.
         - If the state of the session is 'ready'
           We render a template allowing the host to showcase the different options of the session
@@ -48,7 +64,7 @@ class UserInputSession(http.Controller):
           We render a template allowing the host to show the question results, display the attendees
           leaderboard or go to the next question of the session. """
 
-        survey = self._fetch_from_token(survey_token)
+        survey = self._fetch_from_token(survey_token, survey_id)
 
         if not survey:
             return NotFound()
@@ -65,8 +81,8 @@ class UserInputSession(http.Controller):
         # Note that at this stage survey.session_state can be False meaning that the survey has ended (session closed)
         return request.render('survey.user_input_session_manage', self._prepare_manage_session_values(survey))
 
-    @http.route('/survey/session/next_question/<string:survey_token>', type='jsonrpc', auth='user', website=True)
-    def survey_session_next_question(self, survey_token, go_back=False, **kwargs):
+    @http.route('/survey/session/next_question/<int:survey_id>/<string:survey_token>', type='jsonrpc', auth='user', website=True)
+    def survey_session_next_question(self, survey_token, go_back=False, survey_id=False, **kwargs):
         """ This route is called when the host goes to the next question of the session.
 
         It's not a regular 'request.render' route because we handle the transition between
@@ -88,7 +104,7 @@ class UserInputSession(http.Controller):
         to display. Background image depends on the next question to display and cannot be extracted from the
         html rendered question template. The background needs to be changed at frontend side on a specific selector."""
 
-        survey = self._fetch_from_token(survey_token)
+        survey = self._fetch_from_token(survey_token, survey_id)
 
         if not survey or not survey.session_state:
             # no open session
@@ -120,14 +136,14 @@ class UserInputSession(http.Controller):
         else:
             return {}
 
-    @http.route('/survey/session/results/<string:survey_token>', type='jsonrpc', auth='user', website=True)
-    def survey_session_results(self, survey_token, **kwargs):
+    @http.route('/survey/session/results/<int:survey_id>/<string:survey_token>', type='jsonrpc', auth='user', website=True)
+    def survey_session_results(self, survey_token, survey_id=False, **kwargs):
         """ This route is called when the host shows the current question's results.
 
         It's not a regular 'request.render' route because we handle the display of results using
         an AJAX request to be able to include the results in the currently displayed page. """
 
-        survey = self._fetch_from_token(survey_token)
+        survey = self._fetch_from_token(survey_token, survey_id)
 
         if not survey or survey.session_state != 'in_progress':
             # no open session
@@ -141,14 +157,17 @@ class UserInputSession(http.Controller):
 
         return self._prepare_question_results_values(survey, user_input_lines)
 
-    @http.route('/survey/session/leaderboard/<string:survey_token>', type='jsonrpc', auth='user', website=True)
-    def survey_session_leaderboard(self, survey_token, **kwargs):
+    # DANE: remove old routes in v19/v20
+    @http.route(['/survey/session/leaderboard/<int:survey_id>/<string:survey_token>',
+                 '/survey/session/leaderboard/<string:survey_token>'
+                ], type='jsonrpc', auth='user', website=True)
+    def survey_session_leaderboard(self, survey_token, survey_id=False, **kwargs):
         """ This route is called when the host shows the current question's attendees leaderboard.
 
         It's not a regular 'request.render' route because we handle the display of the leaderboard
         using an AJAX request to be able to include the results in the currently displayed page. """
 
-        survey = self._fetch_from_token(survey_token)
+        survey = self._fetch_from_token(survey_token, survey_id)
 
         if not survey or survey.session_state != 'in_progress':
             # no open session
@@ -170,24 +189,24 @@ class UserInputSession(http.Controller):
         It is mainly used to ease survey access for attendees in session mode. """
         return request.render("survey.survey_session_code")
 
-    @http.route('/s/<string:session_code>', type='http', auth='public', website=True)
-    def survey_start_short(self, session_code):
+    @http.route('/s/<int:survey_id>/<string:session_code>', type='http', auth='public', website=True)
+    def survey_start_short(self, session_code, survey_id=False):
         """" Redirects to 'survey_start' route using a shortened link & token.
         Shows an error message if the survey is not valid.
         This route is used in survey sessions where we need short links for people to type. """
-        survey, survey_error = self._fetch_from_session_code(session_code)
+        survey, survey_error = self._fetch_from_session_code(session_code, survey_id=survey_id)
 
         if survey_error:
             return request.render('survey.survey_session_code',
                                   dict(**survey_error, session_code=session_code))
         return request.redirect(survey.get_start_url())
 
-    @http.route('/survey/check_session_code/<string:session_code>', type='jsonrpc', auth='public', website=True)
-    def survey_check_session_code(self, session_code):
+    @http.route('/survey/check_session_code/<int:survey_id>/<string:session_code>', type='jsonrpc', auth='public', website=True)
+    def survey_check_session_code(self, session_code, survey_id=False):
         """ Checks if the given code is matching a survey session_code.
         If yes, redirect to /s/code route.
         If not, return error. The user is invited to type again the code."""
-        survey, survey_error = self._fetch_from_session_code(session_code)
+        survey, survey_error = self._fetch_from_session_code(session_code, survey_id=survey_id)
         if survey_error:
             return survey_error
         return {'survey_url': survey.get_start_url()}

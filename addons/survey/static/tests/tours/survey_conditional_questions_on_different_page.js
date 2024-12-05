@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { expectHiddenQuestion } from "@survey/../tests/tours/survey_chained_conditional_questions";
 
 registry.category("web_tour.tours").add('test_survey_conditional_question_on_different_page', {
-    url: '/survey/start/1cb935bd-2399-4ed1-9e10-c649318fb4dc',
     steps: () => [
         {
             content: 'Click on Start',

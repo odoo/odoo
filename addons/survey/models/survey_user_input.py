@@ -197,7 +197,7 @@ class SurveyUser_Input(models.Model):
             'type': 'ir.actions.act_url',
             'name': "View Answers",
             'target': 'self',
-            'url': '/survey/print/%s?answer_token=%s' % (self.survey_id.access_token, self.access_token)
+            'url': f'/survey/print/{self.survey_id.id}/{self.survey_id.access_token}?answer_token={self.access_token}&answer_id={self.id}'
         }
 
     def action_redirect_to_attempts(self):
@@ -266,7 +266,7 @@ class SurveyUser_Input(models.Model):
 
     def get_print_url(self):
         self.ensure_one()
-        return '%s?answer_token=%s' % (self.survey_id.get_print_url(), self.access_token)
+        return '%s?answer_token=%s&answer_id=%s' % (self.survey_id.get_print_url(), self.access_token, self.id)
 
     # ------------------------------------------------------------
     # CREATE / UPDATE LINES FROM SURVEY FRONTEND INPUT

@@ -162,15 +162,15 @@ class TestUiFeedback(HttpCaseWithUserDemo):
 
     def test_01_admin_survey_tour(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="admin")
+        self.start_tour(f"/survey/start/{self.survey_feedback.id}/{access_token}", 'test_survey', login="admin")
 
     def test_02_demo_survey_tour(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="demo")
+        self.start_tour(f"/survey/start/{self.survey_feedback.id}/{access_token}", 'test_survey', login="demo")
 
     def test_03_public_survey_tour(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey')
+        self.start_tour(f"/survey/start/{self.survey_feedback.id}/{access_token}", 'test_survey')
 
     def test_04_public_survey_with_triggers(self):
         """ Check that chained conditional questions are correctly
@@ -237,7 +237,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
         q4.triggering_answer_ids = q1_a1
 
         access_token = survey_with_triggers.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey_chained_conditional_questions')
+        self.start_tour(f"/survey/start/{survey_with_triggers.id}/{access_token}", 'test_survey_chained_conditional_questions')
 
     def test_05_public_survey_with_trigger_on_different_page(self):
         """Check that conditional questions are shown when triggered from a different page too."""
@@ -298,11 +298,11 @@ class TestUiFeedback(HttpCaseWithUserDemo):
         q3.triggering_answer_ids = q1_a1 | q2_a1
 
         access_token = survey_with_trigger_on_different_page.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey_conditional_question_on_different_page')
+        self.start_tour(f"/survey/start/{survey_with_trigger_on_different_page.id}/{access_token}", 'test_survey_conditional_question_on_different_page')
 
     def test_06_survey_prefill(self):
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey_prefill')
+        self.start_tour(f"/survey/start/{self.survey_feedback.id}/{access_token}", 'test_survey_prefill')
 
     def test_07_survey_roaming_mandatory_questions(self):
         survey_with_mandatory_questions = self.env['survey.survey'].create({
@@ -347,4 +347,4 @@ class TestUiFeedback(HttpCaseWithUserDemo):
         })
 
         access_token = survey_with_mandatory_questions.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey_roaming_mandatory_questions')
+        self.start_tour(f"/survey/start/{survey_with_mandatory_questions.id}/{access_token}", 'test_survey_roaming_mandatory_questions')
