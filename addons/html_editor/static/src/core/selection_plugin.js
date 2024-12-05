@@ -37,6 +37,8 @@ import {
  * @property { Node } commonAncestorContainer
  * @property { boolean } isCollapsed
  * @property { boolean } direction
+ * @property { () => string } textContent
+ * @property { (node: Node) => boolean } intersectsNode
  */
 
 /**
@@ -119,6 +121,7 @@ function getUnselectedEdgeNodes(selection) {
  * @property { SelectionPlugin['getTraversedBlocks'] } getTraversedBlocks
  * @property { SelectionPlugin['getTraversedNodes'] } getTraversedNodes
  * @property { SelectionPlugin['modifySelection'] } modifySelection
+ * @property { SelectionPlugin['forceCursorAfter'] } forceCursorAfter
  * @property { SelectionPlugin['preserveSelection'] } preserveSelection
  * @property { SelectionPlugin['rectifySelection'] } rectifySelection
  * @property { SelectionPlugin['resetActiveSelection'] } resetActiveSelection
@@ -137,6 +140,7 @@ export class SelectionPlugin extends Plugin {
         "setCursorStart",
         "setCursorEnd",
         "extractContent",
+        "forceCursorAfter",
         "preserveSelection",
         "resetSelection",
         "getSelectedNodes",
@@ -503,6 +507,21 @@ export class SelectionPlugin extends Plugin {
      */
     setCursorEnd(node) {
         return this.setSelection({ anchorNode: node, anchorOffset: nodeSize(node) });
+    }
+    /**
+     * Force the cursor after the given node. (normalize : false)
+     * @param { Node } node
+     */
+    forceCursorAfter(node) {
+        const parentElement = node.parentElement;
+        if (parentElement === this.editable && !this.config.allowInlineAtRoot) {
+            return false;
+        }
+        const nodeIndex = Array.from(parentElement.childNodes).indexOf(node);
+        return this.setSelection(
+            { anchorNode: parentElement, anchorOffset: nodeIndex + 1 },
+            { normalize: false }
+        );
     }
 
     /**
