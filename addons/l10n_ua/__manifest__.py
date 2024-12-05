@@ -17,6 +17,7 @@ Ukraine - Chart of accounts.
     'auto_install': ['account'],
     'data': [
         'data/account_account_tag_data.xml',
+        'views/report_invoice.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

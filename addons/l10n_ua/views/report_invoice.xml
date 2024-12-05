@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_waybill" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="layout_document_title">
+                <span>Waybill</span>
+                <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="after">
+            BANK: <span t-field="o.partner_id.bank_ids[0].display_name"/>
+            <br/>
+            BIC: <span t-field="o.partner_id.bank_ids[0].bank_bic"/>
+        </xpath>
+
+        <xpath expr="//div[@name='comment']" position="before">
+            <div id="representative_information" class="row mb-4">
+                <div class="col-8 mb-0" name="representative_supplier">
+                    <strong>Representative Supplier:</strong>
+                    <span t-field="o.env.company.company_details"/>
+                </div>
+                <div class="col-8 mb-0" name="representative_receiver">
+                    <strong>Representative receiver:</strong>
+                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_waybill_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="l10n_ua.report_invoice_waybill" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_waybill_invoice" model="ir.actions.report">
+        <field name="name">Waybill</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ua.report_waybill_invoice</field>
+        <field name="report_file">l10n_ua.report_waybill_invoice</field>
+        <field name="is_invoice_report">True</field>
+        <field name="print_report_name">'Waybill - %s' % (object._get_report_base_filename())</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_invoice_aoc_work" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace">
+            <t t-set="layout_document_title">
+                <span>Act of Completed Work</span>
+                <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@t-set='current_subtotal']" position="before">
+            <span>The representative of the customer, on the one hand, and the representative of the contractor,
+            <strong><span t-field="o.env.company.display_name">UA Company</span></strong>, on the other hand, drew up an act
+            stating that the contractor performed on time and in full, and the customer accepted the following works:</span>
+        </xpath>
+
+        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="after">
+            BANK: <span t-field="o.partner_id.bank_ids[0].display_name"/>
+            <br/>
+            BIC: <span t-field="o.partner_id.bank_ids[0].bank_bic"/>
+        </xpath>
+
+        <xpath expr="//div[@name='comment']" position="before">
+            <div id="representative_information" class="row mb-4">
+                <div class="col-8 mb-0" name="representative_supplier">
+                    <strong>Representative Supplier:</strong>
+                    <span t-field="o.env.company.company_details"/>
+                </div>
+                <div class="col-8 mb-0" name="representative_receiver">
+                    <strong>Representative receiver:</strong>
+                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_aoc_work_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="l10n_ua.report_invoice_aoc_work" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_aoc_work_invoice" model="ir.actions.report">
+        <field name="name">Act of Completed Work</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ua.report_aoc_work_invoice</field>
+        <field name="report_file">l10n_ua.report_aoc_work_invoice</field>
+        <field name="is_invoice_report">True</field>
+        <field name="print_report_name">'Act of Completed Work - %s' % (object._get_report_base_filename())</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
