@@ -9,4 +9,4 @@ class MrpRoutingWorkcenter(models.Model):
 
     def _total_cost_per_hour(self):
         self.ensure_one()
-        return self.workcenter_id.costs_hour
+        return self.workcenter_id.costs_hour + self.workcenter_id.employee_costs_hour * self.employee_ratio
