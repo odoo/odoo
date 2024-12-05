@@ -16,7 +16,7 @@ from odoo.addons.resource.models.utils import Intervals
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
-from odoo.tools import convert, format_duration, format_time, format_datetime
+from odoo.tools import SQL, convert, format_duration, format_time, format_datetime
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -73,6 +73,31 @@ class HrAttendance(models.Model):
                                 readonly=True,
                                 default='manual')
     expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
+    weekday = fields.Selection(selection=[
+            ('1', 'Monday'),
+            ('2', 'Tuesday'),
+            ('3', 'Wednesday'),
+            ('4', 'Thursday'),
+            ('5', 'Friday'),
+            ('6', 'Saturday'),
+            ('7', 'Sunday'),
+        ],
+        store=False, search="_search_weekday"
+    )
+
+    def _read_group_groupby(self, groupby_spec, query):
+        if groupby_spec == "weekday":
+            print(query)
+        return super()._read_group_groupby(groupby_spec, query)
+
+    def _search_weekday(self, operator, value):
+        attendance_ids = [r[0] for r in self.env.execute_query(SQL(
+            """
+                SELECT DISTINCT id FROM hr_attendance
+                WHERE EXTRACT(dow FROM check_in) in %(day_list)s
+            """,
+            day_list=tuple(value)))]
+        return [('id', 'in', attendance_ids)]
 
     @api.depends("worked_hours", "overtime_hours")
     def _compute_expected_hours(self):
