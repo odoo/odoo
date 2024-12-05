@@ -27,7 +27,7 @@ export class HootPresets extends Component {
                 t-att-title="hasCorrectViewPort ? 'Presets' : 'Invalid viewport (check console)'"
             >
                 <i
-                    class="fa font-bold w-4 h-4 flex items-center justify-center"
+                    class="fa font-bold w-4 h-4"
                     t-att-class="getPresetIcon()"
                 />
             </button>
@@ -49,7 +49,7 @@ export class HootPresets extends Component {
                             />
                             <t t-if="preset[1].icon">
                                 <i
-                                    class="fa font-bold w-4 h-4 flex items-center justify-center"
+                                    class="fa font-bold w-4 h-4"
                                     t-attf-class="{{ preset[1].icon }} {{ config.preset === preset[0] ? highlightClass : '' }}"
                                 />
                             </t>
