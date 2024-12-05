@@ -333,6 +333,9 @@ const runTests = async () => {
     }
 
     await stop();
+
+    serverModelCache.clear();
+
     __gcAndLogMemory("tests done");
 };
 
