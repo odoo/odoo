@@ -660,3 +660,26 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         expected_date_case_1 = self.invoice.line_ids.filtered(
             lambda l: l.account_id == self.company_data['default_account_receivable']).mapped('date_maturity')
         self.assertEqual(expected_date_case_1, [fields.Date.from_string('2024-05-31')])
+
+    def test_payment_term_multi_company(self):
+        """
+        Ensure that the payment term is determined by `move.company_id` rather than `user.company_id`.
+        OdooBot has `res.company(1)` set as the default company. The test checks that the payment term correctly reflects
+        the company associated with the move, independent of the user's default company.
+        """
+        user_company = self.env['res.company'].create({'name': 'user_company'})
+        other_company = self.company_data.get('company')
+        self.env.user.write({
+            'company_ids': [user_company.id, other_company.id],
+            'company_id': user_company.id,
+        })
+        self.pay_terms_a.company_id = user_company
+        self.partner_a.with_company(user_company).property_payment_term_id = self.pay_terms_a
+        self.partner_a.with_company(other_company).property_payment_term_id = False
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'company_id': other_company.id
+        })
+        self.assertFalse(invoice.invoice_payment_term_id)
