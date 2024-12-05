@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
+import { browser } from "@web/core/browser/browser";
 
 import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
 
@@ -30,8 +31,10 @@ export class WebClient extends Component {
             );
         }
         this.localization = localization;
+        const storedAction = browser.sessionStorage.getItem("current_action");
+        const lastAction = JSON.parse(storedAction || "{}");
         this.state = useState({
-            fullscreen: false,
+            fullscreen: (lastAction && lastAction.target) || false,
         });
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
