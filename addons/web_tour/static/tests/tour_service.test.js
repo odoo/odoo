@@ -694,13 +694,7 @@ test("perform edit on next step", async () => {
     expect(".o_tour_pointer").toHaveCount(0);
 });
 
-test("scrolling to next step should update the pointer's height", async (assert) => {
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView(options) {
-            super.scrollIntoView({ ...options, behavior: "instant" });
-        },
-    });
-
+test("scrolling to next step should update the pointer's height", async () => {
     const content = "Click this pretty button to increment this magnificent counter !";
     registry.category("web_tour.tours").add("tour_de_france", {
         steps: () => [
@@ -772,12 +766,6 @@ test("scrolling to next step should update the pointer's height", async (assert)
 });
 
 test("scroller pointer to reach next step", async () => {
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView(options) {
-            super.scrollIntoView({ ...options, behavior: "instant" });
-        },
-    });
-
     registry.category("web_tour.tours").add("tour_des_flandres", {
         steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click" }],
     });

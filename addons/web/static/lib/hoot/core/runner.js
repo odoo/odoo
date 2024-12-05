@@ -25,6 +25,7 @@ import {
     storageSet,
     stringify,
 } from "../hoot_utils";
+import { cleanupAnimations } from "../mock/animation";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
@@ -32,7 +33,7 @@ import { cleanupNetwork } from "../mock/network";
 import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
-import { makeFixtureManager } from "./fixture";
+import { HootFixtureElement, makeFixtureManager } from "./fixture";
 import { logLevels, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities } from "./tag";
@@ -1697,6 +1698,10 @@ export class Runner {
         }
 
         // Register default hooks
+        this.beforeAll(() => {
+            document.head.appendChild(HootFixtureElement.styleElement);
+            return () => HootFixtureElement.styleElement.remove();
+        });
         this.afterAll(
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
@@ -1705,6 +1710,7 @@ export class Runner {
         );
         this.beforeEach(this.fixture.setup, setupTime);
         this.afterEach(
+            cleanupAnimations,
             cleanupWindow,
             cleanupNetwork,
             cleanupNavigator,
