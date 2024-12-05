@@ -19,7 +19,7 @@ export class ExpenseFormController extends FormController {
     async beforeExecuteActionButton(clickParams) {
         const record = this.model.root;
         if (
-            clickParams.name === "action_submit_expenses" &&
+            clickParams.name === "action_submit" &&
             record.data.duplicate_expense_ids.count
         ) {
             return new Promise((resolve) => {
