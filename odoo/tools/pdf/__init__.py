@@ -244,6 +244,7 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
         width = float(abs(page.mediaBox.getWidth()))
         height = float(abs(page.mediaBox.getHeight()))
 
+        can.setPageSize((width, height))
         can.translate(width, height)
         can.rotate(-45)
 
