@@ -2,7 +2,7 @@
 <templates>
     <t t-name="mail.MailComposerTemplateSelector">
         <Dropdown t-if="props.record.data.can_edit_body" menuClass="'mail-composer-template-dropdown d-flex flex-column'">
-            <button class="btn btn-light w-auto mail-composer-template-dropdown-btn" data-hotkey="t">
+            <button class="btn btn-light w-auto mail-composer-template-dropdown-btn" data-hotkey="t" title="Templates">
                 <i class="fa fa-fw fa-ellipsis-v"/>
             </button>
             <t t-set-slot="content">
