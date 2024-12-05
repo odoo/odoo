@@ -188,39 +188,6 @@ export class DiscussChannel extends models.ServerModel {
         this.write([channel.id], { description });
     }
 
-    /**
-     * @param {string} name
-     * @param {string} [group_id]
-     */
-    channel_create(name, group_id) {
-        const kwargs = getKwArgs(arguments, "name", "group_id");
-        name = kwargs.name;
-        group_id = kwargs.group_id;
-
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const id = this.create({
-            channel_member_ids: [Command.create({ partner_id: this.env.user.partner_id })],
-            channel_type: "channel",
-            name,
-            group_public_id: group_id,
-        });
-        this.write([id], { group_public_id: group_id });
-        this.message_post(
-            id,
-            makeKwArgs({
-                body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
-                message_type: "notification",
-            })
-        );
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        this._broadcast([id], [partner]);
-        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
-    }
-
     /** @param {number[]} ids */
     _channel_basic_info(ids) {
         const kwargs = getKwArgs(arguments, "ids");
@@ -310,57 +277,6 @@ export class DiscussChannel extends models.ServerModel {
                 partner_id: this.env.user.partner_id,
             });
         }
-    }
-
-    /**
-     * @param {number[]} partners_to
-     * @param {boolean} [pin=true]
-     */
-    channel_get(partners_to, pin) {
-        const kwargs = getKwArgs(arguments, "partners_to", "pin");
-        partners_to = kwargs.partners_to || [];
-        pin = kwargs.pin ?? true;
-
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").DiscussChannelMember} */
-        const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        if (!partners_to.includes(this.env.user.partner_id)) {
-            partners_to.push(this.env.user.partner_id);
-        }
-        const partners = ResPartner.browse(partners_to);
-        const channels = this.search_read([["channel_type", "=", "chat"]]);
-        for (const channel of channels) {
-            const channelMemberIds = DiscussChannelMember.search([
-                ["channel_id", "=", channel.id],
-                ["partner_id", "in", partners_to],
-            ]);
-            if (
-                channelMemberIds.length === partners.length &&
-                channel.channel_member_ids.length === partners.length
-            ) {
-                return new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result();
-            }
-        }
-        const id = this.create({
-            channel_member_ids: partners.map((partner) =>
-                Command.create({
-                    partner_id: partner.id,
-                    unpin_dt:
-                        partner.id == serverState.partnerId ? false : serializeDateTime(today()),
-                })
-            ),
-            channel_type: "chat",
-            name: partners.map((partner) => partner.name).join(", "),
-        });
-        this._broadcast(
-            [id],
-            partners.map(({ id }) => id)
-        );
-        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
     }
 
     /** @param {number[]} ids */
@@ -531,35 +447,6 @@ export class DiscussChannel extends models.ServerModel {
                 custom_channel_name: name,
             }).get_result()
         );
-    }
-
-    /**
-     * @param {number[]} partners_to
-     * @param {string} name
-     * */
-    create_group(partners_to, name) {
-        const kwargs = getKwArgs(arguments, "partners_to", "name");
-        partners_to = kwargs.partners_to || [];
-        name = kwargs.name || "";
-
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const partners = ResPartner.browse(partners_to);
-        const id = this.create({
-            channel_type: "group",
-            channel_member_ids: partners.map((partner) =>
-                Command.create({ partner_id: partner.id })
-            ),
-            name,
-        });
-        this._broadcast(
-            [id],
-            partners.map((partner) => partner.id)
-        );
-        return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
     }
 
     _create_sub_channel(ids, from_message_id, name) {

@@ -11,7 +11,7 @@ class TestDiscussBinaryController(MailControllerBinaryCommon):
         cls.private_channel = cls.env["discuss.channel"].create(
             {"name": "Private Channel", "channel_type": "group"}
         )
-        cls.public_channel = cls.env["discuss.channel"].channel_create(
+        cls.public_channel = cls.env["discuss.channel"]._channel_create(
             name="Public Channel", group_id=None
         )
         cls.partner_ids = (
