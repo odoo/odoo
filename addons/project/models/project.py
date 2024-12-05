@@ -2803,14 +2803,14 @@ class ProjectTags(models.Model):
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'project_id' in self.env.context:
-            tag_ids = self._name_search()
+            tag_ids = self._name_search(limit=None)
             domain = expression.AND([domain, [('id', 'in', tag_ids)]])
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         if 'project_id' in self.env.context:
-            tag_ids = self._name_search()
+            tag_ids = self._name_search(limit=None)
             domain = expression.AND([domain, [('id', 'in', tag_ids)]])
             return self.arrange_tag_list_by_id(super().search_read(domain=domain, fields=fields, offset=offset, limit=limit), tag_ids)
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
