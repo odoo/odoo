@@ -141,8 +141,12 @@ export class FormatPlugin extends Plugin {
     };
 
     removeFormat() {
+        const traversedNodes = this.dependencies.selection.getTraversedNodes();
         for (const format of Object.keys(formatsSpecs)) {
-            if (!formatsSpecs[format].removeStyle || !this.hasSelectionFormat(format)) {
+            if (
+                !formatsSpecs[format].removeStyle ||
+                !this.hasSelectionFormat(format, traversedNodes)
+            ) {
                 continue;
             }
             this._formatSelection(format, { applyStyle: false });
@@ -152,15 +156,15 @@ export class FormatPlugin extends Plugin {
     }
 
     /**
-     * Return true if the current selection on the editable contain a formated
+     * Return true if the current selection on the editable contains a formated
      * node
      *
-     * @param {Element} editable
      * @param {String} format 'bold'|'italic'|'underline'|'strikeThrough'|'switchDirection'
+     * @param {Node[]} [traversedNodes]
      * @returns {boolean}
      */
-    hasSelectionFormat(format) {
-        const selectedNodes = this.dependencies.selection.getTraversedNodes().filter(isTextNode);
+    hasSelectionFormat(format, traversedNodes = this.dependencies.selection.getTraversedNodes()) {
+        const selectedNodes = traversedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.some((n) => isFormatted(n, this.editable));
     }
@@ -180,14 +184,13 @@ export class FormatPlugin extends Plugin {
     }
 
     // @todo: issues:
-    // - this method mixes every (isSelectionFormat) with some (hasAnyNodesColor)
     // - the calls to hasAnyColor should probably be replaced by calls to predicates
     //   registered as resources (e.g. by the ColorPlugin).
     hasAnyFormat(traversedNodes) {
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 formatsSpecs[format].removeStyle &&
-                this.isSelectionFormat(format, traversedNodes)
+                this.hasSelectionFormat(format, traversedNodes)
             ) {
                 return true;
             }
