@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from datetime import datetime, date
 
 from freezegun import freeze_time
+from freezegun.api import date_to_fakedate
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -84,40 +85,34 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'name': 'Expense Account 1'
         })
 
-    def create_expense_report(self, values=None):
-        values = values or {}
-        default_values = {
-            'name': 'Test Expense Report',
-            'employee_id': self.expense_employee.id,
-            'company_id': self.company_data['company'].id,
-            'expense_line_ids': [Command.create({
-                'employee_id': self.expense_employee.id,
-                'product_id': self.product_c.id,
-                'total_amount_currency': 1000.00,
-                'tax_ids': [Command.set(self.tax_purchase_a.ids)],
-                'date': self.frozen_today,
-                'company_id': self.company_data['company'].id,
-                'currency_id': self.company_data['currency'].id,
-            })]
-        }
-        return self.env['hr.expense.sheet'].create({**default_values, **values})
+    @classmethod
+    def create_expenses(cls, values=None):
+        if values is None or isinstance(values, dict):
+            values = [values or {}]
 
-    def create_expense(self, values=None):
-        values = values or {}
         default_values = {
-            'employee_id': self.expense_employee.id,
-            'product_id': self.product_c.id,
+            'employee_id': cls.expense_employee.id,
+            'date': cls.frozen_today.isoformat(),
+            'journal_id': cls.company_data['default_journal_purchase'].id,
+            'company_id': cls.company_data['company'].id,
+            'currency_id': cls.company_data['currency'].id,
+        }
+
+        default_product_values = {
+            'product_id': cls.product_c.id,
             'total_amount_currency': 1000.00,
-            'tax_ids': [Command.set(self.tax_purchase_a.ids)],
-            'date': self.frozen_today,
-            'company_id': self.company_data['company'].id,
-            'currency_id': self.company_data['currency'].id,
         }
-        return self.env['hr.expense'].create({**default_values, **values})
+        create_values = []
+        for value_dict in values:
+            if 'product_id' not in value_dict:
+                default_values.update(default_product_values)
+            value_dict = {**default_values, **(value_dict or {})}
+            create_values.append(value_dict)
+        return cls.env['hr.expense'].create(create_values).sorted()
 
-    def get_new_payment(self, expense_sheet, amount):
+    def get_new_payment(self, expenses, amount):
         """ Helper to create payments """
-        ctx = {'active_model': 'account.move', 'active_ids': expense_sheet.account_move_ids.ids}
+        ctx = {'active_model': 'account.move', 'active_ids': expenses.account_move_id.ids}
         with freeze_time(self.frozen_today):
             payment_register = self.env['account.payment.register'].with_context(**ctx).create({
                 'amount': amount,
@@ -125,3 +120,9 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
                 'payment_method_line_id': self.inbound_payment_method_line.id,
             })
             return payment_register._create_payments()
+
+    @staticmethod
+    def fake_date(date_to_convert):
+        if isinstance(date_to_convert, str):
+            date_to_convert = date.fromisoformat(date_to_convert)
+        return date_to_fakedate(date_to_convert)
