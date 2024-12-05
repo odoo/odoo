@@ -163,6 +163,15 @@ class ChannelUsersRelation(models.Model):
         if mail_mail_values:
             self.env['mail.mail'].sudo().create(mail_mail_values)
 
+    def get_base_url(self):
+        if not self:
+            return super().get_base_url()
+        self.ensure_one()
+
+        if 'channel_website_id' in self and self.sudo().channel_website_id.domain:
+            return self.sudo().channel_website_id.domain
+
+        return super().get_base_url()
 
 class Channel(models.Model):
     """ A channel is a container of slides. """
