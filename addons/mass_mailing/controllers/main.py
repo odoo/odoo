@@ -102,6 +102,38 @@ class MassMailController(http.Controller):
         self.mailing_unsubscribe(mailing_id, document_id=document_id, email=email, hash_token=hash_token, **post)
         return Response(status=200)
 
+    @http.route(['/mailing/<int:mailing_id>/confirm_unsubscribe'], type='http', website=True, auth='public')
+    def mailing_confirm_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None):
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
+
+        unsubscribed_list = ''
+        email_found, hash_token_found = self._fetch_user_information(email, hash_token)
+        try:
+            mailing_sudo = self._check_mailing_email_token(
+                mailing_id, document_id, email_found, hash_token_found,
+                required_mailing_id=True
+            )
+            if mailing.mailing_model_real == 'mailing.contact':
+                unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
+        except NotFound as e:  # avoid leaking ID existence
+            raise Unauthorized() from e
+        template = request.env.ref('mass_mailing.page_confirm_unsubscribe',raise_if_not_found=False)
+        if template:
+            return request.render('mass_mailing.page_confirm_unsubscribe', {
+                    'mailing_id': mailing_id,
+                    'document_id': document_id,
+                    'email': email,
+                    'hash_token': hash_token,
+                    'unsubscribed_list': unsubscribed_list,
+                })
+        else:
+            return self.mailing_confirm_unsubscribe_post(mailing_id, document_id, email, hash_token)
+
+    @http.route(['/mailing/confirm_unsubscribe'], type='http', website=True, auth='public', methods=['POST'])
+    def mailing_confirm_unsubscribe_post(self, mailing_id, document_id=None, email=None, hash_token=None):
+        url = f'/mailing/{mailing_id}/unsubscribe?document_id={document_id}&email={email}&hash_token={hash_token}'
+        return request.redirect(url)
+
     @http.route(['/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None):
         email_found, hash_token_found = self._fetch_user_information(email, hash_token)
