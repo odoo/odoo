@@ -24,6 +24,8 @@ export class NotificationItem extends Component {
         "onSwipeRight?",
         "slots?",
         "isActive?",
+        "nameMaxLine?",
+        "textMaxLine?",
     ];
     static defaultProps = {
         counter: 0,
@@ -52,5 +54,14 @@ export class NotificationItem extends Component {
 
     onClick(ev) {
         this.props.onClick(ev.target === this.markAsReadRef.el);
+    }
+
+    webkitLineClamp(maxLine) {
+        return `
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: ${maxLine};
+        `;
     }
 }

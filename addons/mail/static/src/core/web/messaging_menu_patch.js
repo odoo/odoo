@@ -78,7 +78,7 @@ patch(MessagingMenu.prototype, {
     get installationRequest() {
         return {
             body: _t("Come here often? Install Odoo on your device!"),
-            displayName: _t("%s has a suggestion", this.store.odoobot.name),
+            displayName: _t("Suggestion: Install Odoo"),
             onClick: () => {
                 this.pwa.show();
             },
@@ -89,8 +89,8 @@ patch(MessagingMenu.prototype, {
     },
     get notificationRequest() {
         return {
-            body: _t("Enable desktop notifications to chat"),
-            displayName: _t("%s has a request", this.store.odoobot.name),
+            body: _t("Enable push notifications for improved chat experience"),
+            displayName: _t("Suggestion: Enable chat push notifications"),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
             isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
@@ -177,5 +177,8 @@ patch(MessagingMenu.prototype, {
     },
     get shouldAskPushPermission() {
         return this.notification.permission === "prompt";
+    },
+    getFailureNotificationName(failure) {
+        return _t("Failure: %(modelName)s", { modelName: failure.modelName });
     },
 });
