@@ -2958,6 +2958,22 @@ options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
     shownValue: 'shown',
 });
 
+options.registry.ContainerWidthFooter = options.registry.ContainerWidth.extend({
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+    /**
+     * Allow to customize the view only if the footer copyright section
+     * is the target (due to the data-apply-to)
+     * @override
+     */
+    customizeWebsiteViews: async function (previewMode, widgetValue, params) {
+        if (this.$target[0].closest(".o_footer_copyright")) {
+            await this._super(...arguments);
+        }
+    },
+})
+
 /**
  * Handles the edition of snippet's anchor name.
  */

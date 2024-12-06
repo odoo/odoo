@@ -2140,6 +2140,19 @@
     </xpath>
 </template>
 
+<!-- Copyright Content Width -->
+<template id="footer_copyright_content_width_small" inherit_id="website.layout" name="Footer Copyright Width Small" active="False">
+    <xpath expr="//*[hasclass('o_footer_copyright')]/div" position="attributes">
+        <attribute name="class" remove="container" add="o_container_small" separator=" "/>
+    </xpath>
+</template>
+
+<template id="footer_copyright_content_width_fluid" inherit_id="website.layout" name="Footer Copyright Width Fluid" active="False">
+    <xpath expr="//*[hasclass('o_footer_copyright')]/div" position="attributes">
+        <attribute name="class" remove="container" add="container-fluid" separator=" "/>
+    </xpath>
+</template>
+
 <template id="footer_copyright_company_name" inherit_id="website.layout">
     <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
         <span class="o_footer_copyright_name me-2">Copyright &amp;copy; Company name</span>
