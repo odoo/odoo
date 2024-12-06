@@ -383,7 +383,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
         )
 
-        return tx_sudo._get_processing_values()
+        res = tx_sudo._get_processing_values()
+        __import__('ipdb').set_trace()
+        return res
 
     # Payment overrides
 

@@ -4,7 +4,7 @@ from odoo import _
 
 
 # Currency codes of the currencies supported by Mercado Pago in ISO 4217 format.
-# See https://api.mercadopago.com/currencies. Last seen online: 24 November 2022.
+# See https://api.mercadopago.com/currencies. Last seen online: 2024-10-29.
 SUPPORTED_CURRENCIES = [
     'ARS',  # Argentinian Peso
     'BOB',  # Boliviano
@@ -29,6 +29,16 @@ SUPPORTED_CURRENCIES = [
     'VEF',  # Strong Bolivar
     'VES',  # Sovereign Bolivar
 ]
+
+# Set of currencies where Mercado Pago's minor units deviates from the ISO 4217 standard,
+# expecting 0 decimals instead of 2.
+# See https://www.six-group.com/dam/download/financial-information/data-center/iso-currrency/lists/list-one.xls
+# vs. https://api.mercadopago.com/currencies. Last seen online: 2024-10-29.
+INTEGER_ONLY_CURRENCIES = {
+    'COP',
+    'HNL',
+    'NIO',
+}
 
 # The codes of the payment methods to activate when Mercado Pago is activated.
 DEFAULT_PAYMENT_METHODS_CODES = [

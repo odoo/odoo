@@ -210,6 +210,7 @@ class AuthorizeAPI:
         :rtype: dict
         """
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
+        __import__('ipdb').set_trace()
         response = self._make_request(
             'createTransactionRequest',
             self._prepare_authorization_transaction_request('authOnlyTransaction', tx_data, tx)
@@ -230,6 +231,7 @@ class AuthorizeAPI:
         :rtype: dict
         """
         tx_data = self._prepare_tx_data(token=token, opaque_data=opaque_data)
+        __import__('ipdb').set_trace()
         response = self._make_request(
             'createTransactionRequest',
             self._prepare_authorization_transaction_request('authCaptureTransaction', tx_data, tx)
@@ -247,6 +249,7 @@ class AuthorizeAPI:
         :param dict opaque_data: The payment details obfuscated by Authorize.Net
         """
         assert (token or opaque_data) and not (token and opaque_data), "Exactly one of token or opaque_data must be specified"
+        __import__('ipdb').set_trace()
         if token:
             token.ensure_one()
             return {
@@ -286,6 +289,7 @@ class AuthorizeAPI:
         :return: a dict containing the response code, transaction id and transaction type
         :rtype: dict
         """
+        __import__('ipdb').set_trace()
         response = self._make_request('createTransactionRequest', {
             'transactionRequest': {
                 'transactionType': 'priorAuthCaptureTransaction',

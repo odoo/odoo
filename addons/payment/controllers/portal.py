@@ -267,8 +267,12 @@ class PaymentPortal(portal.CustomerPortal):
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
+        __import__('ipdb').set_trace()
         self._update_landing_route(tx_sudo, access_token)  # Add the required params to the route.
-        return tx_sudo._get_processing_values()
+        __import__('ipdb').set_trace()
+        res = tx_sudo._get_processing_values()
+        __import__('ipdb').set_trace()
+        return res
 
     def _create_transaction(
         self, provider_id, payment_method_id, token_id, amount, currency_id, partner_id, flow,
@@ -393,6 +397,7 @@ class PaymentPortal(portal.CustomerPortal):
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
         """
         tx_id = self._cast_as_int(tx_id)
+        __import__('ipdb').set_trace()
         if tx_id:
             tx_sudo = request.env['payment.transaction'].sudo().browse(tx_id)
 
