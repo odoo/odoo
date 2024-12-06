@@ -170,10 +170,8 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.depends('user_id')
     def _compute_last_activity(self):
-        presences = self.env['bus.presence'].search_read([('user_id', 'in', self.mapped('user_id').ids)], ['user_id', 'last_presence'])
-        # transform the result to a dict with this format {user.id: last_presence}
-        presences = {p['user_id'][0]: p['last_presence'] for p in presences}
-
+        # sudo: mail.presence - can access own user presence
+        presences = {p.user_id.id: p.last_presence for p in self.mapped("user_id").sudo().presence_id}
         for employee in self:
             tz = employee.tz
             last_presence = presences.get(employee.user_id.id, False)
