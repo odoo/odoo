@@ -54,6 +54,10 @@ export class LoadableDataSource {
         return this.odooDataProvider.serverData;
     }
 
+    get modelDisplayNameService() {
+        return this.odooDataProvider.modelDisplayNameService;
+    }
+
     /**
      * Load data in the model
      * @param {object} [params] Params for fetching data
