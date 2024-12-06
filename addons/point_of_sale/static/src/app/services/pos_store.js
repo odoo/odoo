@@ -32,6 +32,7 @@ import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
+import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
 import { user } from "@web/core/user";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { unaccent } from "@web/core/utils/strings";
@@ -283,6 +284,9 @@ export class PosStore extends WithLazyGetterTrap {
         );
         this.models["product.pricelist.item"].addEventListener("create", () => {
             const order = this.getOrder();
+            if (!order) {
+                return;
+            }
             const currentPricelistId = order.pricelist_id?.id;
             order.setPricelist(this.models["product.pricelist"].get(currentPricelistId));
         });
@@ -591,7 +595,7 @@ export class PosStore extends WithLazyGetterTrap {
             price_extra: 0,
             price_unit: 0,
             order_id: this.getOrder(),
-            qty: 1,
+            qty: this.getOrder().preset_id?.is_return ? -1 : 1,
             tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
             product_id: productTemplate.product_variant_ids[0],
             ...vals,
@@ -868,9 +872,7 @@ export class PosStore extends WithLazyGetterTrap {
         }, 3000);
 
         this.addPendingOrder([order.id]);
-
-        // FIXME: If merged with another line, this returned object is useless.
-        return line;
+        return order.getSelectedOrderline();
     }
 
     createPrinter(config) {
@@ -970,6 +972,11 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.getNextOrderRefs(order);
         order.setPricelist(this.config.pricelist_id);
+
+        if (this.config.use_presets) {
+            this.selectPreset(this.config.default_preset_id, order);
+        }
+
         order.recomputeOrderData();
 
         return order;
@@ -1224,6 +1231,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async getServerOrders() {
+        await this.syncAllOrders();
         return await this.loadServerOrders([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
             ["state", "=", "draft"],
@@ -1639,6 +1647,51 @@ export class PosStore extends WithLazyGetterTrap {
     async selectPricelist(pricelist) {
         await this.getOrder().setPricelist(pricelist);
     }
+    async selectPreset(preset = false, order = this.getOrder()) {
+        if (!preset) {
+            const selectionList = this.models["pos.preset"].map((preset) => ({
+                id: preset.id,
+                label: preset.name,
+                isSelected: order.preset_id && preset.id === order.preset_id.id,
+                item: preset,
+            }));
+
+            preset = await makeAwaitable(this.dialog, SelectionPopup, {
+                title: _t("Select preset"),
+                list: selectionList,
+            });
+        }
+
+        if (preset) {
+            if (preset.identification === "address" && !order.partner_id) {
+                const partner = await this.selectPartner();
+                if (!partner) {
+                    return;
+                }
+            }
+
+            order.setPreset(preset);
+
+            if (preset.use_timing && !order.preset_time) {
+                await this.syncPresetSlotAvaibility(preset);
+                order.preset_time = preset.nextSlot?.sql_datetime || false;
+            } else if (!preset.use_timing) {
+                order.preset_time = false;
+            }
+        }
+    }
+    async syncPresetSlotAvaibility(preset) {
+        try {
+            const presetAvailabilities = await this.data.call("pos.preset", "get_available_slots", [
+                preset.id,
+            ]);
+
+            preset.computeAvailabilities(presetAvailabilities);
+        } catch {
+            // Compute locally if the server is not reachable
+            preset.computeAvailabilities();
+        }
+    }
     async selectPartner() {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.getOrder();
@@ -1667,7 +1720,7 @@ export class PosStore extends WithLazyGetterTrap {
             currentOrder.setPartner(false);
         }
 
-        return currentPartner;
+        return payload;
     }
     async editLots(product, packLotLinesToEdit) {
         const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
@@ -1808,10 +1861,16 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getReceiptHeaderData(order) {
+        const pName = this.config.use_presets && order.preset_id?.identification === "name";
+        const pAddrs = this.config.use_presets && order.preset_id?.identification === "address";
         return {
             company: this.company,
             cashier: _t("Served by %s", order?.getCashierName() || this.getCashier()?.name),
             header: this.config.receipt_header,
+            orderNameOnTicket: pName,
+            orderName: order.floatingOrderName,
+            addressOnTicket: pAddrs,
+            partnerAddress: pAddrs && order.partner_id.contact_address.split("\n"),
         };
     }
 

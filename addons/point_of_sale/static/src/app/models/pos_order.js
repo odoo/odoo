@@ -55,6 +55,10 @@ export class PosOrder extends Base {
                 inputTipAmount: "",
             },
         };
+
+        if (!this.session_id) {
+            this.session_id = this.session;
+        }
     }
 
     get user() {
@@ -92,8 +96,20 @@ export class PosOrder extends Base {
     get isUnsyncedPaid() {
         return this.finalized && typeof this.id === "string";
     }
+
+    get presetTime() {
+        const dateTime = DateTime.fromSQL(this.preset_time);
+        return dateTime.isValid ? dateTime.toFormat("HH:mm") : false;
+    }
+
     getEmailItems() {
         return [_t("the receipt")].concat(this.isToInvoice() ? [_t("the invoice")] : []);
+    }
+
+    setPreset(preset) {
+        this.setPricelist(preset.pricelist_id);
+        this.fiscal_position_id = preset.fiscal_position_id;
+        this.preset_id = preset;
     }
 
     exportForPrinting(baseUrl, headerData) {
@@ -961,8 +977,13 @@ export class PosOrder extends Base {
             newPartnerPricelist = this.config.pricelist_id;
         }
 
-        this.setPricelist(newPartnerPricelist);
-        this.fiscal_position_id = newPartnerFiscalPosition;
+        if (!this.config.use_presets || !this.preset_id.fiscal_position_id) {
+            this.fiscal_position_id = newPartnerFiscalPosition;
+        }
+
+        if (!this.config.use_presets || !this.preset_id.pricelist_id) {
+            this.setPricelist(newPartnerPricelist);
+        }
     }
 
     /* ---- Ship later --- */

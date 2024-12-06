@@ -153,6 +153,27 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'journal_id': self.bank_journal.id,
         })
 
+        self.delivery_preset = self.env['pos.preset'].create({
+            'name': 'Test-Delivery',
+            'service_at': 'delivery',
+            'identification': 'address',
+            'available_in_self': True,
+        })
+
+        self.out_preset = self.env['pos.preset'].create({
+            'name': 'Test-Takeout',
+            'service_at': 'counter',
+            'identification': 'name',
+            'available_in_self': True,
+        })
+
+        self.in_preset = self.env['pos.preset'].create({
+            'name': 'Test-In',
+            'service_at': 'table',
+            'identification': 'none',
+            'available_in_self': True,
+        })
+
         self.pos_config = self.env["pos.config"].create(
             {
                 "name": "BarTest",
@@ -161,6 +182,9 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
                 "self_ordering_mode": "consultation",
                 "floor_ids": self.env["restaurant.floor"].search([]),
                 "payment_method_ids": [(4, self.bank_payment_method.id)],
+                "use_presets": True,
+                "available_preset_ids": [(4, self.out_preset.id), (4, self.in_preset.id), (4, self.delivery_preset.id)],
+                "default_preset_id": self.in_preset.id,
             }
         )
 

@@ -16,9 +16,17 @@
                 <div t-if="props.data.company.email" t-esc="props.data.company.email" />
                 <div t-if="props.data.company.website" t-esc="props.data.company.website" />
                 <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
-                <div t-if="props.data.cashier" class="cashier">
+                <div t-if="props.data.cashier and !props.data.addressOnTicket and !props.data.orderNameOnTicket" class="cashier">
                     <div>--------------------------------</div>
                     <div t-esc="props.data.cashier" />
+                </div>
+                <div t-if="props.data.addressOnTicket or props.data.orderNameOnTicket">
+                    <div>--------------------------------</div>
+                    <t t-if="props.data.orderNameOnTicket"> Takeout for: <t t-esc="props.data.orderName" /><br/></t>
+                    <t t-elif="props.data.addressOnTicket"> Delivery to: <br/><span t-foreach="props.data.partnerAddress" t-as="line" t-key="line_index">
+                        <t t-esc="line"/><br/>
+                    </span>
+                    </t>
                 </div>
             </div>
         </div>

@@ -155,6 +155,9 @@ class PosConfig(models.Model):
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_bill_ids = fields.Many2many('pos.bill', string="Coins/Bills")
     use_pricelist = fields.Boolean("Use a pricelist.")
+    use_presets = fields.Boolean("Use Presets")
+    default_preset_id = fields.Many2one('pos.preset', string='Default Preset')
+    available_preset_ids = fields.Many2many('pos.preset', string='Available Presets')
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
@@ -546,7 +549,7 @@ class PosConfig(models.Model):
     def _get_forbidden_change_fields(self):
         forbidden_keys = ['module_pos_hr', 'module_pos_restaurant', 'available_pricelist_ids',
                           'limit_categories', 'iface_available_categ_ids', 'use_pricelist', 'module_pos_discount',
-                          'payment_method_ids', 'iface_tipproduc']
+                          'payment_method_ids', 'iface_tipproduct', 'use_presets', 'default_preset_id']
         return forbidden_keys
 
     def unlink(self):
@@ -880,9 +883,9 @@ class PosConfig(models.Model):
 
         convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/furniture_data.xml', None, noupdate=True, mode='init', kind='data')
 
-    def get_categories(self, categories):
+    def get_record_by_ref(self, recordRefs):
         # filters out unavailable external id
-        return [self.env.ref(category).id for category in categories if self.env.ref(category, raise_if_not_found=False)]
+        return [self.env.ref(record).id for record in recordRefs if self.env.ref(record, raise_if_not_found=False)]
 
     @api.model
     def load_onboarding_clothes_scenario(self):
@@ -890,7 +893,7 @@ class PosConfig(models.Model):
         if not self.env.ref(ref_name, raise_if_not_found=False):
             convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/clothes_data.xml', None, noupdate=True, mode='init', kind='data')
 
-        clothes_categories = self.get_categories([
+        clothes_categories = self.get_record_by_ref([
             'point_of_sale.pos_category_upper',
             'point_of_sale.pos_category_lower',
             'point_of_sale.pos_category_others'
@@ -917,7 +920,7 @@ class PosConfig(models.Model):
             convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/bakery_data.xml', None, mode='init', noupdate=True, kind='data')
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Bakery', 'show_on_dashboard': False})
-        bakery_categories = self.get_categories([
+        bakery_categories = self.get_record_by_ref([
             'point_of_sale.pos_category_breads',
             'point_of_sale.pos_category_pastries',
         ])
@@ -945,7 +948,7 @@ class PosConfig(models.Model):
             cash_ref='point_of_sale.cash_payment_method_furniture',
             cash_journal_vals={'name': 'Cash Furn. Shop', 'show_on_dashboard': False},
         )
-        furniture_categories = self.get_categories([
+        furniture_categories = self.get_record_by_ref([
             'point_of_sale.pos_category_miscellaneous',
             'point_of_sale.pos_category_desks',
             'point_of_sale.pos_category_chairs'

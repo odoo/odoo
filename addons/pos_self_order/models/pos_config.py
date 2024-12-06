@@ -29,7 +29,6 @@ class PosConfig(models.Model):
         store=False,
     )
     self_ordering_url = fields.Char(compute="_compute_self_ordering_url")
-    self_ordering_takeaway = fields.Boolean("Self Takeaway")
     self_ordering_mode = fields.Selection(
         [("nothing", "Disable"), ("consultation", "QR menu"), ("mobile", "QR menu + Ordering"), ("kiosk", "Kiosk")],
         string="Self Ordering Mode",
@@ -257,11 +256,11 @@ class PosConfig(models.Model):
         return encoded_images
 
     def _load_self_data_models(self):
-        return ['pos.session', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.currency', 'pos.category', 'product.template', 'product.product',
-            'product.combo', 'product.combo.item', 'res.company', 'account.tax', 'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist',
-            'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax', 'res.lang', 'product.attribute', 'product.attribute.custom.value',
-            'product.template.attribute.line', 'product.template.attribute.value', 'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link',
-            'restaurant.floor', 'restaurant.table', 'account.cash.rounding']
+        return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method',
+            'res.currency', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
+            'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
+            'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
+            'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding']
 
     def load_self_data(self):
         # Init our first record, in case of self_order is pos_config
@@ -358,7 +357,7 @@ class PosConfig(models.Model):
             return False
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods()
-        restaurant_categories = self.get_categories([
+        restaurant_categories = self.get_record_by_ref([
             'pos_restaurant.food',
             'pos_restaurant.drinks',
         ])

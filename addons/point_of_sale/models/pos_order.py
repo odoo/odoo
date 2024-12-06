@@ -59,7 +59,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('state', '=', 'draft'), ('session_id', '=', data['pos.session'][0]['id'])]
+        return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'][0]['id'])]
 
     @api.model
     def _process_order(self, order, existing_order):
@@ -277,11 +277,8 @@ class PosOrder(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order. Negative if generated from the client', default=1)
-
-    session_id = fields.Many2one(
-        'pos.session', string='Session', required=True, index=True,
-        domain="[('state', '=', 'opened')]")
-    config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False, store=True)
+    session_id = fields.Many2one('pos.session', string='Session', index=True, domain="[('state', '=', 'opened')]")
+    config_id = fields.Many2one('pos.config', compute='_compute_order_config_id', string="Point of Sale", readonly=False, store=True)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=0, readonly=True,
         help='The rate of the currency to the currency of rate applicable at the date of the order')
@@ -296,7 +293,7 @@ class PosOrder(models.Model):
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
-
+    preset_id = fields.Many2one('pos.preset', string='Preset')
     floating_order_name = fields.Char(string='Order Name')
     general_customer_note = fields.Text(string='General Customer Note')
     internal_note = fields.Text(string='Internal Note')
@@ -320,6 +317,7 @@ class PosOrder(models.Model):
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
     shipping_date = fields.Date('Shipping Date')
+    preset_time = fields.Datetime(string='Hour', help="Hour of the day for the order")
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
@@ -335,6 +333,12 @@ class PosOrder(models.Model):
     has_deleted_line = fields.Boolean(string='Has Deleted Line')
     order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
     available_payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Available Payment Methods', readonly=True, store=False)
+
+    @api.depends('session_id')
+    def _compute_order_config_id(self):
+        for order in self:
+            if order.session_id:
+                order.config_id = order.session_id.config_id
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
@@ -487,7 +491,8 @@ class PosOrder(models.Model):
     def write(self, vals):
         for order in self:
             if vals.get('state') and vals['state'] == 'paid' and order.name == '/':
-                vals['name'] = self._compute_order_name()
+                session = self.env['pos.session'].browse(vals['session_id']) if not self.session_id and vals.get('session_id') else False
+                vals['name'] = self._compute_order_name(session)
             if vals.get('mobile'):
                 vals['mobile'] = order._phone_format(number=vals.get('mobile'),
                         country=order.partner_id.country_id or self.env.company.country_id)
@@ -994,8 +999,16 @@ class PosOrder(models.Model):
         }
 
     def action_pos_order_cancel(self):
-        cancellable_orders = self.filtered(lambda order: order.state == 'draft')
-        cancellable_orders.write({'state': 'cancel'})
+        if self.env.context.get('active_ids'):
+            orders = self.browse(self.env.context.get('active_ids'))
+            order_is_in_futur = any(order.preset_time and order.preset_time.date() > fields.Date.today() for order in orders)
+            if order_is_in_futur:
+                raise UserError(_('The order delivery / pickup date is in the future. You cannot cancel it.'))
+
+        today_orders = self.filtered(lambda order: order.state == 'draft' and (not order.preset_time or order.preset_time.date() == fields.Date.today()))
+        next_days_orders = self.filtered(lambda order: order.preset_time and order.preset_time.date() > fields.Date.today() and order.state == 'draft')
+        next_days_orders.session_id = False
+        today_orders.write({'state': 'cancel'})
 
     def _apply_invoice_payments(self, is_reverse=False):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id

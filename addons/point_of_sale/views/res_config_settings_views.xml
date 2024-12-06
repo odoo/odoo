@@ -38,13 +38,30 @@
                         There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
                     </div>
                     <div invisible="not pos_config_id">
-                        <block title="Restaurant Mode" id="restaurant_section">
+                        <block title="Point of Sale" id="restaurant_section">
                             <!-- Wrap the warnings in an o_setting_box so that it doesn't show in the search. -->
-                            <setting>
+                            <setting id="is_restaurant">
                                 <field name="pos_module_pos_restaurant" readonly="pos_has_active_session"/>
                                 <div class="content-group" id="warning_text_pos_restaurant" invisible="not pos_module_pos_restaurant">
                                     <div class="text-warning mt16 mb4">
                                         Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting string="Take out / Delivery / Members" help="Define presets to manage taxes &amp; prices for eat in, take out, members..." >
+                                <field name="pos_use_presets" readonly="pos_has_active_session"/>
+                                <div class="content-group" invisible="not pos_use_presets">
+                                    <div class="row">
+                                        <label for="pos_default_preset_id" class="col-lg-3" string="Default"/>
+                                        <field name="pos_default_preset_id"
+                                            options="{'no_create': True}"
+                                            required="pos_use_presets"
+                                            readonly="pos_has_active_session"
+                                            domain="[('identification', '=', 'none')]" />
+                                    </div>
+                                    <div class="row">
+                                        <label for="pos_available_preset_ids" class="col-lg-3" string="Others"/>
+                                        <field name="pos_available_preset_ids" widget="many2many_tags" options="{'no_quick_create': True, 'color_field': 'color'}" readonly="pos_has_active_session" />
                                     </div>
                                 </div>
                             </setting>
@@ -186,7 +203,7 @@
                             <setting id="order_edit_tracking" help="Store edited orders in the backend">
                                 <field name="pos_order_edit_tracking"/>
                             </setting>
-                            <setting id="flexible_taxes" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.)." string="Flexible Taxes" help="Use fiscal positions to get different taxes by order" documentation="/applications/sales/point_of_sale/pricing/fiscal_position.html">
+                            <setting id="flexible_taxes" invisible="pos_use_presets" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.)." string="Flexible Taxes" help="Use fiscal positions to get different taxes by order" documentation="/applications/sales/point_of_sale/pricing/fiscal_position.html">
                                 <field name="pos_tax_regime_selection"/>
                                 <div class="content-group mt16" invisible="not pos_tax_regime_selection">
                                     <div class="row">

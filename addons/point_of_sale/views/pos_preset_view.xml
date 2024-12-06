@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_preset_form" model="ir.ui.view">
+        <field name="name">pos.preset.form</field>
+        <field name="model">pos.preset</field>
+        <field name="arch" type="xml">
+            <form string="Preset">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_linked_orders"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-shopping-cart"
+                            invisible="count_linked_orders == 0">
+                            <field string="Order(s)" name="count_linked_orders" widget="statinfo"/>
+                        </button>
+                        <button name="action_open_linked_config"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-share-alt"
+                            invisible="count_linked_config == 0">
+                            <field string="PoS Config" name="count_linked_config" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="image_128" widget="image" class="oe_avatar"/>
+                    <div class="oe_title mb-2">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
+                    </div>
+                    <group name="Presets">
+                        <group>
+                            <field name="pricelist_id"/>
+                            <field name="fiscal_position_id"/>
+                            <field name="use_timing" />
+                            <field name="resource_calendar_id" invisible="not use_timing" />
+                            <label for="slot_params" string="Capacity" invisible="not use_timing" />
+                            <div invisible="not use_timing">
+                                <field id="slot_params" name="slots_per_interval" class="oe_inline border-bottom text-center" />
+                                <label for="interval_time" string="orders per" style="font-weight:bold;" />
+                                <field name="interval_time" class="oe_inline border-bottom text-center" />
+                            </div>
+                        </group>
+                        <group>
+                            <field name="identification"/>
+                            <field name="is_return" />
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Resource" name="resource" invisible="not use_timing or not resource_calendar_id">
+                            <field name="attendance_ids" widget="section_one2many" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_preset_tree" model="ir.ui.view">
+        <field name="name">pos.preset.list</field>
+        <field name="model">pos.preset</field>
+        <field name="arch" type="xml">
+            <list string="Presets">
+                <field name="name"/>
+                <field name="use_timing"/>
+                <field name="identification"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_pos_preset_form" model="ir.actions.act_window">
+        <field name="name">Presets</field>
+        <field name="res_model">pos.preset</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new preset
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_preset" parent="menu_point_config_product" action="action_pos_preset_form" sequence="3" groups="group_pos_manager,group_pos_user"/>
+</odoo>

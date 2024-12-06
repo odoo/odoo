@@ -64,9 +64,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // Create a floating order. The idea is to have one of the draft orders be a floating order during the tour.
             Chrome.createFloatingOrder(),
 
-            // Dine in / Takeaway can be toggled.
-            ProductScreen.clickControlButton("Switch to Takeaway"),
-            ProductScreen.clickControlButton("Switch to Dine in"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),

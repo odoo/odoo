@@ -54,14 +54,7 @@
                         <field name="pos_self_ordering_image_brand_name" invisible ="1"/>
                         <field name="pos_self_ordering_image_brand" class="w-100" filename="pos_self_ordering_image_brand_name"/>
                     </setting>
-                    <setting string="Allow takeout order" help="Allow self-order customers to set their order for takeout." invisible="not pos_self_ordering_mode in ['mobile', 'kiosk'] or not pos_takeaway">
-                        <field name="pos_self_ordering_takeaway"/>
-                    </setting>
                 </block>
-            </block>
-
-            <block id="restaurant_section" position="attributes">
-                <attribute name="invisible">is_kiosk_mode</attribute>
             </block>
 
             <setting id="customer_display" position="attributes">
@@ -93,7 +86,7 @@
             </setting>
 
             <setting id="flexible_taxes" position="attributes">
-                <attribute name="invisible">is_kiosk_mode or pos_takeaway</attribute>
+                <attribute name="invisible">is_kiosk_mode</attribute>
             </setting>
         </field>
     </record>

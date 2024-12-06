@@ -7,7 +7,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'User-friendly PoS interface for shops and restaurants',
-    'depends': ['stock_account', 'barcodes', 'web_editor', 'digest', 'phone_validation'],
+    'depends': ['resource', 'stock_account', 'barcodes', 'web_editor', 'digest', 'phone_validation'],
     'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/point_of_sale_security.xml',
@@ -42,6 +42,7 @@
         'views/res_partner_view.xml',
         'views/report_userlabel.xml',
         'views/report_saledetails.xml',
+        'views/pos_preset_view.xml',
         'views/point_of_sale_dashboard.xml',
         'views/report_invoice.xml',
         'views/pos_printer_view.xml',
