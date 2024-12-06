@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="turkey_tax_report" model="account.report">
-        <field name="name">Türkiye Tax Report (TR)</field>
+        <field name="name">Türkiye Tax Report</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.tr"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -91,6 +91,17 @@
                 <field name="name">Sales VAT</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
+                    <record id="sales_vat_line_0" model="account.report.line">
+                        <field name="name">Export Sales 0%</field>
+                        <field name="code">SAL_0</field>
+                        <field name="expression_ids">
+                            <record id="sales_vat_expression_0_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_BASE_0</field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="sales_vat_line_1" model="account.report.line">
                         <field name="name">Sales 1% VAT</field>
                         <field name="code">SAL_1</field>
