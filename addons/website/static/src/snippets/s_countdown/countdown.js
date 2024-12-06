@@ -203,7 +203,10 @@ class Countdown extends Interaction {
 
         const hideCountdown = this.isFinished && !this.editableMode && this.el.classList.contains("hide-countdown");
         if (this.layout === "text") {
-            this.el.querySelector(".s_countdown_canvas_flex").classList.add("d-none");
+            const canvasEls = this.el.querySelectorAll(".s_countdown_canvas_flex")
+            for (const canvasEl of canvasEls) {
+                canvasEl.classList.add("d-none");
+            }
             if (!this.textWrapperEl) {
                 this.textWrapperEl = document.createElement("span");
                 this.textWrapperEl.classList.add("s_countdown_text_wrapper", "d-none");
@@ -216,7 +219,7 @@ class Countdown extends Interaction {
             this.textWrapperEl.classList.toggle("d-none", hideCountdown);
 
             const countdownText = this.timeDiff.map(e => e.nb + " " + e.label).join(", ");
-            this.el.querySelector(".s_countdown_text").text(countdownText.toLowerCase());
+            this.el.querySelector(".s_countdown_text").innerText = countdownText.toLowerCase();
         } else {
             for (const val of this.timeDiff) {
                 const canvas = val.canvas.querySelector("canvas");
@@ -241,7 +244,7 @@ class Countdown extends Interaction {
                 if (this.progressBarStyle !== "none") {
                     this.drawProgressBar(ctx, val.nb, val.total, this.progressBarWeight === "thin");
                 }
-                this.el.querySelector(".s_countdown_canvas_flex").classList.toggle("mx-1", this.layout === "boxes");
+                val.canvas.classList.toggle("mx-1", this.layout === "boxes");
             }
         }
 
