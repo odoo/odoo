@@ -61,6 +61,7 @@ class BaseAutomationLeadThreadTest(models.Model):
     _description = "Automated Rule Test With Thread"
     _inherit = ['base.automation.lead.test', 'mail.thread']
 
+    user_id = fields.Many2one("res.users")
 
 class BaseAutomationLineTest(models.Model):
     _name = 'base.automation.line.test'
