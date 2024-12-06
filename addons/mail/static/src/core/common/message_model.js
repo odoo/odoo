@@ -3,7 +3,6 @@ import {
     EMOJI_REGEX,
     convertBrToLineBreak,
     htmlToTextContentInline,
-    prettifyMessageContent,
 } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
 
@@ -364,24 +363,16 @@ export class Message extends Record {
         this.store.env.services.notification.add(notification, { type });
     }
 
-    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
-        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+    async edit(updateData) {
+        if (
+            convertBrToLineBreak(this.body) === updateData.body &&
+            updateData.attachments?.length === 0
+        ) {
             return;
         }
-        const validMentions = this.store.getMentionsFromText(body, {
-            mentionedChannels,
-            mentionedPartners,
-        });
         const data = await rpc("/mail/message/update_content", {
-            attachment_ids: attachments
-                .concat(this.attachment_ids)
-                .map((attachment) => attachment.id),
-            attachment_tokens: attachments
-                .concat(this.attachment_ids)
-                .map((attachment) => attachment.access_token),
-            body: await prettifyMessageContent(body, validMentions),
             message_id: this.id,
-            partner_ids: validMentions?.partners?.map((partner) => partner.id),
+            update_data: await this.store.getMessageUpdateParams({ message: this, updateData }),
             ...this.thread.rpcParams,
         });
         this.store.insert(data, { html: true });
@@ -407,10 +398,8 @@ export class Message extends Record {
 
     async remove() {
         await rpc("/mail/message/update_content", {
-            attachment_ids: [],
-            attachment_tokens: [],
-            body: "",
             message_id: this.id,
+            update_data: { attachment_ids: [], attachment_tokens: [], body: "" },
             ...this.thread.rpcParams,
         });
         this.body = "";

@@ -147,17 +147,20 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, **kwargs):
+    def mail_message_update_content(self, message_id, update_data, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()
-        guest.env["ir.attachment"].browse(attachment_ids)._check_attachments_access(attachment_tokens)
+        guest.env["ir.attachment"].browse(
+            update_data.get("attachment_ids", [])
+        )._check_attachments_access(update_data.get("attachment_tokens", []))
         message = request.env["mail.message"]._get_with_access(message_id, "create", **kwargs)
         if not message or not self._is_message_editable(message, **kwargs):
             raise NotFound()
         # sudo: mail.message - access is checked in _get_with_access and _is_message_editable
         message = message.sudo()
-        body = Markup(body) if body else body  # may contain HTML such as @mentions
+        body = update_data.get("body")
+        update_data["body"] = Markup(body) if body else body  # may contain HTML such as @mentions
         guest.env[message.model].browse([message.res_id])._message_update_content(
-            message, body=body, attachment_ids=attachment_ids, partner_ids=partner_ids
+            message, **update_data
         )
         return Store(message, for_current_user=True).get_result()
 
