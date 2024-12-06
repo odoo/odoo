@@ -2,7 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+<<<<<<< master
 
+||||||| 768bf0ff097956f34dbf73c32a14eff158ee5779
+=======
+import re
+>>>>>>> c89413d053248055976d43088f45f07d11179f95
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -454,8 +459,16 @@ class HrEmployee(models.Model):
     def _verify_barcode(self):
         for employee in self:
             if employee.barcode:
+<<<<<<< master
                 if not (employee.barcode.isalnum() and len(employee.barcode) <= 18):
                     raise ValidationError(_("The Badge ID must be alphanumeric and no longer than 18 characters."))
+||||||| 768bf0ff097956f34dbf73c32a14eff158ee5779
+            if employee.barcode and not employee.barcode.isdigit():
+                raise ValidationError(_("The Badge ID must be a sequence of digits."))
+=======
+                if not (re.match(r'^[A-Za-z0-9]+$', employee.barcode) and len(employee.barcode) <= 18):
+                    raise ValidationError(_("The Badge ID must be alphanumeric without any accents and no longer than 18 characters."))
+>>>>>>> c89413d053248055976d43088f45f07d11179f95
 
     @api.constrains('ssnid')
     def _check_ssnid(self):
