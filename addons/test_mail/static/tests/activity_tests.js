@@ -1502,4 +1502,30 @@ QUnit.module("test_mail", {}, function () {
         await click(target, ".modal-footer button.o_form_button_cancel");
         assert.containsOnce(target, ".o_activity_summary_cell:not(.o_activity_empty_cell)");
     });
+
+    QUnit.test(
+        "Activity View: Hide 'New' button in SelectCreateDialog based on action context",
+        async function (assert) {
+            assert.expect(1);
+
+            Object.assign(serverData.views, {
+                "mail.test.activity,false,list":
+                    '<tree string="MailTestActivity"><field name="name"/></tree>',
+            });
+
+            const { openView } = await start({
+                serverData,
+            });
+            await openView({
+                res_model: "mail.test.activity",
+                views: [[false, "activity"]],
+                context: { create: false },
+            });
+
+            const activity = $(document);
+            await testUtils.dom.click(activity.find("table tfoot tr .o_record_selector"));
+
+            assert.containsNone(activity, ".o_create_button", "'New' button should be hidden.");
+        }
+    );
 });
