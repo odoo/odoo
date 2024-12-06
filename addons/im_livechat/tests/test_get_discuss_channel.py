@@ -41,7 +41,8 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             )
         channel_info = data["discuss.channel"][0]
         self.assertEqual(channel_info['anonymous_name'], "Visitor 22")
-        self.assertEqual(channel_info['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
+        self.assertEqual(channel_info["anonymous_country"], belgium.id)
+        self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
 
         # ensure persona info are hidden (in particular email and real name when livechat username is present)
         channel = self.env["discuss.channel"].browse(channel_info["id"])
@@ -92,7 +93,8 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         })
         channel_info = data["discuss.channel"][0]
         self.assertFalse(channel_info['anonymous_name'])
-        self.assertEqual(channel_info['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
+        self.assertEqual(channel_info["anonymous_country"], belgium.id)
+        self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
         operator_member_domain = [
             ('channel_id', '=', channel_info['id']),
             ('partner_id', '=', operator.partner_id.id),
@@ -108,11 +110,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             self._filter_partners_fields(
                 {
                     "active": True,
-                    "country": {
-                        "code": "BE",
-                        "id": belgium.id,
-                        "name": "Belgium",
-                    },
+                    "country": belgium.id,
                     "id": test_user.partner_id.id,
                     "isAdmin": False,
                     "isInternalUser": True,
@@ -174,7 +172,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
             ],
         )
-
+        self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
         # ensure visitor info are correct when operator is testing themselves
         operator = self.operators[0]
         self.authenticate(operator.login, self.password)

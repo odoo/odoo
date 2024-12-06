@@ -2,6 +2,7 @@
 
 from odoo import api, models
 from odoo.addons.base.models.res_users import is_selection_groups
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResUsers(models.Model):
@@ -42,20 +43,20 @@ class ResUsers(models.Model):
             lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
         ).unlink()
 
-    def _init_store_data(self, store):
+    def _init_store_data(self, store: Store):
         super()._init_store_data(store)
         # sudo: ir.config_parameter - reading hard-coded keys to check their existence, safe to
         # return whether the features are enabled
         get_param = self.env["ir.config_parameter"].sudo().get_param
-        store.add(
-            {
-                "hasGifPickerFeature": get_param("discuss.tenor_api_key"),
-                "hasMessageTranslationFeature": get_param("mail.google_translate_api_key"),
-                "channel_types_with_seen_infos": sorted(self.env["discuss.channel"]._types_allowing_seen_infos()),
-            }
+        store.add_global_values(
+            hasGifPickerFeature=get_param("discuss.tenor_api_key"),
+            hasMessageTranslationFeature=get_param("mail.google_translate_api_key"),
+            channel_types_with_seen_infos=sorted(
+                self.env["discuss.channel"]._types_allowing_seen_infos()
+            ),
         )
 
-    def _init_messaging(self, store):
+    def _init_messaging(self, store: Store):
         self = self.with_user(self)
         channels = self.env["discuss.channel"]._get_channels_as_member()
         domain = [("channel_id", "in", channels.ids), ("is_self", "=", True)]
@@ -64,4 +65,4 @@ class ResUsers(models.Model):
         # fetch channels data before calling super to benefit from prefetching (channel info might
         # prefetch a lot of data that super could use, about the current user in particular)
         super()._init_messaging(store)
-        store.add({"initChannelsUnreadCounter": len(members_with_unread)})
+        store.add_global_values(initChannelsUnreadCounter=len(members_with_unread))

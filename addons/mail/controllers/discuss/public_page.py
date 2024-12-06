@@ -46,7 +46,7 @@ class PublicPageController(http.Controller):
         # sudo: discuss.channel - channel access is validated with invitation_token
         if not channel or not channel.sudo().uuid or not consteq(channel.sudo().uuid, invitation_token):
             raise NotFound()
-        store = Store({"isChannelTokenSecret": True})
+        store = Store().add_global_values(isChannelTokenSecret=True)
         return self._response_discuss_channel_invitation(store, channel)
 
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
@@ -79,7 +79,7 @@ class PublicPageController(http.Controller):
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()
                 channel_sudo = channel_sudo.search([("uuid", "=", create_token)])
-        store = Store({"isChannelTokenSecret": False})
+        store = Store().add_global_values(isChannelTokenSecret=False)
         return self._response_discuss_channel_invitation(store, channel_sudo.sudo(False))
 
     def _response_discuss_channel_invitation(self, store, channel):
@@ -98,17 +98,15 @@ class PublicPageController(http.Controller):
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
             )
         if guest and not guest_already_known:
-            store.add({"shouldDisplayWelcomeViewInitially": True})
+            store.add_global_values(shouldDisplayWelcomeViewInitially=True)
             channel = channel.with_context(guest=guest)
         return self._response_discuss_public_template(store, channel)
 
-    def _response_discuss_public_template(self, store, channel):
-        store.add(
-            {
-                "companyName": request.env.company.name,
-                "inPublicPage": True,
-                "discuss_public_thread": Store.one(channel),
-            }
+    def _response_discuss_public_template(self, store: Store, channel):
+        store.add_global_values(
+            companyName=request.env.company.name,
+            discuss_public_thread=Store.One(channel),
+            inPublicPage=True,
         )
         return request.render(
             "mail.discuss_public_channel_template",

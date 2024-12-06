@@ -586,16 +586,19 @@ class MailActivity(models.Model):
     def activity_format(self):
         return Store(self).get_result()
 
-    def _to_store(self, store: Store):
-        for activity in self:
-            data = activity.read()[0]
-            data["mail_template_ids"] = [
-                {"id": mail_template.id, "name": mail_template.name}
-                for mail_template in activity.mail_template_ids
-            ]
-            data["attachment_ids"] = Store.many(activity.attachment_ids, fields=["name"])
-            data["persona"] = Store.one(activity.user_id.partner_id)
-            store.add(activity, data)
+    def _to_store_defaults(self):
+        return [
+            *list(self.fields_get(attributes=())),
+            Store.Many("attachment_ids", ["name"]),
+            Store.Attr(
+                "mail_template_ids",
+                lambda activity: activity.mail_template_ids._read_format(["name"]),
+            ),
+            Store.Attr("persona", lambda activity: Store.One(activity.user_id.partner_id)),
+        ]
+
+    def _to_store(self, store: Store, fields):
+        store.add_records_fields(self, fields)
 
     @api.readonly
     @api.model
