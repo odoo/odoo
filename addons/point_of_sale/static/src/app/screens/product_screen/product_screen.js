@@ -75,8 +75,7 @@ export class ProductScreen extends Component {
                 this.currentOrder.preset_id &&
                 this.currentOrder.preset_time
             ) {
-                const orderDateTime = DateTime.fromSQL(this.currentOrder.preset_time);
-                if (orderDateTime > DateTime.now()) {
+                if (this.currentOrder.preset_time > DateTime.now()) {
                     this.pos.addPendingOrder([this.currentOrder.id]);
                     await this.pos.syncAllOrders();
                 }

@@ -16,7 +16,7 @@
                 </option>
                 <t t-foreach="slots" t-as="slot" t-key="slot_index">
                     <option t-att-value="slot[0]" t-esc="slot[0]" disabled="1" />
-                    <option t-foreach="Object.values(slot[1])" t-as="s" t-key="s_index" t-att-value="s.sql_datetime" t-esc="s.humain_readable" />
+                    <option t-foreach="Object.values(slot[1])" t-as="s" t-key="s_index" t-att-value="s.datetime.ts" t-esc="s.toFormat('HH:mm')" />
                 </t>
             </select>
             <a

@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { serializeDateTime } from "@web/core/l10n/dates";
 import { random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
@@ -22,9 +21,7 @@ export class PosOrder extends Base {
         }
 
         // Data present in python model
-        this.date_order = vals.date_order || serializeDateTime(luxon.DateTime.now());
         this.to_invoice = vals.to_invoice || false;
-        this.shipping_date = vals.shipping_date || false;
         this.state = vals.state || "draft";
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.last_order_preparation_change = vals.last_order_preparation_change
@@ -39,6 +36,10 @@ export class PosOrder extends Base {
         this.internal_note = vals.internal_note || "";
         if (!vals.lines) {
             this.lines = [];
+        }
+
+        if (!this.date_order) {
+            this.date_order = DateTime.now();
         }
 
         // !!Keep all uiState in one object!!
@@ -98,8 +99,9 @@ export class PosOrder extends Base {
     }
 
     get presetTime() {
-        const dateTime = DateTime.fromSQL(this.preset_time);
-        return dateTime.isValid ? dateTime.toFormat("HH:mm") : false;
+        return this.preset_time && this.preset_time.isValid
+            ? this.preset_time.toFormat("HH:mm")
+            : false;
     }
 
     getEmailItems() {
