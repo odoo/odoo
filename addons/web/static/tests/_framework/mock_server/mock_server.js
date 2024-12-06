@@ -378,10 +378,10 @@ export class MockServer {
         if (modelName) {
             const model = this.env[modelName];
             if (typeof model[method] === "function") {
-                const expectedLength = model[method].length;
-                while (args.length < expectedLength) {
-                    args.push(undefined);
-                }
+                // const expectedLength = model[method].length;
+                // while (args.length < expectedLength) {
+                //     args.push(undefined);
+                // }
                 return model[method](...args, kwargs);
             }
 
@@ -389,10 +389,10 @@ export class MockServer {
             for (const parentName of safeSplit(model._inherit)) {
                 const parentModel = this.env[parentName];
                 if (typeof parentModel[method] === "function") {
-                    const expectedLength = parentModel[method].length;
-                    while (args.length < expectedLength) {
-                        args.push(undefined);
-                    }
+                    // const expectedLength = parentModel[method].length;
+                    // while (args.length < expectedLength) {
+                    //     args.push(undefined);
+                    // }
                     return parentModel[method].call(model, ...args, kwargs);
                 }
             }
