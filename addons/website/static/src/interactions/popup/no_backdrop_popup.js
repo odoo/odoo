@@ -4,8 +4,6 @@ import { Interaction } from "@website/core/interaction";
 
 export class NoBackdropPopup extends Interaction {
     static selector = ".s_popup_no_backdrop";
-    // TODO: handle edit mode
-    // disabledInEditableMode = false;
     dynamicContent = {
         "_root": {
             "t-on-shown.bs.modal": this.addModalNoBackdropEvents,
@@ -17,12 +15,6 @@ export class NoBackdropPopup extends Interaction {
         this.throttledUpdateScrollbar = this.throttledForAnimation(this.updateScrollbar);
         this.removeResizeListener = null;
         this.resizeObserver = null;
-        // TODO: handle edit mode
-        // if (this.editableMode && this.el.classList.contains("show")) {
-        //     // Use case: When the "Backdrop" option is disabled in edit mode.
-        //     // The page scrollbar must be adjusted and events must be added.
-        //     this.addModalNoBackdropEvents();
-        // }
     }
 
     destroy() {

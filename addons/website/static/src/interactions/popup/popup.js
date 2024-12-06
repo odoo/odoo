@@ -27,6 +27,9 @@ export class Popup extends Interaction {
         this.modalEl = this.el.querySelector(".modal");
         /** @type {import("bootstrap").Modal} */
         this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
+        this.registerCleanup(() => {
+            this.bsModal.dispose();
+        });
 
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
@@ -58,15 +61,6 @@ export class Popup extends Interaction {
         if (!this._popupAlreadyShown && !emptyPopup) {
             this.bindPopup();
         }
-    }
-
-    destroy() {
-        // You cannot hide after dispose, so we do both here to make sure they
-        // trigger in order. The cleanup is not registered in setup so that the
-        // hide.bs.modal event isn't triggered (it is cleaned before destroy),
-        // and no cookie is set.
-        this.bsModal.hide();
-        this.bsModal.dispose();
     }
 
     bindPopup() {

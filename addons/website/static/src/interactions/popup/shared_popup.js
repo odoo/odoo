@@ -5,8 +5,6 @@ import { Interaction } from "@website/core/interaction";
 
 export class SharedPopup extends Interaction {
     static selector = ".s_popup";
-    // TODO: support edit mode
-    disabledInEditableMode = false;
     dynamicContent = {
         // A popup element is composed of a `.s_popup` parent containing the
         // actual `.modal` BS modal. Our internal logic and events are hiding
@@ -28,16 +26,6 @@ export class SharedPopup extends Interaction {
 
     setup() {
         this.popupShown = false;
-
-        // TODO: support edit mode, maybe this can be removed completely.
-        // Popup are always closed when entering edit mode (see Popup interaction),
-        // this allows to make sure the class is sync on the .s_popup parent
-        // after that moment too.
-        // if (!this.editableMode) {
-            this.registerCleanup(() => {
-                this.popupShown = false;
-            });
-        // }
     }
 
     onModalHidden() {
@@ -52,4 +40,10 @@ export class SharedPopup extends Interaction {
     }
 }
 
-registry.category("website.active_elements").add("website.shared_popup", SharedPopup);
+registry
+    .category("website.active_elements")
+    .add("website.shared_popup", SharedPopup);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.shared_popup", { Interaction: SharedPopup });
