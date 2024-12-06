@@ -4,7 +4,7 @@ from odoo import models, fields
 
 
 class TestInheritMother(models.Model):
-    _inherit = ['test.inherit.mother']
+    _inherit = 'test.inherit.mother'
 
     # extend again the selection of the state field: 'e' must precede 'e'
     state = fields.Selection(selection_add=[('e', 'E')])

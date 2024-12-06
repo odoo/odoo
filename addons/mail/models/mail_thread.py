@@ -87,6 +87,7 @@ class MailThread(models.AbstractModel):
      - ``mail_notify_force_send``: if less than 50 email notifications to send,
        send them directly instead of using the queue; True by default
     '''
+    _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True  # flatten the discussion history
     _mail_post_access = 'write'  # access required on the document to post on it

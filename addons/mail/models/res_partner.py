@@ -12,6 +12,7 @@ from odoo.addons.mail.tools.discuss import Store
 class ResPartner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
+    _name = 'res.partner'
     _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
 

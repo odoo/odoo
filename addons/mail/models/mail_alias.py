@@ -29,6 +29,7 @@ class MailAlias(models.Model):
        on the company's mail server, so that as soon as a new mail.alias is
        created, it becomes immediately usable and Odoo will accept email for it.
      """
+    _name = 'mail.alias'
     _description = "Email Aliases"
     _order = 'alias_model_id, alias_name'
     _rec_name = 'alias_name'

@@ -57,6 +57,7 @@ class GamificationChallenge(models.Model):
     'monthly' is selected)
     """
 
+    _name = 'gamification.challenge'
     _description = 'Gamification Challenge'
     _inherit = ['mail.thread']
     _order = 'end_date, start_date, name, id'

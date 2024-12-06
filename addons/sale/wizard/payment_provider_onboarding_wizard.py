@@ -6,6 +6,7 @@ from odoo import fields, models
 class SalePaymentProviderOnboardingWizard(models.TransientModel):
     """ Override for the sale quotation onboarding panel. """
 
+    _name = 'sale.payment.provider.onboarding.wizard'
     _inherit = ['payment.provider.onboarding.wizard']
     _description = 'Sale Payment provider onboarding wizard'
 

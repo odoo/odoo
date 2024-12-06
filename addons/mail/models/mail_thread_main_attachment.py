@@ -8,6 +8,7 @@ from odoo.addons.mail.tools.discuss import Store
 class MailThreadMainAttachment(models.AbstractModel):
     """ Mixin that adds main attachment support to the MailThread class. """
 
+    _name = 'mail.thread.main.attachment'
     _inherit = ['mail.thread']
     _description = 'Mail Main Attachment management'
 

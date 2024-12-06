@@ -64,6 +64,7 @@ class EventLeadRule(models.Model):
     intended in order to give more freedom to the user using the automatic
     lead generation.
     """
+    _name = 'event.lead.rule'
     _description = "Event Lead Rules"
 
     # Definition

@@ -19,6 +19,7 @@ CRON_DEPENDS = {'name', 'active', 'mode', 'until', 'notification_time', 'notific
 class LunchAlert(models.Model):
     """ Alerts to display during a lunch order. An alert can be specific to a
     given day, weekly or daily. The alert is displayed from start to end hour. """
+    _name = 'lunch.alert'
     _description = 'Lunch Alert'
     _order = 'write_date desc, id'
 
