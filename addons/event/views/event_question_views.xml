@@ -92,10 +92,13 @@
             <graph string="Question" type="bar">
                     <field name="question_id" type="col"/>
                     <field name="value_answer_id" type="row" stacked="1"/>
-                    <field name="event_id"/>
+                    <field name="event_id" type="row"/>
 <!--                <field name="value_answer_id" type="row"/>-->
 <!--                <field name="event_id" type="col"/>-->
             </graph>
+        </field>
+        <field name="domaine">
+            ('question_id.question_type', '=', 'simple_choice')
         </field>
     </record>
 
