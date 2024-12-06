@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from typing import Dict
-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class PosOrderLine(models.Model):
@@ -52,6 +51,14 @@ class PosOrder(models.Model):
                         order['takeaway'] = old_order.takeaway
 
         return super().sync_from_ui(orders)
+
+    def _get_open_order(self, order):
+        open_order = super()._get_open_order(order)
+        if not self.env.context.get('from_self'):
+            return open_order
+        elif open_order:
+            del order['table_id']
+        return self.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
 
     def _process_saved_order(self, draft):
         res = super()._process_saved_order(draft)
