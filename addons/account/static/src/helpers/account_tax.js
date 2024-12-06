@@ -479,7 +479,7 @@ export const accountTaxHelpers = {
                 tax_data.tax_amount_factorized = tax_data.tax_amount * tax_data._factor;
                 if (
                     rounding_method === "round_per_line" ||
-                    (!special_mode && tax_data.price_include && round_price_include)
+                    ((special_mode === 'total_included' || tax_data.price_include) && round_price_include)
                 ) {
                     tax_data.tax_amount_factorized = roundPrecision(
                         tax_data.tax_amount_factorized,
@@ -507,7 +507,7 @@ export const accountTaxHelpers = {
                 );
                 if (
                     rounding_method === "round_per_line" ||
-                    (!special_mode && tax_data.price_include && round_price_include)
+                    ((special_mode === 'total_included' || tax_data.price_include) && round_price_include)
                 ) {
                     tax_data.base = roundPrecision(tax_data.base, prec_rounding);
                     tax_data.display_base = roundPrecision(tax_data.display_base, prec_rounding);
