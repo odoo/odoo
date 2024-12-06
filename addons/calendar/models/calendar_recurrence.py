@@ -402,7 +402,8 @@ class RecurrenceRule(models.Model):
         # Optional parameters starts with X- and they can be placed anywhere in the RRULE string.
         # RRULE:FREQ=MONTHLY;INTERVAL=3;X-RELATIVE=1
         # RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
-        rule_str = re.sub(r';?X-[-\w]+=[^;:]*', '', rule_str).replace(":;", ":")
+        # X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        rule_str = re.sub(r';?X-[-\w]+=[^;:]*', '', rule_str).replace(":;", ":").lstrip(":;")
 
         if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)

@@ -119,6 +119,7 @@ class TestDiscussFullPerformance(HttpCase):
         self.users[0].notification_type = 'inbox'
         message = self.channel_channel_public_1.message_post(body='test', message_type='comment', author_id=self.users[2].partner_id.id, partner_ids=self.users[0].partner_id.ids)
         # add star
+        self.channel_channel_public_1.with_user(self.users[0])._set_last_seen_message(message)
         message.toggle_message_starred()
         self.env.company.sudo().name = 'YourCompany'
 

@@ -20,7 +20,7 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
 
     def _default_picking_type_id(self):
-        return self.env['stock.warehouse'].with_context(active_test=False).search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
+        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
         return self.env['account.journal'].search([
@@ -183,7 +183,7 @@ class PosConfig(models.Model):
     auto_validate_terminal_payment = fields.Boolean(default=True, help="Automatically validates orders paid with a payment terminal.")
     trusted_config_ids = fields.Many2many("pos.config", relation="pos_config_trust_relation", column1="is_trusting",
                                           column2="is_trusted", string="Trusted Point of Sale Configurations",
-                                          domain="[('id', '!=', pos_config_id), ('module_pos_restaurant', '=', False)]")
+                                          domain="[('id', '!=', pos_config_id), ('module_pos_restaurant', '=', False), ('company_id', '=', company_id)]")
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

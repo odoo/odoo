@@ -8,7 +8,6 @@
 # Morten Schou <ms@msteknik.dk>, 2023
 # Jesper Carstensen <info@danodoo.dk>, 2023
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2023
-# Mads Søndergaard, 2023
 # Kjeld Borch Egevang <kjeld@mail4us.dk>, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Mads Søndergaard, 2024
@@ -17,6 +16,7 @@
 # Martin Trigaux, 2024
 # Daniel Ytterdal, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Mads Søndergaard, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Last-Translator: Mads Søndergaard, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1613,6 +1613,20 @@ msgid ""
 msgstr ""
 "Konto %s tillader ikke afstemning. Ændr først konfigurationen for denne "
 "konto til at tilladet det."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -5202,11 +5216,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "LEVERET AFGIFT BETALT"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "NED"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Kontrolpanel"
@@ -5938,6 +5947,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Ned"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -7215,11 +7229,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "HALVT-OP"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -9714,6 +9723,11 @@ msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr "Navigér nemt gennem rapporter, og se hvad der gemmer sig bag tallene."
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
@@ -12181,7 +12195,7 @@ msgstr "Tilbageførte bevægelser"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse and Create Invoice"
-msgstr ""
+msgstr "Krediter og opret ny faktura"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
@@ -12433,6 +12447,7 @@ msgstr "Gem denne side og kom tilbage hertil for at konfigurere funktionen."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Scan mig med din online banking app."
@@ -13911,6 +13926,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -13982,8 +14006,8 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
 
 #. module: account
@@ -15709,11 +15733,6 @@ msgid "Type of the exception activity on record."
 msgstr "Type af undtagelsesaktivitet registreret "
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "OP"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -15888,6 +15907,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "Enhed"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Op"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16679,6 +16703,13 @@ msgid ""
 msgstr ""
 "Du kan ikke oprette en ny udtogs linje uden en mellemregningskonto angivet "
 "for %s journalen."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
 
 #. module: account
 #. odoo-python

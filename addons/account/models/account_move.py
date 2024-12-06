@@ -50,9 +50,9 @@ PAYMENT_STATE_SELECTION = [
 TYPE_REVERSE_MAP = {
     'entry': 'entry',
     'out_invoice': 'out_refund',
-    'out_refund': 'entry',
+    'out_refund': 'out_invoice',
     'in_invoice': 'in_refund',
-    'in_refund': 'entry',
+    'in_refund': 'in_invoice',
     'out_receipt': 'out_refund',
     'in_receipt': 'in_refund',
 }
@@ -509,7 +509,7 @@ class AccountMove(models.Model):
         help='Use this field to encode the total amount of the invoice.\n'
              'Odoo will automatically create one invoice line with default values to match it.',
     )
-    quick_encoding_vals = fields.Binary(compute='_compute_quick_encoding_vals', exportable=False)
+    quick_encoding_vals = fields.Json(compute='_compute_quick_encoding_vals', exportable=False)
 
     # === Misc Information === #
     narration = fields.Html(
@@ -886,6 +886,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):
         for move in self:
+            move = move.with_company(move.company_id)
             if move.is_sale_document(include_receipts=True) and move.partner_id.property_payment_term_id:
                 move.invoice_payment_term_id = move.partner_id.property_payment_term_id
             elif move.is_purchase_document(include_receipts=True) and move.partner_id.property_supplier_payment_term_id:
@@ -3209,8 +3210,6 @@ class AccountMove(models.Model):
                             invoices |= invoice
                             current_invoice = self.env['account.move']
                             add_file_data_results(file_data, invoice)
-                        if extend_with_existing_lines:
-                            return attachments_by_invoice
 
                 except RedirectWarning:
                     raise
@@ -3474,9 +3473,9 @@ class AccountMove(models.Model):
                             - sum(x['balance'] for x in res['base_lines'][payment_term_line].values()) \
                             - sum(x['balance'] for x in res['tax_lines'][payment_term_line].values())
 
-            last_tax_line = (list(res['tax_lines'][payment_term_line].values()) or list(res['base_lines'][payment_term_line].values()))[-1]
-            last_tax_line['amount_currency'] += delta_amount_currency
-            last_tax_line['balance'] += delta_balance
+            biggest_base_line = max(list(res['base_lines'][payment_term_line].values()), key=lambda x: x['amount_currency'])
+            biggest_base_line['amount_currency'] += delta_amount_currency
+            biggest_base_line['balance'] += delta_balance
 
         else:
             grouping_dict = {'account_id': cash_discount_account.id}
@@ -3790,18 +3789,25 @@ class AccountMove(models.Model):
         lock_date = self.company_id._get_user_fiscal_lock_date()
         return not self.inalterable_hash and self.date > lock_date
 
+    def _is_protected_by_audit_trail(self):
+        return False
+
     def _unlink_or_reverse(self):
         if not self:
             return
-        to_reverse = self.env['account.move']
         to_unlink = self.env['account.move']
+        to_cancel = self.env['account.move']
+        to_reverse = self.env['account.move']
         for move in self:
-            if move._can_be_unlinked():
-                to_unlink += move
-            else:
+            if not move._can_be_unlinked():
                 to_reverse += move
+            elif move._is_protected_by_audit_trail():
+                to_cancel += move
+            else:
+                to_unlink += move
         to_unlink.filtered(lambda m: m.state in ('posted', 'cancel')).button_draft()
         to_unlink.filtered(lambda m: m.state == 'draft').unlink()
+        to_cancel.button_cancel()
         return to_reverse._reverse_moves(cancel=True)
 
     def _post(self, soft=True):
@@ -3926,11 +3932,9 @@ class AccountMove(models.Model):
         to_post.line_ids._reconcile_marked()
 
         for invoice in to_post:
-            invoice.message_subscribe([
-                p.id
-                for p in [invoice.partner_id]
-                if p not in invoice.sudo().message_partner_ids
-            ])
+            partner_id = invoice.partner_id
+            subscribers = [partner_id.id] if partner_id and partner_id not in invoice.sudo().message_partner_ids else None
+            invoice.message_subscribe(subscribers)
 
             if (
                 invoice.is_sale_document()
@@ -4159,7 +4163,7 @@ class AccountMove(models.Model):
         # We remove all the analytics entries for this journal
         self.mapped('line_ids.analytic_line_ids').unlink()
         self.mapped('line_ids').remove_move_reconcile()
-        self.write({'state': 'draft', 'is_move_sent': False})
+        self.state = 'draft'
 
     def _check_draftable(self):
         exchange_move_ids = set()
@@ -4944,6 +4948,19 @@ class AccountMove(models.Model):
         Down-payments can be created from a sale order. This method is overridden in the sale order module.
         '''
         return False
+
+    def _refunds_origin_required(self):
+        return False
+
+    def _set_reversed_entry(self, credit_note):
+        """ Try to find the original invoice for a single credit_note. """
+        if len(credit_note) != 1 or credit_note.move_type != 'out_refund':
+            return
+
+        original_invoice = self.filtered(lambda inv: inv.move_type == 'out_invoice'
+                                         and credit_note.invoice_line_ids.sale_line_ids in inv.invoice_line_ids.sale_line_ids)
+        if len(original_invoice) == 1 and original_invoice._refunds_origin_required():
+            credit_note.reversed_entry_id = original_invoice.id
 
     @api.model
     def get_invoice_localisation_fields_required_to_invoice(self, country_id):

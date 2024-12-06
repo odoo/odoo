@@ -7,9 +7,9 @@
 # Dylan Kiss, 2023
 # Jolien De Paepe, 2024
 # Larissa Manderfeld, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1619,6 +1619,24 @@ msgstr ""
 "rekening eerst om dit toe te laten."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"De rekening %s is van het type 'Betaalbaar,' maar wordt in een "
+"verkooptransactie gebruikt."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+"De rekening %s is van het type 'debiteuren' maar wordt in een "
+"aankooptransactie gebruikt."
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 msgid "Account Avatax"
 msgstr "Account Avatax"
@@ -2104,7 +2122,7 @@ msgstr "Opgebouwde %s invoer vanaf %s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Accrued Account"
-msgstr "Transitoriarekening"
+msgstr "Overlopende rekening"
 
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
@@ -5241,11 +5259,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "Franco inclusief rechten"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "OMLAAG"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -5985,6 +5998,11 @@ msgstr "Snelkoppeling domeinformule"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr "Land van je boekhouding"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Omlaag"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -7282,11 +7300,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "Groei vergelijking"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "HALVERWEGE"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -9833,6 +9846,11 @@ msgstr ""
 "zit"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr "Naar het dichtstbijzijnde"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
@@ -10776,7 +10794,7 @@ msgstr "Achterstallige betalingen, vervaldatum verstreken"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
-msgstr "winst- en verliesrekeningen"
+msgstr "Winst- en verliesrekeningen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -12580,6 +12598,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Scan met je bank app."
@@ -14091,6 +14110,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+"De Beschikbaarheid is ingesteld op 'Landmatches' maar het veld Land is niet "
+"ingesteld."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -14168,12 +14198,9 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"Het Syscohada-rekeningschemesjabloon mag niet rechtstreeks worden "
-"geselecteerd. In plaats daarvan moet u rechtstreeks de grafieksjabloon voor "
-"uw land selecteren."
 
 #. module: account
 #. odoo-python
@@ -14424,8 +14451,8 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
-"De datum wordt ingesteld voor de %(lock_type)s blokkeerdatum %(lock_date)s. "
-"De boeking wordt op%(invoice_date)s geboekt bij het plaatsen."
+"De datum is ingesteld vóór de %(lock_type)s blokkeerdatum %(lock_date)s. De "
+"boeking wordt geboekt op %(invoice_date)s."
 
 #. module: account
 #. odoo-python
@@ -15972,11 +15999,6 @@ msgid "Type of the exception activity on record."
 msgstr "Type van de geregistreerde uitzonderingsactiviteit."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "OMHOOG"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -16153,6 +16175,11 @@ msgstr "Aantal niet vertrouwde betalingen"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "Maateenheid"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Omhoog"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16970,6 +16997,15 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
+"Je kunt geen betalingen aanmaken voor boekingen die tot verschillende "
+"vestigingen behoren."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -17619,7 +17655,7 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Je dienst de 'wisselkoers winst- of verliesrekening' instellen in de "
+"Je moet de 'wisselkoers winst- of verliesrekening' instellen in de "
 "bedrijfsinstellingen, om automatisch de boekingen in verband met "
 "wisselkoersverschillen te kunnen maken."
 

@@ -11,12 +11,12 @@ import { start } from "@mail/../tests/helpers/test_utils";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Domain } from "@web/core/domain";
 import { serializeDate } from "@web/core/l10n/dates";
-import { deepEqual } from "@web/core/utils/objects";
+import { deepEqual, omit } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
 import { editInput, patchWithCleanup, click, patchDate, triggerEvent } from "@web/../tests/helpers/utils";
 import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
-import { contains } from "@web/../tests/utils";
+import { contains, insertText } from "@web/../tests/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 const { DateTime } = luxon;
@@ -1452,4 +1452,54 @@ QUnit.module("test_mail", {}, function () {
             );
         }
     );
+
+    QUnit.test("update activity view after creating multiple activities", async function (assert) {
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,list":
+                '<tree string="MailTestActivity"><field name="name"/><field name="activity_ids" widget="list_activity"/></tree>',
+            "mail.activity,false,form": '<form><field name="activity_type_id"/></form>',
+            "mail.activity.schedule,false,form": "<form><field name='display_name'/></form>",
+        });
+
+        const activityToCreate = omit(pyEnv.mockServer.models["mail.activity"].records[0], "id");
+        pyEnv.mockServer.models["mail.activity"].records = [];
+
+        pyEnv.mockServer.models["mail.activity.schedule"] = {
+            fields: {
+                id: { type: "integer" },
+                display_name: { type: "char" },
+            },
+            records: [],
+        };
+
+        const { openView, target } = await start({
+            mockRPC(route, args) {
+                if (args.method === "name_search") {
+                    args.kwargs.name = "MailTestActivity";
+                }
+                if (args.method === "web_save" && args.model === "mail.activity.schedule") {
+                    pyEnv["mail.activity"].create(activityToCreate);
+                }
+            },
+            serverData,
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+        });
+        assert.containsNone(target, ".o_activity_summary_cell");
+        await click(target, "table tfoot tr .o_record_selector");
+        await click(
+            target,
+            ".o_list_renderer table tbody tr:nth-child(2) td:nth-child(2) .o-mail-ActivityButton"
+        );
+        await click(target, ".o-mail-ActivityListPopover > button.btn-secondary");
+        const modalSchedule = target.querySelector(".modal:has(.o_form_view)");
+        await insertText(`.o_form_view .o_field_widget[name='display_name'] input`, "test1", {
+            target: modalSchedule,
+        });
+        await click(modalSchedule, ".modal-footer button.o_form_button_save");
+        await click(target, ".modal-footer button.o_form_button_cancel");
+        assert.containsOnce(target, ".o_activity_summary_cell:not(.o_activity_empty_cell)");
+    });
 });

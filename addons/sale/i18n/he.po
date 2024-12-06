@@ -17,7 +17,6 @@
 # Amit Spilman <amit@laylinetech.com>, 2023
 # Jonathan Spier, 2023
 # NoaFarkash, 2023
-# hed shefer <hed@laylinetech.com>, 2023
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # Roy Sayag, 2024
@@ -25,6 +24,8 @@
 # yael terner, 2024
 # Ha Ketem <haketem@gmail.com>, 2024
 # MichaelHadar, 2024
+# Uri Segman, 2024
+# hed shefer <hed@laylinetech.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: MichaelHadar, 2024\n"
+"Last-Translator: hed shefer <hed@laylinetech.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr "'פרו-פורמה - %s' % (object.name)"
+msgstr "'חשבונית עסקה - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -1092,7 +1093,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "מאפשר לך לשלוח חשבונית פרו-פורמה ללקוחות שלך"
+msgstr "מאפשר לך לשלוח חשבונית חשבונית עסקה ללקוחות שלך"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
@@ -2240,7 +2241,7 @@ msgstr "סכום קבוע"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "עקוב, צפה או שלם את ההזמנות שלך"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -3333,7 +3334,7 @@ msgstr "אסימון מזהה PDT"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "חשבונית פרו-פורמה"
+msgstr "חשבונית עסקה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -3497,17 +3498,17 @@ msgstr "תמחור"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "חשבונית פרו-פורמה"
+msgstr "חשבונית עסקה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "חשבונית עסקה #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "חשבוניות פרו-פורמה"
+msgstr "חשבוניות עסקה"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -3777,7 +3778,7 @@ msgstr "הצעות מחיר ומכירות"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr ""
+msgstr "הצעות מחיר לבדיקה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
@@ -5502,8 +5503,8 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'הזמנה ממתינה' or 'הזמנה' }} (מספר {{ object.name or 'לא "
-"קיים' } })"
+"== 'pending') and 'הזמנה ממתינה' or 'הזמנה' }} (מספר {{ object.name or 'n/a'"
+" }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale

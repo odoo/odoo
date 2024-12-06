@@ -24,6 +24,10 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Rumena Georgieva <rumena.georgieva@gmail.com>, 2024
 # Meglen Hadzhitsanchev, 2024
+# Elena Varbanova, 2024
+# Petko Karamotchev, 2024
+# Margarita Katzeva, 2024
+# Veselina Slavkova, 2024
 # 
 msgid ""
 msgstr ""
@@ -31,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Meglen Hadzhitsanchev, 2024\n"
+"Last-Translator: Veselina Slavkova, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -661,6 +665,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        Здравейте,\n"
+"        <br><br>\n"
+"        Вашата\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (with reference: <t t-out=\"object.origin or ''\"></t> )\n"
+"            </t>\n"
+"            на стойност <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> е готова.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            </t>\n"
+"            на издадена <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> е готова за преглед.\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Не се колебайте да се свържете с нас, ако имате въпроси.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -684,6 +718,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        Уважаеми <t t-out=\"object.partner_id.name or ''\">user</t>,\n"
+"        <br><br>\n"
+"        Моля, имайте предвид, че вашата\n"
+"        <t t-out=\"doc_name or ''\">quotation</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (реф.№: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        е отказана. Това означава, че не дължите плащане по нея.\n"
+"        Ако е необходимо някакво връщане на платена сума, това ще бъде уговорено да се случи по най-добрия начин.\n"
+"        <br><br>\n"
+"       Не се колебайте да се свържете с нас, ако имате въпроси.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -753,6 +805,8 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    Заключено"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -767,7 +821,7 @@ msgstr "<i class=\"fa fa-times\"/> Отхвърлете"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Вашият контакт</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -921,7 +975,7 @@ msgstr "<strong>Благодарим!</strong><br/>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>Тази оферта изтече!</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -942,11 +996,13 @@ msgstr "Потвърдената поръчка изисква попълван�
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
+"Бележка, чието съдържание обикновено се отнася за раздела или продукта по-"
+"горе."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A section title"
-msgstr ""
+msgstr "Заглавие на раздел"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -963,6 +1019,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Продуктът, който може да се съхранява, е продукт, за който управлявате наличност. Приложението Inventory (Склад) трябва да бъде инсталирано.\n"
+"Консумативив е продукт, за който запасите не се управляват.\n"
+"Услуга е нематериален продукт, който предоставяте."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -976,6 +1035,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Възможност за избор на тип пакет в поръчките за продажба и за налагане на "
+"количество, което е кратно на броя единици на пакет."
 
 #. module: sale
 #. odoo-python
@@ -994,12 +1055,12 @@ msgstr "Потвърждаване & Подписване на офертата"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Accept &amp; Плащане"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "Accept &amp; Вписване"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -1049,7 +1110,7 @@ msgstr "Декорация за изключение на дейност"
 #. module: sale
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
 msgid "Activity Plans"
-msgstr ""
+msgstr "Планове за дейност"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -1182,7 +1243,7 @@ msgstr "Аналитично разпределение"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Аналитично търсене на дистрибуция"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -1237,6 +1298,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Сигурни ли сте, че искате да анулирате оторизираната транзакция? Това "
+"действие не може да бъде отменено."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1310,7 +1373,7 @@ msgstr "Блокиращо Съобщение"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Основното съдържание е същото като на шаблона"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1324,12 +1387,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this <u>down payment</u> of"
-msgstr ""
+msgstr "С плащането на тази <u>авансова вноска</u> от"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this proposal, I agree to the following terms:"
-msgstr ""
+msgstr "Плащайки, аз се съгласявам със следните условия:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1343,12 +1406,12 @@ msgstr "Кампании"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Може да редактира основното съдържание"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr ""
+msgstr "Може да редактира продукт"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -2276,7 +2339,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "Пълна сума <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2294,12 +2357,12 @@ msgstr "Бъдещи дейности"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Генериране на връзка за плащане на продажбите"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Генериране на линк за плащане"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2704,7 +2767,7 @@ msgstr "Език"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Last Invoices"
-msgstr ""
+msgstr "Последни фактури"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -2741,7 +2804,7 @@ msgstr "Време на лийда"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "Позволете на вашите клиенти да влязат, за да видят документите си"
 
 #. module: sale
 #. odoo-javascript
@@ -2936,7 +2999,7 @@ msgstr "Нова Оферта"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Следващото събитие от календара на дейностите"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
@@ -3031,7 +3094,7 @@ msgstr "Брой грешки"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Брой съобщения, изискващи действие"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
@@ -3158,7 +3221,7 @@ msgstr ""
 #: code:addons/sale/models/product_product.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Операцията не се поддържа"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
@@ -3831,7 +3894,7 @@ msgstr "Свързана поръчка"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Модел на изобразяване"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -3919,7 +3982,7 @@ msgstr "Поръчка"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Брой поръчки за продажба"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
@@ -4036,7 +4099,7 @@ msgstr "Поръчка"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr ""
+msgstr "Отмяна на поръчка за продажба"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -4501,7 +4564,7 @@ msgstr ""
 #: model:onboarding.onboarding.step,done_text:sale.onboarding_onboarding_step_sale_order_confirmation
 #: model:onboarding.onboarding.step,done_text:sale.onboarding_onboarding_step_sample_quotation
 msgid "Step Completed!"
-msgstr ""
+msgstr "Стъпката е завършена!"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
@@ -4685,7 +4748,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Токенът за достъп е невалиден."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
@@ -4825,7 +4888,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Предоставените параметри са невалидни."
 
 #. module: sale
 #. odoo-python
@@ -5091,7 +5154,7 @@ msgstr "USPS конектор"
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr ""
+msgstr "UTM кампания"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5308,7 +5371,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "You can invoice them before they are delivered."
-msgstr ""
+msgstr "Можете да ги фактурирате преди да бъдат доставени."
 
 #. module: sale
 #. odoo-python
@@ -5318,6 +5381,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Не можете да изтриете изпратена оферта или потвърдена поръчка за продажба. "
+"Първо трябва да го отмените."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5333,6 +5398,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Тук можете да зададете вида на комуникацията, която ще се показва в "
+"поръчките за продажба. Комуникацията ще бъде предоставена на клиента, когато"
+" избере метода на плаща"
 
 #. module: sale
 #. odoo-python
@@ -5357,6 +5425,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Не можете да промените типа на продукта, защото той вече се използва в "
+"поръчки за продажба."
 
 #. module: sale
 #. odoo-python
@@ -5366,6 +5436,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Не можете да промените типа на реда за поръчка за продажба. Вместо това "
+"трябва да изтриете текущия ред и да създадете нов ред от правилния тип."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days

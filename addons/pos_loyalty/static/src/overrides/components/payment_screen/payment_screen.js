@@ -90,6 +90,7 @@ patch(PaymentScreen.prototype, {
             if (program.is_nominative && partner) {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
+            agg[pe.coupon_id].date_to = program.date_to;
             return agg;
         }, {});
         for (const line of rewardLines) {
@@ -98,6 +99,7 @@ patch(PaymentScreen.prototype, {
                 couponData[line.coupon_id] = {
                     points: 0,
                     program_id: reward.program_id.id,
+                    date_to: reward.program_id.date_to,
                     coupon_id: line.coupon_id,
                     barcode: false,
                 };

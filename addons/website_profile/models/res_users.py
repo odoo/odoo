@@ -64,3 +64,6 @@ class Users(models.Model):
         if token == validation_token and self.karma == 0:
             return self.write({'karma': VALIDATION_KARMA_GAIN})
         return False
+
+    def get_website_description(self):
+        return self.partner_id.website_description

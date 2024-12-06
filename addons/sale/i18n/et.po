@@ -22,7 +22,6 @@
 # Algo Kärp <algokarp@gmail.com>, 2023
 # Piia Paurson <piia@avalah.ee>, 2023
 # Mihkel avalah, 2023
-# Katrin Kampura, 2024
 # JanaAvalah, 2024
 # Anna, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
@@ -30,6 +29,7 @@
 # Leaanika Randmets, 2024
 # Tairi Tiimann, 2024
 # Siim Raasuke, 2024
+# Katrin Kampura, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Siim Raasuke, 2024\n"
+"Last-Translator: Katrin Kampura, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -765,7 +765,7 @@ msgstr "Makstud"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/>Tühistatud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -842,7 +842,7 @@ msgstr "<span class=\"flex-grow-1\">/ Kuu</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span class=\"mx-3\" invisible=\"not require_payment\"></span>-st"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -1486,6 +1486,15 @@ msgid ""
 "   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
 "   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Arvet ei saa luua. Midagi pole arveldada.\n"
+"\n"
+"Lahendamiseks veendu, et:\n"
+" • Tooted on tarnitud enne arveldamist.\n"
+" • Toote arvelduse meetod on seadistatud õigesti. \n"
+"\n"
+"Kui soovid arveldada tellitud koguste alusel:\n"
+"• Tarbitava või ladustavate toodete puhul ava toode, mine \"Üldine info\" vahelehele ja muuda arvelduse meetod \"Tarnitud kogused\" pealt \"Tellitud kogused\" peale.\n"
+"• Teenuste (ja teiste toodete) puhul muuda arvelduse meetod \"Ettemakstud/fikseeritud hind\" peale.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3655,7 +3664,7 @@ msgstr "Tootekataloog"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "Müügitellimusel on tootekataloogi toode"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
@@ -4057,7 +4066,7 @@ msgstr "Müügitellimuste arv"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "Müügitellimuste plaanid"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -4930,7 +4939,7 @@ msgstr "Selle müügitellimuse maksevestlus."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "Ka makse tuleks edastada armastusega"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount

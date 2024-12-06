@@ -386,6 +386,66 @@ class TestMailAlias(TestMailAliasCommon):
 class TestAliasCompany(TestMailAliasCommon):
     """ Test company / alias domain and configuration synchronization """
 
+    def test_alias_domain_setup_archived_company(self):
+        """Test initialization of alias domain with at least one archived company
+        and at least one mail.alias record points to one mail.thread of the
+        archived company"""
+
+        # add archived company to multi company setup
+        self.company_archived = self.env['res.company'].create({
+                'country_id': self.env.ref('base.be').id,
+                'currency_id': self.env.ref('base.EUR').id,
+                'email': 'company_archived@test.example.com',
+                'name': 'Company Archived Test',
+            })
+        self.company_archived.action_archive()
+
+        # create record inheriting from mail.thread to be used as owner/target thread
+        test_record_archived_company = self.env['mail.test.simple.unfollow'].create({
+                'name': 'Test record (mail.thread) specific to archived company',
+                'company_id': self.company_archived.id,
+            })
+
+        unfollow_model_id = self.env['ir.model']._get_id('mail.test.simple.unfollow')
+        mc_archived_parent = self.env['mail.alias'].create({
+                'alias_name': 'alias_parent_specific_to_archived_company',
+                'alias_parent_model_id': unfollow_model_id,
+                'alias_model_id': unfollow_model_id,
+                'alias_parent_thread_id': test_record_archived_company.id,
+            })  # case where the parent thread is specific to archived company
+
+        mc_archived_target = self.env['mail.alias'].create({
+                'alias_name': 'alias_target_specific_to_archived_company',
+                'alias_parent_model_id': unfollow_model_id,
+                'alias_model_id': unfollow_model_id,
+                'alias_force_thread_id': test_record_archived_company.id,
+            })  # case where the target thread is specific to archived company
+
+        # eject linked aliases then remove all alias domains; should
+        # trigger the init condition at next create() call
+        all_mail_aliases = self.env['mail.alias'].search([])
+        all_mail_aliases.write({'alias_domain_id': False})
+        self.env['mail.alias.domain'].search([]).unlink()
+
+        self.assertFalse(any(all_mail_aliases.mapped("alias_domain_id")),
+                         'Mail aliases should have no linked alias domain at this stage')
+
+        # since we nuked all alias domain records, creating a new alias domain
+        # will initialize it as the default for all mail.alias records.
+        # Should not raise any errors (see _check_alias_domain_id_mc)
+        mc_alias_domain = self.env['mail.alias.domain'].create({
+                'bounce_alias': 'bounce.mc.archived',
+                'catchall_alias': 'catchall.bounce.mc.archived',
+                'name': 'test.init.mc.archived.com',
+            })
+
+        self.assertEqual(mc_archived_parent.alias_domain_id.id, mc_alias_domain.id,
+                         'Parent thread has the wrong alias domain')
+        self.assertEqual(mc_archived_target.alias_domain_id.id, mc_alias_domain.id,
+                         'Target thread has the wrong alias domain')
+        self.assertEqual(self.company_archived.alias_domain_id.id, mc_alias_domain.id,
+                         'Archived company was attributed wrong alias domain')
+
     @mute_logger('odoo.models.unlink')
     @users('erp_manager')
     def test_alias_domain_setup(self):
@@ -743,6 +803,13 @@ class TestMailAliasMixin(TestMailAliasCommon):
 
         with self.assertRaises(exceptions.ValidationError):
             record.write({'alias_defaults': "{'custom_field': brokendict"})
+
+        rec = self.env['mail.test.container'].create({
+            'name': 'Test Record2',
+            'alias_name': 'alias.test',
+            'alias_domain_id': self.mail_alias_domain_c2.id,
+        })
+        self.assertEqual(rec.alias_id.alias_domain_id, self.mail_alias_domain_c2, "Should use the provided alias domain in priority")
 
     @users('erp_manager')
     def test_alias_mixin_alias_email(self):

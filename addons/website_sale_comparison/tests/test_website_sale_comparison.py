@@ -5,7 +5,7 @@ import logging
 
 from collections import OrderedDict
 from lxml import etree
-from odoo import tools
+from odoo import Command
 
 import odoo.tests
 
@@ -22,13 +22,6 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         `_remove_copied_views`. The problematic view that has to be removed is
         `product_attributes_body` because it has a reference to `add_to_compare`.
         """
-        # YTI TODO: Adapt this tour without demo data
-        # I still didn't figure why, but this test freezes on runbot
-        # without the demo data
-        if not odoo.tests.loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-
         Website0 = self.env['website'].with_context(website_id=None)
         Website1 = self.env['website'].with_context(website_id=1)
 
@@ -115,10 +108,62 @@ class TestUi(odoo.tests.HttpCase):
             variant.product_template_attribute_value_ids.filtered(lambda ptav: ptav.attribute_id == self.attribute_vintage).price_extra = price
 
     def test_01_admin_tour_product_comparison(self):
-        # YTI FIXME: Adapt to work without demo data
-        if not odoo.tests.loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
+        attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 10,
+            'display_type': 'color',
+            'value_ids': [
+                Command.create({
+                    'name': 'Red',
+                }),
+                Command.create({
+                    'name': 'Pink',
+                }),
+                Command.create({
+                    'name': 'Blue'
+                })
+            ]
+        })
+        self.env['product.template'].create([{
+            'name': 'Color T-Shirt',
+            'list_price': 20.0,
+            'website_sequence': 1,
+            'is_published': True,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': attribute.value_ids,
+                })
+            ]
+        }, {
+            'name': 'Color Pants',
+            'list_price': 20.0,
+            'website_sequence': 1,
+            'is_published': True,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': attribute.value_ids,
+                })
+            ]
+        }, {
+            'name': 'Color Shoes',
+            'list_price': 20.0,
+            'website_sequence': 1,
+            'is_published': True,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': attribute.value_ids,
+                })
+            ]
+        }])
         self.start_tour("/", 'product_comparison', login='admin')
 
     def test_02_attribute_multiple_lines(self):

@@ -359,7 +359,7 @@
             <t t-if="question.question_type == 'multiple_choice'" t-call="survey.question_multiple_choice"/>
             <t t-if="question.question_type == 'matrix'" t-call="survey.question_matrix"/>
             <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
-                 border-0 py-0 px-3 alert alert-danger #{'slide_in' if is_skipped_question else ''}" role="alert">
+                 border-0 py-0 px-3 alert alert-danger mt-2 #{'slide_in' if is_skipped_question else ''}" role="alert">
                 <span t-if="is_skipped_question" t-out="question.constr_error_msg or default_constr_error_msg"/>
             </div>
         </div>
@@ -427,7 +427,7 @@
             <!-- Directly use field or route if the user doesn't have access rights -->
             <div t-if="not env.user.has_group('survey.group_survey_user')"
                 class="o_survey_choice_img d-flex my-3 justify-content-center">
-                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)"/>
+                <img t-att-src="'/survey/get_question_image/%s/%s/%s/%s' % (survey.access_token, answer.access_token, question.id, label.id)" class="mw-100 h-auto"/>
             </div>
             <div t-else=""  t-field="label.value_image"
                 class="o_survey_choice_img d-flex my-3 justify-content-center"

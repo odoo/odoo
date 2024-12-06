@@ -20,11 +20,16 @@ class IrAttachment(models.Model):
     def _attachment_format(self):
         attachment_format = super()._attachment_format()
         for a in attachment_format:
-        # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible attachments is fine
+            # TODO master: make a real computed / inverse field and stop propagating
+            # kwargs through hook methods
+            # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible attachments is fine
             a["voice"] = bool(self.browse(a["id"]).with_prefetch(self._prefetch_ids).sudo().voice_ids)
         return attachment_format
 
     def _post_add_create(self, **kwargs):
-        super()._post_add_create()
+        super()._post_add_create(**kwargs)
         if kwargs.get('voice'):
-            self.env["discuss.voice.metadata"].create([{"attachment_id": attachment.id} for attachment in self])
+            self._set_voice_metadata()
+
+    def _set_voice_metadata(self):
+        self.env["discuss.voice.metadata"].create([{"attachment_id": att.id} for att in self])

@@ -8,6 +8,16 @@
             <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="l10n_in_upi_id" invisible="country_code != 'IN'"/>
             </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_gst_state_warning or country_code != 'IN'">
+                    <field name="l10n_in_gst_state_warning"/>
+                    <a name="action_update_state_as_per_gstin"
+                            string="update it"
+                            class="ms-1"
+                            invisible="country_code != 'IN'"
+                            type="object"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>

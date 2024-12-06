@@ -81,6 +81,7 @@ export class Thread extends Record {
                 "mainAttachment",
                 "message_unread_counter",
                 "message_needaction_counter",
+                "message_unread_counter_bus_id",
                 "name",
                 "seen_message_id",
                 "state",

@@ -4,7 +4,7 @@
     <t t-name="discuss.CallInvitation">
         <div class="o-discuss-CallInvitation d-flex flex-column m-2 p-5 border border-dark rounded-1 text-bg-900" t-attf-class="{{ className }}" t-ref="root">
             <div t-if="props.thread.rtcInvitingSession" class="o-discuss-CallInvitation-correspondent d-flex flex-column justify-content-around align-items-center text-nowrap">
-                <img class="mb-2 rounded-circle cursor-pointer"
+                <img class="o-discuss-CallInvitation-avatar mb-2 rounded-circle cursor-pointer"
                     t-att-src="threadService.avatarUrl(props.thread.rtcInvitingSession?.channelMember?.persona, props.thread)"
                     t-on-click="onClickAvatar"
                     alt="Avatar"/>

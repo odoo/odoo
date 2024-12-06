@@ -1062,6 +1062,81 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour('/pos/web?config_id=%d' % self.main_pos_config.id, 'PosLoyaltySpecificDiscountWithFreeProductTour', login='pos_user')
 
+    def test_2_discounts_specific_global(self):
+        self.env['res.partner'].create({'name': 'AAAA'})
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+
+        product_category = self.env['product.category'].create({
+            'name': 'Discount category',
+        })
+
+        self.product_a = self.env['product.product'].create({
+            'name': 'Test Product A',
+            'type': 'product',
+            'list_price': 5,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        self.product_b = self.env['product.product'].create({
+            'name': 'Test Product B',
+            'type': 'product',
+            'list_price': 5,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'categ_id': product_category.id,
+        })
+
+        self.env['loyalty.program'].create({
+            'name': 'Discount 10%',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 1,
+                'minimum_qty': 5,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.env['loyalty.program'].create({
+            'name': 'Discount on category',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 1,
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_category_id': product_category.id,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            '/pos/web?config_id=%d' % self.main_pos_config.id,
+            'PosLoyalty2DiscountsSpecificGlobal',
+            login='pos_user',
+        )
+
     def test_point_per_money_spent(self):
         """Test the point per $ spent feature"""
         LoyaltyProgram = self.env['loyalty.program']
@@ -2213,6 +2288,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
     def test_cheapest_product_reward_pos_combo(self):
+        self.env['product.product'].create({
+            "name": "Expensive product",
+            "lst_price": 1000,
+            "available_in_pos": True,
+        })
+        self.env['product.product'].create({
+            "name": "Cheap product",
+            "lst_price": 1,
+            "available_in_pos": True,
+        })
         setup_pos_combo_items(self)
         self.office_combo.write({'lst_price': 50})
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -2233,6 +2318,30 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboCheapestRewardProgram', login="pos_user")
+
+    def test_specific_product_reward_pos_combo(self):
+        setup_pos_combo_items(self)
+        self.office_combo.write({'lst_price': 200})
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'Combo Product Promotion',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'minimum_qty': 1,
+                'product_ids': self.office_combo.ids,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': self.office_combo.ids,
+            })]
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboSpecificProductProgram', login="pos_user")
 
     def test_apply_reward_on_product_scan(self):
         """
@@ -2275,3 +2384,36 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosRewardProductScanGS1",
             login="pos_admin",
         )
+
+    def test_next_order_coupon_program_expiration_date(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Next Order Coupon Program',
+            'program_type': 'next_order_coupons',
+            'applies_on': 'future',
+            'trigger': 'auto',
+            'portal_visible': True,
+            'date_to': date.today() + timedelta(days=2),
+            'rule_ids': [(0, 0, {
+                'minimum_amount': 10,
+                'minimum_qty': 0
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyNextOrderCouponExpirationDate",
+            login="pos_user",
+        )
+
+        coupon = loyalty_program.coupon_ids
+        self.assertEqual(len(coupon), 1, "Coupon not generated")
+        self.assertEqual(coupon.expiration_date, date.today() + timedelta(days=2), "Coupon not generated with correct expiration date")

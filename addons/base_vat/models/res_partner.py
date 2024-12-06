@@ -74,7 +74,7 @@ _ref_vat = {
     'si': 'SI12345679',
     'sk': 'SK2022749619',
     'sm': 'SM24165',
-    'tr': _('TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)'),  # Levent Karakas @ Eska Yazilim A.S.
+    'tr': _('17291716060 (NIN) or 1729171602 (VKN)'),
     'uy': _("'219999830019' (should be 12 digits)"),
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
@@ -202,6 +202,9 @@ class ResPartner(models.Model):
             if not partner.vies_vat_to_check:
                 partner.vies_valid = False
                 continue
+            if partner.parent_id and partner.parent_id.vies_vat_to_check == partner.vies_vat_to_check:
+                partner.vies_valid = partner.parent_id.vies_valid
+                continue
             try:
                 _logger.info('Calling VIES service to check VAT for validation: %s', partner.vies_vat_to_check)
                 vies_valid = check_vies(partner.vies_vat_to_check, timeout=10)
@@ -317,7 +320,8 @@ class ResPartner(models.Model):
         return stdnum.util.get_cc_module('ro', 'vat').is_valid(vat)
 
     __check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
-    __check_tin_hu_companies_re = re.compile(r'^\d{8}-[1-5]-\d{2}$')
+    __check_tin_hu_companies_re = re.compile(r'^\d{8}-?[1-5]-?\d{2}$')
+    __check_tin_hu_european_re = re.compile(r'^\d{8}$')
 
     def check_vat_hu(self, vat):
         """
@@ -325,12 +329,16 @@ class ResPartner(models.Model):
             - For xxxxxxxx-y-zz, 'x' can be any number, 'y' is a number between 1 and 5 depending on the person and the 'zz'
               is used for region code.
             - 8xxxxxxxxy, Tin number for individual, it has to start with an 8 and finish with the check digit
+            - In case of EU format it will be the first 8 digits of the full VAT
         """
         companies = self.__check_tin_hu_companies_re.match(vat)
         if companies:
             return True
         individual = self.__check_tin_hu_individual_re.match(vat)
         if individual:
+            return True
+        european = self.__check_tin_hu_european_re.match(vat)
+        if european:
             return True
         # Check the vat number
         return stdnum.util.get_cc_module('hu', 'vat').is_valid(vat)
@@ -562,48 +570,9 @@ class ResPartner(models.Model):
                 return False
         return True
 
-    # VAT validation in Turkey, contributed by # Levent Karakas @ Eska Yazilim A.S.
+    # VAT validation in Turkey
     def check_vat_tr(self, vat):
-
-        if not (10 <= len(vat) <= 11):
-            return False
-        try:
-            int(vat)
-        except ValueError:
-            return False
-
-        # check vat number (vergi no)
-        if len(vat) == 10:
-            sum = 0
-            check = 0
-            for f in range(0, 9):
-                c1 = (int(vat[f]) + (9-f)) % 10
-                c2 = (c1 * (2 ** (9-f))) % 9
-                if (c1 != 0) and (c2 == 0):
-                    c2 = 9
-                sum += c2
-            if sum % 10 == 0:
-                check = 0
-            else:
-                check = 10 - (sum % 10)
-            return int(vat[9]) == check
-
-        # check personal id (tc kimlik no)
-        if len(vat) == 11:
-            c1a = 0
-            c1b = 0
-            c2 = 0
-            for f in range(0, 9, 2):
-                c1a += int(vat[f])
-            for f in range(1, 9, 2):
-                c1b += int(vat[f])
-            c1 = ((7 * c1a) - c1b) % 10
-            for f in range(0, 10):
-                c2 += int(vat[f])
-            c2 = c2 % 10
-            return int(vat[9]) == c1 and int(vat[10]) == c2
-
-        return False
+        return stdnum.util.get_cc_module('tr', 'tckimlik').is_valid(vat) or stdnum.util.get_cc_module('tr', 'vkn').is_valid(vat)
 
     __check_vat_sa_re = re.compile(r"^3[0-9]{13}3$")
 

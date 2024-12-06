@@ -1384,9 +1384,13 @@ which leads to stray network requests and inconsistencies."""
 
     def take_screenshot(self, prefix='sc_'):
         def handler(f):
-            base_png = f.result(timeout=0)['data']
+            try:
+                base_png = f.result(timeout=0)['data']
+            except Exception as e:
+                self._logger.runbot("Couldn't capture screenshot: %s", e)
+                return
             if not base_png:
-                self._logger.warning("Couldn't capture screenshot: expected image data, got ?? error ??")
+                self._logger.runbot("Couldn't capture screenshot: expected image data, got %r", base_png)
                 return
             decoded = base64.b64decode(base_png, validate=True)
             save_test_file(self.test_class.__name__, decoded, prefix, logger=self._logger)

@@ -41,7 +41,7 @@ class TestRefundFlows(AuthorizeCommon):
     @mute_logger('odoo.addons.payment_authorize.models.payment_transaction')
     def test_refunding_authorized_tx_voids_it(self):
         """ Test that refunding a transaction that is still authorized on Authorize.net side voids
-        it instead. """
+        it on Authorize.net instead of refunding it. """
         source_tx = self._create_transaction('direct', state='done')
         with patch(
             'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'

@@ -400,6 +400,7 @@ class AccountEdiFormat(models.Model):
 
         if invoice.l10n_es_is_simplified and invoice.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
             values['regime_key'] += ['52']  # code for simplified invoices
+        values['nosujeto_causa'] = 'IE' if is_oss else 'RL'
 
         return values
 

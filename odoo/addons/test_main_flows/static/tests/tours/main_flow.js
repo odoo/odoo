@@ -581,7 +581,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     run: () => {}, // check
 }, {
     mobile: false,
-    trigger: 'label:contains("Untaxed Amount")',
+    trigger: 'body',
     // click somewhere else to exit cell focus
 }, {
     mobile: true,

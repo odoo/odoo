@@ -26,6 +26,16 @@ class TestHttpStaticWebServer(test_static.TestHttpStatic, test_static.TestHttpSt
             assert_filename=assert_filename
         )
 
+    def assertDownload(
+        self, url, headers, assert_status_code, assert_headers, assert_content=None
+    ):
+        assert_headers.pop('Content-Length', None)  # nginx compresses on-the-fly
+        if assert_headers.pop('X-Sendfile', None):
+            assert_headers.pop('X-Accel-Redirect', None)
+            assert_content = None
+        return super().assertDownload(
+            url, headers, assert_status_code, assert_headers, assert_content)
+
     def test_static_cache3_private(self):
         super().test_static_cache3_private()
 

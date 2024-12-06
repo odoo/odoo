@@ -20,6 +20,9 @@
 # Gregor Flajs, 2024
 # Grega Vavtar <grega@hbs.si>, 2024
 # Wil Odoo, 2024
+# Islam Mušić, 2024
+# dejan_b, 2024
+# Edi Šuc, 2024
 # 
 msgid ""
 msgstr ""
@@ -27,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Edi Šuc, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -514,7 +517,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/>na sledeči TRR:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1113,7 +1116,7 @@ msgstr "<span>Prikaz</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr "<strong class=\"mr16\">Skupaj</strong>"
+msgstr "<strong class=\"mr16\">Vmesni znesek</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1189,7 +1192,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>Skupaj brez DDV</strong>"
+msgstr "<strong>Vmesni znesek</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
@@ -1426,6 +1429,20 @@ msgid ""
 msgstr ""
 "Račun %s ne omogoča usklajevanja. Najprej spremenite konfiguracijo tega "
 "računa, da jo bo omogočal."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -2423,7 +2440,7 @@ msgstr "Znesek za plačilo (v tuji valuti)"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_words
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_words
 msgid "Amount total in words"
-msgstr ""
+msgstr "Skupaj z besedo"
 
 #. module: account
 #. odoo-javascript
@@ -3211,7 +3228,7 @@ msgstr "Obračun"
 
 #. module: account
 msgid "Billing Administrator"
-msgstr ""
+msgstr "Administrator računovodstva"
 
 #. module: account
 #. odoo-python
@@ -4959,11 +4976,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "DOL"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Nadzorna plošča"
@@ -5687,6 +5699,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
 msgstr ""
 
 #. module: account
@@ -6944,11 +6961,6 @@ msgid "Growth Comparison"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP usmerjanje"
@@ -7881,7 +7893,7 @@ msgstr "Status računa"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_totals
 msgid "Invoice Totals"
-msgstr ""
+msgstr "Skupaj"
 
 #. module: account
 #. odoo-python
@@ -9372,6 +9384,11 @@ msgstr "Iskanje po imenu"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
 msgstr ""
 
 #. module: account
@@ -12060,6 +12077,7 @@ msgstr "Shranite to stran in se vrnite za nastavitev funkcije."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr ""
@@ -13493,6 +13511,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -13563,8 +13590,8 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
 
 #. module: account
@@ -14863,7 +14890,7 @@ msgstr "Skupaj"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_total_amount
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_edit_total_amount
 msgid "Total (Tax inc.)"
-msgstr ""
+msgstr "Skupaj (DDV)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -14874,7 +14901,7 @@ msgstr "Skupni znesek"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Balance"
-msgstr ""
+msgstr "Skupaj stanje"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
@@ -14908,7 +14935,7 @@ msgstr "Skupaj obveznosti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Skupaj za plačilo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit
@@ -14942,6 +14969,8 @@ msgid ""
 "Total amount due (including sales orders and this document): "
 "%(total_credit)s"
 msgstr ""
+"Skupni zapadli znesek (vključno s prodajnimi naročili in tem "
+"dokumentom):%(total_credit)s"
 
 #. module: account
 #. odoo-python
@@ -14972,7 +15001,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Total amount in words: <br/>"
-msgstr ""
+msgstr "Skupaj znesek z besedo: <br/>"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_amount_total_words
@@ -15144,11 +15173,6 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Vrsta dejavnosti izjeme na zapisu. "
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15325,6 +15349,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "EM"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16059,6 +16088,13 @@ msgstr ""
 msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
 msgstr ""
 
 #. module: account

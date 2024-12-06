@@ -125,6 +125,13 @@ function makeRouter(env) {
         current = getRoute(loc);
         bus.trigger("ROUTE_CHANGE");
     });
+    browser.addEventListener("pageshow", (ev) => {
+        // To avoid rendering inconsistencies, we need to reload when loading from a `bfcache'.
+        if (ev.persisted) {
+            browser.clearTimeout(pushTimeout);
+            bus.trigger("ROUTE_CHANGE");
+        }
+    });
 
     /**
      * @param {string} mode

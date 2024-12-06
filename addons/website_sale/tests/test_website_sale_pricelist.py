@@ -6,7 +6,7 @@ import logging
 from unittest.mock import patch
 
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase, loaded_demo_data
+from odoo.tests import tagged, TransactionCase
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest
@@ -656,30 +656,24 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
             The objective is to verify that the pricelist
             changes correctly according to the user.
         """
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         website = self.env.ref('website.default_website')
         test_user = self.env['res.users'].create({
             'name': 'Toto',
             'login': 'toto',
             'password': 'long_enough_password',
         })
-        user_pricelist, _ = self.env['product.pricelist'].create([
-            {
-                'name': 'User Pricelist',
-                'website_id': website.id,
-                'code': 'User_pricelist',
-                'selectable': True,
-                'sequence': 40, # Be sure not to use it by default
-            },
-            {
-                'name': 'Other Pricelist',
-                'website_id': website.id,
-                'code': 'Other_pricelist',
-                'selectable': True,
-                'sequence': 30,
-            }
-        ])
+        # We need at least two selectable pricelists to display the dropdown
+        self.env['product.pricelist'].create([{
+            'name': 'Public Pricelist 1',
+            'selectable': True
+        }, {
+            'name': 'Public Pricelist 2',
+            'selectable': True
+        }])
+        user_pricelist = self.env['product.pricelist'].create({
+            'name': 'User Pricelist',
+            'website_id': website.id,
+            'code': 'User_pricelist',
+        })
         test_user.partner_id.property_product_pricelist = user_pricelist
         self.start_tour("/shop", 'website_sale.website_sale_shop_pricelist_tour', login="")

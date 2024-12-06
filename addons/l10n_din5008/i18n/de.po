@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-15 13:26+0000\n"
+"POT-Creation-Date: 2024-10-15 12:05+0000\n"
 "PO-Revision-Date: 2024-02-15 15:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -115,6 +115,13 @@ msgstr "Banken"
 #. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
+msgid "Beneficiary:"
+msgstr "Leistungsempfänger:"
+
+#. module: l10n_din5008
+#. odoo-python
+#: code:addons/l10n_din5008/models/account_move.py:0
+#, python-format
 msgid "Cancelled Invoice"
 msgstr "Stornierte Rechnung"
 
@@ -218,20 +225,6 @@ msgid "Invoice No."
 msgstr "Rechnungsnr."
 
 #. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#, python-format
-msgid "Invoicing Address:"
-msgstr "Rechnungsadresse:"
-
-#. module: l10n_din5008
-#. odoo-python
-#: code:addons/l10n_din5008/models/account_move.py:0
-#, python-format
-msgid "Invoicing and Shipping Address:"
-msgstr "Rechnungs- und Lieferadresse:"
-
-#. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_account_move
 msgid "Journal Entry"
 msgstr "Journalbuchung"
@@ -259,7 +252,7 @@ msgstr "L10N Din5008 Dokumenttitel"
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_template_data
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_template_data
 msgid "L10N Din5008 Template Data"
-msgstr "L10N Din5008 Vorlagedaten"
+msgstr "L10N Din5008 Vorlagendaten"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -305,6 +298,7 @@ msgstr "Straße 2"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Tax ID"
 msgstr "USt-IdNr."
 
@@ -321,7 +315,7 @@ msgid ""
 "ID. It must be unique across all partners of a same country"
 msgstr ""
 "Die Registernummer des Unternehmens. Verwenden Sie diese, wenn sie sich von "
-"der Steuer-ID unterscheidet. Sie muss für alle Partner desselben Landes "
+"der USt-IdNr. unterscheidet. Sie muss für alle Partner desselben Landes "
 "eindeutig sein."
 
 #. module: l10n_din5008

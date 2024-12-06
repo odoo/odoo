@@ -134,13 +134,8 @@
                                            nolabel="1"/>
                                 </div>
                                 <div class="mt-4" invisible="account_peppol_proxy_state != 'not_registered'">
-                                <field name="account_peppol_mode_constraint" invisible="1"/>
-                                <field name="account_peppol_edi_mode"
-                                       widget="account_peppol_radio_field"
-                                       class="o_field_radio"
-                                       readonly_items="account_peppol_mode_constraint != 'prod' and ['prod'] or []"
-                                       hidden_items="account_peppol_mode_constraint != 'test' and ['test'] or []"
-                                       options="{'horizontal': true }"/>
+                                    <field name="account_peppol_mode_constraint" invisible="1"/>
+                                    <field name="account_peppol_edi_mode" invisible="1"/>
                                     <div class="mb-3" invisible="not account_peppol_edi_mode == 'prod'">
                                         By clicking the button below I accept that Odoo may process my e-invoices.
                                     </div>

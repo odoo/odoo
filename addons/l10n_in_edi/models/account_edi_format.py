@@ -31,6 +31,13 @@ class AccountEdiFormat(models.Model):
             return False
         return super()._is_enabled_by_default_on_journal(journal)
 
+    def _is_compatible_with_journal(self, journal):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code != 'in_einvoice_1_03':
+            return super()._is_compatible_with_journal(journal)
+        return journal.country_code == 'IN' and journal.type == 'sale'
+
     def _get_l10n_in_base_tags(self):
         return (
            self.env.ref('l10n_in.tax_tag_base_sgst').ids

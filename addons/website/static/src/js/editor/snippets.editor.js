@@ -9,7 +9,7 @@ import wUtils from "@website/js/utils";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { switchTextHighlight } from "@website/js/text_processing";
+import { applyTextHighlight, switchTextHighlight } from "@website/js/text_processing";
 
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
@@ -218,6 +218,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         $html.find('we-checkbox[data-dependencies="!footer_copyright_opt"]')[0]?.remove();
         $html.find('[data-name="header_language_selector_none_opt"]')[0]?.remove();
         $html.find('we-select[data-dependencies="!header_language_selector_none_opt"]')[0]?.removeAttribute("data-dependencies");
+
+        // TODO remove in master: changing the `data-apply-to` attribute of the
+        // grid spacing option so it is not applied on inner rows.
+        const $gridSpacingOptions = $html.find('[data-css-property="row-gap"], [data-css-property="column-gap"]');
+        $gridSpacingOptions.attr("data-apply-to", ".row.o_grid_mode");
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
@@ -594,6 +599,16 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _allowParentsEditors($snippet) {
         return this._super(...arguments) && !$snippet[0].classList.contains("s_popup");
+    },
+    /**
+     * @override
+     */
+    _updateDroppedSnippet($target) {
+        // Build the highlighted text content for the snippets.
+        for (const textEl of $target[0]?.querySelectorAll(".o_text_highlight") || []) {
+            applyTextHighlight(textEl);
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------

@@ -4,13 +4,13 @@
     <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
         <xpath expr="//li[hasclass('backend-button')]" position="attributes">
             <attribute name="t-if">
-                !pos.config.module_pos_hr or pos.get_cashier().role === 'manager' or pos.get_cashier_user_id() === pos.user.id
+                !pos.config.module_pos_hr or pos.get_cashier().role === 'manager' or pos.get_cashier_user_id() === pos.pos_session.user_id[0]
             </attribute>
         </xpath>
 
         <xpath expr="//li[hasclass('close-button')]" position="attributes">
             <attribute name="t-if">
-                !pos.config.module_pos_hr or pos.get_cashier().role === 'manager' or pos.get_cashier_user_id() === pos.user.id
+                !pos.config.module_pos_hr or pos.get_cashier().role === 'manager' or pos.get_cashier_user_id() === pos.pos_session.user_id[0]
             </attribute>
         </xpath>
 

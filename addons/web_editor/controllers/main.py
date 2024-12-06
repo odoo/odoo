@@ -318,6 +318,7 @@ class Web_Editor(http.Controller):
         """This route is used to determine the original of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
         """
+        self._clean_context()
         attachment = None
         if src.startswith('/web/image'):
             with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
@@ -557,6 +558,8 @@ class Web_Editor(http.Controller):
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
         """
+        self._clean_context()
+        attachment = request.env['ir.attachment'].browse(attachment.id)
         fields = {
             'original_id': attachment.id,
             'datas': data,
@@ -729,6 +732,15 @@ class Web_Editor(http.Controller):
         img = binary_to_image(image)
         width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)
+
+        if root.attrib.get("data-forced-size"):
+            # Adjusts the SVG height to ensure the image fits properly within
+            # the SVG (e.g. for "devices" shapes).
+            svgHeight = float(root.attrib.get("height"))
+            svgWidth = float(root.attrib.get("width"))
+            svgAspectRatio = svgWidth / svgHeight
+            height = str(float(width) / svgAspectRatio)
+
         root.attrib.update({'width': width, 'height': height})
         # Update default color palette on shape SVG.
         svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))

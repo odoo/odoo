@@ -1614,6 +1614,24 @@ msgstr ""
 "esta cuenta para permitirla."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"La cuenta %s es de tipo por pagar, pero se está utilizando en una operación "
+"de venta."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+"La cuenta %s es de tipo por cobrar, pero se está utilizando en una operación"
+" de compra."
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 msgid "Account Avatax"
 msgstr "Cuenta de Avatax"
@@ -4545,7 +4563,7 @@ msgstr "Grupo de países"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__country
 msgid "Country Matches"
-msgstr "El país coincide"
+msgstr "Coincide con el país"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_country_name
@@ -5254,11 +5272,6 @@ msgstr "ENTREGADO EN LUGAR DESCARGADO"
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
 msgstr "ENTREGADO CON DERECHOS PAGADOS"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "ABAJO"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
@@ -6002,6 +6015,11 @@ msgstr "Acceso rápido de fórmula de dominio"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr "País de origen de su contabilidad"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Abajo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -7304,11 +7322,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "Comparación de crecimiento"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "A LA MITAD MÁS CERCANA"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -9845,6 +9858,11 @@ msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr ""
 "Navegue con facilidad por los informes y observe qué hay detrás de los "
 "números"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr "Más cercano"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -12591,6 +12609,7 @@ msgstr "Guarde esta página y luego regrese para configurar la función."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Escanéeme con su aplicación bancaria."
@@ -14113,6 +14132,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+"La disponibilidad está configurada con “Coincide con el país\", pero el "
+"campo País no está configurado."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -14190,12 +14220,9 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"La plantilla del plan contable de Syscohada no debe seleccionarse "
-"directamente. En su lugar, debe seleccionar directamente la plantilla del "
-"plan contable de su país."
 
 #. module: account
 #. odoo-python
@@ -16003,11 +16030,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipo de actividad de excepción en el registro."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "ARRIBA"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -16184,6 +16206,11 @@ msgstr "Número de pagos no confiables"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "UdM"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Arriba"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16999,6 +17026,14 @@ msgid ""
 msgstr ""
 "No puede crear una nueva línea de extracto bancario sin una cuenta "
 "transitoria establecida en el diario %s."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
+"No puede crear pagos para asientos que pertenezcan a diferentes sucursales."
 
 #. module: account
 #. odoo-python

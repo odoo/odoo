@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-02 14:22+0000\n"
-"PO-Revision-Date: 2024-02-02 14:22+0000\n"
+"POT-Creation-Date: 2024-11-21 08:50+0000\n"
+"PO-Revision-Date: 2024-11-21 08:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_mail_mail__l10n_in_audit_log_account_move_id
 #: model:ir.model.fields,field_description:l10n_in.field_mail_message__l10n_in_audit_log_account_move_id
 msgid "Accounting Entry"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+#, python-format
+msgid "As per GSTN the country should be other than India, so it's recommended to"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+#, python-format
+msgid "As per GSTN the state should be %s, so it's recommended to"
 msgstr ""
 
 #. module: l10n_in
@@ -107,6 +121,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.cess_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_cess
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "CESS"
 msgstr ""
 
@@ -118,6 +133,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.cgst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_cgst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "CGST"
 msgstr ""
 
@@ -177,6 +193,13 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-javascript
+#: code:addons/l10n_in/static/src/components/hsn_autocomplete/hsn_autocomplete.js:0
+#, python-format
+msgid "Could not contact API"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model,name:l10n_in.model_res_country_state
 msgid "Country state"
 msgstr ""
@@ -213,6 +236,12 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__display_pan_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__display_pan_warning
+msgid "Display pan warning"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Draft"
 msgstr ""
@@ -230,6 +259,13 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Export India"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+#, python-format
+msgid "Export/SEZ"
 msgstr ""
 
 #. module: l10n_in
@@ -264,6 +300,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_port_code_search_view
 #: model_terms:ir.ui.view,arch_db:l10n_in.view_message_tree_audit_log_search
 msgid "Group By"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "HSN Summary"
 msgstr ""
 
 #. module: l10n_in
@@ -303,6 +344,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.igst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_igst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "IGST"
 msgstr ""
 
@@ -354,13 +396,22 @@ msgid "Indian port code"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model,name:l10n_in.model_account_move
-msgid "Journal Entry"
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+#, python-format
+msgid "Inter State"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model,name:l10n_in.model_account_move_line
-msgid "Journal Item"
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+#, python-format
+msgid "Intra State"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model,name:l10n_in.model_account_move
+msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_in
@@ -368,6 +419,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_journal_type
 #: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_journal_type
 msgid "Journal Type"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_gst_state_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_gst_state_warning
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_gst_state_warning
+msgid "L10N In Gst State Warning"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+#, python-format
+msgid "LUT - Export/SEZ"
 msgstr ""
 
 #. module: l10n_in
@@ -563,6 +628,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form
+msgid ""
+"PAN number is not same as the 3rd to 12th characters of the GST number."
+msgstr ""
+
+#. module: l10n_in
 #. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
 #, python-format
@@ -579,7 +650,7 @@ msgid "Place of supply"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+#: model_terms:ir.ui.view,arch_db:l10n_in.place_of_supply
 msgid "Place of supply:"
 msgstr ""
 
@@ -619,6 +690,16 @@ msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Quantity"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Rate %"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move__l10n_in_gst_treatment__composition
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_partner__l10n_in_gst_treatment__composition
 msgid "Registered Business - Composition"
@@ -645,6 +726,7 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.sgst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_sgst
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "SGST"
 msgstr ""
 
@@ -656,6 +738,13 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.tax_tag_state_cess
 msgid "STATE CESS"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-javascript
+#: code:addons/l10n_in/static/src/components/hsn_autocomplete/hsn_autocomplete.js:0
+#, python-format
+msgid "Searching..."
 msgstr ""
 
 #. module: l10n_in
@@ -982,6 +1071,16 @@ msgid "Tax"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "Taxable Value"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_port_code_code_uniq
+msgid "The Port Code must be unique!"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,help:l10n_in.field_account_tax__l10n_in_reverse_charge
 msgid "Tick this if this tax is reverse charge. Only for Indian accounting"
 msgstr ""
@@ -1028,6 +1127,12 @@ msgid "Update Only"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_company_form
+msgid "Update it"
+msgstr ""
+
+#. module: l10n_in
 #. odoo-python
 #: code:addons/l10n_in/models/mail_message.py:0
 #, python-format
@@ -1047,6 +1152,13 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Vendor Credit Note"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/template_in.py:0
+#, python-format
+msgid "Within %s"
 msgstr ""
 
 #. module: l10n_in
@@ -1071,4 +1183,11 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_form
 msgid "e.g. ABCTY1234D"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-javascript
+#: code:addons/l10n_in/static/src/components/hsn_autocomplete/hsn_autocomplete.js:0
+#, python-format
+msgid "hsn description field"
 msgstr ""

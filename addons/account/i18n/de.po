@@ -5,8 +5,8 @@
 # Translators:
 # Michael Hofer, 2023
 # Walid Sahli, 2024
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -673,10 +673,10 @@ msgstr ""
 "            Diese Rechnung wurde bereits beglichen.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Please remit payment at your earliest convenience.\n"
+"            Bitte überweisen Sie den Betrag schnellstmöglich.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br><br>\n"
-"                Bitte überweisen Sie den Betrag so bald wie möglich <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                Bitte verwenden Sie für Ihre Zahlung den folgenden Verwendungszweck: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
 "                    auf das Konto <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
 "                </t>\n"
@@ -771,7 +771,7 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> Reversed</span>"
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Storniert</span>"
+"                                    <span class=\"d-none d-md-inline\"> Gutgeschrieben</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1613,6 +1613,22 @@ msgid ""
 msgstr ""
 "Das Konto %s erlaubt keine Abstimmung. Ändern Sie zunächst die Konfiguration"
 " dieses Kontos, um dies zuzulassen."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"%s ist ein Kreditorenkonto, aber wird in einem Verkaufsvorgang verwendet."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+"%s ist ein Debitorenkonto, aber wird in einem Einkaufsvorgang verwendet."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -5254,11 +5270,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "GELIEFERT VERZOLLT"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "NACH UNTEN"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -6000,6 +6011,11 @@ msgstr "Bereichsformel-Kürzel"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr "Land Ihrer Buchhaltung"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Runter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -7303,11 +7319,6 @@ msgid "Growth Comparison"
 msgstr "Wachstumsvergleich"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "AUF NÄCHSTE HALBE ZAHL"
-
-#. module: account
 #: model:ir.model,name:account.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP-Routing"
@@ -8172,7 +8183,7 @@ msgstr "Investitionen & Außerordentliche Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Invoice"
-msgstr "Ausgangsrechnung"
+msgstr "Rechnung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -9852,6 +9863,11 @@ msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr ""
 "Navigieren Sie ganz einfach durch Berichte und sehen Sie, was sich hinter "
 "den Zahlen verbirgt"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr "Nächste halbe Zah"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -12365,7 +12381,7 @@ msgstr "Stornieren und Rechnung erstellen"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "Storniert"
+msgstr "Gutgeschrieben"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
@@ -12610,6 +12626,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "Scannen Sie mich mit Ihrer Banking-App."
@@ -14132,6 +14149,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+"Die Verfügbarkeit ist auf „Land stimmt überein“ gesetzt, aber das Feld "
+"„Land“ ist nicht gesetzt."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -14210,12 +14238,9 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"Die Syscohada-Kontenplanvorlage sollte nicht direkt ausgewählt werden. "
-"Stattdessen solltest du direkt die Kontenplanvorlage für dein Land "
-"auswählen."
 
 #. module: account
 #. odoo-python
@@ -15463,7 +15488,7 @@ msgstr "Der Eintrag wurde dupliziert aus %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been reversed from %s"
-msgstr "Der Eintrag wurde storniert von %s"
+msgstr "Der Eintrag wurde von %s gutgeschrieben"
 
 #. module: account
 #. odoo-python
@@ -16034,11 +16059,6 @@ msgid "Type of the exception activity on record."
 msgstr "Typ der Ausnahmeaktivität im Datensatz."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "NACH OBEN"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -16216,6 +16236,11 @@ msgstr "Anzahl nicht vertrauenswürdiger Zahlungen"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "Maßeinheit"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Hoch"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17035,6 +17060,15 @@ msgid ""
 msgstr ""
 "Sie können keine neue Auszugszeile erstellen, ohne dass ein Zwischenkonto im"
 " Journal %s eingerichtet ist."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr ""
+"Sie können keine Zahlungen für Posten erstellen, die zu verschiedenen "
+"Niederlassungen gehören."
 
 #. module: account
 #. odoo-python

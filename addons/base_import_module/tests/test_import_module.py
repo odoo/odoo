@@ -337,6 +337,26 @@ class TestImportModule(odoo.tests.TransactionCase):
         self.assertEqual(asset_data.module, 'test_module')
         self.assertEqual(asset_data.name, f'{bundle}_/{path}'.replace(".", "_"))
 
+    def test_import_wrong_dependencies(self):
+        files = [
+            ('foo/__manifest__.py', b"{'data': ['foo.xml'], 'depends': ['base', 'bar', 'baz']}"),
+            ('foo/foo.xml', b"""
+                <data>
+                    <record id="foo" model="res.partner">
+                        <field name="name">foo</field>
+                    </record>
+                </data>
+            """),
+        ]
+        with (
+            mute_logger("odoo.addons.base_import_module.models.ir_module"),
+            self.assertRaisesRegex(
+                UserError,
+                "Unknown module dependencies",
+                msg="Cannot allow import of modules with unknown dependencies"),
+        ):
+            self.import_zipfile(files)
+
 
 class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
     def test_import_module_icon(self):

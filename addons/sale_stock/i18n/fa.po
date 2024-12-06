@@ -13,8 +13,8 @@
 # Martin Trigaux, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Hanna Kheradroosta, 2024
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,27 +42,30 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> در انتظار ورود"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>آماده‌سازی"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/> Cancelled"
 msgstr ""
+"```html\n"
+"<i class=\"fa fa-fw fa-times\"/> لغو شد\n"
+"```"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-times\"/>Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/>لغو شد"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> Received"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-truck\"/> دریافت شده است"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -76,6 +79,11 @@ msgid ""
 "                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
 "                                    </span>"
 msgstr ""
+"```html\n"
+"<span class=\"small badge text-bg-success orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> ارسال شد\n"
+"                                    </span>\n"
+"```"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -84,6 +92,11 @@ msgid ""
 "                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
+"```html\n"
+"<span invisible=\"not display_delivery_alert\">\n"
+"                    برخی از تحویل‌ها قبلاً انجام شده‌اند. بازگشت‌ها می‌توانند از دستورات تحویل ساخته شوند.\n"
+"                </span>\n"
+"```"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -172,7 +185,7 @@ msgstr "تنظیمات پیکربندی"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Customer reference"
-msgstr ""
+msgstr "مراجعه مشتری"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -202,7 +215,7 @@ msgstr "سفارشات تحویل"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
 msgid "Delivery Status"
-msgstr ""
+msgstr "وضعیت تحویل"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -288,7 +301,7 @@ msgstr "تعداد آزاد امروز"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr ""
+msgstr "تحویل کامل شده"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -323,12 +336,12 @@ msgstr "محل اصطلاحات بازرگانی"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Incoterm details"
-msgstr ""
+msgstr "جزئیات اینکوترمز"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Incoterm:"
-msgstr ""
+msgstr "اینکوترم:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -372,7 +385,7 @@ msgstr "آیتم دفترروزنامه"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Last Delivery Orders"
-msgstr ""
+msgstr "آخرین سفارشات تحویل"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -428,19 +441,19 @@ msgstr "تاریخ های تحویل مورد انتظار تا"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availability"
-msgstr ""
+msgstr "عدم دسترسی در آینده"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr ""
+msgstr "تحویل داده نشده"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
-msgstr ""
+msgstr "عدم موجودی کافی در آینده"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -459,7 +472,7 @@ msgstr "روشن"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 msgid "Partially Delivered"
-msgstr ""
+msgstr "تحویل جزئی"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -502,7 +515,7 @@ msgstr "پیش‌فاکتور"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "RETURN"
-msgstr ""
+msgstr "بازگشت"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -695,6 +708,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered."
 " Instead, create a return in your inventory."
 msgstr ""
+"مقدار سفارش داده شده نمی‌تواند به کمتر از مقدار تحویل داده شده کاهش یابد. در"
+" عوض، یک مرجوعی در موجودی خود ایجاد کنید."
 
 #. module: sale_stock
 #. odoo-python
@@ -704,6 +719,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
+"مقدار سفارش داده شده یک خط سفارش فروش نمی‌تواند به کمتر از مقدار تحویل داده "
+"شده کاهش یابد. در عوض، یک بازگشت در انبار خود ایجاد کنید."
 
 #. module: sale_stock
 #. odoo-javascript

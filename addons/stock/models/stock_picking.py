@@ -42,7 +42,7 @@ class PickingType(models.Model):
     default_location_return_id = fields.Many2one('stock.location', 'Default returns location', check_company=True,
         help="This is the default location for returns created from a picking with this operation type.",
         domain="[('return_location', '=', 'True')]")
-    code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', required=True)
+    code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', default='incoming', required=True)
     return_picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type for Returns',
         check_company=True)
@@ -797,10 +797,11 @@ class Picking(models.Model):
     def _onchange_picking_type(self):
         if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
-            (self.move_ids | self.move_ids_without_package).update({
-                "picking_type_id": self.picking_type_id,  # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
-                "company_id": self.company_id,
-            })
+            # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
+            (self.move_ids | self.move_ids_without_package).filtered(
+                lambda m: m.picking_type_id != self.picking_type_id
+            ).picking_type_id = self.picking_type_id
+            (self.move_ids | self.move_ids_without_package).company_id = self.company_id
             for move in (self.move_ids | self.move_ids_without_package):
                 if not move.product_id:
                     continue
@@ -911,7 +912,7 @@ class Picking(models.Model):
 
     def should_print_delivery_address(self):
         self.ensure_one()
-        return self.move_ids and self.move_ids[0].partner_id and self._is_to_external_location()
+        return self.move_ids and (self.move_ids[0].partner_id or self.partner_id) and self._is_to_external_location()
 
     def _is_to_external_location(self):
         self.ensure_one()

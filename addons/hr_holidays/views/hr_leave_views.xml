@@ -287,13 +287,11 @@
                                         ('requires_allocation', '=', 'no'),
                                         '&amp;',
                                             ('has_valid_allocation', '=', True),
-                                            '&amp;',
-                                                ('max_leaves', '>', '0'),
-                                                '|',
-                                                    ('allows_negative', '=', True),
-                                                    '&amp;',
-                                                        ('virtual_remaining_leaves', '&gt;', 0),
-                                                        ('allows_negative', '=', False),
+                                            '|',
+                                                ('allows_negative', '=', True),
+                                                '&amp;',
+                                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                                    ('allows_negative', '=', False),
                                 ]"
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'no_open': True, 'request_type': 'leave'}"

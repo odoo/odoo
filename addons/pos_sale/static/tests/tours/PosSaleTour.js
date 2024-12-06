@@ -146,9 +146,10 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickQuotationButton(),
             ProductScreen.selectFirstOrder(),
-            ProductScreen.totalAmountIs(32.2), // 3.5 * 8 * 1.15
+            ProductScreen.totalAmountIs(28.98), // 3.5 * 8 * 1.15 * 90%
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
             ProductScreen.checkOrderlinesNumber(4),
+            ProductScreen.selectedOrderlineHas('Product A', '0.5', '4.14'),
         ].flat(),
 });
 
@@ -281,5 +282,76 @@ registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             negateStep(PaymentScreen.shippingLaterHighlighted()),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.downPayment20PercentFirstOrder(),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "22",
+            }),
+            Order.hasNoTax(),
+            ProductScreen.totalAmountIs(22.0), 
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSDownPaymentAmount", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.downPayment20PercentFirstOrder(),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "20.0",
+            }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosSettleOrder4", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.shippingLaterHighlighted(),
+            PaymentScreen.clickPaymentMethod('Bank'),
+            PaymentScreen.remainingIs('0.0'),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

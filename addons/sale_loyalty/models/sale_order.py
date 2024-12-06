@@ -419,7 +419,7 @@ class SaleOrder(models.Model):
                 continue
             mapped_taxes = self.fiscal_position_id.map_tax(tax)
             tax_desc = ''
-            if any(t.name for t in mapped_taxes):
+            if len(discountable_per_tax) > 1 and any(t.name for t in mapped_taxes):
                 tax_desc = _(
                     ' - On product with the following taxes: %(taxes)s',
                     taxes=", ".join(mapped_taxes.mapped('name')),
@@ -454,7 +454,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         today = fields.Date.context_today(self)
         return [('active', '=', True), ('sale_ok', '=', True),
-                ('company_id', 'in', (self.company_id.id, False)),
+                *self.env['loyalty.program']._check_company_domain([self.company_id.id, self.company_id.parent_id.id]),
                 '|', ('pricelist_ids', '=', False), ('pricelist_ids', 'in', [self.pricelist_id.id]),
                 '|', ('date_from', '=', False), ('date_from', '<=', today),
                 '|', ('date_to', '=', False), ('date_to', '>=', today)]
@@ -466,7 +466,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         today = fields.Date.context_today(self)
         return [('active', '=', True), ('program_id.sale_ok', '=', True),
-                ('company_id', 'in', (self.company_id.id, False)),
+                *self.env['loyalty.program']._check_company_domain([self.company_id.id, self.company_id.parent_id.id]),
                 '|', ('program_id.pricelist_ids', '=', False),
                      ('program_id.pricelist_ids', 'in', [self.pricelist_id.id]),
                 '|', ('program_id.date_from', '=', False), ('program_id.date_from', '<=', today),

@@ -360,8 +360,6 @@
                     <t t-else="">
                         <td>
                             <span t-out="amount_by_group['tax_group_name']">Tax 15%</span>
-                            <span> on </span>
-                            <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_base_amount']">27.00</span>
                         </td>
                         <td class="text-end o_price_total">
                             <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']">4.05</span>
@@ -372,7 +370,7 @@
         </template>
 
         <template id="document_tax_totals_company_currency_template">
-            <t t-set="show_company_taxes" t-value="o.company_id.currency_id != o.currency_id and o.amount_tax != 0 and o.move_type in ['out_invoice', 'out_refund']"/>
+            <t t-set="show_company_taxes" t-value="o.company_id.currency_id != o.currency_id and o.move_type in ['out_invoice', 'out_refund']"/>
             <div t-if="not show_company_taxes" class="oe_structure"></div>
             <div class="mb-2 mt-3 border p-2 avoid-page-break-inside totals_taxes_company_currency"
                  t-else="">

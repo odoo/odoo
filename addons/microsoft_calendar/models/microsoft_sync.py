@@ -192,6 +192,11 @@ class MicrosoftSync(models.AbstractModel):
             record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id)
         for record in new_records:
             values = record._microsoft_values(self._get_microsoft_synced_fields())
+            sender_user = record._get_event_user_m()
+            # Prevent current user to synchronize new events of non-synchronized users, otherwise the event
+            # ownership will be lost in Outlook and it will block the future event sync for the original owner.
+            if record.user_id and record.user_id != self.env.user and sender_user == self.env.user:
+                continue
             if isinstance(values, dict):
                 record._microsoft_insert(values)
             else:

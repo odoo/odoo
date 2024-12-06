@@ -642,20 +642,23 @@ class account_journal(models.Model):
         their amount_total field (expressed in the given target currency).
         amount_total must be signed!
         """
-        # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
-        # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
-        # calls of the method.
+        if not results_dict:
+            return 0, 0
         total_amount = 0
+        company = self.env.company
+        today = fields.Date.context_today(self)
+        ResCurrency = self.env['res.currency']
+        ResCompany = self.env['res.company']
         for result in results_dict:
-            document_currency = self.env['res.currency'].browse(result.get('currency'))
-            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
-            date = result.get('invoice_date') or fields.Date.context_today(self)
+            document_currency = ResCurrency.browse(result.get('currency'))
+            document_company = ResCompany.browse(result.get('company_id')) or company
+            date = result.get('invoice_date') or today
 
-            if company.currency_id == target_currency:
+            if document_company.currency_id == target_currency:
                 total_amount += result.get('amount_total_company') or 0
             else:
-                total_amount += document_currency._convert(result.get('amount_total'), target_currency, company, date)
-        return (len(results_dict), target_currency.round(total_amount))
+                total_amount += document_currency._convert(result.get('amount_total'), target_currency, document_company, date)
+        return len(results_dict), target_currency.round(total_amount)
 
     def _get_journal_dashboard_bank_running_balance(self):
         # In order to not recompute everything from the start, we take the last

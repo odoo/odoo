@@ -8,6 +8,7 @@ import { usePosition } from "@web/core/position_hook";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { roundDecimals } from "@web/core/utils/numbers";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
@@ -629,7 +630,7 @@ export class AnalyticDistribution extends Component {
 
     onWindowResized() {
         // popup ui is ugly when window is resized, so close it
-        if (this.isDropdownOpen) {
+        if (this.isDropdownOpen && !isMobileOS()) {
             this.forceCloseEditor();
         }
     }

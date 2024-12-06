@@ -4,7 +4,6 @@
 import itertools
 from collections import defaultdict
 from datetime import datetime, date, time
-from math import floor
 import pytz
 
 from dateutil.relativedelta import relativedelta
@@ -14,6 +13,8 @@ from odoo.addons.resource.models.utils import string_to_datetime, Intervals
 from odoo.osv import expression
 from odoo.tools import ormcache
 from odoo.exceptions import UserError
+
+from .hr_work_intervals import WorkIntervals
 
 
 class HrContract(models.Model):
@@ -101,34 +102,6 @@ class HrContract(models.Model):
             ))
         return result
 
-    def _postprocess_attendance_intervals(self, intervals):
-        # _attendance_intervals_batch combines the attendances regardless of work entry type if their date and time overlap.
-        # This makes a single attendance block with the work entry type of the first attendance only. This function undoes those
-        # undesirable merges
-        try:
-            multi_type_intervals = [interval for interval in intervals if len(interval[2].work_entry_type_id) > 1]
-        except AttributeError:
-            return intervals
-        for interval in multi_type_intervals:
-            attendances = interval[2]
-            current_work_entry_type = attendances[0].work_entry_type_id
-            attendances_of_type = self.env["resource.calendar.attendance"]
-            start_date = interval[0]
-            for attendance in attendances:
-                if attendance.work_entry_type_id == current_work_entry_type:
-                    end_date = interval[0].replace(hour=floor(attendance.hour_to), minute=int((attendance.hour_to % 1) * 60))
-                    attendances_of_type |= attendance
-                else:
-                    intervals._items.append((start_date, end_date, attendances_of_type))
-                    start_date = interval[0].replace(hour=floor(attendance.hour_from), minute=int((attendance.hour_from % 1) * 60))
-                    end_date = interval[0].replace(hour=floor(attendance.hour_to), minute=int((attendance.hour_to % 1) * 60))
-                    current_work_entry_type = attendance.work_entry_type_id
-                    attendances_of_type = attendance
-            intervals._items.append((start_date, end_date, attendances_of_type))
-            intervals._items.remove(interval)
-        intervals._items.sort()
-        return intervals
-
     def _get_lunch_intervals(self, start_dt, end_dt):
         # {resource: intervals}
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
@@ -206,10 +179,10 @@ class HrContract(models.Model):
                     leave_interval = contract._get_valid_leave_intervals(attendances, leave_interval)
                     if leave_interval:
                         result[resource.id] += leave_interval
-            mapped_leaves = {r.id: Intervals(result[r.id]) for r in resources_list}
+            mapped_leaves = {r.id: WorkIntervals(result[r.id]) for r in resources_list}
             leaves = mapped_leaves[resource.id]
 
-            real_attendances = self._postprocess_attendance_intervals(attendances - leaves)
+            real_attendances = attendances - leaves
             if contract.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
                 real_leaves = attendances - real_attendances
@@ -256,6 +229,7 @@ class HrContract(models.Model):
                     ('state', 'draft'),
                 ] + contract._get_more_vals_attendance_interval(interval))]
 
+            leaves_over_attendances = WorkIntervals(leaves) & real_leaves
             for interval in real_leaves:
                 # Could happen when a leave is configured on the interface on a day for which the
                 # employee is not supposed to work, i.e. no attendance_ids on the calendar.
@@ -263,20 +237,22 @@ class HrContract(models.Model):
                 # sql constraint error
                 if interval[0] == interval[1]:  # if start == stop
                     continue
-                leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves, bypassing_work_entry_type_codes)
-                interval_leaves = [leave for leave in leaves if leave[2].work_entry_type_id.id == leave_entry_type.id]
-                interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
-                interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
-                contract_vals += [dict([
-                    ('name', "%s%s" % (leave_entry_type.name + ": " if leave_entry_type else "", employee.name)),
-                    ('date_start', interval_start),
-                    ('date_stop', interval_stop),
-                    ('work_entry_type_id', leave_entry_type.id),
-                    ('employee_id', employee.id),
-                    ('company_id', contract.company_id.id),
-                    ('state', 'draft'),
-                    ('contract_id', contract.id),
-                ] + contract._get_more_vals_leave_interval(interval, interval_leaves))]
+                leaves_over_interval = [l for l in leaves_over_attendances if l[0] >= interval[0] and l[1] <= interval[1]]
+                for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
+                    leave_entry_type = contract._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
+                    interval_leaves = [leave for leave in leaves if leave[2].work_entry_type_id.id == leave_entry_type.id]
+                    interval_start = leave_interval[0].astimezone(pytz.utc).replace(tzinfo=None)
+                    interval_stop = leave_interval[1].astimezone(pytz.utc).replace(tzinfo=None)
+                    contract_vals += [dict([
+                        ('name', "%s%s" % (leave_entry_type.name + ": " if leave_entry_type else "", employee.name)),
+                        ('date_start', interval_start),
+                        ('date_stop', interval_stop),
+                        ('work_entry_type_id', leave_entry_type.id),
+                        ('employee_id', employee.id),
+                        ('company_id', contract.company_id.id),
+                        ('state', 'draft'),
+                        ('contract_id', contract.id),
+                    ] + contract._get_more_vals_leave_interval(interval, interval_leaves))]
         return contract_vals
 
     def _get_work_entries_values(self, date_start, date_stop):

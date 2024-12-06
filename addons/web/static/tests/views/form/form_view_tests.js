@@ -44,6 +44,7 @@ import { browser } from "@web/core/browser/browser";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { errorService } from "@web/core/errors/error_service";
 import { localization } from "@web/core/l10n/localization";
+import { makeErrorFromResponse } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { scrollerService } from "@web/core/scroller_service";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
@@ -6003,6 +6004,32 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
+    });
+
+    QUnit.test("open a new record from an invalid one", async function (assert) {
+        // in this scenario, the record is already invalid in db, so we should be allowed to
+        // leave it
+        serverData.models.partner.records[0].foo = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" required="1"/>
+                </form>`,
+            resIds: [1],
+            resId: 1,
+        });
+
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
+        assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+        );
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "New");
     });
 
     QUnit.test("keynav: switching to another record from a dirty one", async function (assert) {
@@ -12019,6 +12046,80 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("resequence list lines when previous resequencing crashed", async function (assert) {
+        serviceRegistry.add("error", errorService);
+        let onChangeCount = 0;
+        serverData.models.partner.onchanges = {
+            int_field: function (obj) {
+                if (obj.display_name === "first line") {
+                    if (onChangeCount === 0) {
+                        onChangeCount += 1;
+                        assert.step("resequence onChange crash")
+                        throw makeErrorFromResponse({
+                            code: 200,
+                            message: "Odoo Server Error",
+                            data: {
+                                name: `odoo.exceptions.${"UserError"}`,
+                                debug: "traceback",
+                                arguments: [],
+                                context: {},
+                                message: "error",
+                            },
+                        });
+                    } else {
+                        assert.step("resequence onChange ok");
+                    }
+                }
+            },
+        };
+
+        serverData.views = {
+            "partner,false,list": `
+                <tree editable="bottom">
+                    <field name="int_field" widget="handle"/>
+                    <field name="display_name" required="1"/>
+                </tree>`,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="foo"/><field name="p"/></form>`,
+        });
+
+        // Add two lines
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await editInput(target, `.o_field_cell [name="display_name"] input`, "first line");
+        await nextTick();
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await editInput(target, ".o_selected_row input", "second line");
+        await click(target.querySelector(".o_form_button_save"));
+        await nextTick();
+
+        let getNames = () => [...target.querySelectorAll(".o_list_char")].map((el) => el.textContent)
+        assert.deepEqual(getNames(), ["first line", "second line"])
+
+        // drag and drop first line to the second, should crash because of onchange
+        await dragAndDrop(
+            "tbody.ui-sortable tr:nth-child(1) .o_handle_cell",
+            "tbody.ui-sortable tr:nth-child(2)"
+        );
+        await nextTick();
+        assert.deepEqual(getNames(), ["first line", "second line"])
+
+        // drag and drop first line to the second, should work
+        await dragAndDrop(
+            "tbody.ui-sortable tr:nth-child(1) .o_handle_cell",
+            "tbody.ui-sortable tr:nth-child(2)"
+        );
+        await nextTick();
+        assert.deepEqual(getNames(), ["second line", "first line"])
+
+        assert.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
+    });
+
     QUnit.test(
         "reload company when creating records of model res.company",
         async function (assert) {
@@ -15059,6 +15160,73 @@ QUnit.module("Views", (hooks) => {
             );
             await clickSave(target);
             assert.verifySteps(["web_save"]);
+        }
+    );
+
+    QUnit.test(
+        "do not perform button action for records with invalid datas",
+        async function (assert) {
+            const formView = registry.category("views").get("form");
+            const fakeActionService = {
+                start() {
+                    return {
+                        doActionButton(params) {
+                            assert.step("Perform Action");
+                            assert.strictEqual(params.name, "lovely action");
+                            assert.strictEqual(params.type, "action");
+                        },
+                    };
+                },
+            };
+            serviceRegistry.add("action", fakeActionService, { force: true });
+            class CustomFormController extends formView.Controller {
+                beforeExecuteActionButton(clickParams) {
+                    assert.step("Check/prepare record datas");
+                    return super.beforeExecuteActionButton(clickParams);
+                }
+            }
+            registry.category("views").add("custom_form", {
+                ...formView,
+                Controller: CustomFormController,
+            });
+            // The records data are invalid since foo is required
+            serverData.models.partner.records = [{ id: 6, display_name: "Bob", foo: "" }];
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 6,
+                serverData,
+                arch: `
+                    <form js_class="custom_form">
+                        <field name="foo" required="1"></field>
+                        <button type="action" name="lovely action" string="Use Foo"/>
+                    </form>`,
+                mockRPC(route, args) {
+                    if (args.method === "web_save") {
+                        assert.step("web_save");
+                    }
+                },
+            });
+            patchWithCleanup(form.env.services.notification, {
+                add: (message) => {
+                    assert.step(`Pop Up: Invalid Field: ${message}`);
+                },
+            });
+
+            assert.verifySteps([]);
+            // Try to perform the action with invalid datas
+            await click(target.querySelector(".btn[name='lovely action']"));
+            // the action should not be called thanks to the `_checkValidity`
+            assert.verifySteps([
+                "Check/prepare record datas",
+                "Pop Up: Invalid Field: <ul><li>Foo</li></ul>",
+            ]);
+            // Edit the required field
+            await editInput(target, ".o_input", "Foo Value");
+            // Try to perform the action once more
+            await click(target.querySelector(".btn[name='lovely action']"));
+            // the record should have been saved and the action performed.
+            assert.verifySteps(["Check/prepare record datas", "web_save", "Perform Action"]);
         }
     );
 });

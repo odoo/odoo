@@ -73,7 +73,7 @@ class StockPickingType(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             company = self.env['res.company'].browse(vals.get('company_id', False)) or self.env.company
-            if company.country_id.code == 'IT' and vals['code'] == 'outgoing' and ('l10n_it_ddt_sequence_id' not in vals or not vals['l10n_it_ddt_sequence_id']):
+            if company.country_id.code == 'IT' and vals.get('code') == 'outgoing' and ('l10n_it_ddt_sequence_id' not in vals or not vals['l10n_it_ddt_sequence_id']):
                 ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(vals.get('warehouse_id'), vals['sequence_code'])
                 vals['l10n_it_ddt_sequence_id'] = self.env['ir.sequence'].create({
                         'name': ir_seq_name,

@@ -117,6 +117,16 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         and whatever other model there is in stock with "invoice on order" products
         """
         # let's cheat and put all our products to "invoice on order"
+        product_list = (
+                    self.company_data['product_order_no'],
+                    self.company_data['product_service_delivery'],
+                    self.company_data['product_service_order'],
+                    self.company_data['product_delivery_no'],
+                )
+
+        for product in product_list:
+            product.invoice_policy = 'order'
+
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
@@ -127,17 +137,10 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 'product_uom_qty': 2,
                 'product_uom': p.uom_id.id,
                 'price_unit': p.list_price,
-                }) for p in (
-                    self.company_data['product_order_no'],
-                    self.company_data['product_service_delivery'],
-                    self.company_data['product_service_order'],
-                    self.company_data['product_delivery_no'],
-                )],
+                }) for p in product_list],
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
-        for sol in self.so.order_line:
-            sol.product_id.invoice_policy = 'order'
         # confirm our standard so, check the picking
         self.so.order_line._compute_product_updatable()
         self.assertTrue(self.so.order_line.sorted()[0].product_updatable)
@@ -1939,3 +1942,45 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         validate_picking(return_2)
         self.assertEqual(so.order_line[0].qty_delivered, 0)
+
+    def test_package_with_moves_to_different_location_dest(self):
+        """
+        Create a two-step delivery with two products, and package both products together.
+        Ensure that the destination location is different for the two moves in the second
+        picking. check that the first picking can be validated.
+        """
+        # Set-up multi-step routes
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        warehouse = self.company_data['default_warehouse']
+        # Create two child locations.
+        parent_location = warehouse.lot_stock_id
+        child_location_1 = self.env['stock.location'].create({
+                'name': 'child_1',
+                'location_id': parent_location.id,
+        })
+        child_location_2 = self.env['stock.location'].create({
+                'name': 'child_2',
+                'location_id': parent_location.id,
+        })
+        # Enable 2-steps delivery
+        with Form(warehouse) as w:
+            w.delivery_steps = 'pick_ship'
+        so = self._get_new_sale_order(product=self.product_a)
+        self.env['sale.order.line'].create({
+            'product_id': self.product_b.id,
+            'order_id': so.id,
+        })
+        self.assertEqual(len(so.order_line), 2)
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 2)
+        so.picking_ids[1].move_ids[0].location_dest_id = child_location_1
+        so.picking_ids[1].move_ids[1].location_dest_id = child_location_2
+        # Pack the moves of the first picking together.
+        package = so.picking_ids[0].action_put_in_pack()
+        # a new package is made and done quantities should be in same package
+        self.assertTrue(package)
+        so.picking_ids[0].button_validate()
+        self.assertEqual(so.picking_ids[0].state, 'done')
+        self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[0].location_dest_id, child_location_1)
+        self.assertEqual(so.picking_ids[1].move_ids.move_line_ids[1].location_dest_id, child_location_2)

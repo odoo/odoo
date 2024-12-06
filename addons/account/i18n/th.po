@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
+# Tana Chan, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1550,6 +1551,20 @@ msgid ""
 msgstr ""
 "บัญชี %s ไม่อนุญาตให้มีการกระทบยอด ก่อนอื่น "
 "ให้เปลี่ยนการกำหนดค่าของบัญชีนี้เพื่ออนุญาตให้มีการกระทบยอด"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr "บัญชี %s เป็นประเภทเจ้าหนี้ แต่ใช้ในการดำเนินการขาย"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr "บัญชี %s เป็นประเภทลูกหนี้ แต่ใช้ในการดำเนินการซื้อ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -5136,11 +5151,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "ชำระแล้ว"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "ปัดลง"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "แดชบอร์ด"
@@ -5870,6 +5880,11 @@ msgstr "ทางลัดสูตรโดเมน"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Domestic country of your accounting"
 msgstr "ประเทศในบัญชีของคุณ"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "ลด"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__checkbox_download
@@ -6902,6 +6917,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"สูตรในรูปแบบ line_code.expression_label "
+"ช่วยให้คุณสามารถตั้งค่าเป้าหมายของการส่งต่อสำหรับตัวสั่งงานนี้ได้ "
+"(ในตัวสั่งงานที่มีป้ายกำกับ _carryover_*) ในกรณีที่แตกต่างจากบรรทัดหลัก"
 
 #. module: account
 msgid ""
@@ -7147,11 +7165,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "การเปรียบเทียบการเจริญเติบโต"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "ครึ่งปัดขึ้น"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -9653,6 +9666,11 @@ msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr "นำทางได้อย่างง่ายดายผ่านรายงานและดูว่าตัวเลขที่ได้มาถูกคำนวณอย่างไร"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
@@ -9688,7 +9706,7 @@ msgstr "ช่องจำนวนเงินจะเป็นค่าลบ
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "ไม่อนุญาตให้มีกลุ่มภาษีแบบซ้อนกัน"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -11708,7 +11726,7 @@ msgstr "วันที่ได้รับการยอมรับ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Recompute all taxes and accounts based on this fiscal position"
-msgstr ""
+msgstr "คำนวณภาษีและบัญชีทั้งหมดใหม่ตามสถานะทางบัญชีนี้"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -12370,6 +12388,7 @@ msgstr "บันทึกหน้านี้ไว้และกลับม
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr "สแกนตรงนี้ด้วยแอปธนาคารของคุณ"
@@ -13857,6 +13876,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+"ความพร้อมใช้งานถูกตั้งค่าเป็น 'การจับคู่ประเทศ' แต่ไม่ได้ตั้งค่าฟิลด์ประเทศ"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -13934,11 +13963,9 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
-"The Syscohada chart template shouldn't be selected directly. Instead, you "
-"should directly select the chart template related to your country."
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
-"ไม่ควรเลือกเทมเพลตแผนภูมิ Syscohada โดยตรง "
-"คุณควรเลือกเทมเพลตแผนภูมิที่เกี่ยวข้องกับประเทศของคุณโดยตรงแทน"
 
 #. module: account
 #. odoo-python
@@ -14117,7 +14144,7 @@ msgstr "บริษัทของสายการจำหน่ายนี
 msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
-msgstr ""
+msgstr "รหัสประเทศของหมายเลข VAT ต่างประเทศ ไม่ตรงกับประเทศใดในกลุ่ม"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -15163,7 +15190,7 @@ msgstr "นี่เป็นวงเงินเครดิตเริ่ม
 #, python-format
 msgid ""
 "This journal is associated with a payment method. You cannot archive it"
-msgstr ""
+msgstr "สมุดรายวันนี้เชื่อมโยงกับวิธีการชำระเงิน คุณไม่สามารถเก็บถาวรได้"
 
 #. module: account
 #. odoo-python
@@ -15276,6 +15303,7 @@ msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
 msgstr ""
+"การดำเนินการนี้จะอัปเดตภาษีและบัญชีทั้งหมดตามสถานะทางการเงินที่เลือกในปัจจุบัน"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15670,11 +15698,6 @@ msgid "Type of the exception activity on record."
 msgstr "ประเภทกิจกรรมข้อยกเว้นบนบันทึก"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "ปัดขึ้น"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
@@ -15731,7 +15754,7 @@ msgstr "หน่วยวัด"
 #: code:addons/account/models/template_generic_coa.py:0
 #, python-format
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "สหรัฐอเมริกา (ทั่วไป)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -15853,9 +15876,14 @@ msgid "UoM"
 msgstr "หน่วยวัด"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "ขึ้น"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Update Taxes and Accounts"
-msgstr ""
+msgstr "อัปเดตภาษีและบัญชี"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16369,6 +16397,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"เมื่อกำหนดเป้าหมายตัวสั่งงานสำหรับการส่งต่อ "
+"ป้ายชื่อของตัวสั่งงานนั้นจะต้องเริ่มต้นด้วย _applied_carryover_"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16651,6 +16681,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid "You can't create payments for entries belonging to different branches."
+msgstr "คุณไม่สามารถสร้างการชำระเงินสำหรับรายการที่อยู่ในสาขาที่แตกต่างกันได้"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
@@ -16759,6 +16796,7 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"คุณไม่สามารถรีเซ็ตเพื่อร่างรายการสมุดรายวันเหล่านี้ได้ คุณต้องขอการยกเลิกแทน"
 
 #. module: account
 #. odoo-python
@@ -16807,7 +16845,7 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
+msgstr "คุณไม่สามารถสร้างสถานะทางการเงินกับประเทศนอกกลุ่มประเทศที่เลือกได้"
 
 #. module: account
 #. odoo-python
@@ -17180,6 +17218,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"คุณไม่สามารถใช้ฟิลด์ carryover_target "
+"ในตัวสั่งงานที่ไม่มีป้ายชื่อที่ขึ้นต้นด้วย _carryover_ ได้"
 
 #. module: account
 #. odoo-python

@@ -9,6 +9,7 @@
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
 # Martin Trigaux, 2023
 # KeyVillage, 2024
+# Elena Varbanova, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: KeyVillage, 2024\n"
+"Last-Translator: Elena Varbanova, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,19 +28,19 @@ msgstr ""
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
 msgid "# of Expenses"
-msgstr ""
+msgstr "# на разходите"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__can_be_reinvoiced
 msgid "Can be reinvoiced"
-msgstr ""
+msgstr "Може да бъде префактурирано"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Customer to Reinvoice"
-msgstr ""
+msgstr "Клиент за префактуриране"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -50,7 +51,7 @@ msgstr "Разход"
 #: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
 #: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
 msgid "Expense Policy Tooltip"
-msgstr ""
+msgstr "Насоки за политиката на разходите"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_sheet
@@ -60,7 +61,7 @@ msgstr "Разходен отчет"
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
-msgstr ""
+msgstr "Разпределяне на разходите"
 
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
@@ -75,6 +76,7 @@ msgstr "Разходи"
 #, python-format
 msgid "Expenses of this category may not be added to a Sales Order."
 msgstr ""
+"Разходите от тази категория не могат да се добавят към Поръчка за продажба."
 
 #. module: sale_expense
 #. odoo-python
@@ -83,6 +85,8 @@ msgstr ""
 msgid ""
 "Expenses will be added to the Sales Order at their actual cost when posted."
 msgstr ""
+"Разходите ще бъдат добавени към Поръчката за продажба по тяхната "
+"действителна цена, когато бъдат публикувани."
 
 #. module: sale_expense
 #. odoo-python
@@ -92,6 +96,8 @@ msgid ""
 "Expenses will be added to the Sales Order at their sales price (product "
 "price, pricelist, etc.) when posted."
 msgstr ""
+"Разходите ще бъдат добавени към Поръчката за продажба по тяхната продажна "
+"цена (цена на продукта, ценова листа и т.н.), когато бъдат публикувани."
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
@@ -99,6 +105,8 @@ msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
+"Ако категорията има разходна политика, тя ще бъде фактурирана в тази поръчка"
+" за продажбаr"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -125,12 +133,12 @@ msgstr "Продукт"
 #: code:addons/sale_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "Reinvoiced Sales Orders"
-msgstr ""
+msgstr "Префактурирани поръчки за продажба"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Брой поръчки за продажба"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order

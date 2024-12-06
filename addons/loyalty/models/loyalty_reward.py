@@ -181,7 +181,7 @@ class LoyaltyReward(models.Model):
             ('reward_product_tag_id.product_ids', operator, value)
         ]
 
-    @api.depends('reward_type', 'reward_product_id', 'discount_mode',
+    @api.depends('reward_type', 'reward_product_id', 'discount_mode', 'reward_product_tag_id',
                  'discount', 'currency_id', 'discount_applicability', 'all_discount_product_ids')
     def _compute_description(self):
         for reward in self:

@@ -30,6 +30,8 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"この問題は、変換時に丸めが行われる際に数量がゼロになるために発生します。この問題を解決するには、変換係数または丸めの方法を調整し、元の単位の数量が目標単位でゼロに切り捨てられないようにします。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1805,7 +1807,7 @@ msgstr "限られた機能で継続する"
 msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
-msgstr ""
+msgstr "変換エラー:以下の単位変換では、丸めにより数量がゼロになります:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -3270,7 +3272,7 @@ msgstr "請求されます"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__is_kiosk_mode
 msgid "Is Kiosk Mode"
-msgstr "Kioskモード"
+msgstr "キオスクモード"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_refunded
@@ -4581,7 +4583,7 @@ msgstr "取引先"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 #, python-format
 msgid "Pay"
-msgstr "お支払い"
+msgstr "支払"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -4732,7 +4734,7 @@ msgstr "支払差額"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
 msgid "Payments Methods"
-msgstr "お支払い方法"
+msgstr "支払方法"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6453,7 +6455,7 @@ msgstr "プロダクト毎に複数の価格や自動値引などを設定"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "新規割引を設定"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7728,7 +7730,7 @@ msgstr "合計税抜価格:"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
 msgid "Total amount of the payment."
-msgstr "お支払い総額。"
+msgstr "支払総額。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__total_cost
@@ -8043,7 +8045,7 @@ msgstr "計量"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__weight
 msgid "Weighted Product"
-msgstr "計量対象製品"
+msgstr "計量対象プロダクト"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__one
@@ -8223,7 +8225,7 @@ msgstr "複数の現金支払方法で同じ仕訳帳を使用することはで
 msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
-msgstr ""
+msgstr "POSセッションを開く権限がありません。別のユーザでセッションを開いてみて下さい。"
 
 #. module: point_of_sale
 #. odoo-python

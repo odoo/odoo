@@ -153,3 +153,53 @@ class TestSalePurchaseStockFlow(TransactionCase):
         blue_po = self.env['purchase.order'].search([('partner_id', '=', blue_vendor.id)], limit=1)
         self.assertTrue(blue_po)
         self.assertRecordValues(blue_po.order_line, [{'product_id': blue_product.id, 'product_uom_qty': 3, 'price_unit': 10}])
+
+    def test_mto_and_partial_cancel(self):
+        """
+        First, confirm a SO with two lines with the MTO + Buy routes (the products
+        should not be available in stock). Put the quantity of the first SOL to 0
+        then back to max. Then cancel the PO for the first product and decrease back
+        the quantity of the related SOL to 0:
+        - The delivery should be updated
+        - There should not be any return picking
+        """
+        product_1 = self.mto_product
+        vendor_2 = self.env['res.partner'].create({'name': 'Lovely Vendor'})
+        product_2 = self.env['product.product'].create({
+            'name': 'LovelyProduct',
+            'type': 'product',
+            'route_ids': [Command.set((self.mto_route + self.buy_route).ids)],
+            'seller_ids': [Command.create({
+                'partner_id': vendor_2.id,
+            })],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'name': product_1.name,
+                    'product_id': product_1.id,
+                    'product_uom_qty': 1,
+                    'product_uom': product_1.uom_id.id,
+                    'price_unit': 10,
+                }),
+                Command.create({
+                    'name': product_2.name,
+                    'product_id': product_2.id,
+                    'product_uom_qty': 1,
+                    'product_uom': product_2.uom_id.id,
+                    'price_unit': 20,
+                }),
+            ],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        po_2 = self.env['purchase.order'].search([('partner_id', '=', vendor_2.id)])
+        po_2.button_cancel()
+        line_2 = so.order_line.filtered(lambda sol: sol.product_id == product_2)
+        line_2.product_uom_qty = 0
+        self.assertEqual(delivery, so.picking_ids)
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': product_1.id, 'product_uom_qty': 1.0},
+            {'product_id': product_2.id, 'product_uom_qty': 0.0},
+        ])

@@ -162,7 +162,7 @@ class AccountReport(models.Model):
         for report in self:
             if report.root_report_id and report.country_id:
                 report.availability_condition = 'country'
-            else:
+            elif not report.availability_condition:
                 report.availability_condition = 'always'
 
     @api.depends('section_report_ids')
@@ -191,6 +191,12 @@ class AccountReport(models.Model):
         for record in self:
             if any(section.section_report_ids for section in record.section_report_ids):
                 raise ValidationError(_("The sections defined on a report cannot have sections themselves."))
+
+    @api.constrains('availability_condition', 'country_id')
+    def _validate_availability_condition(self):
+        for record in self:
+            if record.availability_condition == 'country' and not record.country_id:
+                raise ValidationError(_("The Availability is set to 'Country Matches' but the field Country is not set."))
 
     @api.onchange('availability_condition')
     def _onchange_availability_condition(self):

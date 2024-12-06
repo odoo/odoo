@@ -3,7 +3,6 @@
 # 	* calendar_sms
 # 
 # Translators:
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
@@ -28,12 +27,12 @@ msgstr ""
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
 msgid "Calendar Event"
-msgstr "رخداد گاهشمار"
+msgstr "رویداد تقویم"
 
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
 msgid "Calendar Event: Reminder"
-msgstr ""
+msgstr "رویداد تقویم: یادآور"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
@@ -50,7 +49,7 @@ msgstr "مدیریت اطلاع رسانی رویداد"
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
-msgstr ""
+msgstr "یادآوری رویداد: %(name)s, %(time)s."
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
@@ -58,6 +57,8 @@ msgid ""
 "Event reminder: {{ object.name }}, {{ "
 "object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
+"یادآوری رویداد: {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
 
 #. module: calendar_sms
 #. odoo-python
@@ -65,7 +66,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
 #, python-format
 msgid "Notify Responsible"
-msgstr ""
+msgstr "اطلاع‌رسانی به مسئول"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -102,7 +103,7 @@ msgstr "ارسال پیامک به حاضرین"
 #. module: calendar_sms
 #: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
 msgid "Template used to render SMS reminder content."
-msgstr ""
+msgstr "الگوی استفاده‌شده برای نمایش محتوای یادآوری پیامک."
 
 #. module: calendar_sms
 #. odoo-python

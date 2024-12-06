@@ -55,7 +55,7 @@ class LinkTracker(models.Model):
             if url.scheme:
                 tracker.absolute_url = tracker.url
             else:
-                tracker.absolute_url = tracker.get_base_url().join(url).to_url()
+                tracker.absolute_url = urls.url_join(tracker.get_base_url(), url)
 
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
@@ -71,7 +71,7 @@ class LinkTracker(models.Model):
     @api.depends('code')
     def _compute_short_url(self):
         for tracker in self:
-            tracker.short_url = urls.url_join(tracker.short_url_host, '%(code)s' % {'code': tracker.code})
+            tracker.short_url = urls.url_join(tracker.short_url_host or '', tracker.code or '')
 
     def _compute_short_url_host(self):
         for tracker in self:

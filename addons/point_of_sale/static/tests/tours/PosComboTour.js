@@ -5,6 +5,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScr
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import * as combo from "@point_of_sale/../tests/tours/helpers/ComboPopupMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import * as ProductConfigurator from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -16,6 +17,9 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         ...ProductScreen.clickDisplayedProduct("Office Combo"),
         combo.isPopupShown(),
         combo.select("Combo Product 3"),
+        combo.select("Combo Product 9"),
+        ...ProductConfigurator.isShown(),
+        ...ProductConfigurator.cancelAttributes(),
         {
             content: "check that amount is not displayed if zero",
             trigger: `article.product .product-content:not(:has(.price-tag:contains("0")))`,

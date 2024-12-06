@@ -15,6 +15,7 @@ class TestMrpStockReports(TestReportsCommon):
         product_chocolate = self.env['product.product'].create({
             'name': 'Chocolate',
             'type': 'consu',
+            'standard_price': 10
         })
         product_chococake = self.env['product.product'].create({
             'name': 'Choco Cake',
@@ -40,7 +41,7 @@ class TestMrpStockReports(TestReportsCommon):
                 (0, 0, {'product_id': product_chocolate.id, 'product_qty': 4}),
             ],
             'byproduct_ids':
-                [(0, 0, {'product_id': byproduct.id, 'product_qty': 2})],
+                [(0, 0, {'product_id': byproduct.id, 'product_qty': 2, 'cost_share': 1.8})],
         })
         bom_double_chococake = self.env['mrp.bom'].create({
             'product_id': product_double_chococake.id,
@@ -101,9 +102,17 @@ class TestMrpStockReports(TestReportsCommon):
         mo_1.button_mark_done()
 
         self.env.flush_all()  # flush to correctly build report
-        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(mo_1.id)['byproducts']['details'][0]
-        self.assertEqual(report_values['name'], byproduct.name)
-        self.assertEqual(report_values['quantity'], 18)
+        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(mo_1.id)
+        self.assertEqual(report_values['byproducts']['details'][0]['name'], byproduct.name)
+        self.assertEqual(report_values['byproducts']['details'][0]['quantity'], 18)
+        # (Component price $10) * (4 unit to produce one finished) * (the mo qty = 10 units) = $400
+        self.assertEqual(report_values['components'][0]['summary']['mo_cost'], 400)
+        # cost_share of byproduct = 1.8 -> 1.8 / 100 -> 0.018 * 400 = 7.2
+        self.assertAlmostEqual(report_values['byproducts']['summary']['mo_cost'], 7.2)
+        byproduct_report_values = report_values['cost_breakdown'][1]
+        self.assertEqual(byproduct_report_values['name'], byproduct.name)
+        # 7.2 / 18 units = 0.4
+        self.assertAlmostEqual(byproduct_report_values['unit_avg_total_cost'], 0.4)
 
     def test_report_forecast_2_production_backorder(self):
         """ Creates a manufacturing order and produces half the quantity.
@@ -395,3 +404,66 @@ class TestMrpStockReports(TestReportsCommon):
         with Form(mo) as mo_form:
             mo_form.qty_producing = 2.0
         self.assertEqual(mo.components_availability, 'Available')
+
+    def test_mo_overview_same_component(self):
+        """
+        Test that for an mo for a product which has 2+ component lines for the same product,
+        if there is some quantity of the component reserved, we properly match replenishments with
+        components lines
+        """
+        # BOM structure:
+        # 'finished', manufactured:
+        #    - 1 'part'
+        #    - 1 'part'
+        part, finished = self.env['product.product'].create([
+            {
+                'name': name,
+                'type': 'product',
+            } for name in ['Part', 'Finished']
+        ])
+        self.env['mrp.bom'].create([
+            {
+                'product_id': finished.id,
+                'product_tmpl_id': finished.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'bom_line_ids': [
+                    Command.create({'product_id': part.id, 'product_qty': 1.0})
+                ] * 2,
+            }
+        ])
+        # Put 2 parts in stock
+        self.env['stock.quant']._update_available_quantity(part, self.stock_location, 2)
+
+        # Receive 20 parts
+        self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_type': 'one',
+            'move_ids_without_package': [Command.create({
+                    'name': 'test_out_1',
+                    'product_id': part.id,
+                    'product_uom_qty': 20,
+                    'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                    'location_dest_id': self.stock_location.id,
+                }),
+            ],
+        }).action_confirm()
+
+        # Create an MO for 5 finished product
+        mo = self.env['mrp.production'].create({
+            'name': 'MO',
+            'product_qty': 5.0,
+            'product_id': finished.id,
+        })
+        mo.action_confirm()
+
+        # Test overview report values
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        [line0, line1] = overview_values['data']['components']
+        [repl0, repl1] = line0['replenishments'], line1['replenishments']
+        self.assertEqual(len(repl0), 1)
+        self.assertEqual(len(repl1), 1)
+        self.assertEqual(repl0[0]['summary']['quantity'], 3)
+        self.assertEqual(repl1[0]['summary']['quantity'], 5)

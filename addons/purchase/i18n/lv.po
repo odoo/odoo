@@ -3,7 +3,6 @@
 # 	* purchase
 # 
 # Translators:
-# Aleksejs Ivanovs, 2023
 # Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2023
 # InfernalLV <karlisdreizis@gmail.com>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
@@ -12,8 +11,8 @@
 # JanisJanis <jbojars@gmail.com>, 2023
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2024
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # Will Sensors, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -441,9 +440,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Noliktavas produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt instalētam \"Inventory\" modulim.\n"
-"Palīgmateriāls ir produkts, kuram krājumi netiek pārvaldīti.\n"
-"Pakalpojums ir nemateriāls produkts, ko jūs sniedzat."
+"Uzglabājama prece ir prece, kurai Jūs pārvaldat atlikumu. Inventāra lietotnei jābūt uzstādītai.\n"
+"Patērējama prece ir prece, kurai atlikums nav pārvaldams.\n"
+"Pakalpojums ir nemateriāla prece, kuru Jūs nodrošinat."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -602,7 +601,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
-msgstr ""
+msgstr "Laika daudzums starp pirkuma apstiprinājumu un pasūtījuma datumu."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -632,7 +631,7 @@ msgstr "Analītiskā precizitāte"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Approve Order"
-msgstr "Approve Order"
+msgstr "Apstiprināt pasūtījumu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -1398,12 +1397,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
 msgid "Levels of Approvals"
-msgstr "Levels of Approvals"
+msgstr "Apstiprinājumu līmeņi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
 msgid "Levels of Approvals *"
-msgstr "Levels of Approvals *"
+msgstr "Apstiprinājumu līmeņi *"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1992,7 +1991,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
 msgid "Purchase Order Approval"
-msgstr "Pirkuma Pasūtījuma Apstiprinājums"
+msgstr "Pirkuma pasūtījuma apstiprinājums"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__purchase_order_count
@@ -2201,7 +2200,7 @@ msgstr "PPK"
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "RFQ Approved"
+msgstr "RFQ apstiprināts"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
@@ -2782,8 +2781,6 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
-"This default value is applied to any new product created. This can be "
-"changed in the product detail form."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2835,7 +2832,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__to_approve
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "To Approve"
-msgstr "Jāapstiprina"
+msgstr "Apstiprināšanai"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
@@ -3186,8 +3183,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Visam pārdotajam vai iegādātajam produktam ir jādefinē produkts,\n"
-"                neatkarīgi no tā, vai tas ir uzglabājams produkts, patēriņa prece vai pakalpojums."
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -3195,6 +3192,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
 msgstr ""
+" Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"             neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
 
 #. module: purchase
 #. odoo-python

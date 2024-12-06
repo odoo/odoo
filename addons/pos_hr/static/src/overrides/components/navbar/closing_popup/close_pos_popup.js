@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ClosePosPopup.prototype, {
     async closeSession() {
-        sessionStorage.removeItem("connected_cashier");
+        this.pos._resetConnectedCashier();
         super.closeSession();
     },
 });

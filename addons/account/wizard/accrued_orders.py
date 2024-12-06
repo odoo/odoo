@@ -144,9 +144,10 @@ class AccruedExpenseRevenue(models.TransientModel):
         fnames = []
         total_balance = 0.0
         for order in orders:
-            if len(orders) == 1 and self.amount and order.order_line:
+            product_lines = order.order_line.filtered(lambda x: x.product_id)
+            if len(orders) == 1 and product_lines and self.amount and order.order_line:
                 total_balance = self.amount
-                order_line = order.order_line[0]
+                order_line = product_lines[0]
                 account = self._get_computed_account(order, order_line.product_id, is_purchase)
                 distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                 if not is_purchase and order.analytic_account_id:
@@ -226,6 +227,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         move_type = _('Expense') if is_purchase else _('Revenue')
         move_vals = {
             'ref': _('Accrued %s entry as of %s', move_type, format_date(self.env, self.date)),
+            'name': '/',
             'journal_id': self.journal_id.id,
             'date': self.date,
             'line_ids': move_lines,
@@ -243,6 +245,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         move._post()
         reverse_move = move._reverse_moves(default_values_list=[{
             'ref': _('Reversal of: %s', move.ref),
+            'name': '/',
             'date': self.reversal_date,
         }])
         reverse_move._post()

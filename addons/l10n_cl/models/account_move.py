@@ -264,7 +264,6 @@ class AccountMove(models.Model):
         :return:
         """
         self.ensure_one()
-        cid = self.company_id.id
         tax = [{'tax_code': line.tax_line_id.l10n_cl_sii_code,
                 'tax_name': line.tax_line_id.name,
                 'tax_base': abs(sum(self.invoice_line_ids.filtered(
@@ -273,8 +272,8 @@ class AccountMove(models.Model):
                 'tax_percent': abs(line.tax_line_id.amount),
                 'tax_amount_currency': self.currency_id.round(abs(line.amount_currency)),
                 'tax_amount': self.currency_id.round(abs(line.balance))} for line in self.line_ids.filtered(
-            lambda x: x.tax_group_id.id in [self.env.ref(f'account.{cid}_tax_group_ila').id,
-                                            self.env.ref(f'account.{cid}_tax_group_retenciones').id])]
+            lambda x: x.tax_group_id.id in [self.env['account.chart.template'].with_company(self.company_id).ref('tax_group_ila').id,
+                                            self.env['account.chart.template'].with_company(self.company_id).ref('tax_group_retenciones').id])]
         return tax
 
     def _float_repr_float_round(self, value, decimal_places):

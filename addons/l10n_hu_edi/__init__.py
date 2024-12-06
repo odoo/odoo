@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 def post_init(env):
-    for company in env['res.company'].search([('chart_template', '=', 'hu')]):
+    for company in env['res.company'].search([('chart_template', '=', 'hu')], order="parent_path"):
         # Apply default cash rounding configuration
         company._l10n_hu_edi_configure_company()
 

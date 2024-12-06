@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
     test: true,
     url: '/shop',
     steps: () => [
-        ...wsTourUtils.addToCart({productName: "Acoustic Bloc Screens"}),
+        ...wsTourUtils.addToCart({productName: "Plumbus"}),
         wsTourUtils.goToCart(1),
         wsTourUtils.goToCheckout(),
         {

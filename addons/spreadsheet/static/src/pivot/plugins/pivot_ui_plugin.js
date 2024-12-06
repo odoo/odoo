@@ -295,6 +295,9 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
             if (!this.getters.isExistingPivot(pivotId) || !dataSource.isReady()) {
                 return undefined;
             }
+            if (!cell.content.replaceAll(" ", "").toUpperCase().startsWith("=ODOO.PIVOT.TABLE")) {
+                return undefined;
+            }
             const includeTotal = args[2];
             const includeColumnHeaders = args[3];
             const pivotCells = this.getPivotTableStructure(pivotId).getPivotCells(

@@ -55,10 +55,12 @@ export function getTooltips(target, groupIndex) {
 // Record
 export async function createRecord(target) {
     await click(target, ".o_control_panel_main_buttons .d-none button.o-kanban-button-new");
+    await nextTick();
 }
 
 export async function quickCreateRecord(target, groupIndex) {
     await click(getColumn(target, groupIndex), ".o_kanban_quick_add");
+    await nextTick();
 }
 
 export async function editQuickCreateInput(target, field, value) {

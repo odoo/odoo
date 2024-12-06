@@ -322,5 +322,5 @@ class TestWorkEntry(TestWorkEntryBase):
         employee.generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 2))
         result_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
         work_entry_types = [entry.work_entry_type_id for entry in result_entries]
-        self.assertEqual(len(result_entries), 3, 'Afternoon attendances should be split by work entry type')
-        self.assertEqual(work_entry_types, [entry_type_1, entry_type_1, entry_type_2])
+        self.assertEqual(len(result_entries), 4, 'A shift should be created for each attendance')
+        self.assertEqual(work_entry_types, [entry_type_1, entry_type_1, entry_type_1, entry_type_2])

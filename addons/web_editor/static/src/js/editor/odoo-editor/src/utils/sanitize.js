@@ -96,6 +96,10 @@ export function areSimilarElements(node, node2) {
 * @returns {String|null}
 */
 export function deduceURLfromText(text, link) {
+    // Skip modifying the href for Bootstrap tabs.
+    if (link && link.getAttribute("role") === "tab") {
+        return;
+    }
    const label = text.replace(ZERO_WIDTH_CHARS_REGEX, '').trim();
    // Check first for e-mail.
    let match = label.match(EMAIL_REGEX);
@@ -118,7 +122,7 @@ export function deduceURLfromText(text, link) {
    // Check for telephone url.
    match = label.match(PHONE_REGEX);
    if (match) {
-       return match[1] ? match[0] : 'tel://' + match[0];
+        return (match[1] ? match[0] : "tel://" + match[0]).replace(/\s+/g, "");
    }
    return null;
 }
@@ -156,6 +160,7 @@ function sanitizeNode(node, root) {
         && !node.hasAttributes()
         && !hasPseudoElementContent(node, "::before")
         && !hasPseudoElementContent(node, "::after")
+        && !node.querySelector(".oe_currency_value")
     ) {
         // Unwrap the contents of SPAN and FONT elements without attributes.
         getDeepRange(root, { select: true });

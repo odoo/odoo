@@ -42,7 +42,7 @@ class HrEmployeeBase(models.AbstractModel):
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
     parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
-        check_company=True)
+        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
         check_company=True,

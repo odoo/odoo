@@ -201,7 +201,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals_list = super()._get_tax_category_list(invoice, taxes)
 
         for vals in vals_list:
-            vals.pop('name')
+            vals.pop('name', None)
 
         return vals_list
 
@@ -222,6 +222,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
 
         for val in line_item_vals['classified_tax_category_vals']:
+            # [UBL-CR-600] A UBL invoice should not include the InvoiceLine Item ClassifiedTaxCategory TaxExemptionReasonCode
+            val.pop('tax_exemption_reason_code', None)
             # [UBL-CR-601] TaxExemptionReason must not appear in InvoiceLine Item ClassifiedTaxCategory
             # [BR-E-10] TaxExemptionReason must only appear in TaxTotal TaxSubtotal TaxCategory
             val.pop('tax_exemption_reason', None)
@@ -359,6 +361,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 constraints.update({f'cen_en16931_{role}_vat_country_code': _(
                     "The VAT of the %s should be prefixed with its country code.", role)})
 
+        if invoice.partner_shipping_id:
+            # [BR-57]-Each Deliver to address (BG-15) shall contain a Deliver to country code (BT-80).
+            constraints['cen_en16931_delivery_address'] = self._check_required_fields(invoice.partner_shipping_id, 'country_id')
         return constraints
 
     def _invoice_constraints_peppol_en16931_ubl(self, invoice, vals):

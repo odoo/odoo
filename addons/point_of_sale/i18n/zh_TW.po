@@ -31,6 +31,8 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"出現此問題，是因為在換算過程進行四捨五入後，數量變為零。要解決此問題，請調整換算因數或捨入方式，以確保即使是原始單位中最小的數量，也不會在目標單位四捨五入變成零。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -533,7 +535,7 @@ msgstr "帳戶"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "科目現金捨入"
+msgstr "賬戶現金捨入"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_chart_template
@@ -918,7 +920,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1338,7 +1340,7 @@ msgstr "盤點期間觀察到的現金差額 (盈餘)"
 #: code:addons/point_of_sale/static/src/app/navbar/navbar.js:0
 #, python-format
 msgid "Cash in / out"
-msgstr "現金出入"
+msgstr "現金進出"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1573,7 +1575,7 @@ msgstr "關閉營業點錯誤"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Coin/Bill Value"
-msgstr "硬幣／帳單　價值"
+msgstr "硬幣/紙幣價值"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1585,7 +1587,7 @@ msgstr "硬幣／帳單　價值"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_bill
 #, python-format
 msgid "Coins/Bills"
-msgstr "貨幣/帳單"
+msgstr "硬幣/紙幣"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__combo_ids
@@ -1805,7 +1807,7 @@ msgstr "繼續使用有限功能"
 msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
-msgstr ""
+msgstr "轉換錯誤：由於四捨五入，以下計量單位換算後出現零數量："
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -3232,7 +3234,7 @@ msgstr "憑單 %s (%s) 使用 %s 付款方式"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 #, python-format
 msgid "Invoiced"
-msgstr "已開立應收憑單"
+msgstr "已開立發票"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -6331,7 +6333,7 @@ msgstr "序列編號"
 #: code:addons/point_of_sale/static/src/app/store/select_lot_popup/edit_list_input/edit_list_input.xml:0
 #, python-format
 msgid "Serial/Lot Number"
-msgstr "序列號／批次號碼"
+msgstr "序號/批次號碼"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6453,7 +6455,7 @@ msgstr "設定每個產品的多個價格，自動折扣等。"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "設定新的折扣"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6572,7 +6574,7 @@ msgstr "Six"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_six
 msgid "Six Payment Terminal"
-msgstr "Six支付終端"
+msgstr "Six 付款終端機"
 
 #. module: point_of_sale
 #: model:product.attribute,name:point_of_sale.size_attribute
@@ -7295,7 +7297,7 @@ msgstr "交易由PayTM處理。在相關付款方式上設置您的PayTM憑證�
 msgid ""
 "The transactions are processed by Six. Set the IP address of the terminal on"
 " the related payment method."
-msgstr "交易由Six處理. 在相關支付方式上設定終端的IP地址."
+msgstr "交易將由 Six 處理。請在相關的付款方式上，設定終端機的 IP 位址。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_stripe
@@ -8221,7 +8223,7 @@ msgstr "不可在多種現金支付方式中使用同一日記賬。"
 msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
-msgstr ""
+msgstr "您沒有權限開啟 POS 銷售點操作時段。請嘗試使用不同的使用者帳戶去開啟。"
 
 #. module: point_of_sale
 #. odoo-python

@@ -104,13 +104,13 @@
                 </div>
                 <div t-if="twitter_bio" class="my-1 col-sm-9">
                     <div class="d-flex gap-2">
-                        <a t-if="twitter" target="_blank" t-attf-href="http://www.twitter.com/{{twitter}}">
+                        <a t-if="twitter" target="_blank" t-attf-href="http://www.twitter.com/{{twitter}}" class="text-nowrap">
                             http://www.twitter.com/<t t-esc="twitter"/>
                         </a>
                         <span t-if="twitter"> • </span>
-                        <div t-if="twitter_followers"><t t-esc="twitter_followers"/> followers</div>
+                        <div t-if="twitter_followers" class="text-nowrap"><t t-esc="twitter_followers"/> followers</div>
                     </div>
-                    <div t-esc="twitter_bio" />
+                    <div t-esc="twitter_bio" class="mt-1"/>
                 </div>
             </div>
         </div>

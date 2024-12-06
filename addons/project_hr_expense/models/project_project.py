@@ -129,10 +129,10 @@ class Project(models.Model):
         }
         if can_see_expense:
             args = [section_id, [('id', 'in', expense_ids)]]
-            if expense_ids:
-                args.append(expense_ids)
+            if len(expense_ids) == 1:
+                args.append(expense_ids[0])
             action = {'name': 'action_profitability_items', 'type': 'object', 'args': json.dumps(args)}
-            expense_profitability_items['action'] = action
+            expense_profitability_items['costs']['action'] = action
         return expense_profitability_items
 
     def _get_profitability_aal_domain(self):

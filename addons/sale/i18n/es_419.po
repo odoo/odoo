@@ -5,8 +5,8 @@
 # Translators:
 # Lucia Pacheco, 2024
 # Wil Odoo, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -429,7 +429,7 @@ msgstr ""
 "        Hola,\n"
 "        <br><br>\n"
 "        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
-"        Su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> con un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        Su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
 "            ha sido confirmada.<br>\n"
 "            Agradecemos su confianza.\n"
@@ -437,7 +437,7 @@ msgstr ""
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
 "            está pendiente. Se confirmará cuando recibamos su pago.\n"
 "            <t t-if=\"object.reference\">\n"
-"                La referencia de su pago es <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
+"                La referencia de pago es <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <br><br>\n"
@@ -1573,42 +1573,42 @@ msgstr "Complete los datos de su empresa"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Calcular costos de envío y enviar con DHL"
+msgstr "Calcule los costos de envío y haga sus envíos con DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Calcular costos de envío y enviar con Easypost"
+msgstr "Calcule los costos de envío y haga sus envíos con Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calcular costos de envío y enviar con FedEx"
+msgstr "Calcule los costos de envío y haga sus envíos con FedEx"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Calcular costos de envío y enviar con Sendcloud"
+msgstr "Calcule los costos de envío y haga sus envíos con Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Calcular los gastos de envío y enviar con Shiprocket"
+msgstr "Calcule los costos de envío y haga sus envíos con Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Calcular costos de envío y enviar con UPS"
+msgstr "Calcule los costos de envío y haga sus envíos con UPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Calcular costos de envío y enviar con USPS"
+msgstr "Calcule los costos de envío y haga sus envíos con USPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Calcular costos de envío y enviar con bpost"
+msgstr "Calcule los costos de envío y haga sus envíos con bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3709,7 +3709,7 @@ msgstr "Unidad de medida del producto solo lectura"
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Variant"
-msgstr "Variante de producto"
+msgstr "Variante del producto"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_products

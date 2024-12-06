@@ -30,7 +30,11 @@ export class PropertiesField extends Component {
     static props = {
         ...standardFieldProps,
         context: { type: Object, optional: true },
-        columns: { type: Number, optional: true },
+        columns: {
+            type: Number,
+            optional: true,
+            validate: (columns) => [1, 2].includes(columns),
+        },
         showAddButton: { type: Boolean, optional: true },
     };
 
@@ -137,7 +141,12 @@ export class PropertiesField extends Component {
                     const group = this.groupedPropertiesList.find(
                         (group) => group.name === groupName
                     );
-                    to = group.elements.length ? group.elements.at(-1).name : groupName;
+                    if (!group) {
+                        to = null;
+                        moveBefore = false;
+                    } else {
+                        to = group.elements.length ? group.elements.at(-1).name : groupName;
+                    }
                 }
                 await this.onPropertyMoveTo(from, to, moveBefore);
             },
@@ -405,7 +414,9 @@ export class PropertiesField extends Component {
             const newSeparators = [];
             for (let col = 0; col < this.renderedColumnsCount; ++col) {
                 const separatorIndex = columnSize * col + newSeparators.length;
-                if (propertiesValues[separatorIndex].type === "separator") {
+
+                if (propertiesValues[separatorIndex]?.type === "separator") {
+                    newSeparators.push(propertiesValues[separatorIndex].name);
                     continue;
                 }
                 const newSeparator = {
@@ -417,7 +428,7 @@ export class PropertiesField extends Component {
                 propertiesValues.splice(separatorIndex, 0, newSeparator);
             }
             this._unfoldSeparators(newSeparators, true);
-            toPropertyName = toPropertyName || propertiesValues[0].name;
+            toPropertyName = toPropertyName || propertiesValues.at(-1).name;
 
             // indexes might have changed
             fromIndex = propertiesValues.findIndex((property) => property.name === propertyName);

@@ -8,6 +8,7 @@
 # F Hariri <fhari1234@gmail.com>, 2023
 # Hanna Kheradroosta, 2023
 # Martin Trigaux, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +29,12 @@ msgstr ""
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
-msgstr ""
+msgstr "%s ساعت در دسترس است"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr ""
+msgstr "سطح برنامه افزایش"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
@@ -79,7 +80,7 @@ msgstr "روز"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
-msgstr ""
+msgstr "کسر ساعات اضافی"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -103,7 +104,7 @@ msgstr "ساعات اضافی موجود است"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
 msgid "Frequency Hourly Source"
-msgstr ""
+msgstr "منبع ساعتی تکرار"
 
 #. module: hr_holidays_attendance
 #. odoo-javascript
@@ -115,7 +116,7 @@ msgstr "ساعت"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__hr_attendance_overtime
 msgid "Hr Attendance Overtime"
-msgstr ""
+msgstr "حضور اضافه کاری کارکنان"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
@@ -125,19 +126,22 @@ msgid ""
 " time). Otherwise, the amount of worked hours will be based on Attendance "
 "records."
 msgstr ""
+"اگر منبع به تقویم تنظیم شده باشد، مقدار ساعت‌های کاری از تقویم کارکنان و "
+"زمان استراحت محاسبه می‌شود (اگر برنامه بر اساس زمان کاری باشد). در غیر این "
+"صورت، مقدار ساعت‌های کاری بر اساس سوابق حضور و غیاب خواهد بود."
 
 #. module: hr_holidays_attendance
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
-msgstr ""
+msgstr "درخواست تخصیص جدید"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
-msgstr ""
+msgstr "هنگامی که مرخصی از این نوع تأیید شود، ساعات اضافی حضور کسر خواهد شد."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
@@ -148,7 +152,7 @@ msgstr "کسر اضافه کاری"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
-msgstr ""
+msgstr "درخواست اضافه کاری"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -166,14 +170,14 @@ msgstr "مبدا"
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
-msgstr ""
+msgstr "کارمند ساعت اضافی کافی برای تمدید این تخصیص ندارد."
 
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
-msgstr ""
+msgstr "<p>کارمند زمان اضافه کافی برای تمدید این مرخصی ندارد.</p>"
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -181,7 +185,7 @@ msgstr ""
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
-msgstr ""
+msgstr "کارمند ساعات اضافی کافی برای درخواست این مرخصی ندارد."
 
 #. module: hr_holidays_attendance
 #. odoo-python
@@ -189,7 +193,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The employee does not have enough overtime hours to request this leave."
-msgstr ""
+msgstr "کارمند ساعات اضافه‌کاری کافی برای درخواست این مرخصی ندارد."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -223,4 +227,4 @@ msgstr "کاربر"
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
-msgstr ""
+msgstr "شما ساعات اضافی کافی برای درخواست این مرخصی ندارید"

@@ -126,7 +126,7 @@ _LOCALE2WIN32 = {
     'sv_SE': 'Swedish_Sweden',
     'ta_IN': 'English_Australia',
     'th_TH': 'Thai_Thailand',
-    'tr_TR': 'Turkish_Turkey',
+    'tr_TR': 'Turkish_Türkiye',
     'uk_UA': 'Ukrainian_Ukraine',
     'vi_VN': 'Vietnamese_Viet Nam',
     'tlh_TLH': 'Klingon',
@@ -348,7 +348,7 @@ _HTML_PARSER = etree.HTMLParser(encoding='utf8')
 def parse_html(text):
     try:
         parse = html.fragment_fromstring(text, parser=_HTML_PARSER)
-    except TypeError as e:
+    except (etree.ParserError, TypeError) as e:
         raise UserError(_("Error while parsing view:\n\n%s") % e) from e
     return parse
 

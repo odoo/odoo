@@ -2115,6 +2115,66 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_kanban_load_more");
     });
 
+    QUnit.test("quick create record with sample data: no flickering", async (assert) => {
+        serverData.models.partner.records = [];
+
+        const def = makeDeferred();
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" sample="1">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["bar"],
+            async mockRPC(route, { method }) {
+                if (method === "web_read_group") {
+                    // override read_group to return empty groups, as this is
+                    // the case for several models (e.g. project.task grouped
+                    // by stage_id)
+                    return {
+                        groups: [
+                            {
+                                __domain: [["product_id", "=", 3]],
+                                product_id_count: 0,
+                                product_id: [3, "xplone"],
+                            },
+                            {
+                                __domain: [["product_id", "=", 5]],
+                                product_id_count: 0,
+                                product_id: [5, "xplan"],
+                            },
+                        ],
+                        length: 2,
+                    };
+                } else if (method === "onchange") {
+                    await def;
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o_view_sample_data");
+        assert.containsN(target, ".o_kanban_record", 32);
+
+        // click on 'Create' -> should open the quick create in the first column
+        await createRecord(target);
+        assert.containsNone(target, ".o_view_sample_data");
+        assert.containsNone(target, ".o_kanban_record");
+        assert.containsNone(target, ".o_kanban_quick_create"); // blocked by def
+
+        def.resolve();
+        await nextTick();
+        assert.containsOnce(target, ".o_kanban_quick_create");
+    });
+
     QUnit.test(
         "quick create record should focus default field [REQUIRE FOCUS]",
         async function (assert) {
@@ -2211,6 +2271,7 @@ QUnit.module("Views", (hooks) => {
 
         // click "+" icon in first column -> should open the quick create
         await click(target.querySelector(".o_kanban_quick_add"));
+        await nextTick();
         assert.containsOnce(target.querySelector(".o_kanban_group"), ".o_kanban_quick_create");
         assert.verifySteps([]);
     });

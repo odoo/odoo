@@ -56,6 +56,12 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
 class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_website_event_tour_admin(self):
+        self.upcoming_event = self.env['event.event'].create({
+            'name': 'Upcoming Event',
+            'date_begin': fields.Datetime.now() + relativedelta(days=10),
+            'date_end': fields.Datetime.now() + relativedelta(days=13),
+            'website_published': True,
+        })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin', step_delay=100)
 
     def test_website_event_pages_seo(self):

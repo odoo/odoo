@@ -317,7 +317,7 @@ class Product(models.Model):
         if self.env.context.get('strict'):
             loc_domain = [('location_id', 'in', locations.ids)]
             dest_loc_domain = [('location_dest_id', 'in', locations.ids)]
-        else:
+        elif locations:
             paths_domain = expression.OR([[('parent_path', '=like', loc.parent_path + '%')] for loc in locations])
             loc_domain = [('location_id', 'any', paths_domain)]
             dest_loc_domain = [('location_dest_id', 'any', paths_domain)]
@@ -635,6 +635,17 @@ class Product(models.Model):
     @api.model
     def _count_returned_sn_products(self, sn_lot):
         return 0
+
+    def filter_has_routes(self):
+        """ Return products with route_ids
+            or whose categ_id has total_route_ids.
+        """
+        products_with_routes = self.env['product.product']
+        # retrieve products with route_ids
+        products_with_routes += self.search([('id', 'in', self.ids), ('route_ids', '!=', False)])
+        # retrive products with categ_ids having routes
+        products_with_routes += self.search([('id', 'in', (self - products_with_routes).ids), ('categ_id.total_route_ids', '!=', False)])
+        return products_with_routes
 
 
 class ProductTemplate(models.Model):
@@ -1026,7 +1037,7 @@ class ProductCategory(models.Model):
              "(the availability of this method depends on the \"Expiration Dates\" setting)."
     )
     total_route_ids = fields.Many2many(
-        'stock.route', string='Total routes', compute='_compute_total_route_ids',
+        'stock.route', string='Total routes', compute='_compute_total_route_ids', search='_search_total_route_ids',
         readonly=True)
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'category_id', 'Putaway Rules')
     packaging_reserve_method = fields.Selection([
@@ -1035,6 +1046,10 @@ class ProductCategory(models.Model):
         help="Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
              "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved")
     filter_for_stock_putaway_rule = fields.Boolean('stock.putaway.rule', store=False, search='_search_filter_for_stock_putaway_rule')
+
+    def _search_total_route_ids(self, operator, value):
+        categ_ids = self.filtered_domain([('total_route_ids', operator, value)]).ids
+        return [('id', 'in', categ_ids)]
 
     def _compute_total_route_ids(self):
         for category in self:

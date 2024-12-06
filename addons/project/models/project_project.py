@@ -56,7 +56,7 @@ class Project(models.Model):
         project_and_state_counts = self.env['project.task'].with_context(
             active_test=any(project.active for project in self)
         )._read_group(
-            [('project_id', 'in', self.ids)],
+            [('project_id', 'in', self.ids), ('display_in_project', '=', True)],
             ['project_id', 'state'],
             ['__count'],
         )
@@ -473,6 +473,11 @@ class Project(models.Model):
         return projects
 
     def write(self, vals):
+        if vals.get('access_token'):
+            self.ensure_one()  # We are not supposed to add a single access token to multiple project
+            if self.privacy_visibility != 'portal':
+                vals['access_token'] = ''
+
         # Here we modify the project's stage according to the selected company (selecting the first
         # stage in sequence that is linked to the company).
         company_id = vals.get('company_id')
@@ -703,7 +708,7 @@ class Project(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def action_view_tasks(self):
-        action = self.env['ir.actions.act_window'].with_context({'active_id': self.id})._for_xml_id('project.act_project_project_2_project_task_all')
+        action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id('project.act_project_project_2_project_task_all')
         action['display_name'] = _("%(name)s", name=self.name)
         context = action['context'].replace('active_id', str(self.id))
         context = ast.literal_eval(context)
@@ -977,6 +982,9 @@ class Project(models.Model):
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
                 project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
                 project.tasks._unsubscribe_portal_users()
+                # revoke access_token since the project and its tasks are no longer accessible for portal/public users
+                project.tasks.access_token = ''
+                project.access_token = ''
 
     # ---------------------------------------------------
     # Project sharing

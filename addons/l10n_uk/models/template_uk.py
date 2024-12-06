@@ -30,6 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': '7700',
                 'account_sale_tax_id': 'ST11',
                 'account_purchase_tax_id': 'PT_20_G',
+                'deferred_expense_account_id': '1103',
+                'deferred_revenue_account_id': '2109',
             },
         }
 

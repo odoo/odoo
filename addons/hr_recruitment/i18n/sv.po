@@ -22,9 +22,9 @@
 # Robin Calvin, 2023
 # Lasse L, 2024
 # Kim Asplund <kim.asplund@gmail.com>, 2024
-# Larissa Manderfeld, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,7 +120,7 @@ msgid ""
 "                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" invisible=\"application_status != 'archived'\">Archived</span>"
 msgstr ""
 "<span class=\"badge rounded-pill text-bg-danger float-end me-4\" invisible=\"application_status != 'refused'\">Avvisad</span>\n"
-"                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" invisible=\"ansökan_status != 'arkiverad'\">Arkiverad</span>"
+"                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" invisible=\"application_status != 'archived'\">Arkiverad</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -164,7 +164,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span invisible=\"not salary_expected_extra\"> + </span>"
-msgstr "<span invisible=\"not lön_förväntat_extra\"> + </span>"
+msgstr "<span invisible=\"not salary_expected_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -305,24 +305,24 @@ msgstr ""
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.street2\">\n"
 "                    <t t-out=\"object.job_id.address_id.street2 or ''\">Av A15, Santiago (RM)</t><br>\n"
-"                    <t t-set=\"plats\" t-value=\"'%s, %s' % (plats, object.job_id.address_id.street2)\"></t>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"></t>\n"
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.city\">\n"
-"                    <t t-out=\"object.job_id.address_id.city eller ''\">Pudahuel</t>,\n"
-"                    <t t-set=\"ort\" t-value=\"'%s, %s' % (ort, object.job_id.address_id.city)\"></t>\n"
+"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"></t>\n"
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
 "                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
-"                    <t t-set=\"plats\" t-value=\"'%s, %s' % (plats, object.job_id.address_id.state_id.name)\"></t>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"></t>\n"
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.zip\">\n"
 "                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
-"                    <t t-set=\"plats\" t-value=\"'%s, %s' % (plats, object.job_id.address_id.zip)\"></t>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"></t>\n"
 "                </t>\n"
 "                <br>\n"
 "                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
 "                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br>\n"
-"                    <t t-set=\"plats\" t-value=\"'%s, %s' % (plats, object.job_id.address_id.country_id.name)\"></t>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"></t>\n"
 "                </t>\n"
 "                <br>\n"
 "            </div>\n"

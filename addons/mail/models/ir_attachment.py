@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
 
-from odoo import _, api, models, SUPERUSER_ID
+from odoo import _, models, SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.http import request
 from odoo.tools import consteq
 
 
@@ -74,7 +72,6 @@ class IrAttachment(models.Model):
         return self.env.user.partner_id
 
     def _attachment_format(self):
-        safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
         return [{
             'checksum': attachment.checksum,
             'create_date': attachment.create_date,
@@ -83,9 +80,11 @@ class IrAttachment(models.Model):
             'name': attachment.name,
             "size": attachment.file_size,
             'res_name': attachment.res_name,
-            'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+            'mimetype': attachment.mimetype,
             'originThread': [('ADD', {
                 'id': attachment.res_id,
                 'model': attachment.res_model,
             })],
+            'type': attachment.type,
+            'url': attachment.url,
         } for attachment in self]

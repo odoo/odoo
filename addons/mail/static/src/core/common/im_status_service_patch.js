@@ -20,7 +20,7 @@ export const imStatusServicePatch = {
                 if (!persona) {
                     return; // Do not store unknown persona's status
                 }
-                persona.im_status = im_status;
+                persona.debouncedSetImStatus(im_status);
                 if (persona.type !== "guest" || persona.notEq(store.self)) {
                     return; // Partners are already handled by the original service
                 }

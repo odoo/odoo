@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web_edior.ChatGPTPromptDialog">
-    <Dialog size="'lg'" title="'Generate Text with AI'">
+    <Dialog size="'lg'" title="'Generate Text with AI'" modalRef="modalRef">
         <div t-foreach="state.messages" t-as="message" t-key="message_index"
             class="position-relative py-1 px-3"
             t-att-class="message_index ? 'mt-2' : 'mt-0'">
@@ -71,7 +71,7 @@
                         t-model="state.prompt" required="required"></textarea>
                 </div>
                 <div class="border-start-0 rounded-0 rounded-end-3 align-self-center ms-2 me-3">
-                    <button class="btn" t-att-class="state.prompt.length ? 'btn-success' : 'disabled'" t-on-click="submitPrompt">
+                    <button class="btn" t-att-class="state.prompt.trim().length ? 'btn-success' : 'disabled'" t-on-click="submitPrompt">
                         <i class="fa fa-paper-plane"></i>
                     </button>
                 </div>

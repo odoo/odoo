@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { registry } from "@web/core/registry";
 import { makeView } from "@web/../tests/views/helpers";
 import { click, clickDropdown, editInput, getFixture } from "@web/../tests/helpers/utils";
 
@@ -17,6 +18,11 @@ QUnit.module("hr_timesheet", (hooks) => {
             { task_id: "task_with_hours" },
             { task_id: "{ 'default_project_id': project_id }" });
         target = getFixture();
+        registry.category("services").add("create_edit_project_ids", {
+            start() {
+                return {};
+            },
+        });
     });
 
     QUnit.module("task_with_hours");

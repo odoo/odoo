@@ -108,8 +108,8 @@ class L10nInWithholdWizard(models.TransientModel):
     @api.depends('company_id')
     def _compute_journal(self):
         for wizard in self:
-            wizard.journal_id = wizard.company_id.l10n_in_withholding_journal_id or \
-                                wizard.env['account.journal'].search([('company_id', '=', wizard.company_id.id), ('type', '=', 'general')], limit=1)
+            wizard.journal_id = wizard.company_id.parent_ids.l10n_in_withholding_journal_id[-1:] or \
+                                wizard.env['account.journal'].search([*self.env['account.journal']._check_company_domain(wizard.company_id), ('type', '=', 'general')], limit=1)
 
     @api.depends('related_move_id', 'related_payment_id', 'withhold_line_ids.base')
     def _compute_warning_message(self):
@@ -132,7 +132,7 @@ class L10nInWithholdWizard(models.TransientModel):
                 'in_refund': 'in_refund_withhold',
             }[move_type]
         else:
-            withhold_type = 'in_withhold' if self.related_payment_id.payment_type == 'outbound' else 'out_withhold'
+            withhold_type = 'in_withhold' if self.related_payment_id.partner_type == 'supplier' else 'out_withhold'
         return withhold_type
 
     # ===== MOVE CREATION METHODS =====
@@ -249,7 +249,6 @@ class L10nInWithholdWizardLine(models.TransientModel):
         string="TDS Amount",
         compute='_compute_amount',
         store=True,
-        readonly=False
     )
 
     #  ===== Constraints =====

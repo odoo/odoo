@@ -371,7 +371,7 @@ class Export(http.Controller):
 
         return [
             {'name': field['name'], 'label': fields_data[field['name']]}
-            for field in export_fields_list
+            for field in export_fields_list if field['name'] in fields_data
         ]
 
     def fields_info(self, model, export_fields):

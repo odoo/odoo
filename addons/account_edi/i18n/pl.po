@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +66,8 @@ msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
 msgstr ""
+"Czy na pewno chcesz anulować tę fakturę bez czekania na anulowanie dokumentu"
+" EDI?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -93,7 +96,7 @@ msgstr ""
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr "Odwołanie EDI"
+msgstr "Odwołanie anulowania EDI"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -126,7 +129,7 @@ msgstr "Kompatybilny EDI"
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_uid
 msgid "Created by"
-msgstr "Utworzył(a)"
+msgstr "Utworzone przez"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_date
@@ -163,7 +166,7 @@ msgstr "Format EDI, który obsługuje ruchy w tym dzienniku"
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr ""
+msgstr "EDI: Wykonywanie operacji usług sieciowych"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
@@ -208,7 +211,7 @@ msgstr "Format Edi"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr ""
+msgstr "Edi pokaż przycisk anulowania porzucenia"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
@@ -222,7 +225,7 @@ msgstr "EDI pokaż przycisk anuluj"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_force_cancel_button
 msgid "Edi Show Force Cancel Button"
-msgstr ""
+msgstr "Edi Pokaż przycisk wymuszenia anulowania"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
@@ -265,7 +268,7 @@ msgstr "Błąd"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Force Cancel"
-msgstr ""
+msgstr "Wymuś anulowanie"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
@@ -277,7 +280,7 @@ msgstr "Nazwa formatu"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr ""
+msgstr "Ile jest błędnych EDI dla tego ruchu?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -289,7 +292,7 @@ msgstr "ID"
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__info
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__info
 msgid "Info"
-msgstr "Informacja"
+msgstr "Informacje"
 
 #. module: account_edi
 #. odoo-python
@@ -345,7 +348,7 @@ msgstr "Tylko jeden dokument edi w formacie przenieś według"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Process now"
-msgstr "Przetwarzaj teraz"
+msgstr "Przetwórz teraz"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_resequence_wizard
@@ -360,7 +363,7 @@ msgstr "Zgłoś akcję"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr "Wniosek o anulowanie EDI"
+msgstr "Zażądaj anulowania EDI"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -406,11 +409,13 @@ msgstr ""
 msgid ""
 "The following documents have already been sent and cannot be resequenced: %s"
 msgstr ""
+"Następujące dokumenty zostały już wysłane i nie można ich ponownie "
+"sekwencjonować: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will soon be sent to"
-msgstr ""
+msgstr "Faktura zostanie wkrótce wysłana do"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
@@ -441,6 +446,8 @@ msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation"
 " request."
 msgstr ""
+"Ta faktura została anulowana podczas gdy EDI %s wciąż mało oczekujące "
+"żądanie o anulowanie."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
