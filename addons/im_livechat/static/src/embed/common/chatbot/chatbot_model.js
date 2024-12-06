@@ -77,7 +77,9 @@ export class Chatbot extends Record {
                 { html: true }
             );
         }
-        this.thread.messages.add(this.currentStep.message);
+        if (this.currentStep.message) {
+            this.thread.messages.add(this.currentStep.message);
+        }
     }
 
     get completed() {
