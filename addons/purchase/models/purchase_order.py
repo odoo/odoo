@@ -974,6 +974,31 @@ class PurchaseOrder(models.Model):
             'context': ctx,
         }
 
+    def js_vendor_conformation_record(self, partner_id):
+        partner_id = self.env['res.partner'].search([('id', '=', partner_id)])
+        record = []
+        for line in self.order_line:
+            params = {'order_id': line.order_id}
+            seller = line.product_id._select_seller(
+                partner_id=partner_id,
+                quantity=line.product_qty,
+                date=line.order_id.date_order and line.order_id.date_order.date() or fields.Date.context_today(line),
+                uom_id=line.product_uom_id,
+                params=params)
+            price_unit = line._get_price_unit(seller)
+            if seller:
+                price_unit = seller.product_uom_id._compute_price(price_unit, line.product_uom_id)
+            discount = seller.discount or 0.0
+            current_price = f"{line.price_unit} ({line.discount}%)"
+            new_price = f"{price_unit} ({discount}%)"
+            if current_price != new_price:
+                record.append({
+                    'product_name': line.name,
+                    'current_price': current_price,
+                    'new_price': new_price,
+                })
+        return record
+
     @api.model
     def _get_orders_to_remind(self):
         """When auto sending a reminder mail, only send for unconfirmed purchase

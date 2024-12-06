@@ -77,6 +77,8 @@ class PurchaseOrderLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
     is_downpayment = fields.Boolean()
+    old_price_unit = fields.Float(help="Technical field for price computation")
+    old_product_uom_id = fields.Many2one('uom.uom', domain="[('category_id', '=', product_uom_category_id)]", help="Technical field for price computation")
 
     _accountable_required_fields = models.Constraint(
         'CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL AND date_planned IS NOT NULL))',
@@ -309,7 +311,30 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.depends('product_qty', 'product_uom_id', 'company_id', 'order_id.partner_id')
+    def _get_price_unit(self, seller=False):
+        price_unit = 0.0
+        if not seller:
+            po_line_uom = self.product_uom_id or self.product_id.uom_po_id
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(
+                self.product_id.uom_id._compute_price(self.product_id.standard_price, po_line_uom),
+                self.product_id.supplier_taxes_id,
+                self.taxes_id,
+                self.company_id,
+            )
+            price_unit = self.product_id.cost_currency_id._convert(
+                price_unit,
+                self.currency_id,
+                self.company_id,
+                self.date_order or fields.Date.context_today(self),
+                False
+            )
+        else:
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, self.product_id.supplier_taxes_id, self.taxes_id, self.company_id) if seller else 0.0
+            price_unit = seller.currency_id._convert(price_unit, self.currency_id, self.company_id, self.date_order or fields.Date.context_today(self), False)
+            price_unit = float_round(price_unit, precision_digits=max(self.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+        return price_unit
+
+    @api.depends('product_qty', 'product_uom_id', 'company_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
             if not line.product_id or line.invoice_lines or not line.company_id:
@@ -325,36 +350,33 @@ class PurchaseOrderLine(models.Model):
             if seller or not line.date_planned:
                 line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
+            if not line.old_product_uom_id:
+                    line.old_product_uom_id = line.product_uom_id
+
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not seller:
                 line.discount = 0
                 unavailable_seller = line.product_id.seller_ids.filtered(
                     lambda s: s.partner_id == line.order_id.partner_id)
-                if not unavailable_seller and line.price_unit and line.product_uom_id == line._origin.product_uom_id:
-                    # Avoid to modify the price unit if there is no price list for this partner and
-                    # the line has already one to avoid to override unit price set manually.
+
+                # If there is no unavailable seller, price unit is alredy set and product quntity is set to 0 so stop recomputation.
+                if not unavailable_seller and line.product_qty == 0 and line.price_unit:
                     continue
-                po_line_uom = line.product_uom_id or line.product_id.uom_po_id
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(
-                    line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
-                    line.product_id.supplier_taxes_id,
-                    line.taxes_id,
-                    line.company_id,
-                )
-                price_unit = line.product_id.cost_currency_id._convert(
-                    price_unit,
-                    line.currency_id,
-                    line.company_id,
-                    line.date_order or fields.Date.context_today(line),
-                    False
-                )
+
+                price_unit = line._get_price_unit()
+                manual_set = not (line.price_unit in (0, price_unit, line.old_price_unit))
+                line.old_price_unit = price_unit
+                price_unit = line.old_product_uom_id._compute_price(line.price_unit, line.product_uom_id) if manual_set else price_unit
+                line.old_product_uom_id = line.product_uom_id
+
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
 
             elif seller:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
-                price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
-                price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-                line.price_unit = seller.product_uom_id._compute_price(price_unit, line.product_uom_id)
+                price_unit = line._get_price_unit(seller)
+                manual_set = not (line.price_unit in (0, price_unit, line.old_price_unit))
+                line.old_price_unit = price_unit
+                line.price_unit = line.old_product_uom_id._compute_price(line.price_unit, line.product_uom_id) if manual_set else seller.product_uom_id._compute_price(price_unit, line.product_uom_id)
+                line.old_product_uom_id = line.product_uom_id
                 line.discount = seller.discount or 0.0
 
             # record product names to avoid resetting custom descriptions
