@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import {
-    DiscussSidebarCategory,
+    DiscussSidebarCategoryHeader,
     DiscussSidebarChannel,
 } from "../public_web/discuss_sidebar_categories";
 import { _t } from "@web/core/l10n/translation";
@@ -37,8 +37,8 @@ const DiscussSidebarChannelPatch = {
     },
 };
 
-/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategory} */
-const DiscussSidebarCategoryPatch = {
+/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategoryHeader} */
+const DiscussSidebarCategoryHeaderPatch = {
     setup() {
         super.setup();
         this.actionService = useService("action");
@@ -75,4 +75,4 @@ const DiscussSidebarCategoryPatch = {
 };
 
 patch(DiscussSidebarChannel.prototype, DiscussSidebarChannelPatch);
-patch(DiscussSidebarCategory.prototype, DiscussSidebarCategoryPatch);
+patch(DiscussSidebarCategoryHeader.prototype, DiscussSidebarCategoryHeaderPatch);
