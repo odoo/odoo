@@ -138,5 +138,13 @@
         <field name="params" eval="&quot;{ 'default_active_id': 'mail.box_inbox' }&quot;"/>
     </record>
 
+    <record id="mail.discuss_channel_action" model="ir.actions.act_window">
+        <field name="name">Discuss Channels</field>
+        <field name="res_model">discuss.channel</field>
+        <field name="view_mode">kanban</field>
+        <field name="domain" eval="[(('channel_type', '=', 'channel'))]" />
+        <field name="search_view_id" ref="discuss_channel_view_search" />
+    </record>
+
     </data>
 </odoo>

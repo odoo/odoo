@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarChannelCommands">
+        <t t-set="actions" t-value="sidebarChannelActions.actions"/>
+        <div class="fw-bold m-1">
+            <i t-if="!(props.thread.channel_type === 'chat')" class="fa fa-fw " t-att-class="{'fa-comments-o': !props.thread.hasSubChannelFeature, 'fa-hashtag': props.thread.hasSubChannelFeature}" />
+            <span t-esc="chatName"/>
+        </div>
+        <t t-foreach="actions" t-as="action" t-key="action.name">
+            <t t-if="!action.isInteractiveAction">
+                <div class="mb-1">
+                    <button class="btn opacity-50 opacity-100-hover ms-1 p-1 d-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary" t-on-click="() => action.executeAction" t-att-title="store.discuss.isSidebarCompact ? '' : action.name">
+                        <i role="img" class="fa-fw" t-att-class="action.icon"/>
+                        <span t-esc="action.name"/>
+                    </button>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-set="floatingState" t-value="action.text === 'notification' ? notification : addUser" />
+                <Dropdown state="floatingState" manual="true" position="'right-start'">
+                    <div class="btn btn-secondary opacity-50 opacity-100-hover mb-1 ms-1 me-1 p-1 d-flex align-items-center px-1 py-0 gap-1 text-start smaller" t-att-title="store.discuss.isSidebarCompact ? '' : action.name" t-ref="root_{{action.text}}">
+                        <i role="img" class="fa-fw" t-att-class="action.icon"/>
+                        <span t-esc="action.name"/>
+                    </div>
+                    <t t-set-slot="content">
+                        <div t-ref="floating_{{action.text}}">
+                        <t t-component="action.component" thread="this.props.thread" />
+                        </div>
+                    </t>
+                </Dropdown>
+            </t>
+        </t>
+    </t>
+</templates>
