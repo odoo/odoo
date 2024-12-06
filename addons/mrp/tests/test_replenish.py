@@ -5,7 +5,7 @@ from freezegun import freeze_time
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo import fields
+from odoo import fields, Command
 
 
 
@@ -71,6 +71,49 @@ class TestMrpReplenish(TestMrpCommon):
 
         # for manufacturing delay should be taken from the bom
         self.assertEqual("4.0 days", info.wh_replenishment_option_ids.lead_time)
+
+    def test_rr_picking_type_id(self):
+        """Check manufacturing order take bom according to picking type of the rule triggered by an
+        orderpoint."""
+
+        self.product_4.route_ids = self.env.ref('mrp.route_warehouse0_manufacture')
+        picking_type_2 = self.warehouse_1.manu_type_id.copy({'sequence': 100})
+        self.env['mrp.bom'].create({
+            'product_id': self.product_4.id,
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 4.0,
+            'type': 'normal',
+            'picking_type_id': picking_type_2.id,
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_2.id, 'product_qty': 2}),
+                Command.create({'product_id': self.product_1.id, 'product_qty': 4})
+            ]})
+        rr = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake RR',
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': self.product_4.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+        })
+        self.assertTrue(self.product_4.bom_ids, 2)
+        self.assertTrue(self.product_4.bom_ids.picking_type_id, 2)
+
+        rr.action_replenish()
+        mo = self.env['mrp.production'].search([
+            ('product_id', '=', self.product_4.id),
+            ('picking_type_id', '=', self.warehouse_1.manu_type_id.id)
+        ])
+        self.assertTrue(mo)
+        mo.action_cancel()
+        self.warehouse_1.manufacture_pull_id.picking_type_id = picking_type_2
+
+        rr.action_replenish()
+        self.assertTrue(self.env['mrp.production'].search([
+            ('product_id', '=', self.product_4.id),
+            ('picking_type_id', '=', picking_type_2.id)
+        ]))
+
 
     def test_mrp_delay_bom(self):
         route = self.env.ref('mrp.route_warehouse0_manufacture')
