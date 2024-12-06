@@ -74,7 +74,7 @@ export class PosOrder extends Base {
     }
 
     get currency() {
-        return this.session_id.config_id.currency_id;
+        return this.config.currency_id;
     }
 
     get pickingType() {
