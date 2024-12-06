@@ -5190,6 +5190,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertRecordValues(caba_move.line_ids.sorted('id').sorted('sequence'), expected_caba_move_line_values)
 
     def test_partial_payments_auto_validation(self):
+        # We add an account on the first payment method in the common setup, but we also need a method witout an account
+        self.company_data['default_journal_bank'].inbound_payment_method_line_ids += self.env['account.payment.method.line'].create({
+            'name': 'Manual without outstanding',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+        })
         with patch.object(self.env.registry['account.move'], '_get_invoice_in_payment_state', return_value='in_payment'):
             def create_move_payment(move, payment_amount, with_outstanding_account=False):
                 payment = self.env['account.payment.register'].with_context(
