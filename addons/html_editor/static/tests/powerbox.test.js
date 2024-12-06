@@ -25,6 +25,7 @@ import { PowerboxPlugin } from "@html_editor/main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { execCommand } from "./_helpers/userCommands";
+import { SignaturePlugin } from "@html_editor/others/signature_plugin";
 
 function commandNames() {
     return queryAllTexts(".o-we-command-name");
@@ -74,7 +75,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(26);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -82,6 +83,30 @@ describe("search", () => {
 
     test("should hide categories when you have a search term", async () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "/");
+        await animationFrame();
+        expect(commandNames(el).length).toBe(26);
+        expect(".o-we-category").toHaveCount(7);
+        expect(queryAllTexts(".o-we-category")).toEqual([
+            "STRUCTURE",
+            "BANNER",
+            "FORMAT",
+            "MEDIA",
+            "NAVIGATION",
+            "WIDGET",
+            "AI TOOLS",
+        ]);
+
+        await insertText(editor, "h");
+        await animationFrame();
+        expect(commandNames(el).length).toBe(9);
+        expect(".o-we-category").toHaveCount(0);
+    });
+
+    test("should display the signature command along with its category", async () => {
+        const { el, editor } = await setupEditor("<p>ab[]</p>", {
+            config: { Plugins: [...MAIN_PLUGINS, SignaturePlugin] },
+        });
         await insertText(editor, "/");
         await animationFrame();
         expect(commandNames(el).length).toBe(27);
@@ -94,13 +119,8 @@ describe("search", () => {
             "NAVIGATION",
             "WIDGET",
             "AI TOOLS",
-            "BASIC BLOC",
+            "PERSONALIZATION",
         ]);
-
-        await insertText(editor, "h");
-        await animationFrame();
-        expect(commandNames(el).length).toBe(9);
-        expect(".o-we-category").toHaveCount(0);
     });
 
     test.tags("iframe");
@@ -108,7 +128,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(26);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -160,7 +180,7 @@ describe("search", () => {
         await insertText(editor, "/");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(26);
 
         await insertText(editor, "headx");
         await animationFrame();
