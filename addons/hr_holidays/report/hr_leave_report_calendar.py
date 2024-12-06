@@ -11,7 +11,7 @@ class LeaveReportCalendar(models.Model):
     _auto = False
     _order = "start_datetime DESC, employee_id"
 
-    name = fields.Char(string='Name', readonly=True, compute="_compute_name")
+    name = fields.Char(string='Name', readonly=True, compute="_compute_name", search="_search_name")
     start_datetime = fields.Datetime(string='From', readonly=True)
     stop_datetime = fields.Datetime(string='To', readonly=True)
     tz = fields.Selection(_tz_get, string="Timezone", readonly=True)
@@ -113,3 +113,7 @@ class LeaveReportCalendar(models.Model):
 
     def action_refuse(self):
         self.leave_id.action_refuse()
+
+    @api.model
+    def _search_name(self, operator, value):
+        return ['|', '|', ('employee_id', operator, value), ('leave_id.holiday_status_id', operator, value), ('leave_id.duration_display', operator, value)]
