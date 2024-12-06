@@ -2491,6 +2491,7 @@ class APIKeyDescription(models.TransientModel):
             }
             return {'warning': warning}
 
+    @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
         self.env['res.users.apikeys']._check_expiration_date(res.expiration_date)
