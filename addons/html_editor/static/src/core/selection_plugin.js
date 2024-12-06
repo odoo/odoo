@@ -1,10 +1,13 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestPosition,
+    isIconElement,
     isMediaElement,
     isProtected,
     isProtecting,
+    isTextNode,
     isUnprotecting,
+    isVisibleTextNode,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
 import {
@@ -169,7 +172,9 @@ export class SelectionPlugin extends Plugin {
                 "shift+arrowright",
                 "arrowleft",
                 "shift+arrowleft",
+                "arrowup",
                 "shift+arrowup",
+                "arrowdown",
                 "shift+arrowdown",
             ];
             if (handled.includes(getActiveHotkey(ev))) {
@@ -772,7 +777,11 @@ export class SelectionPlugin extends Plugin {
             const shouldSkipCallbacks = this.getResource(
                 "intangible_char_for_keyboard_navigation_predicates"
             );
-            let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+            let adjacentCharacter = getAdjacentCharacter(
+                this.getSelectionData().deepEditableSelection,
+                domDirection,
+                this.editable
+            );
             let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
             while (shouldSkip) {
@@ -783,11 +792,103 @@ export class SelectionPlugin extends Plugin {
                 const hasSelectionChanged =
                     nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
                 const lastSkippedChar = adjacentCharacter;
-                adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+                adjacentCharacter = getAdjacentCharacter(
+                    this.getSelectionData().deepEditableSelection,
+                    domDirection,
+                    this.editable
+                );
 
                 shouldSkip =
                     hasSelectionChanged &&
                     shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+            }
+        } else if (["ArrowUp", "ArrowDown"].includes(ev.key)) {
+            const { anchorNode, anchorOffset } = this.getSelectionData().deepEditableSelection;
+            const block = closestBlock(anchorNode);
+            const isArrowUp = ev.key === "ArrowUp";
+
+            // Move cursor to the start or end of an icon element.
+            const positionCursorOnIcon = (currentNode) => {
+                if (isIconElement(currentNode)) {
+                    ev.preventDefault();
+                    isArrowUp
+                        ? this.setCursorEnd(currentNode)
+                        : this.setCursorStart(getLastAdjacentIcon(currentNode));
+                    return true;
+                }
+                return false;
+            };
+
+            // Traverse siblings to find the nearest <br> element.
+            const findSiblingBreak = (node) => {
+                while (node && node.nodeName !== "BR") {
+                    node = isArrowUp ? node.previousSibling : node.nextSibling;
+                }
+                return node;
+            };
+
+            const getLastAdjacentIcon = (iconNode) => {
+                let current = iconNode;
+                while (current.nextSibling && isIconElement(current.nextSibling)) {
+                    current = current.nextSibling;
+                }
+                return current;
+            };
+
+            // Get visible descendants of an element.
+            const getVisibleDescendants = (element) => {
+                return descendants(element).filter(
+                    (node) => !(isTextNode(node) && !isVisibleTextNode(node))
+                );
+            };
+
+            // Handle cursor movement within the same block.
+            let cursorHandled = false;
+            const currentNode = anchorNode === block ? block.childNodes[anchorOffset] : anchorNode;
+            const nextBreak = findSiblingBreak(currentNode);
+            if (nextBreak) {
+                if (isArrowUp && isIconElement(currentNode)) {
+                    ev.preventDefault();
+                    cursorHandled = true;
+                    if (!nextBreak.previousSibling) {
+                        // Move cursor to the start of the block.
+                        this.setSelection({ anchorNode: block, anchorOffset: 0 });
+                    } else {
+                        // Move cursor to the end of the previous sibling.
+                        this.setCursorEnd(nextBreak.previousSibling);
+                    }
+                } else if (!isArrowUp) {
+                    const blockDescendants = getVisibleDescendants(block);
+                    const nextChild = blockDescendants[blockDescendants.indexOf(nextBreak) + 1];
+                    if (nextChild) {
+                        cursorHandled = positionCursorOnIcon(nextChild);
+                    }
+                }
+            }
+            // Handle cursor movement across sibling blocks.
+            if (!cursorHandled) {
+                // Traverse up to find a valid sibling block.
+                let sibling = isArrowUp ? block.previousSibling : block.nextSibling;
+                let parentBlock = block.parentNode;
+                while (!sibling && parentBlock) {
+                    sibling = isArrowUp ? parentBlock.previousSibling : parentBlock.nextSibling;
+                    parentBlock = parentBlock.parentNode;
+                }
+                if (sibling) {
+                    const siblingDescendants = getVisibleDescendants(sibling);
+                    // Check if the cursor is at the block boundary.
+                    const isAtBoundary =
+                        anchorNode === block
+                            ? (isArrowUp && anchorOffset === 0) ||
+                              (!isArrowUp && anchorOffset === block.childNodes.length - 1)
+                            : !findSiblingBreak(anchorNode);
+                    if (isAtBoundary && siblingDescendants?.length) {
+                        const targetNode = isArrowUp
+                            ? siblingDescendants[siblingDescendants.length - 1]
+                            : siblingDescendants[0];
+                        positionCursorOnIcon(targetNode);
+                    }
+                }
             }
         }
 
