@@ -287,7 +287,7 @@ export class PosOrder extends Base {
         this.lines.forEach((line) => line.updateSavedQuantity());
     }
 
-    assetEditable() {
+    assertEditable() {
         if (this.finalized) {
             throw new Error("Finalized Order cannot be modified");
         }
@@ -437,7 +437,7 @@ export class PosOrder extends Base {
                 delete this.uiState.lineToRefund[lineToRemove.refunded_orderline_id.uuid];
             }
 
-            if (this.assetEditable()) {
+            if (this.assertEditable()) {
                 lineToRemove.delete();
             }
         }
@@ -484,7 +484,7 @@ export class PosOrder extends Base {
 
     /* ---- Payment Lines --- */
     addPaymentline(payment_method) {
-        this.assetEditable();
+        this.assertEditable();
         if (this.electronicPaymentInProgress()) {
             return false;
         } else {
@@ -517,7 +517,7 @@ export class PosOrder extends Base {
     }
 
     removePaymentline(line) {
-        this.assetEditable();
+        this.assertEditable();
 
         if (this.getSelectedPaymentline() === line) {
             this.selectPaymentline(undefined);
@@ -881,7 +881,7 @@ export class PosOrder extends Base {
 
     /* ---- Invoice --- */
     setToInvoice(to_invoice) {
-        this.assetEditable();
+        this.assertEditable();
         this.to_invoice = to_invoice;
     }
 
@@ -893,7 +893,7 @@ export class PosOrder extends Base {
     /* ---- Partner --- */
     // the partner related to the current order.
     setPartner(partner) {
-        this.assetEditable();
+        this.assertEditable();
         this.partner_id = partner;
         this.updatePricelistAndFiscalPosition(partner);
     }

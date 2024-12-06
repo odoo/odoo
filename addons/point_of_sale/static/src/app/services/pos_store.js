@@ -572,7 +572,7 @@ export class PosStore extends WithLazyGetterTrap {
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
         let merge = true;
         let order = this.getOrder();
-        order.assetEditable();
+        order.assertEditable();
 
         if (!order) {
             order = await this.addNewOrder();

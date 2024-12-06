@@ -200,7 +200,7 @@ export class PosOrderline extends Base {
     // product's unity of measure properties. Quantities greater than zero will not get
     // rounded to zero
     setQuantity(quantity, keep_price) {
-        this.order_id.assetEditable();
+        this.order_id.assertEditable();
         const quant =
             typeof quantity === "number" ? quantity : parseFloat("" + (quantity ? quantity : 0));
 
@@ -333,7 +333,7 @@ export class PosOrderline extends Base {
     }
 
     merge(orderline) {
-        this.order_id.assetEditable();
+        this.order_id.assertEditable();
         this.setQuantity(this.getQuantity() + orderline.getQuantity());
         this.update({
             pack_lot_ids: [["link", ...orderline.pack_lot_ids]],
