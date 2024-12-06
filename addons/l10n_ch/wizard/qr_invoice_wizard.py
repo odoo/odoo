@@ -12,6 +12,7 @@ class L10n_ChQr_InvoiceWizard(models.TransientModel):
     to see a list of those.
     The non-QR invoices will have a note logged in their chatter, detailing the reason of the failure.
     '''
+    _name = 'l10n_ch.qr_invoice.wizard'
     _description = 'Handles problems occurring while creating multiple QR-invoices at once'
 
     nb_qr_inv = fields.Integer(readonly=True)

@@ -14,6 +14,7 @@ class GamificationGoalDefinition(models.Model):
     Each module wanting to be able to set goals to the users needs to create
     a new gamification_goal_definition
     """
+    _name = 'gamification.goal.definition'
     _description = 'Gamification Goal Definition'
 
     name = fields.Char("Goal Definition", required=True, translate=True)

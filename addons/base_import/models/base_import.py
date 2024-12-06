@@ -143,6 +143,7 @@ class Base_ImportMapping(models.Model):
     without them having to re-enter the mapping every single
     time.
     """
+    _name = 'base_import.mapping'
     _description = 'Base Import Mapping'
 
     res_model = fields.Char(index=True)
@@ -211,7 +212,7 @@ class Base_ImportImport(models.TransientModel):
           - Save mapping if any import is successful to ease later mapping suggestions.
           - Return import result to the UI (success or errors if any).
     """
-
+    _name = 'base_import.import'
     _description = 'Base Import'
 
     # allow imports to survive for 12h in case user is slow

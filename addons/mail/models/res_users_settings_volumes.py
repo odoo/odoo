@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class ResUsersSettingsVolumes(models.Model):
     """ Represents the volume of the sound that the user of user_setting_id will receive from partner_id. """
+    _name = 'res.users.settings.volumes'
     _description = 'User Settings Volumes'
 
     user_setting_id = fields.Many2one('res.users.settings', required=True, ondelete='cascade', index=True)

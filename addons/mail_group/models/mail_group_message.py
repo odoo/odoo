@@ -19,6 +19,7 @@ class MailGroupMessage(models.Model):
     Those are build on <mail.message> with additional information related to specific
     features of <mail.group> like better parent / children management and moderation.
     """
+    _name = 'mail.group.message'
     _description = 'Mailing List Message'
     _rec_name = 'subject'
     _order = 'create_date DESC'

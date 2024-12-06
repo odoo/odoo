@@ -31,6 +31,7 @@ class MailGroup(models.Model):
     group messages. Moderation can be activated on groups. In that case email have to
     be validated or rejected.
     """
+    _name = 'mail.group'
     _description = 'Mail Group'
     # TDE CHECK: use blaclist mixin
     _inherit = ['mail.alias.mixin']

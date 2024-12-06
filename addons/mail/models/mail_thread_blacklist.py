@@ -26,6 +26,7 @@ class MailThreadBlacklist(models.AbstractModel):
 
     Mail Thread capabilities are required for this mixin. """
 
+    _name = 'mail.thread.blacklist'
     _inherit = ['mail.thread']
     _description = 'Mail Blacklist mixin'
     _primary_email = 'email'

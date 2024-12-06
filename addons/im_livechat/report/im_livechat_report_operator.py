@@ -7,6 +7,7 @@ from odoo import api, fields, models, tools
 class Im_LivechatReportOperator(models.Model):
     """ Livechat Support Report on the Operator """
 
+    _name = 'im_livechat.report.operator'
     _description = "Livechat Support Operator Report"
     _order = 'livechat_channel_id, partner_id'
     _auto = False

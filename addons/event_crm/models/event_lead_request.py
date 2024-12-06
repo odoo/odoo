@@ -15,6 +15,7 @@ class EventLeadRequest(models.Model):
     To benefit from a background processing, we use a CRON that calls itself with a CRON trigger
     until the batch is completed, which unlinks this technical generation record. """
 
+    _name = 'event.lead.request'
     _description = "Event Lead Request"
     _log_access = False
     _rec_name = "event_id"

@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 class IrQweb(models.AbstractModel):
     """ IrQweb object for rendering editor stuff
     """
-    _inherit = ['ir.qweb']
+    _inherit = 'ir.qweb'
 
     def _compile_node(self, el, compile_context, indent):
         snippet_key = compile_context.get('snippet-key')
@@ -457,6 +457,7 @@ class IrQwebFieldImage(models.AbstractModel):
     ``class``
         set as attribute on the generated <img> tag
     """
+    _name = 'ir.qweb.field.image'
     _description = 'Qweb Field Image'
     _inherit = ['ir.qweb.field.image']
 

@@ -33,7 +33,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         merge. We use two objects, the first one is the wizard for the end-user.
         And the second will contain the partner list to merge.
     """
-
+    _name = 'base.partner.merge.automatic.wizard'
     _description = 'Merge Partner Wizard'
 
     @api.model

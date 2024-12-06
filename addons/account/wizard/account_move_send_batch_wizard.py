@@ -5,6 +5,7 @@ from odoo import _, api, Command, fields, models
 
 class AccountMoveSendBatchWizard(models.TransientModel):
     """Wizard that handles the sending of multiple invoices."""
+    _name = 'account.move.send.batch.wizard'
     _inherit = ['account.move.send']
     _description = "Account Move Send Batch Wizard"
 

@@ -8,6 +8,7 @@ from odoo.tools import email_normalize
 
 class MailGroupModeration(models.Model):
     """Represent the moderation rules for an email address in a group."""
+    _name = 'mail.group.moderation'
     _description = 'Mailing List black/white list'
 
     email = fields.Char(string='Email', required=True)

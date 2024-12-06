@@ -58,6 +58,7 @@ class IrAsset(models.Model):
         2. It allows to create 'ir.asset' records to add additional directives
         to certain bundles.
     """
+    _name = 'ir.asset'
     _description = 'Asset'
     _order = 'sequence, id'
     _allow_sudo_commands = False

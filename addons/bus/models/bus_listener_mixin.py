@@ -9,6 +9,7 @@ class BusListenerMixin(models.AbstractModel):
     The model needs to be allowed as a valid channel for the bus in `_build_bus_channel_list`.
     """
 
+    _name = 'bus.listener.mixin'
     _description = "Can send messages via bus.bus"
 
     def _bus_send(self, notification_type, message, /, *, subchannel=None):

@@ -17,8 +17,7 @@ class IrQwebFieldImage(models.AbstractModel):
     ``class``
         set as attribute on the generated <img> tag
     """
-    _description = 'Qweb Field Image'
-    _inherit = ['ir.qweb.field.image']
+    _inherit = 'ir.qweb.field.image'
 
     def _get_src_urls(self, record, field_name, options):
         """Considering the rendering options, returns the src and data-zoom-image urls.
@@ -114,9 +113,7 @@ class IrQwebFieldImage(models.AbstractModel):
 
 
 class IrQwebFieldImage_Url(models.AbstractModel):
-    _name = 'ir.qweb.field.image_url'
-    _description = 'Qweb Field Image'
-    _inherit = ['ir.qweb.field.image_url']
+    _inherit = 'ir.qweb.field.image_url'
 
     def _get_src_urls(self, record, field_name, options):
         image_url = record[options.get('preview_image', field_name)]

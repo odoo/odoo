@@ -22,6 +22,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
 
             e.g.
             class MyModel(models.Model):
+                _name = 'my.model'
                 _track_duration_field = "tracked_field"
 
                 tracked_field = fields.Many2one('tracked.model', tracking=True)

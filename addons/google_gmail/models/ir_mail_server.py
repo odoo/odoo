@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 class IrMail_Server(models.Model):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
 
+    _name = 'ir.mail_server'
     _inherit = ['ir.mail_server', 'google.gmail.mixin']
 
     smtp_authentication = fields.Selection(

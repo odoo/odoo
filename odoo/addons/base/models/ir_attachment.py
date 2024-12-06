@@ -39,6 +39,7 @@ class IrAttachment(models.Model):
     The default implementation is the file:dirname location that stores files
     on the local filesystem using name based on their sha1 hash
     """
+    _name = 'ir.attachment'
     _description = 'Attachment'
     _order = 'id desc'
 

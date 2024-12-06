@@ -24,7 +24,7 @@ class ResConfigSettings(models.TransientModel):
         are still in use, you should promise the current service account
         has the permission to access the old bucket.
     """
-    _inherit = ['res.config.settings']
+    _inherit = 'res.config.settings'
 
     cloud_storage_provider = fields.Selection(selection_add=[('google', 'Google Cloud Storage')])
 

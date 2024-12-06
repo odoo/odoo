@@ -9,6 +9,7 @@ from odoo.osv.expression import OR
 
 class AnalyticPlanFieldsMixin(models.AbstractModel):
     """ Add one field per analytic plan to the model """
+    _name = 'analytic.plan.fields.mixin'
     _description = 'Analytic Plan Fields'
 
     account_id = fields.Many2one(

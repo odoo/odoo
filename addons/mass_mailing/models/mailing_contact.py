@@ -11,6 +11,7 @@ class MailingContact(models.Model):
     because it holds only some basic information: name, email. The purpose is to
     be able to deal with large contact list to email without bloating the partner
     base."""
+    _name = 'mailing.contact'
     _inherit = ['mail.thread.blacklist']
     _description = 'Mailing Contact'
     _order = 'name ASC, id DESC'

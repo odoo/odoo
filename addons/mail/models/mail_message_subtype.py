@@ -8,6 +8,7 @@ class MailMessageSubtype(models.Model):
     """ Class holding subtype definition for messages. Subtypes allow to tune
         the follower subscription, allowing only some subtypes to be pushed
         on the Wall. """
+    _name = 'mail.message.subtype'
     _description = 'Message subtypes'
     _order = 'sequence, id'
 

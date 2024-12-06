@@ -27,6 +27,7 @@ class BaseDocumentLayout(models.TransientModel):
     Customise the company document layout and display a live preview
     """
 
+    _name = 'base.document.layout'
     _description = 'Company Document Layout'
 
     @api.model

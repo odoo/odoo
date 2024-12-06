@@ -20,7 +20,7 @@ class ResConfigSettings(models.TransientModel):
        call, not before `create` is called. Because of this, vals contains a lot of field before
        super call, then the number of fields is reduced after.
     """
-    _inherit = ['res.config.settings']
+    _inherit = 'res.config.settings'
 
     def _default_pos_config(self):
         # Default to the last modified pos.config.

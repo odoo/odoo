@@ -2,6 +2,7 @@ from odoo import api, models
 
 
 class ResourceCalendarAttendance(models.Model):
+    _name = 'resource.calendar.attendance'
     _inherit = ['resource.calendar.attendance', 'pos.load.mixin']
 
     @api.model

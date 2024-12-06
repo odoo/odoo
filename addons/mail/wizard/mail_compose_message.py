@@ -38,6 +38,7 @@ class MailComposeMessage(models.TransientModel):
             contain template placeholders that will be merged with actual data
             before being sent to each recipient.
     """
+    _name = 'mail.compose.message'
     _inherit = ['mail.composer.mixin']
     _description = 'Email composition wizard'
     _log_access = True

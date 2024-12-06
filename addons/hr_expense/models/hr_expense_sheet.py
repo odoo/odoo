@@ -26,6 +26,7 @@ class HrExpenseSheet(models.Model):
                     Manager                 Always
         =================================================================================
     """
+    _name = 'hr.expense.sheet'
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _description = "Expense Report"
     _order = "accounting_date desc, id desc"

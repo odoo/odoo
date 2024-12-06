@@ -54,6 +54,7 @@ class IrQwebField(models.AbstractModel):
       result node
     * generates the root result node itself through :meth:`~.render_element`
     """
+    _name = 'ir.qweb.field'
     _description = 'Qweb Field'
 
     @api.model
@@ -387,6 +388,7 @@ class IrQwebFieldImage(models.AbstractModel):
               reports may need embedded images or FS links whereas website
               needs website-aware
     """
+    _name = 'ir.qweb.field.image'
     _description = 'Qweb Field Image'
     _inherit = ['ir.qweb.field']
 
@@ -419,6 +421,7 @@ class IrQwebFieldImage_Url(models.AbstractModel):
     """ ``image_url`` widget rendering, inserts an image tag in the
     document.
     """
+    _name = 'ir.qweb.field.image_url'
     _description = 'Qweb Field Image'
     _inherit = ['ir.qweb.field.image']
 
@@ -441,6 +444,7 @@ class IrQwebFieldMonetary(models.AbstractModel):
               options mapping, so that the context is available to callees.
               It's set under the ``_values`` key.
     """
+    _name = 'ir.qweb.field.monetary'
     _description = 'Qweb Field Monetary'
     _inherit = ['ir.qweb.field']
 
@@ -535,6 +539,7 @@ class IrQwebFieldFloat_Time(models.AbstractModel):
 
     Can be used on any numerical field.
     """
+    _name = 'ir.qweb.field.float_time'
     _description = 'Qweb Field Float Time'
     _inherit = ['ir.qweb.field']
 
@@ -550,6 +555,7 @@ class IrQwebFieldTime(models.AbstractModel):
 
     Can be used on any numerical field between: 0 <= value < 24
     """
+    _name = 'ir.qweb.field.time'
     _description = 'QWeb Field Time'
     _inherit = ['ir.qweb.field']
 
@@ -584,6 +590,7 @@ class IrQwebFieldDuration(models.AbstractModel):
 
     Sub-second values will be ignored.
     """
+    _name = 'ir.qweb.field.duration'
     _description = 'Qweb Field Duration'
     _inherit = ['ir.qweb.field']
 
@@ -711,6 +718,7 @@ class IrQwebFieldBarcode(models.AbstractModel):
     document. May be overridden by e.g. the website module to generate links
     instead.
     """
+    _name = 'ir.qweb.field.barcode'
     _description = 'Qweb Field Barcode'
     _inherit = ['ir.qweb.field']
 

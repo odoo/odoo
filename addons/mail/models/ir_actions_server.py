@@ -9,6 +9,7 @@ from odoo.exceptions import ValidationError
 
 class IrActionsServer(models.Model):
     """ Add mail.thread related options in server actions. """
+    _name = 'ir.actions.server'
     _description = 'Server Action'
     _inherit = ['ir.actions.server']
 

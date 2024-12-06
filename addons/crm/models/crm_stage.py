@@ -17,6 +17,7 @@ class CrmStage(models.Model):
         issues, ...) will now use only stages, instead of state and stages.
         Stages are for example used to display the kanban view of records.
     """
+    _name = 'crm.stage'
     _description = "CRM Stages"
     _rec_name = 'name'
     _order = "sequence, name, id"

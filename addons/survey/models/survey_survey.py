@@ -16,6 +16,7 @@ from odoo.tools import is_html_empty
 class SurveySurvey(models.Model):
     """ Settings for a multi-page/multi-question survey. Each survey can have one or more attached pages
     and each page can display one or more questions. """
+    _name = 'survey.survey'
     _description = 'Survey'
     _order = 'create_date DESC'
     _rec_name = 'title'

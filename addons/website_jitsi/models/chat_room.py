@@ -16,6 +16,7 @@ class ChatRoom(models.Model):
     The participant count is automatically updated thanks to the chat room widget
     to avoid having a costly computed field with a members model.
     """
+    _name = 'chat.room'
     _description = "Chat Room"
 
     def _default_name(self, objname='room'):

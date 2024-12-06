@@ -104,7 +104,6 @@ regex_order = re.compile(r'''
 ''', re.IGNORECASE | re.VERBOSE)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_group
 regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_group
-regex_camel_case = re.compile(r'(?<=[^_])([A-Z])')
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
@@ -114,10 +113,6 @@ SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
 # hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
 NO_ACCESS = '.'
-
-
-def class_name_to_model_name(classname: str) -> str:
-    return regex_camel_case.sub(r'.\1', classname).lower()
 
 
 def parse_read_group_spec(spec: str) -> tuple:
@@ -225,12 +220,15 @@ class MetaModel(type):
 
             _inherit = attrs.get('_inherit')
             if _inherit and isinstance(_inherit, str):
-                # TODO: add an exception: TypeError(f"'_inherit' property of model {name!r} should be a list: {_inherit!r}.")
                 attrs.setdefault('_name', _inherit)
                 attrs['_inherit'] = [_inherit]
 
             if not attrs.get('_name'):
-                attrs['_name'] = class_name_to_model_name(name)
+                # add '.' before every uppercase letter preceded by any non-underscore char
+                attrs['_name'] = re.sub(r"(?<=[^_])([A-Z])", r".\1", name).lower
+                _logger.warning("Class %s has no _name, please make it explicit: _name = %r", name, attrs['_name'])
+
+            assert attrs.get('_name')
 
         return super().__new__(meta, name, bases, attrs)
 
@@ -343,10 +341,10 @@ READ_GROUP_DISPLAY_FORMAT = {
 #           ...                               / | \
 #                                            A3 A2 A1   <- definition classes
 #       class A(Model):  # A2                 \ | /
-#           _inherit = ['a']                    a       <- registry class: registry['a']
+#           _inherit = 'a'                      a       <- registry class: registry['a']
 #                                               |
 #       class A(Model):  # A3                records    <- model instances, like env['a']
-#           _inherit = ['a']
+#           _inherit = 'a'
 #
 # Note that when the model inherits from another model, we actually make the
 # registry classes inherit from each other, so that extensions to an inherited
@@ -363,7 +361,7 @@ READ_GROUP_DISPLAY_FORMAT = {
 #           _inherit = ['a', 'b']           \   a   /
 #                                            \  |  /
 #       class A(Model):  # A2                 \ | /
-#           _inherit = ['a']                    b
+#           _inherit = 'a'                      b
 #
 #
 # THE FIELDS OF A MODEL
@@ -403,7 +401,7 @@ READ_GROUP_DISPLAY_FORMAT = {
 #           bar = ...                       A2     A1
 #                                            bar    foo, bar
 #       class A2(Model):                      \   /
-#           _inherit = ['a']                     \ /
+#           _inherit = 'a'                     \ /
 #           bar = ...                           a
 #                                                bar
 #

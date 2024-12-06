@@ -7,6 +7,7 @@ from odoo.tools import float_round
 
 class LunchCashmove(models.Model):
     """ Two types of cashmoves: payment (credit) or order (debit) """
+    _name = 'lunch.cashmove'
     _description = 'Lunch Cashmove'
     _order = 'date desc'
 

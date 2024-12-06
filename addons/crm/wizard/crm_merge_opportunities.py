@@ -14,6 +14,7 @@ class CrmMergeOpportunity(models.TransientModel):
         in a new opp).
     """
 
+    _name = 'crm.merge.opportunity'
     _description = 'Merge Opportunities'
 
     @api.model

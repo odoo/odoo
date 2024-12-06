@@ -24,6 +24,7 @@ class HrEmployee(models.Model):
     hr.employee model. Indeed, the prefetch loads the data for all the fields
     that are available according to the group defined on them.
     """
+    _name = 'hr.employee'
     _description = "Employee"
     _order = 'name'
     _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']

@@ -5,6 +5,7 @@ from odoo import models, fields, api
 
 # We inherit from the parent model, and we add some fields in the child model
 class Test_Inherit_Daughter(models.Model):
+    _name = 'test_inherit_daughter'
     _description = 'Test Inherit Daughter'
 
     template_id = fields.Many2one('test.inherit.mother', 'Template',
@@ -14,7 +15,7 @@ class Test_Inherit_Daughter(models.Model):
 
 # pylint: disable=E0102
 class Test_Inherit_Daughter(models.Model):  # noqa: F811
-    _inherit = ['test_inherit_daughter']
+    _inherit = 'test_inherit_daughter'
 
     # simply redeclare the field without adding any option
     template_id = fields.Many2one()
@@ -24,7 +25,7 @@ class Test_Inherit_Daughter(models.Model):  # noqa: F811
 
 
 class ResPartner(models.Model):
-    _inherit = ['res.partner']
+    _inherit = 'res.partner'
 
     # define a one2many field based on the inherited field partner_id (from test.inherit.mother, with template_id)
     daughter_ids = fields.One2many('test_inherit_daughter', 'partner_id', string="My daughter_ids")
@@ -35,6 +36,7 @@ class ResPartner(models.Model):
 
 # Contribution by Adrien Peiffer (ACSONE).
 class Test_Inherit_Property(models.Model):
+    _name = 'test_inherit_property'
     _description = 'Test Inherit Property'
 
     name = fields.Char('Name', required=True)
@@ -44,7 +46,7 @@ class Test_Inherit_Property(models.Model):
 
 # pylint: disable=E0102
 class Test_Inherit_Property(models.Model):  # noqa: F811
-    _inherit = ['test_inherit_property']
+    _inherit = 'test_inherit_property'
 
     # override property_foo with a plain normal field
     property_foo = fields.Integer(company_dependent=False)
@@ -63,6 +65,7 @@ class Test_Inherit_Property(models.Model):  # noqa: F811
 
 
 class Test_Inherit_Parent(models.AbstractModel):
+    _name = 'test_inherit_parent'
     _description = 'Test Inherit Parent'
 
     def stuff(self):
@@ -70,6 +73,7 @@ class Test_Inherit_Parent(models.AbstractModel):
 
 
 class Test_Inherit_Child(models.AbstractModel):
+    _name = 'test_inherit_child'
     _inherit = ['test_inherit_parent']
     _description = 'Test Inherit Child'
 
@@ -81,7 +85,7 @@ class Test_Inherit_Child(models.AbstractModel):
 
 # pylint: disable=E0102
 class Test_Inherit_Parent(models.AbstractModel):  # noqa: F811
-    _inherit = ['test_inherit_parent']
+    _inherit = 'test_inherit_parent'
 
     foo = fields.Integer()
 
@@ -104,7 +108,7 @@ class Test_Inherit_Parent(models.AbstractModel):  # noqa: F811
 
 
 class Test_New_ApiSelection(models.Model):
-    _inherit = ['test_new_api.selection']
+    _inherit = 'test_new_api.selection'
 
     state = fields.Selection(selection_add=[('bar', 'Bar'), ('baz', 'Baz')])
     other = fields.Selection('_other_values')
@@ -119,13 +123,14 @@ class Test_New_ApiSelection(models.Model):
 
 
 class Test_Inherit_Mixin(models.AbstractModel):
+    _name = 'test_inherit_mixin'
     _description = "Test Inherit Mixin"
 
     published = fields.Boolean()
 
 
 class Test_New_ApiMessage(models.Model):
-    _inherit = ['test_new_api.message']
+    _inherit = 'test_new_api.message'
 
     body = fields.Text(translate=True)  # Test conversion of char (with trigram indexed) to jsonb postgreSQL type
 

@@ -4,7 +4,7 @@ from odoo import models, api, fields
 
 
 class TestInheritMother(models.Model):
-    _inherit = ['test.inherit.mother']
+    _inherit = 'test.inherit.mother'
 
     # extend the selection of the state field, and discard its default value
     state = fields.Selection(selection_add=[('c', 'C')], default=None)

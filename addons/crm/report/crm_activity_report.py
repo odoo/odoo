@@ -7,6 +7,7 @@ from odoo import fields, models, tools
 class CrmActivityReport(models.Model):
     """ CRM Lead Analysis """
 
+    _name = 'crm.activity.report'
     _auto = False
     _description = "CRM Activity Analysis"
     _rec_name = 'id'

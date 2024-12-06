@@ -86,6 +86,7 @@ class IrSequence(models.Model):
     way.
 
     """
+    _name = 'ir.sequence'
     _description = 'Sequence'
     _order = 'name'
     _allow_sudo_commands = False

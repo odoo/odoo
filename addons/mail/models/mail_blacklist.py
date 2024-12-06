@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class MailBlacklist(models.Model):
     """ Model of blacklisted email addresses to stop sending emails."""
+    _name = 'mail.blacklist'
     _inherit = ['mail.thread']
     _description = 'Mail Blacklist'
     _rec_name = 'email'

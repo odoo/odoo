@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 class GamificationBadgeUser(models.Model):
     """User having received a badge"""
-    _inherit = ['gamification.badge.user']
+    _inherit = 'gamification.badge.user'
 
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True)
 

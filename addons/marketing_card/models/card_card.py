@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 class CardCard(models.Model):
     """Mapping from a unique ID to a 'sharer' of a campaign. Storing state of sharing and their specific card."""
+    _name = 'card.card'
     _description = 'Marketing Card'
 
     active = fields.Boolean('Active', default=True)
