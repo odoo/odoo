@@ -7,7 +7,6 @@ import { clamp } from "@web/core/utils/numbers";
 
 export class FacebookPage extends Interaction {
     static selector = ".o_facebook_page";
-    disabledInEditableMode = false;
 
     setup() {
         this.previousWidth = 0;
