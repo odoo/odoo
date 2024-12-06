@@ -383,3 +383,56 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         ])
         self.assertEqual(self.component.qty_available, 1)
         self.assertEqual(self.component.value_svl, 1424)
+
+    def test_valuation_across_multi_companies(self):
+        """
+        Check the valuation of the product with multiple companies using different costing methods
+        """
+        company_1 = self.env['res.company'].create([
+            {'name': 'company_1'}
+        ])
+        byproduct = self.env['product.product'].create({'name': 'byproduct'})
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        byproduct.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.with_company(company_1.id).standard_price = 90
+        byproduct.with_company(company_1.id).standard_price = 10
+        self.component.standard_price = 100
+        self.component.with_company(company_1.id).standard_price = 100
+
+        bom_value = {
+            'product_id': self.product1.id,
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {'product_id': self.component.id, 'product_qty': 1})],
+            'byproduct_ids': [(0, 0, {'product_id': byproduct.id, 'product_qty': 1, 'cost_share': 10})],
+            }
+        bom_1_value = {**bom_value, 'company_id': company_1.id}
+        bom_1 = self.env['mrp.bom'].create([bom_1_value])
+        self.bom.update({'byproduct_ids': [(0, 0, {'product_id': byproduct.id, 'product_qty': 1, 'cost_share': 10})]})
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.bom.product_id
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        self._produce(mo)
+        mo.with_company(company_1.id).button_mark_done()
+        self.assertEqual(byproduct.value_svl, 10)
+        self.assertEqual(self.product1.value_svl, 90)
+        self.assertEqual(byproduct.quantity_svl, 1)
+        self.assertEqual(self.product1.quantity_svl, 1)
+
+        mo_form = Form(self.env['mrp.production'].with_company(company_1.id))
+        mo_form.product_id = bom_1.product_id
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.with_company(company_1.id).action_confirm()
+        self._produce(mo)
+        mo.button_mark_done()
+        self.assertEqual(byproduct.with_company(company_1.id).value_svl, 10)
+        self.assertEqual(self.product1.with_company(company_1.id).value_svl, 90)
+        self.assertEqual(byproduct.with_company(company_1.id).quantity_svl, 1)
+        self.assertEqual(self.product1.with_company(company_1.id).quantity_svl, 1)
