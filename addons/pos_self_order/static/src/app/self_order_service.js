@@ -189,7 +189,18 @@ export class SelfOrder extends Reactive {
 
         this.categoryList = new Set(availableCategories);
         this.availableCategories = availableCategories.filter((c) => {
-            return now > c.hour_after && now < c.hour_until;
+            const hourStart = c.hour_after;
+            const hourUntil = c.hour_until;
+            if (hourStart === hourUntil || (hourStart === 0 && hourUntil === 24)) {
+                // if equal, it means open the whole day
+                return true;
+            } else if (hourStart < hourUntil) {
+                // in this case, if current time is in between, then shop is open
+                return now >= hourStart && now <= hourUntil;
+            } else {
+                // in this case, if current time is in between, then shop is closed
+                return !(now >= hourStart && now <= hourUntil);
+            }
         });
         this.currentCategory = this.productCategories[0] || null;
     }
