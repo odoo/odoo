@@ -4,7 +4,7 @@ import { defineModels, fields, models, mountView } from "@web/../tests/web_test_
 class Product extends models.Model {
     json_field = fields.Json();
 
-    _records = [{ id: 1, json_field: "['coupon', 'promotion']" }];
+    _records = [{ id: 1, json_field: '["coupon", "promotion"]' }];
 }
 
 defineModels([Product]);

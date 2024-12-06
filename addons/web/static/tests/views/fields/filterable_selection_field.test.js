@@ -15,8 +15,8 @@ class Program extends models.Model {
     });
 
     _records = [
-        { id: 1, type: "coupon", available_types: "['coupon', 'promotion']" },
-        { id: 2, type: "gift_card", available_types: "['gift_card', 'promotion']" },
+        { id: 1, type: "coupon", available_types: '["coupon", "promotion"]' },
+        { id: 2, type: "gift_card", available_types: '["gift_card", "promotion"]' },
     ];
 }
 defineModels([Program]);
