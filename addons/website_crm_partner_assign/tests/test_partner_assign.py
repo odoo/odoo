@@ -43,64 +43,63 @@ class TestPartnerAssign(TransactionCase):
         self.startPatcher(patcher)
 
     def test_opportunity_count(self):
-        self.customer_uk.write({
+        """
+        Test the propagation of lead/oppourtinity in a parent-child partner hierarchy.
+        """
+        partner = self.env['res.partner']
+        parent = partner.create({
+            'name': 'Parent',
             'is_company': True,
-            'child_ids': [
-                (0, 0, {'name': 'Uk Children 1',
-                       }),
-                (0, 0, {'name': 'Uk Children 2',
-                       }),
-            ],
         })
-        lead_uk_assigned = self.env['crm.lead'].create({
-            'name': 'Office Design and Architecture',
-            'partner_assigned_id': self.customer_uk.id,
-            'type': 'opportunity',
+        child_1 = partner.create({
+            'name': 'Child-1',
+            'parent_id': parent.id,
         })
-        children_leads = self.env['crm.lead'].create([
-            {'name': 'Children 1 Lead 1',
-             'partner_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 1 Lead 2',
-             'partner_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 1',
-             'partner_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 2',
-             'partner_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-        ])
+        child_1_1 = partner.create({
+            'name': 'Child-1.1',
+            'parent_id': child_1.id,
+        })
+
         children_leads_assigned = self.env['crm.lead'].create([
             {'name': 'Children 1 Lead 1',
-             'partner_assigned_id': self.customer_uk.child_ids[0].id,
-             'type': 'lead'},
+             'partner_assigned_id': child_1.id,
+             'type': 'opportunity'},
             {'name': 'Children 1 Lead 2',
-             'partner_assigned_id': self.customer_uk.child_ids[0].id,
+             'partner_assigned_id': child_1.id,
+             'type': 'opportunity'},
+            {'name': 'Children 1.1 Lead 1',
+             'partner_assigned_id': child_1_1.id,
              'type': 'lead'},
-            {'name': 'Children 2 Lead 1',
-             'partner_assigned_id': self.customer_uk.child_ids[1].id,
-             'type': 'lead'},
-            {'name': 'Children 2 Lead 2',
-             'partner_assigned_id': self.customer_uk.child_ids[1].id,
+            {'name': 'Children 1.1 Lead 2',
+             'partner_assigned_id': child_1_1.id,
              'type': 'lead'},
         ])
+        #  when an lead or oppourtinity is assigned to a children then it's count should properly propagate to the parent.
+        expected_lead_count = [4, 4, 2]
+        partners = [parent, child_1, child_1_1]
+        for partner, count in zip(partners, expected_lead_count):
+            self.assertEqual(partner.opportunity_count, count)
 
-        self.assertEqual(
-            repr(self.customer_uk.action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(self.lead_uk.ids + lead_uk_assigned.ids + children_leads.ids))]),
-            'Parent: own + children leads + assigned'
-        )
-        self.assertEqual(
-            repr(self.customer_uk.child_ids[0].action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(children_leads[0:2].ids + children_leads_assigned[0:2].ids))]),
-            'Children: own leads + assigned'
-        )
-        self.assertEqual(
-            repr(self.customer_uk.child_ids[1].action_view_opportunity()['domain']),
-            repr([('id', 'in', sorted(children_leads[2:].ids + children_leads_assigned[2:].ids))]),
-            'Children: own leads + assigned'
-        )
+        #  when the customer of the lead is also set as partner_assign_id then it's count should properly propagate to it's parent.
+        #  when the parent is set as customer and it's children is assigned to the lead then it's count should properly propagate to it's hierarchy.
+
+        for lead in children_leads_assigned:
+            if lead.name == 'Children 1.1 Lead 2':
+                lead.partner_id = parent.id
+            else:
+                lead.partner_id = lead.partner_assigned_id.id
+        for partner, count in zip(partners, expected_lead_count):
+            self.assertEqual(partner.opportunity_count, count)
+
+        #  when partner should show appropriate leads/oppourtinities.
+        parent_lead = self.env['crm.lead'].create({
+            'name': 'Parent Lead',
+            'partner_id': parent.id,
+        })
+        expected_leads = [children_leads_assigned + parent_lead, children_leads_assigned, children_leads_assigned[2:]]
+        for partner, expected_lead in zip(partners, expected_leads):
+            leads = self.env['crm.lead'].search(partner.action_view_opportunity()['domain'])
+            self.assertEqual(leads, expected_lead)
 
     def test_partner_assign(self):
         """ Test the automatic assignation using geolocalisation """
