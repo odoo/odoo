@@ -110,15 +110,13 @@ class TestPeppolParticipant(TransactionCase):
             wizard.button_peppol_sender_registration()
 
     def test_create_participant_already_exists(self):
-        # creating a receiver participant that already exists on Peppol network should not be possible
+        # creating a receiver participant that already exists on Peppol network should migrate him away
         vals = self._get_participant_vals()
         vals['peppol_eas'] = '0208'
         wizard = self.env['peppol.registration'].create(vals)
         wizard.smp_registration = True
-        with self.assertRaises(UserError), self.cr.savepoint():
-            wizard.button_peppol_sender_registration()
-            wizard.verification_code = '123456'
-            wizard.button_check_peppol_verification_code()
+        wizard.button_peppol_sender_registration()
+        self.assertEqual(self.env.company.account_peppol_migration_key, 'test_key')
 
     def test_create_success_sender(self):
         # should be possible to apply with all data
@@ -127,6 +125,7 @@ class TestPeppolParticipant(TransactionCase):
         # after running the cron checking participant status
         company = self.env.company
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard.smp_registration = False  # by default, we try to register as receiver
         wizard.button_peppol_sender_registration()
         # should send verification code immediately
         self.assertEqual(company.account_peppol_proxy_state, 'in_verification')
@@ -163,6 +162,7 @@ class TestPeppolParticipant(TransactionCase):
         # first step: use the peppol wizard to register only as a sender
         company = self.env.company
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard.smp_registration = False  # by default, we try to register as receiver
         wizard.button_peppol_sender_registration()
         wizard.verification_code = '123456'
         wizard.button_check_peppol_verification_code()

@@ -40,7 +40,7 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
-                    'message': _("These partners are missing Peppol EAS or Peppol Endpoint field. "
+                    'message': _("These partners are missing Peppol Address. "
                                  "Please check those in their Accounting tab. "
                                  "Otherwise, the generated files will be incomplete."),
                     'level': 'info',

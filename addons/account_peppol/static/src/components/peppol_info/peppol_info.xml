@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="account_peppol.WhatIsPeppol">
+        <div class="modal-content shadow">
+            <div t-if="state.page === 'whatispeppol'" class="modal-body p-5">
+                <h2 class="fw-bold mb-0">What is Peppol ?</h2>
+                <ul class="d-grid gap-4 my-5 list-unstyled small">
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">An e-invoicing network</h5>
+                            PEPPOL is the secure EU standard for e-invoices.
+                        </div>
+                    </li>
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">Fully digital</h5>
+                            PEPPOL invoices use a format that allows complete automation.
+                        </div>
+                    </li>
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">Free on Odoo</h5>
+                            Create, send and receive e-invoices freely.
+                        </div>
+                    </li>
+                </ul>
+                <button class="btn btn-lg btn-primary mt-5 w-100" t-on-click="next">Next</button>
+            </div>
+            <div t-if="state.page === 'whyitsgreat'" class="modal-body p-5">
+                <h2 class="fw-bold mb-0">Why it's great ?</h2>
+                <ul class="d-grid gap-4 my-5 list-unstyled small">
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">E-invoices will soon be mandatory</h5>
+                            Be prepared early with Odoo.
+                        </div>
+                    </li>
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">Work with all kinds of clients</h5>
+                            Some organizations, like governments, already require e-invoices.
+                        </div>
+                    </li>
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">Automatic import of supplier invoices</h5>
+                            Vendor bills come directly into Odoo, saving you time.
+                        </div>
+                    </li>
+                </ul>
+                <button class="btn btn-lg btn-primary mt-5 w-100" t-on-click="activate">Activate</button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="account_peppol.WhyItsGreat">
+        <h1>Why it's great ?</h1>
+    </t>
+
+</templates>
