@@ -9200,7 +9200,7 @@ registry.ContainerWidth = SnippetOptionWidget.extend({
      */
     selectClass: async function (previewMode, widgetValue, params) {
         await this._super(...arguments);
-        if (previewMode === 'reset') {
+        if (previewMode === 'reset' || !previewMode) {
             this.$target.removeClass('o_container_preview');
         } else if (previewMode) {
             this.$target.addClass('o_container_preview');
