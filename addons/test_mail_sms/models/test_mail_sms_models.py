@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class MailTestSms(models.Model):
     """ A model inheriting from mail.thread with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """
+    _name = 'mail.test.sms'
     _description = 'Chatter Model for SMS Gateway'
     _inherit = ['mail.thread']
     _mailing_enabled = True
@@ -29,6 +30,7 @@ class MailTestSms(models.Model):
 class MailTestSmsBl(models.Model):
     """ A model inheriting from mail.thread.phone allowing to test auto formatting
     of phone numbers, blacklist, ... """
+    _name = 'mail.test.sms.bl'
     _description = 'SMS Mailing Blacklist Enabled'
     _inherit = ['mail.thread.phone']
     _mailing_enabled = True
@@ -61,6 +63,7 @@ class MailTestSmsBl(models.Model):
 class MailTestSmsBlActivity(models.Model):
     """ A model inheriting from mail.thread.phone allowing to test auto formatting
     of phone numbers, blacklist, ... as well as activities management. """
+    _name = 'mail.test.sms.bl.activity'
     _description = 'SMS Mailing Blacklist Enabled with activities'
     _inherit = [
         'mail.test.sms.bl',
@@ -73,6 +76,7 @@ class MailTestSmsBlActivity(models.Model):
 class MailTestSmsBlOptout(models.Model):
     """ Model using blacklist mechanism and a hijacked opt-out mechanism for
     mass mailing features. """
+    _name = 'mail.test.sms.bl.optout'
     _description = 'SMS Mailing Blacklist / Optout Enabled'
     _inherit = ['mail.thread.phone']
     _mailing_enabled = True
@@ -103,6 +107,7 @@ class MailTestSmsBlOptout(models.Model):
 class MailTestSmsPartner(models.Model):
     """ A model like sale order having only a customer, not specific phone
     or mobile fields. """
+    _name = 'mail.test.sms.partner'
     _description = 'Chatter Model for SMS Gateway (Partner only)'
     _inherit = ['mail.thread']
     _mailing_enabled = True

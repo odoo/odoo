@@ -14,7 +14,7 @@ class ResUsers(models.Model):
         - add a welcome message
         - add suggestion preference
     """
-    _inherit = ['res.users']
+    _inherit = 'res.users'
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),

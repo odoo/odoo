@@ -16,7 +16,7 @@ class SurveySurvey(models.Model):
        (4) custom: An empty survey
     """
 
-    _inherit = ['survey.survey']
+    _inherit = 'survey.survey'
 
     @api.model
     def action_load_sample_survey(self):
