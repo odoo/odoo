@@ -43,11 +43,3 @@ def post_init(env):
             company.write({
                 'leave_timesheet_task_id': task.id,
             })
-
-    for hr_leave_type in env['hr.leave.type'].search([('timesheet_generate', '=', True), ('company_id', '!=', False), ('timesheet_project_id', '=', False)]):
-        project_id = hr_leave_type.company_id.internal_project_id
-        default_task_id = hr_leave_type.company_id.leave_timesheet_task_id
-        hr_leave_type.write({
-            'timesheet_project_id': project_id.id,
-            'timesheet_task_id': default_task_id.id if default_task_id and default_task_id.project_id == project_id else False,
-        })
