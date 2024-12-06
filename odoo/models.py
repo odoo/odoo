@@ -4086,22 +4086,22 @@ class BaseModel(metaclass=MetaModel):
             # The first part of the check verifies that all records linked via relation fields are compatible
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
             for name in regular_fields:
-                corecord = record.sudo()[name]
-                if corecord:
-                    domain = corecord._check_company_domain(company)
-                    if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
-                        inconsistencies.append((record, name, corecord))
+                corecords = record.sudo()[name]
+                if corecords:
+                    domain = corecords._check_company_domain(company)
+                    if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
+                        inconsistencies.append((record, name, corecords))
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
             #      `self.property_account_payable_id.company_id == self.env.company
             company = self.env.company
             for name in property_fields:
-                corecord = record.sudo()[name]
-                if corecord:
-                    domain = corecord._check_company_domain(company)
-                    if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
-                        inconsistencies.append((record, name, corecord))
+                corecords = record.sudo()[name]
+                if corecords:
+                    domain = corecords._check_company_domain(company)
+                    if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
+                        inconsistencies.append((record, name, corecords))
 
         if inconsistencies:
             lines = [_("Incompatible companies on records:")]
