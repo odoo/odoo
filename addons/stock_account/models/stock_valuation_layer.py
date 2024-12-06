@@ -276,6 +276,8 @@ class StockValuationLayer(models.Model):
             move = svl.stock_move_id
             if not move:
                 move = svl.stock_valuation_layer_id.stock_move_id
+            if not move:
+                continue # TODO: if there is a revaluation or something, it should also go into this account move
             am_vals = move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
             for am_val in am_vals:
                 journal = am_val['journal_id']
