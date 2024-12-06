@@ -211,3 +211,23 @@ class TestProject(TestCommonSaleTimesheet):
     def test_duplicate_project_allocated_hours(self):
         self.project_global.allocated_hours = 10
         self.assertEqual(self.project_global.copy().allocated_hours, 10)
+
+    def test_sol_and_analytic_distribution_access(self):
+        """
+        Step:
+            1) Create two companies and two users with employees.
+            2) Create a sale order with Company A.
+            3) Confirm the sale order.
+            4) Remove the company_id from the project.
+            5) Select the default company B and remove Company A.
+            6) Add a timesheet to the task.
+        """
+        self.so.project_id.company_id = False
+        self.user_employee_company_B.groups_id += self.env.ref('hr_timesheet.group_timesheet_manager')
+        self.env['account.analytic.line'].with_user(self.user_employee_company_B).create({
+            'name': 'Task with SOL',
+            'project_id': self.so.project_id.id,
+            'task_id': self.so.tasks_ids[1].id,
+            'employee_id': self.user_employee_company_B.employee_id.id,
+            'so_line': self.so.tasks_ids[1].sale_line_id.id,
+        })
