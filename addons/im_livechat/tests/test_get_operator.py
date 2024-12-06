@@ -1,5 +1,6 @@
+from datetime import timedelta
 import odoo
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import HttpCase
 from odoo.tests.common import new_test_user
 
@@ -32,6 +33,7 @@ class TestGetOperator(HttpCase):
                 "livechat_channel_id": livechat.id,
                 "livechat_operator_id": operator.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
+                "last_interest_dt": fields.Datetime.now(),
             }
         )
         if in_call:
@@ -221,3 +223,70 @@ class TestGetOperator(HttpCase):
         self._create_chat(livechat_channel, second_operator)
         self._create_chat(livechat_channel, second_operator)
         self.assertEqual(first_operator, livechat_channel._get_operator())
+
+    def test_max_concurrent_sessions(self):
+        operator = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator.id],
+                "concurrent_session": True,
+                "concurrent_session_number": 2,
+            }
+        )
+        self.assertIn(operator, livechat_channel.available_operator_ids)
+        self._create_chat(livechat_channel, operator)
+        self.assertIn(operator, livechat_channel.available_operator_ids)
+        self._create_chat(livechat_channel, operator)
+        self.assertNotIn(operator, livechat_channel.available_operator_ids)
+
+    def test_max_concurrent_sessions_multi_operators(self):
+        operator_1 = self._create_operator()
+        operator_2 = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator_1.id, operator_2.id],
+                "concurrent_session": True,
+                "concurrent_session_number": 2,
+            }
+        )
+        self._create_chat(livechat_channel, operator_1)
+        self._create_chat(livechat_channel, operator_1)
+        self._create_chat(livechat_channel, operator_2)
+        self.assertIn(operator_2, livechat_channel.available_operator_ids)
+        self.assertNotIn(operator_1, livechat_channel.available_operator_ids)
+
+    def test_operator_in_call_no_new_sessions(self):
+        operator = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator.id],
+                "concurrent_session": True,
+                "concurrent_session_number": 2,
+            }
+        )
+        self._create_chat(livechat_channel, operator, in_call=True)
+        self.assertNotIn(operator, livechat_channel.available_operator_ids)
+
+    def test_operator_concurrent_sessions_with_multi_channel(self):
+        operator = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create([
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator.id],
+                "concurrent_session": True,
+                "concurrent_session_number": 2,
+            },
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator.id],
+            }
+        ])
+        self._create_chat(livechat_channel[0], operator)
+        self._create_chat(livechat_channel[0], operator)
+        self.assertNotIn(operator, livechat_channel[0].available_operator_ids)
+        # Second livechat_channel is not limited, therefore the operator should
+        # be available for this channel
+        self.assertIn(operator, livechat_channel[1].available_operator_ids)
