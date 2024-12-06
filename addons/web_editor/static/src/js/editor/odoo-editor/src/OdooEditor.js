@@ -2142,6 +2142,33 @@ export class OdooEditor extends EventTarget {
                 restore(); // Make sure to make <br>s visible if needed.
             }
         }
+
+        // we get the `columnsContainer` (.o_text_columns) in case the user added columns and is deleting them 
+        const columnsContainers = [];
+        const fullRange = this.document.getSelection().getRangeAt(0);
+        const selectionCommonAncestor = fullRange.commonAncestorContainer;
+        if (selectionCommonAncestor.nodeType === Node.ELEMENT_NODE) {
+            const rows = selectionCommonAncestor.classList.contains("row")
+                ? [selectionCommonAncestor]
+                : selectionCommonAncestor.getElementsByClassName("row");
+            for (const row of rows) {
+                if (
+                    row &&
+                    row.parentElement &&
+                    row.parentElement.classList.contains("o_text_columns")
+                ) {
+                    const firstColumnNode = firstLeaf(row);
+                    const lastColumnNode = lastLeaf(row);
+                    if (
+                        fullRange.isPointInRange(firstColumnNode, 0) &&
+                        fullRange.isPointInRange(lastColumnNode, 0)
+                    ) {
+                        columnsContainers.push(row.parentElement);
+                    }
+                }
+            }
+        }
+
         if (!this.editable.childElementCount) {
             // Ensure the editable has content.
             const p = document.createElement('p');
@@ -2185,7 +2212,17 @@ export class OdooEditor extends EventTarget {
         const endBlock = closestBlock(end);
         const [firstLeafOfStartBlock, lastLeafOfEndBlock] = [firstLeaf(startBlock), lastLeaf(endBlock)];
         const startLink = closestElement(range.startContainer, 'a');
-        if (sel && !sel.isCollapsed && !range.startOffset && !range.startContainer.previousSibling && !startLink) {
+        const rangeStartSameAsColumnsStart =
+            columnsContainers.length &&
+            firstLeaf(range.startContainer) === firstLeaf(columnsContainers[0]);
+        if (
+            sel &&
+            !sel.isCollapsed &&
+            !range.startOffset &&
+            !range.startContainer.previousSibling &&
+            !startLink &&
+            !rangeStartSameAsColumnsStart // if the start is same as columns start we don't add `zws`
+        ) {
             // Insert a zero-width space before the selection if the selection
             // is non-collapsed and at the beginning of its parent, so said
             // parent will have content after extraction. This ensures that the
@@ -2224,8 +2261,31 @@ export class OdooEditor extends EventTarget {
             ...boundariesOut(end).slice(2, 4),
             { allowReenter: false, label: 'deleteRange' });
 
+        // handle the case when we select the columns (all) and only the columns
+        // we adjust the selection to cover the whole columnsContainers
+        if (columnsContainers.length) {
+            const firstColumnContainer = columnsContainers[0];
+            const lastColumnContainer = columnsContainers[columnsContainers.length - 1];
+            const startsWithColumn = firstLeaf(range.startContainer) === firstLeaf(firstColumnContainer);
+            const endsWithColumn = lastLeaf(range.endContainer) === lastLeaf(lastColumnContainer);
+            if (startsWithColumn) {
+                range.setStart(firstColumnContainer, 0);
+            }
+            if (endsWithColumn) {
+                range.setEnd(lastColumnContainer, lastColumnContainer.childNodes.length);
+            }
+        }
+
         // Let the DOM split and delete the range.
         const contents = range.extractContents();
+
+        // if our selection is at exactly the start and end of `columnsContainer`
+        // all its content will be removed but the parent will remain so we remove it manually
+        for (const columnsContainer of columnsContainers) {
+            if (!columnsContainer.hasChildNodes()) {
+                columnsContainer.remove();
+            }
+        }
 
         setSelection(start, nodeSize(start));
         const startLi = closestElement(start, 'li');
