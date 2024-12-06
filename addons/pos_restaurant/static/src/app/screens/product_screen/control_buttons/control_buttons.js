@@ -41,7 +41,6 @@ patch(ControlButtons.prototype, {
                     return;
                 }
                 this.currentOrder.setCustomerCount(guestCount);
-                this.pos.addPendingOrder([this.currentOrder.id]);
             },
         });
     },

@@ -423,12 +423,14 @@ export class PosData extends Reactive {
             );
             this.queue = [];
             console.log("Queue flushed");
+            return true;
         } catch (error) {
             localStorage.setItem(
                 `pos_config_${odoo.pos_config_id}_changes_queue`,
                 JSON.stringify(this.queue)
             );
             console.error("Flush failed", error);
+            return false;
         }
     }
 
