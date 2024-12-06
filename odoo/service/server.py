@@ -475,7 +475,7 @@ class ThreadedServer(CommonServer):
                         thread = threading.current_thread()
                         thread.start_time = time.time()
                         try:
-                            IrCron._process_jobs(db_name)
+                            IrCron._process_jobs(db_name, config['limit_time_soft_cron'])
                         except Exception:
                             _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
                         thread.start_time = None
@@ -1203,7 +1203,7 @@ class WorkerCron(Worker):
             self.setproctitle(db_name)
 
             from odoo.addons.base.models import ir_cron  # noqa: PLC0415
-            ir_cron.IrCron._process_jobs(db_name)
+            ir_cron.IrCron._process_jobs(db_name, config['limit_time_soft_cron'])
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:

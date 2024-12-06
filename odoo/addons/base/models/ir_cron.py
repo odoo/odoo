@@ -121,8 +121,9 @@ class IrCron(models.Model):
         return True
 
     @classmethod
-    def _process_jobs(cls, db_name):
+    def _process_jobs(cls, db_name, soft_limit=0):
         """ Execute every job ready to be run on this database. """
+        end_time = time.time() + soft_limit if soft_limit > 0 else None
         try:
             db = odoo.sql_db.db_connect(db_name)
             threading.current_thread().dbname = db_name
@@ -134,6 +135,9 @@ class IrCron(models.Model):
                 cls._check_modules_state(cron_cr, jobs)
 
                 for job_id in (job['id'] for job in jobs):
+                    if end_time is not None and end_time > time.time():
+                        _logger.info("Database %s soft-time limit reached", db_name)
+                        return
                     try:
                         job = cls._acquire_one_job(cron_cr, job_id)
                     except psycopg2.extensions.TransactionRollbackError:
