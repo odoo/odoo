@@ -74,6 +74,15 @@ class AccountMoveSend(models.TransientModel):
             return invoice._l10n_hu_edi_get_valid_actions()
 
     @api.model
+    def _prepare_invoice_pdf_report(self, invoice, invoice_data): 
+        # EXTENDS 'account'
+        # If we want to re-generate the PDF, we need to unlink the previous one.
+        if invoice.country_code == 'HU':
+            invoice.invoice_pdf_report_file = False
+            invoice.invoice_pdf_report_id = False
+        return super()._prepare_invoice_pdf_report(invoice, invoice_data)
+
+    @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
