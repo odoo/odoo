@@ -20,53 +20,37 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
         cls.test_phone_records += cls.env['mail.test.sms.bl'].create([
             {
                 'phone_nbr': '+32475110505',
-                'mobile_nbr': '+32475000505',
             }, {
                 'phone_nbr': '0032475110606',
-                'mobile_nbr': '0032475000606',
             }, {
                 'phone_nbr': '0032475110707',
-                'mobile_nbr': False,
             }, {
                 'phone_nbr': False,
-                'mobile_nbr': False,
             },
             # duplicated of 0606
             {
                 'phone_nbr': '0475110606',
-                'mobile_nbr': False,
-            }, {
-                'phone_nbr': False,
-                'mobile_nbr': '0475110606',
             }
         ])
-        cls.void_record = cls.test_phone_records[-3]
-        cls.dupes = cls.test_phone_records[-2:]
+        cls.void_record = cls.test_phone_records[-2]
+        cls.dupes = cls.test_phone_records[-1:]
 
     def test_initial_data(self):
         """ Test initial data for this class, allowing to be sure of I/O of tests. """
-        self.assertEqual(
-            self.test_phone_records.mapped('mobile_nbr'),
-            [
-                '0475000000', '0475000101', '0475000202', '0475000303', '0475000404',
-                '+32475000505', '0032475000606',
-                False, False,
-                False, '0475110606',
-            ]
-        )
+
         self.assertEqual(
             self.test_phone_records.mapped('phone_nbr'),
-            [False] * 5 + [
-                '+32475110505', '0032475110606', '0032475110707', False,
-                '0475110606', False,
-            ]
+            [
+                '0475000000', '0475000101', '0475000202', '0475000303',
+                '0475000404', '+32475110505', '0032475110606', '0032475110707',
+                False, '0475110606']
         )
         self.assertEqual(
             self.test_phone_records.mapped('phone_sanitized'),
             [
                 '+32475000000', '+32475000101', '+32475000202', '+32475000303',
                 '+32475000404', '+32475110505', '+32475110606', '+32475110707',
-                False, '+32475110606', '+32475110606',
+                False, '+32475110606',
             ],
         )
 

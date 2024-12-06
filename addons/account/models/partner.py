@@ -896,7 +896,6 @@ class ResPartner(models.Model):
         domains = []
         if phone:
             domains.append([('phone', '=', phone)])
-            domains.append([('mobile', '=', phone)])
         if email:
             domains.append([('email', '=', email)])
 

@@ -49,11 +49,9 @@ class EventSponsor(models.Model):
     partner_name = fields.Char('Name', related='partner_id.name')
     partner_email = fields.Char('Email', related='partner_id.email')
     partner_phone = fields.Char('Phone', related='partner_id.phone')
-    partner_mobile = fields.Char('Mobile', related='partner_id.mobile')
     name = fields.Char('Sponsor Name', compute='_compute_name', readonly=False, store=True)
     email = fields.Char('Sponsor Email', compute='_compute_email', readonly=False, store=True)
     phone = fields.Char('Sponsor Phone', compute='_compute_phone', readonly=False, store=True)
-    mobile = fields.Char('Sponsor Mobile', compute='_compute_mobile', readonly=False, store=True)
     # image
     image_512 = fields.Image(
         string="Logo", max_width=512, max_height=512,
@@ -97,10 +95,6 @@ class EventSponsor(models.Model):
     @api.depends('partner_id')
     def _compute_phone(self):
         self._synchronize_with_partner('phone')
-
-    @api.depends('partner_id')
-    def _compute_mobile(self):
-        self._synchronize_with_partner('mobile')
 
     @api.depends('partner_id')
     def _compute_image_512(self):

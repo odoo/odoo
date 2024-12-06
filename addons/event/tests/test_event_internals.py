@@ -767,9 +767,7 @@ class TestEventRegistrationPhone(EventCase):
         customer2 = self.event_customer2.with_env(self.env)
         event = self.test_event.with_env(self.env)
 
-        self.assertFalse(customer.mobile)
         self.assertEqual(customer.phone, '0485112233')
-        self.assertEqual(customer2.mobile, '0456654321')
         self.assertEqual(customer2.phone, '0456987654')
 
         self.assertEqual(event.company_id.country_id, self.env.ref("base.be"))
@@ -793,8 +791,7 @@ class TestEventRegistrationPhone(EventCase):
             'name': 'Constantin Customer 3 Mobile',
             'email': 'constantin3test.example.com',
             'country_id': self.env.ref('base.be').id,
-            'phone': False,
-            'mobile': '0456987654',
+            'phone': '0456987654',
             })
         event = self.test_event.with_user(self.env.user)
 
