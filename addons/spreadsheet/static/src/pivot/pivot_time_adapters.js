@@ -281,14 +281,11 @@ extendSpreadsheetAdapter("second_number", odooSecondNumberAdapter);
  * the group starting day (local to the timezone)
  * @param {object} field
  * @param {string} groupBy
- * @param {object} readGroup
+ * @param {object} group
  * @returns {string | undefined}
  */
-function getGroupStartingDay(field, groupBy, readGroup) {
-    if (!readGroup["__range"] || !readGroup["__range"][groupBy]) {
-        return undefined;
-    }
-    const sqlValue = readGroup["__range"][groupBy].from;
+function getGroupStartingDay(field, groupBy, group) {
+    const sqlValue = group[groupBy][0];
     if (field.type === "date") {
         return sqlValue;
     }

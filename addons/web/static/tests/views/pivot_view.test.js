@@ -203,7 +203,7 @@ test('pivot view without "string" attribute', async () => {
 test("simple pivot rendering", async () => {
     expect.assertions(4);
 
-    onRpc("read_group", ({ kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.lazy).toBe(false);
     });
 
@@ -552,7 +552,7 @@ test('clicking on the "Total" cell with time range activated', async () => {
 test("pivot view grouped by date field", async () => {
     expect.assertions(2);
 
-    onRpc("read_group", ({ kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         const wrongFields = kwargs.fields.filter((field) => {
             return !(field.split(":")[0] in Partner._fields);
         });
@@ -578,7 +578,7 @@ test("without measures, pivot view uses __count by default", async () => {
     Partner._fields.foo = fields.Integer({ aggregator: null });
     expect.assertions(4);
 
-    onRpc("read_group", ({ kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.fields).toEqual(["__count"]);
     });
 
@@ -614,7 +614,7 @@ test("pivot view grouped by many2one field", async () => {
 
 test("pivot view can be reloaded", async () => {
     let readGroupCount = 0;
-    onRpc("read_group", () => {
+    onRpc("web_read_group", () => {
         readGroupCount++;
     });
     await mountView({
@@ -637,7 +637,7 @@ test("pivot view can be reloaded", async () => {
 test.tags("desktop");
 test("basic folding/unfolding", async () => {
     let rpcCount = 0;
-    onRpc("read_group", () => {
+    onRpc("web_read_group", () => {
         rpcCount++;
     });
 
@@ -828,7 +828,7 @@ test("pivot custom groupby: grouping on date field use default interval month", 
     expect.assertions(1);
 
     let checkReadGroup = false;
-    onRpc("read_group", ({ kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         if (checkReadGroup) {
             expect(kwargs.groupby).toEqual(["date:month"]);
             checkReadGroup = false;
@@ -1160,7 +1160,7 @@ test("can sort data in a column by clicking on header", async () => {
 
 test("can expand all rows", async () => {
     let nbReadGroups = 0;
-    onRpc("read_group", () => {
+    onRpc("web_read_group", () => {
         nbReadGroups++;
     });
     await mountView({
@@ -1207,7 +1207,7 @@ test("can expand all rows", async () => {
 
 test("expand all with a delay", async () => {
     let def;
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2104,7 +2104,7 @@ test("pivot still handles __count__ measure", async () => {
     // for retro-compatibility reasons, the pivot view still handles
     // '__count__' measure.
 
-    onRpc("read_group", ({ kwargs }) => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect(kwargs.fields).toEqual(["__count"]);
     });
 
@@ -2250,7 +2250,7 @@ test("Row and column groupbys plus a domain", async () => {
 
 test("parallel data loading should discard all but the last one", async () => {
     let def;
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2405,8 +2405,8 @@ test("Navigation list view for a group and back with breadcrumbs", async () => {
     Partner._views["form,false"] = `<form><field name="foo"/></form>`;
 
     let readGroupCount = 0;
-    onRpc("read_group", ({ kwargs }) => {
-        expect.step("read_group");
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect.step("web_read_group");
         const domain = kwargs.domain;
         if ([0, 1].indexOf(readGroupCount) !== -1) {
             expect(domain).toEqual([]);
@@ -2439,13 +2439,13 @@ test("Navigation list view for a group and back with breadcrumbs", async () => {
     await contains(".o_control_panel ol.breadcrumb li.breadcrumb-item").click();
 
     expect.verifySteps([
-        "read_group",
-        "read_group",
-        "read_group",
-        "read_group",
+        "web_read_group",
+        "web_read_group",
+        "web_read_group",
+        "web_read_group",
         "web_search_read",
-        "read_group",
-        "read_group",
+        "web_read_group",
+        "web_read_group",
     ]);
 });
 
@@ -2560,7 +2560,7 @@ test("display only one dropdown menu", async () => {
 
 test("Server order is kept by default", async () => {
     let isSecondReadGroup = false;
-    onRpc("read_group", () => {
+    onRpc("web_read_group", () => {
         if (isSecondReadGroup) {
             return [
                 {
@@ -2734,7 +2734,7 @@ test("pivot is reloaded when leaving and coming back", async () => {
     expect(".o_pivot_view").toHaveCount(1);
     expect(getCurrentValues()).toBe(["4", "2", "2"].join(","));
 
-    expect.verifySteps(["/web/webclient/load_menus", "get_views", "read_group", "read_group"]);
+    expect.verifySteps(["/web/webclient/load_menus", "get_views", "web_read_group", "web_read_group"]);
 
     // switch to list view
     await contains(".o_control_panel .o_switch_view.o_list").click();
@@ -2748,7 +2748,7 @@ test("pivot is reloaded when leaving and coming back", async () => {
     expect(".o_pivot_view").toHaveCount(1);
     expect(getCurrentValues()).toBe(["4", "2", "2"].join(","));
 
-    expect.verifySteps(["read_group", "read_group"]);
+    expect.verifySteps(["web_read_group", "web_read_group"]);
 });
 
 test.tags("desktop");
@@ -2841,11 +2841,11 @@ test("correctly handle concurrent reloads", async () => {
 
     let def;
     let readGroupCount = 0;
-    onRpc("read_group", () => {
+    onRpc("web_read_group", () => {
         if (def) {
             readGroupCount++;
             if (readGroupCount === 2) {
-                // slow down last read_group of first reload
+                // slow down last web_read_group of first reload
                 return def;
             }
         }
@@ -2886,7 +2886,7 @@ test("consecutively toggle several measures", async () => {
     Partner._fields.foo2 = fields.Integer({
         groupable: false,
     });
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2917,7 +2917,7 @@ test("consecutively toggle several measures", async () => {
 
 test("flip axis while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2954,7 +2954,7 @@ test("flip axis while loading a filter", async () => {
 
 test("sort rows while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -2990,7 +2990,7 @@ test("sort rows while loading a filter", async () => {
 
 test("close a group while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3027,7 +3027,7 @@ test("close a group while loading a filter", async () => {
 
 test("add a groupby while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3064,7 +3064,7 @@ test("add a groupby while loading a filter", async () => {
 
 test("expand a group while loading a filter", async () => {
     let def;
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3105,7 +3105,7 @@ test("expand a group while loading a filter", async () => {
 
 test("concurrent reloads: add a filter, and directly toggle a measure", async () => {
     let def;
-    onRpc("read_group", () => def);
+    onRpc("web_read_group", () => def);
     await mountView({
         type: "pivot",
         resModel: "partner",
@@ -3473,10 +3473,10 @@ test("group by properties in pivot view", async () => {
             expect.step("fetch_definition");
         }
     });
-    onRpc("/web/dataset/call_kw/partner/read_group", async (request) => {
+    onRpc("/web/dataset/call_kw/partner/web_read_group", async (request) => {
         const { params } = await request.json();
         if (params.kwargs.groupby?.includes("properties.my_char")) {
-            expect.step("read_group");
+            expect.step("web_read_group");
             return [
                 {
                     "properties.my_char": false,
@@ -3523,7 +3523,7 @@ test("group by properties in pivot view", async () => {
     await contains(".o_accordion_values .o_menu_item").click();
 
     await animationFrame();
-    expect.verifySteps(["read_group"]);
+    expect.verifySteps(["web_read_group"]);
 
     const cells = queryAll(".o_value");
     expect(cells).toHaveLength(4);
@@ -3539,8 +3539,8 @@ test("group by properties in pivot view", async () => {
     expect(columns[2]).toHaveText("bbb");
 });
 
-test("avoid duplicates in read_group parameter 'groupby'", async () => {
-    onRpc("read_group", ({ kwargs }) => {
+test("avoid duplicates in web_read_group parameter 'groupby'", async () => {
+    onRpc("web_read_group", ({ kwargs }) => {
         expect.step(kwargs.groupby);
     });
     await mountView({
