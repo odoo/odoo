@@ -333,6 +333,11 @@ class PosOrder(models.Model):
             if order.session_id:
                 order.config_id = order.session_id.config_id
 
+    @api.constrains('order_id', 'refunded_orderline_id')
+    def _ensure_all_refunded_products_are_from_the_same_order(self):
+        if len(self.lines.refunded_orderline_id.order_id) > 1:
+            raise ValidationError(_('Refunded products must be from the same order'))
+
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
         for order in self:
@@ -1013,9 +1018,6 @@ class PosOrder(models.Model):
         order_ids = []
         session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
-            if len(self._get_refunded_orders(order)) > 1:
-                raise ValidationError(_('You can only refund products from the same order.'))
-
             existing_order = self.env['pos.order'].search([('uuid', '=', order.get('uuid'))])
             if existing_order and existing_order.state == 'draft':
                 order_ids.append(self._process_order(order, existing_order))
@@ -1039,11 +1041,6 @@ class PosOrder(models.Model):
             'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
-
-    @api.model
-    def _get_refunded_orders(self, order):
-        refunded_orderline_ids = [line[2]['refunded_orderline_id'] for line in order['lines'] if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
-        return self.env['pos.order.line'].browse(refunded_orderline_ids).mapped('order_id')
 
     def _should_create_picking_real_time(self):
         return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
