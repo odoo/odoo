@@ -104,4 +104,7 @@ class IrAttachment(models.Model):
                     if attachment.res_model != "mail.compose.message" and attachment.res_id
                     else False
                 )
+            if not self.env.user._is_internal():
+                attachment.generate_access_token()
+                data["access_token"] = attachment.access_token
             store.add(attachment, data)

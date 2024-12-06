@@ -100,6 +100,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data1["ir.attachment"],
             [
                     {
+                    "access_token": self.attachments[0].access_token,
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
@@ -156,6 +157,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data2["ir.attachment"],
             [
                 {
+                    "access_token": self.attachments[0].access_token,
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
@@ -168,6 +170,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     'url': False,
                 },
                 {
+                    "access_token": self.attachments[1].access_token,
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
                     "id": self.attachments[1].id,
@@ -202,6 +205,7 @@ class TestMessageController(HttpCaseWithUserDemo):
             data3["ir.attachment"],
             [
                 {
+                    "access_token": self.attachments[0].access_token,
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "id": self.attachments[0].id,
@@ -214,6 +218,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     'url': False,
                 },
                 {
+                    "access_token": self.attachments[1].access_token,
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
                     "id": self.attachments[1].id,
