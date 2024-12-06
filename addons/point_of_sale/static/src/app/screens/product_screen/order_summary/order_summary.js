@@ -61,6 +61,17 @@ export class OrderSummary extends Component {
     async updateSelectedOrderline({ buffer, key }) {
         const order = this.pos.get_order();
         const selectedLine = order.get_selected_orderline();
+        // Handling negation of value on first input
+        if (buffer === "-0" && key == "-") {
+            if (this.pos.numpadMode === "quantity" && !selectedLine.refunded_orderline_id) {
+                buffer = selectedLine.get_quantity() * -1;
+            } else if (this.pos.numpadMode === "discount") {
+                buffer = selectedLine.get_discount() * -1;
+            } else if (this.pos.numpadMode === "price") {
+                buffer = selectedLine.get_unit_price() * -1;
+            }
+            this.numberBuffer.state.buffer = buffer.toString();
+        }
         // This validation must not be affected by `disallowLineQuantityChange`
         if (selectedLine && selectedLine.isTipLine() && this.pos.numpadMode !== "price") {
             /**
