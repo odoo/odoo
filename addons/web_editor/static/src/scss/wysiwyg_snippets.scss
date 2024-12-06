@@ -896,10 +896,10 @@
         }
 
         // Buttons
-        we-button.o_we_user_value_widget {
+        we-button.o_we_user_value_widget:not(we-toggler + we-selection-items > we-button) {
             > div {
                 // Needed otherwise cannot work because of flex display
-                @include o-text-overflow(block);
+                @include o-text-overflow(block, 5em);
                 min-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
                 &, > .fa {
                     line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
