@@ -30,7 +30,7 @@ export async function startInteraction(I, html, options) {
 
 export async function startInteractions(
     html,
-    options = { waitForStart: true, editMode: false },
+    options = { waitForStart: true, editMode: false, translateMode: false },
 ) {
     defineMailModels();
     const fixture = getFixture();
@@ -50,6 +50,9 @@ export async function startInteractions(
     }
     const env = await makeMockEnv();
     const core = env.services.website_core;
+    if (options.translateMode) {
+        core.el.closest("html").dataset.edit_translations = "1";
+    }
     if (options.editMode) {
         core.stopInteractions();
         const builders = registry.category("website.editable_active_elements_builders").getEntries();

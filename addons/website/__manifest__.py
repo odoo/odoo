@@ -199,6 +199,7 @@
             # Activated on-demand by website.ripple_effect_js.
             ('remove', 'website/static/src/interactions/ripple_effect.js'),
             'website/static/src/core/**/*',
+            ('remove', 'website/static/src/core/website_edit_service.js'),
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
             'website/static/src/scss/website.scss',
@@ -238,6 +239,7 @@
         ],
         'website.assets_edit_frontend': [
             'website/static/src/**/*.edit.js',
+            'website/static/src/core/website_edit_service.js',
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',

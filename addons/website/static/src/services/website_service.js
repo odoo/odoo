@@ -2,7 +2,7 @@ import { jsToPyLocale } from "@web/core/l10n/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { user } from "@web/core/user";
-import { getBundle, loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { ensureJQuery } from "@web/core/ensure_jquery";
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
@@ -247,18 +247,6 @@ export const websiteService = {
             async loadWysiwyg() {
                 await ensureJQuery();
                 await loadBundle('website.backend_assets_all_wysiwyg');
-                // TODO Maybe CSS should also be handled.
-                await getBundle("website.assets_edit_frontend").then(({ jsLibs }) => {
-                    const iframeEl = document.querySelector("iframe.o_iframe");
-                    const scriptEl = iframeEl.contentDocument.createElement("script");
-                    scriptEl.type = "text/javascript";
-                    const promise = new Promise((resolve, reject) => {
-                        scriptEl.addEventListener("load", resolve);
-                    });
-                    scriptEl.src = jsLibs;
-                    iframeEl.contentDocument.head.appendChild(scriptEl);
-                    return promise;
-                });
             },
             blockPreview(showLoader, processId) {
                 if (!blockingProcesses.length) {

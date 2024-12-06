@@ -9,6 +9,18 @@ import {
 
 setupInteractionWhiteList("website.form");
 
+function setupUser() {
+    patchWithCleanup(MockServer.prototype, {
+        callOrm(params) {
+            expect(params.model).toBe("res.users");
+            expect(params.method).toBe("read");
+            const result = super.callOrm(...arguments);
+            result[0].commercial_company_name = "TestCompany";
+            return result;
+        }
+    });
+}
+
 test("form formats date in edit mode", async () => {
     const { core, el } = await startInteractions(`
         <div id="wrapwrap">
@@ -49,4 +61,54 @@ test("form formats date in edit mode", async () => {
     // Verify that non-edit code did not run.
     const dateField = dateEl.closest(".s_website_form_datetime");
     expect(dateField).not.toHaveClass("s_website_form_datepicker_initialized");
+});
+
+function getCompanyFormXml() {
+    return `
+        <div id="wrapwrap">
+            <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+                <div class="container-fluid">
+                    <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                        <div class="s_website_form_rows row s_col_no_bgcolor">
+                            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom o_draggable" data-type="char">
+                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                    <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o291di1too2s">
+                                        <span class="s_website_form_label_content">Company</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <input class="form-control s_website_form_input" type="text" name="company" data-fill-with="commercial_company_name" id="o291di1too2s"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                                <div style="width: 200px;" class="s_website_form_label"/>
+                                <span id="s_website_form_result"></span>
+                                <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    `;
+}
+
+test("form is prefilled in edit mode", async () => {
+    setupUser();
+    const { core, el } = await startInteractions(getCompanyFormXml(), { editMode: true });
+    expect(core.interactions.length).toBe(1);
+    await animationFrame();
+    const formEl = el.querySelector("form");
+    const companyEl = el.querySelector("input[name=company]");
+    expect(companyEl.value).toBe("TestCompany");
+});
+
+test("form is NOT prefilled in translate mode", async () => {
+    setupUser();
+    const { core, el } = await startInteractions(getCompanyFormXml(), { editMode: true, translateMode: true });
+    expect(core.interactions.length).toBe(1);
+    await animationFrame();
+    const formEl = el.querySelector("form");
+    const companyEl = el.querySelector("input[name=company]");
+    expect(companyEl.value).toBe("");
 });

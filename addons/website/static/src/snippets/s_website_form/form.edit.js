@@ -9,9 +9,7 @@ import { Form } from "./form";
 const FormEdit = I => class extends I {
     setup() {
         super.setup();
-        // TODO Translation behavior.
-        this.editTranslations = false;
-        // this.editTranslations = !!this.getContext(true).edit_translations;
+        this.editTranslations = this.services.website_edit.isEditingTranslations();
     }
 
     prepareDateFields() {
