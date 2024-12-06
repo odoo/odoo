@@ -236,6 +236,7 @@
         "F31": { "content": "=PIVOT.HEADER(2,\"#task_id\",7)" },
         "F32": { "content": "=PIVOT.HEADER(2,\"#task_id\",8)" },
         "F33": { "content": "=PIVOT.HEADER(2,\"#task_id\",9)" },
+        "F34": { "content": "=PIVOT.HEADER(2,\"#task_id\",10)" },
         "F36": {
           "content": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"employee_id\",\"!=\",false]],\"context\":{\"group_by\":[\"employee_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"employee_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Employees\"})"
         },
@@ -260,6 +261,7 @@
         "G31": { "content": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",7)" },
         "G32": { "content": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",8)" },
         "G33": { "content": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",9)" },
+        "G34": { "content": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",10)" },
         "G37": { "content": "=_t(\"Hours spent\")" },
         "G38": {
           "content": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",1)"
@@ -318,6 +320,9 @@
         },
         "H33": {
           "content": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",9)"
+        },
+        "H34": {
+          "content": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",10)"
         },
         "H37": { "content": "=_t(\"Hours billed\")" },
         "H38": {
