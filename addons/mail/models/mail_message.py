@@ -493,14 +493,10 @@ class Message(models.Model):
         ]
         model_record_ids = _generate_model_record_ids(message_values, document_related_candidate_ids)
         for model, doc_ids in model_record_ids.items():
-            DocumentModel = self.env[model]
-            if hasattr(DocumentModel, '_get_mail_message_access'):
-                check_operation = DocumentModel._get_mail_message_access(doc_ids, operation)  ## why not giving model here?
-            else:
-                check_operation = self.env['mail.thread']._get_mail_message_access(doc_ids, operation, model_name=model)
-            records = DocumentModel.browse(doc_ids)
-            records.check_access_rights(check_operation)
-            mids = records.browse(doc_ids)._filter_access_rules(check_operation)
+            model_class = self.env[model]
+            if not hasattr(model_class, "_filter_accessible_for_message_operation"):
+                model_class = self.env["mail.thread"]
+            mids = model_class._filter_accessible_for_message_operation(model, doc_ids, operation)
             document_related_ids += [
                 mid for mid, message in message_values.items()
                 if (
@@ -558,6 +554,25 @@ class Message(models.Model):
             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)', self._description, operation)
             + ' - ({} {}, {} {})'.format(_('Records:'), list(messages_to_check)[:6], _('User:'), self._uid)
         )
+
+    @api.model
+    def _get_with_access(self, message_id, operation):
+        """Return the message with the given id if it exists and if the current
+        user can access it for the given operation."""
+        message = self.browse(message_id).exists()
+        if not message:
+            return self.browse()
+        try:
+            if not self.env.user._is_public() or not self.env["mail.guest"]._get_guest_from_context():
+                # Don't check_access_rights for public user with a guest, as the rules are
+                # incorrect due to historically having no reason to allow operations on messages to
+                # public user before the introduction of guests. Even with ignoring the rights,
+                # check_access_rule and its sub methods are already covering all the cases properly.
+                message.sudo(False).check_access_rights(operation)
+            message.sudo(False).check_access_rule(operation)
+            return message
+        except AccessError:
+            return self.browse()
 
     @api.model_create_multi
     def create(self, values_list):
@@ -801,8 +816,6 @@ class Message(models.Model):
 
     def _message_add_reaction(self, content):
         self.ensure_one()
-        self.check_access_rule('write')
-        self.check_access_rights('write')
         guest = self.env['mail.guest']._get_guest_from_context()
         if self.env.user._is_public() and guest:
             partner = self.env['res.partner']
@@ -821,8 +834,6 @@ class Message(models.Model):
 
     def _message_remove_reaction(self, content):
         self.ensure_one()
-        self.check_access_rule('write')
-        self.check_access_rights('write')
         guest = self.env['mail.guest']._get_guest_from_context()
         if self.env.user._is_public() and guest:
             partner = self.env['res.partner']

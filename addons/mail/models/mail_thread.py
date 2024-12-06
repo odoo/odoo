@@ -418,6 +418,18 @@ class MailThread(models.AbstractModel):
         return _('%s created', doc_name)
 
     @api.model
+    def _filter_accessible_for_message_operation(self, model_name, res_ids, msg_operation):
+        """Among the records defined by the given model name and ids, returns those
+        that can be accessed by the current user for the given message operation."""
+        model_class = self.env[model_name]
+        if not hasattr(model_class, "_get_mail_message_access"):
+            model_class = self.env["mail.thread"]
+        check_operation = model_class._get_mail_message_access(res_ids, msg_operation, model_name)
+        records = self.env[model_name].browse(res_ids)
+        records.check_access_rights(check_operation)
+        return records._filter_access_rules(check_operation)
+
+    @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
         """ mail.message check permission rules for related document. This method is
             meant to be inherited in order to implement addons-specific behavior.
