@@ -19,8 +19,6 @@ export class HardwareProxy extends EventBus {
         this.setup(...arguments);
     }
     setup() {
-        this.debugWeight = 0;
-        this.useDebugWeight = false;
         this.host = "";
         this.keptalive = false;
         this.connectionInfo = reactive({ status: "init", drivers: {} });
@@ -158,36 +156,7 @@ export class HardwareProxy extends EventBus {
         this.setConnectionInfo({ status: "disconnected" });
         return false;
     }
-    /**
-     * Returns the weight on the scale.
-     *
-     * @returns {Promise<number>}
-     */
-    readScale() {
-        if (this.useDebugWeight) {
-            return this.debugWeight;
-        }
-        return this.message("scale_read")
-            .then(({ weight }) => weight)
-            .catch(() => 0);
-    }
 
-    // sets a custom weight, ignoring the proxy returned value.
-    setDebugWeight(weight) {
-        this.useDebugWeight = true;
-        this.debugWeight = weight;
-    }
-
-    // resets the custom weight and re-enable listening to the proxy for weight values
-    resetDebugWeight() {
-        this.useDebugWeight = false;
-        this.debugWeight = 0;
-    }
-
-    // asks the proxy to log some information, as with the debug.log you can provide several arguments.
-    log() {
-        return this.message("log", { arguments: [...arguments] });
-    }
     async openCashbox(action = false) {
         if (
             this.pos.config.iface_cashdrawer &&
