@@ -13,19 +13,6 @@ class EventEvent(models.Model):
         help="Leads generated from this event")
     lead_count = fields.Integer(
         string="# Leads", compute='_compute_lead_count', groups='sales_team.group_sale_salesman')
-    has_lead_request = fields.Boolean(
-        "Ongoing Generation Request", compute="_compute_has_lead_request", compute_sudo=True,
-        help="Set to True when a Lead Generation Request is currently running.")
-
-    @api.depends('registration_ids')
-    def _compute_has_lead_request(self):
-        lead_requests_data = self.env['event.lead.request']._read_group(
-            [('event_id', 'in', self.ids)],
-            ['event_id'], ['__count'],
-        )
-        mapped_data = {event.id: count for event, count in lead_requests_data}
-        for event in self:
-            event.has_lead_request = mapped_data.get(event.id, 0) != 0
 
     @api.depends('lead_ids')
     def _compute_lead_count(self):

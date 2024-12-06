@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
@@ -235,3 +236,53 @@ class TestEventCrmFlow(TestEventCrmCommon, CronMixinCase):
         })
         self.assertEqual(len(self.test_rule_order.lead_ids), 1)
         self.assertEqual(len(test_rule_order_2.lead_ids), 0)
+
+    def test_action_execute_rule(self):
+        """ Test that the action execute rule creates leads on the bases of
+            - If event_id is specified then execute the rule for that event only
+            - If no event_id is specified then execute the rule for all the ongoing and future events
+        """
+        self.test_rule_attendee.write({
+            'lead_creation_trigger': 'done',
+            'event_registration_filter': ['|', ('email', 'ilike', 'abc@test.com'), ('phone', '=', '123-456-7890')],
+            'event_id': False,
+        })
+        attendee_data = [
+            ('abc@test.com', '111-111-1111'),
+            ('def@test.com', '123-456-7890')
+        ]
+        today = datetime.now()
+        event_prefixes = ['Future', 'Ongoing', 'Ended']
+        event_dates = [
+            (today + timedelta(days=3), today + timedelta(days=5)),
+            (today, today + timedelta(days=2)),
+            (today - timedelta(days=5), today - timedelta(days=3))
+        ]
+        events = self.env['event.event'].create([{
+            'name': f'{prefix} Event',
+            'date_begin': event_start,
+            'date_end': event_end,
+            'registration_ids': [(0, 0, {
+                'name': f'{prefix} Attendee {i}',
+                'email': email,
+                'phone': phone
+            }) for i, (email, phone) in enumerate(attendee_data)]
+        } for prefix, (event_start, event_end) in zip(event_prefixes, event_dates)])
+        self.assertEqual(len(self.test_rule_attendee.lead_ids), 0)
+
+        #  Check that the leads were created for the "Ongoing and Future" event
+        self.test_rule_attendee.action_execute_rule()
+        self.assertEqual(len(self.test_rule_attendee.lead_ids), 4)
+
+        #  Check that no leads were created for the "Ended" event
+        ended_event_leads = self.test_rule_attendee.lead_ids.filtered(lambda lead: lead.event_id == events[2])
+        self.assertEqual(len(ended_event_leads), 0)
+
+        #  Setting the Ended event as event_id in the rule
+        self.test_rule_attendee.event_id = events[2].id
+        self.test_rule_attendee.action_execute_rule()
+        self.assertEqual(len(self.test_rule_attendee.lead_ids), 6)
+
+        #  Testing that no new leads are created when the rule is executed again on the same event
+        self.test_rule_attendee.action_execute_rule()
+        self.assertEqual(len(self.test_rule_attendee.lead_ids), 6)
