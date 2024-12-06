@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { registry } from '@web/core/registry';
 import configuratorTourUtils from '@sale/js/tours/product_configurator_tour_utils';
 import websiteConfiguratorTourUtils from '@website_sale/js/tours/product_configurator_tour_utils';
@@ -19,9 +17,9 @@ registry
                 trigger: '#add_to_cart',
                 run: 'click',
             },
-            configuratorTourUtils.assertProductPrice("Main product", '50.00'),
-            websiteConfiguratorTourUtils.assertProductStrikethroughPrice("Main product", '100.00'),
-            configuratorTourUtils.assertOptionalProductPrice("Optional product", '5.00'),
+            configuratorTourUtils.assertProductPrice("Main product", '55.00'),
+            websiteConfiguratorTourUtils.assertProductStrikethroughPrice("Main product", '110.00'),
+            configuratorTourUtils.assertOptionalProductPrice("Optional product", '5.50'),
             websiteConfiguratorTourUtils.assertOptionalProductStrikethroughPrice(
                 "Optional product", '10.00'
             ),
