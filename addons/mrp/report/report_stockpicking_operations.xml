@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="mrp_report_stock_picking" inherit_id="stock.report_picking">
+            <xpath expr="//table[@t-if='o.move_line_ids and o.move_ids_without_package']/tbody/tr" position="replace">
+                <t t-set="move_lines_with_kit" t-value="o.move_line_ids_without_package.filtered(lambda ml: ml.move_id.bom_line_id.bom_id.type == 'phantom')"/>
+                <t t-if="move_lines_with_kit">
+                    <t t-foreach="move_lines_with_kit.move_id.bom_line_id.bom_id" t-as="kit_section">
+                        <tr>
+                            <td colspan="6" style="font-weight: bold; background-color: lightgray;">
+                                <span t-field="kit_section.product_tmpl_id.display_name"/>
+                            </td>
+                        </tr>
+                        <t t-set="kit_section_move_line" t-value="move_lines_with_kit.filtered(lambda ml: ml.move_id.bom_line_id.bom_id == kit_section)"/>
+                        <tr t-foreach="kit_section_move_line.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
+                            <t t-call="stock.report_picking_move_line"/>
+                        </tr>
+                    </t>
+                </t>
+                <t t-set="move_lines_without_kit" t-value="o.move_line_ids_without_package.filtered(lambda ml: ml.move_id.bom_line_id.bom_id.type != 'phantom')"/>
+                <t t-if="move_lines_without_kit">
+                    <tr t-if="move_lines_with_kit">
+                        <td colspan="6" style="font-weight: bold; background-color: lightgray;">
+                            <span>Products not associated with a kit</span>
+                        </td>
+                    </tr>
+                    <tr t-foreach="move_lines_without_kit.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
+                        <t t-call="stock.report_picking_move_line"/>
+                    </tr>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

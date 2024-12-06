@@ -1262,6 +1262,9 @@ class StockPicking(models.Model):
                 subtype_id=subtype_id,
             )
 
+    def _get_report_base_filename(self):
+        return _("Delivery Slip - %s", f"{self.partner_id.name} - {self.name}")
+
     def _check_move_lines_map_quant_package(self, package):
         return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package and ml.product_id.is_storable))
 
@@ -1457,6 +1460,22 @@ class StockPicking(models.Model):
         backorder_moves = moves._create_backorder()
         backorder_moves += self.move_ids.filtered(lambda m: m.quantity == 0)
         self._create_backorder(backorder_moves=backorder_moves)
+        action = self.env.ref('stock.stock_picking_action_picking_type')
+        backorder_id = max(self.backorder_ids, key=lambda backorder: backorder['create_date'])
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('New transfer created'),
+                'message': '%s',
+                'links': [{
+                    'label': self.backorder_ids[0].name,
+                    'url': f'/web#action={action.id}&id={backorder_id.id}&model=stock.picking&view_type=form'
+                }],
+                'next': {'type': 'ir.actions.act_window_close'},
+                'sticky': False,
+            },
+        }
 
     def _pre_action_done_hook(self):
         for picking in self:
