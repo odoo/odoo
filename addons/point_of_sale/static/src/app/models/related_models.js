@@ -2,8 +2,10 @@ import { toRaw } from "@odoo/owl";
 import { uuidv4 } from "@point_of_sale/utils";
 import { TrapDisabler } from "@point_of_sale/proxy_trap";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
+import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
 
 const ID_CONTAINER = {};
+const { DateTime } = luxon;
 
 function uuid(model) {
     if (!(model in ID_CONTAINER)) {
@@ -24,6 +26,7 @@ function mapObj(obj, fn) {
     return Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(k, v, i)]));
 }
 
+const DATE_TIME_TYPE = new Set(["date", "datetime"]);
 const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
 const AVAILABLE_EVENT = ["create", "update", "delete"];
@@ -171,6 +174,10 @@ export class Base extends WithLazyGetterTrap {
         if (typeof this.id === "number") {
             this.models.commands[this.model.modelName].update.add(this.id);
         }
+    }
+
+    formatDateOrTime(field) {
+        return this[field].toLocaleString(DateTime.DATETIME_SHORT);
     }
 
     setupState(vals) {
@@ -431,6 +438,23 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
     }
 
+    function handleDatetime(model, value, prop) {
+        // Verify if is already a valid dateobject
+        if (!(value instanceof Object) && value) {
+            const datetime = deserializeDateTime(value);
+            if (!datetime.isValid) {
+                throw new Error(
+                    `Invalid date: ${value} for model ${model.modelName} in field ${prop}`
+                );
+            }
+            return datetime;
+        } else if (value instanceof Object && value.isValid) {
+            return value;
+        }
+
+        return false;
+    }
+
     function exists(model, id) {
         return records[model].has(id);
     }
@@ -589,6 +613,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
                     }
                 }
+            } else if (DATE_TIME_TYPE.has(field.type)) {
+                record[name] = handleDatetime(models[model], vals[name], name);
             } else {
                 record[name] = vals[name];
             }
@@ -661,6 +687,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const linkedRec = record[name];
                     disconnect(field, record, linkedRec);
                 }
+            } else if (DATE_TIME_TYPE.has(field.type)) {
+                record[name] = handleDatetime(models[model], vals[name], name);
             } else {
                 record[name] = vals[name];
             }
@@ -846,6 +874,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     } else if (X2MANY_TYPES.has(field.type)) {
                         const ids = [...record[name]].map((record) => record.id);
                         result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
+                    } else if (DATE_TIME_TYPE.has(field.type) && typeof record[name] === "object") {
+                        result[name] = serializeDateTime(record[name]);
                     } else if (typeof record[name] === "object") {
                         result[name] = JSON.stringify(record[name]);
                     } else {
@@ -1056,6 +1086,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                                 }
                             }
                         }
+                    } else if (DATE_TIME_TYPE.has(field.type)) {
+                        recorded[name] = handleDatetime(models[model], rawRec[name], name);
                     }
                 }
 

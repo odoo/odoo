@@ -17,9 +17,9 @@ export class PresetSlotsPopup extends Component {
         this.pos = usePos();
         this.state = useState({
             selectedPresetId: this.pos.getOrder().preset_id.id,
-            selectedDate: DateTime.fromSQL(
-                this.pos.getOrder().preset_time || DateTime.now().toSQL()
-            ).toFormat("yyyy-MM-dd"),
+            selectedDate: (this.pos.getOrder().preset_time || DateTime.now()).toFormat(
+                "yyyy-MM-dd"
+            ),
         });
 
         onWillStart(async () => {
@@ -34,9 +34,9 @@ export class PresetSlotsPopup extends Component {
     }
 
     getSlotColor(slot, preset) {
-        const isSelected = this.isSelected(slot.sql_datetime, preset);
+        const isSelected = this.isSelected(slot, preset);
         const isFull = slot.isFull;
-        const isPast = DateTime.fromSQL(slot.sql_datetime) < DateTime.now();
+        const isPast = slot.datetime < DateTime.now();
 
         if (!isSelected && isFull) {
             return "o_colorlist_item_color_transparent_1"; // Red
@@ -49,9 +49,9 @@ export class PresetSlotsPopup extends Component {
             : "o_colorlist_item_color_transparent_10"; // Green
     }
 
-    isSelected(time, preset) {
+    isSelected(slot, preset) {
         const order = this.pos.getOrder();
-        return order.preset_time === time && order.preset_id?.id === preset.id;
+        return order.preset_time.ts === slot.datetime.ts && order.preset_id?.id === preset.id;
     }
 
     getSlotsForDate(preset, date) {

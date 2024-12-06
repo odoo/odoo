@@ -62,10 +62,9 @@ export class ClosePosPopup extends Component {
     }
     get orderForNextDays() {
         const today = DateTime.now();
-        return this.pos.models["pos.order"].filter((o) => {
-            const presetTime = DateTime.fromSQL(o.preset_time);
-            return o.lines.length > 0 && presetTime > today && o.state === "draft";
-        }).length;
+        return this.pos.models["pos.order"].filter(
+            (o) => o.lines.length > 0 && o.preset_time > today && o.state === "draft"
+        ).length;
     }
     async cashMove() {
         await this.pos.cashMove();
