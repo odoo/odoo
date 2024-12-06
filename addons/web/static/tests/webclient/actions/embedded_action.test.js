@@ -86,7 +86,10 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        "list,false": `<list><field name="name"/></list>`,
+        "list,false": `<list>
+                            <field name="name"/>
+                            <button name="action_test" type="object" string="Action Test" column_invisible="not context.get('display_button')"/>
+                        </list>`,
         "kanban,false": `<kanban>
                             <templates>
                                 <t t-name="card">
@@ -160,6 +163,9 @@ defineEmbeddedActions([
         type: "ir.embedded.actions",
         parent_action_id: 1,
         action_id: 3,
+        context: {
+            display_button: true,
+        },
     },
     {
         id: 3,
@@ -472,6 +478,10 @@ test("User should be redirected to the first embedded action set in localStorage
     });
     expect(".o_last_breadcrumb_item > span").toHaveText("Favorite Ponies", {
         message: "'Favorite Ponies' view should be loaded",
+    });
+    expect(".o_list_renderer .btn-link").toHaveCount(3, {
+        message:
+            "The button should be displayed since `display_button` is true in the context of the embedded action 2",
     });
 });
 
