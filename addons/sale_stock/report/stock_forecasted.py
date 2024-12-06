@@ -51,8 +51,13 @@ class StockForecasted(models.AbstractModel):
             domain += [('product_template_id', 'in', product_template_ids)]
         elif product_ids:
             domain += [('product_id', 'in', product_ids)]
+<<<<<<< saas-17.4
         warehouse_id = self.env.context.get('warehouse_id', False)
+||||||| 562e053de5b0265d255df49d6f20140247d76740
+        warehouse_id = self.env.context.get('warehouse', False)
+=======
+        warehouse_id = self.env['stock.warehouse']._get_warehouse_id_from_context()
+>>>>>>> f2b65aa9a8ca39dc5b12a2c9e6681a05a23aa131
         if warehouse_id:
-            warehouse_id = warehouse_id if isinstance(warehouse_id, list) else [warehouse_id]
-            domain += [('warehouse_id', 'in', warehouse_id)]
+            domain += [('warehouse_id', '=', warehouse_id)]
         return domain
