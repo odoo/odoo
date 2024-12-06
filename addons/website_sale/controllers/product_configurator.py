@@ -248,11 +248,11 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         if pricelist_rule._show_discount_on_shop():
             pricelist_base_price = self._apply_taxes_to_price(
                 pricelist_rule._compute_price_before_discount(
-                    product_or_template,
-                    1.0,
-                    product_or_template.uom_id,
-                    date,
-                    currency,
+                    product=product_or_template,
+                    quantity=1.0,
+                    uom=product_or_template.uom_id,
+                    date=date,
+                    currency=currency,
                 ),
                 product_or_template,
                 currency,
