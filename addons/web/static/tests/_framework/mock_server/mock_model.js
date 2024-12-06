@@ -2970,6 +2970,10 @@ export class Model extends Array {
                     } else {
                         result[field.name] = false;
                     }
+                } else if (field.type === "json") {
+                    result[field.name] = record[field.name]
+                        ? JSON.parse(record[field.name])
+                        : false;
                 } else {
                     result[field.name] = record[field.name] ?? false;
                 }
