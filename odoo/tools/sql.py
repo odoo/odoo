@@ -174,6 +174,11 @@ def get_depending_views(cr, table, column):
     cr.execute(q, [table, column])
     return cr.fetchall()
 
+
+class ConstraintError(Exception):
+    pass
+
+
 def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
     query = 'ALTER TABLE "{}" ALTER COLUMN "{}" SET NOT NULL'.format(tablename, columnname)
@@ -182,7 +187,7 @@ def set_not_null(cr, tablename, columnname):
             cr.execute(query, log_exceptions=False)
             _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
     except Exception:
-        raise Exception("Table %r: unable to set NOT NULL on column %r", tablename, columnname)
+        raise ConstraintError("Table %r: unable to set NOT NULL on column %r" % (tablename, columnname))
 
 def drop_not_null(cr, tablename, columnname):
     """ Drop the NOT NULL constraint on the given column. """
@@ -210,7 +215,7 @@ def add_constraint(cr, tablename, constraintname, definition):
             cr.execute(query2, (definition,), log_exceptions=False)
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
     except Exception:
-        raise Exception("Table %r: unable to add constraint %r as %s", tablename, constraintname, definition)
+        raise ConstraintError("Table %r: unable to add constraint %r as %s" % (tablename, constraintname, definition))
 
 def drop_constraint(cr, tablename, constraintname):
     """ drop the given constraint. """
