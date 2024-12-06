@@ -129,7 +129,22 @@ class PosSelfOrderController(http.Controller):
 
         return self._generate_return_values(orders, pos_config)
 
+<<<<<<< saas-18.1
     @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='jsonrpc', website=True)
+||||||| ee48df7f33a3aeb1798bf5852be8c6d26a7db7fd
+    @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='json', website=True)
+=======
+    @http.route('/pos-self-order/get-available-tables', auth='public', type='json', website=True)
+    def get_available_tables(self, access_token, order_access_tokens):
+        pos_config = self._verify_pos_config(access_token)
+        orders = pos_config.current_session_id.order_ids.filtered_domain([
+            ("access_token", "not in", order_access_tokens)
+        ])
+        available_table_ids = pos_config.floor_ids.table_ids - orders.mapped('table_id')
+        return available_table_ids.read(['id'])
+
+    @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='json', website=True)
+>>>>>>> 97299e0514367ceefbf007d85db1a68e4448c4d2
     def pos_self_order_kiosk_payment(self, pos_config_id, order, payment_method_id, access_token, device_type):
         pos_config = self._verify_pos_config(access_token)
         results = self.process_order(order, access_token, None, device_type)

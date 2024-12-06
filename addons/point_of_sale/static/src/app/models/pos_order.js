@@ -830,9 +830,19 @@ export class PosOrder extends Base {
         return this.uiState.screen_data["value"] ?? { name: "ProductScreen" };
     }
 
+<<<<<<< saas-18.1
     //see setScreenData
     getScreenData() {
         const screen = this.uiState?.screen_data["value"];
+||||||| ee48df7f33a3aeb1798bf5852be8c6d26a7db7fd
+    //see set_screen_data
+    get_screen_data() {
+        const screen = this.uiState?.screen_data["value"];
+=======
+    //see set_screen_data
+    get_screen_data() {
+        const screen = this.uiState?.screen_data?.["value"];
+>>>>>>> 97299e0514367ceefbf007d85db1a68e4448c4d2
         // If no screen data is saved
         //   no payment line -> product screen
         //   with payment line -> payment screen

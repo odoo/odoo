@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from typing import Dict
-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class PosOrderLine(models.Model):
@@ -41,6 +40,44 @@ class PosOrder(models.Model):
     def _load_pos_self_data_domain(self, data):
         return [('id', '=', False)]
 
+<<<<<<< saas-18.1
+||||||| ee48df7f33a3aeb1798bf5852be8c6d26a7db7fd
+    @api.model
+    def sync_from_ui(self, orders):
+        for order in orders:
+            if order.get('id'):
+                order_id = order['id']
+
+                if isinstance(order_id, int):
+                    old_order = self.env['pos.order'].browse(order_id)
+                    if old_order.takeaway:
+                        order['takeaway'] = old_order.takeaway
+
+        return super().sync_from_ui(orders)
+
+=======
+    @api.model
+    def sync_from_ui(self, orders):
+        for order in orders:
+            if order.get('id'):
+                order_id = order['id']
+
+                if isinstance(order_id, int):
+                    old_order = self.env['pos.order'].browse(order_id)
+                    if old_order.takeaway:
+                        order['takeaway'] = old_order.takeaway
+
+        return super().sync_from_ui(orders)
+
+    def _get_open_order(self, order):
+        open_order = super()._get_open_order(order)
+        if not self.env.context.get('from_self'):
+            return open_order
+        elif open_order:
+            del order['table_id']
+        return self.env['pos.order'].search([('uuid', '=', order.get('uuid'))], limit=1)
+
+>>>>>>> 97299e0514367ceefbf007d85db1a68e4448c4d2
     def _process_saved_order(self, draft):
         res = super()._process_saved_order(draft)
 

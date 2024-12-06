@@ -99,13 +99,19 @@ patch(PosOrder.prototype, {
     },
     setupState(vals) {
         super.setupState(...arguments);
-        this.uiState.disabledRewards = new Set(vals.disabledRewards);
+        this.uiState.disabledRewards = new Set(vals?.disabledRewards || []);
     },
     serializeState() {
         const state = super.serializeState(...arguments);
+<<<<<<< saas-18.1:addons/pos_loyalty/static/src/app/models/pos_order.js
         if (this.uiState?.disabledRewards) {
             state.disabledRewards = [...this.uiState.disabledRewards];
         }
+||||||| ee48df7f33a3aeb1798bf5852be8c6d26a7db7fd:addons/pos_loyalty/static/src/overrides/models/pos_order.js
+        state.disabledRewards = [...this.uiState.disabledRewards];
+=======
+        state.disabledRewards = [...(this.uiState.disabledRewards || [])];
+>>>>>>> 97299e0514367ceefbf007d85db1a68e4448c4d2:addons/pos_loyalty/static/src/overrides/models/pos_order.js
         return state;
     },
     /** @override */

@@ -244,7 +244,12 @@ export class ClosePosPopup extends Component {
             if (!response.successful) {
                 return this.handleClosingError(response);
             }
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js
             this.pos.session.state = "closed";
+||||||| ee48df7f33a3aeb1798bf5852be8c6d26a7db7fd:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js
+=======
+            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
+>>>>>>> 97299e0514367ceefbf007d85db1a68e4448c4d2:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js
             location.reload();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
