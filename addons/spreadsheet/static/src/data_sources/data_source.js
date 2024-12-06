@@ -54,6 +54,10 @@ export class LoadableDataSource {
         return this.odooDataProvider.serverData;
     }
 
+    get modelDisplayNameService() {
+        return this.odooDataProvider.modelDisplayNameService;
+    }
+
     /**
      * Load data in the model
      * @param {object} [params] Params for fetching data
@@ -153,16 +157,16 @@ export const LOADING_ERROR = new LoadingDataError();
 export class ModelNotFoundError extends Error {}
 
 /**
- * Perform a `fields_get` on the given model and return the fields.
+ * Return the fields of a given model.
  * If the model is not found, a `ModelNotFoundError` is thrown.
  *
- * @param {ServerData} serverData
+ * @param {object} fieldService
  * @param {string} model
  * @returns {Promise<import("@spreadsheet").OdooFields>}
  */
-export async function getFields(serverData, model) {
+export async function getFields(fieldService, model) {
     try {
-        const fields = await serverData.fetch(model, "fields_get");
+        const fields = await fieldService.loadFields(model);
         return fields;
     } catch (e) {
         if (e instanceof RPCError && e.code === 404) {

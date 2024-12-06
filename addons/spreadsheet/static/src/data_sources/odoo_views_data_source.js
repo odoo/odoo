@@ -56,7 +56,10 @@ export class OdooViewsDataSource extends LoadableDataSource {
 
     async loadMetadata() {
         if (!this._metaData.fields) {
-            this._metaData.fields = await getFields(this.serverData, this._metaData.resModel);
+            this._metaData.fields = await getFields(
+                this.odooDataProvider.fieldService,
+                this._metaData.resModel
+            );
         }
         this._metaDataLoaded = true;
     }
@@ -144,8 +147,9 @@ export class OdooViewsDataSource extends LoadableDataSource {
      * @returns {Promise<string>} Display name of the model
      */
     async getModelLabel() {
-        const model = this._metaData.resModel;
-        const result = await this.serverData.fetch("ir.model", "display_name_for", [[model]]);
-        return (result[0] && result[0].display_name) || "";
+        const displayName = await this.modelDisplayNameService.getModelDisplayName(
+            this._metaData.resModel
+        );
+        return displayName || "";
     }
 }
