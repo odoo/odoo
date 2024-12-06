@@ -27,6 +27,7 @@ class MailScheduledMessage(models.Model):
     have static notification parameters, but some will become dynamic when adding mass_mail support
     such as 'email_from' and 'force_email_lang'.
     """
+    _name = 'mail.scheduled.message'
     _description = 'Scheduled Message'
 
     # content

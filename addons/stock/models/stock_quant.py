@@ -1519,6 +1519,7 @@ class StockQuant(models.Model):
 
 class StockQuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
+    _name = 'stock.quant.package'
     _description = "Packages"
     _order = 'name'
 

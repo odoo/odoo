@@ -14,6 +14,7 @@ class MailAliasMixinOptional(models.AbstractModel):
     based on given 'alias_name', allowing to gradually populate the alias table
     without having void aliases as when used with an inherits-like implementation.
     """
+    _name = 'mail.alias.mixin.optional'
     _description = 'Email Aliases Mixin (light)'
     ALIAS_WRITEABLE_FIELDS = ['alias_domain_id', 'alias_name', 'alias_contact', 'alias_defaults', 'alias_bounced_content']
 

@@ -66,7 +66,7 @@ class ResPartner(models.Model):
 
 
 class ResPartnerBank(models.Model):
-    _inherit = ['res.partner.bank']
+    _inherit = 'res.partner.bank'
 
     def _compute_display_name(self):
         account_employee = self.browse()

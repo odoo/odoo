@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 class IrActionsServer(models.Model):
     """ Add SMS option in server actions. """
-    _inherit = ['ir.actions.server']
+    _inherit = 'ir.actions.server'
 
     state = fields.Selection(selection_add=[
         ('sms', 'Send SMS'), ('followers',),
