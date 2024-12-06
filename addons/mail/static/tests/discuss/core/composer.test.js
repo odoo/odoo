@@ -71,7 +71,7 @@ test("send is_typing on adding emoji", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search for an emoji']", "Santa Claus");
+    await insertText("input[placeholder='Search emoji']", "Santa Claus");
     await click(".o-Emoji", { text: "🎅" });
     await waitForSteps(["notify_typing"]);
     testEnded = true;
