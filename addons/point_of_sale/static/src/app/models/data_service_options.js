@@ -29,6 +29,7 @@ export class DataServiceOptions {
             "product.product": ["pos_categ_ids", "barcode"],
             "account.fiscal.position": ["tax_ids"],
             "product.packaging": ["barcode"],
+            "pos.payment": ["uuid"],
             "loyalty.program": ["trigger_product_ids"],
             "calendar.event": ["appointment_resource_ids"],
             "res.partner": ["barcode"],
