@@ -117,6 +117,7 @@ export class Chatter extends Component {
         useChildSubEnv({
             inChatter: true,
             messageHighlight: this.messageHighlight,
+            reloadParentView: () => this.reloadParentView(),
         });
         useDropzone(
             this.rootRef,
@@ -355,14 +356,15 @@ export class Chatter extends Component {
         this.state.showActivities = !this.state.showActivities;
     }
 
+    async schedule(thread) {
+        await this.activityService.schedule(thread.model, [thread.id]);
+        this.load(thread, ["activities", "messages"]);
+    }
+
     async scheduleActivity() {
         this.closeSearch();
-        const schedule = async (thread) => {
-            await this.activityService.schedule(thread.model, [thread.id]);
-            this.load(thread, ["activities", "messages"]);
-        };
         if (this.state.thread.id) {
-            schedule(this.state.thread);
+            this.schedule(this.state.thread);
         } else {
             this.onThreadCreated = schedule;
             this.props.saveRecord?.();
