@@ -2148,6 +2148,7 @@ class AccountTax(models.Model):
         """
         tax_lines_mapping = defaultdict(lambda: {
             'tax_base_amount': 0.0,
+            'tax_base_amount_currency': 0.0,
             'amount_currency': 0.0,
             'balance': 0.0,
         })
@@ -2171,6 +2172,7 @@ class AccountTax(models.Model):
                     grouping_key = frozendict(tax_rep_data['grouping_key'])
                     tax_line = tax_lines_mapping[grouping_key]
                     tax_line['name'] = tax.name
+                    tax_line['tax_base_amount_currency'] += sign * tax_data['base_amount_currency'] * (-1 if tax_tag_invert else 1)
                     tax_line['tax_base_amount'] += sign * tax_data['base_amount'] * (-1 if tax_tag_invert else 1)
                     tax_line['amount_currency'] += sign * tax_rep_data['tax_amount_currency']
                     tax_line['balance'] += sign * tax_rep_data['tax_amount']

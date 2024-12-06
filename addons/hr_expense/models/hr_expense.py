@@ -926,6 +926,7 @@ class HrExpense(models.Model):
         # Tax lines.
         total_tax_line_balance = 0.0
         for tax_line in tax_results['tax_lines_to_add']:
+            del tax_line['tax_base_amount_currency']  # field does not exist in account.move.line
             total_tax_line_balance += tax_line['balance']
             move_lines.append(tax_line)
         base_move_line['balance'] = self.total_amount - total_tax_line_balance

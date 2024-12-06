@@ -2871,6 +2871,7 @@ class AccountMove(models.Model):
                 to_delete.append(tax_line_vals['record'].id)
 
             for tax_line_vals in tax_results['tax_lines_to_add']:
+                del tax_line_vals['tax_base_amount_currency']  # field does not exist in account.move.line
                 to_create.append({
                     **tax_line_vals,
                     'display_type': 'tax',
@@ -2878,6 +2879,7 @@ class AccountMove(models.Model):
                 })
 
             for tax_line_vals, grouping_key, to_update in tax_results['tax_lines_to_update']:
+                del to_update['tax_base_amount_currency']  # field does not exist in account.move.line
                 line = tax_line_vals['record']
                 if is_write_needed(line, to_update):
                     line.write(to_update)
@@ -4356,6 +4358,7 @@ class AccountMove(models.Model):
             # Compute the tax amounts.
             tax_results = AccountTax._prepare_tax_lines(base_lines, self.company_id)
             for tax_line_vals in tax_results['tax_lines_to_add']:
+                del tax_line_vals['tax_base_amount_currency']  # field does not exist in account.move.line
                 tax_amount_without_epd = tax_amounts.get(tax_line_vals['tax_repartition_line_id'])
                 if tax_amount_without_epd:
                     resulting_delta_tax_details[tax_line_vals['tax_repartition_line_id']] = {

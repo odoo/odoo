@@ -929,7 +929,8 @@ class PosSession(models.Model):
                         {
                             'amount': tax_line['amount_currency'],
                             'amount_converted': tax_line['balance'],
-                            'base_amount': tax_line['tax_base_amount']
+                            'base_amount': tax_line['tax_base_amount_currency'],
+                            'base_amount_converted': tax_line['tax_base_amount']
                         },
                         order.date_order,
                     )
