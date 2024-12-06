@@ -7,7 +7,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from '@web/core/utils/hooks';
 import { Component, useState, useEffect } from "@odoo/owl";
 
-class EditWebsiteSystray extends Component {
+export class EditWebsiteSystray extends Component {
     static template = "website.EditWebsiteSystray";
     static components = {
         Dropdown,
