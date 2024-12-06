@@ -638,3 +638,71 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """ Return whether the current user is allowed to access eCommerce-related content. """
         return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
+
+    def get_product_seo_data(self, product):
+        """ Return SEO data for a given product.
+        If a product is variant or has variants return product group SEO data
+        else return only product SEO data.
+        """
+        self.ensure_one()
+        if product.is_product_variant:
+            return self._get_json_ld_product_group(product.product_tmpl_id)
+        elif product.product_variant_count > 1:
+            return self._get_json_ld_product_group(product)
+        else:
+            return self._get_json_ld_product(product)
+
+    def _get_json_ld_product_group(self, product_template):
+        """ Return product with variants structured data (json-ld) for SEO.
+        :param `product.template`: Current product template.
+        :rtype: dict
+        :return: A structured product template data.
+        """
+        self.ensure_one()
+        seo_data = {
+            '@context': 'https://schema.org/',
+            '@type': 'ProductGroup',
+            'name': product_template.name,
+            'image': self.get_base_url() + self.image_url(product_template, 'image_1920'),
+            'url': self.get_base_url() + product_template.website_url,
+            'hasVariant': [
+                self._get_json_ld_product(product)
+                for product in product_template.product_variant_ids
+            ],
+        }
+        if product_template.website_description:
+            seo_data['description'] = product_template.website_description
+        return seo_data
+
+    def _get_json_ld_product(self, product_or_template):
+        """ Return product structured data (json-ld) for SEO.
+        :param `product.product`| `product.template`: A product without variants.
+        :rtype: dict
+        :return: A structured product data.
+        """
+        self.ensure_one()
+        seo_data = {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            'name': product_or_template.name,
+            'image': self.get_base_url() + self.image_url(product_or_template, 'image_1920'),
+            'offers': {
+                '@type': 'Offer',
+                'price': self.pricelist_id._get_product_price(
+                    product_or_template, quantity=1, target_currency=self.currency_id
+                ),
+                'priceCurrency': self.currency_id.name,
+            },
+            'url': self.get_base_url() + product_or_template.website_url,
+        }
+        if product_or_template.categ_id:
+            seo_data['category'] = product_or_template.categ_id.name,
+        if product_or_template.website_description:
+            seo_data['description'] = product_or_template.website_description
+        if product_or_template.rating_count:
+            seo_data['aggregateRating'] = {
+                '@type': 'AggregateRating',
+                'ratingValue': product_or_template.rating_avg,
+                'reviewCount': product_or_template.rating_count,
+            }
+        return seo_data
