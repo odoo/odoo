@@ -194,7 +194,7 @@
 </t>
 
 <t t-name="mail.Message.bodyAsNotification">
-    <div class="o-mail-Message-body text-break mb-0 w-100">
+    <div class="o-mail-Message-body text-break mb-0 w-100" t-att-class="{'o-note': message.message_type == 'notification'}">
         <t t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
     </div>
 </t>
