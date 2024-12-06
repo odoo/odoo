@@ -49,6 +49,11 @@ class IrProfile(models.Model):
         return self.sudo().search(domain).unlink()
 
     def _compute_speedscope(self):
+        # The params variable is done to control input from the user
+        # When expanding this, it should be select from an enum to input only the correct values
+        params = {
+            'constant_time' : request.httprequest.args.get('constant_time','False')=='True'
+        }
         for execution in self:
             sp = Speedscope(init_stack_trace=json.loads(execution.init_stack_trace))
             if execution.sql:
@@ -58,12 +63,12 @@ class IrProfile(models.Model):
             if execution.traces_sync:
                 sp.add('settrace', json.loads(execution.traces_sync))
 
-            result = json.dumps(sp.add_default().make())
+            result = json.dumps(sp.add_default(**params).make())
             execution.speedscope = base64.b64encode(result.encode('utf-8'))
 
     def _compute_speedscope_url(self):
         for profile in self:
-            profile.speedscope_url = f'/web/speedscope/{profile.id}'
+            profile.speedscope_url = f'/web/speedscope/config/{profile.id}'
 
     def _enabled_until(self):
         """
