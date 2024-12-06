@@ -37,7 +37,7 @@ class IrActionsServer(models.Model):
             rule_model = action.base_automation_id.model_id
             action.available_model_ids = rule_model.ids if rule_model in action.available_model_ids else []
 
-    @api.depends('state', 'update_field_id', 'crud_model_id', 'value', 'evaluation_type', 'template_id', 'partner_ids', 'activity_summary', 'sms_template_id', 'webhook_url')
+    @api.depends('state', 'update_field_id', 'crud_model_id', 'value', 'evaluation_type', 'template_id', 'partner_ids', 'activity_summary', 'sms_template_id', 'webhook_url', 'followers_type', 'followers_partner_field_name')
     def _compute_name(self):
         ''' Only server actions linked to a base_automation get an automatic name. '''
         to_update = self.filtered('base_automation_id')
@@ -65,15 +65,27 @@ class IrActionsServer(models.Model):
                         template_name=action.template_id.name
                     )
                 case 'followers':
-                    action.name = _(
-                        'Add followers: %(partner_names)s',
-                        partner_names=', '.join(action.partner_ids.mapped('name'))
-                    )
+                    if action.followers_type == 'generic':
+                        action.name = _(
+                            'Add followers based on field: %(field_name)s',
+                            field_name=action.followers_partner_field_name
+                        )
+                    else:
+                        action.name = _(
+                            'Add followers: %(partner_names)s',
+                            partner_names=', '.join(action.partner_ids.mapped('name'))
+                        )
                 case 'remove_followers':
-                    action.name = _(
-                        'Remove followers: %(partner_names)s',
-                        partner_names=', '.join(action.partner_ids.mapped('name'))
-                    )
+                    if action.followers_type == 'generic':
+                        action.name = _(
+                            'Remove followers based on field: %(field_name)s',
+                            field_name=action.followers_partner_field_name
+                        )
+                    else:
+                        action.name = _(
+                            'Remove followers: %(partner_names)s',
+                            partner_names=', '.join(action.partner_ids.mapped('name'))
+                        )
                 case 'next_activity':
                     action.name = _(
                         'Create activity: %(activity_name)s',
