@@ -510,8 +510,13 @@ class configmanager:
                          help="Maximum allowed Real time per request (default 120).",
                          type="int")
         group.add_option("--limit-time-real-cron", dest="limit_time_real_cron", my_default=-1,
-                         help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
+                         help="Maximum allowed Real time per cron batch for a database. (default: --limit-time-real). "
                               "Set to 0 for no limit. ",
+                         type="int")
+        group.add_option("--limit-time-soft-cron", dest="limit_time_soft_cron", my_default=-1,
+                         help="Best-effort maximum allowed time before per cron batch for a database. "
+                         "Time split fairly for the cron jobs in the batch. "
+                         "(default: half of hard limit).",
                          type="int")
         group.add_option(PosixOnlyOption(
                          "--limit-request", dest="limit_request", my_default=2**16,
@@ -688,6 +693,9 @@ class configmanager:
 
         if len(self['db_name']) > 1 and (self['init'] or self['update']):
             self.parser.error("Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")
+
+        if self['limit_time_soft_cron'] >= self['limit_time_real_cron'] > 0:
+            self._log(logging.WARNING, "--limit-time-soft-cron should be lower than --limit-time-real-cron")
 
         # ensure default server wide modules are present
         if not self['server_wide_modules']:
