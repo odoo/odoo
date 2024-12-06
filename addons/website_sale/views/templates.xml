@@ -1600,7 +1600,13 @@
         </div>
     </template>
 
-    <template id="product_custom_text" inherit_id="website_sale.product" customize_show="True" active="True" name="Terms and Conditions" priority="21">
+    <template
+        name="Terms and Conditions"
+        id="product_custom_text"
+        inherit_id="website_sale.product"
+        active="True"
+        priority="21"
+    >
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
             <p class="text-muted mb-0">
                 <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
@@ -1793,56 +1799,6 @@
         <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
             <h3 class="fst-italic" t-field="website.prevent_zero_price_sale_text"/>
         </div>
-    </template>
-
-    <template id="product_variants" inherit_id="website_sale.product" active="False" name="List View of Variants">
-        <xpath expr="//t[@name='variant_info']" position="replace">
-            <!--
-                Using this setting with dynamic variants is not supported.
-                Indeed the variants that have yet to exist will not show on the
-                list and will never be selectable to be created...
-
-                We also don't use the feature with no_variant because these
-                attributes have to be selected manually.
-
-                Finally we don't use the feature with is_custom values because
-                they need to be set by the user.
-            -->
-            <t t-if="not product.has_dynamic_attributes() and not product._has_no_variant_attributes() and not product._has_is_custom_values()">
-                <t t-set="attribute_exclusions" t-value="product._get_attribute_exclusions()"/>
-                <t t-set="filtered_sorted_variants" t-value="product._get_possible_variants_sorted()"/>
-                <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"/>
-                <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id"/>
-                <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
-                <t t-if="len(filtered_sorted_variants) &gt; 1">
-                    <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True)"/>
-                    <div class="mb-4">
-                        <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="form-check mb-1">
-                            <t t-set="combination_info" t-value="variant_id._get_combination_info_variant()"/>
-                            <input type="radio"
-                                   name="product_id"
-                                   class="form-check-input product_id js_product_change"
-                                   t-att-checked="'checked' if variant_id_index == 0 else None"
-                                   t-attf-id="radio_variant_#{variant_id.id}"
-                                   t-att-value="variant_id.id"
-                                   t-att-data-price="combination_info['price']"
-                                   t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
-                            <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="form-check-label fw-normal">
-                                <span t-out="combination_info['display_name']"/>
-                                <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>
-                                <span t-attf-class="badge text-bg-{{navClass}} border" t-if="diff_price != 0">
-                                    <span class="sign_badge_price_extra" t-out="diff_price > 0 and '+' or '-'"/>
-                                    <span t-out="abs(combination_info['price'] - template_combination_info['price'])"
-                                          t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                                          class="text-muted fst-italic"/>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </t>
-            </t>
-            <t t-else="">$0</t>
-        </xpath>
     </template>
 
     <template id="wizard_checkout" name="Wizard Checkout">
