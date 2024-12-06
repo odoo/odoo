@@ -119,8 +119,8 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         expected_vals_list = [
             # number_draft, sum_draft, number_waiting, sum_waiting, number_late, sum_late, currency
             [            1,       100,              1,          55,            1,      55, company_currency],
-            [            1,       200,              1,         110,            1,     110, foreign_currency],
-            [            1,       400,              1,         220,            1,     220, foreign_currency],
+            [            1,       100,              1,          55,            1,      55, company_currency],
+            [            1,       200,              1,         110,            1,     110, company_currency],
             [            1,       200,              1,         110,            1,     110, company_currency],
             [            1,       100,              1,          55,            1,      55, company_currency],
         ]
@@ -361,3 +361,70 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
         self.assertEqual(dashboard_data.get('misc_operations_balance', 0), None)
         self.assertEqual(dashboard_data.get('misc_class', ''), 'text-warning')
+
+    def test_to_check_amount_different_currency(self):
+        eur = self.env.ref('base.EUR')
+        usd = self.env.ref('base.USD')
+        
+        self.env['res.currency.rate'].create({
+            'currency_id': eur.id,
+            'name': '2024-12-01',
+            'rate': 1.0,
+        })
+        self.env['res.currency.rate'].create({
+            'currency_id': usd.id,
+            'name': '2024-12-01',
+            'rate': 2,
+        })
+
+        journal = self.env['account.journal'].create({
+            'name': 'Test Foreign Currency Journal',
+            'type': 'sale',
+            'code': 'TEST',
+            'currency_id': eur.id,
+            'company_id': self.env.company.id,
+        })
+        vendor_bills = self.env['account.journal'].search([('name','=','Vendor Bills')])
+        moves = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'journal_id': journal.id,
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2024-12-01',
+                'date': '2024-12-01',
+                'currency_id': eur.id,
+                'to_check': True,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'quantity': 1,
+                        'price_unit': 100,
+                        'tax_ids': [],
+                    })
+                ],
+            },
+            {
+                'move_type': 'out_invoice',
+                'journal_id': journal.id,
+                'partner_id': self.partner_b.id,
+                'invoice_date': '2024-12-02',
+                'date': '2024-12-02',
+                'currency_id': usd.id,
+                'to_check': True,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': self.product_b.id,
+                        'quantity': 2,
+                        'price_unit': 50,
+                        'tax_ids': [],
+                    })
+                ],
+            },
+        ])
+        
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_to_check'], 2)
+        self.assertIn('$\xa0300.00', dashboard_data['to_check_balance'])
+        dashboard_data = vendor_bills._get_journal_dashboard_data_batched()[vendor_bills._ids[0]]
+        self.assertEqual(dashboard_data['number_to_check'], 0)
+        self.assertIn('$\xa00.00', dashboard_data['to_check_balance'])
