@@ -42,7 +42,7 @@ test("fieldmany2many tags email (edition)", async (assert) => {
             }
         },
     });
-    await openFormView("mail.message", messageId, { props: { mode: "edit" } });
+    await openFormView("mail.message", messageId, {});
     await assertSteps([]);
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
 
@@ -100,15 +100,12 @@ test("fieldmany2many tags email popup close without filling", async (assert) => 
             }
         },
     });
-    await openView(
-        {
-            res_model: "mail.message",
-            views: [[false, "form"]],
-        },
-        { mode: "edit" }
-    );
+    await openView({
+        res_model: "mail.message",
+        views: [[false, "form"]],
+    });
 
-    let target = getFixture()
+    const target = getFixture();
 
     // Selecting partner without an email leads to opening a modal dialog
     await selectDropdownItem(document.body, "partner_ids", "Deficient Denise");

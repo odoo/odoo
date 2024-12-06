@@ -495,7 +495,7 @@ export function useOpenMany2XRecord({
         }
 
         const { create: canCreate, write: canWrite } = activeActions;
-        const mode = (resId ? canWrite : canCreate) ? "edit" : "readonly";
+        const readonly = !(resId ? canWrite : canCreate);
 
         addDialog(
             FormViewDialog,
@@ -505,7 +505,7 @@ export function useOpenMany2XRecord({
                 title,
                 context,
                 nextRecordsContext,
-                mode,
+                readonly,
                 resId,
                 resModel: model,
                 viewId,
@@ -573,6 +573,7 @@ export class X2ManyFieldDialog extends Component {
         }); // maybe pass the model directly in props
 
         this.canCreate = !this.record.resId;
+        this.readonly = !this.canCreate && !this.archInfo.activeActions.edit;
 
         if (this.archInfo.xmlDoc.querySelector("footer:not(field footer)")) {
             this.archInfo = { ...this.archInfo, xmlDoc: this.archInfo.xmlDoc.cloneNode(true) };
@@ -751,7 +752,7 @@ export function useOpenX2ManyRecord({
     const addDialog = useOwnedDialogs();
     const viewMode = activeField.viewMode;
 
-    async function openRecord({ record, mode, context, title, controls, onClose }) {
+    async function openRecord({ record, readonly, context, title, controls, onClose }) {
         if (!title) {
             title = record
                 ? _t("Open: %s", activeField.string)
@@ -775,7 +776,8 @@ export function useOpenX2ManyRecord({
         let deleteButtonLabel = undefined;
         const isDuplicate = !!record;
 
-        const params = { activeFields, fields, mode };
+        const params = { activeFields, fields, readonly };
+        params.mode = params.readonly ? "readonly" : "edit";
         if (record) {
             const { delete: canDelete, onDelete } = activeActions;
             deleteRecord = viewMode === "kanban" && canDelete ? () => onDelete(record) : null;

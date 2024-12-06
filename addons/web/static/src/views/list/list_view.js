@@ -19,9 +19,13 @@ export const listView = {
         const { ArchParser } = view;
         const { arch, relatedModels, resModel } = genericProps;
         const archInfo = new ArchParser().parse(arch, relatedModels, resModel);
+        const readonly = genericProps.readonly || !archInfo.activeActions?.edit;
+        const editable = (!readonly && archInfo.editable) || false;
 
         return {
             ...genericProps,
+            readonly: readonly,
+            editable: editable,
             Model: view.Model,
             Renderer: view.Renderer,
             buttonTemplate: view.buttonTemplate,

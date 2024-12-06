@@ -273,7 +273,7 @@ export class X2ManyField extends Component {
             return this._openRecord({
                 record,
                 context: this.props.context,
-                mode: this.props.readonly ? "readonly" : "edit",
+                readonly: this.props.readonly,
             });
         }
     }

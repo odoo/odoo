@@ -84,6 +84,7 @@ export class ListRenderer extends Component {
         "noContentHelp?",
         "nestedKeyOptionalFieldsData?",
         "optionalActiveFields?",
+        "readonly?",
     ];
 
     setup() {
@@ -335,7 +336,10 @@ export class ListRenderer extends Component {
 
     getFieldProps(record, column) {
         return {
-            readonly: this.isCellReadonly(column, record) || this.isRecordReadonly(record),
+            readonly:
+                this.props.readonly ||
+                this.isCellReadonly(column, record) ||
+                this.isRecordReadonly(record),
         };
     }
 
