@@ -199,7 +199,7 @@ from .service import security, model as service_model
 from .tools import (config, consteq, file_path, get_lang, json_default,
                     parse_version, profiler, unique, exception_to_unicode)
 from .tools.func import filter_kwargs, lazy_property
-from .tools.misc import submap
+from .tools.misc import submap, real_time
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
@@ -2374,7 +2374,7 @@ class Application:
         current_thread = threading.current_thread()
         current_thread.query_count = 0
         current_thread.query_time = 0
-        current_thread.perf_t0 = time.time()
+        current_thread.perf_t0 = real_time()
         current_thread.cursor_mode = None
         if hasattr(current_thread, 'dbname'):
             del current_thread.dbname
