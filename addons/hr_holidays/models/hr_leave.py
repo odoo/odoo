@@ -67,6 +67,7 @@ class HrLeave(models.Model):
     On top of that multicompany rules apply based on company defined on the
     leave request leave type.
     """
+    _name = 'hr.leave'
     _description = "Time Off"
     _order = "date_from desc"
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']

@@ -77,6 +77,7 @@ class SlideSlidePartner(models.Model):
 
 class SlideTag(models.Model):
     """ Tag to search slides across channels. """
+    _name = 'slide.tag'
     _description = 'Slide Tag'
 
     name = fields.Char('Name', required=True, translate=True)

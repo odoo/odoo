@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
         invalidate the cached value for
         get_cloud_storage_azure_user_delegation_key
     """
-    _inherit = ['res.config.settings']
+    _inherit = 'res.config.settings'
 
     cloud_storage_provider = fields.Selection(selection_add=[('azure', 'Azure Cloud Storage')])
 

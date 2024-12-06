@@ -15,6 +15,7 @@ class Im_LivechatChannel(models.Model):
         It provides rating tools, and access rules for anonymous people.
     """
 
+    _name = 'im_livechat.channel'
     _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
     _rating_satisfaction_days = 14  # include only last 14 days to compute satisfaction
@@ -424,6 +425,7 @@ class Im_LivechatChannelRule(models.Model):
         option to open automatically the conversation.
     """
 
+    _name = 'im_livechat.channel.rule'
     _description = 'Livechat Channel Rules'
     _order = 'sequence asc'
 

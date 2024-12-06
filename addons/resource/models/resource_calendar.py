@@ -34,6 +34,7 @@ class ResourceCalendar(models.Model):
     All methods in this class use intervals. An interval is a tuple holding
     (begin_datetime, end_datetime). A list of intervals is therefore a list of
     tuples, holding several intervals of work or leaves. """
+    _name = 'resource.calendar'
     _description = "Resource Working Time"
 
     @api.model

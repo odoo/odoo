@@ -16,6 +16,7 @@ class MailComposerMixin(models.AbstractModel):
     It is meant to evolve in a near future with upcoming support of qweb and fine
     grain control of rendering access.
     """
+    _name = 'mail.composer.mixin'
     _inherit = ['mail.render.mixin']
     _description = 'Mail Composer Mixin'
 

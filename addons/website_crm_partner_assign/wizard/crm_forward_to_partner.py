@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class CrmLeadForwardToPartner(models.TransientModel):
     """ Forward info history to partners. """
+    _name = 'crm.lead.forward.to.partner'
     _description = 'Lead forward to partner'
 
     @api.model

@@ -7,6 +7,7 @@ from odoo.tools import SQL
 
 class CrmPartnerReportAssign(models.Model):
     """ CRM Lead Report """
+    _name = 'crm.partner.report.assign'
     _auto = False
     _description = "CRM Partnership Analysis"
 

@@ -46,6 +46,7 @@ class UtmSourceMixin(models.AbstractModel):
     """Mixin responsible of generating the name of the source based on the content
     (field defined by _rec_name) of the record (mailing, social post,...).
     """
+    _name = 'utm.source.mixin'
     _description = 'UTM Source Mixin'
 
     name = fields.Char('Name', related='source_id.name', readonly=False)

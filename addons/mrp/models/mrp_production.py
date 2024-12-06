@@ -24,6 +24,7 @@ SIZE_BACK_ORDER_NUMERING = 3
 
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
+    _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name = 'date_start'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
