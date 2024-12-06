@@ -22,7 +22,9 @@ class MailComposerSendDropdown extends Component {
         this.orm = useService("orm");
     }
 
-    async onClickSend() {
+    async onClickSend(ev) {
+        const sendButton = ev.target;
+        sendButton.setAttribute("disabled", true);
         // don't send message if save failed (eg. missing required field )
         if (await this.props.record.save()) {
             // schedule the message if a scheduled_date is set on the composer
@@ -36,6 +38,7 @@ class MailComposerSendDropdown extends Component {
                 }),
             );
         }
+        sendButton.removeAttribute("disabled");
     }
 
     async onClickSendLater() {
