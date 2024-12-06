@@ -764,3 +764,50 @@ class TestTimesheet(TestCommonTimesheet):
                 'project_id': self.project_customer.id,
                 'employee_id': self.empl_employee.id,
             })
+
+    def test_project_update_timesheet(self):
+        """Test project update timesheet values and percentage calculations."""
+
+        project = self.env['project.project'].create({'name': 'Project', 'allocated_hours': 10})
+        task1, task2 = self.env['project.task'].create([
+            {
+                'name': 'Task 1',
+                'project_id': project.id,
+            },
+            {
+                'name': 'Task 2',
+                'project_id': project.id,
+            },
+        ])
+
+        def create_timesheet(task, hours):
+            """Create a timesheet entry for a given task and hours."""
+            return self.env['account.analytic.line'].create({
+                'name': 'Timesheet',
+                'task_id': task.id,
+                'unit_amount': hours,
+                'employee_id': self.empl_employee.id,
+            })
+
+        def update_project_and_assert(expected_percentage):
+            """Create new project update and validate the expected values."""
+            with Form(self.env['project.update'].with_context({'default_project_id': project.id})) as update_form:
+                update_form.name = "Test"
+            update = update_form.save()
+
+            self.assertEqual(update.allocated_time, project.allocated_hours)
+            self.assertEqual(update.timesheet_time, project.total_timesheet_time)
+            self.assertEqual(update.timesheet_percentage, expected_percentage)
+
+        # Initial timesheet on task1
+        create_timesheet(task1, 2)
+        update_project_and_assert(20)
+
+        # Update allocated hours and add timesheet on task2
+        project.allocated_hours = 12.0
+        create_timesheet(task2, 3)
+        update_project_and_assert(42)
+
+        # Add additional timesheet on task2
+        create_timesheet(task2, 10)
+        update_project_and_assert(125)
