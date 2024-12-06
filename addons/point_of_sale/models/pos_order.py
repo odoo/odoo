@@ -1372,7 +1372,7 @@ class PosOrderLine(models.Model):
         if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking == 'serial':
             existing_lots_sudo = existing_lots_sudo.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) >= 0)
 
-        return existing_lots_sudo.read(['id', 'name'])
+        return existing_lots_sudo.read(['id', 'name', 'product_qty'])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_order_state(self):
