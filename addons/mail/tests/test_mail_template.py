@@ -414,6 +414,59 @@ class TestMailTemplateReset(MailCommon):
         self.assertEqual(mail_template.with_context(lang='en_GB').name, 'Mail: Test Mail Template')
         self.assertEqual(mail_template.with_context(lang='fr_FR').name, 'Mail: Test Mail Template FR')
 
+    def test_search_template_categories(self):
+        MailTemplate = self.env["mail.template"]
+        base_1 = MailTemplate.create({
+            "name": "A base mail template",
+            "description": "with a description",
+        })
+        self.env["ir.model.data"].create({"name": "base_1_mail_template", "model": "mail.template", "res_id": base_1.id})
+
+        hidden_1 = self.env["mail.template"].create({
+            "name": "A custom mail template that was inactivated",
+            "active": False
+        })
+        hidden_2 = MailTemplate.create({
+            "name": "A base mail template that was inactivated",
+            "description": "with a description",
+            "active": False
+        })
+        self.env["ir.model.data"].create({"name": "hidden_1_mail_template", "model": "mail.template", "res_id": hidden_2.id})
+        hidden_3 = MailTemplate.create({
+            "name": "NOT a base mail template because no description",
+        })
+        self.env["ir.model.data"].create({"name": "custom_1_mail_template", "model": "mail.template", "res_id": hidden_3.id})
+
+        custom_1 = MailTemplate.create({
+            "name": "A custom mail template",
+        })
+        custom_2 = MailTemplate.create({
+            "name": "A custom mail template with a description",
+            "description": "description of the template"
+        })
+
+        self.assertEqual(base_1.template_category, "base_template")
+        self.assertEqual(hidden_1.template_category, "hidden_template")
+        self.assertEqual(hidden_2.template_category, "hidden_template")
+        self.assertEqual(hidden_3.template_category, "hidden_template")
+        self.assertEqual(custom_1.template_category, "custom_template")
+        self.assertEqual(custom_2.template_category, "custom_template")
+
+        search = lambda domain, active_test=True: MailTemplate.with_context(active_test=active_test).search(
+            ["&", ("id", "in", (base_1 | hidden_1 | hidden_2 | hidden_3 | custom_1 | custom_2).ids)] + domain)
+
+        self.assertEqual(base_1, search([("template_category", "=", "base_template")]))
+
+        self.assertEqual(hidden_3, search([("template_category", "=", "hidden_template")]))
+        self.assertEqual((hidden_1 | hidden_2 | hidden_3), search([("template_category", "=", "hidden_template")], active_test=False))
+
+        self.assertEqual((custom_1 | custom_2), search([("template_category", "=", "custom_template")]))
+
+        self.assertEqual((base_1 | hidden_3), search([("template_category", "!=", "custom_template")]))
+        self.assertEqual((base_1 | hidden_3), search([("template_category", "in", ["base_template", "hidden_template"])]))
+        self.assertEqual((base_1 | hidden_3), search([("template_category", "not in", ["custom_template"])]))
+        self.assertEqual((base_1 | hidden_3), search(['|', ("template_category", "=", "base_template"), ("template_category", "=", "hidden_template")]))
+
 
 @tagged("mail_template", "-at_install", "post_install")
 class TestMailTemplateUI(HttpCase):
