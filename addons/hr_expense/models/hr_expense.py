@@ -1333,8 +1333,11 @@ class HrExpenseSheet(models.Model):
 
     def _prepare_bill_vals(self):
         self.ensure_one()
+        move_vals = self._prepare_move_vals()
+        if self.employee_id.sudo().bank_account_id:
+            move_vals['partner_bank_id'] = self.employee_id.sudo().bank_account_id.id
         return {
-            **self._prepare_move_vals(),
+            **move_vals,
             # force the name to the default value, to avoid an eventual 'default_name' in the context
             # to set it to '' which cause no number to be given to the account.move when posted.
             'journal_id': self.journal_id.id,
@@ -1548,7 +1551,7 @@ class HrExpenseSheet(models.Model):
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
-                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id if len(self.employee_id.sudo().bank_account_id.ids) <= 1 else None,
+                'default_partner_bank_id': self.account_move_id.partner_bank_id.id,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
