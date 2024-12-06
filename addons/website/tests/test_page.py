@@ -264,7 +264,7 @@ class WithContext(HttpCase):
     @mute_logger('odoo.http')
     def test_03_error_page_debug(self):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
-            self.base_view.arch = self.base_view.arch.replace('I am a generic page', '<t t-esc="15/0"/>')
+            self.base_view.arch = self.base_view.arch.replace('I am a generic page', '<t t-out="15/0"/>')
 
             # first call, no debug, traceback should not be visible
             r = self.url_open(self.page.url)

@@ -12,7 +12,7 @@
                             <t t-set="text">Menu Item %s</t>
                             <t t-set="text" t-value="text % (i + 1)"/>
                             <a href="#" class="nav-link" data-name="Menu Item"
-                                t-esc="text"/>
+                                t-out="text"/>
                         </t>
                     </nav>
                 </div>
@@ -26,7 +26,7 @@
                             <t t-set="text">Menu Item %s</t>
                             <t t-set="text" t-value="text % (i + 1)"/>
                             <a href="#" class="nav-link" data-name="Menu Item"
-                                t-esc="text"/>
+                                t-out="text"/>
                         </t>
                     </nav>
                 </div>

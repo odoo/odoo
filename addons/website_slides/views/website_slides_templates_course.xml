@@ -14,15 +14,15 @@
                         </li>
                         <t t-set="breadcrumb_class" t-value="'breadcrumb-item text-truncate %s' % ('fw-bold' if not slide else '')" />
                         <li t-att-class="'breadcrumb-item text-truncate %s' % ('fw-bold' if not search_category and not search_tag and not search_slide_category and not slide else '')">
-                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?#{keep_query('invite_hash', 'invite_partner_id')}" class="text-truncate d-block"><span t-esc="channel.name" t-att-title="channel.name"/></a>
-                            <a t-else="" t-att-href="'/slides/%s' % slug(channel)" class="text-truncate d-block"><span t-esc="channel.name" t-att-title="channel.name"/></a>
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?#{keep_query('invite_hash', 'invite_partner_id')}" class="text-truncate d-block"><span t-out="channel.name" t-att-title="channel.name"/></a>
+                            <a t-else="" t-att-href="'/slides/%s' % slug(channel)" class="text-truncate d-block"><span t-out="channel.name" t-att-title="channel.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-if="search_category">
-                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}/category/#{search_category.id}?#{keep_query('invite_hash', 'invite_partner_id')}" aria-current='page'><span t-esc="search_category.name" t-att-title="search_category.name"/></a>
-                            <a t-else="" t-attf-href="/slides/#{slug(channel)}/category/#{slug(search_category)}" aria-current='page'><span t-esc="search_category.name" t-att-title="search_category.name"/></a>
+                            <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}/category/#{search_category.id}?#{keep_query('invite_hash', 'invite_partner_id')}" aria-current='page'><span t-out="search_category.name" t-att-title="search_category.name"/></a>
+                            <a t-else="" t-attf-href="/slides/#{slug(channel)}/category/#{slug(search_category)}" aria-current='page'><span t-out="search_category.name" t-att-title="search_category.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-if="search_tag">
-                            <a t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))" aria-current='page'><span t-esc="search_tag.name" t-att-title="search_tag.name"/></a>
+                            <a t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))" aria-current='page'><span t-out="search_tag.name" t-att-title="search_tag.name"/></a>
                         </li>
                         <li t-att-class="breadcrumb_class" t-if="search_uncategorized">
                             <a t-if="invite_preview" t-attf-href="/slides/#{channel.id}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id')}" aria-current='page' title="Uncategorized">Uncategorized</a>
@@ -30,11 +30,11 @@
                         </li>
                         <li t-att-class="breadcrumb_class" t-if="search_slide_category">
                             <a t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)" aria-current='page'>
-                                <span t-esc="slide_categories.get('search_slide_category', '-')" t-att-title="slide_categories.get('search_slide_category', '-')"/>
+                                <span t-out="slide_categories.get('search_slide_category', '-')" t-att-title="slide_categories.get('search_slide_category', '-')"/>
                             </a>
                         </li>
                         <li t-if="slide" class="breadcrumb-item text-truncate fw-bold">
-                            <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-esc="slide.name" t-att-title="slide.name"/></a>
+                            <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-out="slide.name" t-att-title="slide.name"/></a>
                         </li>
                     </ol>
                 </nav>
@@ -65,24 +65,24 @@
                                 <t t-set="dropdown_class" t-value="'dropdown-item %s' % ('active' if not slide else '')"/>
                                 <a t-attf-class="dropdown-item #{'active' if not search_category and not search_tag and not search_slide_category else ''}"
                                     t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}?#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
-                                    &#9492;<span class="ms-1" t-esc="channel.name"/>
+                                    &#9492;<span class="ms-1" t-out="channel.name"/>
                                 </a>
                                 <a t-att-class="dropdown_class" aria-current="page" t-if="search_category"
                                     t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}/category/#{search_category.id if invite_preview else slug(search_category)}?#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
-                                    &#9492;<span class="ms-1" t-esc="search_category.name"/>
+                                    &#9492;<span class="ms-1" t-out="search_category.name"/>
                                 </a>
                                 <a t-att-class="dropdown_class" aria-current="page" t-if="search_tag" t-att-href="'/slides/%s/tag/%s' % (slug(channel), slug(search_tag))">
-                                    &#9492;<span class="ms-1" t-esc="search_tag.name"/>
+                                    &#9492;<span class="ms-1" t-out="search_tag.name"/>
                                 </a>
                                 <a t-att-class="dropdown_class" aria-current="page" t-if="search_uncategorized"
                                     t-attf-href="/slides/#{channel.id if invite_preview else slug(channel)}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">
                                     &#9492;<span class="ms-1">Uncategorized</span>
                                 </a>
                                 <a t-att-class="dropdown_class" aria-current="page" t-if="search_slide_category" t-att-href="'/slides/%s?slide_category=%s' % (slug(channel), search_slide_category)">
-                                    &#9492;<span class="ms-1" t-esc="slide_categories.get('search_slide_category', '-')"/>
+                                    &#9492;<span class="ms-1" t-out="slide_categories.get('search_slide_category', '-')"/>
                                 </a>
                                  <a t-if="slide" class="dropdown-item active" t-att-href="'/slides/slide/%s' % (slug(slide))">
-                                    &#9492;<span class="ms-1" t-esc="slide.name"/>
+                                    &#9492;<span class="ms-1" t-out="slide.name"/>
                                 </a>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
                                     <a t-att-class="'nav-link %s' % ('active' if active_tab == 'review' else '')"
                                         id="review-tab" data-bs-toggle="pill" href="#review" role="tab" aria-controls="review"
                                         t-att-aria-selected="'true' if active_tab == 'review' else 'false'">
-                                        Reviews<t t-if="rating_count"> (<t t-esc="rating_count"/>)</t>
+                                        Reviews<t t-if="rating_count"> (<t t-out="rating_count"/>)</t>
                                     </a>
                                 </li>
                             </ul>
@@ -211,7 +211,7 @@
                                          class="mb-1 pt-1">
                                         <t t-if="channel_frontend_tags">
                                             <t t-foreach="channel_frontend_tags" t-as="channel_tag">
-                                                <span t-attf-class="badge o_wslides_channel_tag #{'o_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
+                                                <span t-attf-class="badge o_wslides_channel_tag #{'o_color_'+str(channel_tag.color)}" t-out="channel_tag.name"/>
                                             </t>
                                         </t>
                                         <a t-if="channel.can_upload"
@@ -258,19 +258,19 @@
             <table class="table table-sm mt-3">
                 <tr t-if="channel.user_id">
                     <th class="border-top-0">Responsible</th>
-                    <td class="border-top-0 text-break"><span t-esc="channel.user_id.display_name"/></td>
+                    <td class="border-top-0 text-break"><span t-out="channel.user_id.display_name"/></td>
                 </tr>
                 <tr>
                     <th class="border-top-0">Last Update</th>
-                    <td class="border-top-0"><t t-esc="channel.slide_last_update" t-options="{'widget': 'date'}"/></td>
+                    <td class="border-top-0"><t t-out="channel.slide_last_update" t-options="{'widget': 'date'}"/></td>
                 </tr>
                 <tr t-if="channel.total_time">
                     <th class="border-top-0">Completion Time</th>
-                    <td class="border-top-0"><t class="fw-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/></td>
+                    <td class="border-top-0"><t class="fw-bold" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/></td>
                 </tr>
                 <tr>
                     <th>Members</th>
-                    <td><t t-esc="channel.members_count"/></td>
+                    <td><t t-out="channel.members_count"/></td>
                 </tr>
             </table>
 
@@ -417,7 +417,7 @@
                         <div class="progress-bar" role="progressbar" t-attf-style="width: #{channel.completion}%" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"></div>
                     </div>
                     <div class="ms-3 small">
-                        <span class="o_wslides_progress_percentage" t-esc="channel.completion"/> %
+                        <span class="o_wslides_progress_percentage" t-out="channel.completion"/> %
                     </div>
                 </div>
             </div>
@@ -599,7 +599,7 @@
                 <span t-field="slide.name"/>
             </a>
             <span t-else="">
-                <span t-esc="slide.name"/>
+                <span t-out="slide.name"/>
             </span>
         </div>
 
@@ -618,7 +618,7 @@
             </span>
             <span t-if="slide.question_ids" t-att-class="'badge fw-bold m-1 %s' % ('text-bg-success' if channel_progress[slide.id].get('completed') else 'text-bg-warning')">
                 <i t-attf-class="fa fa-fw #{'fa-check' if channel_progress[slide.id].get('completed') else 'fa-flag'}"/>
-                <t t-esc="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
+                <t t-out="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
             <span class="badge text-bg-danger fw-normal m-1" t-if="not slide.website_published">Unpublished</span>
         </div>
@@ -658,7 +658,7 @@
                     <div class="o_wslides_desc_truncate_10 mt-3" t-field="slide_promoted.description"/>
                     <div t-if="slide_promoted.tag_ids" class="mt-2 pt-1">
                         <t t-foreach="slide_promoted.tag_ids" t-as="tag">
-                            <h4 t-if="invite_preview" class="badge text-bg-info" t-esc="tag.name"/>
+                            <h4 t-if="invite_preview" class="badge text-bg-info" t-out="tag.name"/>
                             <a t-else="" t-attf-href="/slides/#{slug(slide_promoted.channel_id)}/tag/#{slug(tag)}" class="badge text-bg-primary" t-esc="tag.name"/>
                         </t>
                     </div>
@@ -695,8 +695,8 @@
                                         <li t-if="search_category['nbr_%s' % slide_category_key] > 0" class="nav-item">
                                             <a t-att-href="'/slides/%s/category/%s?%s' % (slug(channel), slug(search_category), keep_query(slide_category=slide_category_key))"
                                                t-att-class="'nav-link d-flex align-items-center justify-content-between me-1 %s' % ('active' if search_slide_category == slide_category_key else '')">
-                                               <t t-esc="slide_categories[slide_category_key]"/>
-                                               <span t-attf-class="badge ms-1 #{'text-bg-info' if search_slide_category == slide_category_key else 'bg-400'}" t-esc="search_category['nbr_%s' % slide_category_key]"/>
+                                               <t t-out="slide_categories[slide_category_key]"/>
+                                               <span t-attf-class="badge ms-1 #{'text-bg-info' if search_slide_category == slide_category_key else 'bg-400'}" t-out="search_category['nbr_%s' % slide_category_key]"/>
                                             </a>
                                         </li>
                                     </t>
@@ -704,8 +704,8 @@
                                         <li t-if="channel['nbr_%s' % slide_category_key] > 0" class="nav-item">
                                             <a t-att-href="'/slides/%s?%s' % (slug(channel), keep_query(slide_category=slide_category_key))"
                                                t-att-class="'nav-link d-flex align-items-center justify-content-between me-1 %s' % ('active' if search_slide_category == slide_category_key else '')">
-                                               <t t-esc="slide_categories[slide_category_key]"/>
-                                               <span t-attf-class="badge ms-1 #{'text-bg-info' if search_slide_category == slide_category_key else 'bg-400'}" t-esc="channel['nbr_%s' % slide_category_key]"/>
+                                               <t t-out="slide_categories[slide_category_key]"/>
+                                               <span t-attf-class="badge ms-1 #{'text-bg-info' if search_slide_category == slide_category_key else 'bg-400'}" t-out="channel['nbr_%s' % slide_category_key]"/>
                                             </a>
                                         </li>
                                     </t>
@@ -763,7 +763,7 @@
             <div class="mb-2 pt-1 text-start col">
                 <t t-if="channel_frontend_tags">
                     <t t-foreach="channel_frontend_tags" t-as="channel_tag">
-                        <span t-attf-class="badge o_wslides_channel_tag #{'o_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
+                        <span t-attf-class="badge o_wslides_channel_tag #{'o_color_'+str(channel_tag.color)}" t-out="channel_tag.name"/>
                     </t>
                 </t>
                 <a t-if="channel.can_upload"
@@ -807,7 +807,7 @@
                 <t t-set="search_results_number" t-value="search_results_number + category['total_slides']"/>
             </t>
             <div t-if="search_results_number == 0" class="alert alert-info mt-4 mb-5 text-center">
-                No content was found using your search <span class="fw-bold" t-esc="search"/>.
+                No content was found using your search <span class="fw-bold" t-out="search"/>.
             </div>
         </t>
 
@@ -815,11 +815,11 @@
             <div class="mb-2" t-if="(category['slides'] or channel.can_publish) and (search_category and search_category.id == category['id'] or not search_category)">
                 <t t-set="is_empty_editable" t-value="not category['slides'] and channel.can_publish"/>
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="category['id'] and query_string != '?search_uncategorized=1'">
-                    <h5 t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-esc="category['name']"/></h5>
+                    <h5 t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-out="category['name']"/></h5>
                     <a t-if="category['id'] and not is_empty_editable" t-attf-href="/slides/#{channel.id}/category/#{category['id']}?#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">View all</a>
                 </div>
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3" t-if="not category['id'] and len(category['slides']) > 0">
-                    <h5 t-if="len(category_data) > 1" t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-esc="category['name']"/></h5>
+                    <h5 t-if="len(category_data) > 1" t-attf-class="m-0 #{'text-muted' if is_empty_editable else ''}"><t t-out="category['name']"/></h5>
                     <a t-attf-href="/slides/#{channel.id}?uncategorized=1&amp;#{keep_query('invite_hash', 'invite_partner_id') if invite_preview else ''}">View all</a>
                 </div>
                 <div class="row mx-n2">
@@ -854,8 +854,8 @@
         <i t-if="channel_progress[slide.id].get('completed')" class="position-absolute py-1 px-2 h5 fa fa-check-circle text-primary" style="right:0; top:0;"/>
 
         <div class="card-body d-flex flex-column px-3">
-            <a t-if="can_access" class="card-title h5 o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-esc="slide.name"/>
-            <span t-else="" class="card-title h5 o_wslides_desc_truncate_2 text-muted" t-esc="slide.name"/>
+            <a t-if="can_access" class="card-title h5 o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-out="slide.name"/>
+            <span t-else="" class="card-title h5 o_wslides_desc_truncate_2 text-muted" t-out="slide.name"/>
             <div class="text-muted o_wslides_desc_truncate_2 mb-2" t-if="slide.is_preview or (not slide.is_published and user.has_group('website_slides.group_website_slides_officer'))">
                 <span t-if="slide.is_preview" class="badge text-bg-info">Preview</span>
                 <span t-if="not slide.is_published and channel.can_publish" class="badge text-bg-danger">Unpublished</span>
@@ -865,8 +865,8 @@
             </div>
             <div class="text-muted o_wslides_desc_truncate_2 my-2">
                 <t t-foreach="slide.tag_ids" t-as="tag">
-                    <h4 t-if="invite_preview" class="badge text-bg-info" t-esc="tag.name"/>
-                    <a t-else="" t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(tag)}" class="badge text-bg-primary" t-esc="tag.name"/>
+                    <h4 t-if="invite_preview" class="badge text-bg-info" t-out="tag.name"/>
+                    <a t-else="" t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(tag)}" class="badge text-bg-primary" t-out="tag.name"/>
                 </t>
             </div>
             <span t-if="channel.is_member and channel_progress[slide.id].get('completed')" class="badge text-bg-success align-self-start"><i class="fa fa-check me-1"/>Completed</span>

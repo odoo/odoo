@@ -39,7 +39,7 @@
             <we-select string="Template" data-name="template_opt" data-attribute-name="templateKey" data-no-preview="true">
             </we-select>
             <we-select string="Fetched Elements" data-name="number_of_records_opt" data-attribute-name="numberOfRecords" data-no-preview="true">
-                <we-button t-foreach="range(1, 17)" t-as="value" t-att-data-select-data-attribute="value" t-esc="value"/>
+                <we-button t-foreach="range(1, 17)" t-as="value" t-att-data-select-data-attribute="value" t-out="value"/>
             </we-select>
             <t t-out="0"/>
         </div>
