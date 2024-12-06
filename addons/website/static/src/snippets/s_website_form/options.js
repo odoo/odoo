@@ -399,6 +399,9 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             this.dataForEmailTo = dataForValues['email_to'];
         }
         this.defaultEmailToValue = "info@yourcompany.example.com";
+        // TODO: In the master branch, ensure the class "oe_unremovable"
+        // is added directly within the XML file.
+        this.$target[0].querySelector(".s_website_form_send").classList.add("oe_unremovable");
         return Promise.all(proms);
     },
     /**
