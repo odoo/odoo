@@ -56,6 +56,28 @@ function getIFrame(popperEl, targetEl) {
 }
 
 /**
+ * Returns the RTl adapted direction and variant if needed.
+ * If the current localization direction is "rtl":
+ *  - Direction "left" and "right" are flipped to "right" and "left".
+ *  - Variant "start" and "end" are flipped to "end" and "start".
+ *
+ * @param {Direction} direction
+ * @param {Variant} [variant="middle"] (default value is "middle")
+ * @returns {[Direction, Variant]}
+ */
+export function reverseForRTL(direction, variant = "middle") {
+    if (localization.direction === "rtl") {
+        if (["left", "right"].includes(direction)) {
+            direction = direction === "left" ? "right" : "left";
+        } else if (["start", "end"].includes(variant)) {
+            // here direction is either "top" or "bottom"
+            variant = variant === "start" ? "end" : "start";
+        }
+    }
+    return [direction, variant];
+}
+
+/**
  * Returns the best positioning solution staying in the container or falls back
  * to the requested position.
  * The positioning data used to determine each possible position is based on
@@ -76,15 +98,7 @@ function getIFrame(popperEl, targetEl) {
  */
 function computePosition(popper, target, { container, flip, margin, position }) {
     // Retrieve directions and variants
-    let [direction, variant = "middle"] = position.split("-");
-    if (localization.direction === "rtl") {
-        if (["left", "right"].includes(direction)) {
-            direction = direction === "left" ? "right" : "left";
-        } else if (["start", "end"].includes(variant)) {
-            // here direction is either "top" or "bottom"
-            variant = variant === "start" ? "end" : "start";
-        }
-    }
+    const [direction, variant = "middle"] = reverseForRTL(...position.split("-"));
     const directions = flip ? DIRECTION_FLIP_ORDER[direction] : [direction.at(0)];
     const variants = VARIANT_FLIP_ORDER[variant];
 
@@ -136,7 +150,8 @@ function computePosition(popper, target, { container, flip, margin, position }) 
     };
 
     function getPositioningData(d, v) {
-        const result = { direction: DIRECTIONS[d], variant: VARIANTS[v] };
+        const [direction, variant] = reverseForRTL(DIRECTIONS[d], VARIANTS[v]);
+        const result = { direction, variant };
         const vertical = ["t", "b"].includes(d);
         const variantPrefix = vertical ? "v" : "h";
         const directionValue = directionsData[d];
