@@ -569,7 +569,7 @@ class HrExpenseSheet(models.Model):
         :return: An action opening the account.payment.register wizard.
         '''
         return self.account_move_ids.with_context(default_partner_bank_id=(
-            self.employee_id.sudo().bank_account_id.id if len(self.employee_id.sudo().bank_account_id.ids) <= 1 else None
+            self.account_move_ids.partner_bank_id.id if len(self.account_move_ids.partner_bank_id.ids) <= 1 else None
         )).action_register_payment()
 
     def action_open_expense_view(self):
@@ -724,8 +724,11 @@ class HrExpenseSheet(models.Model):
 
     def _prepare_bills_vals(self):
         self.ensure_one()
+        move_vals = self._prepare_move_vals()
+        if self.employee_id.sudo().bank_account_id:
+            move_vals['partner_bank_id'] = self.employee_id.sudo().bank_account_id.id
         return {
-            **self._prepare_move_vals(),
+            **move_vals,
             'invoice_date': self.accounting_date or fields.Date.context_today(self),
             'journal_id': self.journal_id.id,
             'ref': self.name,
