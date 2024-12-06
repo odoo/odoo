@@ -154,6 +154,7 @@ class Website(models.Model):
         string="Default Currency",
         comodel_name='res.currency',
         compute='_compute_currency_id',
+        store=True,
     )
     pricelist_ids = fields.One2many(
         string="Price list available for this Ecommerce/Website",
@@ -186,7 +187,7 @@ class Website(models.Model):
         for website in self:
             website.fiscal_position_id = website._get_current_fiscal_position()
 
-    @api.depends('all_pricelist_ids', 'pricelist_id', 'company_id')
+    @api.depends('all_pricelist_ids', 'pricelist_id', 'pricelist_id.currency_id', 'company_id')
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = website.pricelist_id.currency_id or website.company_id.currency_id
@@ -270,6 +271,9 @@ class Website(models.Model):
         # sudo is needed to ensure no records rules are applied during the sorted call,
         # we only want to reorder the records on hand, not filter them.
         return pricelists.sudo().sorted().ids
+
+    def get_website_currency(self):
+        return self.currency_id
 
     def get_pricelist_available(self, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
