@@ -7,11 +7,13 @@ import {
     tableOfContentEmbedding,
 } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content";
 import { videoEmbedding } from "@html_editor/others/embedded_components/core/video/video";
+import { toggleEmbedding } from "@html_editor/others/embedded_components/core/toggle/toggle";
 
 export const MAIN_EMBEDDINGS = [
     excalidrawEmbedding,
     fileEmbedding,
     tableOfContentEmbedding,
+    toggleEmbedding,
     videoEmbedding,
 ];
 
@@ -19,5 +21,6 @@ export const READONLY_MAIN_EMBEDDINGS = [
     readonlyExcalidrawEmbedding,
     readonlyFileEmbedding,
     readonlyTableOfContentEmbedding,
+    toggleEmbedding,
     videoEmbedding,
 ];
