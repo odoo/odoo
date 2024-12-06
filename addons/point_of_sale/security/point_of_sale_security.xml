@@ -5,9 +5,14 @@
         <field name="sequence">21</field>
     </record>
 
+    <record id="group_pos_minimal_user" model="res.groups">
+        <field name="name">Minimal User</field>
+        <field name="category_id" ref="base.module_category_sales_point_of_sale"/>
+    </record>
     <record id="group_pos_user" model="res.groups">
         <field name="name">User</field>
         <field name="category_id" ref="base.module_category_sales_point_of_sale"/>
+        <field name="implied_ids" eval="[(4, ref('group_pos_minimal_user'))]"/>
     </record>
     <record id="group_pos_manager" model="res.groups">
         <field name="name">Administrator</field>

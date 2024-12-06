@@ -61,6 +61,9 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('point_of_sale.group_pos_user')
 
+    def _get_group_pos_minimal_user(self):
+        return self.env.ref('point_of_sale.group_pos_minimal_user')
+
     def _get_default_tip_product(self):
         tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
         if not tip_product_id:
@@ -149,6 +152,8 @@ class PosConfig(models.Model):
         help='This field is there to pass the id of the pos manager group to the point of sale client.')
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
         help='This field is there to pass the id of the pos user group to the point of sale client.')
+    group_pos_minimal_user_id = fields.Many2one('res.groups', string="Point of Sale Minimal User Group", default=_get_group_pos_minimal_user,
+        help='This field is there to pass the id of the pos minimal user group to the point of sale client.')
     iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one('product.product', string='Tip Product', default=_get_default_tip_product, help="This product is used as reference on customer receipts.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')

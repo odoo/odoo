@@ -4,7 +4,7 @@
         <xpath
             expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
             position="before">
-            <button t-att-class="buttonClass" t-on-click="() => this.onClickQuotation()">
+            <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.onClickQuotation()">
                 <i class="fa fa-link me-1" role="img" aria-label="Set Sale Order" title="Set Sale Order" /> Quotation/Order
             </button>
         </xpath>
