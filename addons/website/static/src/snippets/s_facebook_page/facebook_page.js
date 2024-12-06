@@ -60,3 +60,7 @@ export class FacebookPage extends Interaction {
 registry
     .category("website.active_elements")
     .add("website.facebook_page", FacebookPage);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.facebook_page", { Interaction: FacebookPage });

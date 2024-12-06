@@ -403,6 +403,4 @@ registry
 
 registry
     .category("website.editable_active_elements_builders")
-    .add("website.countdown", {
-        Interaction: Countdown,
-    });
+    .add("website.countdown", { Interaction: Countdown });
