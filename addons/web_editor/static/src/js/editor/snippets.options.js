@@ -318,7 +318,8 @@ const UserValueWidget = publicWidget.Widget.extend({
             this.illustrationEl = document.createElement('i');
             this.illustrationEl.classList.add('fa', this.options.dataAttributes.icon);
         }
-        if (this.options.dataAttributes.reload) {
+        // Set no-preview = true by default (avoid uncaught promise when not set)
+        if (this.options.dataAttributes.reload && !('noPreview' in this.options.dataAttributes)) {
             this.options.dataAttributes.noPreview = "true";
         }
     },
