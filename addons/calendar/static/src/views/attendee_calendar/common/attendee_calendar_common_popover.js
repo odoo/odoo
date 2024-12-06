@@ -62,14 +62,14 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
      * @override
      */
     get isEventDeletable() {
-        return super.isEventDeletable && this.isCurrentUserAttendee && !this.isEventArchivable;
+        return super.isEventDeletable && (this.isCurrentUserAttendee || this.isCurrentUserOrganizer) && !this.isEventArchivable;
     }
 
     /**
      * @override
      */
     get isEventEditable() {
-        return this.isEventPrivate ? this.isCurrentUserAttendee : super.isEventEditable;
+        return this.isEventPrivate ? this.isCurrentUserAttendee || this.isCurrentUserOrganizer : super.isEventEditable;
     }
 
     async changeAttendeeStatus(selectedStatus) {
