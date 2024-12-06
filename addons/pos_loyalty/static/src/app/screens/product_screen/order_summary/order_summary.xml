@@ -10,7 +10,7 @@
                 <div t-if="line.gift_code" class="text-wrap" t-esc="line.gift_code"/>
             </t>
         </xpath>
-        <xpath expr="//OrderWidget/t[@t-set-slot='details']" position="inside">
+        <xpath expr="//OrderDisplay/t[@t-set-slot='details']" position="inside">
             <t t-foreach="pos.getOrder()?.getLoyaltyPoints() or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                 <div t-if="_loyaltyStat.points.won || _loyaltyStat.points.spent" class="d-flex justify-content-between mt-2 px-3 py-2 rounded-3 bg-white">
                     <div t-esc="_loyaltyStat.points.name" class="loyalty-points-title fs-4 fw-bolder"/>
