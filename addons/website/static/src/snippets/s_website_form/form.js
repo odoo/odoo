@@ -1,4 +1,4 @@
-import {ReCaptcha} from "@google_recaptcha/js/recaptcha";
+import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
@@ -23,28 +23,6 @@ const DEBOUNCE = 400;
 const { DateTime } = luxon;
 import wUtils from "@website/js/utils";
 
-// TODO Editor behavior.
-/*
-publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({
-    selector: ".s_website_form form, form.s_website_form", // !compatibility
-    disabledInEditableMode: false,
-    start: function () {
-        if (this.editableMode) {
-            // We do not initialize the datetime picker in edit mode but want the dates to be formated
-            this.el.querySelectorAll(".s_website_form_input.datetimepicker-input").forEach(el => {
-                const value = el.getAttribute("value");
-                if (value) {
-                const format =
-                    el.closest(".s_website_form_field").dataset.type === "date"
-                        ? formatDate
-                        : formatDateTime;
-                    el.value = format(DateTime.fromSeconds(parseInt(value)));
-                }
-            });
-        }
-    },
-});
-*/
 
 export class Form extends Interaction {
     static selector = ".s_website_form form, form.s_website_form"; // !compatibility
@@ -79,12 +57,9 @@ export class Form extends Interaction {
         this.visibilityFunctionByFieldName = new Map();
         this.visibilityFunctionByFieldEl = new Map();
         this.disabledStates = new Map();
-        this.inputEls = undefined;
-        this.dateFieldEls = undefined;
+        this.inputEls = this.el.querySelectorAll(".s_website_form_field.s_website_form_field_hidden_if .s_website_form_input");
+        this.dateFieldEls = this.el.querySelectorAll(".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date");
         this.disableDateTimePickers = [];
-        // TODO Translation behavior.
-        this.editTranslations = false;
-        // this.editTranslations = !!this.getContext(true).edit_translations;
         this.preFillValues = {};
     }
     async willStart() {
@@ -120,82 +95,9 @@ export class Form extends Interaction {
         }
     }
     start() {
-        this.dateFieldEls = this.el.querySelectorAll(".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date");
-        if (!this.editableMode) {
-            for (const fieldEl of this.dateFieldEls) {
-                const inputEl = fieldEl.querySelector("input");
-                const defaultValue = inputEl.getAttribute("value");
-                this.disableDateTimePickers.push(this.services.datetime_picker.create({
-                    target: inputEl,
-                    onChange: () => inputEl.dispatchEvent(new Event("input", { bubbles: true })),
-                    pickerProps: {
-                        type: fieldEl.matches(".s_website_form_date, .o_website_form_date") ? "date" : "datetime",
-                        value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
-                    },
-                }).enable());
-            }
-            for (const fieldEl of this.dateFieldEls) {
-                fieldEl.classList.add("s_website_form_datepicker_initialized");
-            }
-        }
+        this.prepareDateFields();
+        this.prefillValues();
 
-        // Display form values from tag having data-for attribute
-        // It's necessary to handle field values generated on server-side
-        // Because, using t-att- inside form make it non-editable
-        // Data-fill-with attribute is given during registry and is used by
-        // to know which user data should be used to prfill fields.
-        let dataForValues = wUtils.getParsedDataFor(this.el.id, document);
-        // TODO Translation behavior.
-        // On the "edit_translations" mode, a <span/> with a translated term
-        // will replace the attribute value, leading to some inconsistencies
-        // (setting again the <span> on the attributes after the editor's
-        // cleanup, setting wrong values on the attributes after translating
-        // default values...)
-        if (!this.editTranslations
-                && (dataForValues || Object.keys(this.preFillValues).length)) {
-            dataForValues = dataForValues || {};
-            const fieldNames = [...this.el.querySelectorAll("[name]")].map(
-                (el) => el.name
-            );
-            // All types of inputs do not have a value property (eg:hidden),
-            // for these inputs any function that is supposed to put a value
-            // property actually puts a HTML value attribute. Because of
-            // this, we have to clean up these values at destroy or else the
-            // data loaded here could become default values. We could set
-            // the values to submit() for these fields but this could break
-            // customizations that use the current behavior as a feature.
-            for (const name of fieldNames) {
-                const fieldEl = this.el.querySelector(`[name="${CSS.escape(name)}"]`);
-
-                // In general, we want the data-for and prefill values to
-                // take priority over set default values. The 'email_to'
-                // field is however treated as an exception at the moment
-                // so that values set by users are always used.
-                if (name === "email_to" && fieldEl.value
-                        // The following value is the default value that
-                        // is set if the form is edited in any way. (see the
-                        // @website/js/form_editor_registry module in editor
-                        // assets bundle).
-                        // TODO that value should probably never be forced
-                        // unless explicitely manipulated by the user or on
-                        // custom form addition but that seems risky to
-                        // change as a stable fix.
-                        && fieldEl.value !== "info@yourcompany.example.com") {
-                    continue;
-                }
-
-                let newValue;
-                if (dataForValues && dataForValues[name]) {
-                    newValue = dataForValues[name];
-                } else if (this.preFillValues[fieldEl.dataset.fillWith]) {
-                    newValue = this.preFillValues[fieldEl.dataset.fillWith];
-                }
-                if (newValue) {
-                    this.initialValues.set(fieldEl, fieldEl.getAttribute("value"));
-                    fieldEl.value = newValue;
-                }
-            }
-        }
         // Visibility might need to be adapted according to pre-filled values.
         this.updateContent();
 
@@ -207,7 +109,6 @@ export class Form extends Interaction {
             });
         }
         // Check disabled states
-        this.inputEls = this.el.querySelectorAll(".s_website_form_field.s_website_form_field_hidden_if .s_website_form_input");
         for (const inputEl of this.inputEls) {
             this.disabledStates[inputEl] = inputEl.disabled;
         }
@@ -282,6 +183,82 @@ export class Form extends Interaction {
 
         for (const disableDateTimePicker of this.disableDateTimePickers) {
             disableDateTimePicker();
+        }
+    }
+
+    prepareDateFields() {
+        for (const fieldEl of this.dateFieldEls) {
+            const inputEl = fieldEl.querySelector("input");
+            const defaultValue = inputEl.getAttribute("value");
+            this.disableDateTimePickers.push(this.services.datetime_picker.create({
+                target: inputEl,
+                onChange: () => inputEl.dispatchEvent(new Event("input", { bubbles: true })),
+                pickerProps: {
+                    type: fieldEl.matches(".s_website_form_date, .o_website_form_date") ? "date" : "datetime",
+                    value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
+                },
+            }).enable());
+        }
+        for (const fieldEl of this.dateFieldEls) {
+            fieldEl.classList.add("s_website_form_datepicker_initialized");
+        }
+    }
+
+    prefillValues() {
+        // Display form values from tag having data-for attribute
+        // It's necessary to handle field values generated on server-side
+        // Because, using t-att- inside form make it non-editable
+        // Data-fill-with attribute is given during registry and is used by
+        // to know which user data should be used to prfill fields.
+        let dataForValues = wUtils.getParsedDataFor(this.el.id, document);
+        // On the "edit_translations" mode, a <span/> with a translated term
+        // will replace the attribute value, leading to some inconsistencies
+        // (setting again the <span> on the attributes after the editor's
+        // cleanup, setting wrong values on the attributes after translating
+        // default values...)
+        if (dataForValues || Object.keys(this.preFillValues).length) {
+            dataForValues = dataForValues || {};
+            const fieldNames = [...this.el.querySelectorAll("[name]")].map(
+                (el) => el.name
+            );
+            // All types of inputs do not have a value property (eg:hidden),
+            // for these inputs any function that is supposed to put a value
+            // property actually puts a HTML value attribute. Because of
+            // this, we have to clean up these values at destroy or else the
+            // data loaded here could become default values. We could set
+            // the values to submit() for these fields but this could break
+            // customizations that use the current behavior as a feature.
+            for (const name of fieldNames) {
+                const fieldEl = this.el.querySelector(`[name="${CSS.escape(name)}"]`);
+
+                // In general, we want the data-for and prefill values to
+                // take priority over set default values. The 'email_to'
+                // field is however treated as an exception at the moment
+                // so that values set by users are always used.
+                if (name === "email_to" && fieldEl.value
+                        // The following value is the default value that
+                        // is set if the form is edited in any way. (see the
+                        // @website/js/form_editor_registry module in editor
+                        // assets bundle).
+                        // TODO that value should probably never be forced
+                        // unless explicitely manipulated by the user or on
+                        // custom form addition but that seems risky to
+                        // change as a stable fix.
+                        && fieldEl.value !== "info@yourcompany.example.com") {
+                    continue;
+                }
+
+                let newValue;
+                if (dataForValues && dataForValues[name]) {
+                    newValue = dataForValues[name];
+                } else if (this.preFillValues[fieldEl.dataset.fillWith]) {
+                    newValue = this.preFillValues[fieldEl.dataset.fillWith];
+                }
+                if (newValue) {
+                    this.initialValues.set(fieldEl, fieldEl.getAttribute("value"));
+                    fieldEl.value = newValue;
+                }
+            }
         }
     }
 
