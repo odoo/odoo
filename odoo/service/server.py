@@ -3,6 +3,7 @@
 #-----------------------------------------------------------
 import datetime
 import errno
+import functools
 import logging
 import os
 import os.path
@@ -492,13 +493,12 @@ class ThreadedServer(CommonServer):
         # See: http://bugs.python.org/issue7980
         datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
         for i in range(odoo.tools.config['max_cron_threads']):
-            def target():
-                self.cron_thread(i)
+            target = functools.partial(self.cron_thread, i)
             t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
             t.daemon = True
             t.type = 'cron'
             t.start()
-            _logger.debug("cron%d started!" % i)
+            _logger.debug("cron%d started!", i)
 
     def http_spawn(self):
         self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, self.app)
