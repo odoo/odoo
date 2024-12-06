@@ -57,7 +57,7 @@ test("FloatTimeField in form view", async () => {
 test("FloatTimeField value formatted on blur", async () => {
     expect.assertions(4);
     onRpc("partner", "web_save", ({ args }) => {
-        expect(args[1].qux).toBe(9.5, {
+        expect(args[1].qux).toBe(9.083333333333334, {
             message: "the correct float value should be saved",
         });
     });
@@ -76,12 +76,12 @@ test("FloatTimeField value formatted on blur", async () => {
     });
 
     await contains(".o_field_float_time[name=qux] input").edit("9.5");
-    expect(".o_field_float_time[name=qux] input").toHaveValue("09:30", {
+    expect(".o_field_float_time[name=qux] input").toHaveValue("09:05", {
         message: "The new value should be displayed properly in the input.",
     });
 
     await clickSave();
-    expect(".o_field_widget input").toHaveValue("09:30", {
+    expect(".o_field_widget input").toHaveValue("09:05", {
         message: "The new value should be saved and displayed properly.",
     });
 });
