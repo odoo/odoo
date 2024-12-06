@@ -342,11 +342,15 @@ const FieldEditor = FormEditor.extend({
      */
     _getLabelPosition: function () {
         const label = this.$target[0].querySelector('.s_website_form_label');
-        if (this.$target[0].querySelector('.row:not(.s_website_form_multiple)')) {
-            return label.classList.contains('text-end') ? 'right' : 'left';
-        } else {
-            return label.classList.contains('d-none') ? 'none' : 'top';
+        const isRow = this.$target[0].querySelector('.row:not(.s_website_form_multiple)');
+
+        if (label.classList.contains('form-check-label')) {
+            return 'after';
         }
+        if (isRow) {
+            return label.classList.contains('text-end') ? 'right' : 'left';
+        }
+        return label.classList.contains('d-none') ? 'none' : 'top';
     },
     /**
      * Returns the multiple checkbox/radio element if it exist else null
