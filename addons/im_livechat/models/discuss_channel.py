@@ -37,49 +37,49 @@ class DiscussChannel(models.Model):
             end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
 
-    def _to_store(self, store: Store):
+    def _to_store_defaults(self):
+        fields = [
+            "anonymous_name",
+            "chatbot_current_step",
+            Store.One("country_id", ["code", "name"], rename="anonymous_country"),
+            Store.One(
+                "livechat_operator_id", ["user_livechat_username", "write_date"], rename="operator"
+            ),
+        ]
+        if self.env.user._is_internal():
+            fields.append(Store.One("livechat_channel_id", ["name"], rename="livechatChannel"))
+        return super()._to_store_defaults() + fields
+
+    def _to_store(self, store: Store, fields):
         """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""
-        super()._to_store(store)
-        chatbot_lang = self.env["chatbot.script"]._get_chatbot_language()
-        for channel in self:
-            channel_info = {}
-            if channel.chatbot_current_step_id:
-                # sudo: chatbot.script.step - returning the current script/step of the channel
-                current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=chatbot_lang)
-                chatbot_script = current_step_sudo.chatbot_script_id
-                # sudo: channel - accessing chatbot messages to get the current step message
-                step_message = next((
-                    m.mail_message_id for m in channel.sudo().chatbot_message_ids
-                    if m.script_step_id == current_step_sudo
+        super()._to_store(store, [f for f in fields if f != "chatbot_current_step"])
+        if "chatbot_current_step" not in fields:
+            return
+        lang = self.env["chatbot.script"]._get_chatbot_language()
+        for channel in self.filtered(lambda channel: channel.chatbot_current_step_id):
+            # sudo: chatbot.script.step - returning the current script/step of the channel
+            current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=lang)
+            chatbot_script = current_step_sudo.chatbot_script_id
+            step_message = self.env["chatbot.message"]
+            if current_step_sudo.step_type != "forward_operator":
+                step_message = channel.sudo().chatbot_message_ids.filtered(
+                    lambda m: m.script_step_id == current_step_sudo
                     and m.mail_message_id.author_id == chatbot_script.operator_partner_id
-                ), None) if channel.chatbot_current_step_id.sudo().step_type != 'forward_operator' else None
-                current_step = {
-                    'scriptStep': current_step_sudo.id,
-                    "message": Store.one_id(step_message),
-                    'operatorFound': current_step_sudo.step_type == 'forward_operator' and len(channel.channel_member_ids) > 2,
-                }
-                channel_info["chatbot"] = {
-                    'script': chatbot_script.id,
-                    'steps': [current_step],
-                    'currentStep': current_step,
-                }
-                store.add(current_step_sudo)
-                store.add(chatbot_script)
-            channel_info['anonymous_name'] = channel.anonymous_name
-            channel_info['anonymous_country'] = {
-                'code': channel.country_id.code,
-                'id': channel.country_id.id,
-                'name': channel.country_id.name,
-            } if channel.country_id else False
-            if channel.channel_type == "livechat":
-                channel_info["operator"] = Store.one(
-                    channel.livechat_operator_id, fields=["user_livechat_username", "write_date"]
-                )
-            if channel.channel_type == "livechat" and self.env.user._is_internal():
-                channel_info["livechatChannel"] = Store.one(
-                    channel.livechat_channel_id, fields=["name"]
-                )
-            store.add(channel, channel_info)
+                )[:1]
+            current_step = {
+                "scriptStep": current_step_sudo.id,
+                "message": step_message.mail_message_id.id,
+                "operatorFound": current_step_sudo.step_type == "forward_operator"
+                and len(channel.channel_member_ids) > 2,
+            }
+            store.add(current_step_sudo)
+            store.add(chatbot_script)
+            chatbot_data = {
+                "script": chatbot_script.id,
+                "steps": [current_step],
+                "currentStep": current_step,
+            }
+            store.add(channel, {"chatbot": chatbot_data})
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):
