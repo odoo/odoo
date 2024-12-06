@@ -96,7 +96,281 @@ export class PosOrder extends Base {
         return [_t("the receipt")].concat(this.isToInvoice() ? [_t("the invoice")] : []);
     }
 
+<<<<<<< master
     exportForPrinting(baseUrl, headerData) {
+||||||| 9fa3561749204a46acfa35d4409463435f318637
+    /**
+     * Get the details total amounts with and without taxes, the details of taxes per subtotal and per tax group.
+     * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
+     */
+    get taxTotals() {
+        const currency = this.config_id.currency_id;
+        const company = this.company_id;
+        const extraValues = { currency_id: currency };
+        const orderLines = this.lines;
+
+        const baseLines = [];
+        for (const line of orderLines) {
+            let taxes = line.tax_ids;
+            if (this.fiscal_position_id) {
+                taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
+            }
+            baseLines.push(
+                accountTaxHelpers.prepare_base_line_for_taxes_computation(line, {
+                    ...extraValues,
+                    quantity: line.qty,
+                    tax_ids: taxes,
+                })
+            );
+        }
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
+
+        // For the generic 'get_tax_totals_summary', we only support the cash rounding that round the whole document.
+        let cashRounding =
+            !this.config.only_round_cash_method && this.config.cash_rounding
+                ? this.config.rounding_method
+                : null;
+
+        const taxTotals = accountTaxHelpers.get_tax_totals_summary(baseLines, currency, company, {
+            cash_rounding: cashRounding,
+        });
+
+        cashRounding = this.config.rounding_method;
+        taxTotals.order_total =
+            taxTotals.total_amount_currency - (taxTotals.cash_rounding_base_amount_currency || 0.0);
+        taxTotals.order_rounding = taxTotals.cash_rounding_base_amount_currency || 0.0;
+        taxTotals.order_to_pay = taxTotals.total_amount_currency;
+
+        // Compute the amount left to pay (exclude the payment line for change).
+        let amountPaid = 0.0;
+        for (const payment of this.payment_ids) {
+            if (payment.is_done() && !payment.is_change) {
+                amountPaid += payment.get_amount();
+            }
+        }
+
+        // Compute the cash rounding amounts.
+        // Basically, we have to determine if the residual amount if due to a cash rounding or not.
+        let amountLeft = taxTotals.total_amount_currency - amountPaid;
+        if (
+            this.config.cash_rounding &&
+            cashRounding &&
+            this.payment_ids.some((x) => x.payment_method_id.is_cash_count)
+        ) {
+            if (!floatIsZero(amountLeft, this.currency.decimal_places)) {
+                const roundingMethod = cashRounding.rounding_method;
+                let lowerBound = 0.0;
+                let upperBound = 0.0;
+                if (roundingMethod === "UP") {
+                    // Paid 15.70. It can be a cash rounding if in [15.66, 15.70].
+                    lowerBound = -cashRounding.rounding + this.currency.rounding;
+                } else if (roundingMethod === "DOWN") {
+                    // Paid 15.70. It can be a cash rounding if in [15.70, 15.74].
+                    upperBound = cashRounding.rounding - this.currency.rounding;
+                } else if (roundingMethod === "HALF-UP") {
+                    // Paid 15.70. It can be a cash rounding if in [15.66, 15.74].
+                    const halfUpDelta =
+                        this.currency.rounding *
+                        Math.ceil(cashRounding.rounding / this.currency.rounding / 2);
+                    lowerBound = -halfUpDelta;
+                    upperBound = halfUpDelta;
+                }
+                const amountLeftWithRounding = amountLeft - taxTotals.order_rounding;
+                if (
+                    (lowerBound < amountLeftWithRounding && amountLeftWithRounding < upperBound) ||
+                    floatIsZero(
+                        lowerBound - amountLeftWithRounding,
+                        this.currency.decimal_places
+                    ) ||
+                    floatIsZero(upperBound - amountLeftWithRounding, this.currency.decimal_places)
+                ) {
+                    taxTotals.payment_cash_rounding_amount_currency = -amountLeft;
+                    taxTotals.order_rounding -= amountLeft;
+                    taxTotals.order_to_pay -= amountLeft;
+                    amountLeft = 0.0;
+                }
+            }
+        }
+
+        if (!floatIsZero(Math.min(0, amountLeft), this.currency.decimal_places)) {
+            taxTotals.order_change = -amountLeft;
+        }
+
+        if (floatIsZero(taxTotals.order_rounding, this.currency.decimal_places)) {
+            delete taxTotals.order_rounding;
+        }
+
+        return taxTotals;
+    }
+
+    /**
+     * Get the amount to pay by default when creating a new payment.
+     * @param paymentMethod: The payment method of the payment to be created.
+     * @returns A monetary value.
+     */
+    getDefaultAmountDueToPayIn(paymentMethod) {
+        let totalAmountDue = this.get_due();
+        if (paymentMethod.is_cash_count && this.config.cash_rounding) {
+            const cashRounding = this.config.rounding_method;
+
+            // Suppose you have a cash rounding 0.05 DOWN on the whole pos order.
+            // Your pos order has a total amount of 15.72.
+            // After the cash rounding, the total of your pos order becomes 15.70.
+            // Now you pay 0.67 in bank. The residual amount to pay becomes 15.03.
+            // Now you pay the rest using a cash payment method.
+            // Without adding the cash rounding amount, the suggested amount to pay in cash will be 15.0 and
+            // the total paid on the pos order will be 0.67 + 15.0 = 15.67 so a rounding of -0.05 has been applied.
+            // This result is weird since the cash rounding method is on 0.05.
+            // To avoid that, we add the collected rounding so far to compute the suggested amount.
+            // That way, the suggested cash amount will be computed on 15.05 and not 15.03.
+            totalAmountDue = roundPrecision(
+                totalAmountDue - (this.taxTotals.cash_rounding_base_amount_currency || 0.0),
+                cashRounding.rounding,
+                cashRounding.rounding_method
+            );
+        }
+        return totalAmountDue;
+    }
+
+    export_for_printing(baseUrl, headerData) {
+=======
+    /**
+     * Get the details total amounts with and without taxes, the details of taxes per subtotal and per tax group.
+     * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
+     */
+    get taxTotals() {
+        const currency = this.config.currency_id;
+        const company = this.company;
+        const extraValues = { currency_id: currency };
+        const orderLines = this.lines;
+
+        const baseLines = [];
+        for (const line of orderLines) {
+            let taxes = line.tax_ids;
+            if (this.fiscal_position_id) {
+                taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
+            }
+            baseLines.push(
+                accountTaxHelpers.prepare_base_line_for_taxes_computation(line, {
+                    ...extraValues,
+                    quantity: line.qty,
+                    tax_ids: taxes,
+                })
+            );
+        }
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
+
+        // For the generic 'get_tax_totals_summary', we only support the cash rounding that round the whole document.
+        let cashRounding =
+            !this.config.only_round_cash_method && this.config.cash_rounding
+                ? this.config.rounding_method
+                : null;
+
+        const taxTotals = accountTaxHelpers.get_tax_totals_summary(baseLines, currency, company, {
+            cash_rounding: cashRounding,
+        });
+
+        cashRounding = this.config.rounding_method;
+        taxTotals.order_total =
+            taxTotals.total_amount_currency - (taxTotals.cash_rounding_base_amount_currency || 0.0);
+        taxTotals.order_rounding = taxTotals.cash_rounding_base_amount_currency || 0.0;
+        taxTotals.order_to_pay = taxTotals.total_amount_currency;
+
+        // Compute the amount left to pay (exclude the payment line for change).
+        let amountPaid = 0.0;
+        for (const payment of this.payment_ids) {
+            if (payment.is_done() && !payment.is_change) {
+                amountPaid += payment.get_amount();
+            }
+        }
+
+        // Compute the cash rounding amounts.
+        // Basically, we have to determine if the residual amount if due to a cash rounding or not.
+        let amountLeft = taxTotals.total_amount_currency - amountPaid;
+        if (
+            this.config.cash_rounding &&
+            cashRounding &&
+            this.payment_ids.some((x) => x.payment_method_id.is_cash_count)
+        ) {
+            if (!floatIsZero(amountLeft, this.currency.decimal_places)) {
+                const roundingMethod = cashRounding.rounding_method;
+                let lowerBound = 0.0;
+                let upperBound = 0.0;
+                if (roundingMethod === "UP") {
+                    // Paid 15.70. It can be a cash rounding if in [15.66, 15.70].
+                    lowerBound = -cashRounding.rounding + this.currency.rounding;
+                } else if (roundingMethod === "DOWN") {
+                    // Paid 15.70. It can be a cash rounding if in [15.70, 15.74].
+                    upperBound = cashRounding.rounding - this.currency.rounding;
+                } else if (roundingMethod === "HALF-UP") {
+                    // Paid 15.70. It can be a cash rounding if in [15.66, 15.74].
+                    const halfUpDelta =
+                        this.currency.rounding *
+                        Math.ceil(cashRounding.rounding / this.currency.rounding / 2);
+                    lowerBound = -halfUpDelta;
+                    upperBound = halfUpDelta;
+                }
+                const amountLeftWithRounding = amountLeft - taxTotals.order_rounding;
+                if (
+                    (lowerBound < amountLeftWithRounding && amountLeftWithRounding < upperBound) ||
+                    floatIsZero(
+                        lowerBound - amountLeftWithRounding,
+                        this.currency.decimal_places
+                    ) ||
+                    floatIsZero(upperBound - amountLeftWithRounding, this.currency.decimal_places)
+                ) {
+                    taxTotals.payment_cash_rounding_amount_currency = -amountLeft;
+                    taxTotals.order_rounding -= amountLeft;
+                    taxTotals.order_to_pay -= amountLeft;
+                    amountLeft = 0.0;
+                }
+            }
+        }
+
+        if (!floatIsZero(Math.min(0, amountLeft), this.currency.decimal_places)) {
+            taxTotals.order_change = -amountLeft;
+        }
+
+        if (floatIsZero(taxTotals.order_rounding, this.currency.decimal_places)) {
+            delete taxTotals.order_rounding;
+        }
+
+        return taxTotals;
+    }
+
+    /**
+     * Get the amount to pay by default when creating a new payment.
+     * @param paymentMethod: The payment method of the payment to be created.
+     * @returns A monetary value.
+     */
+    getDefaultAmountDueToPayIn(paymentMethod) {
+        let totalAmountDue = this.get_due();
+        if (paymentMethod.is_cash_count && this.config.cash_rounding) {
+            const cashRounding = this.config.rounding_method;
+
+            // Suppose you have a cash rounding 0.05 DOWN on the whole pos order.
+            // Your pos order has a total amount of 15.72.
+            // After the cash rounding, the total of your pos order becomes 15.70.
+            // Now you pay 0.67 in bank. The residual amount to pay becomes 15.03.
+            // Now you pay the rest using a cash payment method.
+            // Without adding the cash rounding amount, the suggested amount to pay in cash will be 15.0 and
+            // the total paid on the pos order will be 0.67 + 15.0 = 15.67 so a rounding of -0.05 has been applied.
+            // This result is weird since the cash rounding method is on 0.05.
+            // To avoid that, we add the collected rounding so far to compute the suggested amount.
+            // That way, the suggested cash amount will be computed on 15.05 and not 15.03.
+            totalAmountDue = roundPrecision(
+                totalAmountDue - (this.taxTotals.cash_rounding_base_amount_currency || 0.0),
+                cashRounding.rounding,
+                cashRounding.rounding_method
+            );
+        }
+        return totalAmountDue;
+    }
+
+    export_for_printing(baseUrl, headerData) {
+>>>>>>> 136adf78fad45c2032e67b5252dca827d76f7e36
         const paymentlines = this.payment_ids
             .filter((p) => !p.is_change)
             .map((p) => p.exportForPrinting());
