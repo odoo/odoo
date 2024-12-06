@@ -8,7 +8,11 @@
                 generalCustomerNote="props.data.general_customer_note or ''"
                 internalNote="props.data.internalNote or ''" screenName="props.data.screenName">
                 <t t-set="line" t-value="scope.line"/>
-                <Orderline basic_receipt="props.basic_receipt" line="omit(scope.line, 'customerNote')" class="{ 'px-0': true }" showTaxGroupLabels="showTaxGroupLabels">
+                <t t-if="props.slots?.default" t-slot="default" line="line"/>
+                <Orderline t-else="" basic_receipt="props.basic_receipt"
+                    line="omit(scope.line, 'customerNote')"
+                    class="{ 'px-0': true, 'selected': line.id === this.selectedLineId }"
+                    showTaxGroupLabels="showTaxGroupLabels">
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
                         <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                         <t t-esc="line.customerNote" />

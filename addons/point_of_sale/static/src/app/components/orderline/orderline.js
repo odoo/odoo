@@ -7,6 +7,7 @@ export class Orderline extends Component {
         line: {
             type: Object,
             shape: {
+                id: String | Number,
                 isSelected: { type: Boolean, optional: true },
                 productName: String,
                 price: String,

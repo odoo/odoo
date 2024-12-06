@@ -45,7 +45,7 @@
                             </div>
                             <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                    t-on-click="() => this.onClickOrder(order)">
                                     <div class="col wide p-2 ">
                                         <div><t t-esc="getDate(order)"></t></div>
                                     </div>
@@ -120,7 +120,7 @@
                         <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-100 text-center">
                             Select the product(s) to refund and set the quantity
                         </div>
-                        <OrderWidget lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
+                        <OrderWidget t-if="!isOrderSynced" lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
                             total="env.utils.formatCurrency(_selectedSyncedOrder.getTotalWithTax())"
                             tax="!env.utils.floatIsZero(_selectedSyncedOrder.getTotalTax()) and env.utils.formatCurrency(_selectedSyncedOrder.getTotalTax()) or ''"
                             generalCustomerNote="_selectedSyncedOrder?.general_customer_note or ''"
@@ -128,28 +128,37 @@
                             <t t-set="line" t-value="scope.line" />
                             <Orderline line="line.getDisplayData()"
                                 class="{'selected': line.id === getSelectedOrderlineId()}"
-                                t-on-click="() => this.onClickOrderline(line)">
-                                <t t-set="toRefundDetail" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]" />
-                                <li t-if="!pos.isProductQtyZero(line.refunded_qty)"
-                                    class="info refund-note mt-1">
-                                    <strong t-esc="env.utils.formatProductQty(line.refunded_qty)" />
-                                    <span> Refunded</span>
-                                </li>
-                                <li t-if="!pos.isProductQtyZero(toRefundDetail?.qty)" class="info to-refund-highlight refund-note mt-1 fw-bold text-primary">
-                                    <t t-set="_destinationOrderUid" t-value="toRefundDetail.destination_order_uuid"/>
-                                    <t t-set="refundQty" t-value="env.utils.formatProductQty(toRefundDetail.qty)"/>
-                                    <t t-if="_destinationOrderUid">
-                                        Refunding <t t-esc="refundQty" /> in
-                                        <span t-esc="_destinationOrderUid"
-                                            class="order-link ms-1 text-decoration-underline cursor-pointer"
-                                            t-on-click.stop="() => this.onClickRefundOrderUid(_destinationOrderUid)" />
-                                    </t>
-                                    <t t-else="">
-                                        To Refund: <t t-esc="refundQty" />
-                                    </t>
-                                </li>
-                            </Orderline>
+                                t-on-click="() => this.onClickOrderline(line)" />
                         </OrderWidget>
+                        <div t-elif="_selectedSyncedOrder" class="flex-grow-1 bg-white overflow-y-scroll rounded">
+                            <OrderReceipt data="pos.orderExportForPrinting(_selectedSyncedOrder)" formatCurrency="env.utils.formatCurrency"  t-slot-scope="scope">
+                                <t t-set="displayLine" t-value="scope.line" />
+                                <t t-set="line" t-value="this.pos.models['pos.order.line'].get(displayLine.id)" />
+                                <Orderline line="displayLine"
+                                    class="{'selected': line.id === getSelectedOrderlineId()}"
+                                    t-on-click="() => this.onClickOrderline(line)">
+                                     <t t-set="toRefundDetail" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]" />
+                                    <li t-if="!pos.isProductQtyZero(line.refunded_qty)"
+                                        class="info refund-note mt-1">
+                                        <strong t-esc="env.utils.formatProductQty(line.refunded_qty)" />
+                                        <span> Refunded</span>
+                                    </li>
+                                    <li t-if="!pos.isProductQtyZero(toRefundDetail?.qty)" class="info to-refund-highlight refund-note mt-1 fw-bold text-primary">
+                                        <t t-set="_destinationOrderUid" t-value="toRefundDetail.destination_order_uuid"/>
+                                        <t t-set="refundQty" t-value="env.utils.formatProductQty(toRefundDetail.qty)"/>
+                                        <t t-if="_destinationOrderUid">
+                                            Refunding <t t-esc="refundQty" /> in
+                                            <span t-esc="_destinationOrderUid"
+                                                class="order-link ms-1 text-decoration-underline cursor-pointer"
+                                                t-on-click.stop="() => this.onClickRefundOrderUid(_destinationOrderUid)" />
+                                        </t>
+                                        <t t-else="">
+                                            To Refund: <t t-esc="refundQty" />
+                                        </t>
+                                    </li>
+                                </Orderline>
+                            </OrderReceipt>
+                        </div>
                         <div class="pads">
                             <t t-if="isOrderSynced">
                                 <div class="control-buttons d-flex gap-2 pb-2">
@@ -164,7 +173,7 @@
                                     </button>
                                 </div>
                                 <div class="subpads d-flex flex-column">
-                                    <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
+                                    <Numpad t-if="this.state.selectedOrderlineIds[_selectedSyncedOrder?.id]" class="'pb-2'" buttons="getNumpadButtons()"/>
                                     <ActionpadWidget
                                         partner="getSelectedOrder()?.getPartner()"
                                         actionName.translate="Refund"

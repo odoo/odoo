@@ -620,6 +620,7 @@ export class PosOrderline extends Base {
 
     getDisplayData() {
         return {
+            id: this.id,
             productName: this.getFullProductName(),
             price: this.getPriceString(),
             qty: this.getQuantityStr(),
