@@ -61,7 +61,7 @@ class MailGroup(models.Model):
     member_count = fields.Integer('Members Count', compute='_compute_member_count')
     # Moderation
     is_moderator = fields.Boolean(string='Moderator', help='Current user is a moderator of the group', compute='_compute_is_moderator')
-    moderation = fields.Boolean(string='Moderate this group')
+    moderation = fields.Boolean(string='Moderate')
     moderation_rule_count = fields.Integer(string='Moderated emails count', compute='_compute_moderation_rule_count')
     moderation_rule_ids = fields.One2many('mail.group.moderation', 'mail_group_id', string='Moderated Emails')
     moderator_ids = fields.Many2many('res.users', 'mail_group_moderator_rel', string='Moderators',
@@ -71,7 +71,7 @@ class MailGroup(models.Model):
         help='People receive an automatic notification about their message being waiting for moderation.')
     moderation_notify_msg = fields.Html(string='Notification message')
     moderation_guidelines = fields.Boolean(
-        string='Send guidelines to new subscribers',
+        string='Send guidelines to new members',
         help='Newcomers on this moderated group will automatically receive the guidelines.')
     moderation_guidelines_msg = fields.Html(string='Guidelines')
     # ACLs
