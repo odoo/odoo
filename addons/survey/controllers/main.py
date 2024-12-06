@@ -261,8 +261,12 @@ class Survey(http.Controller):
                 'title': page.title,
             } for page in survey_sudo.page_ids],
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
-            'format_date': lambda date: format_date(request.env, date)
+            'format_date': lambda date: format_date(request.env, date),
         }
+        if answer_sudo.state == 'new' and len(langs := survey_sudo._get_languages()) > 1:
+            # Data for the language selector
+            data['languages'] = langs
+            data['lang_code'] = request.context.get('lang') or request.env['ir.http']._get_default_lang().code
         if survey_sudo.questions_layout != 'page_per_question':
             triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
@@ -389,6 +393,9 @@ class Survey(http.Controller):
 
     @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
     def survey_display_page(self, survey_token, answer_token, **post):
+        if (lang_code := post.get('lang_code')) and request.httprequest.method == 'POST':
+            return request.redirect(self.env['ir.http']._url_for(f'/survey/{survey_token}/{answer_token}', lang_code))
+
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
