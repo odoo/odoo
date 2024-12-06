@@ -266,6 +266,8 @@ class StockValuationLayer(models.Model):
 
     def _create_grouped_accounting_entries(self):
         to_group_vals = []
+        if len(self.mapped('company_id')) > 1:
+            raise UserError(_("You can only create valuation entries for one company at a time. "))
         for svl in self:
             if svl.account_move_id:
                 continue
@@ -316,10 +318,13 @@ class StockValuationLayer(models.Model):
                 'line_ids': [(0, 0, l) for l in lines],
                 'date': fields.Date.today(),
                 'ref': 'stock_val',
-                #'stock_move_id': self.id, TODO: field should be deprecated
+                #'stock_move_id': self.id, TODO: field should be deprecated?
                 'stock_valuation_layer_ids': [(6, None, svl.ids)],
                 'move_type': 'entry',
                 'is_storno': self.env.context.get('is_returned') and self[0].company_id.account_storno,
                 'company_id': self[0].company_id.id,
             }]
-        self.env['account.move'].sudo().create(move_vals)
+        accounting_entries = self.env['account.move'].sudo().create(move_vals)
+        return accounting_entries._get_records_action(name=_("Accounting Entries"))
+
+

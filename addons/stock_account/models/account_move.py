@@ -243,6 +243,18 @@ class AccountMove(models.Model):
     def _get_invoiced_lot_values(self):
         return []
 
+    def action_open_svls(self):
+        self.ensure_one()
+        action_dict = self.env.ref('stock_account.stock_valuation_layer_action')._get_action_dict()
+        action_dict['context'] = {
+            'pivot_column_groupby': ['create_date:month'],
+            'pivot_row_groupby': ['categ_id'],
+            'pivot_measures': ['remaining_qty', 'remaining_value'],
+            'graph_groupbys': ['create_date:day'],
+            'search_default_account_move_id': self.id,
+        }
+        return action_dict
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
