@@ -1582,7 +1582,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         (move.line_ids[-1] | payment.move_id.line_ids.filtered(lambda line: line.account_id == move.line_ids[-1].account_id)).reconcile()
 
         # If the move is already fully paid, we should alert the user
-        with self.assertRaisesRegex(UserError, r"You can't register a payment because there is nothing left"):
+        with self.assertRaisesRegex(UserError, r"You can only register payments for \(partially\) unpaid documents"):
             action_register_payment = move.action_force_register_payment()
             self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
 
