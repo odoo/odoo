@@ -2,9 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.WeButtonGroup">
-    <div class="btn-group w-100">
-        <t t-slot="default"/>
-    </div>
+    <WeComponent>
+        <div class="btn-group w-100" t-ref="root">
+            <t t-slot="default"/>
+        </div>
+    </WeComponent>
 </t>
 
 </templates>

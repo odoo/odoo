@@ -1,4 +1,14 @@
-import { Component, useComponent, useEnv, useState, useSubEnv, xml } from "@odoo/owl";
+import { isTextNode } from "@html_editor/utils/dom_info";
+import {
+    Component,
+    useComponent,
+    useEffect,
+    useEnv,
+    useRef,
+    useState,
+    useSubEnv,
+    xml,
+} from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -215,6 +225,42 @@ export function useInputWeWidget() {
         onChange,
         onInput,
     };
+}
+
+export function useVisibleWithContent(rootName, contentName) {
+    const rootRef = useRef(rootName);
+    const contentRef = useRef(contentName);
+
+    const applyVisibility = () => {
+        rootRef.el?.classList.toggle(
+            "d-none",
+            ![...contentRef.el.childNodes].some((el) =>
+                isTextNode(el) ? el.textContent !== "" : !el.classList.contains("d-none")
+            )
+        );
+    };
+
+    const observer = new MutationObserver(() => {
+        applyVisibility();
+    });
+    useEffect(
+        (rootEl, contentEl) => {
+            if (!rootEl || !contentEl) {
+                return;
+            }
+            applyVisibility();
+            observer.observe(contentEl, {
+                subtree: true,
+                attributes: true,
+                childList: true,
+                attributeFilter: ["class"],
+            });
+            return () => {
+                observer.disconnect();
+            };
+        },
+        () => [rootRef.el, contentRef.el]
+    );
 }
 
 export const basicContainerWeWidgetProps = {

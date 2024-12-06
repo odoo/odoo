@@ -105,3 +105,85 @@ test("Snippets options respect sequencing", async () => {
         "Test",
     ]);
 });
+
+test("hide empty OptionContainer and display OptionContainer with content", async () => {
+    addOption({
+        selector: ".parent-target",
+        template: xml`<WeRow label="'Row 1'">
+            <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+        </WeRow>`,
+    });
+    addOption({
+        selector: ".parent-target > div",
+        template: xml`<WeRow label="'Row 3'">
+            <WeButton applyTo="'.my-custom-class'" classAction="'test'"/>
+        </WeRow>`,
+    });
+    await setupWebsiteBuilder(
+        `<div class="parent-target"><div><div class="child-target">b</div></div></div>`
+    );
+
+    await contains(":iframe .parent-target > div").click();
+    expect(".options-container:not(.d-none)").toHaveCount(1);
+
+    await contains("[data-class-action='my-custom-class']").click();
+    expect(".options-container:not(.d-none)").toHaveCount(2);
+});
+
+test("hide empty OptionContainer and display OptionContainer with content (with WeButtonGroup)", async () => {
+    addOption({
+        selector: ".parent-target",
+        template: xml`<WeRow label="'Row 1'">
+            <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+        </WeRow>`,
+    });
+
+    addOption({
+        selector: ".parent-target > div",
+        template: xml`
+            <WeRow label="'Row 2'">
+                <WeButtonGroup>
+                    <WeButton applyTo="'.my-custom-class'" classAction="'test'">Test</WeButton>
+                </WeButtonGroup>
+            </WeRow>`,
+    });
+
+    await setupWebsiteBuilder(
+        `<div class="parent-target"><div><div class="child-target">b</div></div></div>`
+    );
+    await contains(":iframe .parent-target > div").click();
+    expect(".options-container:not(.d-none)").toHaveCount(1);
+
+    await contains("[data-class-action='my-custom-class']").click();
+    expect(".options-container:not(.d-none)").toHaveCount(2);
+    expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Row 2\nTest");
+});
+
+test("hide empty OptionContainer and display OptionContainer with content (with WeButtonGroup) - 2", async () => {
+    addOption({
+        selector: ".parent-target",
+        template: xml`<WeRow label="'Row 1'">
+            <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+        </WeRow>`,
+    });
+
+    addOption({
+        selector: ".parent-target > div",
+        template: xml`
+            <WeRow label="'Row 2'">
+                <WeButtonGroup applyTo="'.my-custom-class'">
+                    <WeButton  classAction="'test'">Test</WeButton>
+                </WeButtonGroup>
+            </WeRow>`,
+    });
+
+    await setupWebsiteBuilder(
+        `<div class="parent-target"><div><div class="child-target">b</div></div></div>`
+    );
+    await contains(":iframe .parent-target > div").click();
+    expect(".options-container:not(.d-none)").toHaveCount(1);
+
+    await contains("[data-class-action='my-custom-class']").click();
+    expect(".options-container:not(.d-none)").toHaveCount(2);
+    expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Row 2\nTest");
+});

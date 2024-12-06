@@ -1,5 +1,10 @@
 import { Component, EventBus, useSubEnv } from "@odoo/owl";
-import { basicContainerWeWidgetProps, useWeComponent } from "../builder_helpers";
+import {
+    basicContainerWeWidgetProps,
+    useVisibleWithContent,
+    useWeComponent,
+    WeComponent,
+} from "../builder_helpers";
 
 export class WeButtonGroup extends Component {
     static template = "html_builder.WeButtonGroup";
@@ -7,6 +12,7 @@ export class WeButtonGroup extends Component {
         ...basicContainerWeWidgetProps,
         slots: { type: Object, optional: true },
     };
+    static components = { WeComponent };
 
     setup() {
         useWeComponent();
@@ -14,5 +20,6 @@ export class WeButtonGroup extends Component {
         useSubEnv({
             actionBus: bus,
         });
+        useVisibleWithContent("root", "root");
     }
 }

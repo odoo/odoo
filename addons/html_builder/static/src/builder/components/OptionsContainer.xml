@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.OptionsContainer">
-    <div class="options-container">
+    <div class="options-container" t-ref="root">
         <div class="we-bg-darker p-1">
             <t t-out="title"/>
         </div>
-        <div class="we-bg-options-container">
+        <div class="we-bg-options-container" t-ref="content">
             <t t-foreach="props.options" t-as="option" t-key="option_index">
                 <t t-if="option.OptionComponent" t-component="option.OptionComponent"></t>
                 <t t-else="" t-call="{{option.template}}"/>

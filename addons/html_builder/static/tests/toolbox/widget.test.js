@@ -41,6 +41,35 @@ describe("WeRow", () => {
         await contains(":iframe .test-options-target").hover();
         expect(".o-tooltip").not.toBeDisplayed();
     });
+    test("hide empty row and display row with content", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeRow label="'Row 1'">
+                <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+            </WeRow>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeRow label="'Row 2'">
+                <WeButton applyTo="':not(.my-custom-class)'" classAction="'test'"/>
+            </WeRow>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeRow label="'Row 3'">
+                <WeButton applyTo="'.my-custom-class'" classAction="'test'"/>
+            </WeRow>`,
+        });
+        await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        const selectorRowLabel = ".options-container .hb-row:not(.d-none) > div:nth-child(1)";
+        await contains(":iframe .parent-target").click();
+        expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 2"]);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 3"]);
+    });
 });
 describe("WeButton", () => {
     test("call a specific action with some params and value", async () => {
@@ -305,6 +334,53 @@ describe("WeButtonGroup", () => {
         expect.verifySteps(["customAction3"]);
         await contains("[data-action-id='customAction4']").hover();
         expect.verifySteps(["customAction4"]);
+    });
+    test("hide/display base on applyTo", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+        });
+
+        addOption({
+            selector: ".parent-target",
+            template: xml`
+                <WeButtonGroup applyTo="'.my-custom-class'">
+                    <WeButton classAction="'test'">Test</WeButton>
+                </WeButtonGroup>`,
+        });
+
+        await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        await contains(":iframe .parent-target").click();
+        expect(".options-container .btn-group").toHaveCount(0);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(".options-container .btn-group").toHaveCount(1);
+    });
+
+    test("hide/display base on applyTo - 2", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+        });
+
+        addOption({
+            selector: ".parent-target",
+            template: xml`
+                <WeButtonGroup>
+                    <WeButton applyTo="'.my-custom-class'" classAction="'test'">Test</WeButton>
+                </WeButtonGroup>`,
+        });
+
+        await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target">b</div></div>`
+        );
+        await contains(":iframe .parent-target").click();
+        expect(".options-container .btn-group").not.toBeVisible();
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(".options-container .btn-group").toBeVisible();
     });
 });
 describe("WeNumberInput", () => {
@@ -582,6 +658,28 @@ describe("WeSelectItem", () => {
         expect("[data-class-action='my-custom-class']").toHaveClass("active");
         await contains(".options-container button.dropdown-toggle").click();
         expect(queryAllTexts(".o-dropdown--menu div")).toEqual(["A", "B", "C"]);
+    });
+
+    test("hide/display WeSelect base on applyTo in WeSelectItem", async () => {
+        addOption({
+            selector: ".parent-target",
+            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+        });
+        addOption({
+            selector: ".parent-target",
+            template: xml`
+                <WeSelect>
+                    <WeSelectItem applyTo="'.my-custom-class'" classAction="'a'">A</WeSelectItem>
+                </WeSelect>`,
+        });
+        await setupWebsiteBuilder(
+            `<div class="parent-target"><div class="child-target b">b</div></div>`
+        );
+        await contains(":iframe .parent-target").click();
+        expect(".options-container button.dropdown-toggle").not.toBeVisible();
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(".options-container button.dropdown-toggle").toBeVisible();
     });
 });
 describe("WeColorpicker", () => {
