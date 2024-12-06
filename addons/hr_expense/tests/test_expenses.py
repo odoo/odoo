@@ -1296,6 +1296,49 @@ class TestExpenses(TestExpenseCommon):
         # Validate the acction_date value after subitting and approving
         self.assertTrue(expense_sheet.accounting_date, date(2024, 5, 30))
 
+    def test_expense_bank_account_of_employee_on_entry_and_register_payment(self):
+        """
+        Test that the bank account defined on the employee form is correctly set on the entry and on the register payment
+        when having multiple bank accounts defined on the partner
+        """
+
+        self.partner_bank_account_1 = self.env['res.partner.bank'].create({
+            'acc_number': "987654321",
+            'partner_id': self.expense_employee.user_partner_id.id,
+            'acc_type': 'bank',
+        })
+        self.partner_bank_account_2 = self.env['res.partner.bank'].create({
+            'acc_number': "123456789",
+            'partner_id': self.expense_employee.user_partner_id.id,
+            'acc_type': 'bank',
+        })
+        # Set the second bank account for the employee
+        self.expense_employee.bank_account_id = self.partner_bank_account_2
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'payment_mode': 'own_account',
+            'state': 'approve',
+            'expense_line_ids': [Command.create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'payment_mode': 'own_account',
+                'total_amount': 350.00,
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        move_bank_acc = expense_sheet.account_move_ids.partner_bank_id
+        self.assertEqual(move_bank_acc, self.partner_bank_account_2)
+        action_data = expense_sheet.action_register_payment()
+        with Form(self.env['account.payment.register'].with_context(action_data['context'])) as pay_form:
+            self.assertEqual(pay_form.partner_bank_id, self.partner_bank_account_2)
+
     def test_expense_set_total_amount_to_0(self):
         """Checks that amount fields are correctly updating when setting total_amount to 0"""
         expense = self.env['hr.expense'].create({
