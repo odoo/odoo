@@ -839,26 +839,10 @@ export class PosStore extends Reactive {
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         if (values.product_id.to_weight && this.config.iface_electronic_scale && configure) {
             if (values.product_id.isScaleAvailable) {
-                this.isScaleScreenVisible = true;
-                this.scaleData = {
-                    productName: values.product_id?.display_name,
-                    uomName: values.product_id.uom_id?.name,
-                    uomRounding: values.product_id.uom_id?.rounding,
-                    productPrice: this.getProductPrice(values.product_id),
-                };
-                const weight = await makeAwaitable(
-                    this.env.services.dialog,
-                    ScaleScreen,
-                    this.scaleData
-                );
-                if (!weight) {
-                    return;
+                const weight = await this.weighProduct(values);
+                if (weight) {
+                    values.qty = weight;
                 }
-                values.qty = weight;
-                this.isScaleScreenVisible = false;
-                this.scaleWeight = 0;
-                this.scaleTare = 0;
-                this.totalPriceOnScale = 0;
             } else {
                 await values.product_id._onScaleNotAvailable();
             }
@@ -929,6 +913,25 @@ export class PosStore extends Reactive {
 
         // FIXME: If merged with another line, this returned object is useless.
         return line;
+    }
+
+    async weighProduct(values) {
+        this.isScaleScreenVisible = true;
+        this.scaleData = {
+            productName: values.product_id?.display_name,
+            uomName: values.product_id.uom_id?.name,
+            uomRounding: values.product_id.uom_id?.rounding,
+            productPrice: this.getProductPrice(values.product_id),
+        };
+        const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen, this.scaleData);
+        if (!weight) {
+            return;
+        }
+        this.isScaleScreenVisible = false;
+        this.scaleWeight = 0;
+        this.scaleTare = 0;
+        this.totalPriceOnScale = 0;
+        return weight;
     }
 
     create_printer(config) {
