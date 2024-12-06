@@ -44,6 +44,7 @@ __all__ = [
     "LazyTranslate",
     "html_translate",
     "xml_translate",
+    "get_text_content",
 ]
 
 _logger = logging.getLogger(__name__)
