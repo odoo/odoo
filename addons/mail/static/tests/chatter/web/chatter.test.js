@@ -287,7 +287,7 @@ test("base rendering when chatter has no record", async () => {
     await contains(".o-mail-Chatter .o-mail-Thread");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
-    await contains(".o-mail-Message-body", { text: "Creating a new record..." });
+    await contains(".o-mail-Message-content", { text: "Creating a new record..." });
     await contains("button", { count: 0, text: "Load More" });
     await contains(".o-mail-Message-actions");
 });
@@ -469,7 +469,7 @@ test('chatter just contains "creating a new record" message during the creation 
     await openFormView("res.partner", partnerId);
     await click(".o_control_panel_main_buttons .o_form_button_create");
     await contains(".o-mail-Message");
-    await contains(".o-mail-Message-body", { text: "Creating a new record..." });
+    await contains(".o-mail-Message-content", { text: "Creating a new record..." });
 });
 
 test("should display subject when subject is not the same as the default subject", async () => {
