@@ -28,7 +28,6 @@ class TestPackingNeg(TransactionCase):
                 'partner_id': res_partner_2.id,
                 'min_qty': 2.0,})],
             'uom_id': self.ref('uom.product_uom_unit'),
-            'uom_po_id': self.ref('uom.product_uom_unit'),
         })
 
         # Create an incoming picking for this product of 300 PCE from suppliers to stock

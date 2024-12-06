@@ -28,7 +28,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
             product = layers.product_id
             if len(product) > 1:
                 raise UserError(_("You cannot revalue multiple products at once"))
-            if any(float_is_zero(layer.remaining_qty, precision_rounding=product.uom_id.rounding) for layer in layers):
+            if any(float_is_zero(layer.remaining_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) for layer in layers):
                 raise UserError(_("You cannot adjust the valuation of a layer with zero quantity"))
             res['adjusted_layer_ids'] = active_ids
             res['product_id'] = product.id
@@ -69,7 +69,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
     def _compute_new_value(self):
         for reval in self:
             reval.new_value = reval.current_value_svl + reval.added_value
-            if not float_is_zero(reval.current_quantity_svl, precision_rounding=self.product_id.uom_id.rounding):
+            if not float_is_zero(reval.current_quantity_svl, precision_rounding=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 reval.new_value_by_qty = reval.new_value / reval.current_quantity_svl
             else:
                 reval.new_value_by_qty = 0.0
@@ -156,13 +156,14 @@ class StockValuationLayerRevaluation(models.TransientModel):
         # adjust all layers by the unit value change per unit, except the last layer which gets
         # whatever is left. This avoids rounding issues e.g. $10 on 3 products => 3.33, 3.33, 3.34
         for svl in adjusted_layers:
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if product_id.lot_valuated and not lot_id:
                 qty_by_lots[svl.lot_id.id] += svl.remaining_qty
-            if float_is_zero(svl.remaining_qty - remaining_qty, precision_rounding=self.product_id.uom_id.rounding):
+            if float_is_zero(svl.remaining_qty - remaining_qty, precision_digits=precision_digits):
                 taken_remaining_value = remaining_value
             else:
                 taken_remaining_value = remaining_value_unit_cost * svl.remaining_qty
-            if float_compare(svl.remaining_value + taken_remaining_value, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
+            if float_compare(svl.remaining_value + taken_remaining_value, 0, precision_digits=precision_digits) < 0:
                 raise UserError(_('The value of a stock valuation layer cannot be negative. Landed cost could be use to correct a specific transfer.'))
 
             svl.remaining_value += taken_remaining_value

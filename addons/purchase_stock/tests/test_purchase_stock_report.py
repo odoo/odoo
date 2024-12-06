@@ -202,10 +202,10 @@ class TestPurchaseStockReports(TestReportsCommon):
     def test_vendor_delay_report_with_uom(self):
         """
         PO 12 units x P
-        Receive 1 dozen x P
+        Receive 1 pack_of_6 x P
         -> 100% received
         """
-        uom_12 = self.env.ref('uom.product_uom_dozen')
+        uom_12 = self.env.ref('uom.product_uom_pack_6')
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner

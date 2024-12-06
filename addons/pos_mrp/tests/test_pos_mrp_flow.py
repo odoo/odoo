@@ -274,7 +274,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'standard_price': 12000.0,
             'categ_id': category.id,
             'taxes_id': False,
-            'uom_id': self.env.ref('uom.product_uom_dozen').id,
+            'uom_id': self.env.ref('uom.product_uom_pack_6').id,
         })
 
         bom_product_form = Form(self.env['mrp.bom'])

@@ -81,17 +81,23 @@ class TestProductBarcode(TransactionCase):
 
     def test_delete_package_and_use_its_barcode_in_product(self):
         """ Test that the barcode of the package can be used when the package is removed from the product."""
+        pack_uom = self.env['uom.uom'].create({
+            'name': 'Pack of 10',
+            'relative_factor': 10,
+        })
         product = self.env['product.product'].create({
             'name': 'product',
-            'packaging_ids': [(0, 0, {
-                'name': 'packing',
-                'barcode': '1234',
-            })]
+            'uom_ids': [Command.link(pack_uom.id)],
         })
-        package = product.packaging_ids
+        package_barcode = self.env['product.uom'].create({
+            'name': '1234',
+            'product_id': product.id,
+            'uom_id': pack_uom.id,
+        })
+        package = product.product_uom_ids
         self.assertTrue(package.exists())
-        self.assertEqual(package.barcode, '1234')
-        product.packaging_ids = False
+        self.assertEqual(package.name, '1234')
+        package_barcode.unlink()
         self.assertFalse(package.exists())
         product.barcode = '1234'
 
