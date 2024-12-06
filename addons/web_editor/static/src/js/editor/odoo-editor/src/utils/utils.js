@@ -947,12 +947,14 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     // at the last position of the previous node instead.
     const endLeaf = firstLeaf(end);
     const beforeEnd = endLeaf.previousSibling;
+    const isInsideColumn = closestElement(end, '.o_text_columns')
     if (
         correctTripleClick &&
         !endOffset &&
         (start !== end || startOffset !== endOffset) &&
         (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleTextNode(beforeEnd) && !isZWS(beforeEnd))) &&
-        !closestElement(endLeaf, 'table')
+        !closestElement(endLeaf, 'table') &&
+        !isInsideColumn
     ) {
         const previous = previousLeaf(endLeaf, editable, true);
         if (previous && closestElement(previous).isContentEditable) {
