@@ -26,6 +26,7 @@ export class AddToBoard extends Component {
     static props = {};
 
     setup() {
+        this.diskCache = useService("disk_cache");
         this.notification = useService("notification");
         this.state = useState({ name: this.env.config.getDisplayName() });
 
@@ -51,7 +52,7 @@ export class AddToBoard extends Component {
             dashboard_merge_domains_contexts: false,
         };
 
-        const result = await rpc("/board/add_to_dashboard", {
+        const success = await rpc("/board/add_to_dashboard", {
             action_id: this.env.config.actionId || false,
             context_to_save: contextToSave,
             domain,
@@ -59,19 +60,13 @@ export class AddToBoard extends Component {
             view_mode: this.env.config.viewType,
         });
 
-        if (result) {
-            this.notification.add(
-                _t("Please refresh your browser for the changes to take effect."),
-                {
-                    title: _t("“%s” added to dashboard", this.state.name),
-                    type: "warning",
-                }
-            );
-            this.state.name = this.env.config.getDisplayName();
-        } else {
-            this.notification.add(_t("Could not add filter to dashboard"), {
-                type: "danger",
+        if (success) {
+            this.notification.add(_t("“%s” added to dashboard", this.state.name), {
+                type: "success",
             });
+            this.diskCache.invalidate("views");
+        } else {
+            this.notification.add(_t("Could not add filter to dashboard"), { type: "danger" });
         }
     }
 

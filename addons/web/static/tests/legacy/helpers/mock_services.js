@@ -8,6 +8,7 @@ import { overlayService } from "@web/core/overlay/overlay_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { user } from "@web/core/user";
 import { patchWithCleanup } from "./utils";
+import { DiskCache } from "@web/core/browser/disk_cache";
 
 // -----------------------------------------------------------------------------
 // Mock Services
@@ -315,6 +316,25 @@ function makeFakeActionService() {
     };
 }
 
+class MockedDiskCache extends DiskCache {
+    async _checkVersion() {}
+    _execute(callback) {
+        return callback();
+    }
+    async _insert() {}
+    async _invalidate() {}
+    async _read() {}
+}
+function makeFakeDiskCacheService() {
+    return {
+        async start(env) {
+            const cache = new MockedDiskCache("tests");
+            env.bus.addEventListener("CLEAR-CACHES", () => cache.invalidate());
+            return cache;
+        },
+    };
+}
+
 export const mocks = {
     color_scheme: () => fakeColorSchemeService,
     company: () => fakeCompanyService,
@@ -328,4 +348,5 @@ export const mocks = {
     orm: () => ormService,
     action: makeFakeActionService,
     overlay: () => overlayService,
+    disk_cache: makeFakeDiskCacheService,
 };
