@@ -500,18 +500,10 @@ export function createRelatedModels(
         if (!("id" in vals)) {
             vals["id"] = uuid(model);
         }
-        // opts.onCreate(model, vals);
 
         let record = instantiateModel(model, { models, records });
 
         const id = vals["id"];
-        // console.log("Creating record", model, id, Object.keys(record.model.modelFields));
-
-        // Object.keys(record.model.modelFields).forEach((key) => {
-        //     onChange(record, key, () => {
-        //         opts.onUpdate(record, key);
-        //     });
-        // });
 
         record.id = id;
         if (!vals.uuid) {

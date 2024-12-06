@@ -63,7 +63,7 @@ patch(PaymentScreen.prototype, {
         }
 
         if (this.currentOrder.finalized) {
-            this.afterOrderValidation(false);
+            this.afterOrderValidation();
             return false;
         }
 
@@ -241,6 +241,6 @@ patch(PaymentScreen.prototype, {
 
         await this.postPushOrderResolve([this.currentOrder.server_id]);
 
-        this.afterOrderValidation(true);
+        this.afterOrderValidation();
     },
 });

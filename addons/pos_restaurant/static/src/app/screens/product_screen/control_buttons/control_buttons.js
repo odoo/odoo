@@ -81,13 +81,7 @@ patch(ControlButtons.prototype, {
             startingValue: order.floating_order_name || "",
             getPayload: async (newName) => {
                 if (typeof order.id == "number") {
-<<<<<<< HEAD
-                    this.pos.data.write("pos.order", [order.id], {
-                        floating_order_name: newName,
-                    });
-=======
-                    order.update({ note: newName });
->>>>>>> a76dffc4ef0e ([REF] point_of_sale: real time syncing)
+                    order.update({ floating_order_name: newName });
                 } else {
                     order.floating_order_name = newName;
                 }

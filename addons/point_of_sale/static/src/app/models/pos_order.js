@@ -489,8 +489,6 @@ export class PosOrder extends Base {
             const newPaymentline = this.models["pos.payment"].create({
                 pos_order_id: this,
                 payment_method_id: payment_method,
-
-                amount: 0,
             });
 
             this.selectPaymentline(newPaymentline);

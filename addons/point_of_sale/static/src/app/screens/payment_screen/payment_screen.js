@@ -296,16 +296,9 @@ export class PaymentScreen extends Component {
         this.currentOrder.state = "paid";
 
         this.env.services.ui.block();
-        let syncOrderResult;
         try {
             this.currentOrder.recomputeOrderData();
-            // 1. Save order to server.
-            // syncOrderResult = await this.pos.syncAllOrders({ throw: true });
-            // if (!syncOrderResult) {
-            //     return;
-            // }
-
-            // 2. Invoice.
+            // Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.isToInvoice()) {
                 if (this.currentOrder.raw.account_move) {
                     await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
@@ -332,8 +325,8 @@ export class PaymentScreen extends Component {
             this.env.services.ui.unblock();
         }
 
-        // 3. Post process.
-        await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
+        // Post process.
+        await this.afterOrderValidation();
     }
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
