@@ -737,18 +737,18 @@ test("position left === left-middle", getPositionTest("left", "left-middle"));
 test("position bottom === bottom-middle", getPositionTest("bottom", "bottom-middle"));
 test("position right === right-middle", getPositionTest("right", "right-middle"));
 // RTL
-test("position RTL top-start", getPositionTestRTL("top-start", "top-end"));
+test("position RTL top-start", getPositionTestRTL("top-start"));
 test("position RTL top-middle", getPositionTestRTL("top-middle"));
-test("position RTL top-end", getPositionTestRTL("top-end", "top-start"));
-test("position RTL bottom-start", getPositionTestRTL("bottom-start", "bottom-end"));
+test("position RTL top-end", getPositionTestRTL("top-end"));
+test("position RTL bottom-start", getPositionTestRTL("bottom-start"));
 test("position RTL bottom-middle", getPositionTestRTL("bottom-middle"));
-test("position RTL bottom-end", getPositionTestRTL("bottom-end", "bottom-start"));
-test("position RTL right-start", getPositionTestRTL("right-start", "left-start"));
-test("position RTL right-middle", getPositionTestRTL("right-middle", "left-middle"));
-test("position RTL right-end", getPositionTestRTL("right-end", "left-end"));
-test("position RTL left-start", getPositionTestRTL("left-start", "right-start"));
-test("position RTL left-middle", getPositionTestRTL("left-middle", "right-middle"));
-test("position RTL left-end", getPositionTestRTL("left-end", "right-end"));
+test("position RTL bottom-end", getPositionTestRTL("bottom-end"));
+test("position RTL right-start", getPositionTestRTL("right-start"));
+test("position RTL right-middle", getPositionTestRTL("right-middle"));
+test("position RTL right-end", getPositionTestRTL("right-end"));
+test("position RTL left-start", getPositionTestRTL("left-start"));
+test("position RTL left-middle", getPositionTestRTL("left-middle"));
+test("position RTL left-end", getPositionTestRTL("left-end"));
 
 const CONTAINER_STYLE_MAP = {
     top: { alignItems: "flex-start" },
