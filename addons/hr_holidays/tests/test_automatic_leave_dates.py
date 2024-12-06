@@ -31,7 +31,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             leave_form.request_date_from_period = 'am'
 
             self.assertEqual(leave_form.number_of_days, 0)
@@ -71,7 +71,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             leave_form.request_date_from_period = 'am'
 
             self.assertEqual(leave_form.number_of_days, .5)
@@ -125,7 +125,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             leave_form.request_date_from_period = 'am'
 
             self.assertEqual(leave_form.number_of_days, .5)
@@ -154,7 +154,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.holiday_status_id = self.leave_type
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             # Ask for morning
             leave_form.request_date_from_period = 'am'
 
@@ -188,7 +188,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             # does not work on mondays
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             leave_form.request_date_from_period = 'am'
 
 
@@ -218,7 +218,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             # does not work on tuesdays
             leave_form.request_date_from = date(2019, 9, 3)
             leave_form.request_date_to = date(2019, 9, 3)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             leave_form.request_date_from_period = 'am'
 
 
@@ -260,7 +260,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             # even week, works 2 hours
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             leave_form.request_date_from_period = 'am'
 
             self.assertEqual(leave_form.number_of_days, 0.25)
@@ -273,7 +273,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             # odd week, works 4 hours
             leave_form.request_date_from = date(2019, 9, 9)
             leave_form.request_date_to = date(2019, 9, 9)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             leave_form.request_date_from_period = 'am'
 
             self.assertEqual(leave_form.number_of_days, 0.5)
@@ -304,7 +304,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             # even week, does not work
             leave_form.request_date_from = date(2019, 9, 2)
             leave_form.request_date_to = date(2019, 9, 2)
-            leave_form.request_unit_half = True
+            leave_form.request_unit = 'half_day'
             leave_form.request_date_from_period = 'am'
 
             self.assertEqual(leave_form.number_of_days, 0)
