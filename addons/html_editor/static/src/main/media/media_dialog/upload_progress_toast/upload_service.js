@@ -18,13 +18,13 @@ export const uploadService = {
         const progressToast = reactive({
             files: {},
             isVisible: false,
+            close: (value) => {
+                progressToast.isVisible = value;
+            },
         });
 
         registry.category("main_components").add("UploadProgressToast", {
             Component: UploadProgressToast,
-            props: {
-                close: () => (progressToast.isVisible = false),
-            },
         });
 
         const addFile = (file) => {
@@ -68,6 +68,8 @@ export const uploadService = {
              * @param {Function} onUploaded
              */
             uploadFiles: async (files, { resModel, resId, isImage }, onUploaded) => {
+                progressToast.uploadInProgress = true;
+                const startTime = Date.now();
                 // Upload the smallest file first to block the user the least possible.
                 const sortedFiles = Array.from(files).sort((a, b) => a.size - b.size);
                 for (const file of sortedFiles) {
@@ -109,8 +111,20 @@ export const uploadService = {
                     }
                     try {
                         const xhr = new XMLHttpRequest();
+                        progressToast.xhr = xhr;
                         xhr.upload.addEventListener("progress", (ev) => {
                             const rpcComplete = (ev.loaded / ev.total) * 100;
+                            const elapsedTime = (Date.now() - startTime) / 1000;
+                            const totalUploadTime = (elapsedTime / ev.loaded) * ev.total;
+                            const remainingTime = Math.max(totalUploadTime - elapsedTime, 0);
+                            Object.values(progressToast.files).forEach((file) => {
+                                const fileDetails = progressToast.files[file.id];
+                                if (fileDetails) {
+                                    fileDetails.remainingTime = `${Math.floor(
+                                        remainingTime / 60
+                                    )}m:${Math.round(remainingTime % 60)}s`;
+                                }
+                            });
                             file.progress = rpcComplete;
                         });
                         xhr.upload.addEventListener("load", function () {
