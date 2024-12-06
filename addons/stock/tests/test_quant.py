@@ -1273,8 +1273,8 @@ class StockQuant(TransactionCase):
 
         picking = self.env['stock.picking'].create({
             'picking_type_id': picking_type.id,
-            'location_id': dst_location.id,
-            'location_dest_id': stock_location.id,
+            'location_id': stock_location.id,
+            'location_dest_id': dst_location.id,
             'move_ids': [(0, 0, {
                 'name': 'In 5 x %s' % product.name,
                 'product_id': product.id,
