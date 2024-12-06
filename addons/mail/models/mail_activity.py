@@ -23,6 +23,7 @@ class MailActivity(models.Model):
     that can be used in kanban view to display a status. Once done activities
     are unlinked and a message is posted. This message has a new activity_type_id
     field that indicates the activity linked to the message. """
+    _name = 'mail.activity'
     _description = 'Activity'
     _order = 'date_deadline ASC, id ASC'
     _rec_name = 'summary'

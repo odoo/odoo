@@ -20,6 +20,7 @@ class GamificationBadge(models.Model):
     BADGE_REQUIRED = 4
     TOO_MANY = 5
 
+    _name = 'gamification.badge'
     _description = 'Gamification Badge'
     _inherit = ['mail.thread', 'image.mixin']
 

@@ -21,7 +21,7 @@ re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^
 class IrQweb(models.AbstractModel):
     """ IrQweb object for rendering stuff in the website context """
 
-    _inherit = ['ir.qweb']
+    _inherit = 'ir.qweb'
 
     URL_ATTRS = {
         'form': 'action',

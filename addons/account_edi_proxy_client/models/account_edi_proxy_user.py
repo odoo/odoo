@@ -29,6 +29,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     Odoo database.
     It also owns a key with which each file should be decrypted with (the proxy encrypt all the files with the public key).
     """
+    _name = 'account_edi_proxy_client.user'
     _description = 'Account EDI proxy user'
 
     active = fields.Boolean(default=True)

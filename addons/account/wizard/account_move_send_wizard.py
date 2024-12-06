@@ -7,6 +7,7 @@ from odoo.addons.mail.wizard.mail_compose_message import _reopen
 
 class AccountMoveSendWizard(models.TransientModel):
     """Wizard that handles the sending a single invoice."""
+    _name = 'account.move.send.wizard'
     _inherit = ['account.move.send', 'mail.composer.mixin']
     _description = "Account Move Send Wizard"
 

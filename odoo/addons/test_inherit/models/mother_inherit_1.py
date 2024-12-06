@@ -8,7 +8,7 @@ from odoo import models, fields
 
 # feature was broken. These models rely on that feature.
 class TestInheritMother(models.Model):
-    _inherit = ['test.inherit.mother']
+    _inherit = 'test.inherit.mother'
 
     field_in_mother = fields.Char()
     partner_id = fields.Many2one('res.partner')
@@ -22,12 +22,13 @@ class TestInheritMother(models.Model):
 
 
 class Test_Mother_Underscore(models.Model):
+    _name = 'test_mother_underscore'
     _description = 'Test Inherit Underscore'
     _inherit = ['test.inherit.mother']
 
 
 # pylint: disable=E0102
 class Test_Mother_Underscore(models.Model):  # noqa: F811
-    _inherit = ['test_mother_underscore']
+    _inherit = 'test_mother_underscore'
 
     foo = fields.Char()
