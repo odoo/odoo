@@ -7,3 +7,10 @@ patch(ProjectRightSidePanel.prototype, {
         return super.panelVisible || this.state.data.show_sale_items;
     },
 });
+
+patch(ProjectRightSidePanel, {
+    props: {
+        ...ProjectRightSidePanel.props,
+        sectionState: { type: Object, optional: true },
+    },
+});
