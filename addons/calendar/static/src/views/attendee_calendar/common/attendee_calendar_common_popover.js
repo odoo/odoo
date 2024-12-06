@@ -82,14 +82,26 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
      * @override
      */
     get isEventDeletable() {
+<<<<<<< 17.0
         return super.isEventDeletable && this.isEventEditable && !this.isEventArchivable;
+||||||| 6c3c7562258e8996d7ad43d6f8ae766799c68b8f
+        return super.isEventDeletable && this.isCurrentUserAttendee && !this.isEventArchivable;
+=======
+        return super.isEventDeletable && (this.isCurrentUserAttendee || this.isCurrentUserOrganizer) && !this.isEventArchivable;
+>>>>>>> 4f5541ffa662eb3cb3a4c827179dc71c8445eedf
     }
 
     /**
      * @override
      */
     get isEventEditable() {
+<<<<<<< 17.0
         return this.props.record.rawRecord.user_can_edit;
+||||||| 6c3c7562258e8996d7ad43d6f8ae766799c68b8f
+        return this.isEventPrivate ? this.isCurrentUserAttendee : super.isEventEditable;
+=======
+        return this.isEventPrivate ? this.isCurrentUserAttendee || this.isCurrentUserOrganizer : super.isEventEditable;
+>>>>>>> 4f5541ffa662eb3cb3a4c827179dc71c8445eedf
     }
 
     get isEventViewable() {
