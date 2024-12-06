@@ -41,7 +41,7 @@
                                         class="btn"
                                         t-attf-class="{{getSlotColor(slot, preset)}}"
                                         t-on-click="() => this.confirm(slot, preset)">
-                                            <span t-esc="slot.humain_readable" />
+                                            <span t-esc="slot.datetime.toFormat('HH:mm')" />
                                     </button>
                                 </div>
                             </div>
