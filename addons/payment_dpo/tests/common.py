@@ -1,0 +1,26 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.payment.tests.common import PaymentCommon
+
+
+class DPOCommon(AccountTestInvoicingCommon, PaymentCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.dpo = cls._prepare_provider('dpo', update_values={
+            'dpo_company_token': '1A2Z3E4R',
+            'dpo_service': '1234',
+        })
+
+        cls.provider = cls.dpo
+
+        cls.notification_data = {
+            'TransID': '123456',
+            'CompanyRef': 'Test Transaction',
+            'CustomerCreditType': 'VISA',
+            'Result': '000',
+            'ResultExplanation': 'Success',
+        }

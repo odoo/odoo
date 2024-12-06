@@ -1937,6 +1937,17 @@
                      ])]"
         />
     </record>
+    <!--TODO-PDA add right logo-->
+    <record id="payment_method_mobile" model="payment.method">
+        <field name="name">Mobile</field>
+        <field name="code">mobile</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
+    </record>
 
     <record id="payment_method_mobile_money" model="payment.method">
         <field name="name">Mobile money</field>
@@ -3652,6 +3663,17 @@
                          ref('base.HKD'),
                      ])]"
         />
+    </record>
+    <!--TODO-PDA add right logo-->
+    <record id="payment_method_xpay" model="payment.method">
+        <field name="name">xPay</field>
+        <field name="code">xpay</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">none</field>
     </record>
 
     <record id="payment_method_zalopay" model="payment.method">
