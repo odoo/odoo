@@ -1637,7 +1637,17 @@ class BaseModel(metaclass=MetaModel):
         # optimize out the default criterion of ``like ''`` that matches everything
         elif not (name == '' and operator in ('like', 'ilike')):
             aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-            domain = aggregator([[(field_name, operator, name)] for field_name in search_fnames])
+            domains = []
+            for field_name in search_fnames:
+                root_field_name = field_name.split('.')[0]
+                if self._fields[root_field_name].relational or operator == "in":
+                    domains.append([(field_name, operator, name)])
+                else:
+                    try:
+                        domains.append([(field_name, operator, self._fields[field_name].convert_to_cache(name, self, validate=False))])
+                    except ValueError:
+                        pass  # ignore irrelevant fields if the _rec_names_search supports multiple field types
+            domain = aggregator(domains)
             args += domain
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
