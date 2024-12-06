@@ -10,6 +10,7 @@ from odoo.tools import SQL
 
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
+    _name = 'project.tags'
     _description = "Project Tags"
     _order = "name"
 

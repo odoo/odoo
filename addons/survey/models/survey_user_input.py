@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 
 class SurveyUser_Input(models.Model):
     """ Metadata for a set of one user's answers to a particular survey """
+    _name = 'survey.user_input'
     _description = "Survey User Input"
     _rec_name = "survey_id"
     _order = "create_date desc"

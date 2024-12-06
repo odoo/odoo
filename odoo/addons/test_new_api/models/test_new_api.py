@@ -254,6 +254,7 @@ class Test_New_ApiPartner(models.Model):
     overrides from other modules that may change which fields are being read,
     how many queries it takes to use that model, etc.
     """
+    _name = 'test_new_api.partner'
     _description = 'Discussion Partner'
 
     name = fields.Char(string='Name')
@@ -263,6 +264,7 @@ class Test_New_ApiMulti(models.Model):
     """ Model for testing multiple onchange methods in cascade that modify a
         one2many field several times.
     """
+    _name = 'test_new_api.multi'
     _description = 'Test New API Multi'
 
     name = fields.Char(related='partner.name', readonly=True)
@@ -539,6 +541,7 @@ class Test_New_ApiComputeSudo(models.Model):
 
 class Test_New_ApiMulti_Compute_Inverse(models.Model):
     """ Model with the same inverse method for several fields. """
+    _name = 'test_new_api.multi_compute_inverse'
     _description = 'Test New API Multi Compute Inverse'
 
     foo = fields.Char(default='', required=True)

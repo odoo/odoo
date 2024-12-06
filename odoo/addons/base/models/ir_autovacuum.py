@@ -21,6 +21,7 @@ def is_autovacuum(func):
 
 class IrAutovacuum(models.AbstractModel):
     """ Helper model to the ``@api.autovacuum`` method decorator. """
+    _name = 'ir.autovacuum'
     _description = 'Automatic Vacuum'
 
     def _run_vacuum_cleaner(self):

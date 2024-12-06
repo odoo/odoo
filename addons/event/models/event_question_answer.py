@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class EventQuestionAnswer(models.Model):
     """ Contains suggested answers to a 'simple_choice' event.question. """
+    _name = 'event.question.answer'
     _order = 'sequence,id'
     _description = 'Event Question Answer'
 

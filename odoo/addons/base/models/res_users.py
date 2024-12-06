@@ -328,6 +328,7 @@ class ResUsers(models.Model):
         used to store the data related to the partner: lang, name, address,
         avatar, ... The user model is now dedicated to technical data.
     """
+    _name = 'res.users'
     _description = 'User'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
@@ -2170,6 +2171,7 @@ class ResUsersIdentitycheck(models.TransientModel):
     some of the risk of a third party using such an unattended device to manipulate
     the account.
     """
+    _name = 'res.users.identitycheck'
     _description = "Password Check Wizard"
 
     request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
@@ -2208,6 +2210,7 @@ class ResUsersIdentitycheck(models.TransientModel):
 
 class ChangePasswordWizard(models.TransientModel):
     """ A wizard to manage the change of users' passwords. """
+    _name = 'change.password.wizard'
     _description = "Change Password Wizard"
     _transient_max_hours = 0.2
 
@@ -2230,8 +2233,8 @@ class ChangePasswordWizard(models.TransientModel):
 
 class ChangePasswordUser(models.TransientModel):
     """ A model to configure users in the change password wizard. """
+    _name = 'change.password.user'
     _description = 'User, Change Password Wizard'
-
     wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')
     user_login = fields.Char(string='User Login', readonly=True)

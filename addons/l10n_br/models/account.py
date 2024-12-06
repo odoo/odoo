@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class AccountTax(models.Model):
     """ Add fields used to define some brazilian taxes """
-    _inherit = ['account.tax']
+    _inherit = 'account.tax'
 
     tax_discount = fields.Boolean(string='Discount this Tax in Price',
                                   help="Mark it for (ICMS, PIS e etc.).")

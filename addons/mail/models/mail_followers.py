@@ -17,6 +17,7 @@ class MailFollowers(models.Model):
     :param: res_model: model of the followed objects
     :param: res_id: ID of resource (may be 0 for every objects)
     """
+    _name = 'mail.followers'
     _rec_name = 'partner_id'
     _log_access = False
     _description = 'Document Followers'

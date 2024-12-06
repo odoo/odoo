@@ -10,7 +10,7 @@ class IrQweb(models.AbstractModel):
     is allowed for the given model.
     """
 
-    _inherit = ["ir.qweb"]
+    _inherit = "ir.qweb"
 
     allowed_directives = (
         "out",

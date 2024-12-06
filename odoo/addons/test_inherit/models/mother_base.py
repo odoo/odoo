@@ -5,6 +5,7 @@ from odoo import models, fields, api
 
 # We create a new model, the name will be determined as 'test.inherit.mother'
 class TestInheritMother(models.Model):
+    _name = 'test.inherit.mother'
     _description = 'Test Inherit Mother'
 
     name = fields.Char(default='Foo')

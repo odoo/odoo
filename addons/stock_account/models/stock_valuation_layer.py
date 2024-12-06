@@ -13,6 +13,7 @@ from collections import defaultdict
 class StockValuationLayer(models.Model):
     """Stock Valuation Layer"""
 
+    _name = 'stock.valuation.layer'
     _description = 'Stock Valuation Layer'
     _order = 'create_date, id'
 

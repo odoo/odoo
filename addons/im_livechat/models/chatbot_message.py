@@ -10,6 +10,7 @@ class ChatbotMessage(models.Model):
         We do this in a new model to avoid bloating the 'mail.message' model.
     """
 
+    _name = 'chatbot.message'
     _description = 'Chatbot Message'
     _order = 'create_date desc, id desc'
     _rec_name = 'discuss_channel_id'

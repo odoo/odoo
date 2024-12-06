@@ -11,7 +11,7 @@ BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
 class MailThread(models.AbstractModel):
     """ Update MailThread to add the support of bounce management in mass mailing traces. """
-    _inherit = ['mail.thread']
+    _inherit = 'mail.thread'
 
     @api.model
     def _message_route_process(self, message, message_dict, routes):

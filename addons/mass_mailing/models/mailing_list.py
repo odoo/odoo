@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 
 class MailingList(models.Model):
     """Model of a contact list. """
+    _name = 'mailing.list'
     _order = 'name'
     _description = 'Mailing List'
     _mailing_enabled = True

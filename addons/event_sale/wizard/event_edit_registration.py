@@ -69,6 +69,7 @@ class RegistrationEditor(models.TransientModel):
 
 class RegistrationEditorLine(models.TransientModel):
     """Event Registration"""
+    _name = 'registration.editor.line'
     _description = 'Edit Attendee Line on Sales Confirmation'
     _order = "id desc"
 

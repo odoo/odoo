@@ -2,7 +2,7 @@ from odoo import models, api, fields
 
 
 class PosPreset(models.Model):
-    _inherit = ["pos.preset"]
+    _inherit = "pos.preset"
 
     available_in_self = fields.Boolean(string='Available in self', default=False)
     service_at = fields.Selection(

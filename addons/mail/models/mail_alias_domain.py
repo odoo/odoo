@@ -12,6 +12,7 @@ class MailAliasDomain(models.Model):
 
     This replaces ``mail.alias.domain`` configuration parameter use until v16.
     """
+    _name = 'mail.alias.domain'
     _description = "Email Domain"
     _order = 'sequence ASC, id ASC'
 

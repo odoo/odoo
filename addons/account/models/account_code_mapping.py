@@ -9,6 +9,7 @@ class AccountCodeMapping(models.Model):
     # It is not stored in DB. Instead, records are only populated in cache by the
     # `_search` override when accessing the One2many on `account.account`.
 
+    _name = 'account.code.mapping'
     _description = "Mapping of account codes per company"
     _auto = False
     _table_query = '0'

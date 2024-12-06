@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
     cloud_storage_mim_file_size: a soft limit for the file size that can be
         uploaded as the cloud storage attachments for web client.
     """
-    _inherit = ['res.config.settings']
+    _inherit = 'res.config.settings'
 
     cloud_storage_provider = fields.Selection(
         selection=[],

@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class MailTestPortal(models.Model):
     """ A model inheriting from mail.thread and portal.mixin with some fields
     used for portal sharing, like a partner, ..."""
+    _name = 'mail.test.portal'
     _description = 'Chatter Model for Portal'
     _inherit = [
         'portal.mixin',
@@ -25,6 +26,7 @@ class MailTestPortal(models.Model):
 
 class MailTestPortalNoPartner(models.Model):
     """ A model inheriting from portal, but without any partner field """
+    _name = 'mail.test.portal.no.partner'
     _description = 'Chatter Model for Portal (no partner field)'
     _inherit = [
         'mail.thread',
@@ -42,6 +44,7 @@ class MailTestPortalNoPartner(models.Model):
 class MailTestRating(models.Model):
     """ A model inheriting from rating.mixin (which inherits from mail.thread) with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """
+    _name = 'mail.test.rating'
     _description = 'Rating Model (ticket-like)'
     _inherit = [
         'rating.mixin',
@@ -104,6 +107,7 @@ class MailTestRatingThread(models.Model):
      - partner_id: value returned by the base _rating_get_partner method
      - user_id: value returned by the base _rating_get_operator method
      """
+    _name = 'mail.test.rating.thread'
     _description = 'Model for testing rating without the rating mixin'
     _inherit = ['mail.thread']
     _order = 'name asc, id asc'
@@ -121,7 +125,7 @@ class MailTestRatingThread(models.Model):
 
 class MailTestRatingThreadRead(models.Model):
     """Same as MailTestRatingThread but post accessible on read by portal users."""
-
+    _name = 'mail.test.rating.thread.read'
     _description = "Read-post rating model"
     _inherit = ["mail.test.rating.thread"]
     _order = "name asc, id asc"

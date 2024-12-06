@@ -20,6 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class StockWarehouseOrderpoint(models.Model):
     """ Defines Minimum stock rules. """
+    _name = 'stock.warehouse.orderpoint'
     _description = "Minimum Inventory Rule"
     _check_company_auto = True
     _order = "location_id,company_id,id"

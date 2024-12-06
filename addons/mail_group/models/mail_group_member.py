@@ -11,6 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class MailGroupMember(models.Model):
     """Models a group member that can be either an email address either a full partner."""
+    _name = 'mail.group.member'
     _description = 'Mailing List Member'
     _rec_name = 'email'
 

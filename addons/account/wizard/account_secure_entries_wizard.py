@@ -10,6 +10,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
     """
     This wizard is used to secure journal entries (with a hash)
     """
+    _name = 'account.secure.entries.wizard'
     _description = 'Secure Journal Entries'
 
     company_id = fields.Many2one(

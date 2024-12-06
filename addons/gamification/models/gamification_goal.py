@@ -16,6 +16,7 @@ class GamificationGoal(models.Model):
 
     An individual goal for a user on a specified time period"""
 
+    _name = 'gamification.goal'
     _description = 'Gamification Goal'
     _rec_name = 'definition_id'
     _order = 'start_date desc, end_date desc, definition_id, id'
