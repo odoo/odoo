@@ -1315,7 +1315,10 @@ export class Rtc {
         if (this.state.selfSession) {
             switch (type) {
                 case "camera": {
-                    this.removeVideoFromSession(this.state.selfSession, "camera");
+                    this.removeVideoFromSession(this.state.selfSession, {
+                        type: "camera",
+                        cleanup: false,
+                    });
                     if (this.state.cameraTrack) {
                         this.updateStream(this.state.selfSession, this.state.cameraTrack);
                     }
@@ -1323,7 +1326,10 @@ export class Rtc {
                 }
                 case "screen": {
                     if (!this.state.screenTrack) {
-                        this.removeVideoFromSession(this.state.selfSession, "screen");
+                        this.removeVideoFromSession(this.state.selfSession, {
+                            type: "screen",
+                            cleanup: false,
+                        });
                     } else {
                         this.updateStream(this.state.selfSession, this.state.screenTrack);
                     }
@@ -1394,10 +1400,6 @@ export class Rtc {
      * @param {String} type 'camera' or 'screen'
      */
     async setVideo(track, type, activateVideo = false) {
-        if (this.blurManager) {
-            this.blurManager.close();
-            this.blurManager = undefined;
-        }
         const stopVideo = () => {
             if (track) {
                 track.stop();
@@ -1421,13 +1423,17 @@ export class Rtc {
             if (type === "screen") {
                 this.soundEffectsService.play("screen-sharing");
             }
+            if (type === "camera" && this.blurManager) {
+                this.blurManager.close();
+                this.blurManager = undefined;
+            }
             stopVideo();
             return;
         }
         let sourceStream;
         try {
             if (type === "camera") {
-                if (this.state.sourceCameraStream && this.state.sendCamera) {
+                if (this.state.sourceCameraStream) {
                     sourceStream = this.state.sourceCameraStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getUserMedia({
@@ -1436,7 +1442,7 @@ export class Rtc {
                 }
             }
             if (type === "screen") {
-                if (this.state.sourceScreenStream && this.state.sendScreen) {
+                if (this.state.sourceScreenStream) {
                     sourceStream = this.state.sourceScreenStream;
                 } else {
                     sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
@@ -1454,14 +1460,21 @@ export class Rtc {
             stopVideo();
             return;
         }
-        let videoStream = sourceStream;
+        let outputTrack = sourceStream ? sourceStream.getVideoTracks()[0] : undefined;
+        if (outputTrack) {
+            outputTrack.addEventListener("ended", async () => {
+                await this.toggleVideo(type, false);
+            });
+        }
         if (this.userSettingsService.useBlur && type === "camera") {
             try {
+                this.blurManager?.close();
                 this.blurManager = new BlurManager(sourceStream, {
                     backgroundBlur: this.userSettingsService.backgroundBlurAmount,
                     edgeBlur: this.userSettingsService.edgeBlurAmount,
                 });
-                videoStream = await this.blurManager.stream;
+                const bluredStream = await this.blurManager.stream;
+                outputTrack = bluredStream.getVideoTracks()[0];
             } catch (_e) {
                 this.notification.add(
                     _t("%(name)s: %(message)s)", { name: _e.name, message: _e.message }),
@@ -1470,26 +1483,20 @@ export class Rtc {
                 this.userSettingsService.useBlur = false;
             }
         }
-        track = videoStream ? videoStream.getVideoTracks()[0] : undefined;
-        if (track) {
-            track.addEventListener("ended", async () => {
-                await this.toggleVideo(type, false);
-            });
-        }
         switch (type) {
             case "camera": {
                 Object.assign(this.state, {
                     sourceCameraStream: sourceStream,
-                    cameraTrack: track,
-                    sendCamera: Boolean(type === "camera" && track),
+                    cameraTrack: outputTrack,
+                    sendCamera: Boolean(type === "camera" && outputTrack),
                 });
                 break;
             }
             case "screen": {
                 Object.assign(this.state, {
                     sourceScreenStream: sourceStream,
-                    screenTrack: track,
-                    sendScreen: Boolean(type === "screen" && track),
+                    screenTrack: outputTrack,
+                    sendScreen: Boolean(type === "screen" && outputTrack),
                 });
                 break;
             }
@@ -1693,17 +1700,23 @@ export class Rtc {
     }
 
     /**
-     * @param {RtcSession} session
-     * @param {String} [videoType]
+     * @param {import("models").RtcSession} session
+     * @param {Object} [param1]
+     * @param {String} [param1.type]
+     * @param {boolean} [param1.cleanup]
      */
-    removeVideoFromSession(session, videoType = false) {
-        if (videoType) {
-            this.updateActiveSession(session, videoType);
-            closeStream(session.videoStreams.get(videoType));
-            session.videoStreams.delete(videoType);
+    removeVideoFromSession(session, { type, cleanup = true } = {}) {
+        if (type) {
+            this.updateActiveSession(session, type);
+            if (cleanup) {
+                closeStream(session.videoStreams.get(type));
+            }
+            session.videoStreams.delete(type);
         } else {
-            for (const stream of session.videoStreams.values()) {
-                closeStream(stream);
+            if (cleanup) {
+                for (const stream of session.videoStreams.values()) {
+                    closeStream(stream);
+                }
             }
             session.videoStreams.clear();
         }
