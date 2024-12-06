@@ -2959,6 +2959,50 @@ options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
 });
 
 /**
+ * Changes the copyright content accordingly when changing the footer content width
+ *
+ * Since the copyright is displayed as a view, the page needs to be reloaded to reflect any changes.
+ * To ensure that the user can see the changes when adjusting the footer content width,
+ * we will update the class in the DOM during preview (hoover) mode.
+ *
+ */
+options.registry.ContainerWidthFooter = options.registry.ContainerWidth.extend({
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+    /**
+     * @override
+     */
+    selectClass: async function (previewMode, widgetValue, params) {
+        this._updateCopyrightSection(...arguments);
+        await this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    /**
+     * Update the copyright section class (also the preview mode)
+     */
+    _updateCopyrightSection: function (previewMode, widgetValue, params) {
+        const possibleClasses = params.possibleValues.filter(className => className !== '').map(className => `.${className}`).join(', ');
+        const copyrightEl = this.$target[0].closest('footer').querySelector(`.o_footer_copyright :is(${possibleClasses})`);
+
+        if (!copyrightEl) return;  // Exit early if no copyright
+
+        copyrightEl.classList.remove(...params.possibleValues.filter(className => className !== ''), 'o_container_preview');
+
+        if (previewMode === "reset") {
+            copyrightEl.classList.add(params.activeValue);
+        } else if (previewMode) {
+            copyrightEl.classList.add(widgetValue, 'o_container_preview');
+        } else {
+            copyrightEl.classList.add(widgetValue);
+        }
+    }
+})
+
+/**
  * Handles the edition of snippet's anchor name.
  */
 options.registry.anchor = options.Class.extend({
