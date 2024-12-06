@@ -185,7 +185,7 @@ class AccountReport(models.Model):
     @api.constrains('line_ids')
     def _validate_parent_sequence(self):
         previous_lines = self.env['account.report.line']
-        for line in self.line_ids:
+        for line in self.line_ids.sorted('sequence'):
             if line.parent_id and line.parent_id not in previous_lines:
                 raise ValidationError(
                     _('Line "%(line)s" defines line "%(parent_line)s" as its parent, but appears before it in the report. '
