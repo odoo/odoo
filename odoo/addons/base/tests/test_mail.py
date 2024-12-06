@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+from lxml import etree, html
 
 import re
 
@@ -17,6 +18,7 @@ from odoo.tools.mail import (
     single_email_re,
     formataddr,
     prepend_html_content,
+    tag_quote,
 )
 
 from . import test_mail_examples
@@ -365,6 +367,30 @@ class TestSanitizer(BaseCase):
     #         self.assertIn(ext, new_html)
     #     for ext in test_mail_examples.MSOFFICE_1_OUT:
     #         self.assertNotIn(ext, new_html)
+
+    def test_multi_quote_detection(self):
+        doc = """
+            <div>
+                <div>
+                    My name is Green
+                </div>
+                <div> Hello </div>
+                --</br>Signature Hello </span>
+            </div>
+        """
+        doc = html.fromstring(doc)
+
+        for el in doc.iter(tag=etree.Element):
+            tag_quote(el)
+
+        res1 = doc
+
+        for el in doc.iter(tag=etree.Element):
+            tag_quote(el)
+
+        res2 = doc
+
+        self.assertEqual(res1, res2)
 
 
 @tagged('mail_sanitize')
