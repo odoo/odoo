@@ -107,6 +107,7 @@ __all__ = [
     'topological_sort',
     'unique',
     'ustr',
+    'real_time',
 ]
 
 _logger = logging.getLogger(__name__)
@@ -123,6 +124,8 @@ objectify.set_default_parser(default_parser)
 
 NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
+# ensure we have a non patched time for query times when using freezegun
+real_time = time.time.__call__  # type: ignore
 
 class Sentinel(enum.Enum):
     """Class for typing parameters with a sentinel as a default"""
@@ -904,7 +907,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
             perf_t0 = thread_info.get('perf_t0')
             remaining_time = None
             if query_time is not None and perf_t0:
-                remaining_time = '%.3f' % (time.time() - perf_t0 - query_time)
+                remaining_time = '%.3f' % (real_time() - perf_t0 - query_time)
                 query_time = '%.3f' % query_time
             # qc:query_count qt:query_time pt:python_time (aka remaining time)
             code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s) (qc:%s qt:%s pt:%s)" %

@@ -32,7 +32,7 @@ import odoo
 from . import tools
 from .tools import SQL
 from .tools.func import frame_codeinfo, locked
-from .tools.misc import Callbacks
+from .tools.misc import Callbacks, real_time
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -58,9 +58,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_array_type((1231,), 'f
 
 _logger = logging.getLogger(__name__)
 _logger_conn = _logger.getChild("connection")
-
-# ensure we have a non patched time for query times when using freezegun
-real_time = time.time.__call__  # type: ignore
 
 re_from = re.compile(r'\bfrom\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
 re_into = re.compile(r'\binto\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
