@@ -53,6 +53,12 @@ class TestHrAttendanceOvertime(TransactionCase):
             'tz': 'Europe/Brussels',
         })
 
+    def _set_calendar_tz(self, employee, tz):
+        employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'America Calendar',
+            'tz': tz,
+        })
+
     def test_overtime_company_settings(self):
         self.company.hr_attendance_overtime = False
 
@@ -160,6 +166,7 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     def test_overtime_far_timezones(self):
         # Since dates have to be stored in utc these are the tokyo timezone times for 7-12 / 13-18 (UTC+9)
+        self._set_calendar_tz(self.jpn_employee, 'Asia/Tokyo')
         self.env['hr.attendance'].create({
             'employee_id': self.jpn_employee.id,
             'check_in': datetime(2021, 1, 3, 22, 0),
@@ -380,4 +387,21 @@ class TestHrAttendanceOvertime(TransactionCase):
         # Total overtime for that day : 5 hours
         overtime_record = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
                                                               ('date', '=', datetime(2024, 5, 28))])
+        self.assertAlmostEqual(overtime_record.duration, 5)
+
+        # Check that the calendar's timezones take priority and that overtimes and attendances dates are consistent
+        self._set_calendar_tz(self.europe_employee, 'America/New_York')
+        self.europe_employee.flush_recordset(['resource_calendar_id'])  # Needed because we're testing an SQL query
+        early_attendance2 = self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2024, 5, 30, 3, 0),  # 23:00 NY prev day -- attendance should be for the 29th
+            'check_out': datetime(2024, 5, 30, 16, 0)  # 12:00 NY
+        })
+
+        # expected = 5 (13 - 8 work) -- since attendance is for the next day the lunch isn't accounted for
+        self.assertAlmostEqual(early_attendance2.overtime_hours, 5)
+
+        # Total overtime for the 29th (not the 30th): 5 hours
+        overtime_record2 = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
+                                                              ('date', '=', datetime(2024, 5, 29))])
         self.assertAlmostEqual(overtime_record.duration, 5)
