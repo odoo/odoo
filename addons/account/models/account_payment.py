@@ -562,7 +562,7 @@ class AccountPayment(models.Model):
     @api.depends('payment_method_line_id')
     def _compute_outstanding_account_id(self):
         for pay in self:
-            pay.outstanding_account_id = pay.payment_method_line_id.payment_account_id
+            pay.outstanding_account_id = pay.payment_method_line_id.payment_account_id or (self._context.get('keep_outstanding_account') and pay.outstanding_account_id)
 
     @api.depends('journal_id', 'partner_id', 'partner_type')
     def _compute_destination_account_id(self):
