@@ -45,9 +45,9 @@
             </div>
         </div>
 
-        <div t-else="" class="o_breadcrumb d-flex gap-1 text-truncate">
+        <div t-else="" class="o_breadcrumb d-flex gap-1">
             <div class="o_last_breadcrumb_item active d-flex fs-4 min-w-0 align-items-center">
-                <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
+                <span class="min-w-0" t-call="web.Breadcrumb.Name"/>
             </div>
             <t t-call="web.Breadcrumb.Actions"/>
         </div>
