@@ -16,3 +16,4 @@ Cuong NGUYEN MINH TRAN MANH cuong.nmtm@komit-consulting.com https://github.com/c
 Duc TRUONG DINH MINH duc.tdm@komit-consulting.com https://github.com/DucTruongKomit
 Hieu VO MINH BAO hieu.vmb@komit-consulting.com https://github.com/hieulucky111
 Jean-Charles DRUBAY jc@komit-consulting.com https://github.com/jcdrubay
+QUOC PHAM NGOC quoc-pn@komit-consulting.com https://github.com/quoc-pn
