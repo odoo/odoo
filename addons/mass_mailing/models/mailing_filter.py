@@ -11,6 +11,7 @@ class MailingFilter(models.Model):
     """ This model stores mass mailing or marketing campaign domain as filters
     (quite similar to 'ir.filters' but dedicated to mailing apps). Frequently
     used domains can be reused easily. """
+    _name = 'mailing.filter'
     _description = 'Mailing Favorite Filters'
     _order = 'create_date DESC'
 

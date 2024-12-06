@@ -7,6 +7,7 @@ from odoo.addons.mail.tools.discuss import Store
 class MailCannedResponse(models.Model):
     """ Canned Response: content that automatically replaces shortcuts of your
     choosing. This content can still be adapted before sending your message. """
+    _name = 'mail.canned.response'
     _description = "Canned Response"
     _order = "id desc"
     _rec_name = "source"

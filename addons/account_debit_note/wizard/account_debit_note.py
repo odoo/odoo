@@ -10,6 +10,7 @@ class AccountDebitNote(models.TransientModel):
     Opposite of a Credit Note, but different from a regular invoice as you need the link to the original invoice.
     In some cases, also used to cancel Credit Notes
     """
+    _name = 'account.debit.note'
     _description = 'Add Debit Note wizard'
 
     move_ids = fields.Many2many('account.move', 'account_move_debit_move', 'debit_id', 'move_id',

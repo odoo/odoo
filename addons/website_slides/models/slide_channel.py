@@ -271,6 +271,7 @@ class SlideChannelPartner(models.Model):
 
 class SlideChannel(models.Model):
     """ A channel is a container of slides. """
+    _name = 'slide.channel'
     _description = 'Course'
     _inherit = [
         'rating.mixin',

@@ -234,6 +234,7 @@ class WebsitePublishedMixin(models.AbstractModel):
 
 
 class WebsitePublishedMultiMixin(WebsitePublishedMixin):
+    _name = 'website.published.multi.mixin'
     _inherit = ['website.published.mixin', 'website.multi.mixin']
     _description = 'Multi Website Published Mixin'
 
@@ -289,6 +290,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
 
 class WebsiteSearchableMixin(models.AbstractModel):
     """Mixin to be inherited by all models that need to searchable through website"""
+    _name = 'website.searchable.mixin'
     _description = 'Website Searchable Mixin'
 
     @api.model

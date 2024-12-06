@@ -11,6 +11,7 @@ class Auth_TotpDevice(models.Model):
     # use a different model to benefit from the secured methods while not mixing
     # two different concepts
 
+    _name = 'auth_totp.device'
     _inherit = ["res.users.apikeys"]
     _description = "Authentication Device"
     _auto = False

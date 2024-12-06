@@ -131,7 +131,7 @@ class IrModel(models.Model):
 class IrModelFields(models.Model):
     """ fields configuration for form builder """
     _description = 'Fields'
-    _inherit = ['ir.model.fields']
+    _inherit = 'ir.model.fields'
 
     def init(self):
         # set all existing unset website_form_blacklisted fields to ``true``

@@ -16,6 +16,7 @@ class ResPartnerIap(models.Model):
     IAP information.
     """
 
+    _name = 'res.partner.iap'
     _description = 'Partner IAP'
 
     partner_id = fields.Many2one('res.partner', string='Partner',

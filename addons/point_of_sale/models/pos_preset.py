@@ -5,6 +5,7 @@ from collections import defaultdict
 
 
 class PosPreset(models.Model):
+    _name = 'pos.preset'
     _inherit = ['pos.load.mixin']
     _description = 'Easily load a set of configuration options'
 

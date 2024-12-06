@@ -28,6 +28,7 @@ class MailThreadPhone(models.AbstractModel):
       * ``_phone_reset_blacklisted``: reactivate recordset (even if not blacklisted
         this method can be called safely);
     """
+    _name = 'mail.thread.phone'
     _description = 'Phone Blacklist Mixin'
     _inherit = ['mail.thread']
     _phone_search_min_length = 3

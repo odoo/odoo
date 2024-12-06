@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 class MaintenanceStage(models.Model):
     """ Model for case stages. This models the main stages of a Maintenance Request management flow. """
 
+    _name = 'maintenance.stage'
     _description = 'Maintenance Stage'
     _order = 'sequence, id'
 
