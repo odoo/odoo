@@ -144,6 +144,7 @@
                 <field name="product_tmpl_id" />
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="company_id" groups="base.group_multi_company"/>
+                <field name="account_move_id"/>
                 <separator/>
                 <filter string="Incoming" name="incoming" domain="[('stock_move_id.location_id.usage', 'not in', ('internal', 'transit')), ('stock_move_id.location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
                 <filter string="Outgoing" name="outgoing" domain="[('stock_move_id.location_id.usage', 'in', ('internal', 'transit')), ('stock_move_id.location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>

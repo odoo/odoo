@@ -4,5 +4,15 @@
         <function model="ir.default" name="set" eval="('product.category', 'property_cost_method', 'standard')"/>
         <function model="ir.default" name="set" eval="('product.category', 'property_valuation', 'manual_periodic')"/>
     </data>
+    <data>
+        <record id="action_stock_valuation_entry" model="ir.actions.server">
+            <field name="name">Create Stock Valuation Entry</field>
+            <field name="model_id" ref="stock_account.model_stock_valuation_layer"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="binding_model_id" ref="stock_account.model_stock_valuation_layer"/>
+            <field name="state">code</field>
+            <field name="code">action = records._create_grouped_accounting_entries()</field>
+        </record>
+    </data>
 </odoo>
 
