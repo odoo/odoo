@@ -235,7 +235,7 @@ export class PosStore extends Reactive {
         this.config = this.data.models["pos.config"].getFirst();
         this.company = this.data.models["res.company"].getFirst();
         this.user = this.data.models["res.users"].getFirst();
-        this.currency = this.data.models["res.currency"].getFirst();
+        this.currency = this.config.currency_id;
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
 
@@ -1627,10 +1627,10 @@ export class PosStore extends Reactive {
 
         const printingChanges = {
             table_name: order.table_id ? order.table_id.table_number : "",
-            config_name: order.config_id.name,
+            config_name: order.config.name,
             time: order.write_date ? time : "",
             tracking_number: order.tracking_number,
-            takeaway: order.config_id.takeaway && order.takeaway,
+            takeaway: order.config.takeaway && order.takeaway,
             employee_name: order.employee_id?.name || order.user_id?.name,
             order_note: order.general_note,
             diningModeUpdate: diningModeUpdate,

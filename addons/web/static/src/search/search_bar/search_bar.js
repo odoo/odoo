@@ -34,6 +34,10 @@ export class SearchBar extends Component {
                 "search-bar-additional-menu": { optional: true },
             },
         },
+        toggler: {
+            type: Object,
+            optional: true,
+        },
     };
     static defaultProps = {
         autofocus: true,
@@ -45,6 +49,8 @@ export class SearchBar extends Component {
         this.searchItemsFields = this.env.searchModel.getSearchItems((f) => f.type === "field");
         this.root = useRef("root");
         this.ui = useService("ui");
+
+        this.visibilityState = useState(this.props.toggler?.state || { showSearchBar: true });
 
         // core state
         this.state = useState({
@@ -67,7 +73,7 @@ export class SearchBar extends Component {
         this.inputRef =
             this.env.config.disableSearchBarAutofocus || !this.props.autofocus
                 ? useRef("autofocus")
-                : useAutofocus();
+                : useAutofocus({ mobile: this.props.toggler !== undefined }); // only force the focus on touch devices when the toggler is present on small devices
 
         useBus(this.env.searchModel, "focus-search", () => {
             this.inputRef.el.focus();

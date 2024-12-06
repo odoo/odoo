@@ -453,14 +453,7 @@ export class SelectionPlugin extends Plugin {
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         if (selection) {
             if (documentSelectionIsInEditable || selection.anchorNode === null) {
-                if (
-                    selection.anchorNode !== anchorNode ||
-                    selection.focusNode !== focusNode ||
-                    selection.anchorOffset !== anchorOffset ||
-                    selection.focusOffset !== focusOffset
-                ) {
-                    selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
-                }
+                selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
                 this.activeSelection = this.makeActiveSelection(selection, true);
             } else {
                 let range = new Range();

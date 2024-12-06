@@ -74,7 +74,7 @@ export class PosOrder extends Base {
     }
 
     get currency() {
-        return this.models["res.currency"].getFirst();
+        return this.config.currency_id;
     }
 
     get pickingType() {
@@ -109,8 +109,8 @@ export class PosOrder extends Base {
      * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
      */
     get taxTotals() {
-        const currency = this.config_id.currency_id;
-        const company = this.company_id;
+        const currency = this.config.currency_id;
+        const company = this.company;
         const extraValues = { currency_id: currency };
         const orderLines = this.lines;
 

@@ -99,7 +99,7 @@ export class PosOrderline extends Base {
     }
 
     get currency() {
-        return this.models["res.currency"].getFirst();
+        return this.order_id.currency;
     }
 
     get pickingType() {

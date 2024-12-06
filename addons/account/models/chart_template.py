@@ -470,11 +470,12 @@ class AccountChartTemplate(models.AbstractModel):
             if model in data:
                 data[model] = data.pop(model)
 
-        # Remove data of unknown fields present in the company template
-        company_data = data.get('res.company')
-        if company_data and not self.env.context.get('l10n_check_fields_complete'):
-            for fname in list(company_data.get(company.id)):
-                if fname not in company._fields:
+        if data.get('res.company', {}).get(company.id):
+            # Filter out default values that we don't want to ignore if the field is not present, in any case.
+            company_data_to_filter = {'account_production_wip_account_id', 'account_production_wip_overhead_account_id'}
+            # Remove data of unknown fields present in the company template
+            for fname in list(data['res.company'][company.id]):
+                if fname not in company._fields and (not self.env.context.get('l10n_check_fields_complete') or fname in company_data_to_filter):
                     del data['res.company'][company.id][fname]
 
         # Translate the untranslatable fields we want to translate anyway
