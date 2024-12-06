@@ -2,9 +2,9 @@ import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { isVisible } from "@web/core/utils/ui";
+import { setUtmsHtmlDataset } from "@website/core/utils";
 import { Popup } from "@website/interactions/popup/popup";
 import { cloneContentEls } from "@website/js/utils";
-// import { setUtmsHtmlDataset } from "@website/js/content/inject_dom";
 
 // Extending the Popup class with cookiebar functionality.
 // This allows for refusing optional cookies for now and can be
@@ -95,8 +95,7 @@ export class CookiesBar extends Popup {
                 cookie.set(trackingFields[key], value, 31 * 24 * 60 * 60, "optional");
             }
         }
-        // TODO: fix import
-        // setUtmsHtmlDataset();
+        setUtmsHtmlDataset();
     }
 
     /**

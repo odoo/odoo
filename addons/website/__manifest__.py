@@ -222,6 +222,7 @@
             'website/static/src/snippets/observing_cookie_mixin.js',
         ],
         'web.assets_frontend_minimal': [
+            'website/static/src/core/utils.js',
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
@@ -229,6 +230,7 @@
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
+            ('remove', 'website/static/src/core/utils.js'),
             ('remove', 'website/static/src/js/content/inject_dom.js'),
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
