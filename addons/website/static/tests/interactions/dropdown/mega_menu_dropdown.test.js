@@ -1,11 +1,10 @@
 import { expect, test } from "@odoo/hoot";
+import { hover, pointerDown } from "@odoo/hoot-dom";
 
 import {
     startInteractions,
     setupInteractionWhiteList,
 } from "../../core/helpers";
-
-import { hover, pointerDown } from "@odoo/hoot-dom";
 
 setupInteractionWhiteList("website.mega_menu_dropdown");
 

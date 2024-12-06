@@ -10,6 +10,12 @@ export class HoverableDropdown extends Interaction {
             "t-on-mouseenter": this.onMouseEnter,
             "t-on-mouseleave": this.onMouseLeave,
         },
+        ".dropdown-menu": {
+            "t-att-style": () => ({
+                "top": this.isSmall ? "" : "unset",
+                "margin-top": this.isSmall ? "" : "0",
+            }),
+        },
         _window: {
             "t-on-resize": this.onResize,
         },
@@ -17,7 +23,6 @@ export class HoverableDropdown extends Interaction {
 
     setup() {
         this.dropdownMenuEls = this.el.querySelectorAll(".dropdown-menu");
-        this.dropdownToggleEls = this.el.querySelectorAll(".dropdown-toggle");
     }
 
     start() {
@@ -31,8 +36,8 @@ export class HoverableDropdown extends Interaction {
     updateDropdownVisibility(ev, show) {
         const dropdownToggleEl = ev.currentTarget.querySelector(".dropdown-toggle");
         if (
-            !dropdownToggleEl
-            || uiUtils.getSize() < SIZES.LG
+            this.isSmall
+            || !dropdownToggleEl
             || ev.currentTarget.closest(".o_extra_menu_items")
         ) {
             return;
@@ -72,11 +77,9 @@ export class HoverableDropdown extends Interaction {
     }
 
     onResize() {
-        const isSmall = uiUtils.getSize() < SIZES.LG;
+        this.isSmall = uiUtils.getSize() < SIZES.LG;
         for (const dropdownMenuEl of this.dropdownMenuEls) {
             dropdownMenuEl.setAttribute("data-bs-popper", "none");
-            dropdownMenuEl.setAttribute("margin-top", isSmall ? "" : "0");
-            dropdownMenuEl.setAttribute("top", isSmall ? "" : "unset");
         }
     }
 }

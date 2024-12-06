@@ -7,12 +7,11 @@ import {
 
 import {
     setupTest,
-    setupEnd,
+    checkHeader,
     customScroll,
     getTemplateWithoutHideOnScroll,
     getTemplateWithHideOnScroll,
-    checkHeader
-} from "./header_utils";
+} from "./helpers";
 
 setupInteractionWhiteList("website.header_fixed");
 
@@ -40,9 +39,7 @@ test("[scroll] Template without o_header_hide_on_scroll", async () => {
     const wrapwrap = el.querySelector("#wrapwrap");
     const header = el.querySelector("header");
     const main = el.querySelector("main")
-    setupTest(core, wrapwrap);
-
-    await setupEnd();
+    await setupTest(core, wrapwrap);
     expect(checkHeader(header, main, core, behavior1)).toBe(true);
     await customScroll(wrapwrap, 0, 10);
     expect(checkHeader(header, main, core, behavior2)).toBe(true);
@@ -59,9 +56,7 @@ test("[scroll] Template with o_header_hide_on_scroll", async () => {
     const wrapwrap = el.querySelector("#wrapwrap");
     const header = el.querySelector("header");
     const main = el.querySelector("main")
-    setupTest(core, wrapwrap);
-
-    await setupEnd();
+    await setupTest(core, wrapwrap);
     expect(checkHeader(header, main, core, behavior1)).toBe(true);
     await customScroll(wrapwrap, 0, 10);
     expect(checkHeader(header, main, core, behavior2)).toBe(true);

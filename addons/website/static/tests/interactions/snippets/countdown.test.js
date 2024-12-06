@@ -122,11 +122,11 @@ test("countdown is stopped correctly", async () => {
     const { core, el } = await startInteractions(getTemplate());
     const wrapEl = el.querySelector(".s_countdown_canvas_wrapper");
     await advanceTime(0);
-    expect(wrapEl.querySelectorAll(".s_countdown_canvas_flex").length).toBe(4);
+    expect(wrapEl.querySelectorAll(".s_countdown_canvas_flex")).toHaveLength(4);
     core.stopInteractions();
-    expect(!!wrapEl.querySelector(".s_countdown_end_redirect_message")).toBe(false);
-    expect(!!wrapEl.querySelector(".s_countdown_text_wrapper")).toBe(false);
-    expect(!!wrapEl.querySelector(".s_countdown_canvas_flex")).toBe(false);
-    expect(wrapEl.querySelector(".s_countdown_end_message")?.classList.contains("d-none")).toBe(true);
-    expect(wrapEl.querySelector(".s_countdown_canvas_wrapper")?.classList.contains("d-none")).toBe(false);
+    expect(!!wrapEl).toBe(true);
+    expect(wrapEl.querySelectorAll(".s_countdown_canvas_flex")).toHaveLength(0);
+    expect(wrapEl.querySelectorAll(".s_countdown_end_message")).toHaveLength(0);
+    expect(wrapEl.querySelectorAll(".s_countdown_text_wrapper")).toHaveLength(0);
+    expect(wrapEl.querySelectorAll(".s_countdown_end_redirect_message")).toHaveLength(0);
 });

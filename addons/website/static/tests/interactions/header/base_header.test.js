@@ -7,7 +7,7 @@ import {
 
 import {
     getTemplateWithoutHideOnScroll,
-} from "./header_utils";
+} from "./helpers";
 
 setupInteractionWhiteList("website.header_standard");
 

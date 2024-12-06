@@ -1,7 +1,14 @@
 import { animationFrame, scroll } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
-export const setupTest = function (core, wrapwrap) {
+const endTransition = async function () {
+    // Ensure we finish the transition
+    await animationFrame();
+    // Ensure the class "o_transitioning" is removed
+    await advanceTime(500);
+}
+
+export const setupTest = async function (core, wrapwrap) {
     wrapwrap.style.height = "800px";
     wrapwrap.style.width = "100%";
     wrapwrap.style.overflow = "scroll";
@@ -9,13 +16,7 @@ export const setupTest = function (core, wrapwrap) {
     const specialStyle = document.createElement("style");
     specialStyle.innerText = `.hidden {display: none !important;}`
     wrapwrap.closest("html").querySelector("head").appendChild(specialStyle);
-}
-
-export const setupEnd = async function () {
-    // Ensure we finish the transition
-    await animationFrame();
-    // Ensure the class "o_transitioning" is removed
-    await advanceTime(500);
+    await endTransition();
 }
 
 export const customScroll = async function (scrollingElement, start, end) {
@@ -27,10 +28,7 @@ export const customScroll = async function (scrollingElement, start, end) {
     document.dispatchEvent(new Event("scroll"));
     await scroll(scrollingElement, { y: end });
     document.dispatchEvent(new Event("scroll"));
-    // Ensure we finish the transition
-    await animationFrame();
-    // Ensure the class "o_transitioning" is removed
-    await advanceTime(500);
+    await endTransition();
 }
 
 export const checkHeader = function (header, main, core, expectedStatus) {
