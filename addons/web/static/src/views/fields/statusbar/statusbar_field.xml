@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+<<<<<<< 17.0
     <t t-name="web.StatusBarField.Dropdown">
         <Dropdown toggler="'parent'">
             <t t-foreach="items" t-as="item" t-key="item.value">
@@ -9,10 +10,138 @@
                 >
                     <span t-esc="item.label" />
                 </DropdownItem>
+||||||| e06d9f1133c56de4b2e28b3e6c8fa2ca1bf527d0
+
+    <t t-name="web.StatusBarField" owl="1">
+        <div class="o_statusbar_status">
+            <t t-set="items" t-value="computeItems()" />
+
+            <t t-if="items.folded.length">
+                <button type="button" class="btn dropdown-toggle text-uppercase" t-att-class="{ 'o_arrow_button': !env.isSmall, 'btn-primary': env.isSmall }">
+                    <Dropdown toggler="'parent'">
+                        <t t-foreach="items.folded" t-as="item" t-key="item.id">
+                            <DropdownItem class="getDropdownItemClassNames(item)" onSelected="() => this.selectItem(item)">
+                                <t t-esc="item.name" />
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                    <t t-if="env.isSmall">
+                        <t t-esc="currentName" />
+                    </t>
+                    <t t-else="">More</t>
+                </button>
+=======
+
+    <t t-name="web.StatusBarField" owl="1">
+        <div role="radiogroup" class="o_statusbar_status" aria-label="Statusbar">
+            <t t-set="items" t-value="computeItems()" />
+
+            <t t-if="items.folded.length">
+                <button type="button" class="btn dropdown-toggle text-uppercase" t-att-class="{ 'o_arrow_button': !env.isSmall, 'btn-primary': env.isSmall }">
+                    <Dropdown toggler="'parent'">
+                        <t t-foreach="items.folded" t-as="item" t-key="item.id">
+                            <DropdownItem class="getDropdownItemClassNames(item)" onSelected="() => this.selectItem(item)">
+                                <t t-esc="item.name" />
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                    <t t-if="env.isSmall">
+                        <t t-esc="currentName" />
+                    </t>
+                    <t t-else="">More</t>
+                </button>
+>>>>>>> 25fb3e0dc4eb3f5e285fc923ca49ec65f95c8f03
             </t>
+<<<<<<< 17.0
         </Dropdown>
         <!-- Must be below the dropdown menu to align with the caret (if any) -->
         <t t-esc="label" />
+||||||| e06d9f1133c56de4b2e28b3e6c8fa2ca1bf527d0
+
+            <t t-foreach="items.unfolded.reverse()" t-as="item" t-key="item.id">
+                <t t-if="item.isSelected">
+                    <button
+                        type="button"
+                        class="btn o_arrow_button_current o_arrow_button disabled text-uppercase"
+                        disabled="disabled"
+                        role="radio"
+                        aria-label="Current state"
+                        aria-checked="true"
+                        aria-current="step"
+                        t-att-disabled="isDisabled"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                    />
+                </t>
+                <t t-elif="isDisabled">
+                    <button
+                        type="button"
+                        class="btn o_arrow_button disabled text-uppercase"
+                        disabled="disabled"
+                        role="radio"
+                        aria-label="Not active state"
+                        aria-checked="false"
+                        t-att-disabled="isDisabled"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                    />
+                </t>
+                <t t-else="">
+                    <button
+                        type="button"
+                        class="btn o_arrow_button text-uppercase"
+                        role="radio"
+                        aria-label="Not active state, click to change it"
+                        aria-checked="false"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                        t-on-click="() => this.selectItem(item)"
+                    />
+                </t>
+            </t>
+        </div>
+=======
+
+            <t t-foreach="items.unfolded.reverse()" t-as="item" t-key="item.id">
+                <t t-if="item.isSelected">
+                    <button
+                        type="button"
+                        class="btn o_arrow_button_current o_arrow_button disabled text-uppercase"
+                        disabled="disabled"
+                        role="radio"
+                        aria-checked="true"
+                        aria-current="step"
+                        t-att-disabled="isDisabled"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                    />
+                </t>
+                <t t-elif="isDisabled">
+                    <button
+                        type="button"
+                        class="btn o_arrow_button disabled text-uppercase"
+                        disabled="disabled"
+                        role="radio"
+                        aria-checked="false"
+                        t-att-disabled="isDisabled"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                    />
+                </t>
+                <t t-else="">
+                    <button
+                        type="button"
+                        class="btn o_arrow_button text-uppercase"
+                        role="radio"
+                        aria-checked="false"
+                        t-att-data-value="item.id"
+                        t-esc="item.name"
+                        t-on-click="() => this.selectItem(item)"
+                    />
+                </t>
+            </t>
+        </div>
+>>>>>>> 25fb3e0dc4eb3f5e285fc923ca49ec65f95c8f03
     </t>
 
     <t t-name="web.StatusBarField">
