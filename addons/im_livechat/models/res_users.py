@@ -12,15 +12,26 @@ class ResUsers(models.Model):
 
     livechat_username = fields.Char(string='Livechat Username', compute='_compute_livechat_username', inverse='_inverse_livechat_username', store=False)
     livechat_lang_ids = fields.Many2many('res.lang', string='Livechat Languages', compute='_compute_livechat_lang_ids', inverse='_inverse_livechat_lang_ids', store=False)
+    livechat_tag_ids = fields.Many2many("im_livechat.tag", string="Livechat tags",
+        compute="_compute_livechat_tag_ids", inverse="_inverse_livechat_tag_ids", store=False)
     has_access_livechat = fields.Boolean(compute='_compute_has_access_livechat', string='Has access to Livechat', store=False, readonly=True)
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['livechat_username', 'livechat_lang_ids', 'has_access_livechat']
+        return super().SELF_READABLE_FIELDS + [
+            "livechat_username",
+            "livechat_lang_ids",
+            "livechat_tag_ids",
+            "has_access_livechat"
+        ]
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['livechat_username', 'livechat_lang_ids']
+        return super().SELF_WRITEABLE_FIELDS + [
+            "livechat_username",
+            "livechat_tag_ids",
+            "livechat_lang_ids"
+        ]
 
     @api.depends('res_users_settings_id.livechat_username')
     def _compute_livechat_username(self):
@@ -41,6 +52,16 @@ class ResUsers(models.Model):
         for user in self:
             settings = self.env['res.users.settings']._find_or_create_for_user(user)
             settings.livechat_lang_ids = user.livechat_lang_ids
+
+    @api.depends("res_users_settings_id.livechat_tag_ids")
+    def _compute_livechat_tag_ids(self):
+        for user in self:
+            user.livechat_tag_ids = user.res_users_settings_id.livechat_tag_ids
+
+    def _inverse_livechat_tag_ids(self):
+        for user in self:
+            settings = self.env["res.users.settings"]._find_or_create_for_user(user)
+            settings.livechat_tag_ids = user.livechat_tag_ids
 
     def _compute_has_access_livechat(self):
         for user in self.sudo():

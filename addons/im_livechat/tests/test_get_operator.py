@@ -8,8 +8,9 @@ from unittest.mock import patch
 
 @odoo.tests.tagged("-at_install", "post_install")
 class TestGetOperator(HttpCase):
-    def _create_operator(self, lang_code=None, country_code=None):
+    def _create_operator(self, lang_code=None, country_code=None, tag=None):
         operator = new_test_user(self.env, login=f"operator_{lang_code or country_code}_{self.operator_id}")
+        operator.res_users_settings_id.livechat_tag_ids = tag
         operator.partner_id = self.env["res.partner"].create(
             {
                 "name": f"Operator {lang_code or country_code}",
@@ -221,3 +222,38 @@ class TestGetOperator(HttpCase):
         self._create_chat(livechat_channel, second_operator)
         self._create_chat(livechat_channel, second_operator)
         self.assertEqual(first_operator, livechat_channel._get_operator())
+
+    def test_get_by_tag(self):
+        dog_expert_tag = self.env["im_livechat.tag"].create({"name": "dog"})
+        cat_expert_tag = self.env["im_livechat.tag"].create({"name": "cat"})
+        dog_expert_operator = self._create_operator(tag=dog_expert_tag)
+        cat_expert_operator = self._create_operator(tag=cat_expert_tag)
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [dog_expert_operator.id, cat_expert_operator.id],
+            }
+        )
+        self.assertEqual(dog_expert_operator, livechat_channel._get_operator(tag_ids=dog_expert_tag))
+        self.assertEqual(cat_expert_operator, livechat_channel._get_operator(tag_ids=cat_expert_tag))
+
+    def test_get_by_tag_amongst_same_language(self):
+        dog_expert_tag = self.env["im_livechat.tag"].create({"name": "dog"})
+        cat_expert_tag = self.env["im_livechat.tag"].create({"name": "cat"})
+        fr_dog_expert_operator = self._create_operator("fr_FR", tag=dog_expert_tag)
+        fr_cat_expert_operator = self._create_operator("fr_FR", tag=cat_expert_tag)
+        en_dog_expert_operator = self._create_operator("en_US", tag=dog_expert_tag)
+        en_cat_expert_operator = self._create_operator("en_US", tag=cat_expert_tag)
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [
+                    fr_dog_expert_operator.id,
+                    fr_cat_expert_operator.id,
+                    en_dog_expert_operator.id,
+                    en_cat_expert_operator.id
+                ],
+            }
+        )
+        self.assertEqual(fr_dog_expert_operator, livechat_channel._get_operator(lang="fr_FR", tag_ids=dog_expert_tag))
+        self.assertEqual(en_cat_expert_operator, livechat_channel._get_operator(lang="en_US", tag_ids=cat_expert_tag))

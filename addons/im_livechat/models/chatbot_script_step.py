@@ -31,6 +31,8 @@ class ChatbotScriptStep(models.Model):
         ('free_input_single', 'Free Input'),
         ('free_input_multi', 'Free Input (Multi-Line)'),
     ], default='text', required=True)
+    livechat_tag_ids = fields.Many2many("im_livechat.tag", string="Livechat tags",
+        help="When forwarding live chat conversations, the chatbot will prioritize users with matching tags.")
     # answers
     answer_ids = fields.One2many(
         'chatbot.script.answer', 'script_step_id',
@@ -336,7 +338,8 @@ class ChatbotScriptStep(models.Model):
             # sudo: res.lang - visitor can access their own lang
             human_operator = discuss_channel.livechat_channel_id.sudo()._get_operator(
                 lang=discuss_channel.livechat_visitor_id.sudo().lang_id.code if hasattr(discuss_channel, "livechat_visitor_id") else None,
-                country_id=discuss_channel.country_id.id
+                country_id=discuss_channel.country_id.id,
+                tag_ids=self.livechat_tag_ids
             )
 
         # handle edge case where we found yourself as available operator -> don't do anything

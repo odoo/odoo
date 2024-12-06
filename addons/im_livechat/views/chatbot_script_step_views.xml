@@ -21,6 +21,8 @@
                                 required="step_type != 'forward_operator'"/>
                             <field name="chatbot_script_id" invisible="1"/>
                             <field name="step_type"/>
+                            <field name="livechat_tag_ids" widget="many2many_tags"
+                                invisible="step_type != 'forward_operator'"/>
                             <field name="triggering_answer_ids" widget="chatbot_triggering_answers_widget"
                                     options="{'no_create': True}">
                                 <list>

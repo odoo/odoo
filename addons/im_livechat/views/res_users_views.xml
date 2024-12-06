@@ -16,6 +16,8 @@
                         invisible="not has_access_livechat"
                         options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"
                         widget="many2many_tags"/>
+                    <field name="livechat_tag_ids" string="Online Chat Tags"
+                        invisible="not has_access_livechat" widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
@@ -34,6 +36,7 @@
                             <field name="livechat_lang_ids" string="Online Chat Language"
                                 options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"
                                 widget="many2many_tags"/>
+                            <field name="livechat_tag_ids" string="Online Chat Tags" widget="many2many_tags"/>
                         </group>
                     </xpath>
             </field>
