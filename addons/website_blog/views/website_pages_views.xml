@@ -8,7 +8,7 @@
         <form string="Blog Post">
             <sheet>
                 <div class="oe_button_box" name="button_box" invisible="not active">
-                    <field name="is_published" widget="website_redirect_button"/>
+                    <field name="website_published" widget="website_redirect_button"/>
                 </div>
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <group name="blog_details">
@@ -20,12 +20,23 @@
                     <field name="website_id" groups="website.group_multi_website"/>
                 </group>
                 <group name="publishing_details" string="Publishing Options">
-                    <field name="author_id"/>
-                    <field name="create_date" groups="base.group_no_one"/>
-                    <field name="visits"/>
-                    <field name="post_date"/>
-                    <field name="write_uid"/>
-                    <field name="write_date"/>
+                    <group>
+                        <field name="author_id"/>
+                        <field name="create_date" groups="base.group_no_one"/>
+                        <field name="visits"/>
+                        <field name="write_uid"/>
+                        <field name="write_date"/>
+                        <field name="publish_on" invisible="1"/>
+                        <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"></field>
+                        <label invisible="website_published" for="publish_on" string="Auto publish on"/>
+                        <div invisible="website_published" class="o_row">
+                            <field name="publish_on" widget="datetime" options="{'min_date': datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')}"/>
+                            <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                        </div>
+                    </group>
+                    <div class="alert alert-info w-100" invisible="not publish_on" role="alert">
+                        <small>This post will automatically go live on the specified date</small>
+                    </div>
                 </group>
                 <notebook>
                     <page name="seo" string="SEO" groups="base.group_no_one">
@@ -47,6 +58,8 @@
     <field name="model">blog.post</field>
     <field name="arch" type="xml">
         <kanban js_class="website_pages_kanban" class="o_kanban_mobile" action="open_website_url" type="object" sample="1">
+            <field name="published_date"/>
+            <field name="publish_on"/>
             <templates>
                 <t t-name="card">
                     <div class="row mb-auto">
@@ -59,15 +72,17 @@
                         </div>
                         <field name="blog_id" class="col-4 text-end fw-bolder"/>
                         <div class="col-8">
-                            <i class="fa fa-clock-o me-1" role="img" aria-label="Post date" title="Post date"/><field name="post_date"/>
+                            <i class="fa fa-clock-o me-1" role="img" aria-label="Post date" title="Post date"/>
+                            <span t-esc="record.published_date ? record.published_date.value: record.publish_on.value"/>
                         </div>
                         <div class="col-4 text-end" t-att-title="record.author_id.value">
                             <field name="author_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_avatar rounded"/>
                         </div>
                     </div>
                     <div class="d-flex border-top mt-2 pt-2">
-                        <field name="is_published" widget="boolean_toggle"/>
-                        <t t-if="record.is_published.raw_value">Published</t>
+                        <field name="website_published" widget="boolean_toggle"/>
+                        <t t-if="record.publish_on.raw_value">Scheduled</t>
+                        <t t-elif="record.website_published.raw_value">Published</t>
                         <t t-else="">Not Published</t>
                     </div>
                 </t>
@@ -111,8 +126,8 @@
             <field name="write_date" optional="hide"/>
 
             <field name="is_seo_optimized"/>
-            <field name="is_published"/>
-
+            <field name="website_published" invisible="publish_on and website_published"/>
+            <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
             <field name="website_id" groups="website.group_multi_website"/>
         </list>
     </field>

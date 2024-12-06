@@ -17,9 +17,18 @@
                     </group>
                     <group>
                         <field name="website_indexed"/>
-                        <field name="is_published"/>
-                        <field name="date_publish"/>
+                        <field name="publish_on" invisible="1"/>
+                        <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"></field>
+                        <label invisible="website_published" for="publish_on" string="Auto publish on"/>
+                        <div invisible="website_published" class="o_row">
+                            <field name="publish_on" widget="datetime" options="{'min_date': datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')}"/>
+                            <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                        </div>
+                        
                     </group>
+                    <div class="alert alert-info w-100" invisible="not publish_on" role="alert">
+                        <small>This page will automatically go live on the specified date</small>
+                    </div>
                 </group>
                 <label for="menu_ids" string="Related Menu Items"/>
                 <field name="menu_ids"/>
@@ -41,7 +50,12 @@
                 </div>
 
                 <field name="is_homepage" string="Is Homepage" widget="boolean_toggle" options="{'autosave': False}"/>
-                <field name="is_published" string="Published" widget="boolean_toggle" options="{'autosave': False}" invisible="not can_publish"/>
+                <field invisible="not can_publish" string="Published" name="is_published" widget="boolean_toggle" readonly="publish_on" options="{'autosave': False}"></field>
+                <label invisible="not can_publish or is_published" for="publish_on" string="Auto publish on"/>
+                <div invisible="not can_publish or is_published" class="o_row">
+                    <field name="publish_on" widget="datetime" options="{'min_date': datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')}"/>
+                    <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                </div>
             </group>
         </form>
     </field>
@@ -74,9 +88,6 @@
                 </div>
             </div>
         </xpath>
-        <xpath expr="//group/field[@name='is_published']" position="after">
-            <field name="date_publish" widget="datetime"/>
-        </xpath>
         <xpath expr="//group/*[last()]" position="after"> <!-- Bottom -->
             <label for="website_indexed" string="Indexed"/>
             <div class="o_row">
@@ -106,8 +117,8 @@
             <field name="website_indexed"/>
             <field name="is_in_menu" string="Is In Main Menu"/>
             <field name="is_seo_optimized"/>
-            <field name="is_published"/>
-
+            <field name="website_published" invisible="publish_on and website_published"/>
+            <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
             <field name="create_uid" column_invisible="True"/>
             <field name="write_uid" widget="many2one_avatar" optional="hide"/>
             <field name="write_date" optional="hide"/>
@@ -141,8 +152,9 @@
                     <div class="d-flex"><field name="is_in_menu" widget="boolean"/> In Main Menu</div>
                     <div class="d-flex"><field name="is_seo_optimized" widget="boolean"/> SEO Optimized</div>
                     <div class="d-flex border-top mt-2 pt-2">
-                        <field name="is_published" widget="boolean_toggle"/>
-                        <t t-if="record.is_published.raw_value">Published</t>
+                        <field name="website_published" widget="boolean_toggle"/>
+                        <t t-if="record.publish_on.raw_value">Scheduled</t>
+                        <t t-elif="record.website_published.raw_value">Published</t>
                         <t t-else="">Not Published</t>
                         <button
                             class="btn-link ms-auto p-0"

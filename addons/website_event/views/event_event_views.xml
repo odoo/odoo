@@ -47,6 +47,22 @@
                     <field name="community_menu" invisible="1"/>
                 </div>
             </xpath>
+            <page name="event_notes" position="after">
+                <page name="publishing" string="Publish">
+                    <group>
+                        <field name="publish_on" invisible="1"/>
+                        <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"></field>
+                        <label invisible="website_published" for="publish_on" string="Auto publish on"/>
+                        <div invisible="website_published" class="o_row">
+                            <field name="publish_on" widget="datetime" options="{'min_date': datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')}"/>
+                            <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                        </div>
+                    </group>
+                    <div class="alert alert-info w-100" invisible="not publish_on" role="alert">
+                        <small>This event page will automatically go live on the specified date</small>
+                    </div>
+                </page>
+            </page>
             <field name="tag_ids" position="attributes">
                 <attribute name="domain">['|', ('category_id.website_id', '=', website_id), ('category_id.website_id', '=', False)]</attribute>
                 <attribute name="invisible">not website_id</attribute>

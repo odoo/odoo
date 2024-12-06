@@ -126,6 +126,22 @@
                     <span class="text-muted" invisible="product_variant_count &lt;= 1">Based on variants</span>
                 </div>
             </field>
+            <notebook position="inside">
+                <page name="publishing" string="Publish">
+                    <group>
+                        <field name="publish_on" invisible="1"/>
+                        <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"></field>
+                        <label invisible="website_published" for="publish_on" string="Auto publish on"/>
+                        <div invisible="website_published" class="o_row">
+                            <field name="publish_on" widget="datetime" options="{'min_date': datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')}"/>
+                            <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                        </div>
+                    </group>
+                    <div class="alert alert-info w-100" invisible="not publish_on" role="alert">
+                        <small>This product will automatically go live on the specified date</small>
+                    </div>
+                </page>
+            </notebook>
         </field>
     </record>
 
