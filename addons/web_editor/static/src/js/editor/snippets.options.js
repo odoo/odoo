@@ -5170,7 +5170,9 @@ registry.layout_column = SnippetOptionWidget.extend({
             // Create default button.
             const aEl = document.createElement('a');
             aEl.href = '#';
-            aEl.classList.add('mb-2', 'btn', 'btn-primary');
+            // adding `oe_unbreakable` to prevent button from breaking
+            // when enter event is triggered.
+            aEl.classList.add('mb-2', 'btn', 'btn-primary',"oe_unbreakable");
             aEl.textContent = "Button";
 
             newColumnEl.appendChild(aEl);
