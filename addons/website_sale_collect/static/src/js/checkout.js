@@ -32,10 +32,15 @@ publicWidget.registry.WebsiteSaleCheckout.include({
      */
     _updatePickupLocation(button, location, jsonLocation) {
         this._super.apply(this, arguments);
-        const dmContainer = this._getDeliveryMethodContainer(button);
-        const radio = dmContainer.querySelector('[name="o_delivery_radio"]');
-        if (radio.dataset.deliveryType === 'in_store') {
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked')
+        if(checkedRadio.dataset.deliveryType == 'in_store'){
+            const dmContainer = this._getDeliveryMethodContainer(checkedRadio);
             dmContainer.querySelector('[name="unavailable_products_warning"]')?.remove();
+            const pickupLocationButton = this._getPickupLocationContainer(checkedRadio).querySelector('span[name="o_pickup_location_selector"]');
+            pickupLocationButton.classList.add('border')
+            pickupLocationButton.dataset.locationId = location.id;
+            pickupLocationButton.dataset.zipCode = location.zip_code;
+            pickupLocationButton.dataset.pickupLocationData = jsonLocation;
         }
     },
 
@@ -77,12 +82,37 @@ publicWidget.registry.WebsiteSaleCheckout.include({
      */
     async _showPickupLocation(radio) {
         this._super.apply(this, arguments);
+        const all_delivery = document.querySelector(".all_delivery");
         if (radio.dataset.deliveryType === 'in_store') {
+            const all_delivery = document.querySelector(".all_delivery");
+            all_delivery.classList.add('d-none');
             const dmContainer = this._getDeliveryMethodContainer(radio);
             const warning = dmContainer.querySelector('[name="unavailable_products_warning"]');
             if (warning) {
                 warning.classList.remove('d-none');
             }
+        }else{
+            all_delivery.classList.remove('d-none');
+        }
+    },
+
+    async _prepareDeliveryMethods() {
+        this._super.apply(this, arguments);
+        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+        if(checkedRadio && checkedRadio.dataset.deliveryType === 'in_store'){
+            const all_delivery = document.querySelector(".all_delivery");
+            all_delivery.classList.add('d-none');
+            const pickupLocation = this._getPickupLocationContainer(checkedRadio);
+            pickupLocation.classList.remove('d-none');
+        }
+    },
+
+    _getPickupLocationContainer(radio){
+        if (radio.dataset.deliveryType === 'in_store'){
+            const deliveryAddress = document.querySelector('#delivery_address_row');
+            return deliveryAddress.querySelector('[name="o_pickup_location"]')
+        }else{
+            this._super.apply(this, arguments);
         }
     },
 
