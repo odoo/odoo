@@ -766,6 +766,7 @@ class PosOrder(models.Model):
 
         # Create the tax lines
         for tax_line in tax_results['tax_lines_to_add']:
+            del tax_line['tax_base_amount_currency']  # field does not exist in account.move.line
             tax_rep = self.env['account.tax.repartition.line'].browse(tax_line['tax_repartition_line_id'])
             aml_vals_list_per_nature['tax'].append({
                 **tax_line,
@@ -1576,6 +1577,7 @@ class PosOrderLine(models.Model):
                         line,
                         partner_id=commercial_partner,
                         currency_id=self.order_id.currency_id,
+                        rate=self.order_id.currency_rate,
                         product_id=line.product_id,
                         tax_ids=line.tax_ids_after_fiscal_position,
                         price_unit=line.price_unit,
