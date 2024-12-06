@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resume_line_view_form" model="ir.ui.view">
+        <field name="name">hr.resume.line.form</field>
+        <field name="model">hr.resume.line</field>
+        <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
+        <field name="arch" type="xml">
+            <field name="date_end" position="after">
+                <field name="event_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
