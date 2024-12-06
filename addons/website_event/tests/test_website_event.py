@@ -78,6 +78,14 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.assertEqual(specific_view.website_meta_title, "Hello, world!")
         self.assertEqual(event.website_meta_title, False)
 
+    def test_website_event_submenu_align_breadcrumb(self):
+        self.env['event.event'].create({
+            'name': 'Test Event',
+            'is_published': True,
+            'website_menu': True,
+        })
+        self.start_tour('/event', 'website_event_submenu_align_breadcrumb_tour', login='admin')
+
     def test_website_event_questions(self):
         """ Will execute the tour that fills up two tickets with a few questions answers
         and then assert that the answers are correctly saved for each attendee. """
