@@ -8,6 +8,8 @@ import { boundariesOut } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { ImageTransformButton } from "./image_transform_button";
 import { fillEmpty } from "@html_editor/utils/dom";
+import { closestBlock } from "../../utils/blocks";
+import { isEmptyBlock } from "../../utils/dom_info";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -15,7 +17,7 @@ function hasShape(imagePlugin, shapeName) {
 
 export class ImagePlugin extends Plugin {
     static id = "image";
-    static dependencies = ["history", "link", "powerbox", "dom", "selection"];
+    static dependencies = ["history", "link", "powerbox", "dom", "selection", "split"];
     resources = {
         user_commands: [
             {
@@ -57,7 +59,7 @@ export class ImagePlugin extends Plugin {
             {
                 id: "addImageCaption",
                 title: _t("Add a caption"),
-                run: () => this.addImageCaption.bind(this),
+                run: this.addImageCaption.bind(this),
             },
             { id: "resizeImage", run: this.resizeImage.bind(this) },
         ],
@@ -74,11 +76,11 @@ export class ImagePlugin extends Plugin {
         toolbar_groups: [
             withSequence(23, { id: "image_preview", namespace: "image" }),
             withSequence(24, { id: "image_description", namespace: "image" }),
-            withSequence(25, { id: "image_caption", namespace: "image" }),
-            withSequence(26, { id: "image_shape", namespace: "image" }),
-            withSequence(27, { id: "image_padding", namespace: "image" }),
-            withSequence(27, { id: "image_size", namespace: "image" }),
-            withSequence(27, { id: "image_transform", namespace: "image" }),
+            withSequence(24, { id: "image_caption", namespace: "image" }),
+            withSequence(25, { id: "image_shape", namespace: "image" }),
+            withSequence(26, { id: "image_padding", namespace: "image" }),
+            withSequence(26, { id: "image_size", namespace: "image" }),
+            withSequence(26, { id: "image_transform", namespace: "image" }),
             withSequence(30, { id: "image_delete", namespace: "image" }),
         ],
         toolbar_items: [
@@ -104,6 +106,7 @@ export class ImagePlugin extends Plugin {
                 groupId: "image_description",
                 commandId: "addImageCaption",
                 text: "Caption",
+                isAvailable: () => !this.getImageCaption(this.getSelectedImage()),
             },
             {
                 id: "shape_rounded",
@@ -188,7 +191,9 @@ export class ImagePlugin extends Plugin {
         ],
         paste_url_overrides: this.handlePasteUrl.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
-        isUnsplittable: node => node.nodeName === "FIGCAPTION", // avoid merge
+        unsplittable_node_predicates: [
+            node => ["FIGURE", "FIGCAPTION"].includes(node.nodeName) // avoid merge
+        ],
     };
 
     setup() {
@@ -260,7 +265,7 @@ export class ImagePlugin extends Plugin {
         const fileModel = {
             isImage: true,
             isViewable: true,
-            displayName: selectedImg.src,
+            name: this.getImageCaption(selectedImg)?.textContent || selectedImg.src,
             defaultSource: selectedImg.src,
             downloadUrl: selectedImg.src,
         };
@@ -299,16 +304,47 @@ export class ImagePlugin extends Plugin {
         return selectedImg.getAttribute(attributeName) || undefined;
     }
 
+    getImageCaption(image) {
+        if (!image) {
+            return;
+        }
+        const block = closestBlock(image);
+        return block.nodeName === "FIGURE" && block.querySelector("figcaption");
+    }
+
     addImageCaption() {
         const selectedImg = this.getSelectedImage();
         if (!selectedImg) {
             return;
         }
-        const caption = this.document.createElement("figcaption");
-        caption.classList.add("figure-caption", "text-muted", "mt-2");
-        fillEmpty(caption);
-        selectedImg.after(caption);
-        this.shared.setSelection({ anchorNode: caption, anchorOffset: 0 });
+        let caption = this.getImageCaption(selectedImg);
+        if (caption) {
+            this.dependencies.selection.setSelection({ anchorNode: caption, anchorOffset: 0 });
+        } else {
+            const block = this.dependencies.split.splitAroundUntil(
+                selectedImg,
+                closestBlock(selectedImg),
+            );
+            if (isEmptyBlock(block.nextSibling)) {
+                block.nextSibling.remove();
+            }
+            const figure = this.document.createElement("figure");
+            block.before(figure);
+            figure.append(...block.childNodes);
+            block.remove();
+            caption = this.document.createElement("figcaption");
+            caption.classList.add("figure-caption", "mt-2");
+            figure.append(caption);
+            // if (selectedImg.nextSibling === caption) {
+            //     selectedImg.after(this.document.createTextNode("\u200B"));
+            // }
+            fillEmpty(caption);
+            this.dependencies.selection.setSelection({ anchorNode: caption, anchorOffset: 0 });
+            selectedImg.setAttribute("data-oe-protected", "false");
+            caption.setAttribute("data-oe-protected", "false");
+            figure.setAttribute("data-oe-protected", "true");
+            this.dependencies.history.addStep();
+        }
     }
 
     /**
