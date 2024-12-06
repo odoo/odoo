@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
@@ -186,4 +186,25 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
     await contains("[data-class-action='my-custom-class']").click();
     expect(".options-container:not(.d-none)").toHaveCount(2);
     expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Row 2\nTest");
+});
+
+test("display empty message if any option match the selected element", async () => {
+    await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
+    await contains(":iframe .parent-target > div").click();
+    await animationFrame();
+    expect(".o_customize_tab").toHaveText("Select a block on your page to style it.");
+});
+
+test("display empty message if any option container is visible", async () => {
+    addOption({
+        selector: ".parent-target",
+        template: xml`<WeRow label="'Row 1'">
+            <WeButton applyTo="'.invalid'" classAction="'my-custom-class'"/>
+        </WeRow>`,
+    });
+
+    await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
+    await contains(":iframe .parent-target > div").click();
+    await animationFrame();
+    expect(".o_customize_tab").toHaveText("Select a block on your page to style it.");
 });

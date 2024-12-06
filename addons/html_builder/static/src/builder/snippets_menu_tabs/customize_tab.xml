@@ -2,16 +2,20 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.CustomizeTab">
-    <t t-if="!props.currentOptionsContainers.length">
-        <div class="text-center pt-5">
-            Select a block on your page to style it.
-        </div>
-    </t>
-    <t t-else="">
-        <t t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
-            <OptionsContainer editingElement="optionsContainer.element" options="optionsContainer.options"/>
+    <div class="o_customize_tab">
+        <t t-if="!props.currentOptionsContainers.length || !this.state.hasContent">
+            <div class="text-center pt-5">
+                Select a block on your page to style it.
+            </div>
         </t>
-    </t>
+        <t t-else="">
+            <div t-ref="content">
+                <t t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                    <OptionsContainer editingElement="optionsContainer.element" options="optionsContainer.options"/>
+                </t>
+            </div>
+        </t>
+    </div>
 </t>
 
 </templates>
