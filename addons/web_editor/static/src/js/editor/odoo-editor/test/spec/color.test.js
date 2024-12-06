@@ -174,6 +174,13 @@ describe('applyColor', () => {
             `),
         });
     });
+    it("shall apply text color whithout interrupting gradient color on selected text", async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab[ca]bc</font></p>',
+            stepFunction: setColor("rgb(255, 0, 0)", "color"),
+            contentAfter: '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+        });
+    });
 });
 describe('rgbToHex', () => {
     it('should convert an rgb color to hexadecimal', async () => {
