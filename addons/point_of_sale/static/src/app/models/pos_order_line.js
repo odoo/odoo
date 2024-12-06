@@ -555,7 +555,7 @@ export class PosOrderline extends Base {
     }
 
     getCustomerNote() {
-        return this.customer_note;
+        return this.customer_note || "";
     }
 
     getTotalCost() {
@@ -630,7 +630,7 @@ export class PosOrderline extends Base {
                 : "",
             discount: this.getDiscountStr(),
             customerNote: this.getCustomerNote() || "",
-            internalNote: this.getNote(),
+            internalNote: this.note ? JSON.parse(this.note) : [],
             comboParent: this.combo_parent_id?.getFullProductName?.() || "",
             packLotLines: this.pack_lot_ids.map(
                 (l) =>

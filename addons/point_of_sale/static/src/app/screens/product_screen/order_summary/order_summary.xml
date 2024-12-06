@@ -5,7 +5,7 @@
       total="env.utils.formatCurrency(currentOrder.getTotalWithTax())"
       tax="!env.utils.floatIsZero(currentOrder.getTotalTax()) and env.utils.formatCurrency(currentOrder.getTotalTax()) or ''"
       generalCustomerNote="currentOrder.general_customer_note or ''"
-      internalNote="currentOrder.internal_note or ''">
+      internalNote="currentOrder.internal_note or '[]'">
           <t t-set="line" t-value="scope.line" />
           <Orderline line="line.getDisplayData()"
               t-on-click="(event) => this.clickLine(event, line)"

@@ -27,12 +27,7 @@
                     </div>
                     <div t-if="props.internalNote"
                         class="internal-note-container d-flex gap-2">
-                        <t t-foreach="props.internalNote?.split?.('\n') or []" t-as="note"
-                            t-key="note_index">
-                            <li t-if="note.trim() !== ''" t-esc="note"
-                                class="internal-note badge mt-1 p-2 rounded-pill bg-info text-info bg-opacity-25"
-                                style="font-size: 0.85rem;"/>
-                        </t>
+                        <TagsList tags="getInternalNotes()"/>
                     </div>
                 </div>
                 <div t-if="props.total or props.tax" class="order-summary d-flex flex-column gap-1 px-3 py-2 border-top fw-bolder lh-sm">
