@@ -3,7 +3,10 @@
 
 <t t-name="mail.MailComposerSendDropdown">
     <div class="btn-group">
-        <button class="btn btn-primary w-auto o_mail_send" t-on-click="onClickSend" data-hotkey="q">
+        <button class="btn btn-primary w-auto o_mail_send"
+            t-on-click="onClickSend"
+            t-att-disabled="buttonState.disabled"
+            data-hotkey="q">
             <t t-if="props.record.data.subtype_is_log">
                 Log
             </t>
@@ -12,7 +15,7 @@
             </t>
         </button>
         <Dropdown>
-            <button class="btn btn-primary w-auto dropdown-toggle-split o-dropdown-caret"/>
+            <button class="btn btn-primary w-auto dropdown-toggle-split o-dropdown-caret" t-att-disabled="buttonState.disabled"/>
             <t t-set-slot="content">
                 <DropdownItem onSelected.bind="onClickSendLater">
                     <t t-if="props.record.data.subtype_is_log">
