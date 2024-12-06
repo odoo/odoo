@@ -54,6 +54,7 @@ export class PosStore extends WithLazyGetterTrap {
         "hardware_proxy",
         "ui",
         "pos_data",
+        "pos_scale",
         "dialog",
         "notification",
         "printer",
@@ -80,6 +81,7 @@ export class PosStore extends WithLazyGetterTrap {
             printer,
             bus_service,
             pos_data,
+            pos_scale,
             action,
             alert,
         }
@@ -132,11 +134,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;
         });
-        this.isScaleScreenVisible = false;
-        this.scaleData = null;
-        this.scaleWeight = 0;
-        this.scaleTare = 0;
-        this.totalPriceOnScale = 0;
+        this.scale = pos_scale;
 
         this.orderCounter = new Counter(0);
 
@@ -858,25 +856,18 @@ export class PosStore extends WithLazyGetterTrap {
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && configure) {
             if (values.product_tmpl_id.isScaleAvailable) {
-                this.isScaleScreenVisible = true;
-                this.scaleData = {
-                    productName: values?.product_id?.display_name,
-                    uomName: values.product_tmpl_id.uom_id?.name,
-                    uomRounding: values.product_tmpl_id.uom_id?.rounding,
-                    productPrice: this.getProductPrice(values.product_id),
-                };
-                const weight = await makeAwaitable(
-                    this.env.services.dialog,
-                    ScaleScreen,
-                    this.scaleData
+                const decimalAccuracy = this.models["decimal.precision"].find(
+                    (dp) => dp.name === "Product Unit"
+                ).digits;
+                this.scale.setProduct(
+                    values.product_id,
+                    decimalAccuracy,
+                    this.getProductPrice(values.product_id)
                 );
+                const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen);
                 if (weight) {
                     values.qty = weight;
                 }
-                this.isScaleScreenVisible = false;
-                this.scaleWeight = 0;
-                this.scaleTare = 0;
-                this.totalPriceOnScale = 0;
             } else {
                 await values.product_tmpl_id._onScaleNotAvailable();
             }
@@ -978,12 +969,6 @@ export class PosStore extends WithLazyGetterTrap {
         } else {
             this.selectedCategory = this.models["pos.category"].get(categoryId);
         }
-    }
-    setScaleWeight(weight) {
-        this.scaleWeight = weight;
-    }
-    setScaleTare(tare) {
-        this.scaleTare = tare;
     }
 
     /**
