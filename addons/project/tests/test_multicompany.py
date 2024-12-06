@@ -420,7 +420,6 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             self.assertEqual(subtask_line.project_id, self.task_1.project_id, "The task's project should already be set on the subtask.")
             subtask_line.name = 'Test Subtask'
         subtask = self.task_1.child_ids[0]
-        self.assertTrue(subtask.show_display_in_project, "The subtask's field 'display in project' should be visible.")
         self.assertFalse(subtask.display_in_project, "The subtask's field 'display in project' should be unchecked.")
         self.assertEqual(subtask.company_id, self.task_1.company_id, "The company of the subtask should be the one from its project.")
 
@@ -428,7 +427,6 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         with Form(self.task_1) as task_1_form:
             task_1_form.project_id = self.project_company_b
         self.assertEqual(subtask.project_id, self.task_1.project_id, "The task's project should already be set on the subtask.")
-        self.assertTrue(subtask.show_display_in_project, "The subtask's field 'display in project' should be visible.")
         self.assertFalse(subtask.display_in_project, "The subtask's field 'display in project' should be unchecked.")
         self.assertEqual(subtask.company_id, self.project_company_b.company_id, "The company of the subtask should be the one from its project.")
         task_1_form.project_id = self.project_company_a
@@ -448,18 +446,12 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         ):
             subtask_form.parent_id = self.task_2
             self.assertEqual(subtask_form.project_id, self.task_2.project_id, "The task's project should already be set on the subtask.")
-            self.assertTrue(subtask.show_display_in_project, "The subtask's field 'display in project' should be visible.")
             self.assertFalse(subtask.display_in_project, "The subtask's field 'display in project' should be unchecked.")
         self.assertEqual(subtask.company_id, self.task_2.company_id, "The company of the subtask should be the one from its new project, set from its parent.")
 
         # 4) Change the project of the subtask and check some fields
-        with (
-            self.debug_mode(),
-            Form(subtask) as subtask_form
-        ):
-            subtask.project_id = self.project_company_a
-            self.assertFalse(subtask.show_display_in_project, "The subtask's field 'display in project' shouldn't be visible.")
-            self.assertTrue(subtask.display_in_project, "The subtask's field 'display in project' should be checked.")
+        subtask.project_id = self.project_company_a
+        self.assertTrue(subtask.display_in_project, "The subtask's field 'display in project' should be checked.")
         self.assertEqual(subtask.company_id, self.project_company_a.company_id, "The company of the subtask should be the one from its project, and not from its parent.")
 
 
