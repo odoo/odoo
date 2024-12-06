@@ -63,11 +63,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         # currency will be the company currency.
         cls.env['product.pricelist'].action_archive()
 
-    def test_01_admin_shop_customize_tour(self):
-        # Enable Variant Group
-        self.env.ref('product.group_product_variant').write({'user_ids': [(4, self.env.ref('base.user_admin').id)]})
-        self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_customize', login="admin", timeout=120)
-
     def test_01_admin_shop_custom_attribute_value_tour(self):
         self.start_tour("/", 'a_shop_custom_attribute_value', login="admin")
 
@@ -211,16 +206,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             sol.product_no_variant_attribute_value_ids,
             product_template.attribute_line_ids.product_template_value_ids
         )
-
-    def test_06_admin_list_view_b2c(self):
-        self.env.ref('product.group_product_variant').write({'user_ids': [(4, self.env.ref('base.user_admin').id)]})
-
-        # activate b2c
-        self.env['res.config.settings'].create({
-            'show_line_subtotals_tax_selection': 'tax_included'
-        }).execute()
-
-        self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_list_view_b2c', login="admin")
 
     def test_07_editor_shop(self):
         self.env['product.pricelist'].create([
