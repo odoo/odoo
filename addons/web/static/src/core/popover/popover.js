@@ -2,6 +2,7 @@ import { Component, onMounted, onWillDestroy, useExternalListener, useRef } from
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
+import { reverseForRTL } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
@@ -201,6 +202,9 @@ export class Popover extends Component {
 
     updateArrow(direction, variant, variantOffset) {
         const { el } = this.popoverRef;
+
+        // Reverse the direction if RTL as bootstrap expects it that way
+        [direction, variant] = reverseForRTL(direction, variant);
 
         // Update the bootstrap popper placement, in order to give the arrow its shape
         el.dataset.popperPlacement = direction;
