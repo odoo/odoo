@@ -26,6 +26,8 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
                 interval: parseInt(this.el.dataset.carouselInterval),
                 rowPerSlide: parseInt(uiUtils.isSmall() ? 1 : this.el.dataset.rowPerSlide || 1),
                 arrowPosition: this.el.dataset.arrowPosition || '',
+                scrollMode: this.el.dataset.scrollMode || '',
+                wrap: this.el.dataset.wrap || 'true',
             },
         );
     },
