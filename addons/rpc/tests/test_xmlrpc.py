@@ -12,6 +12,7 @@ import odoo.tools
 from odoo.tests import common
 from odoo.service import common as auth, model
 from odoo.tools import DotDict
+from odoo.api import call_kw
 
 
 @common.tagged('post_install', '-at_install')
@@ -222,6 +223,14 @@ class TestAPIKeys(common.HttpCase):
             'res.users', 'context_get', []
         ])
         self.assertEqual(ctx['tz'], 'Australia/Eucla')
+
+        api_key = call_kw(
+            model=self.env['res.users.apikeys.description'],
+            name='create',
+            args=[{'name': 'Name of the key'}],
+            kwargs={}
+        )
+        self.assertTrue(isinstance(api_key, int))
 
     def test_delete(self):
         env = self.env(user=self._user)
