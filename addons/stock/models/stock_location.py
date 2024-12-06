@@ -491,6 +491,18 @@ class Location(models.Model):
 
         return result
 
+<<<<<<< saas-17.2
+||||||| 745a80a3019977cec55dab42615d89e3c2b138e5
+    def _child_of(self, other_location):
+        self.ensure_one()
+        return other_location.parent_path in self.parent_path
+
+=======
+    def _child_of(self, other_location):
+        self.ensure_one()
+        return self.parent_path.startswith(other_location.parent_path)
+
+>>>>>>> 51225f9097b09a6dea79d654a1e4dc249a71a59f
 
 class StockRoute(models.Model):
     _name = 'stock.route'
