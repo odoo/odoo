@@ -49,18 +49,6 @@ export class CustomerDisplayPosAdapter {
         }
     }
 
-    addScaleData(data) {
-        this.data.isScaleScreenVisible = data?.isScaleScreenVisible;
-        if (data?.isScaleScreenVisible) {
-            this.data.scaleData = {
-                productName: data.productName,
-                uomName: data.uomName,
-                uomRounding: data.uomRounding,
-                productPrice: data.productPrice,
-            };
-        }
-    }
-
     formatOrderData(order) {
         this.data = {
             finalized: order.finalized,
