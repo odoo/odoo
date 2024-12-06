@@ -26,8 +26,6 @@ class WebsocketCase(HttpCase):
             raise unittest.SkipTest("websocket-client module is not installed")
         cls._BASE_WEBSOCKET_URL = f"ws://{HOST}:{cls.http_port()}/websocket"
         cls._WEBSOCKET_URL = f"{cls._BASE_WEBSOCKET_URL}?version={WebsocketConnectionHandler._VERSION}"
-        websocket_allowed_patch = patch.object(WebsocketConnectionHandler, "websocket_allowed", return_value=True)
-        cls.startClassPatcher(websocket_allowed_patch)
 
     def setUp(self):
         super().setUp()
