@@ -10,7 +10,7 @@ import sys
 odoo.evented = False
 
 
-def patch_evented():
+def patch():
     if odoo.evented or not (len(sys.argv) > 1 and sys.argv[1] == 'gevent'):
         return
     sys.argv.remove('gevent')
@@ -37,3 +37,7 @@ def patch_evented():
                     "Bad result from poll: %r" % state)
     psycopg2.extensions.set_wait_callback(gevent_wait_callback)
     odoo.evented = True
+    return {
+        'gevent': gevent,
+        'psycopg2': psycopg2,
+    }

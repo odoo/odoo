@@ -1040,8 +1040,8 @@ def url_join(
     return url_unparse((scheme, netloc, path, query, fragment))
 
 
-def patch_werkzeug():
-    from ..tools.json import scriptsafe  # noqa: PLC0415
+def patch():
+    from odoo.required import scriptsafe  # noqa: PLC0415
     Request.json_module = Response.json_module = scriptsafe
 
     FileStorage.save = lambda self, dst, buffer_size=(1 << 20): copyfileobj(self.stream, dst, buffer_size)
@@ -1055,7 +1055,7 @@ def patch_werkzeug():
 
     if hasattr(urls, 'url_join'):
         # URLs are already patched
-        return
+        return {}
     # see https://github.com/pallets/werkzeug/compare/2.3.0..3.0.0
     # see https://github.com/pallets/werkzeug/blob/2.3.0/src/werkzeug/urls.py for replacement
     urls.url_decode = url_decode
@@ -1068,3 +1068,6 @@ def patch_werkzeug():
     urls.url_unquote_plus = url_unquote_plus
     urls.url_unparse = url_unparse
     urls.URL = URL
+    return {
+        'werkzeug.urls': urls,
+    }

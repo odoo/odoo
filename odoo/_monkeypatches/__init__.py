@@ -1,35 +1,40 @@
-# ruff: noqa: F401, PLC0415
-# ignore import not at top of the file
 import os
 import time
-from .evented import patch_evented
+from pathlib import Path
+
+from . import evented  # noqa: F401
+
+modules = {}
 
 
 def set_timezone_utc():
-    os.environ['TZ'] = 'UTC'  # Set the timezone
+    os.environ['TZ'] = 'UTC'
     if hasattr(time, 'tzset'):
         time.tzset()
 
 
 def patch_all():
-    patch_evented()
     set_timezone_utc()
 
-    from .codecs import patch_codecs
-    patch_codecs()
-    from .mimetypes import patch_mimetypes
-    patch_mimetypes()
-    from .pytz import patch_pytz
-    patch_pytz()
-    from .literal_eval import patch_literal_eval
-    patch_literal_eval()
-    from .num2words import patch_num2words
-    patch_num2words()
-    from .stdnum import patch_stdnum
-    patch_stdnum()
-    from .werkzeug_urls import patch_werkzeug
-    patch_werkzeug()
-    from .zeep import patch_zeep
-    patch_zeep()
-    from .win32 import patch_win32
-    patch_win32()
+    # Fetch all the modules in this folder
+    mapping = [
+        (module_name, fq_name)
+        for path in __path__
+        for x in Path(path).glob('*.py')
+        if (module_name := x.stem)
+        and not module_name.startswith("__")
+        and (fq_name := f"{__name__}.{module_name}")
+        and fq_name not in os.sys.modules
+    ]
+
+    for module_name, fq_name in mapping:
+        # Import the monkeypatcher module
+        __import__(fq_name)
+        # Retrieve the loaded monkeypatcher module
+        patcher_module = os.sys.modules[fq_name]
+        # Patch the related module
+        patched_modules = patcher_module.patch()
+        # Save some info on the patched module for runtime inspection
+        for fq_name, patched_module in patched_modules.items():
+            patched_module._patched = True
+            modules[fq_name] = patched_module
