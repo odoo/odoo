@@ -12,11 +12,11 @@ export function clickBack() {
         },
     ];
 }
-export function clickPay() {
+export function clickButton(name) {
     return [
         {
-            content: "click pay button",
-            trigger: `.splitbill-screen .pay-button .button`,
+            content: `click '${name}' button`,
+            trigger: `.splitbill-screen .pay-button button:contains("${name}")`,
             run: "click",
         },
     ];
