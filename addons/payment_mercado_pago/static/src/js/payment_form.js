@@ -42,32 +42,86 @@ paymentForm.include({
 
         // Extract and deserialize the inline form values.
         const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        const inlineForm = this._getInlineForm(radio);
         const inlineFormValues = JSON.parse(radio.dataset['mercadoPagoInlineFormValues']);
-        const formattedAmount = inlineFormValues['formatted_amount'];
+        const mercadoPagoContainer = inlineForm.querySelector('[id="o_mercado_pago_component_container"]');
+
+        const amount = inlineFormValues['amount'];
 
         // Create the checkout object if not already done for another payment method.
         if (!this.mercadoPagoCheckout) {
             try {
-                const mp = new MercadoPago('TEST-6195235198398424-061413-5b6a279b4105ee38995de109e8e8d9b1-1074382083', {
-                locale: 'en'
+                const mp = new MercadoPago('TEST-8ae53c37-e5e3-44b4-94d4-abf8dbe81689', {
+                locale: 'en-US'
                 });
+                const bricksBuilder = mp.bricks();
+                const x = mercadoPagoContainer.getAttribute('id')
+
+                const settings = {
+                    initialization: {
+                      /*
+                        "amout" is the total sum to be paid from all payment methods but Mercado Pago Wallet and Parcels without credit card which have their processing value determined on the backend via "preferenceId"
+                      */
+                      amount: amount,
+                    },
+                    customization: {
+                      visual: {
+                          hideFormTitle: true,
+                          hidePaymentButton: true,
+                      },
+                      paymentMethods: {
+                          creditCard: "all",
+                          debitCard: "all",
+                          atm: "banamex",
+                          bankTransfer: "all",
+                        maxInstallments: 1
+                      },
+                    },
+                    callbacks: {
+                      onReady: () => {
+                        /*
+                         Callback called when Brick is ready.
+                         Here, you may omit loadings from your website, for instance.
+                        */
+                      },
+                      onSubmit: ({ selectedPaymentMethod, formData }) => {
+                        // callback when sending data button is clicked
+                        return new Promise((resolve, reject) => {
+                          fetch("/process_payment", {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(formData),
+                          })
+                            .then((response) => response.json())
+                            .then((response) => {
+                              // receive payment result
+                              resolve();
+                            })
+                            .catch((error) => {
+                              // manage the error answer when trying to create a payment
+                              reject();
+                            });
+                        });
+                      },
+                      onError: (error) => {
+                        // callback called to all error cases related to the Brick
+                        console.error(error);
+                      },
+                    },
+                  };
+                 //i dont need this function at all i just need
+
+              this.mercadoPagoCheckout = await bricksBuilder.create(
+                  "cardPayment",
+                  x,
+                  settings
+              );
+
                 // Await the RPC to let it create AdyenCheckout before using it.
                 // Create the Adyen Checkout SDK.
                 const providerState = this._getProviderState(radio);
-                const settings = {
-                    paymentMethodsResponse: response,
-                    clientKey: inlineFormValues['client_key'],
-                    amount: formattedAmount,
-                    locale: pyToJsLocale(this._getContext().lang) || 'en-US',
-                    environment: providerState === 'enabled' ? 'live' : 'test',
-                    onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),
-                    onError: this._adyenOnError.bind(this),
-                    onSubmit: this._adyenOnSubmit.bind(this),
-                    paymentMethodsConfiguration: {
-                        card: {hasHolderName: true, holderNameRequired: true},
-                    }
-                };
-                this.adyenCheckout = await AdyenCheckout(configuration);
             } catch (error) {
                 if (error instanceof RPCError) {
                     this._displayErrorDialog(
@@ -82,38 +136,33 @@ paymentForm.include({
             }
         }
 
-        // Instantiate and mount the component.
-        const componentConfiguration = {
-            showBrandsUnderCardNumber: false,
-            showPayButton: false,
-            billingAddressRequired: false, // The billing address is included in the request.
-        };
-        if (paymentMethodCode === 'card') {
-            // Forbid Bancontact cards in the card component.
-            componentConfiguration['brands'] = ['mc', 'visa', 'amex', 'discover'];
-        }
-        else if (paymentMethodCode === 'paypal') {
-            // PayPal requires the form to be submitted with its own button.
-            Object.assign(componentConfiguration, {
-                style: {
-                    disableMaxWidth: true
-                },
-                showPayButton: true,
-                blockPayPalCreditButton: true,
-                blockPayPalPayLaterButton: true
-            });
-            this._hideInputs();
-            // Define necessary fields as the step _submitForm is missed.
-            Object.assign(this.paymentContext, {
-                tokenizationRequested: false,
-                providerId: providerId,
-                paymentMethodId: paymentOptionId,
-            });
-        }
-        const inlineForm = this._getInlineForm(radio);
-        const adyenContainer = inlineForm.querySelector('[name="o_adyen_component_container"]');
-        this.adyenComponents[paymentOptionId] = this.adyenCheckout.create(
-            inlineFormValues['adyen_pm_code'], componentConfiguration
-        ).mount(adyenContainer);
+
+        this.mercadoPagoComponents[paymentOptionId] = this.mercadoPagoCheckout; //i think only here the brick should be rendered
     },
+
+    _renderPaymentBrick(brick)  {
+        const settings = {
+            initialization: {
+                preferenceId: "To be done, maybe use the function earlier to get methds",
+                payer: {
+                    firstName: "to be done",
+                },
+            },
+            customization: {
+                paymentMethods: {
+                    ticket: "all",
+                    bankTransfer: "all",
+                    atm: "all",
+                    onboarding_credits: "all",
+                    maxInstallments: 1
+                },
+                visual: {
+                    hideFormTitle: true,
+                    hidePaymentButton: true,
+                },
+            }
+        }
+        this.mercadoPagoCheckout = brick.create("payment", "o_mercado_pago_component_container", settings);
+        const x = 3
+    }
 });
