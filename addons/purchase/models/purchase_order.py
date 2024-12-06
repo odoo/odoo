@@ -994,6 +994,9 @@ class PurchaseOrder(models.Model):
         res = super().action_add_from_catalog()
         if res['context'].get('product_catalog_order_model') == 'purchase.order':
             res['search_view_id'] = [self.env.ref('purchase.product_view_search_catalog').id, 'search']
+        kanban_view_id = self.env.ref('purchase.product_view_kanban_catalog_purchase_only').id
+        res['views'][0] = (kanban_view_id, 'kanban')
+        res['context']['partner_id'] = self.partner_id.id
         return res
 
     def _get_action_add_from_catalog_extra_context(self):
