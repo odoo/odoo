@@ -1,5 +1,5 @@
 .s_floating_blocks {
-    --floating-boxes-box-ratio-mobile: 0.7;
+    --floating-boxes-box-ratio-mobile: 0.6;
     --floating-boxes-box-ratio-desktop: 2;
     --floating-boxes-box-ratio-desktop-small: 1.6;
 
@@ -23,11 +23,13 @@
         will-change: transform;
         transform-origin: center top;
         padding-left: var(--floating-boxes-box-padding-x, var(--floating-boxes-box-padding-x-small));
+        padding-right: var(--floating-boxes-box-padding-x, var(--floating-boxes-box-padding-x-small));
         aspect-ratio: var(--floating-boxes-box-ratio, var(--floating-boxes-box-ratio-mobile));
     }
 
     @include media-breakpoint-up(lg) {
-        > div:where(:not(.o_container_small)) { // Either .container OR .container-fluid
+        // Either .container OR .container-fluid
+        > div:where(:not(.o_container_small)) {
             --floating-boxes-box-ratio: var(--floating-boxes-box-ratio-desktop);
             --floating-boxes-box-padding-x: var(--floating-boxes-box-padding-x-large);
         }

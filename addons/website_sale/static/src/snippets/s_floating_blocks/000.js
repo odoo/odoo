@@ -18,6 +18,8 @@ const FloatingBlocks = publicWidget.Widget.extend({
             return;
         }
 
+        this._cleanupListeners();
+
         this.boxesToAnimate = Array.from(this.boxes).slice(0, -1);
         this.transformCache = new WeakMap();
 
@@ -34,13 +36,7 @@ const FloatingBlocks = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateBoxesTopBound);
-        if (indexCallback >= 0) {
-            extraMenuUpdateCallbacks.splice(indexCallback, 1);
-        }
-
-        window.removeEventListener("scroll", this.throttledUpdateScroll);
-        window.removeEventListener("resize", this.throttledUpdateResize);
+        this._cleanupListeners();
         this._super(...arguments);
     },
 
@@ -111,6 +107,19 @@ const FloatingBlocks = publicWidget.Widget.extend({
         } else {
             return "scale3d(1, 1, 1)";
         }
+    },
+
+    /**
+     * @private
+     */
+    _cleanupListeners() {
+        const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateBoxesTopBound);
+        if (indexCallback >= 0) {
+            extraMenuUpdateCallbacks.splice(indexCallback, 1);
+        }
+
+        window.removeEventListener("scroll", this.throttledUpdateScroll);
+        window.removeEventListener("resize", this.throttledUpdateResize);
     },
 
     //--------------------------------------------------------------------------
