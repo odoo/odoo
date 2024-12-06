@@ -6,7 +6,13 @@
         <field name="sequence">50</field>
         <field name="type">coupon</field>
         <field name="encoding">any</field>
-        <!-- Old Gift Cards might start with 044 -->
-        <field name="pattern">043|044</field>
+            <field name="rule_part_ids">
+                <record id="barcode_rule_group_product" model="barcode.rule.part">
+                    <field name="sequence" eval="1"/>
+                    <field name="type">coupon</field>
+                    <!-- Old Gift Cards might start with 044 -->
+                    <field name="pattern">(04[34])</field>
+                </record>
+            </field>
     </record>
 </odoo>
