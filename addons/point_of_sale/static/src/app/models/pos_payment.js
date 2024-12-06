@@ -27,6 +27,8 @@ export class PosPayment extends Base {
             parseFloat(value) || 0,
             this.pos_order_id.currency.decimal_places
         );
+        // FIXME: the amount is not seen by the onChange...
+        console.log("amount after", this.amount);
     }
 
     getAmount() {

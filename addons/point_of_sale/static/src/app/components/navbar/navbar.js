@@ -30,7 +30,6 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
-        SyncPopup,
         OrderTabs,
     };
     static props = {};

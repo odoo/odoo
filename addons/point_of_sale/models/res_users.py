@@ -1,8 +1,15 @@
-from odoo import models, api
+from odoo import api, fields, models
 
 
 class ResUsers(models.Model):
     _inherit = ['res.users', 'pos.load.mixin']
+
+    role = fields.Selection([('manager', 'Manager'), ('cashier', 'Cashier')], string='Role', compute='_compute_role')
+
+    @api.depends('groups_id')
+    def _compute_role(self):
+        for user in self:
+            user.role = 'manager' if self.env.ref('point_of_sale.group_pos_manager') in user.groups_id else 'cashier'
 
     @api.model
     def _load_pos_data_domain(self, data):
