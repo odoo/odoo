@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -330,6 +332,27 @@ class TestDevice(TestHttpBase):
 
         res = self.hit('2024-01-01 08:00:30', '/test_http/greeting-user-rw', headers={'User-Agent': USER_AGENT_linux_firefox})
         self.assertIn('/web/login', res.url)
+
+    # --------------------
+    # GARBAGE COLLECTOR
+    # --------------------
+
+    def test_garbage_collector_device_log(self):
+        session = self.authenticate(self.user_admin.login, self.user_admin.login)
+        session_identifier = session.sid[:42]
+        now = datetime.now()
+        self.hit(now.replace(hour=8), '/test_http/greeting-public-rw', ip='191.0.1.41')
+        self.hit(now.replace(hour=9), '/test_http/greeting-public-rw', ip='192.0.2.42')
+        self.hit(now.replace(hour=10), '/test_http/greeting-public-rw', ip='191.0.1.41')  # must be collected
+        self.hit(now.replace(hour=11), '/test_http/greeting-public-rw', ip='2001:0db8:85a3:0000:0000:8a2e:0370:7334')
+        self.hit(now.replace(hour=12), '/test_http/greeting-public-rw', ip='fe80:0000:0000:0000:0202:b3ff:fe1e:8329')
+        self.hit(now.replace(hour=13), '/test_http/greeting-public-rw', ip='fe80:0000:85a3:0000:0202:b3ff:fe1e:8329')
+        self.hit(now.replace(hour=14), '/test_http/greeting-public-rw', ip='2001:0db8:85a3:0000:0000:8888:0370:7334')  # must be collected
+        self.hit(now - relativedelta(months=7), '/test_http/greeting-public-rw', ip='192.0.3.43')  # must be collected
+        count_before_gc = self.DeviceLog.search_count([('session_identifier', '=', session_identifier)])
+        self.DeviceLog._gc_device_log()
+        count_after_gc = self.DeviceLog.search_count([('session_identifier', '=', session_identifier)])
+        self.assertEqual(count_before_gc - count_after_gc, 3)
 
     # --------------------
     # SPECIFIC USE CASE
