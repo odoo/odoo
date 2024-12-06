@@ -18,6 +18,9 @@ patch(Thread.prototype, {
      * @param {import("models").Message} message
      */
     notifyMessageToUser(message) {
+        if (message.isOdoobotDiscussion) {
+            return;
+        }
         const channel_notifications =
             this.custom_notifications || this.store.settings.channel_notifications;
         if (
