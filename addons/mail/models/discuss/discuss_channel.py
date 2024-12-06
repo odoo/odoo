@@ -995,7 +995,7 @@ class Channel(models.Model):
             # get the existing channel between the given partners
             channel = self.browse(result[0].get('channel_id'))
             # pin or open the channel for the current partner
-            if pin or open:
+            if pin or force_open:
                 member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
                 vals = {'last_interest_dt': fields.Datetime.now()}
                 if pin:
