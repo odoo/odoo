@@ -385,6 +385,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "isInternalUser": True,
                     "name": "Ernest Employee",
                     "notification_preference": "inbox",
+                    "signature": self.users[0].signature,
                     "userId": self.users[0].id,
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
