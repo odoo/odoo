@@ -10,6 +10,7 @@ import sys
 import tempfile
 import warnings
 import odoo
+from contextlib import closing
 from os.path import expandvars, expanduser, abspath, realpath, normcase
 from .. import release, conf, loglevels
 from . import appdirs
@@ -397,6 +398,7 @@ class configmanager(object):
                     category=PendingDeprecationWarning,
                     stacklevel=2,
                 )
+        self._validate_pg_config()
         self._warn_deprecated_options()
         odoo.modules.module.initialize_sys_path()
         return opt
@@ -574,6 +576,32 @@ class configmanager(object):
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
         return opt
+
+    def _validate_pg_config(self):
+        db_name = self.options["db_name"] or "postgres"
+        db = odoo.sql_db.db_connect(db_name)
+        with closing(db.cursor()) as cr:
+            if (pg_version := cr._cnx.server_version) < 15_0000:
+                human_pg = "%d.%d" % divmod(pg_version, 10_000)
+                self.parser.error(
+                    f"Invalid PostgreSQL version: {human_pg}. As of Odoo 18, PosgresSQL 15 or later is required."
+                )
+            chosen_template = odoo.tools.config['db_template']
+            cr.execute("SELECT 1 FROM pg_database WHERE datname = %s", [chosen_template])
+            if not cr.rowcount:
+                self.parser.error("Invalid value for the option 'db_template'.")
+
+        ro = odoo.sql_db.db_connect(db_name, readonly=True)
+        if ro.dsn == db.dsn:
+            # same server for readonly connections
+            return
+
+        with closing(ro.cursor()) as cr:
+            # TODO check that the replica connection is a replica of the main connection.
+            # in the meanwhile, just compare servers major versions.
+            ro_major = cr._cnx.server_version // 10_000
+            if ro_major != (pg_version // 10_000):
+                self.parser.error("Invalid replica connection configuration.")
 
     def _warn_deprecated_options(self):
         for old_option_name, new_option_name in [
