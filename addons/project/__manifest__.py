@@ -86,17 +86,14 @@
         ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
-            'project/static/src/scss/project_sharing_frontend.scss',
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_unit_tests': [
-            'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
             'project/static/tests/mock_server/**/*',
             'project/static/tests/project_models.js',
             'project/static/tests/**/*.test.js',
         ],
         'web.qunit_suite_tests': [
-            'project/static/src/project_sharing/components/portal_file_input/portal_file_input.js',
             'project/static/tests/tours/**/*',
         ],
         'web.assets_tests': [
@@ -196,6 +193,11 @@
             'web/static/src/views/form/button_box/*.scss',
 
             'bus/static/src/**/*.js',
+
+            # To be able to launch tour js in project sharing
+            'web_tour/static/src/tour_pointer/**/*',
+            'web_tour/static/src/tour_service/**/*',
+            'web/static/lib/hoot-dom/**/*',
 
             'html_editor/static/src/**/*',
 

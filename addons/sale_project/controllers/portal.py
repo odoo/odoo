@@ -37,9 +37,9 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
         else:
             return super()._task_get_search_domain(search_in, search, milestones_allowed, project)
 
-    def _prepare_project_sharing_session_info(self, project, task=None):
-        session_info = super()._prepare_project_sharing_session_info(project, task)
-        session_info['action_context'].update({
+    def _prepare_project_sharing_session_info(self, project):
+        session_info = super()._prepare_project_sharing_session_info(project)
+        session_info['user_context'].update({
             'allow_billable': project.allow_billable,
         })
         return session_info
