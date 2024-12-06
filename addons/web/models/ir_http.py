@@ -210,6 +210,11 @@ class IrHttp(models.AbstractModel):
         Currency = self.env['res.currency']
         currencies = Currency.search_fetch([], ['symbol', 'position', 'decimal_places'])
         return {
-            c.id: {'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
+            c.id: {
+                'digits': [69, c.decimal_places],
+                'name': c.name,
+                'position': c.position,
+                'symbol': c.symbol,
+            }
             for c in currencies
         }

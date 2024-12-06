@@ -51,6 +51,7 @@ export class ReorderDialog extends Component {
     setup() {
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
+        this.websiteSale = useService("websiteSale");
         this.formatCurrency = formatCurrency;
 
         onWillStart(this.onWillStartHandler.bind(this));
@@ -152,12 +153,13 @@ export class ReorderDialog extends Component {
             if (!product.add_to_cart_allowed) {
                 continue;
             }
-            await rpc("/shop/cart/update_json", {
+
+            await this.websiteSale.addToCart({
+                product_template_id: product.product_template_id,
                 product_id: product.product_id,
-                add_qty: product.qty,
+                quantity: product.qty,
                 no_variant_attribute_value_ids: product.no_variant_attribute_value_ids,
-                product_custom_attribute_values: JSON.stringify(product.product_custom_attribute_values),
-                display: false,
+                product_custom_attribute_values: product.product_custom_attribute_values,
             });
         }
     }
