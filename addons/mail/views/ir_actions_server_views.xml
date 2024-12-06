@@ -26,14 +26,23 @@
                     <field name="activity_note" class="oe-bordered-editor" placeholder="Add a description to your activity..." invisible="state != 'next_activity'"/>
                 </xpath>
                 <xpath expr="//field[@name='link_field_id']" position="after">
+                    <!-- Add/Remove Followers -->
+                    <field name="followers_type"
+                           invisible="state not in ['followers', 'remove_followers']"
+                           required="state in ['followers', 'remove_followers']"/>
                     <field name="partner_ids" string="Followers to add" widget="many2many_tags"
-                           placeholder="Choose a user..."
-                           invisible="state != 'followers'"
-                           required="state == 'followers'"/>
+                           placeholder="Choose a contact..."
+                           invisible="state != 'followers' or followers_type != 'specific'"
+                           required="state == 'followers' and followers_type == 'specific'"/>
                     <field name="partner_ids" string="Followers to remove" widget="many2many_tags"
-                           placeholder="Choose a user..."
-                           invisible="state != 'remove_followers'"
-                           required="state == 'remove_followers'"/>
+                           placeholder="Choose a contact..."
+                           invisible="state != 'remove_followers' or followers_type != 'specific'"
+                           required="state == 'remove_followers' and followers_type == 'specific'"/>
+                    <field name="followers_partner_field_name"
+                           placeholder="e.g. partner_id"
+                           invisible="state not in ['followers', 'remove_followers'] or followers_type != 'generic'"
+                           required="state in ['followers', 'remove_followers'] and followers_type == 'generic'"/>
+                    <!-- Send Email -->
                     <field name="template_id"
                            placeholder="Choose a template..."
                            invisible="state != 'mail_post'"
