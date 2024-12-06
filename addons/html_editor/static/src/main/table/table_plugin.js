@@ -73,6 +73,7 @@ export class TablePlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         before_line_break_handlers: this.resetTableSelection.bind(this),
         before_split_block_handlers: this.resetTableSelection.bind(this),
+        beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
 
         /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
@@ -90,6 +91,11 @@ export class TablePlugin extends Plugin {
     setup() {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
         this.addDomListener(this.editable, "mouseup", this.onMouseup);
+        this.addDomListener(this.editable, "keydown", (ev) => {
+            if (ev.key.startsWith("Arrow")) {
+                delete this._selectedThroughMouse;
+            }
+        });
         this.onMousemove = this.onMousemove.bind(this);
     }
 
@@ -519,15 +525,27 @@ export class TablePlugin extends Plugin {
         return false;
     }
 
+    onBeforeInput(ev) {
+        delete this._selectedThroughMouse;
+    }
+
     updateSelectionTable(selectionData) {
         if (this.hanldeFirefoxSelection()) {
             // It will be retriggered with selectionchange
             return;
         }
-        this.deselectTable();
         const selection = selectionData.editableSelection;
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
+        if (startTd === endTd && this._selectedThroughMouse) {
+            // updateSelectionTable gets called whenever
+            // selection changes. This situation can occur
+            // if user does some operation using toolbar
+            // on a single selected cell. In such case
+            // return to prevent deselecting cell.
+            return;
+        }
+        this.deselectTable();
         const startTable = ancestors(selection.startContainer, this.editable)
             .filter((node) => node.nodeName === "TABLE")
             .pop();
@@ -563,6 +581,7 @@ export class TablePlugin extends Plugin {
     }
 
     onMousedown(ev) {
+        delete this._selectedThroughMouse;
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
         this.deselectTable();
@@ -630,6 +649,7 @@ export class TablePlugin extends Plugin {
                     // A cell is fully selected and the mouse is moving away
                     // from the selection, within said cell -> select the cell.
                     this.selectTableCells(selection);
+                    this._selectedThroughMouse = true;
                 }
             } else if (
                 cellContents.filter(isBlock).every(isEmptyBlock) &&
@@ -640,6 +660,7 @@ export class TablePlugin extends Plugin {
             ) {
                 // Handle selecting an empty cell.
                 this.selectTableCells(selection);
+                this._selectedThroughMouse = true;
             }
         }
     }
