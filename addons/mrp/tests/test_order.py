@@ -4373,6 +4373,21 @@ class TestMrpOrder(TestMrpCommon):
         production = production_form.save()
         self.assertEqual(production.workorder_ids[0].duration_expected, 15)
 
+    def test_mo_without_resource_calendar(self):
+
+        self.workcenter_1.resource_calendar_id = False
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'workorder_ids': [Command.create({
+                'name': 'Test Workorder',
+                'product_uom_id': self.product_1.uom_id.id,
+                'workcenter_id': self.workcenter_1.id,
+            })],
+        })
+
+        with self.assertRaises(UserError):
+            mo.button_mark_done()
 
 @tagged('post_install', '-at_install')
 class TestMrpSynchronization(HttpCase):
