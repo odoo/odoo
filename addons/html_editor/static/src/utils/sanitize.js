@@ -59,6 +59,6 @@ export function initElementForEdition(element, options = {}) {
 }
 
 export function fixInvalidHTML(content) {
-    const regex = /<\s*(a|strong)[^<]*?\/\s*>/g;
+    const regex = /<\s*(a|strong|t)[^<]*?\/\s*>/g;
     return content.replace(regex, (match, g0) => match.replace(/\/\s*>/, `></${g0}>`));
 }
