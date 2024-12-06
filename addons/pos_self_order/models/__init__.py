@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import ir_http
-from . import pos_category
 from . import pos_config
 from . import pos_order
 from . import pos_restaurant
