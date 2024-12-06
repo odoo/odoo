@@ -59,6 +59,17 @@ class IrActionsServer(models.Model):
                     'Send SMS: %(template_name)s',
                     template_name=action.sms_template_id.name
                 )
+                case 'discuss_post':
+                    if action.discuss_post_type == 'user':
+                        action.name = _(
+                            'Send message to: %(partner_names)s',
+                            partner_names=', '.join(action.partner_ids.mapped('name'))  # NOTE add domain to display only res.users
+                        )
+                    else:
+                        action.name = _(
+                            'Post message into: %(channel_names)s',
+                            channel_names=', '.join(action.discuss_channel_ids.mapped('name'))
+                        )
                 case 'mail_post':
                     action.name = _(
                         'Send email: %(template_name)s',

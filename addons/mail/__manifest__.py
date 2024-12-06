@@ -119,6 +119,8 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_menus.xml',
         'views/res_company_views.xml',
         "views/mail_scheduled_message_views.xml",
+        'wizard/discuss_template_preview_views.xml',
+        'views/discuss_template_views.xml',
         "data/mail_canned_response_data.xml",
         'data/mail_templates_invite.xml',
         'data/web_tour_tour.xml',
