@@ -2,13 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from odoo import Command
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontendCommon(TestPointOfSaleHttpCommon):
+class TestFrontendCommon(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -37,6 +39,19 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'type': 'cash',
             'company_id': main_company.id,
         })
+        cls.payment_provider = cls.provider # The dummy_provider used by the tests of the 'payment' module.
+
+        cls.payment_provider_old_company_id = cls.payment_provider.company_id.id
+        cls.payment_provider_old_journal_id = cls.payment_provider.journal_id.id
+        cls.payment_provider.write({
+            'company_id': cls.company.id,
+            'journal_id': cls.company_data['default_journal_bank'].id,
+        })
+        cls.online_payment_method = cls.env['pos.payment.method'].create({
+            'name': 'Online payment',
+            'is_online_payment': True,
+            'online_payment_provider_ids': [Command.set([cls.payment_provider.id])],
+        })
         cls.pos_config = cls.env['pos.config'].create({
             'name': 'Bar Prout',
             'module_pos_restaurant': True,
@@ -55,7 +70,8 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
                     'split_transactions': False,
                     'receivable_account_id': cls.account_receivable.id,
                     'journal_id': cash_journal_2.id,
-                })
+                }),
+                Command.link(cls.online_payment_method.id)
             ],
         })
         cls.main_pos_config = cls.pos_config
@@ -325,3 +341,7 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('CrmTeamTour')
         order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(order.crm_team_id.id, sale_team.id)
+
+    def test_16_online_payment_with_multi_table(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('OnlinePaymentWithMultiTables', login="pos_admin")
