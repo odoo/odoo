@@ -90,8 +90,11 @@
         <field name="model">event.registration.answer</field>
         <field name="arch" type="xml">
             <graph string="Question" type="bar">
-                <field name="value_answer_id" type="row"/>
-                <field name="event_id" type="col"/>
+                    <field name="question_id" type="col"/>
+                    <field name="value_answer_id" type="row" stacked="1"/>
+                    <field name="event_id"/>
+<!--                <field name="value_answer_id" type="row"/>-->
+<!--                <field name="event_id" type="col"/>-->
             </graph>
         </field>
     </record>
