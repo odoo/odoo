@@ -173,7 +173,8 @@ class Delivery(WebsiteSale):
         return self._order_summary_values(order_sudo)
 
     @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
-    def website_sale_get_pickup_locations(self, zip_code=None, country_code=None, **kwargs):
+    def website_sale_get_pickup_locations(self, zip_code=None, selected_country=None, **kwargs
+    ):
         """ Fetch the order from the request and return the pickup locations close to the zip code.
 
         Determine the country based on GeoIP or fallback on the order's delivery address' country.
@@ -184,15 +185,16 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         order_sudo = request.website.sale_get_order()
-        selected_country = request.env['res.country'].search(
-             [('code', '=', country_code)],
+        dropdown_country = request.env['res.country'].search(
+             [('code', '=', selected_country)],
             limit=1,
         )
         if not zip_code or order_sudo.pickup_location_data and order_sudo.pickup_location_data['country_code']:
-            country = selected_country
+            country = dropdown_country
         else:
             country = order_sudo.partner_shipping_id.country_id
-        return order_sudo._get_pickup_locations(zip_code, country, **kwargs)
+        selected_country = selected_country or order_sudo.partner_id.country_code
+        return order_sudo._get_pickup_locations(zip_code, country, selected_country=selected_country,**kwargs)
 
     @route(_express_checkout_delivery_route, type='jsonrpc', auth='public', website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):

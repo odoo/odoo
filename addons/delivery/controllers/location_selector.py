@@ -18,7 +18,7 @@ class LocationSelectorController(Controller):
         return order
 
     @route('/delivery/get_pickup_locations', type='jsonrpc', auth='user')
-    def delivery_get_pickup_locations(self, order_id, zip_code=None):
+    def delivery_get_pickup_locations(self, order_id, zip_code=None, selected_country=None):
         """ Fetch the order and return the pickup locations close to a given zip code.
 
         Determine the country based on GeoIP or fallback on the order's delivery address' country.
@@ -35,4 +35,4 @@ class LocationSelectorController(Controller):
             )
         else:
             country = order.partner_shipping_id.country_id
-        return order._get_pickup_locations(zip_code, country)
+        return order._get_pickup_locations(zip_code, country, selected_country)

@@ -96,7 +96,7 @@ export class LocationSelectorDialog extends Component {
         return rpc(this.getLocationUrl, {
             order_id: this.props.orderId,
             zip_code: zip,
-            country_code: this.state.selectedCountry.code,
+            selected_country: this.state.selectedCountry.code,
         });
     }
 
@@ -170,9 +170,7 @@ export class LocationSelectorDialog extends Component {
         const selectedLocation = this.state.locations.find(
             l => String(l.id) === this.state.selectedLocationId
         );
-        this.state.isCountryChanged = (
-            this.state.selectedCountry.code !== selectedLocation.country_code
-        ) ? true : false;
+        this.state.isCountryChanged = value.code !== selectedLocation.country_code ? true : false;
         this._updateLocations();
     }
 
