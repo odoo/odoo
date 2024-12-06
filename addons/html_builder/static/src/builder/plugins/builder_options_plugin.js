@@ -39,8 +39,8 @@ export class BuilderOptionsPlugin extends Plugin {
         const map = new Map();
         for (const option of this.builderOptions) {
             const { selector } = option;
-            const element = selectedElement.closest(selector);
-            if (element) {
+            const elements = getClosestElements(selectedElement, selector);
+            for (const element of elements) {
                 if (map.has(element)) {
                     map.get(element).push(option);
                 } else {
@@ -58,4 +58,9 @@ export class BuilderOptionsPlugin extends Plugin {
         }
         return;
     }
+}
+
+function getClosestElements(element, selector) {
+    const parent = element.closest(selector);
+    return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
 }

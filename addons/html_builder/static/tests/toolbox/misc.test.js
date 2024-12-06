@@ -47,16 +47,16 @@ test("basic multi options containers", async () => {
         <WeRow label="'Row 1'">A</WeRow>`,
     });
     addOption({
-        selector: "p",
+        selector: ".a",
         template: xml`
         <WeRow label="'Row 2'">B</WeRow>`,
     });
     addOption({
-        selector: "div",
+        selector: ".main",
         template: xml`
         <WeRow label="'Row 3'">C</WeRow>`,
     });
-    await setupWebsiteBuilder(`<div><p class="test-options-target">b</p></div>`);
+    await setupWebsiteBuilder(`<div class="main"><p class="test-options-target a">b</p></div>`);
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toHaveCount(2);
     expect(queryAllTexts(".options-container:first .we-bg-options-container > div > div")).toEqual([
@@ -66,6 +66,20 @@ test("basic multi options containers", async () => {
     expect(
         queryAllTexts(".options-container:nth-child(2) .we-bg-options-container > div > div")
     ).toEqual(["Row 1", "A", "Row 2", "B"]);
+});
+
+test("option that matches several elements", async () => {
+    addOption({
+        selector: ".a",
+        template: xml`<WeRow label="'Row'">
+            <WeButton classAction="'my-custom-class'">Test</WeButton>
+        </WeRow>`,
+    });
+
+    await setupWebsiteBuilder(`<div class="a"><div class="a test-target">b</div></div>`);
+    await contains(":iframe .test-target").click();
+    expect(".options-container:not(.d-none)").toHaveCount(2);
+    expect(queryAllTexts(".options-container:not(.d-none)")).toEqual(["Row\nTest", "Row\nTest"]);
 });
 
 test("Snippets options respect sequencing", async () => {
