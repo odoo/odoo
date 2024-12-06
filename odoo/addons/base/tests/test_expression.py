@@ -380,8 +380,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         all_partners = self._search(Partner, [('company_id', '!=', False)])
 
         # check with empty list
-        # TODO complement does not work
-        res_partners = self._search(Partner, [('company_id.partner_id', 'not in', [])], test_complement=False)
+        res_partners = self._search(Partner, [('company_id.partner_id', 'not in', [])])
         self.assertEqual(all_partners, res_partners, "not in [] fails")
 
         # Test the '(not) like/in' behavior. res.partner and its parent_id
@@ -1315,8 +1314,7 @@ class TestAutoJoin(TransactionExpressionCase):
         patch_auto_join(partner_obj, 'child_ids', True)
         patch_auto_join(partner_obj, 'state_id', True)
         patch_auto_join(state_obj, 'country_id', True)
-        # TODO complement does not work
-        partners = self._search(partner_obj, [('child_ids.state_id.country_id.code', 'like', name_test)], test_complement=False)
+        partners = self._search(partner_obj, [('child_ids.state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b, partners,
             "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
 
