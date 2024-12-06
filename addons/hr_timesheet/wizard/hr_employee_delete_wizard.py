@@ -35,7 +35,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
         return {
             'name': _('Employee Termination'),
             'type': 'ir.actions.act_window',
-            'res_model': 'hr.departure.wizard',
+            'res_model': 'hr.employee.departure',
             'views': [[False, 'form']],
             'view_mode': 'form',
             'target': 'new',

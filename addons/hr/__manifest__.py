@@ -23,7 +23,7 @@
         'security/ir.model.access.csv',
         'data/digest_data.xml',
         'data/report_paperformat.xml',
-        'wizard/hr_departure_wizard_views.xml',
+        'views/hr_employee_departure_views.xml',
         'wizard/mail_activity_schedule_views.xml',
         'views/mail_activity_plan_views.xml',
         'views/hr_departure_reason_views.xml',
@@ -42,6 +42,7 @@
         'views/res_users.xml',
         'views/hr_templates.xml',
         'data/hr_data.xml',
+        'data/ir_cron_data.xml',
     ],
     'demo': [
         'data/hr_demo.xml'

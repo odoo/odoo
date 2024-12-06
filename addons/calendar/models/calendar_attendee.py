@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 
 class CalendarAttendee(models.Model):
     """ Calendar Attendee Information """
+    _name = "calendar.attendee"
     _rec_name = 'common_name'
     _description = 'Calendar Attendee Information'
     _order = 'create_date ASC'
