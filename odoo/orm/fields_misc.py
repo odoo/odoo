@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 import copy
 import json
@@ -5,8 +6,14 @@ import typing
 
 from psycopg2.extras import Json as PsycopgJson
 
+from odoo.tools import SQL
+
 from .fields import Field
 from .identifiers import IdType
+
+if typing.TYPE_CHECKING:
+    from .models import BaseModel
+    from odoo.tools import Query
 
 # integer needs to be imported before Id because of `type` attribute clash
 from . import fields_numeric  # noqa: F401
@@ -16,6 +23,7 @@ class Boolean(Field[bool]):
     """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     _column_type = ('bool', 'bool')
+    falsy_value = False
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
@@ -30,6 +38,25 @@ class Boolean(Field[bool]):
 
     def convert_to_export(self, value, record):
         return bool(value)
+
+    def condition_to_sql(self, model: BaseModel, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
+        if operator not in ('in', 'not in', '=', '!='):
+            return super().condition_to_sql(model, alias, field_expr, operator, value, query)
+        # get field and check access
+        sql_field = model._field_to_sql(alias, field_expr, query)
+        # make sure value is a set of bool
+        if operator in ('=', '!='):
+            operator = 'in' if operator == '=' else 'not in'
+            value = {value}
+        else:
+            value = {bool(v) for v in value}
+        if len(value) != 1:
+            sql_expr = SQL("TRUE") if bool(value) == (operator == 'in') else SQL("FALSE")
+        elif any(value) == (operator == 'in'):
+            sql_expr = SQL("%s IS TRUE", sql_field)
+        else:
+            sql_expr = SQL("%s IS NOT TRUE", sql_field)
+        return self._condition_to_sql_company(sql_expr, model, alias, field_expr, operator, value, query)
 
 
 class Json(Field):
@@ -92,3 +119,8 @@ class Id(Field[IdType | typing.Literal[False]]):
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
+
+    def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
+        # do not flush, just return the identifier
+        assert self.store, 'id field must be stored'
+        return SQL.identifier(alias, self.name)
