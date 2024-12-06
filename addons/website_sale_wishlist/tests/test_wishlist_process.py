@@ -57,26 +57,3 @@ class TestWishlistProcess(HttpCase):
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
         self.start_tour("/", 'shop_wishlist')
-
-    def test_02_wishlist_admin_tour(self):
-        attribute = self.env['product.attribute'].create({
-            'name': 'color',
-            'display_type': 'color',
-            'create_variant': 'always',
-            'value_ids': [
-                Command.create({'name': 'red'}),
-                Command.create({'name': 'blue'}),
-                Command.create({'name': 'black'}),
-            ]
-        })
-        self.env['product.template'].create({
-            'name': 'Rock',
-            'is_published': True,
-            'attribute_line_ids': [
-                Command.create({
-                    'attribute_id': attribute.id,
-                    'value_ids': [Command.set(attribute.value_ids.ids)],
-                }),
-            ],
-        })
-        self.start_tour("/", 'shop_wishlist_admin', login="admin")

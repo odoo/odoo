@@ -262,50 +262,6 @@
         </div>
         <!-- Product page -->
         <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Product Page">
-            <we-row string="Customers" class="o_we_full_row">
-                <we-button string="Rating"
-                           data-customize-website-views="website_sale.product_comment"
-                           data-no-preview="true"
-                           data-reload="/"/>
-                <we-button string="Share"
-                           data-name="attributes_opt"
-                           data-customize-website-views="website_sale.product_share_buttons"
-                           data-no-preview="true"
-                           data-reload="/"/>
-            </we-row>
-            <we-checkbox string="Select Quantity"
-                         data-customize-website-views="website_sale.product_quantity"
-                         data-no-preview="true"
-                         data-reload="/"/>
-            <we-checkbox string="Tax Indication"
-                         data-customize-website-views="website_sale.tax_indication"
-                         data-no-preview="true"
-                         data-reload="/"/>
-            <we-select data-name="variants_opt" groups="product.group_product_variant" string="Variants" data-no-preview="true" data-reload="/">
-                <we-button data-name="variants_options_opt" data-customize-website-views="">Options</we-button>
-                <we-button data-name="variants_products_list_opt" data-customize-website-views="website_sale.product_variants">Products List</we-button>
-            </we-select>
-            <we-checkbox string="Product Tags"
-                         data-customize-website-views="website_sale.product_tags"
-                         data-no-preview="true"
-                         data-reload="/"
-            />
-            <we-row string="Cart" class="o_we_full_row" data-name="o_wsale_buy_now_opt">
-                <we-button title="Buy Now" class="o_we_buy_now_btn"
-                           data-customize-website-views="website_sale.product_buy_now"
-                           data-no-preview="true"
-                           data-reload="/">
-                    <i class="fa fa-fw fa-bolt"/>
-                    Buy Now
-                </we-button>
-            </we-row>
-            <we-checkbox
-                string="More Information"
-                data-name="o_wsale_accordion_item"
-                data-customize-website-views="website_sale.accordion_more_information"
-                data-no-preview="true"
-                data-reload="/"
-            />
             <!-- Image config -->
             <we-button-group string="Images Width" data-no-preview="true" data-reload="/">
                 <we-button data-set-image-width="none" data-img="/website_sale/static/src/img/snippet_options/image-width-none.svg" title="None"/>
@@ -364,6 +320,54 @@
                 <we-button class="o_we_bg_success" data-name="o_wsale_add_extra_images" data-add-images="true" data-no-preview="true">Add</we-button>
                 <we-button class="o_we_bg_danger" data-name="o_wsale_clear_extra_images" data-clear-images="true" data-no-preview="true">Remove all</we-button>
             </we-row>
+            <we-row string="Cart" class="o_we_full_row" data-name="o_wsale_cart_opt">
+                <we-button
+                    title="Buy Now"
+                    class="o_we_buy_now_btn"
+                    data-customize-website-views="website_sale.product_buy_now"
+                    data-no-preview="true"
+                    data-reload="/"
+                >
+                    <i class="fa fa-fw fa-bolt"/>
+                    Buy Now
+                </we-button>
+                <we-button
+                    title="Select Quantity"
+                    class="o_we_buy_now_btn"
+                    data-customize-website-views="website_sale.product_quantity"
+                    data-no-preview="true"
+                    data-reload="/"
+                >
+                    Quantity
+                </we-button>
+            </we-row>
+            <div data-name="o_wsale_actions_opt" class="d-none">
+                <we-row string="Actions" class="o_we_full_row" data-name="o_we_actions_opt"/>
+            </div>
+            <we-checkbox
+                string="Tax Indication"
+                data-customize-website-views="website_sale.tax_indication"
+                data-no-preview="true"
+                data-reload="/"
+            />
+            <we-checkbox
+                string="Product Tags"
+                data-customize-website-views="website_sale.product_tags"
+                data-no-preview="true"
+                data-reload="/"
+            />
+            <we-checkbox
+                string="Terms and Conditions"
+                data-customize-website-views="website_sale.product_custom_text"
+                data-no-preview="true"
+                data-reload="/"
+            />
+            <we-checkbox
+                string="Reviews"
+                data-customize-website-views="website_sale.product_comment"
+                data-no-preview="true"
+                data-reload="/"
+            />
         </div>
         <!-- Checkout page  -->
         <div
