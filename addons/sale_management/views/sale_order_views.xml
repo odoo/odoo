@@ -17,7 +17,6 @@
                                     domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
-                                <field name="product_uom_category_id" invisible="1"/>
                                 <field name="uom_id" groups="uom.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
@@ -60,14 +59,12 @@
                             <field name="name" optional="show"/>
                             <field name="quantity"/>
                             <field name="uom_id" string="UoM" groups="uom.group_uom" optional="show"/>
-                            <field name="product_uom_category_id" column_invisible="True"/>
                             <field name="price_unit"/>
                             <field name="discount"
                                 width="50px"
                                 string="Disc.%"
                                 groups="sale.group_discount_per_so_line"
                                 optional="show"/>
-                            <field name="is_present" column_invisible="True" />
                             <button name="button_add_to_order"
                                 type="object"
                                 class="oe_link"
@@ -80,10 +77,11 @@
             </page>
 
             <field name="partner_shipping_id" position="after">
-                <field name="sale_order_template_id"
+                <field
+                    name="sale_order_template_id"
                     options="{'no_create': True}"
-                    groups="sale_management.group_sale_order_template"
-                 readonly="state in ['cancel', 'sale']"/>
+                    readonly="state in ['cancel', 'sale']"
+                    groups="sale_management.group_sale_order_template"/>
             </field>
         </field>
     </record>
