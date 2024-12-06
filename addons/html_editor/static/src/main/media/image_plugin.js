@@ -244,7 +244,7 @@ export class ImagePlugin extends Plugin {
         const fileModel = {
             isImage: true,
             isViewable: true,
-            displayName: selectedImg.src,
+            name: selectedImg.src,
             defaultSource: selectedImg.src,
             downloadUrl: selectedImg.src,
         };

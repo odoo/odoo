@@ -4,7 +4,7 @@ import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 
 /**
  * @typedef {Object} File
- * @property {string} displayName
+ * @property {string} name
  * @property {string} downloadUrl
  * @property {boolean} [isImage]
  * @property {boolean} [isPdf]
