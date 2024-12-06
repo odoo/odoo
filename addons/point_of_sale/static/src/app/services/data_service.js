@@ -290,15 +290,9 @@ export class PosData extends Reactive {
             };
         }
 
-        const { models, records, indexedRecords, baseData } = createRelatedModels(
-            relations,
-            modelClasses,
-            this.opts
-        );
+        const { models, baseData } = createRelatedModels(relations, modelClasses, this.opts);
 
         this.baseData = baseData;
-        this.records = records;
-        this.indexedRecords = indexedRecords;
         this.fields = fields;
         this.relations = relations;
         this.models = models;
@@ -682,7 +676,7 @@ export class PosData extends Reactive {
         // Delete all children records before main record
         this.indexedDB.delete(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
-            this.indexedDB.delete(item.model.modelName, [item.uuid]);
+            this.indexedDB.delete(item.model.name, [item.uuid]);
             item.delete();
         }
 

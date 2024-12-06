@@ -86,7 +86,7 @@ patch(PosStore.prototype, {
         if (this.config.module_pos_hr) {
             const cashier = this.getCashier();
 
-            if (cashier && cashier.model.modelName === "hr.employee") {
+            if (cashier && cashier.model.name === "hr.employee") {
                 const order = this.getOrder();
                 order.employee_id = this.getCashier();
             }
