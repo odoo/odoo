@@ -8,9 +8,15 @@ from odoo.exceptions import UserError
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
+<<<<<<< 18.0
     repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True)
     repair_mto_pull_id = fields.Many2one(
         'stock.rule', 'Repair MTO Rule', copy=False)
+||||||| f63eadaa8e403dbc8b0231b5173ca51a9b3fb879
+    repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True)
+=======
+    repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True, copy=False)
+>>>>>>> 4fbc452622ba29e34cebaa95946cda9b19da6b3b
 
     def _get_sequence_values(self, name=False, code=False):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
