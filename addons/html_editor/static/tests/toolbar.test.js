@@ -29,6 +29,7 @@ import {
 } from "./_helpers/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { strong } from "./_helpers/tags";
+import { insertText } from "./_helpers/user_actions";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -932,5 +933,48 @@ describe("toolbar open and close on user interaction", () => {
             await advanceTime(500);
             expect(".o-we-toolbar").toHaveCount(1);
         });
+    });
+});
+
+describe.tags("mobile");
+describe("history", () => {
+    test("toolbar should have history buttons on mobile", async () => {
+        const { el, editor } = await setupEditor("<p>test</p>");
+        setContent(el, "<p>test[]</p>");
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveCount(1);
+
+        // Check that the history buttons are present and disabled
+        expect(".btn[name='undo']").toHaveClass("disabled");
+        expect(".btn[name='redo']").toHaveClass("disabled");
+
+        // Make changes
+        await insertText(editor, "X");
+        expect(getContent(el)).toBe("<p>testX[]</p>");
+
+        // Undo becomes available
+        await waitFor(".btn[name='undo']:not(.disabled)");
+        expect(".btn[name='undo']").not.toHaveClass("disabled");
+        expect(".btn[name='redo']").toHaveClass("disabled");
+
+        // Click on undo
+        click(".btn[name='undo']");
+        await animationFrame();
+        expect(getContent(el)).toBe("<p>test[]</p>");
+
+        // Redo becomes available, and undo disabled
+        await waitFor(".btn[name='redo']:not(.disabled)");
+        expect(".btn[name='undo']").toHaveClass("disabled");
+        expect(".btn[name='redo']").not.toHaveClass("disabled");
+
+        // Click on redo
+        click(".btn[name='redo']");
+        await animationFrame();
+        expect(getContent(el)).toBe("<p>testX[]</p>");
+
+        // Same state as before (can undo, cannot redo)
+        await waitFor(".btn[name='undo']:not(.disabled)");
+        expect(".btn[name='undo']").not.toHaveClass("disabled");
+        expect(".btn[name='redo']").toHaveClass("disabled");
     });
 });

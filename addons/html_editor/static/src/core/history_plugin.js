@@ -1,5 +1,8 @@
+import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { childNodes, descendants, getCommonAncestor } from "../utils/dom_traversal";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -122,9 +125,26 @@ export class HistoryPlugin extends Plugin {
     ];
     resources = {
         user_commands: [
-            { id: "historyUndo", run: this.undo.bind(this) },
-            { id: "historyRedo", run: this.redo.bind(this) },
+            { id: "historyUndo", title: _t("Undo"), icon: "fa-undo", run: this.undo.bind(this) },
+            { id: "historyRedo", title: _t("Redo"), icon: "fa-repeat", run: this.redo.bind(this) },
         ],
+        ...(hasTouch() && {
+            toolbar_groups: withSequence(5, { id: "historyMobile" }),
+            toolbar_items: [
+                {
+                    id: "undo",
+                    groupId: "historyMobile",
+                    commandId: "historyUndo",
+                    isDisabled: () => !this.canUndo(),
+                },
+                {
+                    id: "redo",
+                    groupId: "historyMobile",
+                    commandId: "historyRedo",
+                    isDisabled: () => !this.canRedo(),
+                },
+            ],
+        }),
         shortcuts: [
             { hotkey: "control+z", commandId: "historyUndo" },
             { hotkey: "control+y", commandId: "historyRedo" },
