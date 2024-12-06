@@ -468,7 +468,7 @@ class HolidaysAllocation(models.Model):
             # even if the value doesn't change. This is the best performance atm.
             first_level = level_ids[0]
             first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
-            leaves_taken = allocation.leaves_taken if first_level.added_value_type == "day" else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            leaves_taken = allocation.leaves_taken if allocation.holiday_status_id.request_unit in ["day", "half_day"] else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
             allocation.already_accrued = already_accrued[allocation.id]
             # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
@@ -519,10 +519,12 @@ class HolidaysAllocation(models.Model):
                 # if it's the carry-over date, adjust days using current level's carry-over policy, then continue
                 if allocation.nextcall == carryover_date:
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
-                        allocation_days = allocation.number_of_days + leaves_taken
-                        postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
-                        allocation_max_days = postpone_max_days + leaves_taken
-                        allocation.number_of_days = min(allocation_days, allocation_max_days)
+                        allocated_days_left = allocation.number_of_days - leaves_taken
+                        allocation_max_days = 0 # default if unused_accrual are lost
+                        if current_level.action_with_unused_accruals == 'maximum':
+                            postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                            allocation_max_days = min(postpone_max_days, allocated_days_left)
+                        allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
 
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
