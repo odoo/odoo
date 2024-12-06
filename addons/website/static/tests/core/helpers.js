@@ -6,6 +6,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { registry } from "@web/core/registry";
+import { buildEditableInteractions } from "@web/legacy/js/public/interaction_util";
 
 let activeInteractions = null;
 let elementRegistry = registry.category("website.active_elements");
@@ -29,7 +30,7 @@ export async function startInteraction(I, html, options) {
 
 export async function startInteractions(
     html,
-    options = { waitForStart: true },
+    options = { waitForStart: true, editMode: false },
 ) {
     defineMailModels();
     const fixture = getFixture();
@@ -49,6 +50,17 @@ export async function startInteractions(
     }
     const env = await makeMockEnv();
     const core = env.services.website_core;
+    if (options.editMode) {
+        core.stopInteractions();
+        const builders = registry.category("website.editable_active_elements_builders").getEntries();
+        for (const [key, builder] of builders) {
+            if (activeInteractions && !activeInteractions.includes(key)) {
+                builder.isAbstract = true;
+            }
+        }
+        const editableInteractions = buildEditableInteractions(builders.map((builder) => builder[1]));
+        core.activate(editableInteractions);
+    }
     if (options.waitForStart) {
         await core.isReady;
     }
