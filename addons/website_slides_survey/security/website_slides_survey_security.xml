@@ -28,6 +28,19 @@
         <field name="perm_create" eval="0"/>
     </record>
 
+    <record id="survey_question_answer_tag_slide_channel_officer" model="ir.rule">
+        <field name="name">Survey question answer tag: slide channel officer on certification: read</field>
+        <field name="model_id" ref="survey.model_survey_question_answer_tag"/>
+        <field name="domain_force">[('survey_id.certification', '=', True),
+            ('survey_id.survey_type', 'in', ('survey', 'live_session', 'assessment', 'custom')),
+            '|', ('survey_id.restrict_user_ids', '=', False), ('survey_id.restrict_user_ids', 'in', user.id)]</field>
+        <field name="groups" eval="[(4, ref('website_slides.group_website_slides_officer'))]"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+    </record>
+
     <record id="survey_question_answer_slide_channel_officer" model="ir.rule">
         <field name="name">Survey question answer: slide channel officer on certification: read</field>
         <field name="model_id" ref="survey.model_survey_question_answer"/>
