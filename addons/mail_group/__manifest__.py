@@ -21,6 +21,7 @@ Manage your mailing lists from Odoo.
         'security/ir.model.access.csv',
         'security/mail_group_security.xml',
         'wizard/mail_group_message_reject_views.xml',
+        'views/mail_compose_message_views.xml',
         'views/mail_group_member_views.xml',
         'views/mail_group_message_views.xml',
         'views/mail_group_moderation_views.xml',
