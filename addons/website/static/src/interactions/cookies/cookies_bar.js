@@ -2,9 +2,8 @@ import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { isVisible } from "@web/core/utils/ui";
-import wUtils from "@website/js/utils";
-import { Popup } from "../popup/popup";
-// import { setUtmsHtmlDataset } from "@website/js/content/inject_dom";
+import { Popup } from "@website/interactions/popup/popup";
+import { cloneContentEls, setUtmsHtmlDataset } from "@website/js/utils";
 
 // Extending the Popup class with cookiebar functionality.
 // This allows for refusing optional cookies for now and can be
@@ -50,7 +49,7 @@ export class CookiesBar extends Popup {
     showToggle() {
         const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
         if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
-            this.toggleEl = wUtils.cloneContentEls(`
+            this.toggleEl = cloneContentEls(`
             <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex gap-2 align-items-center position-fixed pe-auto">
                 <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
             </button>
@@ -95,8 +94,7 @@ export class CookiesBar extends Popup {
                 cookie.set(trackingFields[key], value, 31 * 24 * 60 * 60, "optional");
             }
         }
-        // TODO: relocate/refactor inject_dom.js to work with colibri
-        // setUtmsHtmlDataset();
+        setUtmsHtmlDataset();
     }
 
     /**
