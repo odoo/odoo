@@ -307,12 +307,12 @@ class TestStockValuationStandard(TestStockValuationCommon):
         product1 = self.env['product.product'].create({
             'name': 'p1',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_expenses').id,
+            'categ_id': self.env.ref('hr_expense.product_category_expenses').id,
         })
         product2 = self.env['product.product'].create({
             'name': 'p2',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_expenses').id,
+            'categ_id': self.env.ref('hr_expense.product_category_expenses').id,
         })
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in.id,

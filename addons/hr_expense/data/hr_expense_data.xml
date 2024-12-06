@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record id="product_category_expenses" model="product.category">
+            <field name="name">Expenses</field>
+        </record>
+
         <!-- sgv note - icons will be replaced. Design task is ongoing -->
         <record id="expense_product_meal" model="product.product">
             <field name="name">Meals</field>
@@ -13,7 +17,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
-            <field name="categ_id" ref="product.product_category_expenses"/>
+            <field name="categ_id" ref="hr_expense.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/food.svg"/>
         </record>
         <record id="expense_product_travel_accommodation" model="product.product">
@@ -27,7 +31,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
-            <field name="categ_id" ref="product.product_category_expenses"/>
+            <field name="categ_id" ref="hr_expense.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/transport.svg"/>
         </record>
         <record id="expense_product_mileage" model="product.product">
@@ -40,7 +44,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
-            <field name="categ_id" ref="product.product_category_expenses"/>
+            <field name="categ_id" ref="hr_expense.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/mileage.svg"/>
         </record>
         <record id="expense_product_gift" model="product.product">
@@ -54,7 +58,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
-            <field name="categ_id" ref="product.product_category_expenses"/>
+            <field name="categ_id" ref="hr_expense.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/gift.svg"/>
         </record>
         <record id="expense_product_communication" model="product.product">
@@ -68,7 +72,7 @@
             <field name="can_be_expensed" eval="True"/>
             <field name="sale_ok" eval="False"/>
             <field name="purchase_ok" eval="False"/>
-            <field name="categ_id" ref="product.product_category_expenses"/>
+            <field name="categ_id" ref="hr_expense.product_category_expenses"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/communication.svg"/>
         </record>
         <record id="product_product_no_cost" model="product.product">
@@ -76,9 +80,28 @@
             <field name="standard_price">0.0</field>
             <field name="type">service</field>
             <field name="default_code">EXP_GEN</field>
-            <field name="categ_id" ref="product.product_category_expenses"/>
+            <field name="categ_id" ref="hr_expense.product_category_expenses"/>
             <field name="can_be_expensed" eval="True"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/other.svg"/>
+        </record>
+
+     <!-- Expensable products -->
+        <record id="expense_hotel" model="product.product">
+            <field name="name">Hotel Accommodation</field>
+            <field name="list_price">400.0</field>
+            <field name="standard_price">400.0</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_day"/>
+            <field name="uom_po_id" ref="uom.product_uom_day"/>
+            <field name="categ_id" ref="hr_expense.product_category_expenses"/>
+        </record>
+
+         <record id="expense_product" model="product.product">
+            <field name="name">Restaurant Expenses</field>
+            <field name="list_price">14.0</field>
+            <field name="standard_price">8.0</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="hr_expense.product_category_expenses"/>
         </record>
     </data>
     <data>

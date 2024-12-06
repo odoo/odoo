@@ -275,7 +275,8 @@
                     <div class="oe_title">
                         <h1 class="d-flex">
                             <field name="priority" widget="priority" class="me-3"/>
-                            <field name="name" placeholder="Manufacturing Reference" nolabel="1"/>
+                            <span><field name="name" placeholder="Manufacturing Reference" nolabel="1"/></span>
+                            <i class="fa fa-lock m-3 fs-3" title="This transfer is locked" invisible="not is_locked or name == 'New' or state == 'draft'" />
                         </h1>
                     </div>
                     <group>
