@@ -7,7 +7,7 @@ from odoo import fields, models, _
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
-    repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True)
+    repair_type_id = fields.Many2one('stock.picking.type', 'Repair Operation Type', check_company=True, copy=False)
 
     def _get_sequence_values(self, name=False, code=False):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
