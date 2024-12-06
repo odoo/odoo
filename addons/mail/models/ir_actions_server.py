@@ -27,7 +27,26 @@ class IrActionsServer(models.Model):
         }
     )
     # Followers
+    followers_type = fields.Selection(
+        selection=[
+            ('specific', 'Specific Followers'),
+            ('generic', 'Dynamic Followers'),
+        ],
+        help="""
+            - Specific Followers: select specific contacts to add/remove from record's followers.
+            - Dynamic Followers: all contacts of the chosen record's field will be added/removed from followers.
+        """,
+        string='Followers Type',
+        compute='_compute_followers_type',
+        readonly=False, store=True
+    )
+    followers_partner_field_name = fields.Char(
+        string='Followers Field',
+        compute='_compute_followers_partner_field_name',
+        readonly=False, store=True
+    )
     partner_ids = fields.Many2many('res.partner', compute='_compute_partner_ids', readonly=False, store=True)
+
     # Message Post / Email
     template_id = fields.Many2one(
         'mail.template', 'Email Template',
@@ -118,10 +137,24 @@ class IrActionsServer(models.Model):
             other.mail_post_method = 'comment'
 
     @api.depends('state')
+    def _compute_followers_type(self):
+        to_reset = self.filtered(lambda act: act.state not in ['followers', 'remove_followers'])
+        to_reset.followers_type = False
+        (self - to_reset).followers_type = 'specific'
+
+    @api.depends('model_id', 'state', 'followers_type')
+    def _compute_followers_partner_field_name(self):
+        to_reset = self.filtered(
+            lambda act: not act.model_id
+            or act.state not in ["followers", "remove_followers"]
+            or act.followers_type == 'specific'
+        )
+        to_reset.followers_partner_field_name = False
+
+    @api.depends('state', 'followers_type')
     def _compute_partner_ids(self):
-        to_reset = self.filtered(lambda act: act.state != 'followers')
-        if to_reset:
-            to_reset.partner_ids = False
+        to_reset = self.filtered(lambda act: act.state not in ['followers', 'remove_followers'] or act.followers_type == 'generic')
+        to_reset.partner_ids = False
 
     @api.depends('model_id', 'state')
     def _compute_activity_type_id(self):
@@ -185,16 +218,26 @@ class IrActionsServer(models.Model):
 
     def _run_action_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]
-        if self.partner_ids and hasattr(Model, 'message_subscribe'):
+        if hasattr(Model, 'message_subscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
-            records.message_subscribe(partner_ids=self.partner_ids.ids)
+            if self.followers_type == 'specific':
+                partner_ids = self.partner_ids
+            else:
+                followers_field = self.followers_partner_field_name
+                partner_ids = records.mapped(followers_field)
+            records.message_subscribe(partner_ids=partner_ids.ids)
         return False
 
     def _run_action_remove_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]
-        if self.partner_ids and hasattr(Model, 'message_unsubscribe'):
+        if hasattr(Model, 'message_unsubscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
-            records.message_unsubscribe(partner_ids=self.partner_ids.ids)
+            if self.followers_type == 'specific':
+                partner_ids = self.partner_ids
+            else:
+                followers_field = self.followers_partner_field_name
+                partner_ids = records.mapped(followers_field)
+            records.message_unsubscribe(partner_ids=partner_ids.ids)
         return False
 
     def _is_recompute(self):
