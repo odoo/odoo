@@ -115,6 +115,10 @@ class ResConfigSettings(models.TransientModel):
             record.enabled_extra_checkout_step = website.is_view_active(
                 'website_sale.extra_info'
             )
+            # TODO-PDA better place for this?
+            self.env.ref('website_sale.checkout_step_extra').is_published = website.is_view_active(
+                'website_sale.extra_info'
+            )
             record.enabled_buy_now_button = website.is_view_active(
                 'website_sale.product_buy_now'
             )

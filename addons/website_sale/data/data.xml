@@ -69,7 +69,6 @@
             <field name="step_href">/shop/cart</field>
             <field name="back_button_label">Back to cart</field>
             <field name="is_published" eval="True"/>
-            <!-- TODO-PDA consider next main_button_label could be Sign In or Checkout-->
         </record>
 
         <record id="website_sale.checkout_step_delivery" model="website.checkout.step">
@@ -85,7 +84,8 @@
             <field name="name">Extra Info</field>
             <field name="sequence">3</field>
             <field name="step_href">/shop/extra_info</field>
-            <!--TODO-PDA consider extra step-->
+            <field name="main_button_label">Confirm</field>
+            <field name="back_button_label">Back to extra info</field>
         </record>
 
         <record id="website_sale.checkout_step_payment" model="website.checkout.step">

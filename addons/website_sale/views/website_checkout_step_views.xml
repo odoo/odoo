@@ -5,8 +5,8 @@
         <field name="name">website.checkout.step.list</field>
         <field name="model">website.checkout.step</field>
         <field name="arch" type="xml">
-            <list default_order="sequence">
-                <field name="sequence"/>
+            <list>
+                <field name="sequence"  widget="handle"/>
                 <field name="name"/>
                 <field name="website_id"/>
                 <field name="is_published"/>

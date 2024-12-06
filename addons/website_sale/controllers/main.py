@@ -1775,6 +1775,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'partner': order.partner_id.id,
             'order': order,
         }
+
+        values.update(self._get_checkout_step_values('/shop/extra_info'))
+
         return request.render("website_sale.extra_info", values)
 
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
@@ -1841,7 +1844,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _get_checkout_step_values(self, href):
 
-        current_step = request.env['website.checkout.step'].search(
+        current_step = request.env['website.checkout.step'].sudo().search(
             [('step_href', '=', href)], limit=1
         )
         allowed_steps_domain = [
@@ -1944,6 +1947,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if sale_order_id:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             values = self._prepare_shop_payment_confirmation_values(order)
+            values.update(self._get_checkout_step_values('/shop/confirmation'))
             return request.render("website_sale.confirmation", values)
         return request.redirect('/shop')
 
