@@ -103,9 +103,51 @@ class ResourceCalendar(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
-    flexible_hours = fields.Boolean(string="Flexible Hours",
+    flexible_hours = fields.Boolean(string="Flexible Hours", compute="_compute_flexible_hours", inverse="_inverse_flexible_hours", store=True,
                                     help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
     full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
+
+    schedule_type = fields.Selection(
+        [
+            ('fully_flexible', 'Fully Flexible'),
+            ('flexible', 'Flexible'),
+            ('fixed_time', 'Fixed Time'),
+            ('fully_fixed', 'Fully Fixed'),
+        ],
+        string='Schedule Type',
+        required=True,
+        default='fully_fixed',
+        help="Choose which level of definition you want to define on your Schedule\n"
+            "- Fully Flexible : Nothing is defined, working schedule can vary every week\n"
+            "- Flexible : Define an amount of hours to work on the week\n"
+            "- Fixed Time : In addition to Flexible, define the days (and hours if needed) you're working on the week\n"
+            "- Fully Fixed : In addition to Fixed Hours, define the start & end time for each day of the week"
+    )
+
+    attendance_ids_1st_week = fields.One2many(
+        'resource.calendar.attendance', 'calendar_id', 'Working Time 1st Week',
+        domain=[('week_type', '=', '0')], readonly=False)
+
+    attendance_ids_2nd_week = fields.One2many(
+        'resource.calendar.attendance', 'calendar_id', 'Working Time 2nd Week',
+        domain=[('week_type', '=', '1')], readonly=False)
+
+    @api.onchange('attendance_ids', 'two_weeks_calendar')
+    def _onchange_two_weeks_attendance(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar:
+                continue
+            calendar.attendance_ids_1st_week = calendar.attendance_ids
+            calendar.attendance_ids_2nd_week = calendar.attendance_ids
+
+    @api.depends("schedule_type")
+    def _compute_flexible_hours(self):
+        for calendar in self:
+            calendar.flexible_hours = calendar.schedule_type in ('fully_flexible', 'flexible')
+
+    def _inverse_flexible_hours(self):
+        for calendar in self:
+            calendar.schedule_type = 'flexible' if calendar.flexible_hours else 'fully_fixed'
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_day(self):
@@ -114,6 +156,14 @@ class ResourceCalendar(models.Model):
                 continue
             attendances = calendar._get_global_attendances()
             calendar.hours_per_day = calendar._get_hours_per_day(attendances)
+
+    @api.onchange('flexible_hours')
+    def onchange_flexible_hours(self):
+        if self.flexible_hours:
+            self.two_weeks_calendar = False
+            self.attendance_ids = [(5, 0, 0)]
+        elif not self.attendance_ids:
+            self.attendance_ids = self.default_get(['attendance_ids'])['attendance_ids']
 
     @api.depends('company_id')
     def _compute_attendance_ids(self):

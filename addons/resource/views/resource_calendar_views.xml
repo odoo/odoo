@@ -20,12 +20,12 @@
             <form string="Working Time">
                 <field name="two_weeks_calendar" invisible="1"/>
                 <header>
-                    <button name="switch_calendar_type" invisible="two_weeks_calendar or flexible_hours" string="Switch to 2 weeks calendar" type="object"
+                    <!-- <button name="switch_calendar_type" invisible="two_weeks_calendar or flexible_hours" string="Switch to 2 weeks calendar" type="object"
                         confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
                         confirm-label="Switch"/>
                     <button name="switch_calendar_type" invisible="not two_weeks_calendar" string="Switch to 1 week calendar" type="object"
                         confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
-                        confirm-label="Switch"/>
+                        confirm-label="Switch"/> -->
                 </header>
                 <sheet string="Working Time">
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -52,26 +52,58 @@
                     </div>
                     <group name="resource_details" col="2">
                         <group name="resource_working_hours">
-                            <field name="flexible_hours"/>
+                            <field name="schedule_type" widget="radio"/>
+                            <field name="flexible_hours" invisible="1"/>
                             <label for="full_time_required_hours" invisible="flexible_hours"/>
                             <label for="full_time_required_hours" string="Hours per Week" invisible="not flexible_hours"/>
                             <div>
-                                <field name="full_time_required_hours" style="width: 10%" widget="float_time"/>
+                                <field name="full_time_required_hours" style="width: 10%" widget="float_time" readonly="company_id"/>
                                 <span> hours/week</span>
                             </div>
-                            <field name="hours_per_day" widget="float_time" readonly="not flexible_hours"/>
                         </group>
-                        <group name="resource_company">
-                            <field name="active" invisible="1"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
-                            <field name="tz_offset" invisible="1"/>
+                        <group>
+                            <group name="resource_company">
+                                <field name="active" invisible="1"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
+                                <field name="tz_offset" invisible="1"/>
+                                <div invisible="flexible_hours">
+                                    <span class="me-2">2 Weeks Calendar</span>
+                                    <button name="switch_calendar_type"
+                                            type="object"
+                                            string=""
+                                            class="btn"
+                                            confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
+                                            confirm-label="Switch">
+                                        <i class="fa fa-square-o" title="Switch to 2 weeks calendar" invisible="two_weeks_calendar"/>
+                                        <i class="fa fa-check-square" title="Switch to 1 week calendar" invisible="not two_weeks_calendar"/>
+                                    </button>
+                                </div>
+                                <field name="hours_per_day" widget="float_time" invisible="schedule_type != 'flexible'"/>
+                            </group>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Working Hours" name="working_hours" invisible="flexible_hours">
+                        <page string="Working Hours" name="working_hours" invisible="flexible_hours or two_weeks_calendar">
+                            <group name="weekly_schedule">
+                                <group>
+                                    <field name="hours_per_day" widget="float_time" readonly="1"/>
+                                </group>
+                            </group>
+                            <field name="attendance_ids"/> 
+                        </page>
+                        <page string="Working Hours_1st_week" name="working_hours_1st_week" invisible="not two_weeks_calendar">
+                            <group name="weekly_schedule">
+                                <group>
+                                    <field name="hours_per_day" widget="float_time" readonly="1"/>
+                                </group>
+                            </group>
                             <field name="two_weeks_explanation" invisible="not two_weeks_calendar"/>
-                            <field name="attendance_ids" widget="section_one2many"/>
+                            <field name="attendance_ids_1st_week" /> 
+                        </page>
+                        <page string="Working Hours_2nd_week" name="working_hours_2nd_week" invisible="not two_weeks_calendar">
+                            <field name="two_weeks_explanation" invisible="not two_weeks_calendar"/>
+                            <field name="attendance_ids_2nd_week" /> 
                         </page>
                     </notebook>
                 </sheet>
