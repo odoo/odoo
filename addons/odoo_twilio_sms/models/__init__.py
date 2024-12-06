@@ -28,3 +28,4 @@ from . import twilio_sms
 from . import twilio_sms_group
 from . import twilio_sms_template
 from . import crm_lead
+from . import res_company

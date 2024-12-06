@@ -19,3 +19,4 @@ class TwilioMessageLog(models.Model):
     status = fields.Char(string="Status")
     res_model = fields.Char(string="Res Model")
     res_id = fields.Char(string="Res ID")
+    is_reply_message = fields.Boolean(string="Is Reply Message", default=False)

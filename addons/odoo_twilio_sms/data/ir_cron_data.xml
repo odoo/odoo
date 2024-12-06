@@ -12,5 +12,16 @@
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
         </record>
+
+        <record id="ir_cron_check_last_sms" model="ir.cron">
+            <field name="name">Twilio Message List in Last 10 Minutes</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">model.get_list_of_messages_last_time()</field>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
     </data>
 </odoo>
