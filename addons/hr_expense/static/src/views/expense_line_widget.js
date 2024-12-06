@@ -42,7 +42,7 @@ export class ExpenseLinesKanbanRecord extends KanbanRecord {
         const files = attachments.map((attachment, index) => ({
             isImage: true,
             isViewable: true,
-            displayName: expenseName + ` (${index + 1})`,
+            name: expenseName + ` (${index + 1})`,
             defaultSource: attachment,
             downloadUrl: attachment,
         }));

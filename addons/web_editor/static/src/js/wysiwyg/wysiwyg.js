@@ -1653,7 +1653,7 @@ export class Wysiwyg extends Component {
                 files: [{
                         isImage: true,
                         isViewable: true,
-                        displayName: url,
+                        name: url,
                         defaultSource: url,
                         downloadUrl: url,
                 }],
