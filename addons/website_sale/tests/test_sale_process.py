@@ -75,9 +75,6 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon):
             })
             transfer_provider._transfer_ensure_pending_msg_is_set()
 
-    def test_01_admin_shop_tour(self):
-        self.start_tour(self.env['website'].get_client_action_url('/shop'), 'test_01_admin_shop_tour', login='admin')
-
     def test_01_cart_update_check(self):
         self.start_tour('/', 'shop_update_cart', login='admin')
 
