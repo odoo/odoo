@@ -106,6 +106,54 @@
         </t>
     </t>
 
+    <!-- Inline Boolean Field -->
+    <t t-name="website.form_field_inlinebool">
+        <div t-attf-class="s_website_form_field mb-3 #{field.formatInfo.col or 'col-12'} #{field.custom and 's_website_form_custom' or ''} #{(field.required and 's_website_form_required' or '') or (field.modelRequired and 's_website_form_model_required' or '')} #{field.hidden and 's_website_form_field_hidden' or ''} #{field.dnone and 's_website_form_dnone' or ''}"
+            t-att-data-type="field.type"
+            data-name="Field">
+            <div t-if="field.formatInfo.labelPosition != 'top'" class="row s_col_no_resize s_col_no_bgcolor">
+                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition == 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}; #{field.formatInfo.labelPosition == 'none' and 'visibility: hidden' or ''}" t-att-for="field.id">
+                     <t t-call="website.form_label_content"/>
+                </label>
+                <div class="col-sm">
+                     <div class="form-check">
+                        <input
+                            type="checkbox"
+                            value="Yes"
+                            class="s_website_form_input form-check-input"
+                            t-att-name="field.name"
+                            t-att="{checked: field.value and 'checked' or None}"
+                            t-att-required="field.required || field.modelRequired || None"
+                            t-att-id="field.id"
+                        />
+                        <span t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
+                            <t t-esc="default_description"/>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <t t-else="">
+                <label t-attf-class="s_website_form_label" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                     <t t-call="website.form_label_content"/>
+                </label>
+                <div class="form-check">
+                    <input
+                        type="checkbox"
+                        value="Yes"
+                        class="s_website_form_input form-check-input"
+                        t-att-name="field.name"
+                        t-att="{checked: field.value and 'checked' or None}"
+                        t-att-required="field.required || field.modelRequired || None"
+                        t-att-id="field.id"
+                    />
+                    <span t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
+                        <t t-esc="default_description"/>
+                    </span>
+                </div>
+            </t>
+        </div>
+    </t>
+
     <!-- Email Field -->
     <t t-name="website.form_field_email">
         <t t-call="website.form_field_char"/>
