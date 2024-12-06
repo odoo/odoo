@@ -203,7 +203,7 @@ export class ListRenderer extends Component {
             () => [this.state.columns, this.isEmpty, this.props.list.offset, this.props.list.limit]
         );
         useExternalListener(window, "resize", () => {
-            this.columnWidths = null;
+            this.keepColumnWidths = false;
             this.freezeColumnWidths();
         });
 
@@ -348,6 +348,10 @@ export class ListRenderer extends Component {
             // Set table layout auto and remove inline style to make sure that css
             // rules apply (e.g. fixed width of record selector)
             table.style.tableLayout = "auto";
+            if (this.rootWidthFixed) {
+                this.rootRef.el.style.width = null;
+            }
+            table.style.width = null;
             headers.forEach((th) => {
                 th.style.width = null;
                 th.style.maxWidth = null;
@@ -2013,6 +2017,7 @@ export class ListRenderer extends Component {
 
         // fix the width so that if the resize overflows, it doesn't affect the layout of the parent
         if (!this.rootRef.el.style.width) {
+            this.rootWidthFixed = true;
             this.rootRef.el.style.width = `${Math.floor(
                 this.rootRef.el.getBoundingClientRect().width
             )}px`;
