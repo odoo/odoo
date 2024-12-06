@@ -108,7 +108,7 @@ class StockMove(models.Model):
     state = fields.Selection([
         ('draft', 'New'),
         ('waiting', 'Waiting Another Move'),
-        ('confirmed', 'Waiting Availability'),
+        ('confirmed', 'Waiting'),
         ('partially_available', 'Partially Available'),
         ('assigned', 'Available'),
         ('done', 'Done'),
@@ -116,7 +116,7 @@ class StockMove(models.Model):
         copy=False, default='draft', index=True, readonly=True,
         help="* New: The stock move is created but not confirmed.\n"
              "* Waiting Another Move: A linked stock move should be done before this one.\n"
-             "* Waiting Availability: The stock move is confirmed but the product can't be reserved.\n"
+             "* Waiting: The stock move is confirmed but the product can't be reserved.\n"
              "* Available: The product of the stock move is reserved.\n"
              "* Done: The product has been transferred and the transfer has been confirmed.")
     picked = fields.Boolean(
