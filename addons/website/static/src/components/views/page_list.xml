@@ -15,6 +15,11 @@
             <t t-call="website.RecordFilter"/>
         </t>
     </xpath>
+    <xpath expr="//SearchBar" position="inside">
+        <t t-set-slot="search-bar-additional-facets">
+            <t t-call="website.ActiveWebsiteFacet"/>
+        </t>
+    </xpath>
 </t>
 
 <t t-name="website.RecordFilter">
@@ -36,4 +41,26 @@
     </div>
 </t>
 
+<t t-name="website.ActiveWebsiteFacet">
+    <t t-if="state.activeWebsite">
+        <div class="o_searchview_facet o_facet_active_website position-relative d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap opacity-trigger-hover"
+            role="listitem"
+            aria-label="search"
+            tabindex="0"
+        >
+            <!-- :hover overlay -->
+            <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
+
+            <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0 btn btn-secondary">
+                <i class="small fa-fw fa fa-globe" role="image"/>
+            </div>
+
+            <div class="o_facet_values position-relative d-flex align-items-center ps-2 pe-3 rounded-end-2 text-wrap text-truncate">
+                <small class="o_facet_value text-truncate"
+                    t-esc="state.activeWebsite.name"
+                />
+            </div>
+        </div>
+    </t>
+</t>
 </templates>
