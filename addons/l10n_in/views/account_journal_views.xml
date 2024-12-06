@@ -11,6 +11,24 @@
             <field name="loss_account_id" position="attributes">
                 <attribute name="invisible">country_code != 'IN' and type != 'cash' or country_code == 'IN' and type not in ['bank', 'cash', 'sale', 'purchase']</attribute>
             </field>
+            <group name='group_alias_ro' position="attributes">
+                <attribute name="invisible">country_code == 'IN' or type not in ('sale', 'purchase')</attribute>
+            </group>
+            <group name='group_alias_ro_general' position="attributes">
+                <attribute name="invisible">country_code == 'IN' or type != 'general'</attribute>
+            </group>
+            <group name='group_alias_no_domain' position="attributes">
+                <attribute name="invisible">country_code == 'IN' or type not in ('sale', 'purchase') or display_alias_fields</attribute>
+            </group>
+            <group name='group_alias_no_domain_general' position="attributes">
+                <attribute name="invisible">country_code == 'IN' or type != 'general' or display_alias_fields</attribute>
+            </group>
+            <group name='group_alias_edit' position="attributes">
+                <attribute name="invisible">country_code == 'IN' or type not in ('sale', 'purchase') or not display_alias_fields</attribute>
+            </group>
+            <group name='group_alias_edit_general' position="attributes">
+                <attribute name="invisible">country_code == 'IN' or type != 'general' or not display_alias_fields</attribute>
+            </group>
         </field>
     </record>
 </odoo>
