@@ -2,7 +2,10 @@
 <odoo>
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="Comparison Snippet Options">
-    <xpath expr="//div[@data-js='WebsiteSaleProductPage']//we-checkbox[@data-name='o_wsale_accordion_item']" position="after">
+    <xpath
+        expr="//div[@data-js='WebsiteSaleProductPage']//div[@data-name='o_wsale_actions_opt']"
+        position="after"
+    >
         <we-select string="Specification" data-no-preview="true" data-reload="/">
             <we-button data-customize-website-views="">None</we-button>
             <we-button data-customize-website-views="website_sale_comparison.product_attributes_body">Bottom of Page</we-button>
@@ -15,11 +18,19 @@
                    data-no-preview="true"
                    data-reload="/"/>
     </xpath>
-    <xpath expr="//we-button[hasclass('o_we_buy_now_btn')]" position="after">
-        <we-button title="Compare" class="fa fa-fw fa-exchange"
-                   data-customize-website-views="website_sale_comparison.product_add_to_compare"
-                   data-no-preview="true"
-                   data-reload="/"/>
+    <xpath expr="//div[@data-name='o_wsale_actions_opt']" position="attributes">
+        <attribute name="class" remove="d-none"/>
+    </xpath>
+    <xpath expr="//div[@data-name='o_wsale_actions_opt']/we-row" position="inside">
+        <we-button
+            title="Compare"
+            data-customize-website-views="website_sale_comparison.product_add_to_compare"
+            data-no-preview="true"
+            data-reload="/"
+        >
+            <i class="fa fa-fw fa-exchange"/>
+            Compare
+        </we-button>
     </xpath>
 </template>
 
