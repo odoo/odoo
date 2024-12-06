@@ -281,7 +281,7 @@ export class HtmlField extends Component {
         const value = this.getEditingValue();
         const lastValue = (this.props.record.data[this.props.name] || "").toString();
         if (
-            value !== null &&
+            value && value !== null &&
             !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
             stripHistoryIds(value) !== stripHistoryIds(lastValue)
         ) {
