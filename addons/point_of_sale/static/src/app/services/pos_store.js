@@ -1518,12 +1518,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async printReceipts(order, printer, title, lines, fullReceipt = false, diningModeUpdate) {
-        let time;
-        if (order.write_date) {
-            time = order.write_date?.split(" ")[1].split(":");
-            time = time[0] + "h" + time[1];
-        }
-
+        const time = order.write_date ? order.write_date?.toFormat("HH:mm") : false;
         const printingChanges = {
             table_name: order.table_id ? order.table_id.table_number : "",
             config_name: order.config_id.name,
@@ -1761,7 +1756,7 @@ export class PosStore extends WithLazyGetterTrap {
 
             if (preset.use_timing && !order.preset_time) {
                 await this.syncPresetSlotAvaibility(preset);
-                order.preset_time = preset.nextSlot?.sql_datetime || false;
+                order.preset_time = preset.nextSlot?.datetime || false;
             } else if (!preset.use_timing) {
                 order.preset_time = false;
             }

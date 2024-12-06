@@ -1,5 +1,3 @@
-import { parseDateTime } from "@web/core/l10n/dates";
-
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -123,9 +121,6 @@ export function loadAllImages(el) {
 
     const images = el.querySelectorAll("img");
     return Promise.all(Array.from(images).map((img) => loadImage(img.src)));
-}
-export function parseUTCString(utcStr) {
-    return parseDateTime(utcStr, { format: "yyyy-MM-dd HH:mm:ss", tz: "utc" });
 }
 
 export class Counter {
