@@ -9,6 +9,7 @@ from odoo.tools.float_utils import float_compare, float_round
 
 class RatingMixin(models.AbstractModel):
     """This mixin adds rating statistics to mail.thread that already support ratings."""
+    _name = 'rating.mixin'
     _description = "Rating Mixin"
     _inherit = ['mail.thread']
 

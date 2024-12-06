@@ -16,6 +16,7 @@ class SmsTracker(models.Model):
     Note: Only admins/system user should need to access (a fortiori modify) these technical
       records so no "sudo" is used nor should be required here.
     """
+    _name = 'sms.tracker'
     _description = "Link SMS to mailing/sms tracking models"
 
     SMS_STATE_TO_NOTIFICATION_STATUS = {

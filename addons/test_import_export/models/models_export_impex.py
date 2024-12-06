@@ -94,6 +94,7 @@ class ExportOne2manyMultiple(models.Model):
 class ExportOne2manyMultipleChild(models.Model):
     # FIXME: orm.py:1161, fix to display_name on m2o field
     _rec_name = 'value'
+    _name = 'export.one2many.multiple.child'
     _description = 'Export One To Many Multiple Child'
 
     parent_id = fields.Many2one('export.one2many.multiple')

@@ -282,6 +282,7 @@ class HrWorkEntryType(models.Model):
 class HrUserWorkEntryEmployee(models.Model):
     """ Personnal calendar filter """
 
+    _name = 'hr.user.work.entry.employee'
     _description = 'Work Entries Employees'
 
     user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user, ondelete='cascade')

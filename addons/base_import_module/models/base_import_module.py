@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class BaseImportModule(models.TransientModel):
     """ Import Module """
+    _name = 'base.import.module'
     _description = "Import Module"
 
     module_file = fields.Binary(string='Module .ZIP file', required=True, attachment=False)

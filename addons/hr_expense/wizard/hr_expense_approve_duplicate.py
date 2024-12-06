@@ -10,6 +10,7 @@ class HrExpenseApproveDuplicate(models.TransientModel):
     approved. The user has the opportunity to still validate it or decline.
     """
 
+    _name = 'hr.expense.approve.duplicate'
     _description = "Expense Approve Duplicate"
 
     sheet_ids = fields.Many2many('hr.expense.sheet')

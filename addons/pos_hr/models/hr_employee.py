@@ -9,6 +9,7 @@ from odoo.tools import format_list
 
 
 class HrEmployee(models.Model):
+    _name = 'hr.employee'
     _inherit = ['hr.employee', 'pos.load.mixin']
 
     @api.model

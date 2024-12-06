@@ -18,6 +18,7 @@ MONTHS_TO_INTEGER = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
 
 class HrLeaveAllocation(models.Model):
     """ Allocation Requests Access specifications: similar to leave requests """
+    _name = 'hr.leave.allocation'
     _description = "Time Off Allocation"
     _order = "create_date desc"
     _inherit = ['mail.thread', 'mail.activity.mixin']

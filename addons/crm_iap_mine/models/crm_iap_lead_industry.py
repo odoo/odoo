@@ -6,6 +6,7 @@ from odoo import fields, models
 
 class CrmIapLeadIndustry(models.Model):
     """ Industry Tags of Acquisition Rules """
+    _name = 'crm.iap.lead.industry'
     _description = 'CRM IAP Lead Industry'
     _order = 'sequence,id'
 
