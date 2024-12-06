@@ -111,7 +111,7 @@ export class OrderSummary extends Component {
         ) {
             this.numberBuffer.reset();
             const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
-                startingValue: selectedLine.get_discount() || 10,
+                startingValue: selectedLine.getDiscount() || 10,
                 title: _t("Set the new discount"),
             });
             if (inputNumber) {
@@ -125,7 +125,7 @@ export class OrderSummary extends Component {
         ) {
             this.numberBuffer.reset();
             const inputNumber = await makeAwaitable(this.dialog, NumberPopup, {
-                startingValue: selectedLine.get_unit_price(),
+                startingValue: selectedLine.getUnitPrice(),
                 title: _t("Set the new price"),
             });
             if (inputNumber) {

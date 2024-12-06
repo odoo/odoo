@@ -159,7 +159,7 @@ class PosSession(models.Model):
         data[0]['_data_server_date'] = server_date or self.env.cr.now()
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
-        data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
+        data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().product_tmpl_id.ids
         return data
 
     def load_data(self, models_to_load):

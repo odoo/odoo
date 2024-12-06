@@ -104,7 +104,6 @@ export class PosOrder extends Base {
         return dateTime.isValid ? dateTime.toFormat("HH:mm") : false;
     }
 
-
     get originalSplittedOrder() {
         return this.models["pos.order"].find((o) => o.uuid === this.uiState.splittedOrderUuid);
     }
@@ -123,10 +122,14 @@ export class PosOrder extends Base {
      * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
      */
     get taxTotals() {
+        return this.getTaxTotalsOfLines();
+    }
+
+    getTaxTotalsOfLines(lines = null) {
         const currency = this.config_id.currency_id;
         const company = this.company_id;
         const extraValues = { currency_id: currency };
-        const orderLines = this.lines;
+        const orderLines = lines || this.lines;
 
         const baseLines = [];
         for (const line of orderLines) {
@@ -414,7 +417,7 @@ export class PosOrder extends Base {
                     };
                 }
                 line.setHasChange(false);
-                line.saved_quantity = line.get_quantity();
+                line.saved_quantity = line.getQuantity();
             }
         });
 
@@ -737,6 +740,10 @@ export class PosOrder extends Base {
         return this.taxTotals.total_amount_currency;
     }
 
+    getTotalWithTaxOfLines(lines) {
+        return this.getTaxTotalsOfLines(lines).total_amount_currency;
+    }
+
     getTotalWithoutTax() {
         return this.taxTotals.base_amount_currency;
     }
@@ -762,9 +769,9 @@ export class PosOrder extends Base {
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
-                        orderLine.getAllPrices().priceWithTaxBeforeDiscount -
-                        orderLine.getAllPrices().priceWithTax;
-                    if (orderLine.display_discount_policy() === "without_discount") {
+                        orderLine.allPrices.priceWithTaxBeforeDiscount -
+                        orderLine.allPrices.priceWithTax;
+                    if (orderLine.displayDiscountPolicy() === "without_discount") {
                         sum +=
                             (orderLine.getTaxedlstUnitPrice() -
                                 orderLine.getUnitDisplayPriceBeforeDiscount()) *
@@ -803,7 +810,7 @@ export class PosOrder extends Base {
 
     getTaxDetailsOfLines(lines) {
         const taxDetails = {};
-        for (const line of this.lines) {
+        for (const line of lines) {
             for (const taxData of line.allPrices.taxesData) {
                 const taxId = taxData.id;
                 if (!taxDetails[taxId]) {

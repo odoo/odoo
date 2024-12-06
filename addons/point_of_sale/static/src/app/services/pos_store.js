@@ -178,7 +178,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async showLoginScreen() {
-        this.reset_cashier();
+        this.resetCashier();
         this.showScreen("LoginScreen");
         this.dialog.closeAll();
     }
@@ -540,7 +540,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async setDiscountFromUI(line, val) {
-        line.set_discount(val);
+        line.setDiscount(val);
     }
 
     getDefaultPricelist() {
@@ -582,7 +582,7 @@ export class PosStore extends WithLazyGetterTrap {
     // The configure parameter is available if the orderline already contains all
     // the information without having to be calculated. For example, importing a SO.
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        let order = this.get_order();
+        let order = this.getOrder();
         if (!order) {
             order = await this.addNewOrder();
         }
@@ -591,7 +591,6 @@ export class PosStore extends WithLazyGetterTrap {
 
     async addLineToOrder(vals, order, opts = {}, configure = true) {
         let merge = true;
-        order.assertEditable();
 
         const options = {
             ...opts,

@@ -269,7 +269,7 @@ class PosConfig(models.Model):
             'pos.config': self.env['pos.config'].search_read([('id', '=', self.id)], config_fields, load=False),
         }
         response['pos.config'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
-        response['pos.config'][0]['_pos_special_products_ids'] = self._get_special_products().ids
+        response['pos.config'][0]['_pos_special_products_ids'] = self._get_special_products().product_tmpl_id.ids
         self.env['pos.session']._load_pos_data_relations('pos.config', response)
 
         # Classic data loading
