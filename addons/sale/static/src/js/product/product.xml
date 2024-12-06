@@ -8,17 +8,14 @@
                 alt="Product Image"
             />
         </td>
-        <td class="p-3" t-att-colspan="this.props.optional ? 2:false">
-            <div class="mb-4 text-break" name="o_sale_product_configurator_name">
+        <td class="p-3 mobile_product_name_description">
+            <div class="mb-4 text-break overflow-hidden text-ellipsis" name="o_sale_product_configurator_name">
                 <span class="h5" t-out="this.props.display_name"/>
                 <div
                     t-if="this.props.description_sale"
                     t-out="this.props.description_sale"
-                    class="text-muted small"
+                    class="d-block text-muted small overflow-hidden text-ellipsis"
                 />
-                <div t-if="!this.env.isPossibleCombination(this.props)" class="alert alert-warning mt-3">
-                    <span>This option or combination of options is not available</span>
-                </div>
             </div>
             <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
                 <PTAL
@@ -27,10 +24,14 @@
                     productTmplId="this.props.product_tmpl_id"
                 />
             </t>
+            <div t-if="!this.env.isPossibleCombination(this.props)" class="alert alert-warning alert-mobile-margins mt-3">
+                <span>This option or combination of options is not available</span>
+            </div>
         </td>
         <td
             t-if="env.showQuantityAndPrice"
             class="o_sale_product_configurator_qty py-3 px-0 text-end"
+            t-att-class="{'d_block_mobile': !this.props.optional}"
         >
             <t t-if="!this.props.optional">
                 <QuantityButtons
@@ -53,6 +54,7 @@
         <td
             t-if="env.showQuantityAndPrice"
             class="o_sale_product_configurator_price py-3 px-0 text-end"
+            t-att-class="{'d_block_mobile': !this.props.optional}"
             name="price"
         >
             <t t-if="!this.props.optional">

@@ -1,4 +1,5 @@
 input[name="sale_quantity"] {
+    min-width: 3rem;
     max-width: 4rem;
     // removing input field=number arrows as their size might
     // change depending on browser default styling and shift input's position
@@ -10,4 +11,8 @@ input[name="sale_quantity"] {
     &[type=number] {
         -moz-appearance: textfield;
     }
+}
+
+div[name="quantity_buttons_wrapper"] > button {
+    --btn-padding-x: 0.7rem;
 }
