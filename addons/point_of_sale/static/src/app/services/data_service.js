@@ -108,13 +108,13 @@ export class PosData extends Reactive {
     }
 
     async synchronizeServerDataInIndexedDB(serverData) {
-        for (const [model, data] of Object.entries(serverData)) {
-            try {
-                await this.indexedDB.create(model, data);
-            } catch {
-                console.info(`Error while updating ${model} in indexedDB.`);
-            }
-        }
+        // for (const [model, data] of Object.entries(serverData)) {
+        //     try {
+        //         await this.indexedDB.create(model, data);
+        //     } catch {
+        //         console.info(`Error while updating ${model} in indexedDB.`);
+        //     }
+        // }
     }
     async getLocalDataFromIndexedDB() {
         // Used to retrieve models containing states from the indexedDB.

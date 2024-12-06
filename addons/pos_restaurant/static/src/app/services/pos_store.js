@@ -297,7 +297,7 @@ patch(PosStore.prototype, {
         );
     },
     async transferOrder(orderUuid, destinationTable) {
-        const order = this.models["pos.order"].getBy("uuid", orderUuid);
+        const order = this.models["pos.order"].find((o) => o.uuid === orderUuid);
         const originalTable = order.table_id;
         this.alert.dismiss();
         if (destinationTable.id === originalTable?.id) {
