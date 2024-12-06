@@ -102,7 +102,6 @@ regex_order = re.compile(r'''
 ''', re.IGNORECASE | re.VERBOSE)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_group
 regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_group
-regex_camel_case = re.compile(r'(?<=[^_])([A-Z])')
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
@@ -112,10 +111,6 @@ SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
 # hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
 NO_ACCESS = '.'
-
-
-def class_name_to_model_name(classname: str) -> str:
-    return regex_camel_case.sub(r'.\1', classname).lower()
 
 
 def parse_read_group_spec(spec: str) -> tuple:
@@ -223,12 +218,15 @@ class MetaModel(api.Meta):
 
             _inherit = attrs.get('_inherit')
             if _inherit and isinstance(_inherit, str):
-                # TODO: add an exception: TypeError(f"'_inherit' property of model {name!r} should be a list: {_inherit!r}.")
                 attrs.setdefault('_name', _inherit)
                 attrs['_inherit'] = [_inherit]
 
             if not attrs.get('_name'):
-                attrs['_name'] = class_name_to_model_name(name)
+                regex_camel_case = re.compile(r'(?<=[^_])([A-Z])')
+                model_name = regex_camel_case.sub(r'.\1', name).lower()
+                raise TypeError(f"""The '_name' is missing for the class {name!r}. Perhaps it should be added: "_name = {model_name!r}".""")
+
+            assert attrs.get('_name')
 
         return super().__new__(meta, name, bases, attrs)
 

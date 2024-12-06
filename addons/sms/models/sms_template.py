@@ -6,6 +6,7 @@ from odoo import api, fields, models, _
 
 class SmsTemplate(models.Model):
     "Templates for sending SMS"
+    _name = 'sms.template'
     _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'SMS Templates'
 

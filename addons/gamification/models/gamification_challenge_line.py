@@ -11,6 +11,7 @@ class GamificationChallengeLine(models.Model):
     These are generic list of goals with only the target goal defined
     Should only be created for the gamification.challenge object
     """
+    _name = 'gamification.challenge.line'
     _description = 'Gamification generic goal for challenge'
     _order = "sequence, id"
 

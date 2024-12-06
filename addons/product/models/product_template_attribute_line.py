@@ -9,6 +9,7 @@ class ProductTemplateAttributeLine(models.Model):
     """Attributes available on product.template with their selected values in a m2m.
     Used as a configuration model to generate the appropriate product.template.attribute.value"""
 
+    _name = 'product.template.attribute.line'
     _rec_name = 'attribute_id'
     _rec_names_search = ['attribute_id', 'value_ids']
     _description = "Product Template Attribute Line"

@@ -6,7 +6,7 @@ from odoo import fields, models, api
 
 class ResPartner(models.Model):
     """Inherit res.partner object to add NPWP field and Kode Transaksi"""
-    _inherit = ["res.partner"]
+    _inherit = "res.partner"
 
     l10n_id_pkp = fields.Boolean(string="Is PKP", compute='_compute_l10n_id_pkp', store=True, readonly=False, help="Denoting whether the following partner is taxable")
     l10n_id_nik = fields.Char(string='NIK')

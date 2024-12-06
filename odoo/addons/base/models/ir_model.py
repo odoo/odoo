@@ -190,6 +190,7 @@ def upsert_en(model, fnames, rows, conflict):
 
 class Base(models.AbstractModel):
     """ The base model, which is implicitly inherited by all models. """
+    _name = 'base'
     _description = 'Base'
 
 
@@ -203,6 +204,7 @@ class Unknown(models.AbstractModel):
 
 
 class IrModel(models.Model):
+    _name = 'ir.model'
     _description = "Models"
     _order = 'model'
     _rec_names_search = ['name', 'model']
@@ -1791,6 +1793,7 @@ class IrModelConstraint(models.Model):
     This model tracks PostgreSQL indexes, foreign keys and constraints
     used by Odoo models.
     """
+    _name = 'ir.model.constraint'
     _description = 'Model Constraint'
     _allow_sudo_commands = False
 
@@ -1945,6 +1948,7 @@ class IrModelRelation(models.Model):
     This model tracks PostgreSQL tables used to implement Odoo many2many
     relations.
     """
+    _name = 'ir.model.relation'
     _description = 'Relation Model'
     _allow_sudo_commands = False
 
@@ -2162,6 +2166,7 @@ class IrModelData(models.Model):
              modules themselves, thus making it possible to later
              update them seamlessly.
     """
+    _name = 'ir.model.data'
     _description = 'Model Data'
     _order = 'module, model, name'
     _allow_sudo_commands = False
