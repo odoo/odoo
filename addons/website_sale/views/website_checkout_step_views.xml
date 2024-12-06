@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="view_website_checkout_step_list" model="ir.ui.view">
+        <field name="name">website.checkout.step.list</field>
+        <field name="model">website.checkout.step</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence"  widget="handle"/>
+                <field name="name"/>
+                <field name="website_id"/>
+                <field name="is_published"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_checkout_step_form" model="ir.ui.view">
+        <field name="name">website.checkout.step.form</field>
+        <field name="model">website.checkout.step</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                        <field name="step_href"/>
+                        <field name="website_id"/>
+                        <field name="main_button_label"/>
+                        <field name="back_button_label"/>
+                        <field name="is_published"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_checkout_step" model="ir.actions.act_window">
+        <field name="name">Checkout Steps</field>
+        <field name="res_model">website.checkout.step</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="menu_checkout_step" name="Checkout Steps"
+              parent="website.menu_website_global_configuration"
+              action="action_checkout_step"/>
+</odoo>
