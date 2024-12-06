@@ -141,9 +141,19 @@ class IrCron(models.Model):
         return True
 
     @staticmethod
-    def _process_jobs(db_name: str) -> None:
+    def _process_jobs(db_name: str, soft_limit: float | None = None) -> None:
         """ Execute every job ready to be run on this database. """
-        end_time = float('inf')
+        if soft_limit is None:
+            soft_limit = config['limit_time_soft_cron']
+            if soft_limit < 0:
+                # default to half of the hard-limit
+                real_limit_cron = config['limit_time_real_cron']
+                if real_limit_cron < 0:
+                    real_limit_cron = config['limit_time_real']
+                soft_limit = (real_limit_cron + 1) // 2
+        if not soft_limit:
+            soft_limit = float('inf')
+        end_time = time.monotonic() + soft_limit
         try:
             db = odoo.sql_db.db_connect(db_name)
             threading.current_thread().dbname = db_name
@@ -196,9 +206,6 @@ class IrCron(models.Model):
             jobs_remaining = len(job_ids) - index
             start_job_time = time.monotonic()
             job_end_time = start_job_time + (end_time - start_job_time) / jobs_remaining
-            if job_end_time == float('inf'):
-                # use the default limit
-                job_end_time = None
             # take into account overridings of _process_job() on that database
             registry = Registry(db_name)
             registry[IrCron._name]._process_job(cron_cr, job, end_time=job_end_time)

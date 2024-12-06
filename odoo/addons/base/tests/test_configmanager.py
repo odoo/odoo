@@ -165,6 +165,7 @@ class TestConfigManager(TransactionCase):
             'limit_time_cpu': 60,
             'limit_time_real': 120,
             'limit_time_real_cron': -1,
+            'limit_time_soft_cron': -1,
             'limit_request': 2**16,
         })
 
@@ -280,6 +281,7 @@ class TestConfigManager(TransactionCase):
             'limit_time_cpu': 60,
             'limit_time_real': 61,
             'limit_time_real_cron': 62,
+            'limit_time_soft_cron': -1,
             'limit_request': 100,
         })
         self.assertEqual(capture.output, [
@@ -394,6 +396,7 @@ class TestConfigManager(TransactionCase):
             'limit_time_cpu': 60,
             'limit_time_real': 120,
             'limit_time_real_cron': -1,
+            'limit_time_soft_cron': -1,
             'limit_request': 1 << 16,
 
             # new options since 14.0
@@ -558,6 +561,7 @@ class TestConfigManager(TransactionCase):
             'limit_time_cpu': 60,
             'limit_time_real': 61,
             'limit_time_real_cron': 62,
+            'limit_time_soft_cron': 55,
             'limit_request': 100,
         })
 
