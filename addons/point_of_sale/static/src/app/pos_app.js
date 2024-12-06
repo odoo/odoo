@@ -46,27 +46,21 @@ export class Chrome extends Component {
             return;
         }
         effect(
-            batched(
-                ({
-                    selectedOrder,
-                    scaleData,
-                    scaleWeight,
-                    scaleTare,
-                    totalPriceOnScale,
-                    isScaleScreenVisible,
-                }) => {
-                    if (selectedOrder) {
-                        const allScaleData = {
-                            ...scaleData,
-                            weight: scaleWeight,
-                            tare: scaleTare,
-                            totalPriceOnScale,
-                            isScaleScreenVisible,
-                        };
-                        this.sendOrderToCustomerDisplay(selectedOrder, allScaleData);
-                    }
+            batched(({ selectedOrder, scale }) => {
+                if (selectedOrder) {
+                    const scaleData = scale.product
+                        ? {
+                              product: { ...scale.product },
+                              unitPrice: scale.unitPriceString,
+                              totalPrice: scale.totalPriceString,
+                              netWeight: scale.netWeightString,
+                              grossWeight: scale.grossWeightString,
+                              tare: scale.tareWeightString,
+                          }
+                        : null;
+                    this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
                 }
-            ),
+            }),
             [this.pos]
         );
     }
@@ -74,10 +68,7 @@ export class Chrome extends Component {
     sendOrderToCustomerDisplay(selectedOrder, scaleData) {
         const adapter = new CustomerDisplayPosAdapter();
         adapter.formatOrderData(selectedOrder);
-        adapter.addScaleData(scaleData);
-        adapter.data.weight = scaleData.weight;
-        adapter.data.tare = scaleData.tare;
-        adapter.data.totalPriceOnScale = scaleData.totalPriceOnScale;
+        adapter.data.scaleData = scaleData;
         adapter.dispatch(this.pos);
     }
 
