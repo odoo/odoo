@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, exceptions, _
+from odoo.addons.mail.tools.discuss import Store
 
 
 class RatingRating(models.Model):
@@ -54,3 +55,16 @@ class RatingRating(models.Model):
             if not values.get('publisher_id'):
                 values['publisher_id'] = self.env.user.partner_id.id
         return values
+
+    def _to_store(self, store: Store, /, *, fields=None):
+        super()._to_store(store, fields=fields)
+        if fields is None:
+            fields = ["publisher_comment", "publisher_datetime"]
+        for rating in self:
+            if rating.publisher_id:
+                data = self._read_format(fields, load=False)[0]
+                data["publisher_id"] = Store.one(
+                    rating.publisher_id, fields=["name", "is_company", "user", "write_date"]
+                )
+                data["message_id"] = Store.one(rating.message_id, only_id=True)
+                store.add(rating, data)
