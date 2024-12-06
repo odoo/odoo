@@ -5,6 +5,9 @@
         <field name="model">mail.group.member</field>
         <field name="arch" type="xml">
             <list editable="top" sample="1">
+                <header>
+                    <button name="%(mail_group.mail_compose_message_action_mail_group)d" type="action" string="Email" />
+                </header>
                 <field name="email"
                     force_save="1"
                     required="1"
