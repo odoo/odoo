@@ -300,8 +300,9 @@ export class PosData extends Reactive {
         };
         const prepareValue = (record) => {
             if (record instanceof Array) {
-                // return record.map((r) => getId(r));
-                return record.map((r) => prepareValue(r));
+                // this means that it's a many2many field field
+                // ex: "attribute_value_ids":[["link",52]]
+                return record.map(([command, record]) => [6, 0, [getId(record)]]);
             }
             return getId(record);
         };

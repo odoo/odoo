@@ -26,12 +26,10 @@ class PosConfig(models.Model):
             for key in vals:
                 if self.env[model]._fields[key].type == 'many2one':
                     vals[key] = get_record(self.env[model]._fields[key].comodel_name, vals[key]).id
-                if self.env[model]._fields[key].type in ('many2many', 'one2many'):
-                    vals[key] = [get_record(self.env[model]._fields[key].comodel_name, related_id).id for related_id in vals[key]]
+                # We assume that m2m are only done with data that is already in the db
             return vals
 
         for [operation, *data] in queue:
-            # print("\n", model, id, key, vals[key], "\n")
             _logger.debug('Processing operation %s with data %s', operation, data)
             match operation:
                 case "CREATE":
@@ -51,18 +49,6 @@ class PosConfig(models.Model):
 
                 case _:
                     pass
-        # for [model, id, vals] in queue:
-            # print("\n", model, id, vals, "\n")
-            # vals = self.update_vals(model, id, vals)
-            # db_record = get_record(model, id)
-            # vals = replace_uuid_with_id(vals)
-            # if db_record:
-            #     db_record.write(vals)
-            # else:
-            #     self.env[model].create([{
-            #         **vals,
-            #         'uuid': id
-            #     }])
         return
 
     def update_vals(self, model, id, vals):
