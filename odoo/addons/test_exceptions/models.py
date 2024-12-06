@@ -11,6 +11,7 @@ class TestExceptionsModel(models.Model):
         exceptions that must be handled by the server (and its RPC layer)
         and the clients.
     """
+    _name = 'test.exceptions.model'
     _description = 'Test Exception Model'
 
     def generate_redirect_warning(self):

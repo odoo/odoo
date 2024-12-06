@@ -4,7 +4,7 @@ from odoo import models
 
 
 class HrPayslip(models.Model):
-    _inherit = ['hr.payslip']
+    _inherit = 'hr.payslip'
 
     def _get_data_files_to_update(self):
         # Note: file order should be maintained

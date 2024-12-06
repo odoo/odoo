@@ -65,6 +65,7 @@ class MailMessage(models.Model):
     See ``mailing.trace`` model in mass_mailing application for mailing trace
     information.
     """
+    _name = 'mail.message'
     _inherit = ["bus.listener.mixin"]
     _description = 'Message'
     _order = 'id desc'

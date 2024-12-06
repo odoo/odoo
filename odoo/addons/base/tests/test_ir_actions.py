@@ -735,7 +735,7 @@ class TestCustomFields(TestCommonCustomFields):
         # Add a custom field equivalent to the following definition:
         #
         # class ResPartner(models.Model)
-        #     _inherit = ['res.partner']
+        #     _inherit = 'res.partner'
         #     x_oh_boy = fields.Char(related="country_id.code", store=True)
         #
 
