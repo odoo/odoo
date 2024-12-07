@@ -33,6 +33,7 @@ options.registry.FloatingBlocks = options.Class.extend({
 
         if (action === 'card_removed') {
             // Recount Cards number when one is removed.
+            // See 'options.registry.FloatingBlocksBlock' -> 'onRemove()'
             this.trigger_up('snippet_edition_request', {exec: () => {
                 return this._validateBoxesNumber();
             }});
@@ -73,8 +74,8 @@ options.registry.FloatingBlocks = options.Class.extend({
      *
      * @private
      */
-    async _validateBoxesNumber(forceRefresh) {
-        const boxesNew = this.$target[0].querySelectorAll(".o_block");
+    async _validateBoxesNumber() {
+        const boxesNew = this.wrapperEl.querySelectorAll(".o_block");
 
         if (this.boxes != boxesNew) {
             this.boxes = boxesNew;
@@ -89,7 +90,7 @@ options.registry.FloatingBlocks = options.Class.extend({
      * Injects the "No cards" alert into the DOM.
      *
      * The message must be injected regardless by the actual cards number and
-     * and *before* that the last Card is deleted, otherwise the resulting
+     * anyway *before* the removal of the last Card, otherwise the resulting
      * empty snippet could be automatically removed by the editor.
      *
      * @private

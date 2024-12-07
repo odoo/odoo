@@ -14,21 +14,14 @@ const FloatingBlocks = publicWidget.Widget.extend({
         this.zoomMax = 0.86;
         this.boxes = this.el.querySelectorAll(".o_block");
 
+        this._cleanUp();
+
         if (this.boxes.length < 2) {
             return;
+        } else {
+            this._initiateZoomAnimation();
         }
 
-        this._cleanupListeners();
-
-        this.boxesToAnimate = Array.from(this.boxes).slice(0, -1);
-        this.transformCache = new WeakMap();
-
-        // Adjust boxes position according to the top-menu visibility effect
-        this._updateBoxesTop();
-        this._updateBoxesTopBound = this._updateBoxesTop.bind(this);
-        extraMenuUpdateCallbacks.push(this._updateBoxesTopBound);
-
-        this._initiateZoom();
         return this._super(...arguments);
     },
 
@@ -36,7 +29,7 @@ const FloatingBlocks = publicWidget.Widget.extend({
      * @override
      */
     destroy() {
-        this._cleanupListeners();
+        this._cleanUp();
         this._super(...arguments);
     },
 
@@ -47,7 +40,26 @@ const FloatingBlocks = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _updateBoxesTop() {
+    _initiateZoomAnimation() {
+        this.boxesToAnimate = Array.from(this.boxes).slice(0, -1);
+        this.transformCache = new WeakMap();
+
+        // Adjust boxes position according to the top-menu visibility effect
+        this._adaptToHeaderChange();
+        this._adaptToHeaderChangeBound = this._adaptToHeaderChange.bind(this);
+        extraMenuUpdateCallbacks.push(this._adaptToHeaderChangeBound);
+
+        this._bindEvents();
+
+        // Initial trigger
+        this._onResize();
+        this._onScroll();
+    },
+
+    /**
+     * @private
+     */
+    _adaptToHeaderChange() {
         let position = 16; // Add 1rem equivalent in px to provide a visual gap by default
         const fixedElements = document.getElementsByClassName('o_top_fixed_element');
 
@@ -59,18 +71,15 @@ const FloatingBlocks = publicWidget.Widget.extend({
     },
 
     /**
+     * Attach scroll and resize handlers
+     *
      * @private
      */
-    _initiateZoom() {
-        // Attach scroll and resize handlers
+    _bindEvents() {
         this.throttledUpdateResize = throttleForAnimation(() => this._onResize());
         this.throttledUpdateScroll = throttleForAnimation(() => this._onScroll());
         window.addEventListener("resize", this.throttledUpdateResize, { passive: true });
         window.addEventListener("scroll", this.throttledUpdateScroll, { passive: true });
-
-        // Initial trigger
-        this._onResize();
-        this._onScroll();
     },
 
     /**
@@ -91,7 +100,7 @@ const FloatingBlocks = publicWidget.Widget.extend({
             }
         });
 
-        // Apply all DOM changes at once
+        // Apply all batch changes at once
         if (animationsBatch.length > 0) {
             requestAnimationFrame(() => animationsBatch.forEach((animationsBatch) => animationsBatch()));
         }
@@ -112,10 +121,17 @@ const FloatingBlocks = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _cleanupListeners() {
-        const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateBoxesTopBound);
+    _cleanUp() {
+        const indexCallback = extraMenuUpdateCallbacks.indexOf(this._adaptToHeaderChangeBound);
         if (indexCallback >= 0) {
             extraMenuUpdateCallbacks.splice(indexCallback, 1);
+        }
+
+        if (this.boxes.length > 0) {
+            this.boxes.forEach((boxes) => {
+                boxes.style.transform = "";
+                boxes.style.top = "";
+            });
         }
 
         window.removeEventListener("scroll", this.throttledUpdateScroll);
