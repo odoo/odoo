@@ -85,7 +85,7 @@ class BaseTestUi(odoo.tests.HttpCase):
             'default_account_id': bnk.id,
         })
 
-        self.start_tour("/web", 'main_flow_tour', login="admin", timeout=180)
+        self.start_tour("/web", 'main_flow_tour', login="admin", timeout=100, watch=True)
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(BaseTestUi):
@@ -128,7 +128,7 @@ class TestUi(BaseTestUi):
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUiMobile(BaseTestUi):
 
-    browser_size = '375x667'
+    browser_size = '375,667'
     touch_enabled = True
 
     def test_01_main_flow_tour_mobile(self):
