@@ -572,8 +572,30 @@ Please change the quantity done or the rounding precision of your unit of measur
                         move_lines_commands.append(Command.update(move_line.id, sml_lot_vals))
                         mls_without_lots -= move_line
                     else:  # No line without serial number, creates a new one.
+<<<<<<< saas-17.2
                         move_line_vals = self._prepare_move_line_vals(quantity=0)
                         move_line_vals.update(**sml_lot_vals)
+||||||| 8420efd0ae3b5b9aee13e9735bd57edf43e860a4
+                        reserved_quants = self.env['stock.quant']._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot)
+                        if reserved_quants:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
+                        else:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0)
+                            move_line_vals['lot_id'] = lot.id
+                            move_line_vals['lot_name'] = lot.name
+                        move_line_vals['product_uom_id'] = move.product_id.uom_id.id
+                        move_line_vals['quantity'] = 1
+=======
+                        reserved_quants = self.env['stock.quant']._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
+                        if reserved_quants:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
+                        else:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0)
+                            move_line_vals['lot_id'] = lot.id
+                            move_line_vals['lot_name'] = lot.name
+                        move_line_vals['product_uom_id'] = move.product_id.uom_id.id
+                        move_line_vals['quantity'] = 1
+>>>>>>> 7e1e1b85f77e5b58ac2909ce243ca90667ed88fb
                         move_lines_commands.append((0, 0, move_line_vals))
                 else:
                     move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
