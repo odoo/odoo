@@ -86,6 +86,15 @@
                         />
                         <field name="tax_string" class="oe_inline"/>
                     </div>
+                    <label for="base_unit_count" groups="product.group_show_uom_price"/>
+                    <div name="base_unit_price" groups="product.group_show_uom_price" class="d-flex flex-row">
+                        <field name="base_unit_count" invisible="product_variant_count &gt; 1" style="width: 4rem;"/>
+                        <field name="base_unit_id" options="{'no_open': True}" invisible="product_variant_count &gt; 1" placeholder="Specify unit" style="width: 10rem;"/>
+                        <div class="d-flex flex-row" invisible="base_unit_price == 0 or product_variant_count &gt; 1">
+                            (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                        </div>
+                        <span class="text-muted" invisible="product_variant_count &lt;= 1">Based on variants</span>
+                    </div>
                 </div>
                 <div name="standard_price_uom" position="after">
                     <field name="supplier_taxes_id"

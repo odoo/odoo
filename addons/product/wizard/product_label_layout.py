@@ -12,10 +12,12 @@ class ProductLabelLayout(models.TransientModel):
 
     print_format = fields.Selection([
         ('dymo', 'Dymo'),
-        ('2x7xprice', '2 x 7 with price'),
-        ('4x7xprice', '4 x 7 with price'),
+        ('2x7', '2 x 7'),
+        ('4x7', '4 x 7'),
         ('4x12', '4 x 12'),
-        ('4x12xprice', '4 x 12 with price')], string="Format", default='2x7xprice', required=True)
+        ('zpl', 'ZPL Labels'),
+    ], string="Format", default='2x7', required=True, store=True)
+    with_price = fields.Boolean('Print With Price', default=True)
     custom_quantity = fields.Integer('Quantity', default=1, required=True)
     product_ids = fields.Many2many('product.product')
     product_tmpl_ids = fields.Many2many('product.template')
@@ -28,7 +30,7 @@ class ProductLabelLayout(models.TransientModel):
     def _compute_dimensions(self):
         for wizard in self:
             if 'x' in wizard.print_format:
-                columns, rows = wizard.print_format.split('x')[:2]
+                columns, rows = wizard.print_format.split('x')
                 wizard.columns = columns.isdigit() and int(columns) or 1
                 wizard.rows = rows.isdigit() and int(rows) or 1
             else:
@@ -38,15 +40,7 @@ class ProductLabelLayout(models.TransientModel):
         if self.custom_quantity <= 0:
             raise UserError(_('You need to set a positive quantity.'))
 
-        # Get layout grid
-        if self.print_format == 'dymo':
-            xml_id = 'product.report_product_template_label_dymo'
-        elif 'x' in self.print_format:
-            xml_id = 'product.report_product_template_label_%sx%s' % (self.columns, self.rows)
-            if 'xprice' not in self.print_format:
-                xml_id += '_noprice'
-        else:
-            xml_id = ''
+        xml_id = f'product.report_product_template_label_{self.print_format}'
 
         active_model = ''
         if self.product_tmpl_ids:
@@ -63,7 +57,6 @@ class ProductLabelLayout(models.TransientModel):
             'active_model': active_model,
             'quantity_by_product': {p: self.custom_quantity for p in products},
             'layout_wizard': self.id,
-            'price_included': 'xprice' in self.print_format,
         }
         return xml_id, data
 

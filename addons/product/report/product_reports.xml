@@ -48,17 +48,6 @@
             <field name="binding_model_id" eval="False"/>
             <field name="binding_type">report</field>
         </record>
-        <record id="report_product_template_label_4x12_noprice" model="ir.actions.report">
-            <field name="name">Product Label 4x12 No Price (PDF)</field>
-            <field name="model">product.template</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">product.report_producttemplatelabel4x12noprice</field>
-            <field name="report_file">product.report_producttemplatelabel4x12noprice</field>
-            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
-            <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
-            <field name="binding_model_id" eval="False"/>
-            <field name="binding_type">report</field>
-        </record>
 
         <record id="report_product_packaging" model="ir.actions.report">
             <field name="name">Product Packaging (PDF)</field>
@@ -104,5 +93,17 @@
             <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
             <field name="binding_type">report</field>
         </record>
+
+        <record id="report_product_template_label_zpl" model="ir.actions.report">
+            <field name="name">Product Label (ZPL)</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">product.report_producttemplatelabel_zpl</field>
+            <field name="report_file">product.report_producttemplatelabel_zpl</field>
+            <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+
     </data>
 </odoo>

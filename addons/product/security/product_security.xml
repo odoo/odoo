@@ -31,6 +31,11 @@
 
 <data noupdate="1">
 
+    <record id="group_show_uom_price" model="res.groups">
+        <field name="name">UOM price display</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record id="product_comp_rule" model="ir.rule">
         <field name="name" >Product multi-company</field>
         <field name="model_id" ref="model_product_template"/>
