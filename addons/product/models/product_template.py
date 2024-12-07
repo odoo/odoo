@@ -78,6 +78,7 @@ class ProductTemplate(models.Model):
         string="Product Category",
         comodel_name='product.category',
         group_expand='_read_group_categ_id',
+        tracking=True,
     )
 
     currency_id = fields.Many2one(
