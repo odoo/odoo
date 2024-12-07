@@ -8,65 +8,66 @@ export const callActionsRegistry = registry.category("discuss.call/actions");
 callActionsRegistry
     .add("mute", {
         condition: (component) => component.rtc,
-        name: (component) => (component.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
-        isActive: (component) => component.rtc.selfSession?.isMute,
+        name: (component) => (component.rtc.syncState.isMute ? _t("Unmute") : _t("Mute")),
+        isActive: (component) => component.rtc.syncState.isMute,
         inactiveIcon: "fa-microphone",
         icon: "fa-microphone-slash",
         activeClass: "text-danger",
         select: (component) => {
-            if (component.rtc.selfSession.isMute) {
-                if (component.rtc.selfSession.is_muted) {
-                    component.rtc.unmute();
-                }
-                if (component.rtc.selfSession.is_deaf) {
-                    component.rtc.undeafen();
-                }
+            if (component.rtc.syncState.isMute) {
+                component.rtc.syncState.command({ isMuted: false, isDeaf: false });
             } else {
-                component.rtc.mute();
+                component.rtc.syncState.command({ isMuted: true });
             }
         },
         sequence: 10,
     })
     .add("deafen", {
         condition: (component) => component.rtc,
-        name: (component) => (component.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
-        isActive: (component) => component.rtc.selfSession?.is_deaf,
+        name: (component) => (component.rtc.syncState.isDeaf ? _t("Undeafen") : _t("Deafen")),
+        isActive: (component) => component.rtc.syncState?.isDeaf,
         inactiveIcon: "fa-headphones",
         icon: "fa-deaf",
         activeClass: "text-danger",
         select: (component) =>
-            component.rtc.selfSession.is_deaf ? component.rtc.undeafen() : component.rtc.deafen(),
+            component.rtc.syncState.command({ isDeaf: !component.rtc.syncState.isDeaf }),
         sequence: 20,
     })
     .add("camera-on", {
+        // TODO maybe camera/screen should not be available if syncState.isRemote.
         condition: (component) => component.rtc,
         name: (component) =>
-            component.rtc.selfSession.is_camera_on ? _t("Stop camera") : _t("Turn camera on"),
-        isActive: (component) => component.rtc.selfSession?.is_camera_on,
+            component.rtc.syncState.isCameraOn ? _t("Stop camera") : _t("Turn camera on"),
+        isActive: (component) => component.rtc.syncState.isCameraOn,
         icon: "fa-video-camera",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("camera"),
+        select: (component) =>
+            component.rtc.syncState.command({ isCameraOn: !component.rtc.syncState.isCameraOn }),
         sequence: 30,
     })
     .add("raise-hand", {
         condition: (component) => component.rtc,
         name: (component) =>
-            component.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand"),
-        isActive: (component) => component.rtc.selfSession?.raisingHand,
+            component.rtc.syncState.raisingHand ? _t("Lower Hand") : _t("Raise Hand"),
+        isActive: (component) => component.rtc.syncState.raisingHand,
         icon: "fa-hand-paper-o",
-        select: (component) => component.rtc.raiseHand(!component.rtc.selfSession.raisingHand),
+        select: (component) =>
+            component.rtc.syncState.command({ raisingHand: !component.rtc.syncState.raisingHand }),
         sequence: 50,
     })
     .add("share-screen", {
         condition: (component) => component.rtc && !isMobileOS(),
         name: (component) =>
-            component.rtc.selfSession.is_screen_sharing_on
+            component.rtc.syncState.isScreenSharingOn
                 ? _t("Stop Sharing Screen")
                 : _t("Share Screen"),
-        isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
+        isActive: (component) => component.rtc.syncState.isScreenSharingOn,
         icon: "fa-desktop",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("screen"),
+        select: (component) =>
+            component.rtc.syncState.command({
+                isScreenSharingOn: !component.rtc.syncState.isScreenSharingOn,
+            }),
         sequence: 40,
     })
     .add("blur-background", {

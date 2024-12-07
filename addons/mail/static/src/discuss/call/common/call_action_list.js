@@ -24,7 +24,7 @@ export class CallActionList extends Component {
     }
 
     get isOfActiveCall() {
-        return Boolean(this.props.thread.eq(this.rtc.state?.channel));
+        return Boolean(this.props.thread.eq(this.rtc.syncState.channel));
     }
 
     get isSmall() {
@@ -49,6 +49,6 @@ export class CallActionList extends Component {
      * @param {MouseEvent} ev
      */
     async onClickToggleAudioCall(ev) {
-        await this.rtc.toggleCall(this.props.thread);
+        await this.rtc.syncState.toggleCall(this.props.thread);
     }
 }
