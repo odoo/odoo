@@ -1,16 +1,14 @@
 import { Dropzone } from "@web/core/dropzone/dropzone";
-
 import { useEffect, useExternalListener } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
-import { registry } from "@web/core/registry";
+export function useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponentProps, isDropzoneEnabled = () => true) {
+    const overlayService = useService("overlay");
+    const uiService = useService("ui");
 
-const componentRegistry = registry.category("main_components");
-
-let id = 1;
-export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = () => true) {
-    const dropzoneId = `web.dropzone_${id++}`;
     let dragCount = 0;
     let hasTarget = false;
+    let removeDropzone = false;
 
     useExternalListener(document, "dragenter", onDragEnter, { capture: true });
     useExternalListener(document, "dragleave", onDragLeave, { capture: true });
@@ -24,16 +22,19 @@ export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = (
     }, { capture: true });
 
     function updateDropzone() {
-        const shouldDisplayDropzone = dragCount && hasTarget && isDropzoneEnabled();
-        const hasDropzone = componentRegistry.contains(dropzoneId);
+        const hasDropzone = !!removeDropzone;
+        const isTargetInActiveElement = uiService.activeElement.contains(targetRef.el);
+        const shouldDisplayDropzone = dragCount && hasTarget && isTargetInActiveElement && isDropzoneEnabled();
+
         if (shouldDisplayDropzone && !hasDropzone) {
-            componentRegistry.add(dropzoneId, {
-                Component: Dropzone,
-                props: { extraClass, onDrop, ref: targetRef },
+            removeDropzone = overlayService.add(dropzoneComponent, {
+                ref: targetRef,
+                ...dropzoneComponentProps
             });
         }
         if (!shouldDisplayDropzone && hasDropzone) {
-            componentRegistry.remove(dropzoneId);
+            removeDropzone();
+            removeDropzone = false;
         }
     }
 
@@ -58,4 +59,10 @@ export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = (
         },
         () => [targetRef.el]
     );
+}
+
+export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = () => true) {
+    const dropzoneComponent = Dropzone;
+    const dropzoneComponentProps = { extraClass, onDrop };
+    useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponentProps, isDropzoneEnabled);
 }

@@ -283,4 +283,6 @@ class TestMailComposerUI(MailCommon, HttpCase):
             )
         message = self._new_msgs.filtered(lambda message: message.author_id == self.user_employee.partner_id)
         self.assertEqual(len(message), 1)
+        self.assertEqual(message.attachment_ids[0].raw, b'hi there')
+        self.assertEqual(message.attachment_ids[1].raw, b'hello, world')
         self.assertIn(user.partner_id, message.partner_ids)
