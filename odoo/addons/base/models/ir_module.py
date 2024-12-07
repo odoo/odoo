@@ -30,7 +30,7 @@ from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort, get_flag
-from odoo.tools.translate import TranslationImporter, get_po_paths
+from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile_translation_path
 from odoo.http import request
 from odoo.modules import get_module_path
 
@@ -947,6 +947,9 @@ class IrModuleModule(models.Model):
                 for po_path in get_po_paths(module_name, lang, env=env):
                     _logger.info('module %s: loading translation file %s for language %s', module_name, po_path, lang)
                     translation_importer.load_file(po_path, lang)
+                    is_lang_imported = True
+                for data_path in get_datafile_translation_path(module_name, env=env):
+                    translation_importer.load_file(data_path, lang, module=module_name)
                     is_lang_imported = True
                 if lang != 'en_US' and not is_lang_imported:
                     _logger.info('module %s: no translation for language %s', module_name, lang)
