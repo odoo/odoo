@@ -258,7 +258,7 @@ export class KanbanController extends Component {
         const { onCreate } = this.props.archInfo;
         const { root } = this.model;
         if (this.canQuickCreate && onCreate === "quick_create") {
-            const firstGroup = root.groups[0];
+            const firstGroup = root.groups.find((group) => !group.isFolded) || root.groups[0];
             if (firstGroup.isFolded) {
                 await firstGroup.toggle();
             }
