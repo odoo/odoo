@@ -18,30 +18,24 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_sale" name="Quotations / Sales Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-            <t t-set="portal_client_category_enable" t-value="True"/>
-            <t t-set="portal_alert_category_enable" t-value="True"/>
-        </xpath>
-        <div id="portal_alert_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="bg_color" t-value="'alert alert-primary align-items-center'"/>
-                <t t-set="placeholder_count" t-value="'quotation_count'"/>
-                <t t-set="title">Quotations to review</t>
-                <t t-set="url" t-value="'/my/quotes'"/>
-                <t t-set="show_count" t-value="True"/>
-            </t>
-        </div>
-        <div id="portal_client_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="icon" t-value="'/sale/static/src/img/bag.svg'"/>
-                <t t-set="title">Your Orders</t>
-                <t t-set="url" t-value="'/my/orders'"/>
-                <t t-set="text">Follow, view or pay your orders</t>
-                <t t-set="placeholder_count" t-value="'order_count'"/>
-            </t>
-        </div>
-    </template>
+    <data noupdate="1">
+        <record id="portal_quotations_to_review" model="portal.entry">
+            <field name="title">Quotations to review</field>
+            <field name="text">Review your quotations</field>
+            <field name="url">/my/quotes</field>
+            <field name="icon">/sale/static/src/img/bag.svg</field>
+            <field name="placeholder_count">quotation_count</field>
+            <field name="bg_color">alert alert-primary align-items-center</field>
+        </record>
+        <record id="portal_your_orders" model="portal.entry">
+            <field name="title">Your Orders</field>
+            <field name="text">Follow, view or pay your orders</field>
+            <field name="url">/my/orders</field>
+            <field name="icon">/sale/static/src/img/bag.svg</field>
+            <field name="placeholder_count">order_count</field>
+            <field name="bg_color">bg-light</field>
+        </record>
+    </data>
 
     <template id="portal_my_quotations" name="My Quotations">
         <t t-call="portal.portal_layout">
