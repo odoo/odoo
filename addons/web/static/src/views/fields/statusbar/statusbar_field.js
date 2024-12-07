@@ -282,19 +282,6 @@ export class StatusBarField extends Component {
         return classNames.join(" ");
     }
 
-    /**
-     * @param {StatusBarItem} item
-     */
-    getItemTooltip(item) {
-        if (item.isSelected) {
-            return _t("Current state");
-        }
-        if (this.props.isDisabled) {
-            return _t("Not active state");
-        }
-        return _t("Not active state, click to change it");
-    }
-
     getSortedItems() {
         const before = [];
         const after = [];

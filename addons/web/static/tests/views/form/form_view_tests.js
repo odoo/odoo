@@ -10395,7 +10395,6 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector('button[data-value="4"]'),
                 "o_arrow_button_current"
             );
-            assert.ok(target.querySelector('button[data-value="4"]').disabled);
 
             failFlag = true;
             await click(target.querySelector('button[data-value="1"]'));

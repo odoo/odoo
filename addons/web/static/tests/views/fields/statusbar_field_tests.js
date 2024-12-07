@@ -251,7 +251,6 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_statusbar_status button[data-value='4']"),
             "o_arrow_button_current"
         );
-        assert.ok(target.querySelector(".o_statusbar_status button[data-value='4']").disabled);
 
         const clickableButtons = target.querySelectorAll(
             ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current)"
@@ -264,7 +263,6 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_statusbar_status button[data-value='1']"),
             "o_arrow_button_current"
         );
-        assert.ok(target.querySelector(".o_statusbar_status button[data-value='1']").disabled);
     });
 
     QUnit.test("statusbar with no status", async function (assert) {
@@ -461,7 +459,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector("[aria-label='Current state']").textContent,
+            target.querySelector("[aria-checked='true']").textContent,
             "aaa",
             "default status is 'aaa'"
         );
@@ -472,11 +470,18 @@ QUnit.module("Fields", (hooks) => {
             "...",
             "button has the correct text"
         );
+        assert.strictEqual(
+            document
+                .querySelector(".o_statusbar_status .dropdown-toggle.o_arrow_button")
+                .getAttribute("aria-label"),
+            "More...",
+            "button has the correct aria label"
+        );
 
         await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
         await click(target, ".o-dropdown .dropdown-item");
         assert.strictEqual(
-            target.querySelector("[aria-label='Current state']").textContent,
+            target.querySelector("[aria-checked='true']").textContent,
             "second record",
             "status has changed to the selected dropdown item"
         );
