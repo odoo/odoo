@@ -9265,6 +9265,19 @@ msgstr ""
 "và đồng nội tệ Lempira."
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_lb_account
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Lebanon in Odoo.\n"
+"==============================================================================\n"
+"Lebanon accounting basic charts,taxes and localization.\n"
+"Activates:\n"
+"* Chart of Accounts\n"
+"* Taxes\n"
+"* Fiscal Positions\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
 msgid ""
 "\n"
@@ -10538,6 +10551,26 @@ msgid ""
 "Payment' wizard. An error message will appear if no valid mandate is\n"
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
+"\n"
+"Phân hệ này cho phép tạo các tệp XML tuân thủ Ghi nợ trực tiếp SEPA (SDD) (phù hợp với quy định kỹ thuật pain.008.001.02) để gửi đến ngân hàng của bạn nhằm thu một tập hợp các khoản thanh toán.\n"
+"\n"
+"Để đủ điều kiện sử dụng phương thức thanh toán này, trước tiên, khách hàng phải\n"
+"gửi lại giấy ủy quyền cho công ty, đồng ý sử dụng ghi nợ trực tiếp.\n"
+"Sự đồng ý này phải được mã hóa dưới dạng 'ủy quyền của khách hàng' trong Odoo.\n"
+"\n"
+"Bạn cũng cần đáp ứng các yêu cầu sau để\n"
+"tạo tệp SDD đúng cách:\n"
+"- Tài khoản công ty của bạn phải được đặt thành số IBAN hợp lệ\n"
+"- Công ty của bạn phải được cấp mã định danh chủ nợ (có thể thực hiện việc này trong phần Cài đặt - Cài đặt chung - Kế toán)\n"
+"- Công ty của bạn phải xác định nhật ký để nhận thanh toán SDD (vẫn trong phần 'cài đặt' của phân hệ kế toán)\n"
+"- Mỗi khách hàng mà bạn tạo thanh toán phải có số tài khoản IBAN hợp lệ.\n"
+"\n"
+"Odoo sẽ thông báo cho bạn nếu bất kỳ yêu cầu nào trong số các yêu cầu trên không được đáp ứng.\n"
+"\n"
+"Để ghi nhận thanh toán cho các hóa đơn chưa thanh toán, bạn có thể sử dụng tùy chọn\n"
+"'Ghi nợ trực tiếp SEPA' riêng bằng cách chọn tài khoản ngân hàng trong công cụ 'Ghi nhận\n"
+"thanh toán'. Một thông báo lỗi sẽ xuất hiện nếu không có uỷ quyền hợp lệ\n"
+"nào khả dụng để tạo thanh toán cho hóa đơn đã chọn.\n"
 
 #. module: base
 msgid ""
@@ -25474,6 +25507,11 @@ msgid "Lebanon"
 msgstr "Lebanon"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lb_account
+msgid "Lebanon - Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
 msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr "Ledger  28  431.8 x 279.4 mm"
@@ -34768,7 +34806,7 @@ msgstr "Sint Maarten (Dutch part)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__size
 msgid "Size"
-msgstr "Quy mô"
+msgstr "Kích thước"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_fields_size_gt_zero

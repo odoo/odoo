@@ -6384,11 +6384,11 @@ msgid ""
 "* Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 msgstr ""
 "\n"
-"Rende la data di blocco irreversibile:\n"
+"Rende la data di chiusura irreversibile:\n"
 "\n"
-"*Non è possibile configurare ulteriori restrizioni per i contabili né per gli utenti. Pertanto, la data di blocco di tutti gli utenti deve essere precedente (o uguale) alla data di blocco dellle fatture.\n"
-"*Non è possibile bloccare un periodo non ancora terminato. Di conseguenza, la data di blocco di tutti gli utenti deve essere anteriore (o uguale) all'ultimo giorno del mese precedente.\n"
-"*Qualsiasi nuova data di blocco di tutti gli utenti deve precedere (o essere uguale) alla precedente.\n"
+"*Non è possibile configurare ulteriori restrizioni per i contabili né per gli utenti. Pertanto, la data di chiusura di tutti gli utenti deve essere precedente (o uguale) alla data di chiusura delle fatture.\n"
+"*Non è possibile bloccare un periodo non ancora terminato. Di conseguenza, la data di chiusura di tutti gli utenti deve essere anteriore (o uguale) all'ultimo giorno del mese precedente.\n"
+"*Qualsiasi nuova data di chiusura di tutti gli utenti deve precedere (o essere uguale) alla precedente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mt_reports
@@ -9081,7 +9081,7 @@ msgstr ""
 "    *tipi di riferimento per il pagamento delle fatture (Riferimento predefinito finlandese e Creditor Reference finlandese (RF))\n"
 "    *formato di riferimento finlandese per gli ordini di vendita.\n"
 "\n"
-"Configura il tipo di riferimento di pagamento dal giornale delle vendite.\n"
+"Configura il tipo di riferimento di pagamento dal registro delle vendite.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -9283,6 +9283,19 @@ msgstr ""
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
 "moneda Lempira. -- Aggiunge il piano dei conti per l'Honduras. Include anche le imposte\n"
 " e la valuta Lempira."
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lb_account
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Lebanon in Odoo.\n"
+"==============================================================================\n"
+"Lebanon accounting basic charts,taxes and localization.\n"
+"Activates:\n"
+"* Chart of Accounts\n"
+"* Taxes\n"
+"* Fiscal Positions\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -10561,6 +10574,28 @@ msgid ""
 "Payment' wizard. An error message will appear if no valid mandate is\n"
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
+"\n"
+"Questo modulo abilita la generazione dei file XML conformi all'addebito diretto SEPA (SDD) (in accordo\n"
+"        con le specifiche pain.008.001.02) da inviare alla banca per\n"
+"riscuotere una serie di pagamenti.\n"
+"\n"
+"Per essere idoneo a questo metodo di pagamento, un cliente deve prima\n"
+"restituire un mandato all'azienda, fornendo il proprio consenso per l'utilizzo dell'addebito diretto.\n"
+"Questo consenso deve essere codificato in Odoo come \"Mandato del cliente\".\n"
+"\n"
+"Per generare correttamente un file SDD è anche necessario\n"
+"soddisfare i seguenti requisiti:\n"
+"- il conto aziendale deve essere impostato con un numero IBAN valido\n"
+"- all'azienda deve essere assegnato un identificativo creditore (può essere fatto dal menu \"Impostazioni\" del modulo di contabilità)\n"
+"- l'azienda deve aver definito un registro per ricevere i pagamenti SDD (ancora nelle \"Impostazioni\" del modulo di contabilità)\n"
+"- ogni cliente per il quale viene generato un pagamento deve possedere un numero di conto IBAN valido\n"
+"\n"
+"Se qualcuno di questi requisiti non è soddisfatto Odoo provvederà a comunicarlo\n"
+"\n"
+"Per registrare un pagamento per le fatture aperte, è possibile utilizzare l'apposita opzione\n"
+"'Addebito diretto SEPA' selezionando un conto bancario nella procedura guidata\n"
+"\"Registra pagamento\". Se non è disponibile un mandato valido per generare un pagamento\n"
+"sulla fattura selezionata, viene visualizzato un messaggio di errore.\n"
 
 #. module: base
 msgid ""
@@ -25559,6 +25594,11 @@ msgstr "Scopri di più"
 #: model:res.country,name:base.lb
 msgid "Lebanon"
 msgstr "Libano"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lb_account
+msgid "Lebanon - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger

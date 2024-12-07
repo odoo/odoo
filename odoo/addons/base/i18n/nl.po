@@ -9272,6 +9272,19 @@ msgstr ""
 "en de Lempira-valuta."
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_lb_account
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Lebanon in Odoo.\n"
+"==============================================================================\n"
+"Lebanon accounting basic charts,taxes and localization.\n"
+"Activates:\n"
+"* Chart of Accounts\n"
+"* Taxes\n"
+"* Fiscal Positions\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
 msgid ""
 "\n"
@@ -10547,6 +10560,25 @@ msgid ""
 "Payment' wizard. An error message will appear if no valid mandate is\n"
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
+"\n"
+"Deze module maakt het mogelijk om SEPA Direct Debit (SDD)-compatibele XML-bestanden te genereren (consistent\n"
+"met de pain.008.001.02-specificatie) om naar je bank te sturen om\n"
+"een reeks betalingen te innen.\n"
+"\n"
+"Om in aanmerking te komen voor deze betaalmethode, moet een klant eerst\n"
+"een mandaat aan het bedrijf hebben geretourneerd, waarin hij toestemming geeft om automatische incasso te gebruiken.\n"
+"\n"
+"Deze toestemming moet zijn gecodeerd als een 'klantmandaat' in Odoo.\n"
+"\n"
+"Je moet ook aan de volgende vereisten voldoen om een ​​SDD-bestand correct te genereren:\n"
+"- Je bedrijfsrekening moet zijn ingesteld op een geldig IBAN-nummer\n"
+"- Je bedrijf moet een crediteuren-ID hebben gekregen (dit kan worden gedaan in Instellingen - Algemene instellingen - Boekhouding)\n"
+"- Je bedrijf moet een journaal hebben gedefinieerd om SDD-betalingen te ontvangen (opnieuw, in 'instellingen' van de boekhoudmodule)\n"
+"- Elke klant voor wie je een betaling genereert, moet een geldig IBAN-rekeningnummer hebben.\n"
+"\n"
+"Odoo laat u weten of aan een van deze vereisten niet is voldaan.\n"
+"\n"
+"Om een ​​betaling voor openstaande facturen te registreren, kun je de speciale optie 'SEPA Direct Debit' gebruiken door een bankrekening te selecteren in de wizard 'Register Payment'. Er verschijnt een foutmelding als er geen geldig mandaat beschikbaar is om een ​​betaling te genereren op de geselecteerde factuur.\n"
 
 #. module: base
 msgid ""
@@ -25483,6 +25515,11 @@ msgstr "Leer meer"
 #: model:res.country,name:base.lb
 msgid "Lebanon"
 msgstr "Libanon"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lb_account
+msgid "Lebanon - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
