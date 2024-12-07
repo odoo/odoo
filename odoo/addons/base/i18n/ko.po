@@ -9264,6 +9264,19 @@ msgstr ""
 "and the Lempira currency."
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_lb_account
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Lebanon in Odoo.\n"
+"==============================================================================\n"
+"Lebanon accounting basic charts,taxes and localization.\n"
+"Activates:\n"
+"* Chart of Accounts\n"
+"* Taxes\n"
+"* Fiscal Positions\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
 msgid ""
 "\n"
@@ -10537,6 +10550,28 @@ msgid ""
 "Payment' wizard. An error message will appear if no valid mandate is\n"
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
+"\n"
+"이 모듈을 사용하면 일련의 결제를 수금하기 위해 은행에 전송할 SEPA 자동 이체(SDD)\n"
+"호환 XML 파일(pain.008.001.02 사양과 일치)을\n"
+"생성할 수 있습니다.\n"
+"\n"
+"이 결제 방법을 사용하려면 먼저 고객이 회사에 자동 이체 사용에 동의하는\n"
+"위임장을 제출해야 합니다.\n"
+"이 동의는 Odoo에 '고객 위임장'으로 인코딩되어 있어야 합니다.\n"
+"\n"
+"또한 SDD 파일을 올바르게 생성하려면 다음 요구 사항을\n"
+"충족해야 합니다:\n"
+"- 회사 계정은 유효한 IBAN 번호로 설정되어 있어야 합니다.\n"
+"- 회사에 채권자 식별자가 부여되어야 합니다. (설정 - 일반 설정 - 계정 섹션에서 이 작업을 수행할 수 있습니다).\n"
+"- 회사에서 SDD 지급을 받으려면 저널을 정의해야 합니다. (마찬가지로, 회계 모듈의 '설정'에서 정의할 수 있습니다.)\n"
+"- 결제를 생성하는 모든 고객에게는 유효한 IBAN 계좌 번호가 있어야 합니다.\n"
+"\n"
+"이러한 요구사항 중 하나라도 충족되지 않을 경우, Odoo에서 알림을 보내드립니다.\n"
+"\n"
+"미결 청구서에 대한 결제를 등록하려면\n"
+"'결제 등록' 마법사에서 은행 계좌를 선택하여 전용 'SEPA 자동 이체' 옵션을 사용할 수 있습니다.\n"
+"선택한 청구서에 대한 결제를 생성할 수 있는 유효한 위임장이 없는 경우\n"
+"오류 메시지가 표시됩니다.\n"
 
 #. module: base
 msgid ""
@@ -25116,6 +25151,11 @@ msgstr "추가 정보"
 #: model:res.country,name:base.lb
 msgid "Lebanon"
 msgstr "레바논"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lb_account
+msgid "Lebanon - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
