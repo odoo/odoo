@@ -21,7 +21,8 @@ class ReportPosOrder(models.Model):
          ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
         string='Status', readonly=True)
     user_id = fields.Many2one('res.users', string='User', readonly=True)
-    price_total = fields.Float(string='Total Price', readonly=True)
+    currency_id  = fields.Integer(string='Currency', readonly=True)
+    price_total = fields.Monetary(string='Total Price', currency_field='currency_id', readonly=True)
     price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
     price_subtotal_excl = fields.Float(string='Subtotal w/o Tax', readonly=True)
     total_discount = fields.Float(string='Total Discount', readonly=True)
@@ -62,6 +63,7 @@ class ReportPosOrder(models.Model):
                 l.qty AS product_qty,
                 l.qty * l.price_unit / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS price_sub_total,
                 ROUND((l.price_subtotal_incl) / COALESCE(NULLIF(s.currency_rate, 0), 1.0), cu.decimal_places) AS price_total,
+                co.currency_id as currency_id,
                 (l.qty * l.price_unit) * (l.discount / 100) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS total_discount,
                 CASE
                     WHEN l.qty * u.factor = 0 THEN NULL
