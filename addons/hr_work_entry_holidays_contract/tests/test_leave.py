@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, date
@@ -7,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import SUPERUSER_ID
-from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+from odoo.addons.hr_work_entry_holidays_contract.tests.common import TestWorkEntryHolidaysBase
 from odoo.tests import tagged
 
 @tagged('test_leave')

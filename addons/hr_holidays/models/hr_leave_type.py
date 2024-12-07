@@ -586,14 +586,14 @@ class HrLeaveType(models.Model):
                     if data['virtual_remaining_leaves'] > 0:
                         allocations_with_remaining_leaves |= allocation
                 closest_expiration_date, closest_allocation_remaining = self._get_closest_expiring_leaves_date_and_count(
-                                                                            allocations_with_remaining_leaves,
-                                                                            allocations_leaves_consumed[employee][leave_type],
-                                                                            target_date
-                                                                        )
+                    allocations_with_remaining_leaves,
+                    allocations_leaves_consumed[employee][leave_type],
+                    target_date
+                )
                 if closest_expiration_date:
                     closest_allocation_expire = format_date(self.env, closest_expiration_date)
                     calendar = employee.resource_calendar_id\
-                                or self.env.company.resource_calendar_id
+                        or self.env.company.resource_calendar_id
                     # closest_allocation_duration corresponds to the time remaining before the allocation expires
                     calendar_attendance = calendar._work_intervals_batch(
                         datetime.combine(target_date, time.min).replace(tzinfo=pytz.UTC),
