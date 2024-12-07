@@ -132,6 +132,15 @@ test("should disconnect when closing page while in call", async () => {
                     asyncStep(`sendBeacon_leave_call:${blobData.params.channel_id}`);
                 }
             },
+            serviceWorker: {
+                controller: {
+                    postMessage(data) {
+                        if (data.name === "UNEXPECTED_CALL_TERMINATION") {
+                            asyncStep(`postMessage:${data.name}:${data.channelId}`);
+                        }
+                    },
+                },
+            },
         },
     });
 
@@ -139,7 +148,10 @@ test("should disconnect when closing page while in call", async () => {
     await contains(".o-discuss-Call");
     // simulate page close
     window.dispatchEvent(new Event("pagehide"), { bubble: true });
-    await waitForSteps([`sendBeacon_leave_call:${channelId}`]);
+    await waitForSteps([
+        `postMessage:UNEXPECTED_CALL_TERMINATION:${channelId}`,
+        `sendBeacon_leave_call:${channelId}`,
+    ]);
 });
 
 test("should display invitations", async () => {
