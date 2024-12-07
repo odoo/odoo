@@ -9,7 +9,7 @@
             </div>
             <div class="d-flex flex-column w-100 gap-1">
                 <div class="d-flex justify-content-between">
-                    <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
+                    <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate" t-att-class="{ 'text-info': props.highlightRefund and line.isRefund }">
                         <span class="text-wrap" t-esc="line.productName"/>
                         <t t-slot="product-name"/>
                     </div>

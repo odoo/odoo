@@ -8,7 +8,8 @@
           <t t-set="line" t-value="scope.line" />
           <Orderline line="line.getDisplayData()"
               t-on-click="(event) => this.clickLine(event, line)"
-              class="{ ...line.getDisplayClasses(), 'selected' : line.isSelected() }">
+              class="{ ...line.getDisplayClasses(), 'selected' : line.isSelected() }"
+              highlightRefund="true">
               <t t-set-slot="product-name">
                 <!-- FIXME: pos_sale does not always correctly import orders -->
                 <!-- that makes is such that we might have a line w\o product; that's why we need the  conditional chaining here-->
