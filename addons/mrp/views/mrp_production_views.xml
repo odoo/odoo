@@ -355,7 +355,7 @@
                                 <list editable="bottom">
                                     <field name="product_id" readonly="state == 'done'"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom" widget="many2one_uom"/>
+                                    <field name="product_uom" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="operation_id"/>
                                     <field name="byproduct_id"/>
                                     <field name="date_deadline"/>
@@ -563,7 +563,7 @@
                                 <field name="priority" widget="priority"/>
                                 <field name="product_id" class="fw-bolder fs-6 ms-1"/>
                                 <field name="product_qty" class="ms-auto"/>
-                                <field name="product_uom_id" class="small ms-1"/>
+                                <field name="product_uom_id" class="small ms-1" groups="uom.group_uom"/>
                             </div>
                             <footer class="text-muted">
                                 <div class="d-flex">

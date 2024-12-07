@@ -242,7 +242,7 @@
                 </xpath>
                 <xpath expr="//field[@name='product_properties']" position="before">
                     <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value">
-                        On hand: <field name="qty_available"/> <field name="uom_id"/>
+                        On hand: <field name="qty_available"/> <field name="uom_id" groups="uom.group_uom"/>
                     </div>
                 </xpath>
             </field>
@@ -326,7 +326,7 @@
                                     </div>
                                     <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
                                         <span class="o_stat_value">
-                                            <field name="uom_name" widget="statinfo" nolabel="1"/>
+                                            <field name="uom_name" widget="statinfo" nolabel="1" groups="uom.group_uom"/>
                                         </span>
                                         <span class="o_stat_value text-muted">
                                             Forecasted
@@ -442,7 +442,7 @@
                                     </div>
                                     <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
                                         <span class="o_stat_value">
-                                            <field name="uom_name" widget="statinfo" nolabel="1"/>
+                                            <field name="uom_name" widget="statinfo" nolabel="1" groups="uom.group_uom"/>
                                         </span>
                                         <span class="o_stat_value text-muted">
                                             Forecasted
