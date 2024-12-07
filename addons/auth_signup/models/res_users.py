@@ -5,12 +5,14 @@ import logging
 
 from ast import literal_eval
 from collections import defaultdict
+from contextlib import nullcontext
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.http import request
+from odoo.tools import str2bool
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError
@@ -336,6 +338,18 @@ class ResUsers(models.Model):
             if request.httprequest.user_agent.platform:
                 values['useros'] = request.httprequest.user_agent.platform.capitalize()
         return values
+
+    def _alert_untrusted_location(self):
+        if not str2bool(self.env['ir.config_parameter'].get_param("auth_signup.alert_untrusted_location", 'true')):
+            return
+        # Fallback on ``_alert_new_device`` with a no readonly cursor
+        if self.env.cr.readonly:
+            self.env.cr.rollback()
+            cursor = self.env.registry.cursor(readonly=False)
+        else:
+            cursor = nullcontext(self.env.cr)
+        with cursor as cr:
+            self.with_env(self.env(cr=cr))._alert_new_device()
 
     @api.model
     def web_create_users(self, emails):
