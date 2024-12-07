@@ -470,7 +470,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         for email_to in emails:
             found_mail = self._find_mail_mail_wemail(
                 email_to, status, mail_message=mail_message,
-                author=author, email_from=fields_values.get('email_from')
+                author=author, email_from=(fields_values or {}).get('email_from')
             )
             self.assertTrue(bool(found_mail))
             self._assertMailMail(
