@@ -142,7 +142,7 @@ class IrModule(models.Model):
                         convert_xml_import(self.env, module, fp, idref, mode, noupdate)
                         if filename in exclude_list:
                             self.env['ir.model.data'].create([{
-                                'name': f"cloc_exclude_{key}",
+                                'name': f"cloc_exclude_{module}_{key}",
                                 'model': self.env['ir.model.data']._xmlid_lookup(f"{module}.{key}")[0],
                                 'module': "__cloc_exclude__",
                                 'res_id': value,
