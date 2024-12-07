@@ -21,13 +21,16 @@ Those trackers can be used in Google Analytics to track clicks and visitors, or 
             'website_links/static/src/js/website_links_code_editor.js',
             'website_links/static/src/js/website_links_charts.js',
             'website_links/static/src/css/website_links.css',
-            'website_links/static/src/xml/*.xml',
+            'website_links/static/src/xml/website_links_tags_wrapper.xml',
         ],
         'web.assets_tests': [
             'website_links/static/tests/**/*',
         ],
         'website.assets_editor': [
             'website_links/static/src/services/website_custom_menus.js',
+        ],
+        'website_links.assets_widget_xml': [
+            'website_links/static/src/xml/recent_link.xml',
         ],
     },
     'license': 'LGPL-3',

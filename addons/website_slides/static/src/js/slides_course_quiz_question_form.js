@@ -19,6 +19,9 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         'click .o_wslides_js_quiz_remove_answer_comment': '_removeAnswerLineComment',
         'change .o_wslides_js_quiz_answer_comment > input[type=text]': '_onCommentChanged'
     },
+    assetLibs: [
+        "website_slides.assets_widget_xml",
+    ],
 
     /**
      * @override

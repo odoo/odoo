@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="portal_rating.rating_stars_static">
+        <t t-set="val_integer" t-value="Math.floor(val)"/>
+        <t t-set="val_decimal" t-value="val - val_integer"/>
+        <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
+        <div class="o_website_rating_static"
+             t-att-style="inline_mode ? 'display:inline' : ''"
+             t-attf-aria-label="#{Math.round(val * 100) / 100} stars on 5"
+             t-attf-title="#{Math.round(val * 100) / 100} stars on 5">
+            <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
+                <i class="fa fa-star" role="img"></i>
+            </t>
+            <t t-if="val_decimal">
+                <i class="fa fa-star-half-o" role="img"></i>
+            </t>
+            <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
+                <i class="fa fa-star text-black-25" role="img"></i>
+            </t>
+        </div>
+    </t>
+</templates>
