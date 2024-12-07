@@ -14,7 +14,7 @@ class HrLeaveAllocation(models.Model):
     def default_get(self, fields):
         res = super().default_get(fields)
         if 'holiday_status_id' in fields and self.env.context.get('deduct_extra_hours'):
-            domain = [('overtime_deductible', '=', True), ('requires_allocation', '=', 'yes')]
+            domain = [('requires_allocation', '=', 'extra_hours')]
             if self.env.context.get('deduct_extra_hours_employee_request', False):
                 # Prevent loading manager allocated time off type in self request contexts
                 domain = expression.AND([domain, [('employee_requests', '=', 'yes')]])
@@ -29,7 +29,7 @@ class HrLeaveAllocation(models.Model):
     @api.depends('holiday_status_id')
     def _compute_overtime_deductible(self):
         for allocation in self:
-            allocation.overtime_deductible = allocation.holiday_status_id.overtime_deductible
+            allocation.overtime_deductible = allocation.holiday_status_id.requires_allocation == 'extra_hours'
 
     @api.model_create_multi
     def create(self, vals_list):
