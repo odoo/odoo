@@ -1,9 +1,9 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { omit } from "@web/core/utils/objects";
-import { parseUTCString, qrCodeSrc, random5Chars, uuidv4 } from "@point_of_sale/utils";
+import { qrCodeSrc, random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
@@ -11,8 +11,8 @@ import { changesToOrder } from "./utils/order_change";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 
-const { DateTime } = luxon;
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
+const { DateTime } = luxon;
 
 export class PosOrder extends Base {
     static pythonModel = "pos.order";
@@ -25,9 +25,7 @@ export class PosOrder extends Base {
         }
 
         // Data present in python model
-        this.date_order = vals.date_order || serializeDateTime(luxon.DateTime.now());
         this.to_invoice = vals.to_invoice || false;
-        this.shipping_date = vals.shipping_date || false;
         this.state = vals.state || "draft";
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.last_order_preparation_change = vals.last_order_preparation_change
@@ -41,6 +39,10 @@ export class PosOrder extends Base {
         this.internal_note = vals.internal_note || "";
         if (!vals.lines) {
             this.lines = [];
+        }
+
+        if (this.date_order) {
+            this.date_order = DateTime.now();
         }
 
         // !!Keep all uiState in one object!!
@@ -257,7 +259,7 @@ export class PosOrder extends Base {
             general_customer_note: this.general_customer_note || "",
             invoice_id: null, //TODO
             cashier: this.getCashierName(),
-            date: formatDateTime(parseUTCString(this.date_order)),
+            date: formatDateTime(this.date_order),
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
                 this.finalized &&
@@ -266,7 +268,7 @@ export class PosOrder extends Base {
             base_url: baseUrl,
             footer: this.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
-            shippingDate: this.shipping_date && formatDate(DateTime.fromSQL(this.shipping_date)),
+            shippingDate: this.shipping_date && formatDate(this.shipping_date),
             headerData: headerData,
             screenName: "ReceiptScreen",
         };
