@@ -11,6 +11,14 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'kz1210',
             'property_account_payable_id': 'kz3310',
+<<<<<<< master
+||||||| 85335af781c0c6a832bd75a9f59f37470f52dc8c
+            'property_account_income_categ_id': 'kz6010',
+            'property_account_expense_categ_id': 'kz1330',
+=======
+            'property_account_income_categ_id': 'kz6010',
+            'property_account_expense_categ_id': 'kz7010',
+>>>>>>> 9e63927997d9a2c4d482b45a5ff63197883eb09e
             'code_digits': '4',
         }
 
