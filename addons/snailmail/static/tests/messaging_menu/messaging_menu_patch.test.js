@@ -77,14 +77,14 @@ test("notifications grouped by notification_type", async () => {
     await contains(".o-mail-NotificationItem", { count: 2 });
     await contains(":nth-child(1 of .o-mail-NotificationItem)", {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Contact" }],
+            [".o-mail-NotificationItem-name", { text: "Failure: Contact" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [".o-mail-NotificationItem-text", { text: "An error occurred when sending an email" }],
         ],
     });
     await contains(":nth-child(2 of .o-mail-NotificationItem)", {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Contact" }],
+            [".o-mail-NotificationItem-name", { text: "Failure: Contact" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [
                 ".o-mail-NotificationItem-text",
@@ -143,7 +143,7 @@ test("grouped notifications by document model", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem", { text: "Contact" });
+    await contains(".o-mail-NotificationItem", { text: "Failure: Contact" });
     await contains(".o-mail-NotificationItem-counter", { text: "2" });
     await click(".o-mail-NotificationItem");
     await waitForSteps(["do_action"]);

@@ -49,7 +49,7 @@ test("basic layout", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", {
         contains: [
-            [".o-mail-NotificationItem-name", { text: "Discussion Channel" }],
+            [".o-mail-NotificationItem-name", { text: "Failure: Discussion Channel" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
             [".o-mail-NotificationItem-date", { text: "Jan 1" }],
             [
@@ -77,11 +77,13 @@ test("mark as read", async () => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], { text: "Discussion Channel" });
-    await click(".o-mail-NotificationItem-markAsRead", {
-        parent: [".o-mail-NotificationItem", { text: "Discussion Channel" }],
+    await triggerEvents(".o-mail-NotificationItem", ["mouseenter"], {
+        text: "Failure: Discussion Channel",
     });
-    await contains(".o-mail-NotificationItem", { count: 0, text: "Discussion Channel" });
+    await click(".o-mail-NotificationItem-markAsRead", {
+        parent: [".o-mail-NotificationItem", { text: "Failure: Discussion Channel" }],
+    });
+    await contains(".o-mail-NotificationItem", { count: 0, text: "Failure: Discussion Channel" });
 });
 
 test("open non-channel failure", async () => {
