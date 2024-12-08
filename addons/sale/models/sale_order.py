@@ -732,7 +732,7 @@ class SaleOrder(models.Model):
                            order.company_id.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order,
+                    order.sudo(),  # ensure access to `credit` & `credit_limit` fields
                     current_amount=(order.amount_total / order.currency_rate),
                 )
 
