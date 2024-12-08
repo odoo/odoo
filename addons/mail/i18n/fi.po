@@ -29,16 +29,16 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Miika Nissi <miika.nissi@tawasta.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
-# santeri valjakka <santeri.valjakka@avoin.systems>, 2024
+# Santeri Valjakka <santeri.valjakka@avoin.systems>, 2024
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Mikko Salmela <salmemik@gmail.com>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
-# Martin Trigaux, 2024
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2024
+# Martin Trigaux, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -173,6 +173,18 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "%(name)s: %(message)s)"
 msgstr "%(name)s: %(message)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid ""
+"%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
+"someone, and grab their attention.%(new_line)sType "
+"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
+"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
+"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
+"message."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1682,6 +1694,12 @@ msgid ""
 msgstr ""
 "Estetty, koska portaali-tili on poistettu %(portal_user_name)s tekijänä "
 "%(user_name)s (#%(user_id)s)"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Blur Background"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4292,8 +4310,10 @@ msgid "Groups"
 msgstr "Ryhmät"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -5313,12 +5333,6 @@ msgid "Language"
 msgstr "Kieli"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.xml:0
-msgid "Large windows"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
 msgid "Last Fetch Date"
 msgstr "Edellinen noutopäivä"
@@ -5836,18 +5850,6 @@ msgstr "Postit"
 #: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Pääliitetiedosto"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.js:0
-msgid "Make chats bigger"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.js:0
-msgid "Make chats smaller"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
@@ -7055,6 +7057,12 @@ msgid "Open Channel"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Open Discuss App"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
 msgid "Open Document"
@@ -7069,8 +7077,6 @@ msgstr "Avaa lomakkeen näkymä"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#, python-format
 msgid "Open Link"
 msgstr "Avaa linkki"
 
@@ -8016,6 +8022,12 @@ msgstr "Yhdistämiskenttä"
 #: code:addons/mail/static/src/core/common/message_reaction_menu.xml:0
 msgid "Remove"
 msgstr "Poista"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Remove Blur"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -9891,6 +9903,12 @@ msgstr "Tämän päivän toimenpiteet"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Today at %(time)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Today:"
 msgstr "Tänään:"
@@ -10530,6 +10548,12 @@ msgid "Username"
 msgstr "Käyttäjänimi"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid "Users in this channel: %(members)s."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__restrict_template_rendering
 msgid ""
 "Users will still be able to render templates.\n"
@@ -10803,6 +10827,11 @@ msgid "Whether to display all the recipients or only the important ones."
 msgstr "Näytetäänkö kaikki vastaanottajat vai vain tärkeät."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid "Write /field to insert dynamic content"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 msgid "Write Feedback"
@@ -10851,6 +10880,12 @@ msgstr "Eilen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Yesterday at %(time)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Yesterday:"
 msgstr "Eilen:"
@@ -10865,6 +10900,24 @@ msgid ""
 msgstr ""
 "Olet poistumassa tästä ryhmäkeskustelusta etkä voi enää käyttää sitä, ellei "
 "sinua kutsuta uudelleen. Oletko varma, että haluat jatkaa?"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid "You are alone in a private conversation."
+msgstr "Olet yksin yksityisessä keskustelussa."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid "You are alone in this channel."
+msgstr "Olet yksin kanavalla."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid "You are in a private conversation with %(member_names)s."
+msgstr "Olet yksityisessä keskustelussa %(member_names)s kanssa."
 
 #. module: mail
 #. odoo-python
@@ -11536,6 +11589,12 @@ msgid "months"
 msgstr "kuukaudet"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid "more"
+msgstr "lisää"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
 msgid "morning"
@@ -11737,6 +11796,12 @@ msgstr "websocket-viestien käsittely"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "viikkoa"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/discuss/discuss_channel.py:0
+msgid "you"
+msgstr "sinä"
 
 #. module: mail
 #. odoo-python

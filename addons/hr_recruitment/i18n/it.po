@@ -621,16 +621,6 @@ msgstr ""
 " la creazione di nuovi record per l'alias."
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid ""
-"At least one applicant doesn't have a email; you can't use send email "
-"option."
-msgstr ""
-"È presente almeno un candidato senza indirizzo e-mail. Non è possibile "
-"utilizzare l'opzione invia e-mail."
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
 msgid "Action Needed"
@@ -957,6 +947,16 @@ msgstr "Sei sicuro di voler archiviare la posizione lavorativa?"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
 msgid "Assigned"
 msgstr "Assegnato"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr ""
+"È presente almeno un candidato senza indirizzo e-mail. Non è possibile "
+"utilizzare l'opzione invia e-mail."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3709,6 +3709,13 @@ msgid ""
 msgstr ""
 "Non puoi selezionare l'opzione Invia e-mail.\n"
 "L'e-mail non verrà inviata ai seguenti candidati perché non hanno un indirizzo e-mail:"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid ""
+"You cannot create an applicant in a different company than the candidate"
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python

@@ -17,8 +17,8 @@
 # JanaAvalah, 2024
 # Mihkel avalah, 2024
 # Algo Kärp <algokarp@gmail.com>, 2024
-# Anna, 2024
 # Stevin Lilla, 2024
+# Anna, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-29 10:13+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
+"Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -634,14 +634,6 @@ msgstr ""
 "kirjete loomiseks sellele aliasele."
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid ""
-"At least one applicant doesn't have a email; you can't use send email "
-"option."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
 msgid "Action Needed"
@@ -961,6 +953,16 @@ msgstr "Kas oled kindel, et soovid selle ametikoha arhiveerida?"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
 msgid "Assigned"
 msgstr "Määratud"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr ""
+"Vähemalt ühel kandidaadil puudub e-posti aadress; e-kirja saatmise võimalust"
+" ei saa kasutada."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3328,6 +3330,8 @@ msgid ""
 "             position. The Recruiter is automatically added to all meetings "
 "with the Applicant."
 msgstr ""
+"Värbaja määratakse selle ametikoha kandidaatidele vaikimisi. Värbaja "
+"lisatakse automaatselt kõigile kandidaatidega peetavatele kohtumistele."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3665,6 +3669,13 @@ msgstr ""
 msgid ""
 "You can't select Send email option.\n"
 "The email will not be sent to the following applicant(s) as they don't have an email address:"
+msgstr ""
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid ""
+"You cannot create an applicant in a different company than the candidate"
 msgstr ""
 
 #. module: hr_recruitment

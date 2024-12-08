@@ -619,14 +619,6 @@ msgstr ""
 "ที่จะถูกประเมินเพื่อให้เป็นค่าเริ่มต้นเมื่อสร้างการบันทึกใหม่สำหรับนามแฝงนี้"
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid ""
-"At least one applicant doesn't have a email; you can't use send email "
-"option."
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
 msgid "Action Needed"
@@ -953,6 +945,15 @@ msgstr "คุณแน่ใจหรือไม่ว่าต้องกา
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
 msgid "Assigned"
 msgstr "มอบหมายแล้ว"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr ""
+"ผู้สมัครอย่างน้อยหนึ่งรายไม่มีอีเมล คุณไม่สามารถใช้ตัวเลือกส่งอีเมลได้"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -2735,12 +2736,12 @@ msgstr "เงินเดือนพิเศษที่เสนอ"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Provide an email"
-msgstr ""
+msgstr "ให้อีเมล"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish job offers on your website"
-msgstr ""
+msgstr "เผยแพร่ข้อเสนองานบนเว็บไซต์ของคุณ"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2852,7 +2853,7 @@ msgstr "ปฏิเสธ"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_date
 msgid "Refuse Date"
-msgstr ""
+msgstr "วันที่ปฏิเสธ"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2905,12 +2906,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "Refused by applicant: job fit"
-msgstr ""
+msgstr "ผู้สมัครปฏิเสธ: ตำแหน่งงานไม่เหมาะสม"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
 msgid "Refused by applicant: salary"
-msgstr ""
+msgstr "ผู้สมัครปฏิเสธ: เงินเดือน"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__regex
@@ -2969,12 +2970,12 @@ msgstr "ผู้สมัครที่กำลังใช้งาน"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Digitization (OCR)"
-msgstr ""
+msgstr "การแปลงเรซูเม่เป็นดิจิทัล (OCR)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Display"
-msgstr ""
+msgstr "แสดงเรซูเม่"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2995,7 +2996,7 @@ msgstr "เงินเดือนที่คาดหวังโดยผู
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Salary Package"
-msgstr ""
+msgstr "แพ็คเกจเงินเดือน"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
@@ -3101,7 +3102,7 @@ msgstr "ส่งอีเมลถึงผู้สมัคร"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_candidate_send_mail
 msgid "Send mails to candidates"
-msgstr ""
+msgstr "ส่งเมลถึงผู้สมัคร"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -3145,17 +3146,17 @@ msgstr "แสดงระเบียนทั้งหมดที่มีว
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "Similar Candidates"
-msgstr ""
+msgstr "ผู้สมัครที่คล้ายกัน"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__similar_candidates_count
 msgid "Similar Candidates Count"
-msgstr ""
+msgstr "จำนวนผู้สมัครที่คล้ายกัน"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__single_applicant_email
 msgid "Single Applicant Email"
-msgstr ""
+msgstr "อีเมลผู้สมัครรายเดียว"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3187,7 +3188,7 @@ msgstr "แหล่งที่มาของผู้สมัคร"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Sourcing"
-msgstr ""
+msgstr "การจัดหา"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_7
@@ -3197,7 +3198,7 @@ msgstr "สแปม"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Specific jobs that use this stage. Other jobs will not use this stage."
-msgstr ""
+msgstr "งานเฉพาะที่ใช้ขั้นตอนนี้ งานอื่นจะไม่ใช้ขั้นตอนนี้"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -3334,6 +3335,8 @@ msgid ""
 "The candidate is linked to an employee, to avoid losing information, archive"
 " it instead."
 msgstr ""
+"ผู้สมัครจะเชื่อมโยงกับพนักงาน เพื่อหลีกเลี่ยงการสูญเสียข้อมูล "
+"ควรเก็บข้อมูลไว้แทน"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -3351,7 +3354,7 @@ msgstr "ผู้สมัครต่อไปนี้ไม่มีที่
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/candidate_send_mail.py:0
 msgid "The following candidates are missing an email address: %s."
-msgstr ""
+msgstr "ผู้สมัครรายต่อไปนี้ไม่มีที่อยู่อีเมล: %s"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -3394,6 +3397,8 @@ msgid ""
 "These job positions and all related applicants will be archived. Are you "
 "sure?"
 msgstr ""
+"ตำแหน่งงานเหล่านี้และผู้สมัครที่เกี่ยวข้องทั้งหมดจะถูกเก็บถาวร "
+"คุณแน่ใจหรือไม่?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
@@ -3401,6 +3406,8 @@ msgid ""
 "This displays how the applicant has reached out, e.g. via Email, LinkedIn, "
 "Website, etc."
 msgstr ""
+"นี่แสดงให้เห็นว่าผู้สมัครได้ติดต่อมาอย่างไร เช่น ทางอีเมล LinkedIn เว็บไซต์ "
+"เป็นต้น"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -3437,6 +3444,7 @@ msgstr ""
 msgid ""
 "This job position and all related applicants will be archived. Are you sure?"
 msgstr ""
+"ตำแหน่งงานนี้และผู้สมัครที่เกี่ยวข้องทั้งหมดจะถูกเก็บถาวร คุณแน่ใจหรือไม่?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -3476,7 +3484,7 @@ msgstr "ตัวติดตาม"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Try creating an application by sending an email to"
-msgstr ""
+msgstr "ลองสร้างแอปพลิเคชันโดยส่งอีเมลไปที่"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3486,7 +3494,7 @@ msgstr "ลองส่งอีเมล"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Try the Website app to publish job offers online."
-msgstr ""
+msgstr "ลองใช้แอปเว็บไซต์เพื่อเผยแพร่ข้อเสนองานออนไลน์"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -3540,7 +3548,7 @@ msgstr "ข้อความที่ยังไม่ได้อ่าน"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the Résumr or the file itself"
-msgstr ""
+msgstr "ใช้ OCR เพื่อกรอกข้อมูลจากภาพของผลสรุปหรือจากไฟล์นั้นเอง"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -3611,7 +3619,7 @@ msgstr "เมื่อคุณปฏิเสธการสมัคร ค�
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Who can access candidates"
-msgstr ""
+msgstr "ใครสามารถเข้าถึงผู้สมัครได้"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
@@ -3660,6 +3668,13 @@ msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid ""
+"You cannot create an applicant in a different company than the candidate"
+msgstr ""
+
+#. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_source.py:0
 msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
@@ -3672,13 +3687,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for %s"
-msgstr ""
+msgstr "คุณได้รับมอบหมายให้เป็นผู้สัมภาษณ์สำหรับ%s"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for the Applicant %s"
-msgstr ""
+msgstr "คุณได้รับมอบหมายให้เป็นผู้สัมภาษณ์สำหรับผู้สมัคร %s"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3690,7 +3705,7 @@ msgstr "คุณต้องกำหนดชื่อผู้ติดต่
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "You must define a Contact Name for this candidate."
-msgstr ""
+msgstr "คุณจะต้องกำหนดชื่อผู้ติดต่อสำหรับผู้สมัครรายนี้"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -3718,7 +3733,7 @@ msgstr "เช่น Linkedin"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Masters"
-msgstr ""
+msgstr "เช่น ปริญญาโท"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3738,12 +3753,12 @@ msgstr "เช่น domain.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. https://www.linkedin.com/in/..."
-msgstr ""
+msgstr "เช่น https://www.linkedin.com/in/..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. jobs"
-msgstr ""
+msgstr "เช่น งาน"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
@@ -3753,7 +3768,7 @@ msgstr "เช่น jobs-listings@linkedin.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. john.doe@example.com"
-msgstr ""
+msgstr "เช่น john.doe@example.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

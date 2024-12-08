@@ -1,43 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_setup
-#
-# Translators:
-# Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
-# Kovács Tibor <kovika@gmail.com>, 2022
-# Zsolt Godó <zsolttokio@gmail.com>, 2022
-# Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# krnkris, 2022
-# Martin Trigaux, 2023
-# Tamás Németh <ntomasz81@gmail.com>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
-msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
 "                                        Active User\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
@@ -45,10 +34,10 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
 "                                        Company\n"
 "                                    </span>\n"
-"                                    <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
 "                                        Companies\n"
 "                                    </span>\n"
 "                                    <br/>"
@@ -57,33 +46,39 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
 "                                            Language\n"
 "                                        </span>\n"
-"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to choose your Geo Provider."
-msgstr "<strong>Mentse</strong> az oldalt, és jöjjön vissza ide kiválasztani a földrajzi szolgáltatóját."
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up Cloudflare turnstile."
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Geo "
+"Provider."
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up reCaptcha."
-msgstr "<strong>Mentse</strong> az oldalt, és jöjjön vissza ide beállítani a reCaptcha funkciót."
+msgid ""
+"<strong>Save</strong> this page and come back here to set up Cloudflare "
+"turnstile."
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "<strong>Save</strong> this page and come back here to set up the feature."
-msgstr "<strong>Mentse</strong> az oldalt, és jöjjön vissza ide beállítani a funkciót."
+msgid ""
+"<strong>Save</strong> this page and come back here to set up reCaptcha."
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -92,29 +87,31 @@ msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "API Keys allow your users to access Odoo with external tools when multi-factor authentication is enabled."
+msgid ""
+"API Keys allow your users to access Odoo with external tools when multi-"
+"factor authentication is enabled."
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "About"
-msgstr "Névjegy"
+msgstr ""
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/controllers/main.py:0
 msgid "Access Denied"
-msgstr "Hozzáférés megtagadva"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add Languages"
-msgstr "Új nyelvek"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add fun feedback and motivate your employees"
-msgstr "Tréfás visszajelzések adása és az alkalmazottak motiválása"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
@@ -124,7 +121,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "Engedélyezze felhasználók számára a naptárak szinkronizálását Google naptárral"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
@@ -135,17 +132,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "Engedélyezze felhasználók számára adatok betöltését CSV/XLS/XLSX/ODS fájlokból"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr "Több pénznemes környezetet tesz elérhetővé"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
-msgid "Asterisk (VoIP)"
-msgstr "Asterisk (VoIP)"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -154,18 +146,20 @@ msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Automatically generate counterpart documents for orders/invoices between companies"
+msgid "Automatically generate counterpart documents in recipient companies"
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "By default, new users get highest access rights for all installed apps."
-msgstr "Alapértelmezetten az új felhasználók a legmagasabb hozzáférést kapják minden telepített alkalmazáshoz."
+msgid ""
+"By default, new users get highest access rights for all installed apps. If "
+"unchecked, new users will only have basic employee access."
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose the layout of your documents"
-msgstr "Válassza ki a dokumentumai elrendezését"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
@@ -175,12 +169,12 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Companies"
-msgstr "Vállalatok"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
 msgid "Company"
-msgstr "Vállalat"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
@@ -190,49 +184,51 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
 msgid "Company Informations"
-msgstr "Vállalat információk"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_name
 msgid "Company Name"
-msgstr "Vállalat neve"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Beállítások módosítása"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr "Dokumentum elrendezés konfigurálása"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
+msgid ""
+"Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Contacts"
-msgstr "Kapcsolatok"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
 msgid "Custom Report Footer"
-msgstr "Egyedi kimutatás lábléc"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr "Alapértelmezett hozzáférési jogok"
+msgstr ""
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "Default User Template not found."
-msgstr "Alapértelmezett felhasználó sablon nem található."
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -242,53 +238,50 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
 msgid "Document Template"
-msgstr "Dokumentum sablon"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Documentation"
-msgstr "Dokumentáció"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
-msgstr "Elrendezés szerkesztése"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Enable the profiling tool. Profiling may impact performance while being active."
+msgid ""
+"Enable the profiling tool. Profiling may impact performance while being "
+"active."
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Find free high-resolution images from Unsplash"
-msgstr "Nagy felbontású képek keresése az Unsplash-ben"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr "Lábjegyzet szövege megjelenítve minden kimutatás alján."
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.menu,name:base_setup.menu_config
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "General Settings"
-msgstr "Általános beállítások"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Geo Localization"
-msgstr "Helymeghatározás"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
 msgid "GeoLocalize"
-msgstr "Helymeghatározás"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "GeoLocalize your partners"
-msgstr "Helymeghatározás támogatás a partnerekhez"
+msgid "Geolocate your partners"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Geolocation"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
@@ -296,19 +289,14 @@ msgid "Get product pictures using barcode"
 msgstr ""
 
 #. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Google Calendar"
-msgstr "Google Naptár"
-
-#. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP irányítás"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
-msgstr "Importálás és exportálás"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -318,28 +306,33 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrations"
-msgstr "Integrálások"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter-Company Transactions"
-msgstr "Cégen belüli tranzakciók"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
+msgid "Is Root Company"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "LDAP Authentication"
-msgstr "LDAP hitelesítés"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Languages"
-msgstr "Nyelvek"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Layout"
-msgstr "Elrendezés"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -349,91 +342,86 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr "API kulcsok kezelése"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr "Vállalatok kezelése"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "Belső vállalat kezelés"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr "Nyelvek kezelése"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr "Felhasználók kezelése"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
 msgid "Multi-Currencies"
-msgstr "Több pénznem"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
 msgid "Number of Active Users"
-msgstr "Aktív felhasználók száma"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
 msgid "Number of Companies"
-msgstr "Vállalatok száma"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__language_count
 msgid "Number of Languages"
-msgstr "Nyelvek száma"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "OAuth Authentication"
-msgstr "OAuth hitelesítés"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "On Apple Store"
-msgstr "Az App Store-ban"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "On Google Play"
-msgstr "A Google Play-en"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Outlook Calendar"
-msgstr "Outlook naptár"
+msgid "Odoo"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "Partneradatok automata kiegészítése"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Performance"
-msgstr "Teljesítmény"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Permissions"
-msgstr "Jogosultságok"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
-msgstr "Dokumentum előnézete"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
 msgid "Profiling enabled until"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Progressive Web App"
 msgstr ""
 
 #. module: base_setup
@@ -447,39 +435,34 @@ msgid "Protect your forms with CF Turnstile."
 msgstr ""
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
+msgid "SMS"
+msgstr ""
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send SMS"
-msgstr "SMS küldése"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr "Küldjön szöveges üzenetet a kapcsolatainak"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr "Egyedi hozzáférési jogok beállítása az új felhasználóknak"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
 msgid "Settings"
-msgstr "Beállítások"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
 msgid "Show Effect"
-msgstr "Effekt megjelenítése"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Google Calendar"
-msgstr "A naptár szinkronizálása a Google naptárral"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Outlook"
-msgstr "A naptár szinkronizálása Outlookkal"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__company_country_code
@@ -489,57 +472,67 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"This name will be used for the application when Odoo is installed through "
+"the browser."
+msgstr ""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr "Unspalsh képtár"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr "Adatok frissítése"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
-msgid "Use Custom Email Servers"
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
-msgstr "LDAP használata a bejelentkezésekhez"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
-msgstr "Külső fiókok használata a bejelentkezésekhez (Google, Facebook stb.)"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr "Külső azonosító szolgáltatók használata (OAuth)"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_users
 msgid "User"
-msgstr "Felhasználó"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Users"
-msgstr "Felhasználók"
+msgstr ""
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "VAT"
-msgstr "ÁFA"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
+msgid "VoIP"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled."
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
 msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
-msgstr "reCAPTCHA"
+msgstr ""

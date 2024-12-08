@@ -622,16 +622,6 @@ msgstr ""
 " ghi mới cho bí danh này. "
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid ""
-"At least one applicant doesn't have a email; you can't use send email "
-"option."
-msgstr ""
-"Có ít nhất một ứng viên không có email; bạn không thể sử dụng tùy chọn gửi "
-"email."
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
 msgid "Action Needed"
@@ -958,6 +948,16 @@ msgstr "Bạn có chắc muốn lưu trữ vị trí này không?"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
 msgid "Assigned"
 msgstr "Đã phân công"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr ""
+"Có ít nhất một ứng viên không có email; bạn không thể sử dụng tùy chọn gửi "
+"email."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3695,6 +3695,15 @@ msgstr ""
 msgid ""
 "You can't select Send email option.\n"
 "The email will not be sent to the following applicant(s) as they don't have an email address:"
+msgstr ""
+"Bạn không thể lựa chọn tuỳ chọn Gửi email\n"
+"Email sẽ không được gửi cho (các) ứng viên sau vì họ không có địa chỉ email:"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid ""
+"You cannot create an applicant in a different company than the candidate"
 msgstr ""
 
 #. module: hr_recruitment

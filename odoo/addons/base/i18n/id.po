@@ -9564,6 +9564,19 @@ msgstr ""
 "- Chart of accounts\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_lb_account
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Lebanon in Odoo.\n"
+"==============================================================================\n"
+"Lebanon accounting basic charts,taxes and localization.\n"
+"Activates:\n"
+"* Chart of Accounts\n"
+"* Taxes\n"
+"* Fiscal Positions\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
 msgid ""
 "\n"
@@ -10894,6 +10907,28 @@ msgid ""
 "Payment' wizard. An error message will appear if no valid mandate is\n"
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
+"\n"
+"Modul ini memungkinkan pembuatan file XML SEPA Direct Debit (SDD)-compliant (konsisten\n"
+"dengan spesifikasi pain.008.001.02) untuk dikirim ke bank Anda untuk\n"
+"mengumpulkan satu kelompok pembayaran.\n"
+"\n"
+"Untuk memenuhi syarat penggunaan metode pembayaran ini, pelanggan harus terlebih dahulu\n"
+"mengembalikan mandat ke perusahaan, memberikan persetujuan untuk menggunakan direct debit.\n"
+"Persetujuan ini harus di-encode sebagai 'customer mandate' di Odoo.\n"
+"\n"
+"Anda juga harus memenuhi persyaratan berikut agar dengan tepat\n"
+"membuat file SDD:\n"
+"- Akun perusahaan Anda harus merupakan nomor IBAN yang valid\n"
+"- Perusahaan Anda harus sudah diberikan creditor identifier (ini dapat dilakukan di bagian Pengaturan - Pengaturan Umum - bagian Akuntansi)\n"
+"- Perusahaan Anda harus sudah mendefinisikan jurnal untuk menerima pembayaran SDD (sekali lagi, di 'pengaturan' pada modul akuntansi)\n"
+"- Setiap pelanggan yang mana Anda membuat pembayaran harus memiliki nomor akun IBAN yang valid.\n"
+"\n"
+"Odoo akan memberitahu Anda bila ada persyaratan di atas yang tidak dipenuhi.\n"
+"\n"
+"Untuk mendaftarkan pembayaran untuk faktur terbuka, Anda dapat menggunakan opsi\n"
+"'SEPA Direct Debit' terdedikasi dengan memilih akun bank di wizard\n"
+"'Daftarkan Pembayaran'. Pesan error akan muncul bila tidak ada mandat yang valid yang\n"
+"tersedia untuk membuat pembayaran pada faktur terpilih.\n"
 
 #. module: base
 msgid ""
@@ -28969,6 +29004,11 @@ msgstr "Leave Management of Indian Localization"
 #: model:res.country,name:base.lb
 msgid "Lebanon"
 msgstr "Lebanon"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lb_account
+msgid "Lebanon - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger

@@ -7,9 +7,9 @@
 # Siim Raasuke, 2024
 # Egon Raamat <egon@avalah.ee>, 2024
 # Kärt Villako, 2024
-# Stevin Lilla, 2024
 # Anna, 2024
 # Birgit Vijar, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,13 +17,20 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Birgit Vijar, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"<br/>\n"
+"                            If you need a Peppol compliant software, we recommend"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -371,8 +378,10 @@ msgstr "ID"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
-"If you want to be invoiced by Peppol, your configuration must be valid."
+"In Belgium, electronic invoicing will be <u>mandatory as of January "
+"2026</u>."
 msgstr ""
 
 #. module: account_peppol
@@ -470,6 +479,11 @@ msgid "Not verified yet"
 msgstr "Veel kinnitamata"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "PEPPOL"
 msgstr "PEPPOL"
@@ -509,6 +523,20 @@ msgstr "PEPPOL: uuenda sõnumi staatust"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
+"invoice on Peppol.</b>"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
+"color\">sent on Peppol</b>."
 msgstr ""
 
 #. module: account_peppol

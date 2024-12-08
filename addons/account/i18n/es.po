@@ -7,8 +7,8 @@
 # Martin Trigaux, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -599,7 +599,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
@@ -612,47 +612,16 @@ msgid ""
 "        </t>\n"
 "        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado/a\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Aquí está su\n"
-"        <t t-if=\"object.name\">\n"
-"            factura rectificativa <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            factura rectificativa\n"
-"        </t>\n"
-"        <t t-if=\"object.invoice_origin\">\n"
-"            (con la referencia: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"        </t>\n"
-"        por un importe total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143.750,00 €</span>\n"
-"        de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
-"        <br/><br/>\n"
-"        No dude en contactarnos si tiene alguna pregunta.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -666,7 +635,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
@@ -685,113 +654,49 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
-"                <br><br>\n"
+"                <br/><br/>\n"
 "                Please use the following communication for your payment: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
-"                    on the account <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                    on the account <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
 "                </t>\n"
 "                .\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
-"            <br><br>\n"
+"            <br/><br/>\n"
 "            PS: you can review your timesheets <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal.</a>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado/a\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
-"        </t>\n"
-"        <br><br>\n"
-"        Aquí está su\n"
-"        <t t-if=\"object.name\">\n"
-"            factura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            factura\n"
-"        </t>\n"
-"        <t t-if=\"object.invoice_origin\">\n"
-"            (con referencia: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"        </t>\n"
-"        con un importe total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$143,750.00</span>\n"
-"        de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
-"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-"             Esta factura ya está pagada.\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"             Realice su pago lo más pronto posible.\n"
-"            <t t-if=\"object.payment_reference\">\n"
-"                <br><br>\n"
-"                Utilice la siguiente referencia para realizar su pago: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
-"                <t t-if=\"object.partner_bank_id\">\n"
-"                    en la cuenta <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
-"                </t>\n"
-"                .\n"
-"            </t>\n"
-"        </t>\n"
-"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
-"            <br><br>\n"
-"            Puede revisar sus sus partes de horas <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">desde el portal</a>.\n"
-"        </t>\n"
-"        <br><br>\n"
-"        No dude en contactarnos si tiene alguna pregunta.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
 "        Thank you for your payment.\n"
 "        Here is your payment receipt <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> amounting\n"
 "        to <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Best regards,\n"
-"        <t t-if=\"not is_html_empty(user.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado/a<t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
-"        Gracias por su pago.\n"
-"        Aquí está su recibo de pago <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</span> de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
-"        <br><br>\n"
-"       No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
-"        <br><br>\n"
-"        Atentamente,\n"
-"        <t t-if=\"not is_html_empty(user.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -3036,6 +2941,29 @@ msgid "Another entry with the same name already exists."
 msgstr "Ya existe otro asiento con el mismo nombre."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__hard_lock_date
+msgid ""
+"Any entry up to and including that date will be postponed to a later time, "
+"in accordance with its journal sequence. This lock date is irreversible and "
+"does not allow any exception."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
+msgid ""
+"Any entry up to and including that date will be postponed to a later time, "
+"in accordance with its journal's sequence."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_company__tax_lock_date
+msgid ""
+"Any entry with taxes up to and including that date will be postponed to a "
+"later time, in accordance with its journal's sequence. The tax lock date is "
+"automatically set when the tax closing entry is posted."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
@@ -3053,6 +2981,20 @@ msgid ""
 msgstr ""
 "Cualquier apunte contable en una cuenta por cobrar debe tener una fecha "
 "límite y viceversa."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_company__purchase_lock_date
+msgid ""
+"Any purchase entry prior to and including this date will be postponed to a "
+"later date, in accordance with its journal's sequence."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_company__sale_lock_date
+msgid ""
+"Any sales entry prior to and including this date will be postponed to a "
+"later date, in accordance with its journal's sequence."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -3302,11 +3244,6 @@ msgstr "Tipos de cambio automáticos"
 #: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
 msgid "Automatic Entry Default Journal"
 msgstr "Diario por defecto de asiento automático"
-
-#. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "Mapeo de impuestos automático (AvaTax)"
 
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
@@ -3704,6 +3641,11 @@ msgid "Based on Payment"
 msgstr "Basado en el pago"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "Básico"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Batch Payment Number Sequence"
@@ -4071,7 +4013,6 @@ msgstr "Traspasar a"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_46
-#: model:account.account,name:account.1_cash_journal_default_account_55
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4083,16 +4024,6 @@ msgstr "Efectivo"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "Cuenta de efectivo"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_52
-msgid "Cash Bakery"
-msgstr "Efectivo de la panadería"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_54
-msgid "Cash Bar"
-msgstr "Efectivo del bar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4129,11 +4060,6 @@ msgstr "Impuestos con criterio de caja"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "Cuenta transitoria con criterio de caja"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_51
-msgid "Cash Clothes Shop"
-msgstr "Efectivo de la tienda de ropa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4189,20 +4115,10 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Cuenta de pérdida por desajuste por descuento por pronto pago"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_50
-msgid "Cash Furn. Shop"
-msgstr "Efectivo de la mueblería"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Cajas registradoras"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_53
-msgid "Cash Restaurant"
-msgstr "Restaurante con efectivo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -5683,11 +5599,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "ENTREGADO CON DERECHOS PAGADOS"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "ABAJO"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
@@ -6552,6 +6463,7 @@ msgid "Domestic country of your accounting"
 msgstr "País de origen de su contabilidad"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__down
 msgid "Down"
 msgstr "Abajo"
@@ -7921,16 +7833,6 @@ msgid "Growth Comparison"
 msgstr "Comparación de crecimiento"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "A LA MITAD MÁS CERCANA"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
-msgid "Half-up (away from 0)"
-msgstr "A la mitad más cercana (alejado de 0)"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__hard_lock_date
 msgid "Hard Lock Date"
 msgstr "Fecha de bloqueo permanente"
@@ -8826,11 +8728,6 @@ msgid "Invalid fiscal year last day"
 msgstr "El último día del ejercicio fiscal no es válido."
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "Valoración del inventario"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
 msgstr "Valor del inventario"
@@ -9213,11 +9110,6 @@ msgstr "Coincidencia perfecta de facturas"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "Facturación"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr "Facturación y bancos"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -9992,7 +9884,6 @@ msgid "Liability"
 msgstr "Pasivo"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_res_company__hard_lock_date
 msgid "Like the \"Global Lock Date\", but no exceptions are possible."
 msgstr "Similar a \"Fecha de bloqueo global\", pero sin excepciones."
 
@@ -10244,7 +10135,6 @@ msgid "Mapping of account codes per company"
 msgstr "Mapeo de los códigos de cuenta por compañía"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr "Marc Demo"
@@ -10680,6 +10570,12 @@ msgstr ""
 "números"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+#: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
+msgid "Nearest"
+msgstr "Más cercano"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
@@ -10760,16 +10656,6 @@ msgstr "Nuevos valores"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "Más recientes primero"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de actividades."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10890,7 +10776,6 @@ msgid "No possible action found with the selected lines."
 msgstr "No se encontró ninguna acción posible con las líneas seleccionadas."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
 msgid ""
 "No users can edit accounts prior to and inclusive of this date. Use it for "
 "fiscal year locking for example."
@@ -10899,7 +10784,6 @@ msgstr ""
 "por ejemplo, para bloquear un ejercicio fiscal."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_res_company__tax_lock_date
 msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
@@ -11557,6 +11441,7 @@ msgstr "Cuenta pendiente"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
 msgstr "Pagos pendientes"
 
@@ -11568,6 +11453,7 @@ msgstr "Cuentas de pagos pendientes"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
 msgstr "Recibos pendientes"
 
@@ -11778,7 +11664,7 @@ msgstr "Pagado parcialmente"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_various_payment_tree
 msgid "Partner"
-msgstr "Contacto"
+msgstr "Empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -12037,11 +11923,6 @@ msgstr "Recibo de pago"
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
 msgid "Payment Receipt Title"
 msgstr "Título del recibo de pago"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr "Ref. de pago"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -12479,7 +12360,6 @@ msgstr ""
 "Preajuste para crear asientos durante la conciliación de facturas y pagos"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_res_company__purchase_lock_date
 msgid ""
 "Prevents creation and modification of entries in purchase journals up to the"
 " defined date inclusive."
@@ -12488,7 +12368,6 @@ msgstr ""
 " la fecha definida."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_res_company__sale_lock_date
 msgid ""
 "Prevents creation and modification of entries in sales journals up to the "
 "defined date inclusive."
@@ -12777,20 +12656,6 @@ msgstr "Codificación rápida"
 #: model:account.account,name:account.1_expense_rd
 msgid "RD Expenses"
 msgstr "Gastos de I+D"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "Calificaciones"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -13554,11 +13419,6 @@ msgid "Sample Memo"
 msgstr "Memo de muestra"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr "Referencia de muestra"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Sample data"
@@ -13589,6 +13449,7 @@ msgstr "Escanear código de barra"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "Escanéeme con su aplicación bancaria."
 
@@ -13863,6 +13724,15 @@ msgstr "Envíe facturas y seguimientos de pagos por correo postal"
 #: model:ir.actions.server,name:account.ir_cron_account_move_send_ir_actions_server
 msgid "Send invoices automatically"
 msgstr "Enviar facturas automáticamente"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid ""
+"Send invoices to your customers in no time with the <b>Invoicing app</b>."
+msgstr ""
+"Envíe facturas a sus clientes en poco tiempo con la <b>aplicación "
+"Facturación</b> ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -14373,6 +14243,11 @@ msgid ""
 msgstr ""
 "Especifique la manera en que se redondeará el importe de la factura a la "
 "precisión de redondeo"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Standard communication"
+msgstr "Mensaje estándar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -15120,6 +14995,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
+msgstr ""
+"La plantilla del plan contable %s no debe seleccionarse directamente. En su "
+"lugar, debe seleccionar directamente la plantilla del plan contable de su "
+"país."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
@@ -15202,14 +15088,6 @@ msgid ""
 msgstr ""
 "La condición de pago debe tener al menos una línea de porcentaje y la suma "
 "de este debe ser 100 %."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
@@ -16457,16 +16335,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_analytic_line.py:0
-msgid ""
-"This analytic item was created by a journal item. Please edit the analytic "
-"distribution on the journal item instead."
-msgstr ""
-"Este asiento analítico fue creado por un apunte contable. Edite la "
-"distribución analítica en el apunte contable."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "This can only be used on accounts."
 msgstr "Esto solo se puede usar en cuentas."
@@ -17172,11 +17040,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipo de actividad de excepción en el registro."
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "ARRIBA"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
@@ -17373,6 +17236,7 @@ msgid "UoM"
 msgstr "UdM"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__up
 msgid "Up"
 msgstr "Arriba"

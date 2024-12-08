@@ -622,16 +622,6 @@ msgstr ""
 " catatan baru untuk alias ini."
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid ""
-"At least one applicant doesn't have a email; you can't use send email "
-"option."
-msgstr ""
-"Setidaknya satu pelamar tidak memiliki email; Anda tidak dapat menggunakan "
-"opsi email."
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
 msgid "Action Needed"
@@ -958,6 +948,16 @@ msgstr "Apakah Anda yakin Anda ingin mengarsip lowongan kerja ini?"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
 msgid "Assigned"
 msgstr "Ditugaskan"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr ""
+"Setidaknya satu pelamar tidak memiliki email; Anda tidak dapat menggunakan "
+"opsi email."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3695,6 +3695,13 @@ msgid ""
 msgstr ""
 "Anda tidak dapat memilih opsi Kirim email.\n"
 "Email tidak akan dikirim ke pelamar berikut karena mereka tidak memiliki alamat email:"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid ""
+"You cannot create an applicant in a different company than the candidate"
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python

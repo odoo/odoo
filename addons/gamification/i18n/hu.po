@@ -1,31 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* gamification
-#
-# Translators:
-# Kovács Tibor <kovika@gmail.com>, 2022
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2022
-# sixsix six, 2022
-# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# Tamás Dombos, 2022
-# Martin Trigaux, 2022
-# Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# Tamás Németh <ntomasz81@gmail.com>, 2022
-# krnkris, 2022
-# gezza <geza.nagy@oregional.hu>, 2023
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: gamification
@@ -38,18 +25,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "%s has joined the challenge"
-msgstr "%s csatlakozott a kihíváshoz"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "%s has refused the challenge"
-msgstr "%s visszautasította a kihívást"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.mail_template_data_new_rank_reached
 msgid ""
-"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<div style=\"color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
 "<table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "    <tbody>\n"
 "        <tr>\n"
@@ -79,9 +66,12 @@ msgid ""
 "                </p>\n"
 "            </td>\n"
 "        </tr>\n"
-"        <tr t-if=\"user.signature\">\n"
-"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"        <tr>\n"
+"            <td t-if=\"not user.share and user.active\" style=\"padding:15px 20px 10px 20px;\">\n"
 "                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            </td>\n"
+"            <td t-else=\"\" style=\"padding:15px 20px 10px 20px;\">\n"
+"                <t t-out=\"user.company_id.name or ''\"></t>\n"
 "            </td>\n"
 "        </tr>\n"
 "    </tbody>\n"
@@ -106,17 +96,23 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" aria-label=\"Goal in Progress\"/>"
-msgstr "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" aria-label=\"Goal in Progress\"/>"
-
-#. module: gamification
-#: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal Failed\" aria-label=\"Goal Failed\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-700 fa fa-clock-o fa-3x\" title=\"Goal in "
+"Progress\" aria-label=\"Goal in Progress\"/>"
 msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
-msgid "<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal Reached\" aria-label=\"Goal Reached\"/>"
+msgid ""
+"<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal "
+"Failed\" aria-label=\"Goal Failed\"/>"
+msgstr ""
+
+#. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
+msgid ""
+"<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal "
+"Reached\" aria-label=\"Goal Reached\"/>"
 msgstr ""
 
 #. module: gamification
@@ -426,9 +422,6 @@ msgid ""
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
-"A jelvény egy szimbolikus emléktárgy a felhasználónak létrehozva,  jutalmazás kifejezésére.\n"
-"                    Automatikusan is hozzá lehet jutni, ha egy pár kritériumnak megfelel, vagy kézzel is adható.\n"
-"                    Egyes jelvények megszerzése nehezebb a különleges  feltételek miatt."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -441,8 +434,10 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal__definition_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__condition
-msgid "A goal is considered as completed when the current value is compared to the value to reach"
-msgstr "Egy cél elértnek tekinthető, ha a jelenlegi elért megegyezik a cél értékkel"
+msgid ""
+"A goal is considered as completed when the current value is compared to the "
+"value to reach"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
@@ -450,8 +445,6 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
-"A célt egy felhasználó és a cél leírása határozz meg.\n"
-"                    Célokat automatikusan is létrehozhatja a kihívások használatával."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
@@ -463,23 +456,23 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
 msgid "A selected list of users"
-msgstr "Egy kiválasztott csoportlista"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__action_id
 msgid "Action"
-msgstr "Művelet"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Művelet szükséges"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
 msgid "Active"
-msgstr "Aktív"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
@@ -492,23 +485,23 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr "Haladó beállítások"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
 msgid "Allowance to Grant"
-msgstr "Létrehozni kívánt engedély"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__challenge_category
 msgid "Appears in"
-msgstr "Ebben jelenik meg"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Archived"
-msgstr "Archivált"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -522,40 +515,37 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
-"Hozzárendelhet egy, a felhasználók által kiválasztható cél listát, melyből kiértékelheti Őket. \n"
-"A kihívás használhat egy időszakot (heti, havi...) a célok automatikus létrehozásához.\n"
-"A célt az ide vonatkozó felhasználóhoz vagy egy csoport tagjához hozza létre."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_attachment_count
 msgid "Attachment Count"
-msgstr "Mellékletek száma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Authorized Users"
-msgstr "Jogosult felhasználók"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__python
 msgid "Automatic: execute a specific Python code"
-msgstr "Automatikus: specifikus Python kód végrehajtás"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__count
 msgid "Automatic: number of records"
-msgstr "Automatikus: adatbázis rekordok száma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__sum
 msgid "Automatic: sum on a field"
-msgstr "Automatikus: összeg egy mezőn"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_bachelor
 msgid "Bachelor"
-msgstr "Alapképzés"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__name
@@ -563,86 +553,90 @@ msgstr "Alapképzés"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__badge_id
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge"
-msgstr "Jelvény"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Description"
-msgstr "Jelvény leírás"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__level
 msgid "Badge Level"
-msgstr "Jelvény szint"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_list_view
 msgid "Badge List"
-msgstr "Jelvény lista"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__badge_name
 msgid "Badge Name"
-msgstr "Jelvény neve"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
 #: model:ir.model.fields,field_description:gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:gamification.gamification_badge_menu
 msgid "Badges"
-msgstr "Jelvények"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid "Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed."
-msgstr "Jelvényeket fogad el, ha egy kihívást befejez. Ez vagy a futó periódus vége (pl.: hónap végén gy havonta futó kihívás esetén), vagy a kihívás befejezésének dátumán (ha nincs ismétlődés beállítva) vagy, ha egy kihívást kézzel lezár."
+msgid ""
+"Badges are granted when a challenge is finished. This is either at the end "
+"of a running period (eg: end of the month for a monthly challenge), at the "
+"end date of a challenge (if no periodicity is set) or when the challenge is "
+"manually closed."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
 msgid "Batch Mode"
-msgstr "Kötegelt mód"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr "Brilliáns"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__bronze
 msgid "Bronze"
-msgstr "Bronz"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__bronze_badge
 msgid "Bronze badges count"
-msgstr "Bronz jelvény számláló"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Can not grant"
-msgstr "Nem tudja létrehozni"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_goal.py:0
 msgid "Can not modify the configuration of a started goal"
-msgstr "Egy elkezdett célnak a beállítását nem tudja módosítani"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Cancel"
-msgstr "Mégse"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__canceled
-msgid "Canceled"
-msgstr "Visszavonva"
+msgid "Cancelled"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
-msgstr "Kategória"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__challenge_id
@@ -650,27 +644,29 @@ msgstr "Kategória"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__challenge_id
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Challenge"
-msgstr "Kihívás"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__line_id
 msgid "Challenge Line"
-msgstr "Kihívás tételsor"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Challenge Lines"
-msgstr "Kihívás tételsorok"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__name
 msgid "Challenge Name"
-msgstr "Kihívás neve"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__challenge_id
-msgid "Challenge that generated the goal, assign challenge to users to generate goals with a value in this field."
-msgstr "A cél által generált kihívás, rendelje hozzá a felhasználókhoz a kihívásokat a célok generálásához, ennek a mezőnek az értékével."
+msgid ""
+"Challenge that generated the goal, assign challenge to users to generate "
+"goals with a value in this field."
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -678,50 +674,55 @@ msgstr "A cél által generált kihívás, rendelje hozzá a felhasználókhoz a
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_list_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Challenges"
-msgstr "Kihívás"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr "Ellenőrizze a személyre kiküldhető havi limit beállítását ehhez a jelvényhez"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Clickable Goals"
-msgstr "Kijelölhető célok"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__closed
 msgid "Closed goal"
-msgstr "Lezárt célok"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__color
+msgid "Color Index"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__comment
 msgid "Comment"
-msgstr "Megjegyzés"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
 msgid "Complete your Profile"
-msgstr "Egészítse ki a profilját"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__completeness
 msgid "Completeness"
-msgstr "Elvégzettség"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__computation_mode
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Computation Mode"
-msgstr "Számítási mód"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__condition
 msgid "Condition"
-msgstr "Feltétel"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__consolidated
@@ -732,43 +733,47 @@ msgstr ""
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
-msgid "Consolidation from %s to %s"
+msgid "Consolidation from %(from_date)s to %(end_date)s"
 msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
-msgstr "Új felhasználó"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
 msgid "Create a new badge"
-msgstr "Új jelvény"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
 msgid "Create a new challenge"
-msgstr "Új kihívás"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
 msgid "Create a new goal"
-msgstr "Új cél"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid "Create a new goal definition"
-msgstr "Új cél meghatározása"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
 msgid "Create a new rank"
-msgstr "Új rang"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
-msgid "Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system."
-msgstr "Hozza létre és kezelje a felhasználókat, akik csatlakozni fognak a rendszerhez. A felhasználók deaktiválhatóak, ha eltelik egy időszak amelynek során nem csatlakoznak a rendszerhez. Csoportokhoz rendelheti őket, amely külön hozzáféréseket biztosít az alkalmazásokhoz, amelyekre szükségük van a rendszer használatához."
+msgid ""
+"Create and manage users that will connect to the system. Users can be "
+"deactivated should there be a period of time during which they will/should "
+"not connect to the system. You can assign them groups in order to give them "
+"specific access to the applications they need to use in the system."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
@@ -782,7 +787,7 @@ msgstr "Hozza létre és kezelje a felhasználókat, akik csatlakozni fognak a r
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_uid
 msgid "Created by"
-msgstr "Létrehozta"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_date
@@ -796,28 +801,28 @@ msgstr "Létrehozta"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_date
 msgid "Created on"
-msgstr "Létrehozva"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
 msgid "Current"
-msgstr "Jelenlegi"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__current
 msgid "Current Value"
-msgstr "Aktuális érték"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__daily
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__daily
 msgid "Daily"
-msgstr "Naponta"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Data"
-msgstr "Adat"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
@@ -827,43 +832,46 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
 msgid "Date Field"
-msgstr "Dátum mező"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__computation_mode
-msgid "Define how the goals will be computed. The result of the operation will be stored in the field 'Current'."
+msgid ""
+"Define how the goals will be computed. The result of the operation will be "
+"stored in the field 'Current'."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
-msgstr "Határozza meg a kihívás felfedezhetőségét a menün keresztül"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_condition
 msgid "Definition Condition"
-msgstr "Meghatározás feltétel"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_description
 msgid "Definition Description"
-msgstr "Meghatározás leírása"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
-msgstr "Képernyőmódtól függően, a jelentések önállóan láthatóak vagy megosztva."
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr "Kihívás körülírása: mit csinál, mik a célok, miért számít..."
+msgid ""
+"Describe the challenge: what is does, who it targets, why it matters..."
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Írja le mit csinált és az miért számított (nyilvános lesz)"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__description
@@ -872,13 +880,13 @@ msgstr "Írja le mit csinált és az miért számított (nyilvános lesz)"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__reason
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Description"
-msgstr "Leírás"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__visibility_mode
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_display
 msgid "Display Mode"
-msgstr "Megjelenítés módja"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__display_name
@@ -892,40 +900,43 @@ msgstr "Megjelenítés módja"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
 msgid "Displayed as"
-msgstr "Megjelenítés mint"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid "Distinctive field for batch user"
-msgstr "Meghatározás mező a kötegelt felhasználóhoz"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_doctor
 msgid "Doctor"
-msgstr "Doktor"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__domain
-msgid "Domain for filtering records. General rule, not user depending, e.g. [('state', '=', 'done')]. The expression can contain reference to 'user' which is a browse record of the current user if not in batch mode."
-msgstr "Domén rekordok szűrésére. Általános szabály, nem felhasználó függő, pl. [('state', '=', 'done')]. A kifejezés tartalmazhat hivatkozást  'user' , mely böngészhető rekord a jelenlegi felhasználó részére, ha nincs kötegelt módban."
+msgid ""
+"Domain for filtering records. General rule, not user depending, e.g. "
+"[('state', '=', 'done')]. The expression can contain reference to 'user' "
+"which is a browse record of the current user if not in batch mode."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr "Kész"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__draft
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__draft
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
-msgstr "Piszkozat"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
@@ -937,74 +948,74 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__end_date
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "End Date"
-msgstr "Záródátum"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
-msgstr "Értékelje a hozzászólást tömegessen a felhasználók egyenkénti értékelése helyett"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_user_expression
 msgid "Evaluated expression for batch mode"
-msgstr "Értékelje a hozzászlást a tömeges módhoz"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__everyone
 msgid "Everyone"
-msgstr "Mindenki"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__boolean
 msgid "Exclusive (done or not-done)"
-msgstr "Kizárólagos (elvégezve vagy nincs-elvégezve)"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__failed
 msgid "Failed"
-msgstr "Sikertelen"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_id
 msgid "Field to Sum"
-msgstr "Mező az összegzéshez"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__domain
 msgid "Filter Domain"
-msgstr "Tartomány szűrés"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_follower_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_follower_ids
 msgid "Followers"
-msgstr "Követők"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_partner_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_first_id
 msgid "For 1st user"
-msgstr "1. Első felhasználónak"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_second_id
 msgid "For 2nd user"
-msgstr "2. felhasználónak"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_third_id
 msgid "For 3rd user"
-msgstr "3. felhasználónak"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_id
 msgid "For Every Succeeding User"
-msgstr "Összes eredményes felhasználónak"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1014,17 +1025,17 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__level
 msgid "Forum Badge Level"
-msgstr "Fórum jelvény szint"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr "Forrás"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__full_suffix
 msgid "Full Suffix"
-msgstr "Teljes utótag"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__gain
@@ -1059,7 +1070,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
 msgid "Gamification Tools"
-msgstr "Gammifikációs/Játékos eszközök"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
@@ -1074,7 +1085,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr "Gamifikációs/játékos cél a kihíváshoz"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_badge_received
@@ -1089,7 +1100,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
 msgid "Gamification: Goal Challenge Check"
-msgstr "Gamifikáció: Cél elérésének ellenőrzése"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_consolidate_ir_actions_server
@@ -1110,7 +1121,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal"
-msgstr "Cél"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_id
@@ -1118,44 +1129,44 @@ msgstr "Cél"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__name
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
-msgstr "Cél meghatározása"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_definition_list_action
 #: model:ir.ui.menu,name:gamification.gamification_definition_menu
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_list_view
 msgid "Goal Definitions"
-msgstr "Cél meghatározásai"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__description
 msgid "Goal Description"
-msgstr "Cél leírás"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Failed"
-msgstr "Cél sikertelen"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_list_view
 msgid "Goal List"
-msgstr "Cél lista"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__condition
 msgid "Goal Performance"
-msgstr "Cél teljesítmény"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Reached"
-msgstr "Cél elérve"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Goal definitions"
-msgstr "Cél meghatározásai"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_list_action
@@ -1163,44 +1174,44 @@ msgstr "Cél meghatározásai"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goals"
-msgstr "Célok"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__gold
 msgid "Gold"
-msgstr "Arany"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__gold_badge
 msgid "Gold badges count"
-msgstr "Arany jelvény számláló"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_good_job
 msgid "Good Job"
-msgstr "Szép munka"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
-msgstr "Adományoz"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr "Kitüntetést adományoz"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr "Kitüntetést adományoz hozzá"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr "Ezt a kitüntetést adományozza"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
@@ -1210,12 +1221,12 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "Granted by"
-msgstr "Adományozó"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Granting"
-msgstr "Adományozza"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1223,28 +1234,28 @@ msgstr "Adományozza"
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Group By"
-msgstr "Csoportosítás"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__report_message_group_id
 msgid "Group that will receive a copy of the report in addition to the user"
-msgstr "A csoport, mely a  kimutatásból másolatot kap a felhasználóval együtt"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "HR Challenges"
-msgstr "Munkaügyi kihívások"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__has_message
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__has_message
 msgid "Has Message"
-msgstr "Van üzenet"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
 msgid "Hidden"
-msgstr "Rejtett"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1254,7 +1265,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
 msgid "Human Resources / Engagement"
-msgstr "Emberi erőforrás kezelés"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__id
@@ -1268,111 +1279,118 @@ msgstr "Emberi erőforrás kezelés"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__id
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__res_id_field
 msgid "ID Field of user"
-msgstr "Felhasználói ID azonosító mező"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__remaining_sending
 msgid "If a maximum is set"
-msgstr "Ha a maximumot beállította"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1920
 msgid "Image"
-msgstr "Kép"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1024
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1024
 msgid "Image 1024"
-msgstr "1024-es kép"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_128
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_128
 msgid "Image 128"
-msgstr "128-as kép"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_256
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_256
 msgid "Image 256"
-msgstr "256-os kép"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_512
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_512
 msgid "Image 512"
-msgstr "512-es kép"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__inprogress
 msgid "In Progress"
-msgstr "Folyamatban"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
-msgid "In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain."
-msgstr "Kötegelt módban, a domént globálissan értékeli. Ha bekapocslt, ne használjon 'felhasználó' kulcsszót a felső domén szűrőben."
+msgid ""
+"In batch mode, the domain is evaluated globally. If enabled, do not use "
+"keyword 'user' in above filter domain."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
-msgid "In batch mode, this indicates which field distinguishes one user from the other, e.g. user_id, partner_id..."
+msgid ""
+"In batch mode, this indicates which field distinguishes one user from the "
+"other, e.g. user_id, partner_id..."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
-msgid "In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in challenge). Ignored in case of non-manual goal or goal not linked to a challenge."
-msgstr "Kézi célmegadásnál, emlékeztetőt fog kiküldeni, ha a célt nem frissítette egy ideje (határozza meg a felmérésben). Visszautasított abban az esetben, ha nem-kézzel megadott cél vagy a cél nincs hozzákapcsolva egy felméréshez."
+msgid ""
+"In case of manual goal, reminders are sent if the goal as not been updated "
+"for a while (defined in challenge). Ignored in case of non-manual goal or "
+"goal not linked to a challenge."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
 msgid "In progress"
-msgstr "Folyamatban"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__visibility_mode__personal
 msgid "Individual Goals"
-msgstr "Egyéni célok"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_inherited_ids
 msgid "Inherited models"
-msgstr "Örökölt modellek"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
-msgstr "Új felhasználók meghívása"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_is_follower
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_is_follower
 msgid "Is Follower"
-msgstr "Követő"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
 #: model_terms:ir.ui.view,arch_db:gamification.res_users_view_form
 msgid "Karma"
-msgstr "Karma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
@@ -1401,12 +1419,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
 msgid "Last Report Date"
-msgstr "Utolsó meghirdetési dátum"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__last_update
 msgid "Last Update"
-msgstr "Utolsó frissítés"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__write_uid
@@ -1420,7 +1438,7 @@ msgstr "Utolsó frissítés"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_uid
 msgid "Last Updated by"
-msgstr "Frissítette"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__write_date
@@ -1434,32 +1452,32 @@ msgstr "Frissítette"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_date
 msgid "Last Updated on"
-msgstr "Frissítve ekkor"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__visibility_mode__ranking
 msgid "Leader Board (Group Ranking)"
-msgstr "Eredményjelző tábla (Csoport  rangsorolás)"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max_number
 msgid "Limitation Number"
-msgstr "Határ szám"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Line List"
-msgstr "Tételsor lista"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__line_ids
 msgid "Lines"
-msgstr "Tételek"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__line_ids
 msgid "List of goals that will be set"
-msgstr "Beállítandó célok listája"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
@@ -1469,51 +1487,51 @@ msgstr ""
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_master
 msgid "Master"
-msgstr "Mester"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error
 msgid "Message Delivery error"
-msgstr "Üzenetkézbesítési hiba"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_ids
 msgid "Messages"
-msgstr "Üzenetek"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
-msgstr "Modell"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_monetary
 msgid "Monetary"
-msgstr "Pénzügyi"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__monetary
 msgid "Monetary Value"
-msgstr "Pénzügyi érték"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__monthly
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__monthly
 msgid "Monthly"
-msgstr "Havi"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max
 msgid "Monthly Limited Sending"
-msgstr "Havi küldési limit"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_this_month
 msgid "Monthly total"
-msgstr "Összes havi"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__description_motivational
@@ -1529,7 +1547,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
-msgstr "Célom"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
@@ -1539,32 +1557,32 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "My Monthly Sending Total"
-msgstr "Havi küldési limitem"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_this_month
 msgid "My Monthly Total"
-msgstr "Összes havim"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my
 msgid "My Total"
-msgstr "Én összesen"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__name
 msgid "Name"
-msgstr "Név"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__never
 msgid "Never"
-msgstr "Soha"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__remind_update_delay
 msgid "Never reminded if no value or zero is specified."
-msgstr "Ne emlékeztessen, ha nincs érték vagy nulla van megadva."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__new_value
@@ -1584,17 +1602,17 @@ msgstr ""
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_newbie
 msgid "Newbie"
-msgstr "Újonc"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__next_rank_id
 msgid "Next Rank"
-msgstr "Következő rang"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__next_report_date
 msgid "Next Report Date"
-msgstr "Következő meghirdetési dátum"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
@@ -1604,78 +1622,80 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid "No goal found"
-msgstr "Nem található cél"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "No monthly sending limit"
-msgstr "Nincs havi küldési limit"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr "Senki nem old meg úgy felmérést, mint Te."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__nobody
 msgid "No one, assigned through challenges"
-msgstr "Felmérésen keresztül senki nincs hozzárendelve"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Nobody has succeeded to reach every goal, no badge is rewarded for this challenge."
+msgid ""
+"Nobody has succeeded to reach every goal, no badge is rewarded for this "
+"challenge."
 msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "Senki nem érte el a kívánt feltételeket a speciális kitűző eléréséhez."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
 msgid "Non recurring"
-msgstr "Nem ismétlődő"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__remind_update_delay
 msgid "Non-updated manual goals will be reminded after"
-msgstr "Nem frissülő kézi célokra később emlékeztet"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Notification Messages"
-msgstr "Értesítő üzenetek"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Műveletek száma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of errors"
-msgstr "Hibák száma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek műveletet igényelnek"
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Kézbesítési hibával rendelkező üzenetek száma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_users_count
 msgid "Number of users"
-msgstr "Felhasználók száma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__old_value
@@ -1685,59 +1705,56 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
 msgid "On change"
-msgstr "Változtatáshoz"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr "Csak azok az személyek adhatják ezt a kitüntetést akik rendelkeznek ilyennel"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr "Csak ezek a személyek adhatják ezt a kitüntetést"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Optimisation"
-msgstr "Optimalizálás"
-
-#. module: gamification
-#: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
-msgid "Owner"
-msgstr "Tulajdonos"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__owner_ids
 msgid "Owners"
-msgstr "Tulajdonosok"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_ids
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Participants"
-msgstr "Résztvevők"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
 msgid "People having some badges"
-msgstr "Személyek egy pár kitűzővel"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Period"
-msgstr "Időszak"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__period
-msgid "Period of automatic goal assignment. If none is selected, should be launched manually."
+msgid ""
+"Period of automatic goal assignment. If none is selected, should be launched"
+" manually."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
 msgid "Periodicity"
-msgstr "Időszakos"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
@@ -1747,33 +1764,35 @@ msgstr ""
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
 msgid "Problem Solver"
-msgstr "Probléma megoldó"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__progress
 msgid "Progressive (using numerical values)"
-msgstr "Fejlődő (szám értékek használatával)"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__compute_code
 msgid "Python Code"
-msgstr "Python kód"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__compute_code
-msgid "Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id."
-msgstr "Python kód végrehajtása minden felhasználóra. 'result' eredménynek tartalmaznia kell az új jelenlegi értéket. Értékelt felhasználó elérhető ezen keresztül: object.user_id."
+msgid ""
+"Python code to be executed for each user. 'result' should contains the new "
+"current value. Evaluated user can be access through object.user_id."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Rank"
-msgstr "Rang"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__name
 msgid "Rank Name"
-msgstr "Rang neve"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_rank
@@ -1784,12 +1803,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:gamification.gamification_karma_ranks_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_ranks_menu
 msgid "Ranks"
-msgstr "Rangok"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_tree
 msgid "Ranks List"
-msgstr "Ranglista"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
+msgid "Reach the next rank and become a Master!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
+msgid "Reach the next rank and become a powerful user!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
@@ -1812,69 +1841,74 @@ msgid "Reach the next rank and gain a very nice unicorn!"
 msgstr ""
 
 #. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
+msgid "Reach the next rank to improve your status!"
+msgstr ""
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
+msgid "Reach the next rank to show the rest of the world you exist."
+msgstr ""
+
+#. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
 msgid "Reached"
-msgstr "Elérve"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
-msgstr "Elérve, ha az aktuális érték"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
 msgid "Recorded manually"
-msgstr "Kézzel bejegyzett"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reference"
-msgstr "Hivatkozás"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Refresh Challenge"
-msgstr "Felmérés frissítés"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
-msgstr "Kapcsolódó célok"
-
-#. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Az erőforráshoz kapcsolódó felhasználó neve, aki annak hozzáférését kezeli."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
 msgid "Remaining Sending Allowed"
-msgstr "Hátralévő megengedett küldés"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__remind_update_delay
 msgid "Remind delay"
-msgstr "Emlékeztető késleltetés"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
-msgstr "Kézi célok emlékeztetői"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_frequency
 msgid "Report Frequency"
-msgstr "Meghirdetés gyakorisága"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_template_id
 msgid "Report Template"
-msgstr "Meghirdetés sablon"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Required Badges"
-msgstr "Kötelező kitűzők "
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
@@ -1884,94 +1918,96 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
-msgstr "Kitöltés visszaállítása"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__manager_id
 msgid "Responsible"
-msgstr "Felelős"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Retrieving progress for personal challenge without user information"
-msgstr "Visszanyerési folyamat a személyi felméréshez, felhasználói információk nélkül"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reward"
-msgstr "Jutalom"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s."
+msgid ""
+"Reward (badge %(badge_name)s) for every succeeding user was sent to "
+"%(users)s."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
 msgid "Reward Bests if not Succeeded?"
-msgstr "Legjobbak jutalmazása, ha nincs ütemezve?"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_realtime
 msgid "Reward as soon as every goal is reached"
-msgstr "Jutalmazás miután az összes célt elérték"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__challenge_ids
 msgid "Reward of Challenges"
-msgstr "Felmérések jutalma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__goal_definition_ids
 msgid "Rewarded by"
-msgstr "Által jutalmazva"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Rewards for challenges"
-msgstr "Felmérések jutalmai"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
-msgstr "Érvényes"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr "Futó felmérések"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr "Ütemezés"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Search Badge"
-msgstr "Jelvény keresése"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Search Challenges"
-msgstr "Felmérések keresése"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
-msgstr "Cél meghatározások keresése"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
-msgstr "Célok keresése"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_search
 msgid "Search Ranks"
-msgstr "Rangok keresése"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
@@ -1980,13 +2016,15 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
-msgid "Security rules to define who is allowed to manually grant badges. Not enforced for administrator."
-msgstr "Biztonsági szabályok annak meghatározására, hogy ki adományozhat kitűzőket kézzel. Nem rendszergazdára erőltetett."
+msgid ""
+"Security rules to define who is allowed to manually grant badges. Not "
+"enforced for administrator."
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Send Report"
-msgstr "Kimutatás küldése"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,description:gamification.simple_report_template
@@ -1996,12 +2034,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
 msgid "Send a copy to"
-msgstr "Küldjön egy másolatot ide"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__sender_id
 msgid "Sender"
-msgstr "Küldő"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_goal_reminder
@@ -2021,47 +2059,47 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
 msgid "Sequence"
-msgstr "Sorszám"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr "Jelenlegi értéket a cél eléréséhez megszerzett értékre állítja"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr "Vállalata adatait állítja be"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr "Céges logót állítja be."
+msgstr ""
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_timezone
 msgid "Set your Timezone"
-msgstr "Időzánáját állítja be"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__other
 msgid "Settings / Gamification Tools"
-msgstr "Gammifikációs/Játékos eszközök beállítása"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr "Vállalkozását állítja be"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__silver
 msgid "Silver"
-msgstr "Ezüst"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__silver_badge
 msgid "Silver badges count"
-msgstr "Ezüst jelvény számláló"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref
@@ -2077,24 +2115,26 @@ msgstr ""
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-msgid "Special rewards were sent to the top competing users. The ranking for this challenge is:"
+msgid ""
+"Special rewards were sent to the top competing users. The ranking for this "
+"challenge is:"
 msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Start Challenge"
-msgstr "Felmérés elkezdése"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__start_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__start_date
 msgid "Start Date"
-msgstr "Kezdődátum"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
-msgstr "Cél elkezdése"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__state
@@ -2102,50 +2142,50 @@ msgstr "Cél elkezdése"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr "Állam"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Statistics"
-msgstr "Statisztika"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_student
 msgid "Student"
-msgstr "Tanuló"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Subscriptions"
-msgstr "Előfizetések"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__suffix
 msgid "Suffix"
-msgstr "Utótag"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__invited_user_ids
 msgid "Suggest to users"
-msgstr "Felhasználóknak javasolja"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Target"
-msgstr "Cél"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__target_goal
 msgid "Target Value to Reach"
-msgstr "Elérni kívánt cél érték"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
-msgstr "Cél: kisebb, mint"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
@@ -2156,82 +2196,86 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
 msgid "The action that will be called to update the goal value."
-msgstr "A cél értékének frissítéséhez meghívott művelet."
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "The challenge %s is finished."
-msgstr "A %s felmérés befejeződött."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_full_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal__definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__full_suffix
 msgid "The currency and suffix field"
-msgstr "A pénznem és utótag mező"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_date_id
 msgid "The date to use for the time period evaluated"
-msgstr "Az időszak értékeléséhez használt dátum"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__end_date
-msgid "The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."
-msgstr "Egy új felmérés automatikus lezárásához használt dátum. Ha nincs periódus beállítva, ezt fogja használni a végcél dátumára."
+msgid ""
+"The day a new challenge will be automatically closed. If no periodicity is "
+"set, will use this date as the goal end date."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
-msgid "The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."
-msgstr "Egy új felmérés automatikus elindításához használt dátum. Ha nincs periódus beállítva, ezt fogja használni a cél indítási dátumra."
+msgid ""
+"The day a new challenge will be automatically started. If no periodicity is "
+"set, will use this date as the goal start date."
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_goal_definition.py:0
 msgid ""
-"The domain for the definition %s seems incorrect, please check it.\n"
+"The domain for the definition %(definition)s seems incorrect, please check it.\n"
 "\n"
-"%s"
+"%(error_message)s"
 msgstr ""
-"A %s domén meghatározása úgy néz ki nem megfelelő, kérem ellenőrizze.\n"
-"\n"
-"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
-msgid "The field name on the user profile (res.users) containing the value for res_id for action."
-msgstr "A felhasználói profilon lévő mezőnév (res.users) tartalmazza a res_id értékét a művelethez."
+msgid ""
+"The field name on the user profile (res.users) containing the value for "
+"res_id for action."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
 msgid "The higher the better"
-msgstr "Minél magasabb annál jobb"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr "A felhasználóknak adományozni kívánt kitűzők példányainak a listája"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_inherited_ids
 msgid "The list of models that extends the current model."
-msgstr "A jelenlegi modellt túllépő modellek listái."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr "Azoknak az egyedi felhasználóknak a listája, akik ezt a kitűzőt megkapták."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__lower
 msgid "The lower the better"
-msgstr "Minél alacsonyabb annál jobb"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
-msgid "The maximum number of time this badge can be sent per month per person."
-msgstr "Maximum, ahányszor ezt a kitűzőt havonta, személyenként ki lehet adni."
+msgid ""
+"The maximum number of time this badge can be sent per month per person."
+msgstr ""
 
 #. module: gamification
 #. odoo-python
@@ -2253,38 +2297,41 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__remind_update_delay
-msgid "The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."
-msgstr "Napok száma miután emlékeztetni fogja a felhasználó által kézzel hozzárendelt célra. Soha nem emlékeztet, ha nincs érték megadva."
+msgid ""
+"The number of days after which the user assigned to a manual goal will be "
+"reminded. Never reminded if no value is specified."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
-msgid "The number of time the current user has received this badge this month."
-msgstr "Ahányszor a jelenlegi felhasználó megkapta ezt a kitűzőt ebben a hónapban."
+msgid ""
+"The number of time the current user has received this badge this month."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
 msgid "The number of time the current user has received this badge."
-msgstr "Ahányszor a jelenlegi felhasználó megkapta ezt a kitűzőt."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr "Ahányszor a jelenlegi felhasználó adta ezt a kitűzőt ebben a hónapban."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
 msgid "The number of time this badge has been received by unique users."
-msgstr "Ahányszor az egyedi felhasználók megkapták ezt a kitűzőt."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_this_month
 msgid "The number of time this badge has been received this month."
-msgstr "Ahányszor ezt a kitűzőt megkapták ebben a hónapban."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_count
 msgid "The number of time this badge has been received."
-msgstr "Ahányszor ezt a kitűzőt megkapták."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.constraint,message:gamification.constraint_gamification_karma_rank_karma_min_check
@@ -2295,23 +2342,28 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__monetary
 msgid "The target and current value are defined in the company currency."
-msgstr "A cél és a jelenlegi értéke a vállalkozás pénznemeinél van meghatározva."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__suffix
 msgid "The unit of the target and current values"
-msgstr "A cél és a jelenlegi értékek egysége"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
-msgid "The users that have succeeded these goals will receive automatically the badge."
+msgid ""
+"The users that have succeeded these goals will receive automatically the "
+"badge."
 msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
-msgid "The value to compare with the distinctive field. The expression can contain reference to 'user' which is a browse record of the current user, e.g. user.id, user.partner_id.id..."
-msgstr "Összehasonlító érték a meghatározott mezőhöz. A kifejezés tartalmazhat 'user'-re hivatkozást, mely a jelenlegi felhasználó  böngészési bejegyzése, pl. user.id, user.partner_id.id..."
+msgid ""
+"The value to compare with the distinctive field. The expression can contain "
+"reference to 'user' which is a browse record of the current user, e.g. "
+"user.id, user.partner_id.id..."
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2324,28 +2376,28 @@ msgstr ""
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 msgid "This badge can not be sent by users."
-msgstr "Ezt a kitűzőt nem küldhetik ki felhasználók."
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "To"
-msgstr "Záró dátum"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__target_goal
 msgid "To Reach"
-msgstr "Elérni kívánt"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__to_update
 msgid "To update"
-msgstr "Frissítendő"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_count
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Total"
-msgstr "Összesen"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
@@ -2360,7 +2412,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
 msgid "Tracking"
-msgstr "Nyomon követés"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__tracking_date
@@ -2375,23 +2427,23 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__unique_owner_ids
 msgid "Unique Owners"
-msgstr "Egyedi tulajdonosok"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_suffix
 msgid "Unit"
-msgstr "Egység"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Update"
-msgstr "Frissítés"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_goal.py:0
 msgid "Update %s"
-msgstr "%s frissítése"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
@@ -2403,7 +2455,7 @@ msgstr "%s frissítése"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__user_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "User"
-msgstr "Felhasználó"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
@@ -2414,90 +2466,92 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain
 msgid "User domain"
-msgstr "Felhasználói tartomány"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_current_rank_users
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__user_ids
 msgid "Users"
-msgstr "Felhasználók"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__weekly
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__weekly
 msgid "Weekly"
-msgstr "Heti"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth
 msgid "Who can grant this badge"
-msgstr "Ki adományozhatja ezt a kitűzőt"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
-msgstr "Kit szeretne jutalmazni?"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
-msgid "With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."
-msgstr "Ennek a lehetőségnek a bekapcsolásával, Egy felhasználó egy kitűzőt csak egyszer kaphat. A 3 legértékesebb kitűzőt a felmérés legvégén adományozza."
+msgid ""
+"With this option enabled, a user can receive a badge only once. The top 3 "
+"badges are still rewarded only at the end of the challenge."
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
 msgid "With your brilliant ideas, you are an inspiration to others."
-msgstr "A briliáns ötleteivel másokat inspirál."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__yearly
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__yearly
 msgid "Yearly"
-msgstr "Éves"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 msgid "You are not in the user allowed list."
-msgstr "Nincs rajta a felhasználó engedélyezett listán."
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/wizard/grant_badge.py:0
 msgid "You can not grant a badge to yourself."
-msgstr "Nem adományozhat jelvény saját magának."
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "You can not reset a challenge with unfinished goals."
-msgstr "Nem állíthatja vissza a felmérést befejezetlen célokkal."
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "You can still grant"
-msgstr "Még adományozhat"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_good_job
 msgid "You did great at your job."
-msgstr "Nagyon jól teljesítette a munkáját."
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 msgid "You do not have the required badges."
-msgstr "Nincs meg a szükséges kitűzője."
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 msgid "You have already sent this badge too many time this month."
-msgstr "Ezt a kitűzőt már túl sokszor elküldte ebben a hónapban."
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
-msgstr "Megtalálta az elrejtett kitűzőt"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_doctor
@@ -2527,17 +2581,19 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
-msgstr "kitűző ebben a hónapban"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "days"
-msgstr "nap"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
-msgid "e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"
+msgid ""
+"e.g. A Master Chief knows quite everything on the forum! You cannot beat "
+"him!"
 msgstr ""
 
 #. module: gamification
@@ -2553,7 +2609,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "e.g. Monthly Sales Objectives"
-msgstr "pl. Havi értékesítési cél"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -2573,34 +2629,34 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. days"
-msgstr "pl. napok"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr "pl. user.partner_id.id"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "granted,"
-msgstr "adományozott,"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "refresh"
-msgstr "frissítés"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "than the target."
-msgstr "utána a cél."
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "the"
-msgstr "a"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
-msgstr "ebben a hónapban"
+msgstr ""
