@@ -3,8 +3,8 @@
 # 	* account_peppol
 # 
 # Translators:
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +26,8 @@ msgid ""
 "<br/>\n"
 "                            If you need a Peppol compliant software, we recommend"
 msgstr ""
+"<br/>\n"
+"                            Wenn Sie eine Peppol-konforme Software benötigen, empfehlen wir"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -116,7 +118,7 @@ msgstr "Kann senden, aber nicht empfangen"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__smp_registration
 msgid "Can send, pending registration to receive"
-msgstr "Kann senden, zu erhaltene ausstehende Registrierung"
+msgstr "Kann senden, ausstehende Registrierung zum Empfangen"
 
 #. module: account_peppol
 #. odoo-python
@@ -302,7 +304,6 @@ msgstr "E-Adresseschema"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_mode
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "EDI mode"
 msgstr "EDI-Modus"
 
@@ -369,11 +370,6 @@ msgid "Fill in the code below that we sent you by SMS to"
 msgstr "Geben Sie den untenstehenden Code ein, den wir Ihnen per SMS an"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid "In Belgium, electronic invoicing will be"
-msgstr ""
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "I want to migrate my existing Peppol connection to Odoo (optional):"
@@ -386,6 +382,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"In Belgium, electronic invoicing will be <u>mandatory as of January "
+"2026</u>."
+msgstr ""
+"In Belgien wird die elektronische Rechnungsstellung <u>ab Januar 2026 "
+"verpflichtend</u>."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -549,9 +554,11 @@ msgstr "PEPPOL: Teilnehmerstatus aktualisieren"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">We could not send your "
+"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
 "invoice on Peppol.</b>"
 msgstr ""
+"PS: <b style=\"color: $o-enterprise-action-color;\">Wir haben Ihnen Ihre "
+"Rechnung nicht auf Peppol gesendet.</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -559,6 +566,8 @@ msgid ""
 "PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
 "color\">sent on Peppol</b>."
 msgstr ""
+"PS: Diese Rechnung wurde auch <b style=\"color: $o-enterprise-action-"
+"color\">per Peppol versendet</b>."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -1179,8 +1188,3 @@ msgstr "Ihre Registrierung sollte innerhalb eines Tages aktiviert werden."
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "for validation purposes"
 msgstr "zu Validierungszwecken"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid "mandatory as of January 2026"
-msgstr ""

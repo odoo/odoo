@@ -2403,7 +2403,7 @@ msgstr "Tutti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
 msgid "All Users Lock Date"
-msgstr "Data di blocco tutti utenti"
+msgstr "Data di chiusura tutti utenti"
 
 #. module: account
 #. odoo-python
@@ -8571,7 +8571,7 @@ msgid ""
 "number since last lock date."
 msgstr ""
 "Irregolarità dovute alla bozza, fatture fornitore annullate o eliminate con "
-"una sequenza numerica dall'ultima data di blocco."
+"una sequenza numerica dall'ultima data di chiusura."
 
 #. module: account
 #. odoo-python
@@ -8581,7 +8581,7 @@ msgid ""
 "number since last lock date."
 msgstr ""
 "Irregolarità dovute alla bozza, fatture annullate o eliminate con una "
-"sequenza numerica dall'ultima data di blocco."
+"sequenza numerica dall'ultima data di chiusura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -8994,7 +8994,7 @@ msgstr "Disponibilità giornali"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
 msgid "Journals Entries Lock Date"
-msgstr "Data di blocco registrazioni contabili"
+msgstr "Data di chiusura registrazioni contabili"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -9400,7 +9400,7 @@ msgstr "Blocca"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
-msgstr "Messaggio data di blocco"
+msgstr "Messaggio data di chiusura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9696,7 +9696,7 @@ msgstr "Data massima delle righe abbinate"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__max_tax_lock_date
 msgid "Max Tax Lock Date"
-msgstr "Data massima di blocco dell'IVA"
+msgstr "Data massima di chiusura dell'IVA"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -13888,7 +13888,7 @@ msgstr "Riga ripartizione imposta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
 msgid "Tax Return Lock Date"
-msgstr "Data di blocco dichiarazione fiscale"
+msgstr "Data di chiusura dichiarazione fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -14259,6 +14259,9 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
+"Il modello di grafico %s non dovrebbe essere selezionato direttamente. "
+"Tuttavia, è possibile selezionare direttamente il modello di grafico "
+"collegato al tuo Paese."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
@@ -14528,15 +14531,15 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
-"La data è impostata prima della %(lock_type)s data di blocco %(lock_date)s. "
-"La registrazione contabile verrà contabilizzata il %(invoice_date)s al "
-"momento della registrazione."
+"La data è impostata prima della %(lock_type)s data di chiusura "
+"%(lock_date)s. La registrazione contabile verrà contabilizzata il "
+"%(invoice_date)s al momento della registrazione."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "The date selected is protected by a lock date"
-msgstr "La data selezionata è protetta da una data di blocco"
+msgstr "La data selezionata è protetta da una data di chiusura"
 
 #. module: account
 #. odoo-python
@@ -15572,7 +15575,7 @@ msgid ""
 msgstr ""
 "Non è stato possibile bloccare il movimento perché:\n"
 "- alcuni movimenti con lo stesso prefisso di sequenza hanno un numero più grande. Potrebbe essere necessario rimetterli in sequenza.\n"
-"- La data del movimento precede la data di blocco"
+"- La data del movimento precede la data di chiusura"
 
 #. module: account
 #. odoo-python

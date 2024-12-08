@@ -3,8 +3,8 @@
 # 	* mail
 # 
 # Translators:
-# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,6 +100,7 @@ msgstr ""
 #: code:addons/mail/models/models.py:0
 msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
 msgstr ""
+"%(model_name)s.%(field_path)s ดูเหมือนจะไม่ใช่เส้นทางของฟิลด์ที่ถูกต้อง"
 
 #. module: mail
 #. odoo-javascript
@@ -316,7 +317,7 @@ msgstr "%s\" ต้องการการเข้าถึง \"การบ�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_attachment_links
 msgid "&amp;#128229;"
-msgstr ""
+msgstr "&amp;#128229;"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -1639,6 +1640,8 @@ msgid ""
 "Brave: enable 'Google Services for Push Messaging' to enable push "
 "notifications"
 msgstr ""
+"Brave: เปิดใช้งาน 'บริการ Google สำหรับการส่งข้อความแบบ Push' "
+"เพื่อเปิดใช้งานการแจ้งเตือนแบบพุช"
 
 #. module: mail
 #. odoo-javascript
@@ -2027,7 +2030,7 @@ msgstr "ปิดหน้าต่างแชท"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Close Chat Window (ESC)"
-msgstr ""
+msgstr "ปิดหน้าต่างแชท (ESC)"
 
 #. module: mail
 #. odoo-javascript
@@ -2039,7 +2042,7 @@ msgstr "ปิดการค้นหา"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Close all conversations"
-msgstr ""
+msgstr "ปิดการสนทนาทั้งหมด"
 
 #. module: mail
 #. odoo-javascript
@@ -3562,7 +3565,7 @@ msgstr "ล้มเหลว"
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
 msgid "Failed to enable push notifications"
-msgstr ""
+msgstr "ไม่สามารถเปิดใช้งานการแจ้งเตือนแบบพุชได้"
 
 #. module: mail
 #. odoo-javascript
@@ -4023,8 +4026,10 @@ msgid "Groups"
 msgstr "กลุ่ม"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -4179,7 +4184,7 @@ msgstr "ซ่อนข้อความที่ปักหมุด"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Hide all conversations"
-msgstr ""
+msgstr "ซ่อนการสนทนาทั้งหมด"
 
 #. module: mail
 #. odoo-javascript
@@ -4659,7 +4664,7 @@ msgstr "ไม่ถูกต้อง"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Invalid domain “%(domain)s” (type “%(domain_type)s”)"
-msgstr ""
+msgstr "โดเมนที่ไม่ถูกต้อง “%(domain)s” (พิมพ์ “%(domain_type)s”)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
@@ -7263,13 +7268,13 @@ msgstr "การแจ้งเตือนแบบพุช"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Push to Talk"
-msgstr ""
+msgstr "กดเพื่อพูด"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 msgid "Push to talk"
-msgstr ""
+msgstr "กดเพื่อพูด"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__push_to_talk_key
@@ -8044,43 +8049,43 @@ msgstr "ดูข้อความที่ปักหมุดไว้ทั
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user)s"
-msgstr ""
+msgstr "เห็นโดย %(user)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s and %(user2)s"
-msgstr ""
+msgstr "มองเห็นโดย %(user1)s และ %(user2)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s, %(user2)s and %(user3)s"
-msgstr ""
+msgstr "มองเห็นโดย %(user1)s, %(user2)s และ %(user3)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s, %(user2)s, %(user3)s and %(count)s others"
-msgstr ""
+msgstr "มองเห็นโดย %(user1)s, %(user2)s, %(user3)s และ %(count)s คนอื่น"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s, %(user2)s, %(user3)s and 1 other"
-msgstr ""
+msgstr "มองเห็นโดย %(user1)s, %(user2)s, %(user3)s และอีก 1 คน"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by everyone"
-msgstr ""
+msgstr "ทุกคนได้มองเห็น"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_seen_indicator.js:0
 msgid "Seen by:"
-msgstr ""
+msgstr "มองเห็นโดย:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -8700,7 +8705,7 @@ msgstr "การแจ้งเตือนระบบ"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Tab to select"
-msgstr ""
+msgstr "แท็บเพื่อเลือก"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
@@ -8782,6 +8787,8 @@ msgid ""
 "Template rendering should only be called with a list of IDs. Received "
 "“%(res_ids)s” instead."
 msgstr ""
+"การเรนเดอร์เทมเพลตควรเรียกใช้ด้วยรายการ ID เท่านั้น แต่จะได้รับ "
+"“%(res_ids)s” แทน"
 
 #. module: mail
 #. odoo-python
@@ -9248,7 +9255,7 @@ msgstr "รูปภาพเธรด"
 #: code:addons/mail/static/src/core/common/chat_bubble.xml:0
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Thread image"
-msgstr ""
+msgstr "รูปเธรด"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
@@ -9990,7 +9997,7 @@ msgstr "ดู %s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
 msgid "View Profile"
-msgstr ""
+msgstr "ดูโปรไฟล์"
 
 #. module: mail
 #. odoo-javascript
@@ -10025,18 +10032,18 @@ msgstr "เสียง"
 #. module: mail
 #: model:ir.ui.menu,name:mail.menu_call_settings
 msgid "Voice & Video"
-msgstr ""
+msgstr "เสียงและวิดีโอ"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.discuss_call_settings_action
 msgid "Voice & Video Settings"
-msgstr ""
+msgstr "การตั้งค่าเสียงและวิดีโอ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Voice Detection"
-msgstr ""
+msgstr "การตรวจจับเสียง"
 
 #. module: mail
 #. odoo-javascript

@@ -3,8 +3,8 @@
 # 	* account_peppol
 # 
 # Translators:
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +26,8 @@ msgid ""
 "<br/>\n"
 "                            If you need a Peppol compliant software, we recommend"
 msgstr ""
+"<br/>\n"
+"                            Si vous avez besoin d'un logiciel conforme à Peppol, nous vous recommandons"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -299,7 +301,6 @@ msgstr "Plan des adresses électroniques"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_mode
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "EDI mode"
 msgstr "Mode EDI"
 
@@ -366,11 +367,6 @@ msgid "Fill in the code below that we sent you by SMS to"
 msgstr "Complétez le code ci-dessous que nous vous avons envoyé par SMS"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid "In Belgium, electronic invoicing will be"
-msgstr ""
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "I want to migrate my existing Peppol connection to Odoo (optional):"
@@ -383,6 +379,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"In Belgium, electronic invoicing will be <u>mandatory as of January "
+"2026</u>."
+msgstr ""
+"En Belgique, la facturation électronique sera <u>obligatoire à partir de "
+"janvier 2026</u>."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -546,9 +551,11 @@ msgstr "PEPPOL : mettre à jour le statut du participant"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">We could not send your "
+"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
 "invoice on Peppol.</b>"
 msgstr ""
+"PS : <b style=\"color: $o-enterprise-action-color;\">Nous n'avons pas envoyé"
+" votre facture sur Peppol.</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -556,6 +563,8 @@ msgid ""
 "PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
 "color\">sent on Peppol</b>."
 msgstr ""
+"PS : Cette facture a également été <b style=\"color: $o-enterprise-action-"
+"color\">senvoyée sur Peppol</b>."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -1172,8 +1181,3 @@ msgstr "Votre inscription devrait être activée dans la journée."
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "for validation purposes"
 msgstr "pour validation"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid "mandatory as of January 2026"
-msgstr ""

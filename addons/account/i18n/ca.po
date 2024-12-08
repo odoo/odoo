@@ -31,7 +31,6 @@
 # Pere Martínez, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
-# Josep Anton Belchi, 2024
 # Martin Trigaux, 2024
 # ericrolo, 2024
 # Iván Infantes Castarnado, 2024
@@ -40,7 +39,9 @@
 # eriiikgt, 2024
 # Harcogourmet, 2024
 # Arnau Ros, 2024
-# Quim - eccit <quim@eccit.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
+# Josep Anton Belchi, 2024
+# Juande Gutierrez, 2024
 # 
 msgid ""
 msgstr ""
@@ -48,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-14 14:13+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2024\n"
+"Last-Translator: Juande Gutierrez, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,13 +114,13 @@ msgstr "%(action)s pel diari %(journal)s"
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Excl. Taxes"
-msgstr ""
+msgstr "%(amount)s Excl. Impostos"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product.py:0
 msgid "%(amount)s Incl. Taxes"
-msgstr ""
+msgstr "%(amount)s Incl. Impostos"
 
 #. module: account
 #. odoo-python
@@ -162,6 +163,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Facturat, "
+"%(quantity_delivered)s Lliurat a %(unit_price)s cada"
 
 #. module: account
 #. odoo-python
@@ -179,13 +182,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
-msgstr ""
+msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
-msgstr ""
+msgstr "%(tax_name)s (arrodonint)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -316,13 +319,13 @@ msgstr ". És possible que vulgueu posar un número més alt aquí."
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid "... (%(nb_of_values)s other)"
-msgstr ""
+msgstr "... (%(nb_of_values)s altres)"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
-msgstr ""
+msgstr "... (Veure-ho tot)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
@@ -780,6 +783,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Alias Domain"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configurar Domini Àlies"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -822,6 +826,8 @@ msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
 msgstr ""
+"<span class=\"figure-caption\">No et perdis mai un termini, amb declaracions"
+" i alertes automatitzades.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1568,12 +1574,16 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"El compte%s és de tipus \"a pagar\", però es fa servir en una operació de "
+"venda. "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Account %s is of receivable type, but is used in a purchase operation."
 msgstr ""
+"El compte %s és de tipus \"a cobrar\", però es fa servir en una operació de "
+"compra."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1912,7 +1922,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Accountant"
-msgstr ""
+msgstr "Comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3411,7 +3421,7 @@ msgstr "Missatge de bloqueig"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Bookkeeper"
-msgstr ""
+msgstr "Comptable"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -6183,7 +6193,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "Descompte per pagament anticipat de"
 
 #. module: account
 #. odoo-python
@@ -6998,6 +7008,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Fòrmula al formulari line_code.expression_label. Això permet establir "
+"l'objetiu del traspàs per a aquesta expresió (en una expresió etiquetada com"
+" a _carryover_* ), en cas de que sigui diferent de la línia pare."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8765,13 +8778,13 @@ msgstr "Apunt comptable"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr ""
+msgstr "L'assentament %s ha estat creat"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr ""
+msgstr "S'ha eliminat l'assentament %s "
 
 #. module: account
 #. odoo-python
@@ -16131,7 +16144,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Update Taxes and Accounts"
-msgstr ""
+msgstr "Actualitza impostos i comptes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17702,7 +17715,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "has been applied."
-msgstr ""
+msgstr "ha estat aplicat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

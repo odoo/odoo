@@ -5,6 +5,7 @@
 # Translators:
 # Chloe Wang, 2024
 # Wil Odoo, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:11+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 "<br/>\n"
 "                            If you need a Peppol compliant software, we recommend"
 msgstr ""
+"<br/>\n"
+"                            如果您需要符合 Peppol 标准的软件，我们建议您"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -170,7 +173,7 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
 "用于识别 BIS Billing 3.0 及其衍生版本的端点的代码。\n"
-"             列表可从 https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/ 获取。"
+"             列表可从 https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/ 获取"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -289,7 +292,6 @@ msgstr "电子地址计划"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_mode
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "EDI mode"
 msgstr "电子数据交换模式"
 
@@ -356,11 +358,6 @@ msgid "Fill in the code below that we sent you by SMS to"
 msgstr "填写我们通过短信发送给您的以下代码，发送至"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid "In Belgium, electronic invoicing will be"
-msgstr ""
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "I want to migrate my existing Peppol connection to Odoo (optional):"
@@ -372,6 +369,13 @@ msgstr "我想将现有的 Peppol 连接迁移到 Odoo（可选）："
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__id
 msgid "ID"
 msgstr "ID"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid ""
+"In Belgium, electronic invoicing will be <u>mandatory as of January "
+"2026</u>."
+msgstr "在比利时，电子发票将于<u> 2026 年 1 月强制执行</u>。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -533,16 +537,18 @@ msgstr "Peppol：更新参与者状态"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">We could not send your "
+"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
 "invoice on Peppol.</b>"
 msgstr ""
+"PS: <b style=\"color: $o-enterprise-action-color;\">我们没有在 Peppol "
+"上发送您的发票。</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
 "color\">sent on Peppol</b>."
-msgstr ""
+msgstr "PS: 此发票也已<b style=\"color: $o-enterprise-action-color\">发送至 Peppol</b>。"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -943,7 +949,7 @@ msgstr "从演示版切换到实时版时，文件的 peppol 状态已重置。"
 msgid ""
 "The recommended EAS code for Belgium is 0208. The Endpoint should be the "
 "Company Registry number."
-msgstr "比利时推荐的EAS代码是0208。目标接口应该是公司注册号"
+msgstr "比利时推荐的EAS代码是0208。目标接口应该是公司注册号。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1121,8 +1127,3 @@ msgstr "您的注册应在一天内激活。"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "for validation purposes"
 msgstr "用于验证"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid "mandatory as of January 2026"
-msgstr ""
