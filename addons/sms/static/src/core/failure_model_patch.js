@@ -11,7 +11,7 @@ patch(Failure.prototype, {
     },
     get body() {
         if (this.type === "sms") {
-            return _t("An error occurred when sending an SMS");
+            return { text: _t("An error occurred when sending an SMS") };
         }
         return super.body;
     },
