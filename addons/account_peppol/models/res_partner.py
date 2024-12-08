@@ -215,3 +215,9 @@ class ResPartner(models.Model):
                     return 'not_valid_format'
             else:
                 return 'not_valid'
+
+    def _get_frontend_writable_fields(self):
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.update({'peppol_eas', 'peppol_endpoint'})
+
+        return frontend_writable_fields
