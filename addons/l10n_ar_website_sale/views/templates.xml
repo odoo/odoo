@@ -54,7 +54,7 @@
 
     </template>
 
-    <template id="address" inherit_id="website_sale.address">
+    <template id="address" inherit_id="portal.address_details">
         <div id="div_vat" position="before">
             <t t-if="(use_delivery_as_billing and address_type == 'delivery' or address_type == 'billing') and res_company.country_id.code == 'AR'">
                 <t t-call="l10n_ar_website_sale.partner_info"/>

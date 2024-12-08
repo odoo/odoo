@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="address" inherit_id="website_sale.address">
+    <template id="address" inherit_id="portal.address_details">
         <div id="div_vat" position="before">
             <t t-if="res_company.country_id.code == 'EC'">
                 <!-- Break the line to put Identification Type and Number (vat) on the same line -->

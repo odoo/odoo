@@ -6,8 +6,8 @@ from odoo.http import request
 
 class L10nECWebsiteSale(WebsiteSale):
 
-    def _get_mandatory_billing_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
+    def _get_mandatory_invoice_address_fields(self, country_sudo):
+        mandatory_fields = super()._get_mandatory_invoice_address_fields(country_sudo)
         if request.website.sudo().company_id.country_id.code != 'EC':
             return mandatory_fields
 
@@ -16,15 +16,14 @@ class L10nECWebsiteSale(WebsiteSale):
         mandatory_fields.add('l10n_latam_identification_type_id')
         return mandatory_fields
 
-    def _prepare_address_form_values(self, *args, address_type, use_delivery_as_billing, **kwargs):
+    def _prepare_address_form_values(self, *args, address_type, **kwargs):
         rendering_values = super()._prepare_address_form_values(
             *args,
-            address_type=address_type,
-            use_delivery_as_billing=use_delivery_as_billing,
+            address_type,
             **kwargs,
         )
         if (
-            (address_type == 'billing' or use_delivery_as_billing)
+            (self._is_billing_address(address_type, **kwargs))
             and request.website.sudo().company_id.country_id.code == 'EC'
         ):
             can_edit_vat = rendering_values['can_edit_vat']

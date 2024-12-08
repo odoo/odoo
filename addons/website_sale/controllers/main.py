@@ -1028,42 +1028,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: dict
         """
         PartnerSudo = order_sudo.partner_id.with_context(show_address=1)
-        commercial_partner_sudo = order_sudo.partner_id.commercial_partner_id
-        billing_partners_sudo = PartnerSudo.search([
-            ('id', 'child_of', commercial_partner_sudo.ids),
-            '|',
-            ('type', 'in', ['invoice', 'other']),
-            ('id', '=', commercial_partner_sudo.id),
-        ], order='id desc') | order_sudo.partner_id
-        delivery_partners_sudo = PartnerSudo.search([
-            ('id', 'child_of', commercial_partner_sudo.ids),
-            '|',
-            ('type', 'in', ['delivery', 'other']),
-            ('id', '=', commercial_partner_sudo.id),
-        ], order='id desc') | order_sudo.partner_id
-
-        if order_sudo.partner_id != commercial_partner_sudo:  # Child of the commercial partner.
-            # Don't display the commercial partner's addresses if they are not complete, as its
-            # children can't edit them.
-            if not self._check_billing_address(commercial_partner_sudo):
-                billing_partners_sudo = billing_partners_sudo.filtered(
-                    lambda p: p.id != commercial_partner_sudo.id
-                )
-            if not self._check_delivery_address(commercial_partner_sudo):
-                delivery_partners_sudo = delivery_partners_sudo.filtered(
-                    lambda p: p.id != commercial_partner_sudo.id
-                )
-
         return {
             'order': order_sudo,
             'website_sale_order': order_sudo,  # Compatibility with other templates.
-            'billing_addresses': billing_partners_sudo,
-            'delivery_addresses': delivery_partners_sudo,
             'use_delivery_as_billing': (
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             ),
             'only_services': order_sudo.only_services,
             'json_pickup_location_data': json.dumps(order_sudo.pickup_location_data or {}),
+            **self._prepare_address_page_values(PartnerSudo),
         }
 
     @route(
@@ -1105,17 +1078,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Render the address form.
         address_form_values = self._prepare_address_form_values(
-            order_sudo,
             partner_sudo,
-            address_type=address_type,
+            address_type,
+            order_sudo=order_sudo,
             use_delivery_as_billing=use_delivery_as_billing,
             **query_params
         )
         return request.render('website_sale.address', address_form_values)
 
-    def _prepare_address_form_values(
-        self, order_sudo, partner_sudo, address_type, use_delivery_as_billing, callback='', **kwargs
-    ):
+    def _prepare_address_form_values(self, *args, order_sudo=False, use_delivery_as_billing=False, **kwargs):
         """ Prepare and return the values to use to render the address form.
 
         :param sale.order order_sudo: The current cart.
@@ -1127,60 +1098,27 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The checkout page values.
         :rtype: dict
         """
-        can_edit_vat = (
-            (address_type == 'billing' or use_delivery_as_billing)
-            and (not partner_sudo or partner_sudo.can_edit_vat())
+        rendering_values = super()._prepare_address_form_values(
+            *args,
+            order_sudo=order_sudo,
+            use_delivery_as_billing=use_delivery_as_billing,
+            **kwargs
         )
-        is_anonymous_cart = order_sudo._is_anonymous_cart()
-
-        ResCountrySudo = request.env['res.country'].sudo()
-        country_sudo = partner_sudo.country_id
-        if not country_sudo:
-            if is_anonymous_cart:
-                if request.geoip.country_code:
-                    country_sudo = ResCountrySudo.search([
-                        ('code', '=', request.geoip.country_code),
-                    ], limit=1)
-                else:
-                    country_sudo = order_sudo.website_id.user_id.country_id
-            else:
-                country_sudo = order_sudo.partner_id.country_id
-
-        state_id = partner_sudo.state_id.id
-
-        address_fields = country_sudo and country_sudo.get_address_fields() or ['city', 'zip']
+        if not order_sudo:
+            return rendering_values
 
         return {
+            **rendering_values,
             'website_sale_order': order_sudo,
-            'partner_sudo': partner_sudo,  # If set, customer is editing an existing address
-            'partner_id': partner_sudo.id,
-            'address_type': address_type,  # 'billing' or 'delivery'
-            'can_edit_vat': can_edit_vat,
-            'callback': callback,
             'only_services': order_sudo.only_services,
-            'is_anonymous_cart': is_anonymous_cart,
             'use_delivery_as_billing': use_delivery_as_billing,
-            'discard_url': is_anonymous_cart and '/shop/cart' or '/shop/checkout',
-            'country': country_sudo,
-            'countries': ResCountrySudo.search([]),
-            'state_id': state_id,
-            'country_states': country_sudo.state_ids,
-            'zip_before_city': (
-                'zip' in address_fields
-                and address_fields.index('zip') < address_fields.index('city')
-            ),
-            'show_vat': (
-                (address_type == 'billing' or use_delivery_as_billing)
-                and (
-                    is_anonymous_cart  # Allow inputting VAT on the new main address.
-                    or (
-                        partner_sudo == order_sudo.partner_id
-                        and (can_edit_vat or partner_sudo.vat)
-                    )  # On the main partner only, if the VAT was set.
-                )
-            ),
-            'vat_label': request.env._("VAT"),
+            'discard_url': rendering_values['is_anonymous_customer'] and '/shop/cart' or '/shop/checkout',
         }
+
+    def _is_billing_address(self, address_type, use_delivery_as_billing=False, **kwargs):
+        return super()._is_billing_address(
+            address_type, use_delivery_as_billing=use_delivery_as_billing, **kwargs
+        ) or use_delivery_as_billing
 
     @route(
         '/shop/address/submit', type='http', methods=['POST'], auth='public', website=True,
@@ -1220,8 +1158,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Parse form data into address values, and extract incompatible data as extra form data.
         address_values, extra_form_data = self._parse_form_data(form_data)
 
-        is_anonymous_cart = order_sudo._is_anonymous_cart()
-        is_main_address = is_anonymous_cart or order_sudo.partner_id.id == partner_sudo.id
+        is_anonymous_customer = partner_sudo._is_anonymous_customer()
+        is_main_address = is_anonymous_customer or order_sudo.partner_id.id == partner_sudo.id
         # Validate the address values and highlights the problems in the form, if any.
         invalid_fields, missing_fields, error_messages = self._validate_address_values(
             address_values,
@@ -1271,7 +1209,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         order_sudo._update_address(partner_sudo.id, partner_fnames)
 
-        if is_anonymous_cart:
+        if is_anonymous_customer:
             # Unsubscribe the public partner if the cart was previously anonymous.
             order_sudo.message_unsubscribe(order_sudo.website_id.partner_id.ids)
 
@@ -1297,7 +1235,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :raise Forbidden: If the customer is not allowed to update the given address.
         """
         PartnerSudo = request.env['res.partner'].with_context(show_address=1).sudo()
-        if order_sudo._is_anonymous_cart():
+        if order_sudo.partner_id._is_anonymous_customer():
             partner_sudo = PartnerSudo
         else:
             partner_sudo = PartnerSudo.browse(partner_id)
@@ -1317,9 +1255,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             else:
                 address_type = 'billing'
 
-        if partner_sudo and not partner_sudo._can_be_edited_by_current_customer(
-            order_sudo, address_type
-        ):
+        if partner_sudo and not partner_sudo._can_edited_by_current_customer():
             raise Forbidden()
 
         return partner_sudo, address_type
@@ -1471,7 +1407,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if address_type == 'delivery' or use_delivery_as_billing:
             required_field_set |= self._get_mandatory_delivery_address_fields(country)
         if address_type == 'billing' or use_delivery_as_billing:
-            required_field_set |= self._get_mandatory_billing_address_fields(country)
+            required_field_set |= self._get_mandatory_invoice_address_fields(country)
             if not is_main_address:
                 commercial_fields = ResPartnerSudo._commercial_fields()
                 for fname in commercial_fields:
@@ -1512,7 +1448,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_values['website_id'] = order_sudo.website_id.id
 
         commercial_partner = order_sudo.partner_id.commercial_partner_id
-        if order_sudo._is_anonymous_cart():
+        if order_sudo.partner_id._is_anonymous_customer():
             address_values['type'] = 'contact'
         elif address_type == 'billing':
             address_values['type'] = 'invoice'
@@ -1582,7 +1518,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
         billing_address, _side_values = self._parse_form_data(billing_address)
-        if order_sudo._is_anonymous_cart():
+        if order_sudo.partner_id._is_anonymous_customer():
 
             # Pricelist are recomputed every time the partner is changed. We don't want to recompute
             # the price with another pricelist at this state since the customer has already accepted
@@ -1999,7 +1935,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                  the appropriate page.
         """
         # Check that an address has been added.
-        if order_sudo._is_anonymous_cart():
+        if order_sudo.partner_id._is_anonymous_customer():
             return request.redirect('/shop/address')
 
         # Check that the delivery address is complete.
@@ -2007,7 +1943,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if (
             not order_sudo.only_services
             and not self._check_delivery_address(delivery_partner_sudo)
-            and delivery_partner_sudo._can_be_edited_by_current_customer(order_sudo, 'delivery')
+            and delivery_partner_sudo._can_edited_by_current_customer()
         ):
             return request.redirect(
                 f'/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery'
@@ -2015,71 +1951,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Check that the billing address is complete.
         invoice_partner_sudo = order_sudo.partner_invoice_id
         if (
-            not self._check_billing_address(invoice_partner_sudo)
-            and invoice_partner_sudo._can_be_edited_by_current_customer(order_sudo, 'billing')
+            not self._check_invoice_address(invoice_partner_sudo)
+            and invoice_partner_sudo._can_edited_by_current_customer()
         ):
             return request.redirect(
                 f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
             )
-
-    def _check_delivery_address(self, partner_sudo):
-        """ Check that all mandatory delivery fields are filled for the given partner.
-
-        :param res.partner: The partner whose delivery address to check.
-        :return: Whether all mandatory fields are filled.
-        :rtype: bool
-        """
-        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
-            partner_sudo.country_id
-        )
-        return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
-
-    def _get_mandatory_delivery_address_fields(self, country_sudo):
-        """ Return the set of mandatory delivery field names.
-
-        :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of mandatory delivery field names.
-        :rtype: set
-        """
-        return self._get_mandatory_address_fields(country_sudo)
-
-    def _check_billing_address(self, partner_sudo):
-        """ Check that all mandatory billing fields are filled for the given partner.
-
-        :param res.partner: The partner whose billing address to check.
-        :return: Whether all mandatory fields are filled.
-        :rtype: bool
-        """
-        mandatory_billing_fields = self._get_mandatory_billing_address_fields(
-            partner_sudo.country_id
-        )
-        return all(partner_sudo.read(mandatory_billing_fields)[0].values())
-
-    def _get_mandatory_billing_address_fields(self, country_sudo):
-        """ Return the set of mandatory billing field names.
-
-        :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of mandatory billing field names.
-        :rtype: set
-        """
-        field_names = self._get_mandatory_address_fields(country_sudo)
-        # Include the required billing fields from the portal logic.
-        field_names |= set(self._get_mandatory_fields())
-        return field_names
-
-    def _get_mandatory_address_fields(self, country_sudo):
-        """ Return the set of common mandatory address fields.
-
-        :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of common mandatory address field names.
-        :rtype: set
-        """
-        field_names = {'name', 'street', 'city', 'country_id', 'phone'}
-        if country_sudo.state_required:
-            field_names.add('state_id')
-        if country_sudo.zip_required:
-            field_names.add('zip')
-        return field_names
 
     # ------------------------------------------------------
     # Edit
@@ -2164,24 +2041,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if delivery_line:
             tracking_cart_dict['shipping'] = delivery_line.price_unit
         return tracking_cart_dict
-
-    @route(['/shop/country_info/<model("res.country"):country>'], type='jsonrpc', auth="public", methods=['POST'], website=True, readonly=True)
-    def shop_country_info(self, country, address_type, **kw):
-        address_fields = country.get_address_fields()
-        if address_type == 'billing':
-            required_fields = self._get_mandatory_billing_address_fields(country)
-        else:
-            required_fields = self._get_mandatory_delivery_address_fields(country)
-        return {
-            'fields': address_fields,
-            'zip_before_city': (
-                'zip' in address_fields
-                and address_fields.index('zip') < address_fields.index('city')
-            ),
-            'states': [(st.id, st.name, st.code) for st in country.sudo().state_ids],
-            'phone_code': country.phone_code,
-            'required_fields': list(required_fields),
-        }
 
     # --------------------------------------------------------------------------
     # Products Recently Viewed
