@@ -896,20 +896,6 @@ a.no-decoration {
         }
     }
 
-    .all_delivery, .all_billing {
-        @include media-breakpoint-down(md) {
-            overflow-x: auto;
-
-            > div {
-                width: auto;
-            }
-        }
-
-        .o_wsale_add_address {
-            min-height: 8rem;
-        }
-    }
-
     div[name="o_express_checkout_container"] {
         margin-bottom: -#{map-get($spacers, 3)};
         margin-top: map-get($spacers, 3);

@@ -690,17 +690,6 @@ class SaleOrder(models.Model):
 
     #=== TOOLING ===#
 
-    def _is_anonymous_cart(self):
-        """ Return whether the cart was created by the public user and no address was added yet.
-
-        Note: `self.ensure_one()`
-
-        :return: Whether the cart is anonymous.
-        :rtype: bool
-        """
-        self.ensure_one()
-        return self.partner_id.id == request.website.user_id.sudo().partner_id.id
-
     def _get_lang(self):
         res = super()._get_lang()
 
