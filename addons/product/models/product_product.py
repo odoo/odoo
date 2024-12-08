@@ -641,7 +641,11 @@ class ProductProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         sellers_filtered = self._prepare_sellers(params)
-        sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
+        if params and 'order_id' in params and params['order_id'].company_id:
+            company_id = params['order_id'].company_id.id
+        else:
+            company_id = self.env.company.id
+        sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == company_id)
         sellers = self.env['product.supplierinfo']
         for seller in sellers_filtered:
             # Set quantity in UoM of seller
