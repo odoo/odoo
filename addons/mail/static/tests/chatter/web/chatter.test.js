@@ -67,6 +67,7 @@ test("can post a message on a record thread", async () => {
             context: args.context,
             post_data: {
                 body: "hey",
+                channel_ids: [],
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
             },
@@ -97,6 +98,7 @@ test("can post a note on a record thread", async () => {
             context: args.context,
             post_data: {
                 body: "hey",
+                channel_ids: [],
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_note",
             },
