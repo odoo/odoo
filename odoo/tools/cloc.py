@@ -6,7 +6,8 @@ import os
 import re
 import shutil
 
-import odoo
+import odoo.api
+import odoo.modules
 from odoo.tools.config import config
 
 VERSION = 1
