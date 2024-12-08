@@ -81,12 +81,12 @@ test("can change the thread name of #general", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-Discuss-threadName:value(general)");
-    await insertText("input.o-mail-Discuss-threadName:enabled", "special", { replace: true });
+    await contains("input.o-mail-DiscussHeader-threadName:value(general)");
+    await insertText("input.o-mail-DiscussHeader-threadName:enabled", "special", { replace: true });
     triggerHotkey("Enter");
     await waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
     await contains(".o-mail-DiscussSidebarChannel:contains(special)");
-    await contains("input.o-mail-Discuss-threadName:value(special)");
+    await contains("input.o-mail-DiscussHeader-threadName:value(special)");
 });
 
 test("can active change thread from messaging menu", async () => {
@@ -120,13 +120,17 @@ test("can change the thread description of #general", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-Discuss-threadDescription:value(General announcements...)");
-    await insertText("input.o-mail-Discuss-threadDescription:enabled", "I want a burger today!", {
-        replace: true,
-    });
+    await contains("input.o-mail-DiscussHeader-threadDescription:value(General announcements...)");
+    await insertText(
+        "input.o-mail-DiscussHeader-threadDescription:enabled",
+        "I want a burger today!",
+        {
+            replace: true,
+        }
+    );
     triggerHotkey("Enter");
     await waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
-    await contains("input.o-mail-Discuss-threadDescription:value(I want a burger today!)");
+    await contains("input.o-mail-DiscussHeader-threadDescription:value(I want a burger today!)");
 });
 
 test("Message following a notification should not be squashed", async () => {
@@ -696,13 +700,13 @@ test("basic top bar rendering", async () => {
     await start();
     await openDiscuss();
     await contains("button:disabled", { text: "Mark all read" });
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Inbox" });
     await click("button", { text: "Starred" });
     await contains("button:disabled", { text: "Unstar all" });
-    await contains(".o-mail-Discuss-threadName", { value: "Starred" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Starred" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-Discuss-header button[title='Invite People']");
-    await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await contains(".o-mail-DiscussHeader button[title='Invite People']");
+    await contains(".o-mail-DiscussHeader-threadName", { value: "General" });
 });
 
 test("rendering of inbox message", async () => {
@@ -1525,7 +1529,7 @@ test("Thread avatar image is displayed in top bar of channels of type 'channel' 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
+    await contains(".o-mail-DiscussHeader .o-mail-DiscussHeader-threadAvatar");
 });
 
 test("Thread avatar image is displayed in top bar of channels of type 'channel' not limited to any group", async () => {
@@ -1537,7 +1541,7 @@ test("Thread avatar image is displayed in top bar of channels of type 'channel' 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
+    await contains(".o-mail-DiscussHeader .o-mail-DiscussHeader-threadAvatar");
 });
 
 test("Partner IM status is displayed as thread icon in top bar of channels of type 'chat'", async () => {
@@ -1588,15 +1592,15 @@ test("Partner IM status is displayed as thread icon in top bar of channels of ty
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "Michel Online" });
-    await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Online']");
+    await contains(".o-mail-DiscussHeader .o-mail-ImStatus [title='Online']");
     await click(".o-mail-DiscussSidebarChannel", { text: "Jacqueline Offline" });
-    await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Offline']");
+    await contains(".o-mail-DiscussHeader .o-mail-ImStatus [title='Offline']");
     await click(".o-mail-DiscussSidebarChannel", { text: "Nabuchodonosor Idle" });
-    await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Idle']");
+    await contains(".o-mail-DiscussHeader .o-mail-ImStatus [title='Idle']");
     await click(".o-mail-DiscussSidebarChannel", { text: "Robert Fired" });
-    await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='No IM status available']");
+    await contains(".o-mail-DiscussHeader .o-mail-ImStatus [title='No IM status available']");
     await click(".o-mail-DiscussSidebarChannel", { text: "OdooBot" });
-    await contains(".o-mail-Discuss-header .o-mail-ImStatus [title='Bot']");
+    await contains(".o-mail-DiscussHeader .o-mail-ImStatus [title='Bot']");
 });
 
 test("Thread avatar image is displayed in top bar of channels of type 'group'", async () => {
@@ -1604,7 +1608,7 @@ test("Thread avatar image is displayed in top bar of channels of type 'group'", 
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "group" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
+    await contains(".o-mail-DiscussHeader .o-mail-DiscussHeader-threadAvatar");
 });
 
 test("Thread avatar is not editable in DM chat", async () => {
@@ -1623,11 +1627,11 @@ test("Thread avatar is not editable in DM chat", async () => {
     ]);
     await start();
     await openDiscuss(groupChatId);
-    await contains(".o-mail-Discuss-threadName[title='GroupChat']");
-    await contains(".o-mail-Discuss-threadAvatar .fa-pencil");
+    await contains(".o-mail-DiscussHeader-threadName[title='GroupChat']");
+    await contains(".o-mail-DiscussHeader-threadAvatar .fa-pencil");
     await click(".o-mail-DiscussSidebar-item:contains('Demo')");
-    await contains(".o-mail-Discuss-threadName[title='Demo']");
-    await contains(".o-mail-Discuss-threadAvatar .fa-pencil", { count: 0 });
+    await contains(".o-mail-DiscussHeader-threadName[title='Demo']");
+    await contains(".o-mail-DiscussHeader-threadAvatar .fa-pencil", { count: 0 });
 });
 
 test("Do not trigger chat name server update when it is unchanged", async () => {
@@ -1638,7 +1642,7 @@ test("Do not trigger chat name server update when it is unchanged", async () => 
 
     await start();
     await openDiscuss(channelId);
-    await insertText("input.o-mail-Discuss-threadName:enabled", "Mitchell Admin", {
+    await insertText("input.o-mail-DiscussHeader-threadName:enabled", "Mitchell Admin", {
         replace: true,
     });
     triggerHotkey("Enter");
@@ -1656,7 +1660,7 @@ test("Do not trigger channel description server update when channel has no descr
 
     await start();
     await openDiscuss(channelId);
-    await insertText("input.o-mail-Discuss-threadDescription", "");
+    await insertText("input.o-mail-DiscussHeader-threadDescription", "");
     triggerHotkey("Enter");
     await waitForSteps([]);
 });
@@ -1693,17 +1697,17 @@ test("select another mailbox", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss");
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Inbox" });
     await click("button", { text: "Starred" });
     await contains("button:disabled", { text: "Unstar all" });
-    await contains(".o-mail-Discuss-threadName", { value: "Starred" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Starred" });
 });
 
 test('auto-select "Inbox nav bar" when discuss had inbox as active thread', async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
-    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussHeader-threadName", { value: "Inbox" });
     await contains(".o-mail-MessagingMenu-navbar button.fw-bolder", { text: "Mailboxes" });
     await contains("button.active.o-active", { text: "Inbox" });
     await contains("h4", { text: "Your inbox is empty" });
