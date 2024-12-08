@@ -1,14 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import math
 import re
 
 from werkzeug import urls
+from werkzeug.exceptions import Forbidden
 
-from odoo import http, tools, _, SUPERUSER_ID
+from odoo import SUPERUSER_ID, _, http
 from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, ValidationError
-from odoo.http import content_disposition, Controller, request, route
-from odoo.tools import consteq
+from odoo.http import Controller, content_disposition, request, route
+from odoo.tools import clean_context, consteq, single_email_re, str2bool
 
 # --------------------------------------------------
 # Misc tools
@@ -177,56 +179,631 @@ class CustomerPortal(Controller):
         return request.render("portal.portal_my_home", values)
 
     @route(['/my/account'], type='http', auth='user', website=True)
-    def account(self, redirect=None, **post):
-        values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
-        values.update({
-            'error': {},
-            'error_message': [],
-        })
-
-        if post and request.httprequest.method == 'POST':
-            if not partner.can_edit_vat():
-                post['country_id'] = str(partner.country_id.id)
-
-            error, error_message = self.details_form_validate(post)
-            values.update({'error': error, 'error_message': error_message})
-            values.update(post)
-            if not error:
-                values = {key: post[key] for key in self._get_mandatory_fields()}
-                values.update({key: post[key] for key in self._get_optional_fields() if key in post})
-                for field in set(['country_id', 'state_id']) & set(values.keys()):
-                    try:
-                        values[field] = int(values[field])
-                    except:
-                        values[field] = False
-                values.update({'zip': values.pop('zipcode', '')})
-                self.on_account_update(values, partner)
-                partner.sudo().write(values)
-                if redirect:
-                    return request.redirect(redirect)
-                return request.redirect('/my/home')
-
-        countries = request.env['res.country'].sudo().search([])
-        states = request.env['res.country.state'].sudo().search([])
-
-        values.update({
-            'partner': partner,
-            'countries': countries,
-            'states': states,
-            'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
-            'partner_can_edit_vat': partner.can_edit_vat(),
-            'redirect': redirect,
-            'page_name': 'my_details',
-        })
-
-        response = request.render("portal.portal_my_details", values)
+    def account(self, **kwargs):
+        response = request.render(
+            'portal.portal_my_details',
+            self._prepare_my_account_rendering_values(**kwargs),
+        )
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
-    def on_account_update(self, values, partner):
-        pass
+    def _prepare_my_account_rendering_values(self, redirect='/my', **kwargs):
+        """ Prepare the rendering values for the /my/account route template.
+
+        :param str redirect: route to redirect to after the address update
+        :param dict kwargs: unused parameters available for overrides
+        :return: The rendering values
+        :rtype: dict
+        """
+        return {
+            'page_name': 'my_details',
+            **self._prepare_portal_layout_values(),
+            **self._prepare_address_form_values(
+                partner_sudo=request.env.user.partner_id,
+                # Main address should always have delivery & billing information set
+                use_delivery_as_billing=True,
+                callback=redirect,
+            ),
+        }
+
+    @route('/my/addresses', type='http', auth='user', readonly=True, website=True)
+    def my_addresses(self, **query_params):
+        """Display the user's addresses."""
+        partner_sudo = request.env.user.partner_id  # env.user is always sudoed
+        address_data = self._prepare_address_data(partner_sudo, **query_params)
+        values = {
+            'partner_sudo': partner_sudo,
+            **address_data,
+            'page_name': 'my_addresses',
+            # One unique address
+            'use_delivery_as_billing': len(address_data['billing_addresses']) == 1,
+            'address_url': '/my/address',
+        }
+        return request.render('portal.my_addresses', values)
+
+    def _prepare_address_data(self, partner_sudo, **_kwargs):
+        """Provide the data of the current customer addresses.
+
+        Gives the addresses the customer can use, including:
+            * his own addresses
+            * the addresses belonging to his commercial partner, if complete because
+              he cannot edit those addresses.
+
+        :param res.partner partner_sudo: The current user partner.
+        :param dict _kwargs: unused parameters available for potential overrides.
+        :return: A dictionary holding the current customer billing and delivery addresses.
+        :rtype: dict
+        """
+        partner_sudo = partner_sudo.with_context(show_address=1)
+        commercial_partner_sudo = partner_sudo.commercial_partner_id
+        billing_partners_sudo = partner_sudo | partner_sudo.search([
+            ('id', 'child_of', commercial_partner_sudo.ids),
+            '|',
+            ('type', 'in', ['invoice', 'other']),
+            ('id', '=', commercial_partner_sudo.id),
+        ], order='id desc')
+        delivery_partners_sudo = partner_sudo | partner_sudo.search(
+            commercial_partner_sudo._get_delivery_address_domain(),
+            order='id desc',
+        )
+
+        if partner_sudo != commercial_partner_sudo:  # Child of the commercial partner.
+            # Don't display the commercial partner's addresses if they are not complete, as its
+            # children can't edit them.
+            if not self._check_billing_address(commercial_partner_sudo):
+                billing_partners_sudo = billing_partners_sudo.filtered(
+                    lambda p: p.id != commercial_partner_sudo.id
+                )
+            if not self._check_delivery_address(commercial_partner_sudo):
+                delivery_partners_sudo = delivery_partners_sudo.filtered(
+                    lambda p: p.id != commercial_partner_sudo.id
+                )
+
+        return {
+            'billing_addresses': billing_partners_sudo,
+            'delivery_addresses': delivery_partners_sudo,
+        }
+
+    def _check_billing_address(self, partner_sudo):
+        """ Check that all mandatory billing fields are filled for the given partner.
+
+        :param res.partner partner_sudo: The partner whose billing address to check.
+        :return: Whether all mandatory fields are filled.
+        :rtype: bool
+        """
+        mandatory_billing_fields = self._get_mandatory_billing_address_fields(
+            partner_sudo.country_id
+        )
+        return all(partner_sudo.read(mandatory_billing_fields)[0].values())
+
+    def _get_mandatory_billing_address_fields(self, country_sudo):
+        """ Return the set of mandatory billing field names.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of mandatory billing field names.
+        :rtype: set
+        """
+        return self._get_mandatory_address_fields(country_sudo)
+
+    def _check_delivery_address(self, partner_sudo):
+        """ Check that all mandatory delivery fields are filled for the given partner.
+
+        :param res.partner partner_sudo: The partner whose delivery address to check.
+        :return: Whether all mandatory fields are filled.
+        :rtype: bool
+        """
+        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
+            partner_sudo.country_id
+        )
+        return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
+
+    def _get_mandatory_delivery_address_fields(self, country_sudo):
+        """ Return the set of mandatory delivery field names.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of mandatory delivery field names.
+        :rtype: set
+        """
+        return self._get_mandatory_address_fields(country_sudo)
+
+    def _get_mandatory_address_fields(self, country_sudo):
+        """ Return the set of common mandatory address fields.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of common mandatory address field names.
+        :rtype: set
+        """
+        field_names = {'name', 'email', 'street', 'city', 'country_id', 'phone'}
+        if country_sudo.state_required:
+            field_names.add('state_id')
+        if country_sudo.zip_required:
+            field_names.add('zip')
+        return field_names
+
+    @route(
+        '/my/address',
+        type='http',
+        methods=['GET'],
+        auth='user',
+        website=True,
+        sitemap=False,
+        readonly=True,
+    )
+    def portal_address(
+        self, partner_id=None, address_type='billing', use_delivery_as_billing=False, **query_params
+    ):
+        """ Display the address form.
+
+        A partner and/or an address type can be given through the query string params to specify
+        which address to update or create, and its type.
+
+        :param str partner_id: The partner to update with the address form, if any, as a
+            `res.partner` id.
+        :param str address_type: The type of the address: 'billing' or 'delivery'.
+        :param str use_delivery_as_billing: Whether the provided address should be used as both the
+                                            delivery and the billing address. 'true' or 'false'.
+        :param dict query_params: The additional query string parameters forwarded to
+                                  `_prepare_address_form_values`.
+        :return: The rendered address form.
+        :rtype: str
+        """
+        partner_id = partner_id and int(partner_id)
+        partner_sudo = request.env['res.partner'].with_context(show_address=1).sudo().browse(
+            partner_id
+        )
+
+        if partner_sudo and not partner_sudo._can_be_edited_by_current_customer():
+            raise Forbidden()
+
+        address_form_values = {
+            **self._prepare_address_form_values(
+                partner_sudo,
+                address_type=address_type,
+                use_delivery_as_billing=str2bool(use_delivery_as_billing or 'false'),
+                **query_params
+            ),
+            'page_name': 'address_form',
+        }
+        return request.render('portal.address_management', address_form_values)
+
+    def _prepare_address_form_values(
+        self, partner_sudo, address_type='billing', use_delivery_as_billing=False, callback='', **kwargs
+    ):
+        """Prepare the rendering values of the address form.
+
+        :param partner_sudo: The partner whose address to update through the address form.
+        :param str address_type: The type of the address: 'billing' or 'delivery'.
+        :param bool use_delivery_as_billing: Whether the provided address should be used as both the
+                                             billing and the delivery address.
+        :param str callback: The URL to redirect to in case of successful address creation/update.
+        :param dict kwargs: additional parameters, forwarded to other methods as well.
+        :return: The address page values.
+        :rtype: dict
+        """
+        current_partner = request.env['res.partner']._get_current_partner(**kwargs)
+        commercial_partner = current_partner.commercial_partner_id  # handling commercial fields
+
+        # TODO in the future: rename can_edit_vat
+        # Means something like 'can edit commercial fields on current address'
+        if partner_sudo:
+            # Existing address, use the values defined on the address
+            state_id = partner_sudo.state_id.id
+            country_sudo = partner_sudo.country_id
+            can_edit_vat = partner_sudo.can_edit_vat()
+        else:
+            # New address, take default values from current partner
+            country_sudo = current_partner.country_id or self._get_default_country(**kwargs)
+            state_id = current_partner.state_id.id
+            can_edit_vat = not current_partner or (
+                partner_sudo == current_partner and current_partner.can_edit_vat()
+            )
+        address_fields = (country_sudo and country_sudo.get_address_fields()) or ['city', 'zip']
+
+        return {
+            'partner_sudo': partner_sudo,  # If set, customer is editing an existing address
+            'partner_id': partner_sudo.id,
+            'current_partner': current_partner,
+            'commercial_partner': current_partner.commercial_partner_id,
+            'is_commercial_address': not current_partner or partner_sudo == commercial_partner,
+            'commercial_address_update_url': (
+                # Only redirect to account update if the logged in user is their own commercial
+                # partner.
+                current_partner == commercial_partner and "/my/account?redirect=/my/addresses"
+            ),
+            'address_type': address_type,
+            'can_edit_vat': can_edit_vat,
+            'callback': callback,
+            'country': country_sudo,
+            'countries': request.env['res.country'].sudo().search([]),
+            'is_used_as_billing': address_type == 'billing' or use_delivery_as_billing,
+            'use_delivery_as_billing': use_delivery_as_billing,
+            'state_id': state_id,
+            'country_states': country_sudo.state_ids,
+            'zip_before_city': (
+                'zip' in address_fields
+                and address_fields.index('zip') < address_fields.index('city')
+            ),
+            'vat_label': request.env._("VAT"),
+            'discard_url': callback or '/my/addresses',
+        }
+
+    def _is_used_as_billing(self, address_type, **kwargs):
+        return address_type == 'billing'
+
+    def _get_default_country(self, **kwargs):
+        """ Get country of current user country as default. """
+        return request.env.user.country_id
+
+    @route(
+        '/my/address/submit',
+        type='http',
+        methods=['POST'],
+        auth='user',
+        website=True,
+        sitemap=False,
+    )
+    def portal_address_submit(self, partner_id=None, **form_data):
+        """ Create or update an address from portal and redirect to appropriate page.
+
+        If it succeeds, it returns the URL to redirect (client-side) to. If it fails (missing or
+        invalid information), it highlights the problematic form input with the appropriate error
+        message.
+
+        :param str partner_id: The partner whose address to update with the address form, if any.
+        :param dict form_data: The form data to process as address values.
+        :return: A JSON-encoded feedback, with either the success URL or an error message.
+        :rtype: str
+        """
+        partner_sudo = request.env['res.partner'].with_context(show_address=1).sudo().browse(
+            partner_id and int(partner_id)
+        )
+        if partner_sudo and not partner_sudo._can_be_edited_by_current_customer():
+            raise Forbidden()
+
+        _partner_sudo, feedback_dict = self._create_or_update_address(partner_sudo, **form_data)
+
+        return json.dumps(feedback_dict)
+
+    def _create_or_update_address(
+        self,
+        partner_sudo,
+        address_type='billing',
+        use_delivery_as_billing=False,
+        callback='/my/addresses',
+        required_fields=False,
+        **form_data
+    ):
+        """ Create or update an address if there is no error else return error dict.
+
+        :param str partner_id: The partner whose address to update with the address form, if any.
+        :param str address_type: The type of the address: 'billing' or 'delivery'.
+        :param dict form_data: The form data to process as address values.
+        :param str use_delivery_as_billing: Whether the provided address should be used as both the
+                                            billing and the delivery address. 'true' or 'false'.
+        :param str callback: The URL to redirect to in case of successful address creation/update.
+        :param str required_fields: The additional required address values, as a comma-separated
+                                    list of `res.partner` fields.
+        :return: Partner record and A JSON-encoded feedback, with either the success URL or
+                 an error message.
+        :rtype: res.partner, dict
+        """
+        use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
+
+        # Parse form data into address values, and extract incompatible data as extra form data.
+        address_values, extra_form_data = self._parse_form_data(form_data)
+
+        # Validate the address values and highlights the problems in the form, if any.
+        invalid_fields, missing_fields, error_messages = self._validate_address_values(
+            address_values,
+            partner_sudo,
+            address_type,
+            use_delivery_as_billing,
+            required_fields or '',
+            **extra_form_data,
+        )
+        if error_messages:
+            return partner_sudo, {
+                'invalid_fields': list(invalid_fields | missing_fields),
+                'messages': error_messages,
+            }
+
+        if not partner_sudo:  # Creation of a new address.
+            self._complete_address_values(
+                address_values, address_type, use_delivery_as_billing, **form_data
+            )
+            create_context = clean_context(request.env.context)
+            create_context.update({
+                'tracking_disable': True,
+                'no_vat_validation': True,  # Already verified in _validate_address_values
+            })
+            partner_sudo = request.env['res.partner'].sudo().with_context(
+                create_context
+            ).create(address_values)
+        elif not self._are_same_addresses(address_values, partner_sudo):
+            partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
+
+        self._handle_extra_form_data(extra_form_data, address_values)
+
+        return partner_sudo, {'successUrl': callback}
+
+    def _parse_form_data(self, form_data):
+        """ Parse the form data and return them converted into address values and extra form data.
+
+        :param dict form_data: The form data to convert to address values.
+        :return: A tuple of converted address values and extra form data.
+        :rtype: tuple[dict, dict]
+        """
+        address_values = {}
+        extra_form_data = {}
+
+        ResPartner = request.env['res.partner']
+        partner_fields = ResPartner._fields
+        authorized_partner_fields = request.env['res.partner']._get_frontend_writable_fields()
+        for key, value in form_data.items():
+            if isinstance(value, str):
+                value = value.strip()
+            if key in partner_fields and key in authorized_partner_fields:
+                field = partner_fields[key]
+                if field.type == 'many2one' and isinstance(value, str) and value.isdigit():
+                    address_values[key] = field.convert_to_cache(int(value), ResPartner)
+                else:
+                    # Always keep field values, even if falsy, as it might be for resetting a field.
+                    address_values[key] = field.convert_to_cache(value, ResPartner)
+            elif value:  # The value cannot be saved on the `res.partner` model.
+                extra_form_data[key] = value
+
+        if (
+            hasattr(ResPartner, 'check_vat')  # The `base_vat` module is installed.
+            and address_values.get('vat')
+            and address_values.get('country_id')
+        ):
+            address_values['vat'] = ResPartner.fix_eu_vat_number(
+                address_values['country_id'],
+                address_values['vat'],
+            )
+
+        if 'zipcode' in form_data and not form_data.get('zip'):
+            address_values['zip'] = form_data.pop('zipcode', '')
+
+        return address_values, extra_form_data
+
+    def _validate_address_values(
+        self,
+        address_values,
+        partner_sudo,
+        address_type,
+        use_delivery_as_billing,
+        required_fields,
+        **kwargs,
+    ):
+        """ Validate the address values and return the invalid fields, the missing fields, and any
+        error messages.
+
+        :param dict address_values: The address values to validates.
+        :param res.partner partner_sudo: The partner whose address values to validate, if any (can
+                                         be empty).
+        :param str address_type: The type of the address: 'billing' or 'delivery'.
+        :param bool use_delivery_as_billing: Whether the provided address should be used as both the billing and
+                              the delivery address.
+        :param str required_fields: The additional required address values, as a comma-separated
+                                    list of `res.partner` fields.
+        :param dict kwargs: Extra form data, available for overrides and some method calls.
+        :return: The invalid fields, the missing fields, and any error messages.
+        :rtype: tuple[set, set, list]
+        """
+        # data: values after preprocess
+        invalid_fields = set()
+        missing_fields = set()
+        error_messages = []
+
+        if partner_sudo:
+            name_change = (
+                'name' in address_values
+                and partner_sudo.name
+                and address_values['name'] != partner_sudo.name
+            )
+            email_change = (
+                'email' in address_values
+                and partner_sudo.email
+                and address_values['email'] != partner_sudo.email
+            )
+
+            # Prevent changing the partner name if documents have been issued.
+            if name_change and not partner_sudo._can_edit_name():
+                invalid_fields.add('name')
+                error_messages.append(_(
+                    "Changing your name is not allowed once document(s) have been issued for your"
+                    " account. Please contact us directly for this operation."
+                ))
+
+            # Prevent changing the partner name or email if it is an internal user.
+            if (name_change or email_change) and not all(partner_sudo.user_ids.mapped('share')):
+                if name_change:
+                    invalid_fields.add('name')
+                if email_change:
+                    invalid_fields.add('email')
+                error_messages.append(_(
+                    "If you are ordering for an external person, please place your order via the"
+                    " backend. If you wish to change your name or email address, please do so in"
+                    " the account settings or contact your administrator."
+                ))
+
+            # Prevent changing commercial fields on sub-addresses, as they are expected to match
+            # commercial partner values, and would be reset if modified on the commercial partner.
+            if not (is_commercial_address := partner_sudo == partner_sudo.commercial_partner_id):
+                for commercial_field_name in partner_sudo._commercial_fields():
+                    if (
+                        commercial_field_name in address_values
+                        and partner_sudo[commercial_field_name] != address_values[commercial_field_name]
+                        and (
+                            bool(partner_sudo[commercial_field_name])
+                            or bool(address_values[commercial_field_name])
+                        )
+                    ):
+                        invalid_fields.add(commercial_field_name)
+                        field_description = partner_sudo._fields[commercial_field_name]._description_string(request.env)
+                        if partner_sudo.commercial_partner_id.is_company:
+                            error_messages.append(_(
+                                "The %(field_name)s is managed on your company account.",
+                                field_name=field_description,
+                            ))
+                        else:
+                            error_messages.append(_(
+                                "The %(field_name)s is managed on your main account address.",
+                                field_name=field_description,
+                            ))
+                    else:
+                        address_values.pop(commercial_field_name, None)
+
+            # Prevent changing the VAT number on a commercial partner if documents have been issued.
+            elif (
+                'vat' in address_values
+                and partner_sudo.vat
+                and address_values['vat'] != partner_sudo.vat
+                and not partner_sudo.can_edit_vat()
+            ):
+                invalid_fields.add('vat')
+                error_messages.append(_(
+                    "Changing VAT number is not allowed once document(s) have been issued for your"
+                    " account. Please contact us directly for this operation."
+                ))
+        else:
+            # We're creating a new address, it'll only be the main address of public customers
+            is_commercial_address = not request.env['res.partner']._get_current_partner(**kwargs)
+
+        # Validate the email.
+        if address_values.get('email') and not single_email_re.match(address_values['email']):
+            invalid_fields.add('email')
+            error_messages.append(_("Invalid Email! Please enter a valid email address."))
+
+        # Validate the VAT number.
+        ResPartnerSudo = request.env['res.partner'].sudo()
+        if (
+            address_values.get('vat')
+            and hasattr(ResPartnerSudo, 'check_vat')  # base_vat module is installed
+            and 'vat' not in invalid_fields
+        ):
+            partner_dummy = ResPartnerSudo.new({
+                fname: address_values[fname]
+                for fname in self._get_vat_validation_fields()
+                if fname in address_values
+            })
+            try:
+                partner_dummy.check_vat()
+            except ValidationError as exception:
+                invalid_fields.add('vat')
+                error_messages.append(exception.args[0])
+
+        # Build the set of required fields from the address form's requirements.
+        required_field_set = {f for f in required_fields.split(',') if f}
+
+        # Complete the set of required fields based on the address type.
+        country_id = address_values.get('country_id')
+        country = request.env['res.country'].browse(country_id)
+        if address_type == 'delivery' or use_delivery_as_billing:
+            required_field_set |= self._get_mandatory_delivery_address_fields(country)
+        if address_type == 'billing' or use_delivery_as_billing:
+            required_field_set |= self._get_mandatory_billing_address_fields(country)
+            if not is_commercial_address:
+                commercial_fields = ResPartnerSudo._commercial_fields()
+                for fname in commercial_fields:
+                    if fname in required_field_set and fname not in address_values:
+                        required_field_set.remove(fname)
+
+        # Verify that no required field has been left empty.
+        for field_name in required_field_set:
+            if not address_values.get(field_name):
+                missing_fields.add(field_name)
+        if missing_fields:
+            error_messages.append(_("Some required fields are empty."))
+
+        return invalid_fields, missing_fields, error_messages
+
+    def _get_vat_validation_fields(self):
+        return {'country_id', 'vat'}
+
+    def _complete_address_values(
+        self, address_values, address_type, use_delivery_as_billing, **kwargs
+    ):
+        """ Complete the address values with the request's contextual values.
+
+        :param dict address_values: The address values to complete.
+        :param str address_type: The type of the address: 'billing' or 'delivery'.
+        :param bool use_delivery_as_billing: Whether the provided address should be used as both the
+                                             billing and the delivery address.
+        :params **kwargs: Other contextual values.
+        :return: None
+        """
+        address_values['lang'] = request.lang.code
+        partner = request.env['res.partner']._get_current_partner(**kwargs)
+        address_values['company_id'] = partner.company_id.id
+        commercial_partner = partner.commercial_partner_id
+        if use_delivery_as_billing:
+            address_values['type'] = 'other'
+        elif address_type == 'billing':
+            address_values['type'] = 'invoice'
+        elif address_type == 'delivery':
+            address_values['type'] = 'delivery'
+
+        # Avoid linking the address to the default archived 'Public user' partner.
+        if commercial_partner.active:
+            address_values['parent_id'] = commercial_partner.id
+
+    def _are_same_addresses(self, address_values, partner):
+        ResPartner = request.env['res.partner']
+        for key, new_val in address_values.items():
+            val = ResPartner._fields[key].convert_to_cache(partner[key], ResPartner)
+            if new_val != val and (val or new_val):
+                # Skip falsy values if unset in values and on record
+                return False
+        return True
+
+    def _handle_extra_form_data(self, extra_form_data, address_values):
+        """ Handling extra form data that were not processed on the address from.
+
+        :param dict extra_form_data: The extra form data.
+        :param dict address_values: The address value.
+        :return: None
+        """
+
+    @route(
+        '/my/address/country_info/<model("res.country"):country>',
+        type='jsonrpc',
+        auth='user',
+        methods=['POST'],
+        website=True,
+        readonly=True,
+    )
+    def portal_address_country_info(self, country, address_type, **kw):
+        address_fields = country.get_address_fields()
+        if address_type == 'billing':
+            required_fields = self._get_mandatory_billing_address_fields(country)
+        else:
+            required_fields = self._get_mandatory_delivery_address_fields(country)
+        return {
+            'fields': address_fields,
+            'zip_before_city': (
+                'zip' in address_fields
+                and address_fields.index('zip') < address_fields.index('city')
+            ),
+            'states': [(st.id, st.name, st.code) for st in country.sudo().state_ids],
+            'phone_code': country.phone_code,
+            'required_fields': list(required_fields),
+        }
+
+    @route('/my/address/archive', type='jsonrpc', auth='user', website=True, methods=['POST'])
+    def address_archive(self, partner_id):
+        address_sudo = request.env['res.partner'].sudo().browse(int(partner_id)).exists()
+        if not address_sudo or not address_sudo._can_be_edited_by_current_customer():
+            raise Forbidden()
+
+        if address_sudo == request.env.user.partner_id:
+            raise UserError(_("You cannot archive your main address"))
+
+        address_sudo.action_archive()
+
+    # Security
 
     @route('/my/security', type='http', auth='user', website=True, methods=['GET', 'POST'])
     def security(self, **post):
@@ -316,66 +893,7 @@ class CustomerPortal(Controller):
 
         return attachment_sudo.unlink()
 
-    def details_form_validate(self, data, partner_creation=False):
-        error = dict()
-        error_message = []
-
-        request.update_context(portal_form_country_id=data['country_id'])
-        partner = request.env.user.partner_id
-
-        # Validation
-        for field_name in self._get_mandatory_fields():
-            if not data.get(field_name):
-                if field_name == 'country_id' and not partner.can_edit_vat():
-                    # you cannot edit the country ID in that case so we skip the error, see the XML form for details
-                    continue
-                error[field_name] = 'missing'
-                if field_name == 'zipcode':
-                    error['zip'] = 'missing'
-
-        # email validation
-        if data.get('email') and not tools.single_email_re.match(data.get('email')):
-            error["email"] = 'error'
-            error_message.append(_('Invalid Email! Please enter a valid email address.'))
-
-        # vat validation
-        if data.get("vat") and partner and partner.vat != data.get("vat"):
-            # Check the VAT if it is the public user too.
-            if partner_creation or partner.can_edit_vat():
-                if hasattr(partner, "check_vat"):
-                    if data.get("country_id"):
-                        data["vat"] = request.env["res.partner"].fix_eu_vat_number(int(data.get("country_id")), data.get("vat"))
-                    partner_dummy = partner.new({
-                        'vat': data['vat'],
-                        'country_id': (int(data['country_id'])
-                                       if data.get('country_id') else False),
-                    })
-                    try:
-                        partner_dummy.check_vat()
-                    except ValidationError as e:
-                        error["vat"] = 'error'
-                        error_message.append(e.args[0])
-            else:
-                error_message.append(_('Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'))
-
-        # error message for empty required fields
-        if [err for err in error.values() if err == 'missing']:
-            error_message.append(_('Some required fields are empty.'))
-
-        unknown = [k for k in data if k not in self._get_mandatory_fields() + self._get_optional_fields()]
-        if unknown:
-            error['common'] = 'Unknown field'
-            error_message.append("Unknown field '%s'" % ','.join(unknown))
-
-        return error, error_message
-
-    def _get_mandatory_fields(self):
-        """ This method is there so that we can override the mandatory fields """
-        return ["name", "phone", "email", "street", "city", "country_id"]
-
-    def _get_optional_fields(self):
-        """ This method is there so that we can override the optional fields """
-        return ["street2", "zipcode", "state_id", "vat", "company_name"]
+    # Bussiness Methods
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         """Check if current user is allowed to access the specified record.

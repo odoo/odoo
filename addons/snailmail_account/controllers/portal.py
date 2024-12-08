@@ -1,11 +1,13 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import _
-from odoo.addons.portal.controllers.portal import CustomerPortal
+
+from odoo.addons.account.controllers.portal import PortalAccount as CustomerPortal
 
 
 class PortalAccount(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        # EXTENDS 'portal'
-        portal_layout_values = super()._prepare_portal_layout_values()
-        portal_layout_values['invoice_sending_methods'].update({'snailmail': _('by Post')})
-        return portal_layout_values
+    def _prepare_my_account_rendering_values(self, *args, **kwargs):
+        rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
+        rendering_values['invoice_sending_methods'].update({'snailmail': _("by Post")})
+        return rendering_values

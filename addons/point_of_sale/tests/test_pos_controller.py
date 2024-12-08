@@ -15,6 +15,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.new_partner = self.env['res.partner'].create({
             'name': 'AAA Partner',
             'zip': '12345',
+            'state_id': self.env.ref('base.state_us_1').id,
             'country_id': self.env.ref('base.us').id,
         })
         self.product1 = self.env['product.product'].create({
@@ -55,7 +56,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'city': "Test City",
             'zipcode': self.new_partner.zip,
             'country_id': self.new_partner.country_id.id,
-            'state_id': self.new_partner.state_id,
+            'state_id': self.new_partner.state_id.id,
             'phone': "123456789",
             'csrf_token': odoo.http.Request.csrf_token(self)
         }
