@@ -158,6 +158,7 @@ _map_iban_template = {
     'mu': 'MUkk BBBB BBSS CCCC CCCC CCCC CCCC CC',  # Mauritius
     'nl': 'NLkk BBBB CCCC CCCC CC',  # Netherlands
     'no': 'NOkk BBBB CCCC CCK',  # Norway
+    'om': 'OMkk BBBC CCCC CCCC CCCC CCC', # Oman
     'pk': 'PKkk BBBB CCCC CCCC CCCC CCCC',  # Pakistan
     'pl': 'PLkk BBBS SSSK CCCC CCCC CCCC CCCC',  # Poland
     'ps': 'PSkk BBBB XXXX XXXX XCCC CCCC CCCC C',  # Palestinian
