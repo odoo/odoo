@@ -10,6 +10,7 @@ class AccountMoveSend(models.AbstractModel):
     See 'account.move.send.batch.wizard' for multiple invoices sending wizard (async)
     and 'account.move.send.wizard' for single invoice sending wizard (sync).
     """
+    _name = 'account.move.send'
     _description = "Account Move Send"
 
     # -------------------------------------------------------------------------

@@ -40,6 +40,7 @@ mso_re = re.compile(r"\[if mso\]>[\s\S]*<!\[endif\]")
 
 class MailingMailing(models.Model):
     """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
+    _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread',
                 'mail.activity.mixin',

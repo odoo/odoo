@@ -12,6 +12,7 @@ from odoo.osv import expression
 
 class UtmMixin(models.AbstractModel):
     """ Mixin class for objects which can be tracked by marketing. """
+    _name = 'utm.mixin'
     _description = 'UTM Mixin'
 
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', index='btree_not_null',
