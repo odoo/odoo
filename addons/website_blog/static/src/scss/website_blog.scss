@@ -55,13 +55,8 @@ $o-wblog-loader-size: 50px;
         background-color: rgba(black, 0.005);
     }
 
-    .o_wblog_read_with_sidebar {
-        max-width: map-get($container-max-widths, md) + $o-wblog-sidebar-width;
-    }
-
     // This option class is assigned to the post's content using the "Customize"
-    // menu. The aim is to be able to write simple articles on the fly,
-    // achieving a good design without being forced to use snippets.
+    // menu. The aim is to be able to write simple articles on the fly.
     .o_wblog_read_text {
         @include font-size(18px);
         font-weight: 300;
@@ -102,12 +97,22 @@ $o-wblog-loader-size: 50px;
         a.oe_mail_expand {
             font-weight: bold;
         }
+        .breadcrumb, .o_wblog_post_tags {
+            animation: o-wblog-fade-In 0.3s cubic-bezier(.02, .01, .47, 1);
+        }
     }
 
     #o_wblog_post_comments {
+        animation: o-wblog-fade-In 0.3s cubic-bezier(.02, .01, .47, 1);
         .o_portal_chatter > hr {
             display: none;
         }
+    }
+
+    .o_container_as_first {
+        // Important needed to be applied within #o_wblog_post_content.
+        animation: none !important;
+        opacity: 0;
     }
 
     // Blog Post Page Cover
