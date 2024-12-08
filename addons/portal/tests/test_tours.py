@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.tests import tagged
+
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
 
 @tagged('post_install', '-at_install')
@@ -26,7 +26,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     def test_02_portal_load_tour_cant_edit_vat(self):
         willis = self.user_portal
-        willis.parent_id = self.user_demo.partner_id.id
         self.start_tour("/", 'portal_load_homepage', login="portal")
         self.assertEqual(willis.phone, "+1 555 666 7788")
 
