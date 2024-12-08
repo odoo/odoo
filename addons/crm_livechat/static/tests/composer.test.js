@@ -1,4 +1,6 @@
 import {
+    click,
+    contains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -21,7 +23,10 @@ test("Can execute lead command", async () => {
         return true;
     });
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/lead great lead");
+    await insertText(".o-mail-Composer-input", "/lead");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-input", { value: "/lead " });
+    await insertText(".o-mail-Composer-input", "great lead");
     await press("Enter");
     await waitForSteps([[channelId]]);
 });

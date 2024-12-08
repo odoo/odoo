@@ -430,7 +430,7 @@ export class Thread extends Record {
             "discuss.channel",
             command.methodName,
             [[this.id]],
-            { body }
+            { body, ...command.params }
         );
     }
 

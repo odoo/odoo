@@ -21,6 +21,7 @@ export class ChatBotService {
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {{
+     * bus_service: ReturnType<typeof import("@bus/services/bus_service").busService.start>,
      * "im_livechat.livechat": import("@im_livechat/embed/common/livechat_service").LivechatService,
      * "mail.store": import("@mail/core/common/store_service").Store,
      * }} services
@@ -28,6 +29,8 @@ export class ChatBotService {
     setup(env, services) {
         this.env = env;
         this.bus = new EventBus();
+        this.busService = services.bus_service;
+        this.livechatInitializedService = services["im_livechat.initialized"];
         this.livechatService = services["im_livechat.livechat"];
         this.store = services["mail.store"];
         services["mail.store"].isReady.then(async () => {
@@ -37,6 +40,13 @@ export class ChatBotService {
                 await new Promise(setTimeout);
                 this.start();
             }
+        });
+        this.livechatInitializedService.ready.then(() => {
+            this.busService.subscribe("im_livechat.bot_command", (payload) => {
+                this.store.insert(payload);
+                this.chatbot.restart();
+                this._triggerNextStep();
+            });
         });
         this.livechatService.onStateChange(SESSION_STATE.CREATED, () => {
             if (this.chatbot) {
@@ -158,7 +168,7 @@ export class ChatBotService {
 }
 
 export const chatBotService = {
-    dependencies: ["im_livechat.livechat", "mail.store"],
+    dependencies: ["bus_service", "im_livechat.initialized", "im_livechat.livechat", "mail.store"],
     start(env, services) {
         return new ChatBotService(env, services);
     },
