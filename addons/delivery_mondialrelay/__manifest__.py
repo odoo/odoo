@@ -14,6 +14,7 @@ Delivery price pre-configured is an example, you need to adapt the pricing's rul
     'depends': ['stock_delivery'],
     'data': [
         'data/data.xml',
+        'views/portal_address_templates.xml',
         'views/views.xml',
         'wizard/choose_delivery_carrier_views.xml',
     ],

@@ -118,4 +118,17 @@
         <field name="standard_price">4500.0</field>
     </record>
 
+    <function model="product.product" name="write">
+        <value model="product.product" eval="obj().search([('taxes_id', '=', False)]).ids"/>
+        <value
+            model="account.tax"
+            eval="{
+                'taxes_id': [(4, obj().search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('tax_group_id', '=', ref('account.%s_tax_group_iva_21' % ref('base.company_ri'))),
+                    ('company_id', '=', ref('base.company_ri'))
+                ]).id)]}"
+        />
+    </function>
+
 </odoo>

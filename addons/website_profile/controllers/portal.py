@@ -1,14 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.portal.controllers import portal
 from odoo.http import request
 
+from odoo.addons.portal.controllers.portal import CustomerPortal
 
-class CustomerPortal(portal.CustomerPortal):
 
-    def on_account_update(self, values, partner):
-        super().on_account_update(values, partner)
-        # Do not show "Validation Email sent" if the current user changed their email address
-        if values["email"] != partner.email:
+class CustomerPortalProfile(CustomerPortal):
+
+    def _validate_address_values(self, address_values, partner_sudo, *args, **kwargs):
+        """Overide to hide email validated button if changed on current partner."""
+        if (
+            partner_sudo == self.env.user.partner_id
+            and 'email' in address_values
+            and address_values['email'] != partner_sudo.email
+        ):
             request.session['validation_email_sent'] = False
+
+        return super()._validate_address_values(address_values, partner_sudo, *args, **kwargs)

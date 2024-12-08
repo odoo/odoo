@@ -83,7 +83,7 @@ export function fillAdressForm(
     for (const arg of ["name", "phone", "email", "street", "city", "zip"]) {
         steps.push({
             content: `Address filling ${arg}`,
-            trigger: `form.checkout_autoformat input[name=${arg}]`,
+            trigger: `form.address_autoformat input[name=${arg}]`,
             run: `edit ${adressParams[arg]}`,
         });
     }

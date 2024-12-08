@@ -180,6 +180,10 @@ $input-border-color: $gray-400;
             }
         }
     }
+
+    .o_address_kanban_card {
+        cursor: pointer;
+    }
 }
 
 #product_detail ~ .oe_structure.oe_empty > section:first-child {
@@ -482,13 +486,6 @@ $input-border-color: $gray-400;
     margin-top: $grid-gutter-width / 2;
 }
 
-.oe_cart {
-
-    > .oe_structure {
-        clear: both;
-    }
-}
-
 div#payment_method {
     div.list-group {
         margin-left: 40px;
@@ -498,10 +495,6 @@ div#payment_method {
         padding-top: 5px;
         padding-bottom: 5px;
     }
-}
-
-.js_change_address {
-    cursor: pointer;
 }
 
 a.no-decoration {
@@ -904,20 +897,6 @@ a.no-decoration {
         .col-form-label:not(.label-optional)::after {
             content: " *";
             font-weight: normal;
-        }
-    }
-
-    .all_delivery, .all_billing {
-        @include media-breakpoint-down(md) {
-            overflow-x: auto;
-
-            > div {
-                width: auto;
-            }
-        }
-
-        .o_wsale_add_address {
-            min-height: 8rem;
         }
     }
 

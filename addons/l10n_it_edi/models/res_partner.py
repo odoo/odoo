@@ -199,6 +199,12 @@ class ResPartner(models.Model):
         # extends account_edi_ubl_cii
         return super()._peppol_eas_endpoint_depends() + ['l10n_it_codice_fiscale']
 
+    def _get_frontend_writable_fields(self):
+        frontend_writable_fields = super()._get_frontend_writable_fields()
+        frontend_writable_fields.update({'l10n_it_codice_fiscale', 'l10n_it_pa_index'})
+
+        return frontend_writable_fields
+
     def _get_suggested_invoice_edi_format(self):
         # EXTENDS 'account'
         res = super()._get_suggested_invoice_edi_format()

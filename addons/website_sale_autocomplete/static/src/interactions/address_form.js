@@ -5,7 +5,7 @@ import { googlePlacesSession } from "@google_address_autocomplete/google_places_
 import { KeepLast } from "@web/core/utils/concurrency";
 
 export class AddressForm extends Interaction {
-    static selector = ".oe_cart .checkout_autoformat";
+    static selector = ".oe_cart .address_autoformat";
     static selectorHas = "input[name='street'][data-autocomplete-enabled='1']";
     dynamicContent = {
         "input[name='street']": { "t-on-input.withTarget": this.debounced(this.onStreetInput, 200) },
