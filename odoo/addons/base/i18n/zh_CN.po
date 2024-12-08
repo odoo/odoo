@@ -1191,7 +1191,8 @@ msgstr ""
 "        * 拉脱维亚银行列表\n"
 "\n"
 "        作者为 Allegro IT（如欲了解更多信息，请访问 https://www.allegro.lv）\n"
-"         合著者为 Chick.Farm（如欲了解更多信息，请访问 https://www.myacc.cloud）"
+"         合著者为 Chick.Farm（如欲了解更多信息，请访问 https://www.myacc.cloud）\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -1617,7 +1618,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    莫桑比克会计本地化"
+"    莫桑比克会计本地化\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -1733,7 +1735,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        本模块为塞尔维亚本地化基础模块，管理会计科目表和税务。"
+"        本模块为塞尔维亚本地化基础模块，管理会计科目表和税务。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph
@@ -1927,6 +1930,29 @@ msgid ""
 "        available for generating a payment on the selected invoice.\n"
 "    "
 msgstr ""
+"\n"
+"        该模块可生成符合 SEPA Direct Debit (SDD) 标准的 XML 文件（符合\n"
+"        008.001.02 规范）发送给您的银行，以便。\n"
+"        收取一组付款。\n"
+"\n"
+"        要使用这种付款方式，客户必须首先\n"
+"        向公司交回委托书，同意使用直接借记。\n"
+"        该同意书必须在 Odoo 中编码为 \"客户委托书\"。\n"
+"\n"
+"        您还需要满足以下要求，才能正确\n"
+"        生成 SDD 文件：\n"
+"        - 您的公司账户必须设置为有效的 IBAN 号码\n"
+"        - 贵公司必须已获得债权人标识符（可在 \"设置\"-\"常规设置\"-\"会计 \"部分进行设置）\n"
+"        - 贵公司必须定义了接收 SDD 付款的日记账（同样在会计模块的 \"设置 \"中定义）\n"
+"        - 生成付款的每个客户都必须有一个有效的 IBAN 账号。\n"
+"\n"
+"        如果其中任何一项要求未满足，Odoo 会通知您。\n"
+"\n"
+"        要为未结发票登记付款，您可以使用专用的\n"
+"         \"SEPA 直接借记 \"选项在 \"注册付款 \"向导中\n"
+"        选择银行账户。如果没有有效授权，为所选发票生成付款时\n"
+"        则会出现错误信息。\n"
+"    "
 
 #. module: base
 msgid ""
@@ -2116,7 +2142,8 @@ msgid ""
 msgstr ""
 "\n"
 "        本模块支持为\n"
-"        合作伙伴定义两个标识符：一个用于客户，一个用于供应商，用于DateV导出"
+"        合作伙伴定义两个标识符：一个用于客户，一个用于供应商，用于DateV导出\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -2393,7 +2420,8 @@ msgstr ""
 "    立陶宛SAF-T是标准文件格式，使用XML格式导出各种会计事务数据。\n"
 "    使用的XSD版本为2.01版本（始于2019年），立陶宛当局使用的最新版本。\n"
 "    SAF-T财务的首个版本仅限于总账级别，包括客户和供应商交易。\n"
-"    还包括必要的主数据。"
+"    还包括必要的主数据。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -2534,7 +2562,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"一些卢森堡公共机构没有增值税号，而是被分配了一个任意的编号（请参阅：https://pch.gouvernement.lu/fr/peppol.html）。因此，该模块在account.move表单视图上添加了Peppol标识字段。如果设置了此字段，然后在导出电子结算单格式时会读取该字段。"
+"    一些卢森堡公共机构没有增值税号，而是被分配了一个任意的编号\n"
+"    （请参阅：https://pch.gouvernement.lu/fr/peppol.html）。因此，该模块在account.move表单视图上\n"
+"    添加了Peppol标识字段。如果设置了此字段，然后在导出电子结算单格式时会读取该字段。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock
@@ -5434,7 +5465,8 @@ msgstr ""
 "人力资源线上学习和技能\n"
 "============================\n"
 "\n"
-"本模块用于为员工简历添加已完成课程。"
+"本模块用于为员工简历添加已完成课程。\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_40
@@ -6847,7 +6879,8 @@ msgstr ""
 "=========================\n"
 "本模块用于向UPI付款发票报告中添加二维码，允许通过任何UPI应用程序进行付款。\n"
 "\n"
-"要打印UPI二维码，在公司中添加UPI ID，并在配置中勾选“二维码”"
+"要打印UPI二维码，在公司中添加UPI ID，并在配置中勾选“二维码”\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -8828,7 +8861,8 @@ msgstr ""
 "人力资源技能和简历\n"
 "========================\n"
 "\n"
-"本模块用于介绍员工技能和简历管理。"
+"本模块用于介绍员工技能和简历管理。\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sk
@@ -9458,7 +9492,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"管理爱沙尼亚会计图表的 Odoo 基础模块。"
+"管理爱沙尼亚会计图表的 Odoo 基础模块。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -11267,7 +11302,8 @@ msgstr ""
 "\n"
 "WMS会计模块\n"
 "======================\n"
-"本模块添加价差账户，用于标准永久估价。"
+"本模块添加价差账户，用于标准永久估价。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -11399,7 +11435,8 @@ msgstr ""
 "    均按序号排序，因此，请注意税费配置中的\n"
 "    税费排序。\n"
 "\n"
-"    安装本模块时，应更新意大利会计模块（l10n_it）。"
+"    安装本模块时，应更新意大利会计模块（l10n_it）。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -34504,7 +34541,8 @@ msgstr "这个筛选应用的菜单动作. 如果留空，筛选将应用于这�
 msgid ""
 "The method _button_immediate_install cannot be called on init or non loaded "
 "registries. Please use button_install instead."
-msgstr "init或未加载注册表中无法调用method _button_immediate_install。请使用button_install。"
+msgstr ""
+"无法在初始注册表或未加载的注册表上调用 _button_immediate_install 方法。请使用 button_install 代替。"
 
 #. module: base
 #. odoo-python
