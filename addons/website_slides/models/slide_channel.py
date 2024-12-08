@@ -9,7 +9,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, Command, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
@@ -744,6 +744,14 @@ class Channel(models.Model):
                 vals['name'] = f"{channel.name} ({_('copy')})"
             if 'enroll' not in default and channel.visibility == "members":
                 vals['enroll'] = 'invite'
+            # Preserve slide sequence when copying a channel
+            if 'slide_ids' in vals:
+                slides = channel.slide_ids.sorted(key=lambda s: s.sequence or float('inf'))
+                vals['slide_ids'] = [
+                    Command.create(dict(data, sequence=slide.sequence))
+                    for slide, data in zip(slides, slides.copy_data())
+                    if data
+                ]
         return vals_list
 
     def write(self, vals):
