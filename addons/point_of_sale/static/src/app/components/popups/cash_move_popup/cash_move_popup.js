@@ -87,4 +87,7 @@ export class CashMovePopup extends Component {
     _prepareTryCashInOutPayload(type, amount, reason, extras) {
         return [[this.pos.session.id], type, amount, reason, extras];
     }
+    isValidCashMove() {
+        return this.env.utils.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
+    }
 }
