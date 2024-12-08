@@ -48,6 +48,7 @@ class Forum(models.Model):
     faq = fields.Html('Guidelines', translate=html_translate, sanitize=True, sanitize_overridable=True)
     description = fields.Text('Description', translate=True)
     teaser = fields.Text('Teaser', compute='_compute_teaser', store=True)
+    teaser_non_stored = fields.Text('Teaser Non Stored', compute='_compute_teaser_non_stored')
     welcome_message = fields.Html(
         'Welcome Message',
         translate=True,
@@ -142,14 +143,19 @@ class Forum(models.Model):
     @api.depends('description')
     def _compute_teaser(self):
         for forum in self:
-            if forum.description:
-                desc = forum.description.replace('\n', ' ')
-                if len(forum.description) > 180:
-                    forum.teaser = desc[:180] + '...'
-                else:
-                    forum.teaser = forum.description
-            else:
-                forum.teaser = ""
+            forum.teaser = forum._generate_teaser()
+
+    @api.depends_context('lang')
+    @api.depends('description')
+    def _compute_teaser_non_stored(self):
+        for forum in self:
+            forum.teaser_non_stored = forum._generate_teaser()
+
+    def _generate_teaser(self):
+        if self.description:
+            desc = self.description.replace('\n', ' ')
+            return desc[:180] + '...' if len(desc) > 180 else desc
+        return ""
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
