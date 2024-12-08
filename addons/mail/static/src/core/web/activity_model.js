@@ -140,6 +140,10 @@ export class Activity extends Record {
         return formatDate(this.date_deadline);
     }
 
+    get dateDeadlineMED() {
+        return this.date_deadline.toLocaleString(luxon.DateTime.DATE_MED);
+    }
+
     get dateDoneFormatted() {
         return formatDate(this.date_done);
     }

@@ -60,6 +60,14 @@ export class Activity extends Component {
         this.state.showDetails = !this.state.showDetails;
     }
 
+    getActivityIconAttClass() {
+        return {
+            "text-bg-success": this.props.activity.state === "planned",
+            "text-bg-warning": this.props.activity.state === "today",
+            "text-bg-danger": this.props.activity.state === "overdue",
+        };
+    }
+
     async onClickMarkAsDone(ev) {
         if (this.markDonePopover.isOpen) {
             this.markDonePopover.close();
