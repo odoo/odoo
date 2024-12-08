@@ -148,6 +148,14 @@ export class SuggestionService {
             partners = thread.channelMembers
                 .map((member) => member.persona)
                 .filter((persona) => persona.type === "partner");
+            if (thread.channel_type === "channel") {
+                partners = new Set([
+                    ...partners,
+                    ...Object.values(this.store.Persona.records).filter(
+                        ({ group_id }) => group_id && group_id === thread.authorizedGroupId
+                    ),
+                ]);
+            }
         } else {
             partners = Object.values(this.store.Persona.records).filter((persona) => {
                 if (thread?.model !== "discuss.channel" && persona.eq(this.store.odoobot)) {
