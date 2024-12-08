@@ -42,16 +42,7 @@
                 </FileUploader>
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
                 <div class="o-mail-Followers d-flex me-1">
-                    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown d-flex flex-column'" state="followerListDropdown">
-                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (props.compactHeight ? '' : 'my-2')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
-                            <i class="fa fa-user-o me-1" role="img"/>
-                            <i t-if="state.thread.id and state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
-                            <sup t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
-                        </button>
-                        <t t-set-slot="content">
-                            <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread" dropdown="followerListDropdown"/>
-                        </t>
-                    </Dropdown>
+                    <FollowerListDropDown onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread"/>
                 </div>
                 <button t-if="state.thread.selfFollower" class="btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover, 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickUnfollow" t-ref="unfollow">
                     <div class="position-relative">
