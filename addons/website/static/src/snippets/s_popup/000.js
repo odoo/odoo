@@ -367,7 +367,7 @@ publicWidget.registry.noBackdropPopup = noBackdropPopupWidget;
 // Extending the popup widget with cookiebar functionality.
 // This allows for refusing optional cookies for now and can be
 // extended to picking which cookies categories are accepted.
-publicWidget.registry.cookies_bar = PopupWidget.extend({
+const CookiesBar = PopupWidget.extend({
     selector: '#website_cookies_bar',
     events: Object.assign({}, PopupWidget.prototype.events, {
         'click #cookies-consent-essential, #cookies-consent-all': '_onAcceptClick',
@@ -481,5 +481,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         setUtmsHtmlDataset();
     }
 });
+
+publicWidget.registry.cookiesBar = CookiesBar;
 
 export default PopupWidget;

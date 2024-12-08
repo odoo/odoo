@@ -71,13 +71,17 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 window.location.href = Object.keys(self.comparelist_product_ids || {}).length === 0 ? '/shop' : newLink;
             });
         });
-
+        const cookieModalDialogEl = document.querySelector("#website_cookies_bar .s_popup_bottom");
+        if (cookieModalDialogEl) {
+            this._setObserver(cookieModalDialogEl);
+        }
         return this._super.apply(this, arguments);
     },
     /**
      * @override
      */
     destroy: function () {
+        this.observer?.disconnect();
         this._super.apply(this, arguments);
         $(document.body).off('.product_comparaison_widget');
     },
@@ -91,6 +95,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      */
     handleCompareAddition: function ($elem) {
         var self = this;
+        this._checkCookieModalDialog()
         if (this.comparelist_product_ids.length < this.product_compare_limit) {
             var productId = $elem.data('product-product-id');
             if ($elem.hasClass('o_add_compare_dyn')) {
@@ -112,6 +117,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 if (!productId) {
                     return;
                 }
+                // To display the hidden popover behind the model
+                self.el.classList.remove("o_bottom_fixed_element_hidden");
                 self._addNewProducts(productId).then(function () {
                     website_sale_utils.animateClone(
                         $('#comparelist .o_product_panel_header'),
@@ -123,6 +130,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             });
         } else {
             this.$('.o_comparelist_limit_warning').show();
+            this.el.classList.remove("o_bottom_fixed_element_hidden");
             $('#comparelist .o_product_panel_header').popover('show');
         }
     },
@@ -131,6 +139,59 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * 
+     * Resolved the issue where the compare button was hidden due to the modal
+     * appearing over it. Added CSS `--move-cookie-over-modal` to dynamically adjust
+     * the position of elements based on modal changes.
+     */
+    _checkCookieModalDialog() {
+        const popoverBottomFixedEl = document.querySelector("#website_cookies_bar .s_popup_bottom");
+        if (!popoverBottomFixedEl) {
+            return;
+        }
+
+        const cookieModalDialogEl = popoverBottomFixedEl.querySelector(".modal-dialog");
+        const isNoBackdrop = popoverBottomFixedEl.classList.contains("s_popup_no_backdrop");
+        const isBottomCookie =
+	            popoverBottomFixedEl.classList.contains("o_cookies_classic")
+	            || popoverBottomFixedEl.classList.contains("o_cookies_discrete");
+        const isCookiebarLarge = cookieModalDialogEl.classList.contains("s_popup_size_full");
+
+        if (isNoBackdrop && isBottomCookie && isCookiebarLarge) {
+            const bottom = cookieModalDialogEl.querySelector(".modal-content").offsetHeight
+                ? `${cookieModalDialogEl.querySelector(".modal-content").offsetHeight}px`
+                : "";
+            this.el?.style.setProperty("--move-cookie-over-modal", bottom);
+        }
+    },
+    /**
+     * @private
+     * 
+     * We set an observer on the modal because, upon reload, the modal initially has
+     * the class d-none. It then changes to block, but during that initial period,
+     * the modal is not accessible. By adding an observer, we can call the
+     * _checkCookieModalDialog function for every state change, ensuring proper
+     * functionality.
+     */
+    _setObserver: function (element) {
+        this.observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === "attributes" && mutation.attributeName === "style") {
+                    const displayStyle = window.getComputedStyle(element).display;
+                    if (displayStyle === "block") {
+                        this._checkCookieModalDialog();
+                    }
+                }
+            });
+        });
+        const config = {
+            attributes: true,
+            attributeFilter: ["style"],
+        };
+        this.observer.observe(element, config);
+    },
     /**
      * @private
      */
@@ -169,11 +230,10 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     _addNewProductsImpl: function (product_id) {
         var self = this;
         $('.o_product_feature_panel').addClass('d-md-block');
+        this._updateContent();
         if (!self.comparelist_product_ids.includes(product_id)) {
             self.comparelist_product_ids.push(product_id);
-            if (Object.prototype.hasOwnProperty.call(self.product_data, product_id)) {
-                self._updateContent();
-            } else {
+            if (!Object.prototype.hasOwnProperty.call(this.product_data, product_id)) {
                 return self._loadProducts([product_id]).then(function () {
                     self._updateContent();
                     self._updateCookie();
