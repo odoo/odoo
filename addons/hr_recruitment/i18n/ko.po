@@ -614,14 +614,6 @@ msgid ""
 msgstr "이 별칭에 대한 새 레코드를 만들 때 기본값을 제공하도록 평가되는 Python 사전입니다."
 
 #. module: hr_recruitment
-#. odoo-python
-#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
-msgid ""
-"At least one applicant doesn't have a email; you can't use send email "
-"option."
-msgstr "한 명 이상의 신청자에 대한 이메일이 누락되어 이메일 보내기 옵션을 사용할 수 없습니다."
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__message_needaction
 msgid "Action Needed"
@@ -946,6 +938,14 @@ msgstr "이 채용 공고를 보관하시겠습니까?"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
 msgid "Assigned"
 msgstr "배정됨"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
+msgid ""
+"At least one applicant doesn't have a email; you can't use send email "
+"option."
+msgstr "한 명 이상의 신청자에 대한 이메일이 누락되어 이메일 보내기 옵션을 사용할 수 없습니다."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3602,6 +3602,13 @@ msgid ""
 msgstr ""
 "이메일 보내기 옵션은 선택할 수 없습니다.\n"
 "다음 지원자는 이메일 주소가 없기 때문에 이메일이 전송되지 않습니다."
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid ""
+"You cannot create an applicant in a different company than the candidate"
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
