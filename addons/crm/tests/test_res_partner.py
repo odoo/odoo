@@ -69,3 +69,30 @@ class TestPartner(TestCrmCommon):
         partner_form.name = 'Mom Corp'
         self.assertFalse(partner_form.team_id)
         self.assertFalse(partner_form.user_id)
+
+    def test_contact_calendar(self):
+
+        context = {
+            "active_model": "res.partner",
+            "active_id": self.contact_1.id,
+        }
+
+        event = self.env["calendar.event"].with_context(context).create([
+            {
+                "name": "Simulates flow: partner's calendar -> open quickcreate -> Save",
+                "allday": False,
+                "start": "2024-10-24 13:45:00",
+                "stop": "2024-10-24 15:45:00",
+            }
+        ])
+        self.assertEqual(event.res_id, self.contact_1.id, "Partner not linked to the event with res_id")
+
+        event2 = self.env["calendar.event"].with_context(context).create([
+            {
+                "res_id": 0,
+                "name": "Simulates flow: partner's calendar -> open quickcreate -> Edit -> Save",
+                "start": "2024-10-24 16:45:00",
+                "stop": "2024-10-24 18:45:00",
+            }
+        ])
+        self.assertEqual(event2.res_id, self.contact_1.id, "Partner not linked to the event with res_id (default res_id not used)")
