@@ -3,29 +3,16 @@
 """ Modules dependency graph. """
 from __future__ import annotations
 
-import functools
 import itertools
-import logging
 import typing
 
 import odoo.tools as tools
 
-from .module import get_manifest
+from odoo.modules.module import get_manifest
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
     from odoo.sql_db import BaseCursor
-
-_logger = logging.getLogger(__name__)
-
-
-@functools.lru_cache(maxsize=1)
-def _ignored_modules(cr: BaseCursor) -> list[str]:
-    result = ['studio_customization']
-    if tools.sql.column_exists(cr, 'ir_module_module', 'imported'):
-        cr.execute('SELECT name FROM ir_module_module WHERE imported')
-        result += [m[0] for m in cr.fetchall()]
-    return result
 
 
 class Graph(dict[str, 'Node']):
@@ -78,8 +65,6 @@ class Graph(dict[str, 'Node']):
             info = get_manifest(module)
             if info and info['installable']:
                 packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
-            elif module not in _ignored_modules(cr):
-                _logger.warning('module %s: not installable, skipped', module)
 
         dependencies = {p: info['depends'] for p, info in packages}
         current: set[str] = {p for p, _info in packages}
@@ -96,10 +81,7 @@ class Graph(dict[str, 'Node']):
                     continue
                 later.clear()
                 current.remove(package)
-                node = self.add_node(package, info)
-                for kind in ('init', 'demo', 'update'):
-                    if package in tools.config[kind] or 'all' in tools.config[kind] or kind in force:
-                        setattr(node, kind, True)
+                self.add_node(package, info)
             else:
                 later.add(package)
                 packages.append((package, info))
@@ -109,7 +91,6 @@ class Graph(dict[str, 'Node']):
 
         for package in later:
             unmet_deps = [p for p in dependencies[package] if p not in self]
-            _logger.info('module %s: Unmet dependencies: %s', package, ', '.join(unmet_deps))
 
         return len(self) - len_graph
 
@@ -175,7 +156,6 @@ class Node:
     def __setattr__(self, name, value):
         super().__setattr__(name, value)
         if name in ('init', 'update', 'demo'):
-            tools.config[name][self.name] = 1
             for child in self.children:
                 setattr(child, name, value)
         if name == 'depth':
