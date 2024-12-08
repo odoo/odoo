@@ -3,11 +3,23 @@
 import logging
 import re
 import time
+<<<<<<< master
+||||||| 2971ac46cf5cf751c33cba3e1768f35a53654b02
+=======
+
+from collections import defaultdict
+>>>>>>> c72f25456c86f817fb750f19dd9dc9f865ac8d7b
 
 from collections import defaultdict
 
 from odoo import _, api, fields, models
+<<<<<<< master
 from odoo.exceptions import LockError, UserError, ValidationError
+||||||| 2971ac46cf5cf751c33cba3e1768f35a53654b02
+from odoo import api, fields, models, _
+=======
+from odoo.exceptions import UserError, ValidationError
+>>>>>>> c72f25456c86f817fb750f19dd9dc9f865ac8d7b
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, SQL, mute_logger, unique
 

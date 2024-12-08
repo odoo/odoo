@@ -874,6 +874,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             ),
             'only_services': order_sudo.only_services,
+<<<<<<< master
+||||||| 2971ac46cf5cf751c33cba3e1768f35a53654b02
+            'json_pickup_location_data': json.dumps(order_sudo.pickup_location_data or {}),
+=======
+            'json_pickup_location_data': json.dumps(order_sudo.pickup_location_data or {}),
+>>>>>>> c72f25456c86f817fb750f19dd9dc9f865ac8d7b
             **self._prepare_address_data(partner_sudo, **kwargs),
             'address_url': '/shop/address',
         }
@@ -1015,8 +1021,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
         is_new_address = not partner_sudo
         is_extra_step_active = request.website.viewref('website_sale.extra_info').active
         if is_extra_step_active:
+<<<<<<< master
             callback = callback or 'shop/extra_info'
         if is_new_address or order_sudo.only_services:
+||||||| 2971ac46cf5cf751c33cba3e1768f35a53654b02
+        # Parse form data into address values, and extract incompatible data as extra form data.
+        address_values, extra_form_data = self._parse_form_data(form_data)
+=======
+            callback = callback or '/shop/extra_info'
+        elif is_new_address or order_sudo.only_services:
+>>>>>>> c72f25456c86f817fb750f19dd9dc9f865ac8d7b
             callback = callback or '/shop/checkout?try_skip_step=true'
         else:
             callback = callback or '/shop/checkout'
