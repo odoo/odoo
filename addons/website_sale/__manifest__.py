@@ -88,7 +88,6 @@
 
             'website_sale/static/src/scss/product_configurator.scss',
 
-            'website_sale/static/src/js/address.js',
             'website_sale/static/src/js/cart.js',
             'website_sale/static/src/js/checkout.js',
             'website_sale/static/src/js/payment_button.js',
