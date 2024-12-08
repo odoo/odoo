@@ -385,7 +385,11 @@ class MailTemplate(models.Model):
                         email_to_company[mail] = record_company
 
             if all_emails:
-                customers_information = ModelSudo.browse(res_ids)._get_customer_information()
+                if hasattr(ModelSudo, '_get_customer_information'):
+                    customers_information = ModelSudo.browse(res_ids)._get_customer_information()
+                else:
+                    customers_information = {}
+
                 partners = self.env['res.partner']._find_or_create_from_emails(
                     all_emails,
                     additional_values={
