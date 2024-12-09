@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from pytz import UTC
 
 from odoo import models, fields, _
 from odoo.http import request
@@ -61,3 +62,36 @@ class ProductProduct(models.Model):
                 mail = self_ctxt.env['mail.mail'].sudo().create(mail_values)
                 mail.send(raise_exception=False)
                 product.stock_notification_partner_ids -= partner
+
+    def _get_replenishment_domain(self):
+        self.ensure_one()
+        return [
+            ('product_id', '=', self.id),
+            ('state', 'not in', ('draft', 'canceled', 'done')),
+            ('location_dest_usage', '=', 'customer'),
+        ]
+
+    def _get_gmc_values(self):
+        dict_vals = super()._get_gmc_values()
+        moves_sudo = self.env['stock.move'].sudo()
+        for product, vals in dict_vals.items():
+            if product._is_sold_out():
+                if not product.allow_out_of_stock_order:
+                    vals['availability'] = 'out_of_stock'
+                else:
+                    moves = moves_sudo.search(product._get_replenishment_domain())
+                    availability_date = max(
+                        (
+                            move.forecast_expected_date
+                            for move in moves
+                            if move.forecast_expected_date
+                        ),
+                        default=False,
+                    )
+                    if availability_date:
+                        vals['availability'] = 'backorder'
+                        vals['availability_date'] = (
+                            UTC.localize(availability_date)
+                            .isoformat(timespec='minutes')
+                        )
+        return dict_vals

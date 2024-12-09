@@ -140,6 +140,11 @@ class Website(models.Model):
         default="Not Available For Sale",
     )
 
+    enabled_gmc_src = fields.Boolean(
+        string="Google Merchant Center Data Source",
+        default=False,
+    )
+
     # Computed fields
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
@@ -322,6 +327,10 @@ class Website(models.Model):
         """
         :returns: The current pricelist record
         """
+
+        if request and 'forced_pricelist' in request.context:
+            return request.context['forced_pricelist']
+
         self = self.with_company(self.company_id)
         ProductPricelist = self.env['product.pricelist']
 

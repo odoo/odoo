@@ -680,7 +680,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/change_pricelist/<model("product.pricelist"):pricelist>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
-        redirect_url = request.httprequest.referrer
+        redirect_url = request.httprequest.referrer or post.get('r')
         if (
             website.is_pricelist_available(pricelist.id)
             and (
@@ -2214,3 +2214,57 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'currency_id': website.currency_id.id,
             'pricelist_id': website.pricelist_id.id,
         })
+
+    @route([
+        '/gmc.xml',
+        '/gmc-<pricelist_name_ilike>.xml'
+    ], type='http', auth='public', website=True, sitemap=False)
+    def products_xml_index(self, pricelist_name_ilike=None):
+        if not request.website.enabled_gmc_src:
+            return NotFound()
+        domain = request.website.domain
+        if not domain:
+            raise ValidationError(_(
+                "No domain set for this website. Please consider adding a domain name for your "
+                "website in the settings."
+            ))
+        if pricelist_name_ilike is not None:
+            pricelist = request.env['product.pricelist'].search([
+                    ('active', '=', True),
+                    ('name', 'ilike', pricelist_name_ilike),
+                    '|',
+                    ('website_id', '=', request.website.id),
+                    ('website_id', '=', False),
+                ],
+                limit=1,
+            )
+            if not pricelist:
+                return NotFound()
+            request.update_context(forced_pricelist=pricelist)
+
+        View = request.env['ir.ui.view'].sudo()
+        mimetype = 'application/xml;charset=utf-8'
+        products = request.env['product.product'].search([
+            ('is_published', '=', True),
+            ('type', 'in', ('consu', 'combo')),
+            '|',
+            ('website_id', '=', request.website.id),
+            ('website_id', '=', False),
+        ])
+        website_homepage = request.env['website.page'].sudo().search([
+                ('website_id', '=', request.website.id),
+                ('url', '=', request.website.homepage_url or '/'),
+            ],
+            limit=1,
+        )
+        seo = website_homepage.get_website_meta().get('opengraph_meta', {})
+
+        vals = {
+            'title': seo.get('og:title', request.website.name),
+            'link': f"{domain.rstrip('/')}/{request.lang.url_code}",
+            'description': seo.get('og:description', ""),
+            'items': products._get_gmc_values(),
+        }
+
+        content = View._render_template('website_sale.gmc_xml', vals)
+        return request.make_response(content, [('Content-Type', mimetype)])
