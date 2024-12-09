@@ -39,6 +39,8 @@ class BackgroundVideo extends Interaction {
         this.hideVideoContainer = false;
         this.videoSrc = this.el.dataset.bgVideoSrc;
         this.iframeID = uniqueId("o_bg_video_iframe_");
+        this.iframeEl = null;
+        this.bgVideoContainer = null;
     }
 
     start() {
@@ -79,15 +81,15 @@ class BackgroundVideo extends Interaction {
     appendBgVideo() {
         const allowedCookies = !this.el.dataset.needCookiesApproval;
 
-        const oldContainer = this.bgVideoContainer || this.querySelector(":scope > .o_bg_video_container");
+        const oldContainer = this.bgVideoContainer || this.el.querySelector(":scope > .o_bg_video_container");
         this.bgVideoContainer = renderToElement("website.background.video", {
             videoSrc: allowedCookies ? this.videoSrc : "about:blank",
             iframeID: this.iframeID,
         });
 
         this.iframeEl = this.bgVideoContainer.querySelector(".o_bg_video_iframe");
-        this.addListener(this.iframe, "load", () => {
-            this.bgVideoContainer.find(".o_bg_video_loading").remove();
+        this.addListener(this.iframeEl, "load", () => {
+            this.bgVideoContainer.querySelector(".o_bg_video_loading")?.remove();
             // When there is a "slide in (left or right) animation" element, we
             // need to adjust the iframe size once it has been loaded, otherwise
             // an horizontal scrollbar may appear.
