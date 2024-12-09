@@ -3,7 +3,9 @@
 
 import logging
 
+from datetime import datetime, timedelta
 from freezegun import freeze_time
+from json import loads
 
 from odoo import Command
 from odoo.exceptions import UserError
@@ -901,3 +903,42 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_picking = self.env['stock.picking'].browse(return_picking_id)
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
+
+    def test_global_visibility_days_affect_lead_time(self):
+        """ Don't count global visibility days more than once, make sure a PO generated from
+        replenishment/orderpoint has a sensible planned reception date.
+        """
+        wh = self.env.user._get_default_warehouse_id()
+        self.env['ir.config_parameter'].sudo().set_param('stock.visibility_days', '365')
+        self.finished2.seller_ids = [Command.create({
+            'partner_id': self.subcontractor_partner1.id,
+            'delay': 0,
+        })]
+        final_product = self.finished2
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({'product_id': final_product.id})
+        out_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': wh.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'move_ids': [Command.create({
+                'name': 'TGVDALT out move',
+                'product_id': final_product.id,
+                'product_uom_qty': 2,
+                'location_id': wh.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })],
+        })
+        out_picking.action_assign()
+        r = orderpoint.action_stock_replenishment_info()
+        repl_info = self.env[r['res_model']].browse(r['res_id'])
+        lead_days_date = datetime.strptime(
+            loads(repl_info.json_lead_days)['lead_days_date'],'%m/%d/%Y').date()
+        self.assertEqual(lead_days_date, Date.today() + timedelta(days=365))
+
+        orderpoint.action_replenish()
+        purchase_order = self.env['purchase.order'].search([
+            ('order_line', 'any', [
+                ('product_id', '=', self.finished2.id),
+            ]),
+        ], limit=1)
+        self.assertEqual(purchase_order.date_planned.date(), Date.today())
