@@ -62,7 +62,7 @@ class ConnectionManager(Thread):
         # Save DB URL and token
         helpers.save_conf_server(url, token, db_uuid, enterprise_code)
         # Notify the DB, so that the kanban view already shows the IoT Box
-        manager.send_alldevices()
+        manager.send_all_devices()
         # Restart to checkout the git branch, get a certificate, load the IoT handlers...
         helpers.odoo_restart(2)
 
