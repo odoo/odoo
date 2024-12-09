@@ -1,9 +1,10 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { Component, onWillStart, xml } from "@odoo/owl";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 import { defaultOptionComponents } from "../../src/builder/components/defaultComponents";
+import { OptionsContainer } from "../../src/builder/components/OptionsContainer";
 
 defineWebsiteModels();
 
@@ -221,4 +222,93 @@ test("display empty message if any option container is visible", async () => {
     await contains(":iframe .parent-target > div").click();
     await animationFrame();
     expect(".o_customize_tab").toHaveText("Select a block on your page to style it.");
+});
+test("hide/display option base on selector", async () => {
+    addOption({
+        selector: ".parent-target",
+        template: xml`<WeRow label="'Row 1'">
+            <WeButton classAction="'my-custom-class'"/>
+        </WeRow>`,
+    });
+    addOption({
+        selector: ".my-custom-class",
+        template: xml`<WeRow label="'Row 2'">
+            <WeButton classAction="'test'"/>
+        </WeRow>`,
+    });
+
+    await setupWebsiteBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
+    await contains(":iframe .parent-target").click();
+    expect("[data-class-action='test']").not.toBeDisplayed();
+
+    await contains("[data-class-action='my-custom-class']").click();
+    expect("[data-class-action='test']").toBeDisplayed();
+});
+
+test("hide/display option container base on selector", async () => {
+    addOption({
+        selector: ".parent-target",
+        template: xml`<WeRow label="'Row 1'">
+            <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+        </WeRow>`,
+    });
+    addOption({
+        selector: ".my-custom-class",
+        template: xml`<WeRow label="'Row 2'">
+            <WeButton classAction="'test'"/>
+        </WeRow>`,
+    });
+
+    addOption({
+        selector: ".sub-child-target",
+        template: xml`<WeRow label="'Row 3'">
+            <WeButton classAction="'another-custom-class'"/>
+        </WeRow>`,
+    });
+
+    await setupWebsiteBuilder(`
+        <div class="parent-target">
+            <div class="child-target">
+                <div class="sub-child-target">b</div>
+            </div>
+        </div>`);
+    await contains(":iframe .sub-child-target").click();
+    expect("[data-class-action='test']").not.toBeDisplayed();
+    const selectorRowLabel = ".options-container .hb-row:not(.d-none) > div:nth-child(1)";
+    expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 3"]);
+
+    await contains("[data-class-action='my-custom-class']").click();
+    expect("[data-class-action='test']").toBeDisplayed();
+    expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 2", "Row 3"]);
+});
+
+test("don't rerender the OptionsContainer every time you click on the same element", async () => {
+    addOption({
+        selector: ".parent-target",
+        template: xml`<WeRow label="'Row 1'">
+            <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+        </WeRow>`,
+    });
+
+    patchWithCleanup(OptionsContainer.prototype, {
+        setup() {
+            super.setup();
+            onWillStart(() => {
+                expect.step("onWillStart");
+            });
+        },
+    });
+
+    await setupWebsiteBuilder(`
+        <div class="parent-target">
+            <div class="child-target">
+                <div class="sub-child-target">b</div>
+            </div>
+        </div>`);
+    await contains(":iframe .sub-child-target").click();
+    expect("[data-class-action='test']").not.toBeDisplayed();
+    expect.verifySteps(["onWillStart"]);
+
+    await contains(":iframe .sub-child-target").click();
+    expect.verifySteps([]);
 });
