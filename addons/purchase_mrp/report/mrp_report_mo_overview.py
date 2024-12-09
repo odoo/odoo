@@ -9,10 +9,15 @@ class ReportMoOverview(models.AbstractModel):
     def _get_extra_replenishments(self, product):
         res = super()._get_extra_replenishments(product)
         domain = [('state', 'in', ['draft', 'sent', 'to approve']), ('product_id', '=', product.id)]
+<<<<<<< saas-17.4
         warehouse_id = self.env.context.get('warehouse_id', False)
+||||||| 562e053de5b0265d255df49d6f20140247d76740
+        warehouse_id = self.env.context.get('warehouse', False)
+=======
+        warehouse_id = self.env['stock.warehouse']._get_warehouse_id_from_context()
+>>>>>>> f2b65aa9a8ca39dc5b12a2c9e6681a05a23aa131
         if warehouse_id:
-            warehouse_id = warehouse_id if isinstance(warehouse_id, list) else [warehouse_id]
-            domain += [('order_id.picking_type_id.warehouse_id', 'in', warehouse_id)]
+            domain += [('order_id.picking_type_id.warehouse_id', '=', warehouse_id)]
         po_lines = self.env['purchase.order.line'].search(domain, order='date_planned, id')
 
         for po_line in po_lines:
