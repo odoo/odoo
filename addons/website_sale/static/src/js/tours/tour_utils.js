@@ -44,7 +44,7 @@ export function assertCartAmounts({taxes = false, untaxed = false, total = false
 }
 
 export function assertCartContains({productName, backend, notContains = false} = {}) {
-    let trigger = `a:contains(${productName})`;
+    let trigger = `h6:contains(${productName})`;
 
     if (notContains) {
         trigger = `:not(${trigger})`;

@@ -175,13 +175,13 @@
         </xpath>
     </template>
 
-    <template id="cart_line_product_no_link" inherit_id="website_sale.cart_line_product_link">
-        <xpath expr="//a" position="replace">
-            <t t-if="line.is_reward_line">
-                <strong t-field="line.name"/>
-                <t t-call="sale_loyalty.used_gift_card"/>
-            </t>
+    <template id="cart_line_product_no_link" inherit_id="website_sale.cart_lines">
+        <xpath expr="//h6[@t-field='line.name_short']" position="replace">
+            <h6 t-if="line.is_reward_line" class="d-inline align-top fw-bold text-wrap small" t-field="line.name"/>
             <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//div[@name='o_wsale_cart_line_button_container']" position="before">
+            <t t-if="line.is_reward_line" t-call="sale_loyalty.used_gift_card"/>
         </xpath>
     </template>
 

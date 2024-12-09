@@ -382,12 +382,10 @@ class SaleOrderLine(models.Model):
             + self._get_sale_order_line_multiline_description_variants()
         )
         if self.linked_line_id and not self.combo_item_id:
-            description += "\n" + _("Option for: %s", self.linked_line_id.product_id.display_name)
-        if self.linked_line_ids and self.product_type != 'combo':
-            description += "\n" + "\n".join([
-                _("Option: %s", linked_line.product_id.display_name)
-                for linked_line in self.linked_line_ids
-            ])
+            description += "\n" + _(
+                "Option for: %s",
+                self.linked_line_id.product_id.with_context(display_default_code=False).display_name
+            )
         return description
 
     def _get_sale_order_line_multiline_description_variants(self):
@@ -1370,9 +1368,15 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return False
 
-    def _is_not_sellable_line(self):
-        # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
-        return False
+    def _is_sellable(self):
+        """ Check if a line is sellable or not.
+
+        A line is not sellable if the product is unpublished.
+
+        :return: Whether the line is sellable or not.
+        :rtype: bool
+        """
+        return self.product_id.is_published
 
     def _get_product_catalog_lines_data(self, **kwargs):
         """ Return information about sale order lines in `self`.

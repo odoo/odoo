@@ -829,6 +829,41 @@ a.no-decoration {
 }
 
 .o_website_sale_checkout {
+    #shop_cart {
+        &.o_img_ratio_4_3 {
+            --card-product-img-ratio: 4/3;
+        }
+
+        &.o_img_ratio_4_5 {
+            --card-product-img-ratio: 4/5;
+        }
+
+        &.o_img_ratio_2_3 {
+            --card-product-img-ratio: 2/3;
+        }
+    }
+
+    #cart_products {
+        --cart-product-img-size-lg: 6rem;
+
+        .o_cart_product_image {
+            img {
+                @include media-breakpoint-down(md) {
+                    --cart-product-img-size-sm: 4rem;
+                }
+
+                aspect-ratio: var(--card-product-img-ratio, 1/1);
+                object-fit: cover;
+                object-position: center;
+                width: var(--cart-product-img-size-sm, var(--cart-product-img-size-lg));
+            }
+        }
+
+        .o_description_line {
+            @include o-line-clamp(2);
+        }
+    }
+
     .o_total_card {
         // The accordion have to mimick the styling of a card
         background-color: $card-bg;
