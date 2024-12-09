@@ -184,16 +184,8 @@ class ChatbotScript(models.Model):
     # Tooling / Misc
     # --------------------------
 
-    def _to_store(self, store: Store, /, *, fields=None, **kwargs):
-        if fields is None:
-            fields = ["title", "operator_partner_id"]
-        for script in self:
-            data = script._read_format(
-                [f for f in fields if f not in {"operator_partner_id"}], load=False
-            )[0]
-            if "operator_partner_id" in fields:
-                data["operator_partner_id"] = Store.one(script.operator_partner_id, fields=["name"])
-            store.add(script, data)
+    def _to_store_defaults(self):
+        return [Store.One("operator_partner_id", ["name"]), "title"]
 
     def _validate_email(self, email_address, discuss_channel):
         email_address = html2plaintext(email_address)

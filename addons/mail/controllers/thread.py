@@ -21,7 +21,7 @@ class ThreadController(http.Controller):
                 {"hasReadAccess": False, "hasWriteAccess": False},
                 as_thread=True,
             ).get_result()
-        return Store(thread, as_thread=True, request_list=request_list).get_result()
+        return Store(thread, request_list=request_list, as_thread=True).get_result()
 
     @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_messages(self, thread_model, thread_id, fetch_params=None):
@@ -37,7 +37,7 @@ class ThreadController(http.Controller):
         return {
             **res,
             "data": Store(messages, for_current_user=True).get_result(),
-            "messages": Store.many_ids(messages),
+            "messages": messages.ids,
         }
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="jsonrpc", auth="user")
