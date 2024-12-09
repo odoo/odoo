@@ -179,6 +179,12 @@ class ProductProduct(models.Model):
     def _get_gmc_values(self):
         dict_vals = super()._get_gmc_values()
 
+        if not (request and request.website.domain):
+            raise ValidationError(_(
+                "No domain set for this website. Please consider adding a domain name for your "
+                "website in the settings."
+            ))
+
         domain = f"{request.website.domain.rstrip('/')}/{request.lang.url_code}"
 
         delivery_carriers = self.env['delivery.carrier'].sudo().search([
