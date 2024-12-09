@@ -17,7 +17,7 @@ GMC_SUPPORTED_UOM = {
     'sqft', 'sqm',
 }
 GMC_SUPPORTED_INTEGER_UOM = {1, 10, 100, 2, 4, 8}
-GMC_SUPPORTED_UOM_COMBINATION = {'75cl', '750ml', '50kg', '1000kg'}
+GMC_SUPPORTED_UOM_EXTRA_COMBINATION = {'75cl', '750ml', '50kg', '1000kg'}
 
 
 class ProductProduct(models.Model):
@@ -236,9 +236,7 @@ class ProductProduct(models.Model):
                             )
             vals.update({
                 # Required
-                'description': (
-                    product.description_ecommerce or ""
-                ),
+                'description': product.description_ecommerce or "",
                 'link': format_product_link(product.website_url),
                 'image_link': (
                     domain + image_link if (image_link := product._get_image_link()) else 
@@ -268,12 +266,12 @@ class ProductProduct(models.Model):
                 ],
                 'product_type': [
                     category.display_name.replace('/', '>')  # google uses a different format
-                    for category in product.public_categ_ids[:5] # up to 5 custom_label
+                    for category in product.public_categ_ids[:5] # up to 5 categories
                 ],
                 'custom_label': [
                     (f'custom_label_{i}', tag_name)
                     for i, tag_name in zip(
-                        range(5), # supports up to 5 custom label
+                        range(5), # supports up to 5 custom labels
                         product.all_product_tag_ids.sorted('sequence').mapped('name')
                     )
                 ],
@@ -308,7 +306,7 @@ class ProductProduct(models.Model):
                 if (
                     base_unit_count in GMC_SUPPORTED_INTEGER_UOM
                     and base_unit_name in GMC_SUPPORTED_UOM
-                    or unit_pricing_measure in GMC_SUPPORTED_UOM_COMBINATION
+                    or unit_pricing_measure in GMC_SUPPORTED_UOM_EXTRA_COMBINATION
                 ):
                     vals.update({
                         'unit_pricing_measure': unit_pricing_measure,

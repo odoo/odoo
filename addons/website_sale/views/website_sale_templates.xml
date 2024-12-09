@@ -49,9 +49,9 @@
                     </t>
                     <t t-foreach="item['custom_label']" t-as="tag_label">
                         <t t-translation="off">
-                            &lt;g:<t t-out="tag_labl[0]"/>&gt;
-                                <t t-out="tag_labl[1]"/>
-                            &lt;/g:<t t-out="tag_labl[0]"/>&gt;
+                            &lt;g:<t t-out="tag_label[0]"/>&gt;
+                                <t t-out="tag_label[1]"/>
+                            &lt;/g:<t t-out="tag_label[0]"/>&gt;
                         </t>
                     </t>
                     <t t-foreach="item['additionnal_image_link']" t-as="link">
@@ -64,10 +64,10 @@
                         <g:item_group_id><t t-out="item['item_group_id']"/></g:item_group_id>
                     </t>
                     <g:is_bundle><t t-out="item['is_bundle']"/></g:is_bundle>
-                    <t t-foreach="item['product_detail']" t-as="attr">
+                    <t t-foreach="item['product_detail']" t-as="name_value">
                         <g:product_detail>
-                            <g:attribute_name><t t-out="attr[0]"/></g:attribute_name>
-                            <g:attribute_value><t t-out="attr[1]"/></g:attribute_value>
+                            <g:attribute_name><t t-out="name_value[0]"/></g:attribute_name>
+                            <g:attribute_value><t t-out="name_value[1]"/></g:attribute_value>
                         </g:product_detail>
                     </t>
                     <t t-foreach="item['free_shipping_threshold']" t-as="shipping">
