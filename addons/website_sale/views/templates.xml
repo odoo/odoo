@@ -1891,9 +1891,10 @@
     <!-- Encapsulate the content in a `a` tag with a link to the product page. Override this
          template to change or remove the product link. Called in `website_sale.cart_lines`. -->
     <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
-        <a t-att-href="line.product_id.website_url">
+        <a t-if="line._is_sellable()" t-att-href="line.product_id.website_url" name="o_cart_line_product_link">
             <t t-out="0"/>
         </a>
+        <t t-else="" t-out="0"/>
     </template>
 
     <!-- This template displays all the lines following the first one on the description of the sale
@@ -1903,7 +1904,11 @@
         <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
         <div t-if="description_lines" t-attf-class="text-muted small">
             <t t-foreach="description_lines" t-as="name_line">
-                <span t-if="name_line" class="d-block text-truncate" t-out="name_line"/>
+                <span
+                    t-if="name_line"
+                    t-attf-class="o_description_line overflow-hidden #{not name_line_last and 'mb-1'}"
+                    t-out="name_line"
+                />
             </t>
         </div>
     </template>
@@ -1922,190 +1927,231 @@
              t-if="website_sale_order and website_sale_order.website_order_line"
              class="js_cart_lines d-flex flex-column mb32">
             <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
-            <div t-foreach="website_sale_order.website_order_line"
-                 t-as="line"
-                 t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
-                 t-attf-data-product-id="#{line.product_id and line.product_id.id}">
-                <t t-if="line.product_id">
-                    <div style="width: 64px">
+            <t t-foreach="website_sale_order.website_order_line" t-as="line">
+                <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
+                <div
+                    class="o_cart_product d-flex gap-3 py-4"
+                    t-attf-data-product-id="#{line.product_id and line.product_id.id}"
+                >
+                    <div
+                        class="o_cart_product_image"
+                    >
                         <!--
                             Unsellable lines can have unpublished products, but portal users have no
                             access to unpublished product images. To ensure product images are
                             always shown for unsellable lines, we use the raw image data as src
                             (which doesn't require access, unlike the image URL).
                         -->
-                        <img
-                            t-if="line._is_not_sellable_line() and line.product_id.image_128"
-                            t-att-src="image_data_uri(line.product_id.image_128)"
-                            class="o_image_64_max img rounded"
-                            t-att-alt="line.name_short"
-                        />
-                        <t
-                            t-elif="line.product_id.image_128"
-                            t-call="website_sale.cart_line_product_link"
-                        >
+                        <t t-call="website_sale.cart_line_product_link">
+                            <img
+                                t-if="not line._is_sellable() and line.product_id.image_128"
+                                t-att-src="image_data_uri(line.product_id.image_128)"
+                                class="img border rounded"
+                                t-att-alt="line.name_short"
+                            />
                             <div
+                                t-else=""
                                 t-field="line.product_id.image_128"
                                 t-options="{
                                     'widget': 'image',
                                     'qweb_img_responsive': False,
-                                    'class': 'o_image_64_max rounded',
+                                    'class': 'border rounded',
                                 }"
                             />
                         </t>
                     </div>
-                    <div class="flex-grow-1 overflow-hidden">
-                        <t t-call="website_sale.cart_line_product_link">
-                            <h6 t-field="line.name_short" class="d-block align-top h6 fw-bold text-truncate"/>
-                        </t>
-                        <t t-call="website_sale.cart_line_description_following_lines"/>
-                        <div name="o_wsale_cart_line_button_container">
-                            <a href='#'
-                               class="js_delete_product d-none d-md-inline-block small"
-                               aria-label="Remove from cart"
-                               title="Remove from cart">Remove</a>
-                            <button class="js_delete_product btn btn-light d-inline-block d-md-none"
-                                    title="remove">
-                                <i class="fa fa-trash-o"/>
+                    <div class="d-flex flex-column flex-grow-1 gap-3 min-w-0">
+                        <div class="d-flex gap-3">
+                            <div class="flex-grow-1 text-wrap">
+                                <div class="d-flex justify-content-between">
+                                    <t t-call="website_sale.cart_line_product_link">
+                                        <h6
+                                            t-field="line.name_short"
+                                            class="d-inline align-top fw-bold text-wrap small"
+                                        />
+                                    </t>
+                                    <div
+                                        t-attf-class="{{'d-block d-md-none' if not is_combo else ''}}"
+                                        t-call="website_sale.cart_lines_price"
+                                    />
+                                </div>
+                                <t t-call="website_sale.cart_line_description_following_lines"/>
+                                <ul t-if="is_combo" class="list-group">
+                                    <t
+                                        t-foreach="line.linked_line_ids"
+                                        t-as="combo_item_line"
+                                    >
+                                        <t t-call="website_sale.cart_combo_item_line"/>
+                                    </t>
+                                </ul>
+                                <div
+                                    name="o_wsale_cart_line_button_container"
+                                    t-attf-class="d-none d-md-flex align-items-center gap-2 mt-2 {{'justify-content-between' if is_combo else ''}}"
+                                >
+                                    <a
+                                        href='#'
+                                        class="js_delete_product small"
+                                        aria-label="Remove from cart"
+                                        title="Remove from cart"
+                                    >
+                                        Remove
+                                    </a>
+                                    <div
+                                        t-if="is_combo"
+                                        class="d-none d-md-block ms-auto"
+                                        t-call="website_sale.cart_lines_quantity"
+                                    />
+                                </div>
+                            </div>
+                            <div t-if="not is_combo" class="d-none d-md-block">
+                                <t t-call="website_sale.cart_lines_price"/>
+                                <div
+                                    class="d-none d-md-block"
+                                    t-call="website_sale.cart_lines_quantity"
+                                />
+                            </div>
+                        </div>
+                        <div
+                            name="o_wsale_cart_line_button_container_mobile"
+                            class="d-flex d-md-none flex-wrap"
+                        >
+                            <div
+                                class="d-flex d-md-none align-items-center me-auto"
+                                t-call="website_sale.cart_lines_quantity"
+                            >
+                                <t t-set="is_mobile" t-value="True"/>
+                            </div>
+                            <button
+                                class="js_delete_product btn btn-link d-inline-block d-md-none px-2"
+                                title="remove"
+                            >
+                                <i class="fa fa-fw fa-trash-o"/>
                             </button>
                         </div>
-                        <t t-if="line.product_type == 'combo'">
-                            <div
-                                t-foreach="line.linked_line_ids"
-                                t-as="combo_item_line"
-                                t-attf-class="{{'' if combo_item_line_last else 'pb-2'}}"
-                            >
-                                <t t-call="website_sale.cart_combo_item_line"/>
-                            </div>
-                        </t>
                     </div>
-                    <div class="d-flex flex-column align-items-end">
-                        <div t-attf-class="css_quantity input-group mb-2"
-                             name="website_sale_cart_line_quantity">
-                            <t t-if="not line._is_not_sellable_line()">
-                                <t t-if="show_qty">
-                                    <a href="#"
-                                       class="js_add_cart_json btn btn-link d-inline-block border-end-0"
-                                       aria-label="Remove one"
-                                       title="Remove one">
-                                        <i class="position-relative z-1 fa fa-minus"/>
-                                    </a>
-                                    <input type="text"
-                                           class="js_quantity quantity form-control border-start-0 border-end-0"
-                                           t-att-data-line-id="line.id"
-                                           t-att-data-product-id="line.product_id.id"
-                                           t-att-value="line._get_displayed_quantity()"/>
-                                    <t t-if="line._get_shop_warning(clear=False)">
-                                        <a href="#" class="btn btn-link">
-                                        <i class='fa fa-warning text-warning'
-                                           t-att-title="line._get_shop_warning()"
-                                           role="img"
-                                           aria-label="Warning"/>
-                                        </a>
-                                    </t>
-                                    <a t-else=""
-                                       href="#"
-                                       class="js_add_cart_json d-inline-block float_left btn btn-link border-start-0"
-                                       aria-label="Add one"
-                                       title="Add one">
-                                        <i class="fa fa-plus position-relative z-1"/>
-                                    </a>
-                                </t>
-                                <t t-else="">
-                                    <input type="hidden"
-                                           class="js_quantity form-control quantity"
-                                           t-att-data-line-id="line.id"
-                                           t-att-data-product-id="line.product_id.id"
-                                           t-att-value="line._get_displayed_quantity()"/>
-                                </t>
-                            </t>
-                            <t t-else="">
-                                <span class="w-100 text-muted" t-esc="int(line.product_uom_qty)"/>
-                                <input type="hidden"
-                                       class="js_quantity quantity form-control"
-                                       t-att-data-line-id="line.id"
-                                       t-att-data-product-id="line.product_id.id"
-                                       t-att-value="line._get_displayed_quantity()"/>
-                            </t>
-                        </div>
-                        <div class="mb-0 h6 fw-bold text-end" name="website_sale_cart_line_price">
-                            <t t-if="line.discount">
-                                <del t-attf-class="#{'text-muted mr8'}"
-                                     style="white-space: nowrap;"
-                                     t-out="line._get_displayed_unit_price() * line.product_uom_qty"
-                                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                            </t>
-                            <t t-set="product_price" t-value="line._get_cart_display_price()"/>
-                            <t t-call="website_sale.cart_product_price"/>
-                            <small
-                                t-if="not line._is_not_sellable_line() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
-                                class="cart_product_base_unit_price d-block text-muted"
-                            >
-                                <t t-call="website_sale.base_unit_price">
-                                    <t t-set="product" t-value="line.product_id"/>
-                                    <t t-set="base_unit_price"
-                                       t-value="product._get_base_unit_price(product_price/line.product_uom_qty)"/>
-                                </t>
-                            </small>
-                        </div>
-                    </div>
-                </t>
-            </div>
+                </div>
+            </t>
         </div>
     </template>
 
-    <template id="cart_combo_item_line">
-        <div class="d-flex align-items-center">
-            <!--
-                To sell a product type 'combo', one doesn't need to publish all combo choices. This
-                causes an issue when public users access the image of each choice via the /web/image
-                route. To bypass this access check, we send the raw image URL if the product is
-                inaccessible to the current user.
-            -->
-            <img
-                t-if="not combo_item_line.product_id.sudo(False).has_access('read')
-                      and combo_item_line.product_id.image_128"
-                t-att-src="image_data_uri(combo_item_line.product_id.image_128)"
-                class="o_image_64_max img rounded"
-                t-att-alt="combo_item_line.name_short"
-            />
-            <div
-                t-else=""
-                t-field="combo_item_line.product_id.image_128"
-                 t-options="{
-                    'widget': 'image',
-                    'qweb_img_responsive': False,
-                    'class': 'o_image_64_max rounded',
-                 }"
-            />
-            <div class="ms-3">
-                <t t-if="combo_item_line.product_id.website_published">
-                    <a t-att-href="combo_item_line.product_id.website_url">
-                        <t t-call="website_sale.cart_item_line_heading" />
+    <template id="cart_lines_quantity" name="Shopping Cart Line quantity">
+        <div
+            class="css_quantity input-group justify-content-end h-100"
+            t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
+        >
+            <t t-if="line._is_sellable()">
+                <t t-if="show_qty">
+                    <a
+                        href="#"
+                        class="js_add_cart_json btn btn-link d-inline-block border-end-0"
+                        aria-label="Remove one"
+                        title="Remove one"
+                    >
+                        <i class="position-relative z-1 fa fa-minus"/>
+                    </a>
+                    <input
+                        type="text"
+                        class="js_quantity quantity form-control border-start-0 border-end-0"
+                        t-att-data-line-id="line.id"
+                        t-att-data-product-id="line.product_id.id"
+                        t-att-value="line._get_displayed_quantity()"
+                    />
+                    <t t-if="line._get_shop_warning(clear=False)">
+                        <a href="#" class="btn btn-link">
+                            <i
+                                class="fa fa-warning text-warning"
+                                t-att-title="line._get_shop_warning()"
+                                role="img"
+                                aria-label="Warning"
+                            />
+                        </a>
+                    </t>
+                    <a
+                        t-else=""
+                        href="#"
+                        class="js_add_cart_json d-inline-block btn btn-link border-start-0"
+                        aria-label="Add one"
+                        title="Add one"
+                    >
+                        <i class="fa fa-plus position-relative z-1"/>
                     </a>
                 </t>
                 <t t-else="">
-                    <t t-call="website_sale.cart_item_line_heading" />
+                    <input
+                        type="hidden"
+                        class="js_quantity form-control quantity"
+                        t-att-data-line-id="line.id"
+                        t-att-data-product-id="line.product_id.id"
+                        t-att-value="line._get_displayed_quantity()"
+                    />
                 </t>
-                <t
-                    t-set="description_lines"
-                    t-value="combo_item_line.get_description_following_lines()"
+            </t>
+            <t t-else="">
+                <input
+                    type="hidden"
+                    class="js_quantity quantity form-control"
+                    t-att-data-line-id="line.id"
+                    t-att-data-product-id="line.product_id.id"
+                    t-att-value="line._get_displayed_quantity()"
                 />
-                <div t-if="description_lines" t-attf-class="text-muted d-none d-md-block small">
-                    <t t-foreach="description_lines" t-as="description_line">
-                        <span class="d-block" t-if="description_line" t-out="description_line"/>
-                    </t>
-                </div>
-            </div>
+            </t>
         </div>
     </template>
 
-    <template id="cart_item_line_heading">
-        <h6 class="d-inline align-top h6 fw-bold">
-            <span t-out="combo_item_line._get_displayed_quantity()"/>
-            x
-            <span t-out="combo_item_line.name_short"/>
+    <template id="cart_lines_price" name="Shopping Cart Line Price">
+        <h6
+            class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end small fw-bold"
+            name="website_sale_cart_line_price"
+        >
+            <t t-if="line.discount and line._is_sellable()">
+                <del
+                    class="me-md-2 text-muted text-nowrap opacity-50"
+                    t-out="line._get_displayed_unit_price() * line.product_uom_qty"
+                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                />
+            </t>
+            <t t-set="product_price" t-value="line._get_cart_display_price()"/>
+            <t t-call="website_sale.cart_product_price"/>
+            <small
+                t-if="not line._is_not_sellable_line() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
+                class="cart_product_base_unit_price d-block text-muted"
+                groups="website_sale.group_show_uom_price"
+            >
+                <t t-call="website_sale.base_unit_price">
+                    <t t-set="product" t-value="line.product_id"/>
+                    <t
+                        t-set="base_unit_price"
+                        t-value="product._get_base_unit_price(product_price/line.product_uom_qty)"
+                    />
+                </t>
+            </small>
         </h6>
+    </template>
+
+    <template id="cart_combo_item_line">
+        <a
+            t-att-href="combo_item_line.product_id.website_url if combo_item_line._is_sellable() and combo_item_line.product_id.website_published else '#'"
+            t-attf-class="list-group-item #{'list-group-item-action' if combo_item_line._is_sellable() and combo_item_line.product_id.website_published else 'cursor-default text-decoration-none'}"
+        >
+            <h6 class="d-inline small">
+                <span t-out="combo_item_line._get_displayed_quantity()"/>
+                x
+                <span t-out="combo_item_line.name_short"/>
+            </h6>
+            <t
+                t-set="description_lines"
+                t-value="combo_item_line.get_description_following_lines()"
+            />
+            <div t-if="description_lines" class="small text-muted">
+                <t t-foreach="description_lines" t-as="description_line">
+                    <span
+                        t-if="description_line"
+                        class="o_description_line overflow-hidden"
+                        t-out="description_line"
+                    />
+                </t>
+            </div>
+        </a>
     </template>
 
     <template id="cart_product_price">
@@ -2129,8 +2175,14 @@
                      t-att-id) and each template needs to define a div element. -->
                 <div class="oe_structure" id="oe_structure_website_sale_cart_2"/>
             </t>
-
-            <div class="col" id="shop_cart">
+            <div
+                id="shop_cart"
+                t-att-class="'col ' + (
+                        'o_img_ratio_4_3' if is_view_active('website_sale.products_thumb_4_3') else
+                        'o_img_ratio_4_5' if is_view_active('website_sale.products_thumb_4_5') else
+                        'o_img_ratio_2_3' if is_view_active('website_sale.products_thumb_2_3') else
+                        '')
+            ">
                 <h3 class="mb-4">Order overview</h3>
                 <div t-if="abandoned_proceed or access_token" class="alert alert-info mt8 mb8" role="alert"> <!-- abandoned cart choices -->
                     <t t-if="abandoned_proceed">
@@ -2161,56 +2213,68 @@
     <!-- Deactivatable through the website editor. -->
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
         <xpath expr="//div[@id='cart_products']" position="inside">
-            <h5 t-attf-class="mt32 mb-3" t-if="suggested_products">Suggested accessories</h5>
+            <h5 t-attf-class="mt-3 mb-0" t-if="suggested_products">Suggested accessories</h5>
             <div t-if="suggested_products"
                  id="suggested_products"
-                 class="d-flex flex-column align-items-stretch mb32">
-                <div t-foreach="suggested_products"
-                     t-as="product"
-                     t-attf-class="d-flex gap-3 #{not product_last and 'border-bottom pb-4'} #{product_index &gt; 0 and 'pt-4'}"
-                     t-att-data-publish="product.website_published and 'on' or 'off'">
-                    <div style="width: 64px">
+                 class="d-flex flex-column align-items-stretch">
+                <div
+                    t-foreach="suggested_products"
+                    t-as="product"
+                    t-attf-class="d-flex gap-3 py-4 #{not product_last and 'border-bottom'}"
+                    t-att-data-publish="product.website_published and 'on' or 'off'"
+                >
+                    <div class="o_cart_product_image">
                         <a t-att-href="product.website_url">
-                            <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"/>
+                            <div t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'border rounded'}"/>
                         </a>
                     </div>
                     <div class="o_cart_suggested_product_name flex-grow-1">
-                        <div>
-                            <a t-att-href="product.website_url">
-                                <strong t-out="product.with_context(display_default_code=False).display_name"/>
-                            </a>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <a t-att-href="product.website_url">
+                                    <h6
+                                        class="align-top small fw-bold text-wrap"
+                                        t-out="product.with_context(display_default_code=False).display_name"
+                                    />
+                                </a>
+                                <div
+                                    class="text-truncate small text-muted"
+                                    t-field="product.description_sale"
+                                />
+                            </div>
+                            <h6
+                                class="d-flex mb-0 small text-end fw-bold"
+                                name="suggested_product_price_container"
+                            >
+                                <t
+                                    t-set="combination_info"
+                                    t-value="product._get_combination_info_variant()"
+                                />
+                                <del
+                                    name="suggested_product_list_price"
+                                    t-attf-class="me-2 text-nowrap text-muted {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                    t-esc="combination_info['list_price']"
+                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                />
+                                <span
+                                    name="suggested_product_price"
+                                    class="text-nowrap"
+                                    t-esc="combination_info['price']"
+                                    t-options="{'widget': 'monetary','display_currency': website.currency_id}"
+                                />
+                            </h6>
                         </div>
-                        <div class="d-none d-md-block text-muted" t-field="product.description_sale"/>
-                    </div>
-                    <div class="d-flex flex-column align-items-end">
-                        <a
-                            role="button"
-                            class="js_add_suggested_products btn btn-md btn-outline-primary text-nowrap"
-                            t-att-data-product-id="product.id"
-                            t-att-data-product-template-id="product.product_tmpl_id.id"
-                            t-att-data-product-type="product.type"
-                        >
-                            <span class="d-md-none fa fa-shopping-cart"/>
-                            <span class="d-none d-md-inline">Add to cart</span>
-                        </a>
-                        <div
-                            class="mb-0 h-6 fw-bold text-end d-flex"
-                            name="suggested_product_price_container"
-                        >
-                            <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
-                            <del
-                                name="suggested_product_list_price"
-                                t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                                t-esc="combination_info['list_price']"
-                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                                style="white-space: nowrap;"
-                            />
-                            <span
-                                name="suggested_product_price"
-                                t-esc="combination_info['price']"
-                                t-options="{'widget': 'monetary','display_currency': website.currency_id}"
-                                style="white-space: nowrap;"
-                            />
+                        <div class="d-flex justify-content-md-end">
+                            <button
+                                role="button"
+                                class="js_add_suggested_products btn btn-primary text-nowrap"
+                                t-att-data-product-id="product.id"
+                                t-att-data-product-template-id="product.product_tmpl_id.id"
+                                t-att-data-product-type="product.type"
+                            >
+                                <i class="d-md-none fa fa-shopping-cart" role="presentation"/>
+                                <span class="d-none d-md-inline">Add to cart</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -2671,7 +2735,7 @@
                                                         <td t-if="not line.product_id" colspan="2"/>
                                                         <t t-else="">
                                                             <td t-attf-class="td-img ps-0 #{o_cart_sum_padding_top}">
-                                                                <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
+                                                                <span t-if="not line._is_sellable() and line.product_id.image_128">
                                                                     <img t-att-src="image_data_uri(line.product_id.image_128)" class="o_image_64_max img rounded" t-att-alt="line.name_short"/>
                                                                 </span>
                                                                 <span t-else=""

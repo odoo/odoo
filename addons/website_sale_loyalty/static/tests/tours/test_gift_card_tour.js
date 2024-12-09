@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: 'check gift card line',
-            trigger: "#cart_products div>strong:contains(PAY WITH GIFT CARD)",
+            trigger: "#cart_products div>h6:contains(PAY WITH GIFT CARD)",
         },
         {
             content: "Insert promo",
@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: "Check promo",
-            trigger: "#cart_products div>strong:contains(10% on your order)",
+            trigger: "#cart_products div>h6:contains(10% on your order)",
         },
         {
             content: "Click on Continue Shopping",

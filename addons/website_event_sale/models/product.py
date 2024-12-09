@@ -9,6 +9,10 @@ class ProductProduct(models.Model):
 
     event_ticket_ids = fields.One2many('event.event.ticket', 'product_id', string='Event Tickets')
 
+    def _get_product_placeholder_filename(self):
+        if self.event_ticket_ids:
+            return 'website_event_sale/static/img/event_ticket_placeholder_thumbnail.png'
+        return super()._get_product_placeholder_filename()
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
