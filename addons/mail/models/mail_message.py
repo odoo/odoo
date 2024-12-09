@@ -497,6 +497,8 @@ class MailMessage(models.Model):
 
         for model, docid_msgids in model_docid_msgids.items():
             documents = self.env[model].browse(docid_msgids)
+            if hasattr(documents, '_get_forbidden_access_extra'):
+                forbidden += documents._get_forbidden_access_extra(messages_to_check, operation)
             if hasattr(documents, '_get_mail_message_access'):
                 doc_operation = documents._get_mail_message_access(docid_msgids, operation)  # why not giving model here?
             else:

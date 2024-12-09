@@ -88,3 +88,33 @@ test("bus subscription is refreshed when channel is left", async () => {
     await click("[title='Leave Channel']");
     await waitForSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
 });
+
+test("Guest user cannot post in read only channel", async () => {
+    const pyEnv = await startServer();
+    const channel_id = pyEnv["discuss.channel"].create({ name: "General", read_only: true });
+    await start({ authenticateAs: false });
+    await openDiscuss(channel_id);
+    await contains(`.o-mail-Composer-input[readonly][placeholder="This channel is read only"]`, {
+        count: 1,
+    });
+});
+
+test("Non admin user cannot post on read only channel", async () => {
+    const pyEnv = await startServer();
+    const channel_id = pyEnv["discuss.channel"].create({ name: "General", read_only: true });
+    const partnerId = pyEnv["res.users"].create({
+        name: "test user",
+        login: "test",
+        password: "test",
+        partner_id: pyEnv["res.partner"].create({
+            name: "test_partner",
+            isAdmin: false,
+        }),
+    });
+    const [partnerUser] = pyEnv["res.users"].search_read([["id", "=", partnerId]]);
+    await start({ authenticateAs: partnerUser });
+    await openDiscuss(channel_id);
+    await contains(`.o-mail-Composer-input[readonly][placeholder="This channel is read only"]`, {
+        count: 1,
+    });
+});
