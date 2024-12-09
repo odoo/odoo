@@ -478,7 +478,7 @@
     & .o_form_renderer:not(.o_kanban_quick_create_form) .o_inner_group {
         @include media-breakpoint-up(sm) {
             .o_cell:first-child:last-child,
-            .o_cell:not(.o_wrap_label):not(.o_wrap_input) {
+            .o_cell:not(.o_wrap_label):not(.o_wrap_input):not(.o_cell_custom) {
                 grid-column: span 2;
             }
         }
