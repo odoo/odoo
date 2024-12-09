@@ -122,3 +122,16 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
                     self.get_xml_tree_from_string(invoice_xml),
                     self.get_xml_tree_from_string(expected_xml_file.read()),
                 )
+
+    def test_multi_currency_tax_sign(self):
+        currency_usd = self.env.ref('base.USD')
+
+        out_invoice = self.create_invoice_simple(currency=currency_usd)
+        in_invoice = self.create_bill_simple(currency=currency_usd)
+        out_refund = self.create_credit_note_simple(currency=currency_usd)
+        in_refund = self.create_refund_simple(currency=currency_usd)
+
+        self.assertGreaterEqual(out_invoice._l10n_hu_get_invoice_totals_for_report()['total_vat_amount_in_huf'], 0)
+        self.assertGreaterEqual(in_invoice._l10n_hu_get_invoice_totals_for_report()['total_vat_amount_in_huf'], 0)
+        self.assertLessEqual(out_refund._l10n_hu_get_invoice_totals_for_report()['total_vat_amount_in_huf'], 0)
+        self.assertLessEqual(in_refund._l10n_hu_get_invoice_totals_for_report()['total_vat_amount_in_huf'], 0)
