@@ -24,7 +24,7 @@ fi
 # TODO: Remove this code when v16 is deprecated
 odoo_conf="addons/point_of_sale/tools/posbox/configuration/odoo.conf"
 if ! grep -q "server_wide_modules" $odoo_conf; then
-    echo "server_wide_modules=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web" >> $odoo_conf
+    echo "server_wide_modules=hw_drivers,hw_posbox_homepage,point_of_sale,web" >> $odoo_conf
 fi
 
 {
