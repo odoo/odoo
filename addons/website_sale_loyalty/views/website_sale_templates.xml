@@ -175,8 +175,8 @@
         </xpath>
     </template>
 
-    <template id="cart_line_product_no_link" inherit_id="website_sale.cart_line_product_link">
-        <xpath expr="//a" position="replace">
+    <template id="cart_line_product_no_link" inherit_id="website_sale.cart_lines">
+        <xpath expr="//a[hasclass('o_cart_line_product_link')]" position="replace">
             <t t-if="line.is_reward_line">
                 <strong t-field="line.name"/>
                 <t t-call="sale_loyalty.used_gift_card"/>
