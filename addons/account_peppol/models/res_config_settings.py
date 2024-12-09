@@ -99,12 +99,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
     def _compute_account_peppol_edi_mode(self):
-        edi_mode = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
         for config in self:
-            if config.account_peppol_edi_user:
-                config.account_peppol_edi_mode = config.account_peppol_edi_user.edi_mode
-            else:
-                config.account_peppol_edi_mode = edi_mode or 'prod'
+            config.account_peppol_edi_mode = config.company_id._get_peppol_edi_mode()
 
     def _inverse_account_peppol_edi_mode(self):
         for config in self:
