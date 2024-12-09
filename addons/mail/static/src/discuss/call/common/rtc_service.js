@@ -45,6 +45,7 @@ const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.Medi
 const DEFAULT_ICE_SERVERS = [
     { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
 ];
+const RECOVERY_DELAY = 3_000;
 
 /**
  * @param {Array<RTCIceServer>} iceServers
@@ -183,6 +184,8 @@ export class Rtc extends Record {
     actionsStack = [];
     /** @type {string|undefined} String representing the last call action activated, or undefined if none are */
     lastSelfCallAction = undefined;
+    /** @type {number|null} Timestamp used for call recovery after a pagehide event */
+    recoveryTimestamp = null;
 
     callActions = Record.attr([], {
         compute() {
@@ -247,6 +250,9 @@ export class Rtc extends Record {
          * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
          */
         this.p2pService = services["discuss.p2p"];
+        this.multiTab = services["multi_tab"];
+        this.busService = services["bus_service"];
+        this.outOfFocusService = services["mail.out_of_focus"];
         onChange(this.store.settings, "useBlur", () => {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
@@ -299,8 +305,12 @@ export class Rtc extends Record {
 
         browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
+                const timestamp = new Date().getTime();
                 const data = JSON.stringify({
-                    params: { channel_id: this.state.channel.id },
+                    params: {
+                        channel_id: this.state.channel.id,
+                        recovery_ts: timestamp,
+                    },
                 });
                 const blob = new Blob([data], { type: "application/json" });
                 // using sendBeacon allows sending a post request even when the
@@ -308,6 +318,10 @@ export class Rtc extends Record {
                 // is closed. Alternatives like synchronous XHR are not reliable.
                 browser.navigator.sendBeacon("/mail/rtc/channel/leave_call", blob);
                 this.sfuClient?.disconnect();
+                this.multiTab.broadcast("discuss.rtc/recover", {
+                    channel_id: this.state.channel.id,
+                    recovery_ts: -timestamp,
+                });
             }
         });
         /**
@@ -328,6 +342,50 @@ export class Rtc extends Record {
             }
             this.call();
         }, 30_000);
+
+        this.busService.subscribe("discuss.rtc/recover", (params) => {
+            this.attemptRecovery(params);
+        });
+
+        this.multiTab.subscribe("discuss.rtc/recover", (params) => {
+            this.attemptRecovery(params);
+        });
+    }
+
+    attemptRecovery({ channel_id, recovery_ts }) {
+        if (!this.recoveryTimestamp || this.recoveryTimestamp + recovery_ts) {
+            this.recoveryTimestamp = recovery_ts;
+            return;
+        }
+        setTimeout(async () => {
+            if (!this.multiTab.isOnMainTab()) {
+                return;
+            }
+            const channel = await this.store.Thread.getOrFetch({
+                model: "discuss.channel",
+                id: channel_id,
+            });
+            if (
+                channel &&
+                !this.state.channel &&
+                Object.keys(channel.rtcSessions).length > 1 &&
+                new Date().getTime() - Math.abs(this.recoveryTimestamp) < RECOVERY_DELAY &&
+                navigator.userActivation.hasBeenActive
+            ) {
+                await this.joinCall(channel);
+                this.outOfFocusService.sendNotification({
+                    message: _t("Call recovered successfully"),
+                    title: "Page closed",
+                    type: "success",
+                });
+            } else {
+                this.outOfFocusService.sendNotification({
+                    message: _t("Call was terminated"),
+                    title: "Page closed",
+                    type: "danger",
+                });
+            }
+        }, 100); // Delayed for the new main tab election
     }
 
     setPttReleaseTimeout(duration = 200) {
