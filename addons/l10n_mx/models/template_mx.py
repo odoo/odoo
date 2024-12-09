@@ -39,6 +39,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_cash_basis_journal_id': 'cbmx',
                 'account_sale_tax_id': 'tax12',
                 'account_purchase_tax_id': 'tax14',
+                'account_cash_basis_base_account_id': 'cuenta801_01_99',
             },
         }
 
