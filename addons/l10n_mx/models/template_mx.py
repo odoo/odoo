@@ -16,7 +16,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'cuenta205_06_01',
             'property_stock_account_output_categ_id': 'cuenta107_05_01',
             'property_stock_valuation_account_id': 'cuenta115_01',
-            'property_cash_basis_base_account_id': 'cuenta801_01_99',
         }
 
     @template('mx', 'res.company')
@@ -38,8 +37,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_calculation_rounding_method': 'round_globally',
                 'account_sale_tax_id': 'tax12',
                 'account_purchase_tax_id': 'tax14',
+<<<<<<< master
                 'expense_account_id': 'cuenta601_84',
                 'income_account_id': 'cuenta401_01',
+||||||| 1f99b446187a3d0879c1b1f9b9ea488787219375
+=======
+                'account_cash_basis_base_account_id': 'cuenta801_01_99',
+>>>>>>> 32ee894ad7acd6069da2a6a7331f4efc803e8c24
             },
         }
 
