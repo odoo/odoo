@@ -72,6 +72,13 @@ class TestCommand(BaseCase):
                         actual.add(result.groups()[0])
                 self.assertGreaterEqual(actual, expected, msg="Help is not showing required commands")
 
+    def test_help_subcommand(self):
+        """Just execute the help for each internal sub-command"""
+        load_internal_commands()
+        for name in commands:
+            with self.subTest(command=name):
+                self.run_command(name, '--help', timeout=10)
+
     def test_upgrade_code_example(self):
         proc = self.run_command('upgrade_code', '--script', '17.5-00-example', '--dry-run')
         self.assertFalse(proc.stdout, "there should be no file modified by the example script")
