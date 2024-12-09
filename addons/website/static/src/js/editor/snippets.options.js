@@ -1028,7 +1028,7 @@ options.Class.include({
                 }
         }
 
-        if (params.reload || params.noBundleReload) {
+        if (params.reload || params.noBundleReload || widgetValue?.length === 0) {
             // Caller will reload the page, nothing needs to be done anymore.
             return;
         }
