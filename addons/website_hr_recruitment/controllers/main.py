@@ -313,7 +313,7 @@ class WebsiteHrRecruitment(WebsiteForm):
 
     def extract_data(self, model, values):
         candidate = request.env['hr.candidate']
-        if model.model == 'hr.applicant':
+        if model.sudo().model == 'hr.applicant':
             # pop the fields since there are only useful to generate a candidate record
             partner_name = values.pop('partner_name')
             partner_phone = values.pop('partner_phone', None)
