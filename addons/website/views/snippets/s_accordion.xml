@@ -4,9 +4,19 @@
 <template id="s_accordion" name="Accordion">
 <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
     <div t-attf-class="s_accordion" data-name="Accordion">
-        <div id="myCollapse" t-attf-class="{{extra_classes}} accordion">
+        <div id="myCollapse" t-attf-class="{{extra_classes}} accordion" data-active-custom-icon="fa fa-arrow-up" data-inactive-custom-icon="fa fa-arrow-down">
             <div class="accordion-item position-relative z-1" data-name="Accordion Item">
-                <button type="button" t-attf-id="accordion-button{{uniq}}_1" class="accordion-header accordion-button justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_1" t-attf-aria-controls="myCollapseTab{{uniq}}_1" data-bs-toggle="collapse" aria-expanded="true"><span class="flex-grow-1">What services does your company offer ?</span></button>
+                <button type="button" t-attf-id="accordion-button{{uniq}}_1" class="accordion-header accordion-button justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_1" t-attf-aria-controls="myCollapseTab{{uniq}}_1" data-bs-toggle="collapse" aria-expanded="true">
+                    <span class="flex-grow-1">What services does your company offer ?</span>
+                    <span class="o_custom_icons_wrap position-relative flex-shrink-0 overflow-hidden">
+                        <span class="o_custom_icon_active align-items-center justify-content-center">
+                            <i class="fa fa-arrow-up"/>
+                        </span>
+                        <span class="o_custom_icon_inactive align-items-center justify-content-center">
+                            <i class="fa fa-arrow-down"/>
+                        </span>
+                    </span>
+                </button>
                 <div t-attf-id="myCollapseTab{{uniq}}_1" class="accordion-collapse collapse show" data-bs-parent="#myCollapse" role="region" t-attf-aria-labelledby="accordion-button{{uniq}}_1">
                     <div class="accordion-body">
                         <p>Our company specializes in consulting, product development, and customer support. We tailor our services to fit the unique needs of businesses across various sectors, helping them grow and succeed in a competitive market.</p>
@@ -14,7 +24,17 @@
                 </div>
             </div>
             <div class="accordion-item position-relative z-1" data-name="Accordion Item">
-                <button type="button" t-attf-id="accordion-button{{uniq}}_2" class="accordion-header accordion-button collapsed justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_2" t-attf-aria-controls="myCollapseTab{{uniq}}_2" data-bs-toggle="collapse" aria-expanded="false"><span class="flex-grow-1">How can I contact customer support ?</span></button>
+                <button type="button" t-attf-id="accordion-button{{uniq}}_2" class="accordion-header accordion-button collapsed justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_2" t-attf-aria-controls="myCollapseTab{{uniq}}_2" data-bs-toggle="collapse" aria-expanded="false">
+                    <span class="flex-grow-1">How can I contact customer support ?</span>
+                    <span class="o_custom_icons_wrap position-relative flex-shrink-0 overflow-hidden">
+                        <span class="o_custom_icon_active align-items-center justify-content-center">
+                            <i class="fa fa-arrow-up"/>
+                        </span>
+                        <span class="o_custom_icon_inactive align-items-center justify-content-center">
+                            <i class="fa fa-arrow-down"/>
+                        </span>
+                    </span>
+                </button>
                 <div t-attf-id="myCollapseTab{{uniq}}_2" class="accordion-collapse collapse" data-bs-parent="#myCollapse" role="region" t-attf-aria-labelledby="accordion-button{{uniq}}_2">
                     <div class="accordion-body">
                         <p>You can reach our customer support team by emailing info@yourcompany.example.com, calling +1 555-555-5556, or using the live chat on our website. Our dedicated team is available 24/7 to assist with any inquiries or issues.</p>
@@ -23,7 +43,17 @@
                 </div>
             </div>
             <div class="accordion-item position-relative z-1" data-name="Accordion Item">
-                <button type="button" t-attf-id="accordion-button{{uniq}}_3" class="accordion-header accordion-button collapsed justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_3" t-attf-aria-controls="myCollapseTab{{uniq}}_3" data-bs-toggle="collapse" aria-expanded="false"><span class="flex-grow-1">What is your return policy ?</span></button>
+                <button type="button" t-attf-id="accordion-button{{uniq}}_3" class="accordion-header accordion-button collapsed justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_3" t-attf-aria-controls="myCollapseTab{{uniq}}_3" data-bs-toggle="collapse" aria-expanded="false">
+                    <span class="flex-grow-1">What is your return policy ?</span>
+                    <span class="o_custom_icons_wrap position-relative flex-shrink-0 overflow-hidden">
+                        <span class="o_custom_icon_active align-items-center justify-content-center">
+                            <i class="fa fa-arrow-up"/>
+                        </span>
+                        <span class="o_custom_icon_inactive align-items-center justify-content-center">
+                            <i class="fa fa-arrow-down"/>
+                        </span>
+                    </span>
+                </button>
                 <div t-attf-id="myCollapseTab{{uniq}}_3" class="accordion-collapse collapse" data-bs-parent="#myCollapse" role="region" t-attf-aria-labelledby="accordion-button{{uniq}}_3">
                     <div class="accordion-body">
                         <p>We offer a 30-day return policy for all products. Items must be in their original condition, unused, and include the receipt or proof of purchase. Refunds are processed within 5-7 business days of receiving the returned item.</p>
@@ -36,7 +66,7 @@
 
 <template id="s_accordion_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
-        <div data-selector=".s_accordion" data-target=".accordion">
+        <div data-js="Accordion" data-selector=".s_accordion" data-target=".accordion">
             <we-select string="Style">
                 <we-button title="Boxed" data-name="accordion_style_boxed_opt" data-select-class="">Boxed</we-button>
                 <we-button title="Highlight Active" data-select-class="s_accordion_highlight">Highlight Active</we-button>
@@ -48,8 +78,30 @@
                 data-select-style="0"
                 data-apply-to=".accordion-item"
                 />
-            <we-button-group string="Icon Position" data-apply-to=".accordion-header">
-                <we-button title="Left" data-select-class="justify-content-end flex-row-reverse"
+            <we-select string="Icons">
+                <we-button title="Default" data-select-class="">Default</we-button>
+                <we-button title="Side / bottom" data-select-class="o_icons_side_to_bottom">Side / bottom</we-button>
+                <we-button title="Plus / minus" data-select-class="o_icons_plus_to_minus o_has_custom_icons">Plus / minus</we-button>
+                <we-button title="Custom" data-name="accordion_icons_custom_opt" data-select-class="o_icons_custom o_has_custom_icons">Custom</we-button>
+            </we-select>
+            <we-row string="Active" class="o_we_sublevel_1">
+                <we-button data-dependencies="accordion_icons_custom_opt" data-custom-icon="true" data-custom-active-icon="true" data-no-preview="true">
+                    <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
+                </we-button>
+            </we-row>
+            <we-row string="Inactive" class="o_we_sublevel_1">
+                <we-button data-dependencies="accordion_icons_custom_opt" data-custom-icon="true" data-custom-active-icon="false" data-no-preview="true">
+                    <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
+                </we-button>
+            </we-row>
+            <we-select string="Transition" data-dependencies="accordion_icons_custom_opt" class="o_we_sublevel_1">
+                <we-button title="None" data-select-class="">None</we-button>
+                <we-button title="Fade" data-select-class="o_transition o_transition_fade">Fade</we-button>
+                <we-button title="Scale" data-select-class="o_transition o_transition_scale">Scale</we-button>
+                <we-button title="Translate" data-select-class="o_transition o_transition_translate">Translate</we-button>
+            </we-select>
+            <we-button-group string="Position" data-apply-to=".accordion-header" class="o_we_sublevel_1">
+                <we-button title="Left" data-select-class="justify-content-end flex-row-reverse o_icons_position_reversed"
                     data-img="/website/static/src/img/snippets_options/pos_left.svg"/>
                 <we-button title="Right" data-select-class="justify-content-between"
                     data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
