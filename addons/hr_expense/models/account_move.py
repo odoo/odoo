@@ -9,6 +9,18 @@ class AccountMove(models.Model):
 
     expense_sheet_id = fields.One2many('hr.expense.sheet', 'account_move_id')
 
+    @api.depends('partner_id', 'expense_sheet_id', 'company_id')
+    def _compute_commercial_partner_id(self):
+        own_expense_moves = self.filtered(lambda move: move.sudo().expense_sheet_id.payment_mode == 'own_account')
+        for move in own_expense_moves:
+            if move.expense_sheet_id.payment_mode == 'own_account':
+                move.commercial_partner_id = (
+                    move.partner_id.commercial_partner_id
+                    if move.partner_id.commercial_partner_id != move.company_id.partner_id
+                    else move.partner_id
+                )
+        super(AccountMove, self - own_expense_moves)._compute_commercial_partner_id()
+
     def action_open_expense_report(self):
         self.ensure_one()
         return {
