@@ -86,17 +86,17 @@ class MailFollowers(models.Model):
             recipients of the mails as a set of tuple (model, res_id, partner_id).
         :rtype: set
         """
-        self.env['mail.mail'].flush_model(['message_id', 'recipient_ids'])
+        self.env['mail.mail'].flush_model(['mail_message_id', 'recipient_ids'])
         self.env['mail.followers'].flush_model(['partner_id', 'res_model', 'res_id'])
         self.env['mail.message'].flush_model(['model', 'res_id'])
         # mail_mail_res_partner_rel is the join table for the m2m recipient_ids field
         self.env.cr.execute("""
             SELECT message.model, message.res_id, mail_partner.res_partner_id
-              FROM mail_mail mail        
+              FROM mail_mail mail
               JOIN mail_mail_res_partner_rel mail_partner ON mail_partner.mail_mail_id = mail.id
               JOIN mail_message message ON mail.mail_message_id = message.id AND message.model != 'discuss.channel'
-              JOIN mail_followers follower ON message.model = follower.res_model 
-               AND message.res_id = follower.res_id 
+              JOIN mail_followers follower ON message.model = follower.res_model
+               AND message.res_id = follower.res_id
                AND mail_partner.res_partner_id = follower.partner_id
              WHERE mail.id IN %(mail_ids)s
         """, {'mail_ids': tuple(mail_ids)})
@@ -142,7 +142,7 @@ class MailFollowers(models.Model):
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
         self.env['mail.message.subtype'].flush_model(['internal'])
         self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'groups_id'])
-        self.env['res.partner'].flush_model(['active', 'partner_share'])
+        self.env['res.partner'].flush_model(['active', 'email', 'email_normalized', 'partner_share'])
         self.env['res.groups'].flush_model(['users'])
         # if we have records and a subtype: we have to fetch followers, unless being
         # in user notification mode (contact only pids)
@@ -179,6 +179,8 @@ class MailFollowers(models.Model):
     )
     SELECT partner.id as pid,
            partner.active as active,
+           partner.email AS email,
+           partner.email_normalized AS email_normalized,
            partner.lang as lang,
            partner.partner_share as pshare,
            sub_user.uid as uid,
@@ -216,6 +218,8 @@ class MailFollowers(models.Model):
             query = """
     SELECT partner.id as pid,
            partner.active as active,
+           partner.email AS email,
+           partner.email_normalized AS email_normalized,
            partner.lang as lang,
            partner.partner_share as pshare,
            sub_user.uid as uid,
@@ -268,6 +272,8 @@ class MailFollowers(models.Model):
             query = """
     SELECT partner.id as pid,
            partner.active as active,
+           partner.email AS email,
+           partner.email_normalized AS email_normalized,
            partner.lang as lang,
            partner.partner_share as pshare,
            sub_user.uid as uid,
@@ -307,7 +313,10 @@ class MailFollowers(models.Model):
 
         res_ids = records.ids if records else [0]
         doc_infos = dict((res_id, {}) for res_id in res_ids)
-        for (partner_id, is_active, lang, pshare, uid, ushare, notif, groups, res_id, is_follower) in res:
+        for (
+            partner_id, is_active, email, email_normalized, lang,
+            pshare, uid, ushare, notif, groups, res_id, is_follower
+        ) in res:
             to_update = [res_id] if res_id else res_ids
             for res_id_to_update in to_update:
                 # avoid updating already existing information, unnecessary dict update
@@ -315,6 +324,8 @@ class MailFollowers(models.Model):
                     continue
                 follower_data = {
                     'active': is_active,
+                    'email': email,
+                    'email_normalized': email_normalized,
                     'id': partner_id,
                     'is_follower': is_follower,
                     'lang': lang,
