@@ -685,7 +685,7 @@ export function createRelatedModels(
     }
 
     const delete_ = withoutProxyTrap(_delete);
-    function _delete(model, record, deleteOptions = {}) {
+    function _delete(crud, model, record, deleteOptions = {}) {
         const id = record.id;
         const fields = getFields(model);
         const handleCommand = (inverse, field, record, backend = false) => {
