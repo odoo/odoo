@@ -114,6 +114,7 @@ test("keep new message separator until user goes back to the thread", async () =
     await contains(".o-mail-Discuss-threadName", { value: "History" });
     await click(".o-mail-DiscussSidebar-item", { text: "test" });
     await contains(".o-mail-Discuss-threadName", { value: "test" });
+    await contains(".o-mail-Message", { text: "hello" });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New" });
 });
 

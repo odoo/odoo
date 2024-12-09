@@ -12,6 +12,7 @@ import { BusBus } from "./mock_server/mock_models/bus_bus";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 
 import { registry } from "@web/core/registry";
+import { deepEqual } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { patchWebsocketWorkerWithCleanup } from "./mock_websocket";
 
@@ -60,7 +61,7 @@ viewsRegistry.category("form").add(
 
 // should be enough to decide whether or not notifications/channel
 // subscriptions... are received.
-const TIMEOUT = 500;
+const TIMEOUT = 2000;
 
 /**
  * @param {string} eventName
@@ -176,14 +177,21 @@ function _waitNotification(notification) {
     const [env, type, payload, { received = true } = {}] = notification;
     const notificationDeferred = new Deferred();
     const failTimeout = setTimeout(() => {
-        expect(!received).toBe(true, {
-            message: `Notification of type "${type}" with payload ${payload} not received.`,
-        });
+        const msgParts = [`Notification of type "${type}"`];
+        if (payload) {
+            msgParts.push(`with payload ${JSON.stringify(payload)}`);
+        }
+        msgParts.push("not received.");
+        expect(!received).toBe(true, { message: msgParts.join(" ") });
         env.services["bus_service"].unsubscribe(type, callback);
-        notificationDeferred.resolve();
+        if (received) {
+            notificationDeferred.reject(new Error(msgParts.join(" ")));
+        } else {
+            notificationDeferred.resolve();
+        }
     }, TIMEOUT);
     const callback = (notifPayload) => {
-        if (payload === undefined || JSON.stringify(notifPayload) === JSON.stringify(payload)) {
+        if (payload === undefined || deepEqual(notifPayload, payload)) {
             expect(received).toBe(true, {
                 message: `Notification of type "${type}" with payload ${JSON.stringify(
                     notifPayload
