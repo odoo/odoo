@@ -381,11 +381,15 @@ export class Message extends Record {
         this.store.env.services.notification.add(notification, { type });
     }
 
-    async edit(updateData) {
-        if (
+    skipEdit(updateData) {
+        return (
             convertBrToLineBreak(this.body) === updateData.body &&
             updateData.attachments?.length === 0
-        ) {
+        );
+    }
+
+    async edit(updateData) {
+        if (this.skipEdit(updateData)) {
             return;
         }
         const data = await rpc("/mail/message/update_content", {

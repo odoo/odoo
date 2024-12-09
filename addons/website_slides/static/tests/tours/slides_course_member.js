@@ -147,24 +147,27 @@ registry.category("web_tour.tours").add("course_member", {
             run: "click",
         },
         {
-            trigger: 'button[data-bs-target="#ratingpopupcomposer"]',
+            trigger: '#ratingComposerRoot:shadow button:contains("Review")',
             run: "click",
         },
         {
-            trigger: ".modal .modal-body i.fa.fa-star:eq(2)",
+            trigger: "#ratingComposerRoot:shadow i.fa.fa-star:eq(2)",
             run: "click",
         },
         {
-            trigger: ".modal .modal-body textarea",
+            trigger: "#ratingComposerRoot:shadow textarea",
             run: "edit This is a great course. Top !",
         },
         {
-            trigger: ".modal button:contains(review)",
+            trigger: "#ratingComposerRoot:shadow button.o-mail-Composer-send",
             run: "click",
         },
         {
             trigger: 'a[id="review-tab"]',
             run: "click",
+        },
+        {
+            trigger: '#chatterRoot:shadow .o-mail-Message-body:contains("This is a great course. Top !")',
         },
     ],
 });

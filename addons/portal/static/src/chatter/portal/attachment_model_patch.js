@@ -11,7 +11,7 @@ patch(Attachment.prototype, {
     },
 
     get urlRoute() {
-        if (!this.access_token && this.thread?.model !== "discuss.channel") {
+        if (!this.access_token && this.thread && this.thread.model !== "discuss.channel") {
             return this.isImage
                 ? `/portal/thread/${this.thread.model}/${this.thread.id}/image/${this.id}`
                 : `/portal/thread/${this.thread.model}/${this.thread.id}/attachment/${this.id}`;
