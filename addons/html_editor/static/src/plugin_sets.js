@@ -34,6 +34,7 @@ import { IconPlugin } from "./main/media/icon_plugin";
 import { ImageCropPlugin } from "./main/media/image_crop_plugin";
 import { ImagePlugin } from "./main/media/image_plugin";
 import { MediaPlugin } from "./main/media/media_plugin";
+import { MobilePlugin } from "./main/mobile_plugin";
 import { MoveNodePlugin } from "./main/movenode_plugin";
 import { PowerButtonsPlugin } from "./main/power_buttons_plugin";
 import { PositionPlugin } from "./main/position_plugin";
@@ -151,6 +152,7 @@ export const MAIN_PLUGINS = [
     TextDirectionPlugin,
     InlineCodePlugin,
     TableResizePlugin,
+    MobilePlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [
