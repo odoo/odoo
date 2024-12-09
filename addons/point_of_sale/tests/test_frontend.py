@@ -1123,3 +1123,28 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
+
+    def test_product_price_precision_tax(self):
+        """ This tests the behavior of taxes when the decimal accuracy of the
+        currency and the product price are different """
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount': 10,
+            'price_include': False,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        # Set the allowed number of digits for the price_unit
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1)
+        decimal_precision.digits = 4
+
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'taxes_id': [(6, 0, [tax.id])],
+            'list_price': 2.2727,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductPricePrecisionTaxTour', login="accountman")

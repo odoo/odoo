@@ -1211,7 +1211,8 @@ class PosGlobalState extends PosModel {
         const company = this.company;
         var round_tax = company.tax_calculation_rounding_method != 'round_globally';
 
-        var initial_currency_rounding = currency_rounding;
+        var product_rounding = Math.pow(10, -this.dp['Product Price']);
+        var initial_currency_rounding = Math.min(product_rounding, currency_rounding)
         if(!round_tax)
             currency_rounding = currency_rounding * 0.00001;
 
