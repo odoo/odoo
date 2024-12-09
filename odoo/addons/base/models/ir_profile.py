@@ -49,6 +49,11 @@ class IrProfile(models.Model):
         return self.sudo().search(domain).unlink()
 
     def _compute_speedscope(self):
+        # The params variable is done to control input from the user
+        # When expanding this, it should be select from an enum to input only the correct values
+        params = {
+            'constant_time' : request.httprequest.args.get('constant_time','False')=='True'
+        }
         for execution in self:
             sp = Speedscope(init_stack_trace=json.loads(execution.init_stack_trace))
             if execution.sql:
@@ -58,7 +63,7 @@ class IrProfile(models.Model):
             if execution.traces_sync:
                 sp.add('settrace', json.loads(execution.traces_sync))
 
-            result = json.dumps(sp.add_default().make())
+            result = json.dumps(sp.add_default(**params).make())
             execution.speedscope = base64.b64encode(result.encode('utf-8'))
 
     def _compute_speedscope_url(self):
@@ -72,6 +77,19 @@ class IrProfile(models.Model):
         """
         limit = self.env['ir.config_parameter'].sudo().get_param('base.profiling_enabled_until', '')
         return limit if str(fields.Datetime.now()) < limit else None
+
+    def open_config_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Profile render wizard',
+            'res_model': 'base.render.profiling.wizard',
+            'view_mode': 'form',
+            'view_id': self.env.ref('base.render_profiling_wizard').id,
+            'target': 'new',
+            'context': {
+                'profile_id': self.id,
+            },
+        }
 
     @api.model
     def set_profiling(self, profile=None, collectors=None, params=None):
@@ -144,3 +162,29 @@ class BaseEnableProfilingWizard(models.TransientModel):
     def submit(self):
         self.env['ir.config_parameter'].set_param('base.profiling_enabled_until', self.expiration)
         return False
+    
+class RenderProfilingWizard(models.TransientModel):
+    _name = 'base.render.profiling.wizard'
+    _description = "Enable profiling for some time"
+
+    constant_time = fields.Boolean('Constant Time')
+
+    search_params = fields.Char("Search Params", compute='_formulate_search_params')
+
+    def _formulate_search_params(self):
+        self.search_params = f'constant_time={self.constant_time}'
+    
+    def open(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f"/web/speedscope/{self.id}?{self.search_params}",
+            'target': 'new',
+        }
+    
+    def download(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f"/web/speedscope/download/{self.id}?{self.search_params}",
+            'target': 'new',
+        }
+

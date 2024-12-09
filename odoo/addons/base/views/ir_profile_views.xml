@@ -23,8 +23,8 @@
                 <field name="name"/>
                 <field name="entry_count"/>
                 <field name="sql_count" optional="hide"/>
-                <field name="speedscope_url" widget="url"/>
                 <field name="duration"/>
+                <button name="open_config_wizard" type="object" string="Options" class="btn-primary"/>
             </list>
         </field>
     </record>
@@ -68,6 +68,24 @@
                 <footer>
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     <button string="Enable profiling" type="object" name="submit" class="btn btn-primary" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="render_profiling_wizard" model="ir.ui.view">
+        <field name="name">Config profiling render</field>
+        <field name="model">base.render.profiling.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Config profile rendering">
+                <group>
+                    <field name="constant_time"/>
+                    <!-- <field name="expiration"/> -->
+                </group>
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    <button string="Open" type="object" name="open" class="btn btn-primary" data-hotkey="q"/>
+                    <button string="Download" type="object" name="download" class="btn btn-primary" data-hotkey="d"/>
                 </footer>
             </form>
         </field>
