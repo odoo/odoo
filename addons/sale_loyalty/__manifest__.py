@@ -24,12 +24,8 @@
         'views/sale_loyalty_menus.xml',
     ],
     'assets': {
-        'web.assets_frontend': [
-            'sale_loyalty/static/src/portal/*',
-        ],
         'web.assets_backend': [
             'sale_loyalty/static/src/**/*',
-            ('remove', 'sale_loyalty/static/src/portal/**/*'),
         ],
     },
     'uninstall_hook': 'uninstall_hook',

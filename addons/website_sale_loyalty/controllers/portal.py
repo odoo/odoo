@@ -18,16 +18,10 @@ class CustomerPortalLoyalty(CustomerPortal):
 
         res['program']['trigger_products'] = []
         for product in program_sudo.trigger_product_ids:
-            taxes = product.taxes_id.filtered(lambda t: t.company_id == request.env.company)
-            tax_data = taxes.compute_all(
-                product.lst_price,
-                currency=request.env.company.currency_id,
-                quantity=1,
-                product=product,
-                partner=request.env.user.partner_id,
-            )
+            if not product.website_published:
+                continue
             res['program']['trigger_products'].append({
                 'id': product.id,
-                'total_price': format_amount(self.env, tax_data['total_included'], request.env.company.currency_id),
+                'total_price': format_amount(self.env, product.lst_price, request.env.company.currency_id),
             })
         return res

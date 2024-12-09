@@ -27,3 +27,9 @@ class Cart(WebsiteSaleCart):
             # and does not follow the request's context
             request.website = request.website.with_context(website_sale_loyalty_delete=True)
         return super().update_cart(*args, quantity=quantity, **kwargs)
+
+    @route('/topup/pay', type='http', methods=['GET', 'POST'], auth='user', website=True, sitemap=False)
+    def topup_pay(self, **kwargs):
+        product = self.env['product.product'].browse(int(kwargs['trigger_product_id']))
+        self.add_to_cart(product.product_tmpl_id.id, product.id, 1)
+        return request.redirect('/shop/cart')
