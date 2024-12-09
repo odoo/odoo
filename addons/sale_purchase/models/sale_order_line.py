@@ -229,6 +229,7 @@ class SaleOrderLine(models.Model):
             ('partner_id', '=', partner.id),
             ('state', '=', 'draft'),
             ('company_id', '=', (company and company or self.env.company).id),
+            ('order_line.sale_order_id', '=', self.order_id.id)
         ], order='id desc')
 
     def _create_purchase_order(self, supplierinfo):
@@ -285,10 +286,8 @@ class SaleOrderLine(models.Model):
             will not create a second one.
         """
         sale_line_purchase_map = {}
-        for line in self:
-            line = line.with_company(line._purchase_service_get_company())
-            # Do not regenerate PO line if the SO line has already created one in the past (SO cancel/reconfirmation case)
-            if line.product_id.service_to_purchase and not line.purchase_line_count:
-                result = line._purchase_service_create()
-                sale_line_purchase_map.update(result)
+        lines_to_process = self.with_company(self._purchase_service_get_company()).filtered(
+            lambda l: l.product_id.service_to_purchase and not l.purchase_line_count)
+        if lines_to_process:
+            sale_line_purchase_map.update(lines_to_process._purchase_service_create())
         return sale_line_purchase_map
