@@ -440,6 +440,34 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     const disabler = new TrapDisabler();
     const setTrapsCache = {};
 
+    function instantiate(model) {
+        const modelName = model.name;
+        const fields = model.fields;
+        const Model = modelClasses[modelName] || Base;
+        if (!(modelName in setTrapsCache)) {
+            setTrapsCache[modelName] = function setTrap(target, prop, value, receiver) {
+                if (disabler.isDisabled() || !(prop in fields)) {
+                    return Reflect.set(target, prop, value, receiver);
+                }
+                return disabler.call(() => {
+                    const field = fields[prop];
+                    if (field && X2MANY_TYPES.has(field.type)) {
+                        if (!isX2ManyCommands(value)) {
+                            value = [["clear"], ["link", ...value]];
+                        }
+                    }
+                    receiver.update({ [prop]: value });
+                    target.model.triggerEvents("update", { field: prop, value, id: target.id });
+                    return true;
+                });
+            };
+        }
+        return new Model({
+            model,
+            traps: { set: setTrapsCache[modelName] },
+        });
+    }
+
     /**
      * A model (e.g. pos.order) points to an instance of this class.
      */
@@ -463,31 +491,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return Array.from(this.records[this.name].values());
         }
         instantiate() {
-            const modelName = this.name;
-            const fields = this.fields;
-            const Model = modelClasses[modelName] || Base;
-            if (!(modelName in setTrapsCache)) {
-                setTrapsCache[modelName] = function setTrap(target, prop, value, receiver) {
-                    if (disabler.isDisabled() || !(prop in fields)) {
-                        return Reflect.set(target, prop, value, receiver);
-                    }
-                    return disabler.call(() => {
-                        const field = fields[prop];
-                        if (field && X2MANY_TYPES.has(field.type)) {
-                            if (!isX2ManyCommands(value)) {
-                                value = [["clear"], ["link", ...value]];
-                            }
-                        }
-                        receiver.update({ [prop]: value });
-                        target.model.triggerEvents("update", { field: prop, value, id: target.id });
-                        return true;
-                    });
-                };
-            }
-            return new Model({
-                model: this,
-                traps: { set: setTrapsCache[modelName] },
-            });
+            return instantiate(this);
         }
         exists(id) {
             return this.records[this.name].has(id);
