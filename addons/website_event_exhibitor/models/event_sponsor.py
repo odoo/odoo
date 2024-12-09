@@ -44,6 +44,7 @@ class EventSponsor(models.Model):
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=True, translate=html_translate,
         readonly=False, store=True)
+    show_on_ticket = fields.Boolean("Show on ticket", default=True)
     # contact information
     partner_id = fields.Many2one('res.partner', 'Partner', required=True, auto_join=True)
     partner_name = fields.Char('Name', related='partner_id.name')
