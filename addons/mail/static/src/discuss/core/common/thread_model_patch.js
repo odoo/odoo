@@ -272,6 +272,12 @@ const threadPatch = {
         return super.importantCounter;
     },
     /** @override */
+    isDisplayedOnUpdate() {
+        super.isDisplayedOnUpdate(...arguments);
+        if (this.selfMember && !this.isDisplayed) {
+            this.selfMember.syncUnread = true;
+        }
+    },
     get isUnread() {
         return this.selfMember?.message_unread_counter > 0 || super.isUnread;
     },
@@ -294,6 +300,8 @@ const threadPatch = {
             this.selfMember.seen_message_id?.id >= newestPersistentMessage.id &&
             this.selfMember.new_message_separator > newestPersistentMessage.id;
         if (alreadyReadBySelf) {
+            // Server is up to date, but local state must be updated as well.
+            this.selfMember.syncUnread = sync ?? this.selfMember.syncUnread;
             return;
         }
         rpc("/discuss/channel/mark_as_read", {
