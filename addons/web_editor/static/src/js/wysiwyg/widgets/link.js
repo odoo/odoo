@@ -250,6 +250,11 @@ const Link = Widget.extend({
         }
 
         this.$link.attr(attrs);
+        // Adding `oe_unbreakable` class to link if it is a button which
+        // prevents button from breaking when enter event is triggered.
+        if(this.$link[0].classList.contains("btn")) {
+            this.$link[0].classList.add("oe_unbreakable");
+        }
         if (!this.$link.attr('target')) {
             this.$link[0].removeAttribute('target');
         }
