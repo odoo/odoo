@@ -2,13 +2,13 @@
 <templates id="template" xml:space="preserve">
     <t t-name="l10n_in_pos.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
-            <t t-if="props.data.partner and props.data.company?.country_id?.code == 'IN'">
+            <t t-if="order.partner_id and order.company?.country_id?.code == 'IN'">
                 <div class="pos-receipt-center-align">
-                    <div><t t-out="props.data.partner.name" /></div>
-                    <t t-if="props.data.partner.phone">
+                    <div><t t-out="order.parnter_id.name" /></div>
+                    <t t-if="order.parnter_id.phone">
                         <div>
                             <span>Phone: </span>
-                            <t t-out="props.data.partner.phone" />
+                            <t t-out="order.parnter_id.phone" />
                         </div>
                     </t>
                     <br />
@@ -19,7 +19,7 @@
 
     <t t-name="l10n_in_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
         <xpath expr="//Orderline" position="inside">
-            <t t-if="line.l10n_in_hsn_code and props.data.headerData.company.country_id?.code === 'IN'">
+            <t t-if="line.l10n_in_hsn_code and header.company.country_id?.code === 'IN'">
                 <div class="pos-receipt-left-padding">
                     <span>HSN Code: </span>
                     <t t-out="line.l10n_in_hsn_code"/>
@@ -28,8 +28,8 @@
         </xpath>
         <xpath expr="//div[@class='before-footer']" position="after">
             <br/>
-            <t t-set="l10n_in_hsn_summary" t-value="props.data?.l10n_in_hsn_summary"/>
-            <table t-if="l10n_in_hsn_summary and props.data.headerData.company.country_id?.code === 'IN' and l10n_in_hsn_summary.items.length > 0" style="width:100%;">
+            <t t-set="l10n_in_hsn_summary" t-value="order._prepareL10nInHsnSummary()"/>
+            <table t-if="l10n_in_hsn_summary and header.company.country_id?.code === 'IN' and l10n_in_hsn_summary.items.length > 0" style="width:100%;">
               <tr>
                     <th class="text-center fw-bolder" colspan="6">HSN Summary</th>
                 </tr>
