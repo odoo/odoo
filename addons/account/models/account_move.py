@@ -1124,8 +1124,7 @@ class AccountMove(models.Model):
                 reconciliation_vals = [x for x in reconciliation_vals if x['source_line_account_type'] in ('asset_receivable', 'liability_payable')]
 
             new_pmt_state = 'not_paid' if invoice.payment_state != 'blocked' else 'blocked'
-            if invoice.state == 'posted':
-
+            if invoice.state in ('draft', 'posted'):
                 # Posted invoice/expense entry.
                 if payment_state_matters:
 
@@ -1139,7 +1138,7 @@ class AccountMove(models.Model):
                                 new_pmt_state = invoice._get_invoice_in_payment_state()
 
                         else:
-                            new_pmt_state = 'paid'
+                            new_pmt_state = 'paid' if invoice.state == 'posted' else 'not_paid'
 
                             reverse_move_types = set()
                             for x in reconciliation_vals:
@@ -1165,7 +1164,7 @@ class AccountMove(models.Model):
     @api.depends('payment_state', 'state')
     def _compute_status_in_payment(self):
         for move in self:
-            move.status_in_payment = move.state if move.state in ('draft', 'cancel') else move.payment_state
+            move.status_in_payment = move.state if move.state == 'cancel' or (move.state == 'draft' and move.payment_state == 'not_paid') else move.payment_state
 
     @api.depends('matched_payment_ids')
     def _compute_payment_count(self):
@@ -1248,7 +1247,7 @@ class AccountMove(models.Model):
             move.invoice_outstanding_credits_debits_widget = False
             move.invoice_has_outstanding = False
 
-            if move.state != 'posted' \
+            if move.state not in {'draft', 'posted'} \
                     or move.payment_state not in ('not_paid', 'partial') \
                     or not move.is_invoice(include_receipts=True):
                 continue
@@ -1320,7 +1319,7 @@ class AccountMove(models.Model):
         for move in self:
             payments_widget_vals = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
 
-            if move.state == 'posted' and move.is_invoice(include_receipts=True):
+            if move.is_invoice(include_receipts=True):
                 reconciled_vals = []
                 reconciled_partials = move.sudo()._get_all_reconciled_invoice_partials()
                 for reconciled_partial in reconciled_partials:
