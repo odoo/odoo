@@ -25,10 +25,7 @@ test("list activity widget with no activity", async () => {
     };
     const { openView } = await start({
         mockRPC(route, args) {
-            if (
-                args.method !== "get_views" &&
-                !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
-            ) {
+            if (args.method !== "get_views" && !ROUTES_TO_IGNORE.includes(route)) {
                 step(`${route} - ${JSON.stringify(args)}`);
             }
         },
@@ -104,10 +101,7 @@ test("list activity widget with activities", async () => {
     };
     const { openView } = await start({
         mockRPC(route, args) {
-            if (
-                args.method !== "get_views" &&
-                !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
-            ) {
+            if (args.method !== "get_views" && !ROUTES_TO_IGNORE.includes(route)) {
                 step(`${route} - ${JSON.stringify(args)}`);
             }
         },
@@ -183,10 +177,7 @@ test("list activity widget with exception", async () => {
     };
     const { openView } = await start({
         mockRPC(route, args) {
-            if (
-                args.method !== "get_views" &&
-                !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
-            ) {
+            if (args.method !== "get_views" && !ROUTES_TO_IGNORE.includes(route)) {
                 step(`${route} - ${JSON.stringify(args)}`);
             }
         },
@@ -269,10 +260,7 @@ test("list activity widget: open dropdown", async () => {
     };
     const { openView } = await start({
         mockRPC(route, args) {
-            if (
-                args.method !== "get_views" &&
-                !["/mail/", "/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
-            ) {
+            if (args.method !== "get_views" && !["/mail/", ...ROUTES_TO_IGNORE].includes(route)) {
                 step(`${route} - ${JSON.stringify(args)}`);
             }
             if (args.method === "action_feedback") {

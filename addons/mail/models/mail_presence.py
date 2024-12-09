@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
 
 from odoo import api, fields, models
@@ -11,22 +11,34 @@ AWAY_TIMER = 1800  # 30 minutes
 PRESENCE_OUTDATED_TIMER = 12 * 60 * 60  # 12 hours
 
 
-class BusPresence(models.Model):
+class MailPresence(models.Model):
     """ User Presence
         Its status is 'online', 'away' or 'offline'. This model should be a one2one, but is not
         attached to res_users to avoid database concurrence errors. Since the 'update_presence' method is executed
         at each poll, if the user have multiple opened tabs, concurrence errors can happend, but are 'muted-logged'.
     """
 
-    _description = 'User Presence'
+    _name = "mail.presence"
+    _inherit = "bus.listener.mixin"
+    _description = "User Presence"
     _log_access = False
 
-    user_id = fields.Many2one('res.users', 'Users', ondelete='cascade')
-    last_poll = fields.Datetime('Last Poll', default=lambda self: fields.Datetime.now())
-    last_presence = fields.Datetime('Last Presence', default=lambda self: fields.Datetime.now())
-    status = fields.Selection([('online', 'Online'), ('away', 'Away'), ('offline', 'Offline')], 'IM Status', default='offline')
+    user_id = fields.Many2one("res.users", "Users", ondelete="cascade")
+    guest_id = fields.Many2one("mail.guest", "Guest", ondelete="cascade")
+    last_poll = fields.Datetime("Last Poll", default=lambda self: fields.Datetime.now())
+    last_presence = fields.Datetime("Last Presence", default=lambda self: fields.Datetime.now())
+    status = fields.Selection(
+        [("online", "Online"), ("away", "Away"), ("offline", "Offline")],
+        "IM Status", default="offline"
+    )
 
+    _guest_unique = models.UniqueIndex("(guest_id) WHERE guest_id IS NOT NULL")
     _user_unique = models.UniqueIndex("(user_id) WHERE user_id IS NOT NULL")
+
+    _partner_or_guest_exists = models.Constraint(
+        "CHECK((user_id IS NOT NULL AND guest_id IS NULL) OR (user_id IS NULL AND guest_id IS NOT NULL))",
+        "A mail presence must have a user or a guest."
+    )
 
     def create(self, values):
         presences = super().create(values)
@@ -35,9 +47,9 @@ class BusPresence(models.Model):
         return presences
 
     def write(self, values):
-        status_by_user = {presence._get_identity_field_name(): presence.status for presence in self}
+        status_by_presence = {presence: presence.status for presence in self}
         result = super().write(values)
-        updated = self.filtered(lambda p: status_by_user[p._get_identity_field_name()] != p.status)
+        updated = self.filtered(lambda p: status_by_presence[p] != p.status)
         updated._invalidate_im_status()
         updated._send_presence()
         return result
@@ -64,18 +76,6 @@ class BusPresence(models.Model):
             # ignore concurrency error
             return self.env.cr.rollback()
 
-    def _get_bus_target(self):
-        self.ensure_one()
-        return self.user_id.partner_id if self.user_id else None
-
-    def _get_identity_field_name(self):
-        self.ensure_one()
-        return "user_id" if self.user_id else None
-
-    def _get_identity_data(self):
-        self.ensure_one()
-        return {"partner_id": self.user_id.partner_id.id} if self.user_id else None
-
     @api.model
     def _update_presence(self, inactivity_period, identity_field, identity_value):
         presence = self.search([(identity_field, "=", identity_value)])
@@ -93,6 +93,7 @@ class BusPresence(models.Model):
     def _invalidate_im_status(self):
         self.user_id.invalidate_recordset(["im_status"])
         self.user_id.partner_id.invalidate_recordset(["im_status"])
+        self.guest_id.invalidate_recordset(["im_status"])
 
     def _send_presence(self, im_status=None, bus_target=None):
         """Send notification related to bus presence update.
@@ -100,15 +101,15 @@ class BusPresence(models.Model):
         :param im_status: 'online', 'away' or 'offline'
         """
         for presence in self:
-            identity_data = presence._get_identity_data()
-            target = presence._get_bus_target()
-            target = bus_target or (target and (target, "presence"))
-            if identity_data and target:
-                self.env["bus.bus"]._sendone(
-                    target,
-                    "bus.bus/im_status_updated",
-                    {"im_status": im_status or presence.status, **identity_data},
-                )
+            self.env["bus.bus"]._sendone(
+                bus_target or (presence.guest_id or presence.user_id.partner_id, "presence"),
+                "bus.bus/im_status_updated",
+                {
+                    "im_status": im_status or presence.status,
+                    "guest_id": presence.guest_id.id,
+                    "partner_id": presence.user_id.partner_id.id
+                },
+            )
 
     @api.autovacuum
     def _gc_bus_presence(self):
