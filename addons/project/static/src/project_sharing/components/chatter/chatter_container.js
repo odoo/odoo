@@ -120,7 +120,7 @@ export class ChatterContainer extends Component {
 
     async fetchMessages() {
         const result = await rpc(
-            '/mail/chatter_fetch',
+            '/mail/thread/messages',
             this.messagesParams(this.props),
         );
         this.state.messages = this.preprocessMessages(result.messages);
