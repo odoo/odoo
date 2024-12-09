@@ -15,7 +15,8 @@ class PurchaseOrder(models.Model):
         dropship_subcontract_pos = self.filtered(lambda po: po.default_location_dest_id_is_subcontracting_loc)
         for order in dropship_subcontract_pos:
             subcontractor_ids = order.picking_type_id.default_location_dest_id.subcontractor_ids
-            order.dest_address_id = subcontractor_ids if len(subcontractor_ids) == 1 else False
+            if len(subcontractor_ids) == 1:
+                order.dest_address_id = subcontractor_ids
         super(PurchaseOrder, self - dropship_subcontract_pos)._compute_dest_address_id()
 
     @api.onchange('picking_type_id')
