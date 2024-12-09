@@ -7,6 +7,7 @@ import datetime
 from enum import Enum
 from functools import cache, wraps
 from importlib import util
+import inspect
 import io
 import logging
 import netifaces
@@ -102,6 +103,29 @@ elif platform.system() == 'Linux':
                 subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=False)
 
 
+def require_db(function):
+    """Decorator to check if the IoT Box is connected to the internet
+    and to a database before executing the function.
+    This decorator injects the ``server_url`` parameter if the function has it.
+    """
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        fname = f"<function {function.__module__}.{function.__qualname__}>"
+        server_url = get_odoo_server_url()
+        iot_box_ip = get_ip()
+        if not iot_box_ip or iot_box_ip == "10.11.12.1" or not server_url:
+            _logger.info('Ignoring the function %s without a connected database', fname)
+            return
+
+        arg_name = 'server_url'
+        if arg_name in inspect.signature(function).parameters:
+            _logger.debug('Adding server_url param to %s', fname)
+            kwargs[arg_name] = server_url
+
+        return function(*args, **kwargs)
+    return wrapper
+
+
 def start_nginx_server():
     if platform.system() == 'Windows':
         path_nginx = get_path_nginx()
@@ -156,12 +180,15 @@ def check_certificate():
 
 
 @toggleable
-def check_git_branch():
+@require_db
+def check_git_branch(server_url=None):
     """Check if the local branch is the same as the connected Odoo DB and
     checkout to match it if needed.
+
+    :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
     try:
-        response = requests.post(get_odoo_server_url() + "/web/webclient/version_info", json={}, timeout=5)
+        response = requests.post(server_url + "/web/webclient/version_info", json={}, timeout=5)
         response.raise_for_status()
         data = response.json()
     except requests.exceptions.HTTPError:
@@ -315,14 +342,10 @@ def get_path_nginx():
 @cache
 def get_odoo_server_url():
     """Get the URL of the linked Odoo database.
-    If no internet connection is available, return None to avoid trying
-    to reach the server.
 
     :return: The URL of the linked Odoo database.
     :rtype: str or None
     """
-    if get_ip() == "10.11.12.1":
-        return None
     return get_conf('remote_server')
 
 
@@ -416,30 +439,28 @@ def delete_iot_handlers():
 
 
 @toggleable
+@require_db
 def download_iot_handlers(auto=True):
-    """
-    Get the drivers from the configured Odoo server
-    """
+    """Get the drivers from the configured Odoo server"""
     server = get_odoo_server_url()
-    if server:
-        try:
-            response = requests.post(
-                server + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
-            )
-            response.raise_for_status()
-        except requests.exceptions.RequestException:
-            _logger.exception('Could not reach configured server to download IoT handlers')
-            return
+    try:
+        response = requests.post(
+            server + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
+        )
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        _logger.exception('Could not reach configured server to download IoT handlers')
+        return
 
-        data = response.content
-        if not data:
-            return
+    data = response.content
+    if not data:
+        return
 
-        delete_iot_handlers()
-        with writable():
-            path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
-            zip_file = zipfile.ZipFile(io.BytesIO(data))
-            zip_file.extractall(path)
+    delete_iot_handlers()
+    with writable():
+        path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
+        zip_file = zipfile.ZipFile(io.BytesIO(data))
+        zip_file.extractall(path)
 
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
