@@ -70,6 +70,10 @@ class WebsiteRewrite(models.Model):
         404 Not Found: If you want remove a specific page/controller (e.g. Ecommerce is installed, but you don't want /shop on a specific website)
         308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)
     ''')
+    has_group = fields.Many2many(
+        string="If User In Group",
+        comodel_name="res.groups",
+    )
 
     sequence = fields.Integer()
 
