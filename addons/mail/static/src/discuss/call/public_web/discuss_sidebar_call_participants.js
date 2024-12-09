@@ -59,12 +59,9 @@ export class DiscussSidebarCallParticipants extends Component {
 
     get sessions() {
         const sessions = [...this.props.thread.rtcSessions];
-        return sessions.sort((s1, s2) => {
-            return (
-                s1.channelMember?.persona?.nameOrDisplayName?.localeCompare(
-                    s2.channelMember?.persona?.nameOrDisplayName
-                ) ?? 1
-            );
-        });
+        return sessions.sort(
+            (s1, s2) =>
+                s1.channelMember?.persona?.name?.localeCompare(s2.channelMember?.persona?.name) ?? 1
+        );
     }
 }
