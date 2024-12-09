@@ -836,6 +836,12 @@ a.no-decoration {
 }
 
 .o_website_sale_checkout {
+    #cart_products {
+        .o_description_line {
+            @include o-line-clamp(2);
+        }
+    }
+
     .o_total_card {
         // The accordion have to mimick the styling of a card
         background-color: $card-bg;

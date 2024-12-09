@@ -10,8 +10,8 @@
     </template>
 
     <!-- If the sale order line concerns an event, we want the "product" link to point to the event itself and not to the product on the ecommerce -->
-    <template id="cart_line_product_link_inherit_website_event_sale" inherit_id="website_sale.cart_line_product_link" name="Event Shopping Cart Line Product Link">
-        <xpath expr="//a" position="attributes">
+    <template id="cart_line_product_link_inherit_website_event_sale" inherit_id="website_sale.cart_lines" name="Event Shopping Cart Line Product Link">
+        <xpath expr="//a[hasclass('o_cart_line_product_link')]" position="attributes">
             <attribute name="t-attf-href"/>
             <attribute name="t-att-href">
                 line.event_id and ('/event/%s/register' % slug(line.event_id)) or line.product_id.website_url
