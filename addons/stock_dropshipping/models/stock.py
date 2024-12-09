@@ -92,7 +92,7 @@ class StockLot(models.Model):
             if lot.delivery_count > 0:
                 last_delivery = max(lot.delivery_ids, key=lambda d: d.date_done)
                 if last_delivery.is_dropship:
-                    lot.last_delivery_partner_id = last_delivery.sale_id.partner_id
+                    lot.last_delivery_partner_id = last_delivery.sale_id.partner_shipping_id
 
     def _get_outgoing_domain(self):
         res = super()._get_outgoing_domain()
