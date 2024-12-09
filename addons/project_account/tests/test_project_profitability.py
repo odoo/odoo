@@ -17,7 +17,7 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         project = self.env['project.project'].create({'name': 'new project'})
         project._create_analytic_account()
         self.assertDictEqual(
-            project._get_profitability_items(False),
+            project._get_profitability_items(None, None, with_action=False),
             self.project_profitability_items_empty,
             'The profitability data of the project should return no data and so 0 for each total amount.'
         )
@@ -48,7 +48,7 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         }])
         # Ensures that when all the AAL of the account belongs to another company, the total amount is still converted to the currency of the current active company
         self.assertDictEqual(
-            project._get_profitability_items(False),
+            project._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {'data': [{'id': 'other_revenues_aal', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_revenues_aal'],
                     'invoiced': 30.0, 'to_invoice': 0.0}], 'total': {'invoiced': 30.0, 'to_invoice': 0.0}},
@@ -76,7 +76,7 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         }])
         # Ensures that multiple AAL from different companies are correctly computed for the project profitability
         self.assertDictEqual(
-            project._get_profitability_items(False),
+            project._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {'data': [{'id': 'other_revenues_aal', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_revenues_aal'],
                     'invoiced': 180.0, 'to_invoice': 0.0}], 'total': {'invoiced': 180.0, 'to_invoice': 0.0}},

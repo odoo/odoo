@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { formatFloat, formatFloatTime } from "@web/views/fields/formatters";
 
 export class ProjectProfitabilitySection extends Component {
@@ -12,6 +12,8 @@ export class ProjectProfitabilitySection extends Component {
         onClick: Function,
         projectId: Number,
         context: Object,
+        startDate: Date | Boolean,
+        endDate: Date | Boolean,
     };
     static template = "sale_project.ProjectProfitabilitySection";
 
@@ -24,6 +26,18 @@ export class ProjectProfitabilitySection extends Component {
             displayLoadMore: null,
         });
         this.sale_items = [];
+        onWillUpdateProps(this.onWillUpdateProps);
+    }
+
+    async onWillUpdateProps(nextProps) {
+        if (
+            this.props.startDate !== nextProps.startDate ||
+            this.props.endDate !== nextProps.endDate
+        ) {
+            this.sale_items = [];
+            this.state.displayLoadMore = null;
+            this.state.isFolded = true;
+        }
     }
 
     get revenue() {
@@ -46,7 +60,15 @@ export class ProjectProfitabilitySection extends Component {
     _getOrmValue(offset, section_id) {
         return {
             function: "get_sale_items_data",
-            args: [this.props.projectId, offset, 5, true, section_id],
+            args: [
+                this.props.projectId,
+                this.props.startDate,
+                this.props.endDate,
+                offset,
+                5,
+                true,
+                section_id,
+            ],
         };
     }
 

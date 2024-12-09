@@ -39,6 +39,24 @@
                     </div>
                 </div>
             </ProjectRightSidePanelSection>
+            <ProjectRightSidePanelSection header="false" show="true" dataClassName="'py-3'">
+                <div class="d-inline-flex text-nowrap gap-2 align-items-center">
+                    Time Frame:
+                    <input
+                        type="text"
+                        t-ref="start-date"
+                        class="o_datetime_input o_input cursor-pointer"
+                        autocomplete="off"
+                    />
+                    <i class="fa fa-long-arrow-right"/>
+                    <input
+                        type="text"
+                        t-ref="end-date"
+                        class="o_datetime_input o_input cursor-pointer"
+                        autocomplete="off"
+                    />
+                </div>
+            </ProjectRightSidePanelSection>
             <ProjectRightSidePanelSection
                 name="'milestones'"
                 show="!!state.data.milestones &amp;&amp; !!state.data.milestones.data"
@@ -94,6 +112,8 @@
                     formatMonetary="formatMonetary.bind(this)"
                     onProjectActionClick="onProjectActionClick.bind(this)"
                     onClick="(params) => this.onProjectActionClick(params)"
+                    startDate="this.state.startDate"
+                    endDate="this.state.endDate"
                 />
                 <div t-elif="state.data.show_project_profitability_helper" class="ps-3">
                     <span class="text-muted fst-italic">
