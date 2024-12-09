@@ -52,6 +52,18 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "App1");
     });
 
+    QUnit.test("action loading: current_action loaded from localstorage", async (assert) => {
+        assert.expect(1);
+        browser.sessionStorage.setItem(
+            "current_action",
+            '{"id":999,"xml_id":"action_999","name":"Partners Action 999","res_model":"partner","type":"ir.actions.act_window","views":[[1,"kanban"]], "target": "fullscreen"}' ||
+                "{}"
+        );
+        const webClient = await createWebClient({ serverData });
+        await loadState(webClient, { model: "partner", view_type: "kanban" });
+        assert.containsNone(target, ".o_navbar");
+    });
+
     QUnit.test("menu loading", async (assert) => {
         assert.expect(2);
         const webClient = await createWebClient({ serverData });
@@ -1143,7 +1155,10 @@ QUnit.module("ActionManager", (hooks) => {
                 target.querySelector(".o_nocontent_help").innerText
             );
 
-            assert.verifySteps(["getItem session current_action", "getItem session current_action"]);
+            assert.verifySteps([
+                "getItem session current_action",
+                "getItem session current_action",
+            ]);
         }
     );
 });
