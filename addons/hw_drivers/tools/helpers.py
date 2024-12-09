@@ -8,7 +8,6 @@ from enum import Enum
 from functools import cache
 from importlib import util
 import io
-import json
 import logging
 import netifaces
 from OpenSSL import crypto
@@ -20,7 +19,7 @@ import secrets
 import socket
 import subprocess
 from urllib.parse import parse_qs
-import urllib3
+import urllib3.util
 from threading import Thread, Lock
 import time
 import zipfile
@@ -137,70 +136,76 @@ def check_certificate():
 
 
 def check_git_branch():
-    """
-    Check if the local branch is the same than the connected Odoo DB and
+    """Check if the local branch is the same as the connected Odoo DB and
     checkout to match it if needed.
     """
-    server = get_odoo_server_url()
-    urllib3.disable_warnings()
-    http = urllib3.PoolManager(cert_reqs='CERT_NONE')
     try:
-        response = http.request(
-            'POST',
-            server + "/web/webclient/version_info",
-            body='{}',
-            headers={'Content-type': 'application/json'},
+        response = requests.post(get_odoo_server_url() + "/web/webclient/version_info", json={}, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.HTTPError:
+        _logger.exception('Could not reach configured server to get the Odoo version')
+        return
+    except ValueError:
+        _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
+        return
+
+    try:
+        git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
+
+        db_branch = data['result']['server_serie'].replace('~', '-')
+        if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
+            db_branch = 'master'
+
+        local_branch = (
+            subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+        )
+        _logger.info(
+            "Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s",
+            local_branch,
+            db_branch,
         )
 
-        if response.status == 200:
-            git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
-
-            db_branch = json.loads(response.data)['result']['server_serie'].replace('~', '-')
-            if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
-                db_branch = 'master'
-
-            local_branch = (
-                subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
-            )
-            _logger.info(
-                "Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s",
-                local_branch,
-                db_branch,
-            )
-
-            if db_branch != local_branch:
-                with writable():
-                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
-                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
-                    _logger.info("Updating odoo folder to the branch %s", db_branch)
-                    subprocess.run(
-                        ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
-                    )
-                odoo_restart()
+        if db_branch != local_branch:
+            with writable():
+                subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
+                _logger.info("Updating odoo folder to the branch %s", db_branch)
+                subprocess.run(
+                    ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
+                )
+            odoo_restart()
     except Exception:
         _logger.exception('An error occurred while trying to update the code with git')
 
+
 def check_image():
+    """Check if the current image of IoT Box is up to date
+
+    :return: dict containing major and minor versions of the latest image available
+    :rtype: dict
     """
-    Check if the current image of IoT Box is up to date
-    """
-    url = 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt'
-    urllib3.disable_warnings()
-    http = urllib3.PoolManager(cert_reqs='CERT_NONE')
-    response = http.request('GET', url)
-    checkFile = {}
-    valueActual = ''
-    for line in response.data.decode().split('\n'):
+    try:
+        response = requests.get('https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt', timeout=5)
+        response.raise_for_status()
+        data = response.content.decode()
+    except requests.exceptions.HTTPError:
+        _logger.exception('Could not reach the server to get the latest image version')
+        return False
+
+    check_file = {}
+    value_actual = ''
+    for line in data.split('\n'):
         if line:
             value, name = line.split('  ')
-            checkFile.update({value: name})
+            check_file.update({value: name})
             if name == 'iotbox-latest.zip':
-                valueLastest = value
+                value_latest = value
             elif name == get_img_name():
-                valueActual = value
-    if valueActual == valueLastest:
+                value_actual = value
+    if value_actual == value_latest:
         return False
-    version = checkFile.get(valueLastest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
+    version = check_file.get(value_latest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
     return {'major': version[0], 'minor': version[1]}
 
 
@@ -351,31 +356,18 @@ def load_certificate():
     if not (db_uuid and enterprise_code):
         return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
 
-    url = 'https://www.odoo.com/odoo-enterprise/iot/x509'
-    data = {
-        'params': {
-            'db_uuid': db_uuid,
-            'enterprise_code': enterprise_code
-        }
-    }
-    urllib3.disable_warnings()
-    http = urllib3.PoolManager(cert_reqs='CERT_NONE', retries=urllib3.Retry(4))
     try:
-        response = http.request(
-            'POST',
-            url,
-            body = json.dumps(data).encode('utf8'),
-            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        response = requests.post(
+            'https://www.odoo.com/odoo-enterprise/iot/x509',
+            json = {'params': {'db_uuid': db_uuid, 'enterprise_code': enterprise_code}},
+            timeout=5,
         )
-    except Exception as e:
+        response.raise_for_status()
+        result = response.json()['result']
+    except requests.exceptions.RequestException as e:
         _logger.exception("An error occurred while trying to reach odoo.com servers.")
         return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
-
-    if response.status != 200:
-        return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
-
-    result = json.loads(response.data.decode('utf8'))['result']
-    if not result:
+    except ValueError:
         return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
 
     update_conf({'subject': result['subject_cn']})
@@ -412,26 +404,33 @@ def delete_iot_handlers():
     except OSError:
         _logger.exception('Failed to delete old IoT handlers')
 
+
 def download_iot_handlers(auto=True):
     """
     Get the drivers from the configured Odoo server
     """
     server = get_odoo_server_url()
     if server:
-        urllib3.disable_warnings()
-        pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
-        server = server + '/iot/get_handlers'
         try:
-            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
-            if resp.data:
-                delete_iot_handlers()
-                with writable():
-                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
-                    path = path_file(str(Path().joinpath(*drivers_path)))
-                    zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                    zip_file.extractall(path)
-        except Exception:
+            response = requests.post(
+                server + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
+            )
+            response.raise_for_status()
+        except requests.exceptions.RequestException:
             _logger.exception('Could not reach configured server to download IoT handlers')
+            return
+
+        data = response.content
+        if not data:
+            return
+
+        delete_iot_handlers()
+        with writable():
+            drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
+            path = path_file(str(Path().joinpath(*drivers_path)))
+            zip_file = zipfile.ZipFile(io.BytesIO(data))
+            zip_file.extractall(path)
+
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
@@ -520,7 +519,7 @@ def download_from_url(download_url, path_to_filename):
         request_response.raise_for_status()
         write_file(path_to_filename, request_response.content, 'wb')
         _logger.info('Downloaded %s from %s', path_to_filename, download_url)
-    except Exception:
+    except requests.exceptions.RequestException:
         _logger.exception('Failed to download from %s', download_url)
 
 def unzip_file(path_to_filename, path_to_extract):
