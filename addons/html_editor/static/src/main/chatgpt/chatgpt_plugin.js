@@ -35,6 +35,10 @@ export class ChatGPTPlugin extends Plugin {
                 Component: LanguageSelector,
                 props: {
                     onSelected: (language) => this.openDialog({ language }),
+                    isDisabled: () => {
+                        const sel = this.document.getSelection();
+                        return !sel.toString().replace(/\s+/g, "");
+                    },
                 },
             },
             {
@@ -42,6 +46,7 @@ export class ChatGPTPlugin extends Plugin {
                 groupId: "ai",
                 commandId: "openChatGPTDialog",
                 text: "AI",
+                isDisabled: (sel) => !sel.textContent().replace(/\s+/g, ""),
             },
         ],
 
