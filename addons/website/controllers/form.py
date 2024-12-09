@@ -154,8 +154,10 @@ class WebsiteForm(http.Controller):
     }
 
     # Extract all data sent by the form and sort its on several properties
-    def extract_data(self, model, values):
-        dest_model = request.env[model.sudo().model]
+    def extract_data(self, model_sudo, values):
+        if not model_sudo.env.su:
+            raise ValueError("model_sudo should get passed with sudo")
+        dest_model = request.env[model_sudo.model]
 
         data = {
             'record': {},        # Values to create record
@@ -164,7 +166,7 @@ class WebsiteForm(http.Controller):
             'meta': '',         # Add metadata if enabled
         }
 
-        authorized_fields = model.with_user(SUPERUSER_ID)._get_form_writable_fields(values)
+        authorized_fields = model_sudo.with_user(SUPERUSER_ID)._get_form_writable_fields(values)
         error_fields = []
         custom_fields = []
 
@@ -254,8 +256,10 @@ class WebsiteForm(http.Controller):
     def _should_log_authenticate_message(self, record):
         return True
 
-    def insert_record(self, request, model, values, custom, meta=None):
-        model_name = model.sudo().model
+    def insert_record(self, request, model_sudo, values, custom, meta=None):
+        if not model_sudo.env.su:
+            raise ValueError("model_sudo should get passed with sudo")
+        model_name = model_sudo.model
         if model_name == 'mail.mail':
             email_from = _('"%(company)s form submission" <%(email)s>', company=request.env.company.name, email=request.env.company.email)
             values.update({'reply_to': values.get('email_from'), 'email_from': email_from})
@@ -272,7 +276,7 @@ class WebsiteForm(http.Controller):
                 form_email = values[email_field_name]
                 if user_email != form_email:
                     authenticate_message = _("This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on behalf of %(form_email)s",
-                        model_name=model.name, user_name=request.env.user.name, user_email=user_email, form_email=form_email)
+                        model_name=model_sudo.name, user_name=request.env.user.name, user_email=user_email, form_email=form_email)
             elif self._should_log_authenticate_message(record):
                 warning_icon = "/!\\ "
                 authenticate_message = _("EXTERNAL SUBMISSION - Customer not verified")
@@ -285,7 +289,7 @@ class WebsiteForm(http.Controller):
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
             if model_name == 'mail.mail':
                 _custom_label = "%s\n___________\n\n" % _("This message has been posted on your website!")
-            default_field = model.website_form_default_field_id
+            default_field = model_sudo.website_form_default_field_id
             default_field_data = values.get(default_field.name, '')
             custom_label = _custom_label + custom if custom else ''
             meta_label = self._meta_label + "\n________\n\n" + meta if meta else ''
@@ -312,11 +316,13 @@ class WebsiteForm(http.Controller):
         return record.id
 
     # Link all files attached on the form
-    def insert_attachment(self, model, id_record, files):
+    def insert_attachment(self, model_sudo, id_record, files):
+        if not model_sudo.env.su:
+            raise ValueError("model_sudo should get passed with sudo")
+        model_name = model_sudo.model
         orphan_attachment_ids = []
-        model_name = model.sudo().model
-        record = model.env[model_name].browse(id_record)
-        authorized_fields = model.with_user(SUPERUSER_ID)._get_form_writable_fields()
+        record = model_sudo.env[model_name].browse(id_record)
+        authorized_fields = model_sudo.with_user(SUPERUSER_ID)._get_form_writable_fields()
         for file in files:
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
