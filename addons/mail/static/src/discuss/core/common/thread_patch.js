@@ -66,13 +66,6 @@ const threadPatch = {
             super.fetchMessages();
         }
     },
-    /** @override */
-    isDisplayedOnUpdate() {
-        super.isDisplayedOnUpdate(...arguments);
-        if (this.selfMember && !this.isDisplayed) {
-            this.selfMember.syncUnread = true;
-        }
-    },
     get newMessageBannerText() {
         if (this.props.thread.selfMember?.totalUnreadMessageCounter > 1) {
             return _t("%s new messages", this.props.thread.selfMember.totalUnreadMessageCounter);
