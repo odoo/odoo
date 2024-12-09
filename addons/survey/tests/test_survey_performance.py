@@ -16,7 +16,7 @@ class SurveyPerformance(common.TestSurveyResultsCommon, HttpCase):
         """
         url = f'/survey/results/{self.survey.id}?filters=A,0,{self.gras_id}|L,0,{self.answer_pauline.id}'
         self.authenticate('survey_manager', 'survey_manager')
-        with self.assertQueryCount(default=31):
+        with self.assertQueryCount(default=23):
             self.url_open(url)
 
     @warmup
@@ -27,12 +27,12 @@ class SurveyPerformance(common.TestSurveyResultsCommon, HttpCase):
         """
         url = f'/survey/results/{self.survey.id}?filters=A,0,{self.gras_id}|A,0,{self.cat_id}'
         self.authenticate('survey_manager', 'survey_manager')
-        with self.assertQueryCount(default=29):
+        with self.assertQueryCount(default=21):
             self.url_open(url)
 
     @warmup
     def test_survey_results_with_one_filter(self):
         url = f'/survey/results/{self.survey.id}?filters=A,0,{self.cat_id}'
         self.authenticate('survey_manager', 'survey_manager')
-        with self.assertQueryCount(default=29):
+        with self.assertQueryCount(default=21):
             self.url_open(url)
