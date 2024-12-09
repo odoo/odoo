@@ -3013,6 +3013,7 @@ class MailThread(models.AbstractModel):
         return {
             'force_email_company',
             'force_email_lang',
+            'force_email_unfollow',
             'force_send',
             'mail_auto_delete',
             'model_description',
@@ -3213,7 +3214,8 @@ class MailThread(models.AbstractModel):
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
-                                model_description=False, force_email_company=False, force_email_lang=False,  # rendering
+                                model_description=False, force_email_company=False,  # rendering
+                                force_email_lang=False, force_email_unfollow=False,  # rendering
                                 subtitles=None,  # rendering
                                 resend_existing=False, force_send=True, send_after_commit=True,  # email send
                                  **kwargs):
@@ -3235,6 +3237,8 @@ class MailThread(models.AbstractModel):
           notification layout. Otherwise computed based on current record;
         :param str force_email_lang: lang used when rendering content, used
           notably to compute model name or translate access buttons;
+        :param bool force_email_unfollow: display an 'unfollow' link in notification
+          email (if supported by layout). Otherwise it depends on model itself;
         :param list subtitles: optional list set as template value "subtitles";
 
         :param bool resend_existing: check for existing notifications to update
@@ -3274,6 +3278,7 @@ class MailThread(models.AbstractModel):
             model_description=model_description,
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,
+            force_email_unfollow=force_email_unfollow,
             subtitles=subtitles,
         ):
             # generate notification email content
@@ -3343,7 +3348,8 @@ class MailThread(models.AbstractModel):
 
     def _notify_get_classified_recipients_iterator(
             self, message, recipients_data, msg_vals=False,
-            model_description=False, force_email_company=False, force_email_lang=False,  # rendering
+            model_description=False, force_email_company=False,  # rendering
+            force_email_unfollow=False, force_email_lang=False,  # rendering
             subtitles=None):
         """ Make groups of recipients, based on 'recipients_data' which is a list
         of recipients informations. Purpose of this method is to group them by
@@ -3365,6 +3371,8 @@ class MailThread(models.AbstractModel):
         :param str force_email_lang: when no specific lang is found this is the
           default lang to use notably to compute model name or translate access
           buttons;
+        :param bool force_email_unfollow: display an 'unfollow' link in notification
+          email (if supported by layout). Otherwise it depends on model itself;
         :param list subtitles: optional list set as template value "subtitles";
 
         :return: iterator based on recipients classified by lang, with their
@@ -3417,17 +3425,25 @@ class MailThread(models.AbstractModel):
                 model_description=lang_model_description,
                 force_email_company=force_email_company,
                 force_email_lang=lang,
+                force_email_unfollow=force_email_unfollow,
             ) # 10 queries
             if subtitles:
                 render_values['subtitles'] = subtitles
 
             for recipients_group in recipients_groups_list:
+                if not render_values['show_unfollow']:
+                    render_values['show_unfollow'] = any(
+                        r['is_follower']
+                        for r in recipients_group['recipients_data']
+                        if r['id'] and r['uid'] and not r['ushare']
+                    )
                 yield (lang, render_values, recipients_group)
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False,
                                                    model_description=False,
                                                    force_email_company=False,
-                                                   force_email_lang=False):
+                                                   force_email_lang=False,
+                                                   force_email_unfollow=False):
         """ Prepare rendering context for notification email.
 
         Signature: if asked a default signature is computed based on author. Either
@@ -3455,6 +3471,8 @@ class MailThread(models.AbstractModel):
           notification layout. Otherwise computed based on current record;
         :param str force_email_lang: lang used when rendering content, used
           notably to compute model name or translate access buttons;
+        :param bool force_email_unfollow: display an 'unfollow' link in notification
+          email (if supported by layout). Otherwise it depends on model itself;
 
         :return: dictionary of values used when rendering notification layout;
         """
@@ -3513,6 +3531,10 @@ class MailThread(models.AbstractModel):
         subtype_id = msg_vals.get('subtype_id') if msg_vals and 'subtype_id' in msg_vals else message.subtype_id.id
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
+        show_unfollow = force_email_unfollow
+        if not show_unfollow:
+            show_unfollow = getattr(self, '_partner_unfollow_enabled', False)
+
         return {
             # message
             'is_discussion': is_discussion,
@@ -3528,6 +3550,7 @@ class MailThread(models.AbstractModel):
             'company': company,
             'email_add_signature': email_add_signature,
             'lang': lang,
+            'show_unfollow': force_email_unfollow or show_unfollow,
             'signature': signature,
             'website_url': website_url,
             # tools
