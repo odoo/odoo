@@ -528,6 +528,27 @@ class configmanager:
         self._warn_deprecated_options()
         self._flush_log_and_warn_entries()
         odoo.modules.module.initialize_sys_path()
+        if self['test_file']:
+            test_file = config['test_file']
+            if not os.path.isfile(test_file):
+                self._log(logging.WARNING, f'test file {test_file} cannot be found')
+            elif not test_file.endswith('py'):
+                self._log(logging.WARNING, f'test file {test_file} is not a python file')
+            else:
+                test_tags = (self['test_tags'] or '').split(',')
+                absolute_path = os.path.abspath(test_file)
+                for addons_path in odoo.addons.__path__:
+                    if absolute_path.startswith(addons_path):
+                        file_tag = '/%s' % os.path.relpath(absolute_path, addons_path)
+                        self._log(logging.INFO, 'Transforming --test-file into --test-tags %s', file_tag)
+                        test_tags.append(file_tag)
+                        self['test_tags'] = ','.join(test_tags)
+                        self['test_enable'] = True
+                        self['stop_after_init'] = True
+                        break
+                else:
+                    self._log(logging.WARNING, f'test file {test_file} is not in any addons path')
+
         return opt
 
     def _parse_config(self, args=None):
