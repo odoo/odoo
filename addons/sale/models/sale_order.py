@@ -988,6 +988,7 @@ class SaleOrder(models.Model):
             'default_res_ids': self.ids,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
+            'hide_mail_template_management_options': True,
             'proforma': self.env.context.get('proforma', False),
         }
 

@@ -580,10 +580,11 @@ class TestMailRenderSecurity(TestMailRenderCommon):
         partner_model_id = self.env['ir.model']._get_id('res.partner')
 
         # check no default
-        template = Form(self.env['mail.template'].with_context({
-            'default_name': 'test_allow_template_defaults_nodefault_valid',
-            'default_model_id': partner_model_id,
-        }))
+        with self.debug_mode():
+            template = Form(self.env['mail.template'].with_context({
+                'default_name': 'test_allow_template_defaults_nodefault_valid',
+                'default_model_id': partner_model_id,
+            }))
         template = template.save()
         self.assertFalse(template.lang)
         self.assertFalse(template.email_cc)
@@ -601,10 +602,11 @@ class TestMailRenderSecurity(TestMailRenderCommon):
             'odoo.addons.base.models.res_partner.ResPartner._mail_template_default_values',
             new=patched_mail_template_default_values, create=True,
         ):
-            template = Form(self.env['mail.template'].with_context({
-                'default_name': 'test_allow_template_with_default',
-                'default_model_id': partner_model_id,
-            }))
+            with self.debug_mode():
+                template = Form(self.env['mail.template'].with_context({
+                    'default_name': 'test_allow_template_with_default',
+                    'default_model_id': partner_model_id,
+                }))
             template = template.save()
             self.assertEqual(template.lang, template_defaults['lang'])
             self.assertEqual(template.email_cc, template_defaults['email_cc'])
