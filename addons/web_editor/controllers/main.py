@@ -634,7 +634,7 @@ class Web_Editor(http.Controller):
         try:
             with file_open(shape_path, 'r', filter_ext=('.svg',)) as file:
                 return file.read()
-        except FileNotFoundError:
+        except (FileNotFoundError, ValueError):
             raise werkzeug.exceptions.NotFound()
 
     def _update_svg_colors(self, options, svg):
