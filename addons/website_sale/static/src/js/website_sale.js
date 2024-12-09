@@ -778,10 +778,58 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
     },
 });
 
+publicWidget.registry.webisteProductImageChanger = publicWidget.Widget.extend({
+        selector: ".o_wsale_product_grid_wrapper",
+        events: {
+            'mouseover .o_wsale_product_attribute div': '_onMouseOver',
+            'mouseout .o_wsale_product_attribute div': '_onMouseOut',
+        },
+        init: function () {
+            this._super.apply(this, arguments);
+            this.orm = this.bindService("orm");
+        },
+
+        async start() {
+            await this._super(...arguments);
+            this.defaultImageSrc = this.el.querySelector("img").src;
+        },
+
+        _onMouseOver(ev) {
+            const attributeProductIds = ev.currentTarget.getAttribute(
+                "data-attribute_product_ids"
+            );
+            if (attributeProductIds) {
+            const recordId = JSON.parse(attributeProductIds)[0];
+            this._onImageChange(recordId);
+            } else {
+            this._onImageRestore();
+            }
+        },
+
+        _onMouseOut(ev) {
+            this._onImageRestore();
+        },
+
+        _onImageChange(recordId) {
+            var model = 'product.product';
+            var modelId = recordId;
+            var imageUrl = '/web/image/{0}/{1}/image_512';
+            var imageSrc = imageUrl
+                .replace("{0}", model)
+                .replace("{1}", modelId);
+            this.el.querySelector("img").src = imageSrc + "/" + new Date().getTime();
+        },
+
+        _onImageRestore() {
+            this.el.querySelector("img").src = this.defaultImageSrc;
+        },
+    });
+
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
     WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
     WebsiteSaleProductPage: publicWidget.registry.WebsiteSaleAccordionProduct,
     WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
     WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
+    webisteProductImageChanger: publicWidget.registry.webisteProductImageChanger,
 };

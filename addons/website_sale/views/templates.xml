@@ -213,7 +213,13 @@
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
                 <div class="o_wsale_product_information_text">
                     <h6 class="o_wsale_products_item_title mb-2 text-break">
-                        <a class="text-decoration-none" itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
+                        <a
+                            class="text-primary text-decoration-none product_price_list"
+                            itemprop="name"
+                            t-att-href="product_href"
+                            t-att-content="product.name"
+                            t-field="product.name"
+                        />
                         <a t-if="not product.website_published" role="button" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">
                             Unpublished
                         </a>
@@ -253,6 +259,167 @@
         </xpath>
     </template>
 
+    <template
+        id="product_attributes_values"
+        inherit_id="website_sale.products_item"
+        name="Product Attributes"
+        active="True"
+    >
+        <xpath expr="//div[hasclass('o_wsale_product_information_text')]" position="before">
+            <t t-set="has_color" t-value="False"/>
+            <t t-set="has_single_radio" t-value="False"/>
+            <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
+                <t t-set="attribute" t-value="ptal.attribute_id"/>
+                <t t-if="attribute.display_type == 'color'">
+                    <t t-set="has_color" t-value="True"/>
+                </t>
+                <t
+                    t-if="attribute.display_type == 'radio'
+                        and len(product.valid_product_template_attribute_line_ids.filtered(
+                            lambda a: a.attribute_id.display_type == 'radio')) == 1"
+                >
+                    <t t-set="has_single_radio" t-value="True"/>
+                </t>
+            </t>
+
+            <t t-foreach="product.valid_product_template_attribute_line_ids" t-as="ptal">
+                <t t-set="attribute" t-value="ptal.attribute_id"/>
+                <t t-set="ptavs" t-value="ptal.product_template_value_ids._only_active()"/>
+                <ul
+                    t-if="attribute.show_variants != 'hidden'"
+                    t-attf-class="list-unstyled mb-0 #{'o_wsale_product_template'
+                        if attribute.show_variants in ['image', 'hover'] else ''}"
+                >
+                    <t
+                        t-if="has_color
+                            and attribute.display_type == 'color'
+                            and attribute.show_variants != 'hidden'"
+                        >
+                        <t t-set="color_limit" t-value="min(len(ptavs), 5)"/>
+                        <t t-set="total_attributes" t-value="len(ptavs)"/>
+                        <li
+                            t-att-data-attribute_id="attribute.id"
+                            t-att-data-attribute_name="attribute.name"
+                            t-att-data-attribute_display_type="attribute.display_type"
+                        >
+                            <div class="d-flex align-items-center o_wsale_product_attribute">
+                                <t t-foreach="ptavs[:color_limit]" t-as="ptav">
+                                    <div
+                                        class="list-inline-item mt-1 mb-1 ms-n1"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                        t-att-data-value_id="ptav.id"
+                                        t-att-data-value_name="ptav.name"
+                                        t-att-data-attribute_product_ids="ptav.ptav_product_variant_ids.ids"
+                                    >
+                                        <t t-set="img_style"
+                                            t-value="'background:url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''"/>
+                                        <t t-set="color_style"
+                                            t-value="'background:' + str(ptav.html_color or ptav.name if not ptav.is_custom else '')"/>
+                                        <a t-att-href="product_href + '#attribute_values=' + str(ptav.product_attribute_value_id.id)">
+                                            <t t-if="attribute.show_variants == 'hover'">
+                                                <label
+                                                    t-attf-style="#{img_style or color_style}"
+                                                    t-attf-class="attribute_variant_color"
+                                                />
+                                            </t>
+                                            <t t-if="attribute.show_variants == 'image'">
+                                                <img
+                                                    t-if="ptav.ptav_product_variant_ids
+                                                        and ptav.ptav_product_variant_ids[0]"
+                                                    t-att-src="'/web/image/product.product/' + str(ptav.ptav_product_variant_ids[0].id) + '/image_512'"
+                                                    t-attf-class="variant_image"
+                                                    t-att-title="ptav.name"
+                                                    t-att-alt="ptav.name"
+                                                />
+                                            </t>
+                                            <t t-if="attribute.show_variants == 'visible'">
+                                                <div
+                                                    t-attf-style="#{img_style or color_style}"
+                                                    t-attf-class=" attribute_variant_color"
+                                                />
+                                            </t>
+                                        </a>
+                                    </div>
+                                </t>
+                                <t t-if="total_attributes > color_limit">
+                                    <div class="list-inline-item ms-2">
+                                        <a
+                                            class="text-muted"
+                                            t-att-href="product_href"
+                                            t-att-title="'+' + str(total_attributes - color_limit) + ' more'"
+                                        >
+                                            +<t t-esc="total_attributes - color_limit"/>
+                                        </a>
+                                    </div>
+                                </t>
+                            </div>
+                        </li>
+
+                    </t>
+                    <t
+                        t-elif="not has_color
+                            and has_single_radio
+                            and attribute.display_type == 'radio'
+                            and attribute.show_variants != 'hidden'"
+                        >
+                        <t t-set="radio_limit" t-value="3"/>
+                        <t t-set="total_attributes" t-value="len(ptavs)"/>
+                        <li
+                            t-att-data-attribute_id="attribute.id"
+                            t-att-data-attribute_name="attribute.name"
+                            t-att-data-attribute_display_type="attribute.display_type"
+                        >
+                            <ul
+                                t-att-data-attribute_id="attribute.id"
+                                t-attf-class="list-inline list-unstyled #{'o_wsale_product_template'
+                                    if attribute.show_variants in ['image', 'hover'] else ''}"
+                            >
+                                <t t-foreach="ptavs[:radio_limit]" t-as="ptav">
+                                    <li
+                                        class="list-inline-item mt-1 ms-n1"
+                                        t-att-data-attribute_product_ids="ptav.ptav_product_variant_ids.ids"
+                                    >
+                                        <a
+                                            class="text-decoration-none"
+                                            t-att-href="product_href + '#attribute_values=' + str(ptav.product_attribute_value_id.id)"
+                                        >
+                                            <t t-if="attribute.show_variants == 'visible'">
+                                                <label t-field="ptav.name"/>
+                                            </t>
+                                            <t t-if="attribute.show_variants == 'hover'">
+                                                <label t-field="ptav.name"/>
+                                            </t>
+                                            <t t-if="attribute.show_variants == 'image'">
+                                                <img
+                                                    t-if="ptav.ptav_product_variant_ids and ptav.ptav_product_variant_ids[0]"
+                                                    t-att-src="'/web/image/product.product/' + str(ptav.ptav_product_variant_ids[0].id) + '/image_512'"
+                                                    t-attf-class="variant_image"
+                                                    t-att-title="ptav.name"
+                                                    t-att-alt="ptav.name"
+                                                />
+                                            </t>
+                                        </a>
+                                    </li>
+                                </t>
+                                <t t-if="total_attributes > radio_limit">
+                                    <li class="list-inline-item mt-1 ms-1">
+                                        <a
+                                            t-att-href="product_href"
+                                            class="text-muted"
+                                            t-att-title="'+' + str(total_attributes - radio_limit) + ' more'"
+                                        >
+                                            +<t t-esc="total_attributes - radio_limit"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </li>
+                    </t>
+                </ul>
+            </t>
+        </xpath>
+    </template>
+
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" name="Add to Cart">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
@@ -263,7 +430,7 @@
                     t-if="product._website_show_quick_add()"
                     href="#"
                     role="button"
-                    class="btn btn-light a-submit"
+                    class="btn btn-light a-submit cart_button"
                     aria-label="Shopping cart"
                     title="Shopping cart"
                 >
@@ -470,7 +637,7 @@
                                                     t-att-data-rowspan="td_product['y'] != 1 and td_product['y']"
                                                     t-att-data-name="product_block_name"
                                                 >
-                                                    <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
+                                                    <div t-attf-class="o_wsale_product_grid_wrapper o_wsale_product_information position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
                                                         <t t-call="website_sale.products_item">
                                                             <t t-set="product"
                                                                t-value="td_product['product']"/>
