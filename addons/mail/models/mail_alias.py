@@ -30,9 +30,9 @@ class MailAlias(models.Model):
        created, it becomes immediately usable and Odoo will accept email for it.
      """
     _description = "Email Aliases"
+    _order = 'alias_model_id, alias_name'
     _rec_name = 'alias_name'
     _rec_names_search = ['alias_name', 'alias_domain']
-    _order = 'alias_model_id, alias_name'
 
     # email definition
     alias_name = fields.Char(
