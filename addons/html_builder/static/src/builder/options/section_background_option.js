@@ -7,6 +7,7 @@ import { defaultOptionComponents } from "../components/defaultComponents";
 export class SectionBackgroundOption extends Component {
     static template = "html_builder.SectionBackgroundOption";
     static components = { ...defaultOptionComponents };
+    static props = {};
 }
 
 // todo: this is a naive implemenation. We should look at the current

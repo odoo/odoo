@@ -15,6 +15,7 @@ import {
 export class LayoutOption extends Component {
     static template = "html_builder.LayoutOption";
     static components = { ...defaultOptionComponents, SpacingOption, AddElementOption };
+    static props = {};
 
     setup() {
         this.state = useDomState(() => ({

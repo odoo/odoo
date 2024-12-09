@@ -7,6 +7,7 @@ export class BorderOption extends Component {
     static components = {
         ...defaultOptionComponents,
     };
+    static props = {};
 }
 
 registry.category("sidebar-element-option").add("BorderOption", {

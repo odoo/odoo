@@ -9,6 +9,7 @@ export class ContentWidthOption extends Component {
     static components = {
         ...defaultOptionComponents,
     };
+    static props = {};
 }
 
 registry.category("sidebar-element-option").add("ContentWidthOption", {

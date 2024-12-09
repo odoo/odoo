@@ -7,6 +7,7 @@ export class VisibilityOption extends Component {
     static components = {
         ...defaultOptionComponents,
     };
+    static props = {};
 }
 
 registry.category("sidebar-element-option").add("VisibilityOption", {
