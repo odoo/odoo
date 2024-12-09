@@ -334,6 +334,9 @@ class HrCandidate(models.Model):
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
         employee = self.env['hr.employee'].create(self._get_employee_create_vals())
+        attachments = self.env['ir.attachment'].search([('res_model', '=', self._name), ('res_id', '=', self.id)])
+        if attachments:
+            attachments.copy({'res_model': 'hr.employee', 'res_id': employee.id})
         action['res_id'] = employee.id
         return action
 
