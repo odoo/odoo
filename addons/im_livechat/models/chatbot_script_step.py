@@ -360,19 +360,10 @@ class ChatbotScriptStep(models.Model):
 
         return posted_message
 
-    def _to_store(self, store: Store, /, *, fields=None):
-        if fields is None:
-            fields = ["answer_ids", "message", "type", "is_last"]
-        for step in self:
-            data = step._read_format(
-                [f for f in fields if f not in {"answer_ids", "message", "type", "is_last"}], load=False
-            )[0]
-            if "answer_ids" in fields:
-                data["answers"] = Store.many(step.answer_ids)
-            if "message" in fields:
-                data["message"] = plaintext2html(step.message) if step.message else False
-            if "type" in fields:
-                data["type"] = step.step_type
-            if "is_last" in fields:
-                data["isLast"] = step._is_last_step()
-            store.add("chatbot.script.step", data)
+    def _to_store_defaults(self):
+        return [
+            Store.Many("answer_ids", rename="answers"),
+            Store.Attr("is_last", lambda step: step._is_last_step()),
+            Store.Attr("message", lambda s: plaintext2html(s.message) if s.message else False),
+            Store.Attr("step_type", rename="type"),
+        ]

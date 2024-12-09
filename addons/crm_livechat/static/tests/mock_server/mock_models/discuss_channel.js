@@ -16,7 +16,7 @@ const discussChannelPatch = {
                     <span class="o_mail_notification">
                         Create a new lead: <a href="#" data-oe-model="crm.lead" data-oe-id="${leadId}">${leadName}</a>
                     </span>`,
-            thread: { model: "discuss.channel", id: ids[0] },
+            channel_id: ids[0],
         });
         return true;
     },
