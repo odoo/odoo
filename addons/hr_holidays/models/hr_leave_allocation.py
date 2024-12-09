@@ -755,7 +755,7 @@ class HolidaysAllocation(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env.user
+        responsible = self.env['res.users']
 
         if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
             if self.employee_id.leave_manager_id:
@@ -792,7 +792,7 @@ class HolidaysAllocation(models.Model):
                             allocation_type=allocation.holiday_status_id.name,
                         )
                         to_second_do |= allocation
-                    user_ids = allocation.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    user_ids = allocation.sudo()._get_responsible_for_approval().ids
                     for user_id in user_ids:
                         activity_vals.append({
                             'activity_type_id': activity_type.id,
