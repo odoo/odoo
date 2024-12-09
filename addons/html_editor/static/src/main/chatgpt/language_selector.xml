@@ -4,11 +4,12 @@
             class="btn btn-light px-1"
             name="translate"
             t-att-title="props.title"
-            t-on-click="() => this.onSelected(state.languages[0][1])">
+            t-on-click="() => this.onSelected(state.languages[0][1])"
+            t-att-disabled="props.isDisabled()">
                 Translate
         </button>
         <Dropdown t-elif="state.languages.length > 1">
-            <button class="btn btn-light" name="translate" t-att-title="props.title">
+            <button class="btn btn-light" name="translate" t-att-title="props.title" t-att-disabled="props.isDisabled()">
                 Translate
             </button>
             <t t-set-slot="content">
