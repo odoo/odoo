@@ -15,9 +15,9 @@ callActionsRegistry
         activeClass: "text-danger",
         select: (component) => {
             if (component.rtc.syncState.isMute) {
-                component.rtc.syncState.command({ isMuted: false, isDeaf: false });
+                component.rtc.syncState.action({ isMuted: false, isDeaf: false });
             } else {
-                component.rtc.syncState.command({ isMuted: true });
+                component.rtc.syncState.action({ isMuted: true });
             }
         },
         sequence: 10,
@@ -30,7 +30,7 @@ callActionsRegistry
         icon: "fa-deaf",
         activeClass: "text-danger",
         select: (component) =>
-            component.rtc.syncState.command({ isDeaf: !component.rtc.syncState.isDeaf }),
+            component.rtc.syncState.action({ isDeaf: !component.rtc.syncState.isDeaf }),
         sequence: 20,
     })
     .add("camera-on", {
@@ -42,7 +42,7 @@ callActionsRegistry
         icon: "fa-video-camera",
         activeClass: "text-success",
         select: (component) =>
-            component.rtc.syncState.command({ isCameraOn: !component.rtc.syncState.isCameraOn }),
+            component.rtc.syncState.action({ isCameraOn: !component.rtc.syncState.isCameraOn }),
         sequence: 30,
     })
     .add("raise-hand", {
@@ -52,7 +52,7 @@ callActionsRegistry
         isActive: (component) => component.rtc.syncState.raisingHand,
         icon: "fa-hand-paper-o",
         select: (component) =>
-            component.rtc.syncState.command({ raisingHand: !component.rtc.syncState.raisingHand }),
+            component.rtc.syncState.action({ raisingHand: !component.rtc.syncState.raisingHand }),
         sequence: 50,
     })
     .add("share-screen", {
@@ -65,7 +65,7 @@ callActionsRegistry
         icon: "fa-desktop",
         activeClass: "text-success",
         select: (component) =>
-            component.rtc.syncState.command({
+            component.rtc.syncState.action({
                 isScreenSharingOn: !component.rtc.syncState.isScreenSharingOn,
             }),
         sequence: 40,

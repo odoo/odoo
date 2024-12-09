@@ -1,22 +1,18 @@
 import { Record } from "@mail/core/common/record";
+import { toRaw } from "@odoo/owl";
 
 const HOST_MESSAGE = {
     SESSION_INFO_CHANGE: "SESSION_INFO_CHANGE", // sent with updated state of the remote rtc sessions of the call
-    SYNC_CONTROLS: "SYNC_CONTROLS", // sent with the updated state of controls
+    SYNC_ACTIONS: "SYNC_ACTIONS", // sent with the updated state of actions
     CLOSE: "CLOSE", // sent when the host ends the call
 };
 
 const CLIENT_MESSAGE = {
-    CONTROL_CHANGE: "CONTROL_CHANGE", // request to change a control (mute, deaf,...)
-    LEAVE: "LEAVE", // request to leave call
+    REQUEST_ACTION: "REQUEST_ACTION", // request that an action be executed by the host (mute, deaf,...)
+    LEAVE: "LEAVE", // request the host to leave the call
 };
 
 export class CallSyncState extends Record {
-    // TODO are these statics necessary?
-    static id = "id";
-    /** @type {Object.<number, CallSyncState>} */
-    static records = {};
-
     /** @type {BroadcastChannel} */
     _broadcastChannel = new BroadcastChannel("call_sync_state");
     _hostId;
@@ -75,7 +71,7 @@ export class CallSyncState extends Record {
             return;
         }
         this._broadcastChannel.onmessage = this._onMessage.bind(this);
-        this._post({ type: CLIENT_MESSAGE.CONTROL_CHANGE });
+        this._post({ type: CLIENT_MESSAGE.REQUEST_ACTION });
     }
     host() {
         this._hostId = this.selfSession.id;
@@ -83,7 +79,8 @@ export class CallSyncState extends Record {
         this._share();
     }
     endHost() {
-        this._post({ type: HOST_MESSAGE.CLOSE, hostId: this._hostId });
+        this._post({ type: HOST_MESSAGE.CLOSE, originSessionId: this._hostId });
+        this._hostId = undefined;
     }
 
     toggleCall(channel) {
@@ -92,6 +89,18 @@ export class CallSyncState extends Record {
         } else {
             this.rtc.toggleCall(...arguments);
         }
+    }
+
+    updateInfo(info) {
+        if (!this.isHost) {
+            return;
+        }
+        info = toRaw(info);
+        this.rtc.network?.updateInfo(info);
+        this._post({
+            type: HOST_MESSAGE.SESSION_INFO_CHANGE,
+            changes: { [this.selfSession.id]: info },
+        });
     }
 
     updateSessionInfo(changes) {
@@ -110,15 +119,15 @@ export class CallSyncState extends Record {
                 }
                 this.rtc.updateSessionInfo(changes);
                 return;
-            case CLIENT_MESSAGE.CONTROL_CHANGE: {
+            case CLIENT_MESSAGE.REQUEST_ACTION: {
                 if (!this.isHost) {
                     return;
                 }
-                await this._localApply(changes);
+                await this._localAction(changes);
                 this._share();
                 return;
             }
-            case HOST_MESSAGE.SYNC_CONTROLS: {
+            case HOST_MESSAGE.SYNC_ACTIONS: {
                 if (this.isHost) {
                     return;
                 }
@@ -146,17 +155,17 @@ export class CallSyncState extends Record {
             }
         }
     }
-    async command(changes) {
+    async action(changes) {
         if (this.isHost) {
-            await this._localApply(changes);
+            await this._localAction(changes);
             this._share();
             return;
         }
-        this._remoteApply(changes);
+        this._remoteAction(changes);
     }
 
-    _remoteApply(changes) {
-        this._post({ type: CLIENT_MESSAGE.CONTROL_CHANGE, changes });
+    _remoteAction(changes) {
+        this._post({ type: CLIENT_MESSAGE.REQUEST_ACTION, changes });
     }
 
     _sync(changes = {}) {
@@ -165,7 +174,7 @@ export class CallSyncState extends Record {
         }
     }
 
-    async _localApply(changes = {}) {
+    async _localAction(changes = {}) {
         const promises = [];
         for (const [key, value] of Object.entries(changes)) {
             switch (key) {
@@ -206,7 +215,7 @@ export class CallSyncState extends Record {
 
     _share() {
         this._post({
-            type: HOST_MESSAGE.SYNC_CONTROLS,
+            type: HOST_MESSAGE.SYNC_ACTIONS,
             hostedChannelId: this.channel.id,
             originSessionId: this.selfSession.id,
             changes: {

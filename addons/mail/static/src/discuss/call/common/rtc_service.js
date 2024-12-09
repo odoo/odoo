@@ -552,6 +552,15 @@ export class Rtc extends Record {
     }
 
     /**
+     * Sends info about the current (self) rtcSession to the other tabs and remote participants.
+     */
+    _shareOwnInfo() {
+        const info = this.formatInfo();
+        this.syncState.updateInfo(info);
+        this.network?.updateInfo(info);
+    }
+
+    /**
      * @param {import("models").RtcSession} session
      * @param {String} entry
      * @param {Object} [param2]
@@ -947,7 +956,7 @@ export class Rtc extends Record {
             return;
         }
         this.selfSession.raisingHand = raise ? new Date() : undefined;
-        await this.network?.updateInfo(this.formatInfo());
+        await this.syncState.updateInfo(this.formatInfo());
     }
 
     /**
@@ -1043,7 +1052,7 @@ export class Rtc extends Record {
             return;
         }
         this.state.audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
-        this.network?.updateInfo(this.formatInfo());
+        this.syncState.updateInfo(this.formatInfo());
     }
 
     /**
