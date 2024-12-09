@@ -1271,28 +1271,6 @@ def _reexec(updated_modules=None):
     os.execve(sys.executable, args, os.environ)
 
 
-def load_test_file_py(registry, test_file):
-    # pylint: disable=import-outside-toplevel
-    from odoo.tests import loader  # noqa: PLC0415
-    from odoo.tests.suite import OdooSuite  # noqa: PLC0415
-    threading.current_thread().testing = True
-    try:
-        test_path, _ = os.path.splitext(os.path.abspath(test_file))
-        for mod in [m for m in get_modules() if '%s%s%s' % (os.path.sep, m, os.path.sep) in test_file]:
-            for mod_mod in loader.get_test_modules(mod):
-                mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
-                if test_path == config._normalize(mod_path):
-                    tests = loader.get_module_test_cases(mod_mod)
-                    suite = OdooSuite(tests)
-                    _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    suite(registry._assertion_report)
-                    if not registry._assertion_report.wasSuccessful():
-                        _logger.error('%s: at least one error occurred in a test', test_file)
-                    return
-    finally:
-        threading.current_thread().testing = False
-
-
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
@@ -1303,17 +1281,6 @@ def preload_registries(dbnames):
             update_module = config['init'] or config['update']
             threading.current_thread().dbname = dbname
             registry = Registry.new(dbname, update_module=update_module)
-
-            # run test_file if provided
-            if config['test_file']:
-                test_file = config['test_file']
-                if not os.path.isfile(test_file):
-                    _logger.warning('test file %s cannot be found', test_file)
-                elif not test_file.endswith('py'):
-                    _logger.warning('test file %s is not a python file', test_file)
-                else:
-                    _logger.info('loading test file %s', test_file)
-                    load_test_file_py(registry, test_file)
 
             # run post-install tests
             if config['test_enable']:
