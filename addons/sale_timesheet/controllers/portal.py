@@ -47,7 +47,7 @@ class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
 
         # content according to pager and archive selected
         invoices = values['invoices'](pager['offset'])
-        request.session['my_invoices_history'] = invoices.ids[:100]
+        request.session['my_invoices_history'] = [i['invoice'].id for i in invoices[:100]]
 
         values.update({
             'invoices': invoices,
