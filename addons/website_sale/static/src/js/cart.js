@@ -71,11 +71,10 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
         });
         $input.data('update_change', true);
 
-        rpc('/shop/cart/update_json', {
+        rpc('/shop/cart/update', {
             line_id: line_id,
             product_id: parseInt($input.data('product-id'), 10),
-            set_qty: value,
-            display: true,
+            quantity: value,
         }).then((data) => {
             $input.data('update_change', false);
             var check_value = parseInt($input.val() || 0, 10);
@@ -93,7 +92,7 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
 
             wSaleUtils.updateCartNavBar(data);
-            wSaleUtils.showWarning(data.notification_info.warning);
+            wSaleUtils.showWarning(data.warning);
             // Propagating the change to the express checkout forms
             Component.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
         });

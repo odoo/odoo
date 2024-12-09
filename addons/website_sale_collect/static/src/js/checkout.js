@@ -15,10 +15,9 @@ publicWidget.registry.WebsiteSaleCheckout.include({
      * @param {Event} ev
      */
     async _onClickDeleteProduct(ev) {
-        await rpc('/shop/cart/update_json', {
+        await rpc('/shop/cart/update', {
             product_id: parseInt(ev.target.dataset.productId, 10),
             set_qty: 0,
-            display: false,  // No need to return the rendered templates.
         });
         window.location.reload();  // Reload all cart values.
     },
