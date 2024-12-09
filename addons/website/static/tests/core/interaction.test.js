@@ -1216,19 +1216,14 @@ describe("dynamic attributes", () => {
 
         const { core, el } = await startInteraction(
             Test,
-            `<div><span class="a">coucou</span></div>`,
+            getTemplateWithAttribute("class='a'")
         );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="a b">coucou</span>`,
-        );
+        expect("span").toHaveClass(["a", "b"]);
         el.querySelector("span").classList.add("c");
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="a b c">coucou</span>`,
-        );
+        expect("span").toHaveClass(["a", "b", "c"]);
         core.stopInteractions();
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="a c">coucou</span>`,
-        );
+        expect("span").toHaveClass(["a", "c"]);
+        expect("span").not.toHaveClass("b");
     });
 
     // T-ATT-STYLE
@@ -1280,19 +1275,14 @@ describe("dynamic attributes", () => {
 
         const { core, el } = await startInteraction(
             Test,
-            `<div><span style="background-color: blue">coucou</span></div>`,
+            getTemplateWithAttribute("style='background-color: blue'")
         );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: black; color: red;">coucou</span>`,
-        );
+        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 0)", color: "rgb(255, 0, 0)" });
         el.querySelector("span").style.setProperty("width", "50%");
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: black; color: red; width: 50%;">coucou</span>`,
-        );
+        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 0)", color: "rgb(255, 0, 0)", width: "50%" });
         core.stopInteractions();
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: blue; width: 50%;">coucou</span>`,
-        );
+        expect("span").toHaveStyle({ "background-color": "rgb(0, 0, 255)", width: "50%" });
+        expect("span").not.toHaveStyle({ "color": "rgb(255, 0, 0)" });
     });
 
     test("t-att-style restores priority on reset", async () => {
