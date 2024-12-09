@@ -117,11 +117,11 @@ class ResPartnerBank(models.Model):
         for acc in self:
             acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number
 
-    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query) -> SQL:
-        if fname == 'acc_number':
-            fname = 'sanitized_acc_number'
+    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query) -> SQL:
+        if field_expr == 'acc_number':
+            field_expr = 'sanitized_acc_number'
             if not isinstance(value, str) and isinstance(value, Iterable):
                 value = [sanitize_account_number(i) for i in value]
             else:
                 value = sanitize_account_number(value)
-        return super()._condition_to_sql(alias, fname, operator, value, query)
+        return super()._condition_to_sql(alias, field_expr, operator, value, query)
