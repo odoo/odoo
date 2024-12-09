@@ -241,7 +241,7 @@ export class PosData extends Reactive {
         const { models, records, indexedRecords } = createRelatedModels(
             relations,
             modelClasses,
-            this.opts.databaseIndex
+            this.opts
         );
 
         this.records = records;

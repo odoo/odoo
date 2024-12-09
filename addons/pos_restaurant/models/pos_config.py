@@ -26,7 +26,7 @@ class PosConfig(models.Model):
         self.ensure_one()
         floors = self.env['restaurant.floor'].search([('pos_config_ids', '=', self.id)])
         tables = self.env['restaurant.table'].search([('floor_id', 'in', floors.ids)])
-        domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
+        domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids), ('lines', '!=', False)]
 
         order_stats = self.env['pos.order']._read_group(domain, ['table_id'], ['__count'])
         linked_orderlines = self.env['pos.order.line'].search([('order_id.state', '=', 'draft'), ('order_id.table_id', 'in', tables.ids)])
