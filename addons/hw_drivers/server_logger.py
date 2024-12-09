@@ -4,7 +4,6 @@ import queue
 import requests
 import threading
 import time
-import urllib3.exceptions
 
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.netsvc import DBFormatter
@@ -99,7 +98,7 @@ class AsyncHTTPHandler(logging.Handler):
                 timeout=self._REQUEST_TIMEOUT
             ).raise_for_status()
             self._next_disconnection_time = None
-        except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError, urllib3.exceptions.NewConnectionError) as request_errors:
+        except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError) as request_errors:
             now = time.time()
             if not self._next_disconnection_time or now >= self._next_disconnection_time:
                 _logger.info("Connection with the server to send the logs failed. It is likely down: %s", request_errors)

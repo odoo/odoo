@@ -6,11 +6,11 @@ import json
 import logging
 import netifaces as ni
 import os
+import requests
 import socket
 import subprocess
 import time
 import werkzeug
-import urllib3
 
 from odoo import http
 from odoo.addons.hw_drivers.browser import Browser, BrowserState
@@ -50,7 +50,7 @@ class DisplayDriver(Driver):
                 self._x_screen,
                 os.environ.copy(),
             )
-            self.update_url(self.load_url())
+            self.update_url(self.get_url_from_db())
 
         self._actions.update({
             'update_url': self._action_update_url,
@@ -85,26 +85,18 @@ class DisplayDriver(Driver):
         browser_state = BrowserState.KIOSK if "/pos-self/" in self.url else BrowserState.FULLSCREEN
         self.browser.open_browser(self.url, browser_state)
 
-    def load_url(self):
-        url = None
-        if helpers.get_odoo_server_url():
-            # disable certifiacte verification
-            urllib3.disable_warnings()
-            http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+    def get_url_from_db(self):
+        server_url = helpers.get_odoo_server_url()
+        if server_url:
             try:
-                response = http.request(
-                    'GET',
-                    "%s/iot/box/%s/display_url" % (helpers.get_odoo_server_url(), helpers.get_mac_address())
-                )
-                if response.status == 200:
-                    data = json.loads(response.data.decode('utf8'))
-                    url = data[self.device_identifier]
+                response = requests.get(f"{server_url}/iot/box/{helpers.get_mac_address()}/display_url", timeout=5)
+                response.raise_for_status()
+                data = json.loads(response.content.decode())
+                return data.get(self.device_identifier)
+            except requests.exceptions.RequestException:
+                _logger.exception("Failed to get display URL from server")
             except json.decoder.JSONDecodeError:
-                url = response.data.decode('utf8')
-            except Exception:
-                pass
-
-        return url
+                return response.content.decode('utf8')
 
     def _action_update_url(self, data):
         if self.device_identifier != 'distant_display':
