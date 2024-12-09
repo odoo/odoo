@@ -145,7 +145,7 @@ class ResUsers(models.Model):
             for user in user_notification_type_modified:
                 user._bus_send_store(
                     user.partner_id,
-                    fields=["notification_type"],
+                    "notification_type",
                     main_user_by_partner={user.partner_id: user},
                 )
 
@@ -258,63 +258,50 @@ class ResUsers(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def _init_store_data(self, store: Store, /):
+    def _init_store_data(self, store: Store):
         """Initialize the store of the user."""
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
-        store.add(
-            {
-                "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
-                "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
-                "internalUserGroupId": self.env.ref("base.group_user").id,
-                "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
-                # sudo: res.partner - exposing OdooBot data is considered acceptable
-                "odoobot": Store.one(self.env.ref("base.partner_root").sudo()),
-            }
+        store.add_global_values(
+            action_discuss_id=xmlid_to_res_id("mail.action_discuss"),
+            hasLinkPreviewFeature=self.env["mail.link.preview"]._is_link_preview_enabled(),
+            internalUserGroupId=self.env.ref("base.group_user").id,
+            mt_comment_id=xmlid_to_res_id("mail.mt_comment"),
+            # sudo: res.partner - exposing OdooBot data is considered acceptable
+            odoobot=Store.One(self.env.ref("base.partner_root").sudo()),
         )
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
-            store.add(
-                {
-                    "self": Store.one(
-                        self.env.user.partner_id,
-                        fields=[
-                            "active",
-                            "isAdmin",
-                            "name",
-                            "notification_type",
-                            "user",
-                            "write_date",
-                        ],
-                        main_user_by_partner={self.env.user.partner_id: self.env.user},
-                    ),
-                    "settings": settings._res_users_settings_format(),
-                }
+            store.add_global_values(
+                store_self=Store.One(
+                    self.env.user.partner_id,
+                    ["active", "isAdmin", "name", "notification_type", "user", "write_date"],
+                    main_user_by_partner={self.env.user.partner_id: self.env.user},
+                ),
+                settings=settings._res_users_settings_format(),
             )
         elif guest := self.env["mail.guest"]._get_guest_from_context():
-            store.add({"self": Store.one(guest, fields=["name", "write_date"])})
+            store.add_global_values(store_self=Store.One(guest, ["name", "write_date"]))
 
-    def _init_messaging(self, store):
+    def _init_messaging(self, store: Store):
         self.ensure_one()
         self = self.with_user(self)
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        store.add(
-            {
-                "inbox": {
-                    "counter": self.partner_id._get_needaction_count(),
-                    "counter_bus_id": bus_last_id,
-                    "id": "inbox",
-                    "model": "mail.box",
-                },
-                "starred": {
-                    "counter": self.env["mail.message"].search_count(
-                        [("starred_partner_ids", "in", self.partner_id.ids)]
-                    ),
-                    "counter_bus_id": bus_last_id,
-                    "id": "starred",
-                    "model": "mail.box",
-                },
-            }
+        store.add_global_values(
+            inbox={
+                "counter": self.partner_id._get_needaction_count(),
+                "counter_bus_id": bus_last_id,
+                "id": "inbox",
+                "model": "mail.box",
+            },
+            starred={
+                "counter": self.env["mail.message"].search_count(
+                    [("starred_partner_ids", "in", self.partner_id.ids)]
+                ),
+                "counter_bus_id": bus_last_id,
+                "id": "starred",
+                "model": "mail.box",
+            },
         )
 
     @api.model

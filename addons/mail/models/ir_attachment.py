@@ -76,32 +76,14 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
-    def _to_store(self, store: Store, /, *, fields=None, extra_fields=None):
-        if fields is None:
-            fields = [
-                "checksum",
-                "create_date",
-                "mimetype",
-                "name",
-                "res_name",
-                "thread",
-                "type",
-                "url",
-            ]
-        if extra_fields:
-            fields.extend(extra_fields)
-        for attachment in self:
-            data = attachment._read_format(
-                [field for field in fields if field != "thread"], load=False
-            )[0]
-            if "thread" in fields:
-                data["thread"] = (
-                    Store.one(
-                        self.env[attachment.res_model].browse(attachment.res_id),
-                        as_thread=True,
-                        only_id=True,
-                    )
-                    if attachment.res_model != "mail.compose.message" and attachment.res_id
-                    else False
-                )
-            store.add(attachment, data)
+    def _to_store_defaults(self):
+        return [
+            "checksum",
+            "create_date",
+            "mimetype",
+            "name",
+            "res_name",
+            Store.One("thread", [], as_thread=True),
+            "type",
+            "url",
+        ]

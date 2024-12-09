@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResUsers(models.Model):
@@ -46,6 +46,6 @@ class ResUsers(models.Model):
         for user in self.sudo():
             user.has_access_livechat = user.has_group('im_livechat.im_livechat_group_user')
 
-    def _init_store_data(self, store):
+    def _init_store_data(self, store: Store):
         super()._init_store_data(store)
-        store.add({"has_access_livechat": self.env.user.has_access_livechat})
+        store.add_global_values(has_access_livechat=self.env.user.has_access_livechat)

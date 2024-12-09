@@ -43,7 +43,7 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel._bus_send_store(channel, {"rtcSessions": Store.many(rtc_sessions, "ADD")})
+            channel._bus_send_store(channel, {"rtcSessions": Store.Many(rtc_sessions, mode="ADD")})
         return rtc_sessions
 
     def unlink(self):
@@ -64,7 +64,7 @@ class DiscussChannelRtcSession(models.Model):
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
             channel._bus_send_store(
-                channel, {"rtcSessions": Store.many(rtc_sessions, "DELETE", only_id=True)}
+                channel, {"rtcSessions": Store.Many(rtc_sessions, [], mode="DELETE")}
             )
         for rtc_session in self:
             rtc_session._bus_send(
@@ -136,17 +136,19 @@ class DiscussChannelRtcSession(models.Model):
         for target, payload in payload_by_target.items():
             target._bus_send("discuss.channel.rtc.session/peer_notification", payload)
 
-    def _to_store(self, store: Store, extra=False):
-        fields = []
+    def _to_store_defaults(self):
+        return Store.One(
+            "channel_member_id",
+            [
+                Store.One("channel_id", [], as_thread=True, rename="thread"),
+                *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
+            ],
+        )
+
+    def _to_store(self, store: Store, fields, *, extra=False):
         if extra:
             fields += ["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]
-        for rtc_session in self:
-            data = rtc_session._read_format(fields, load=False)[0]
-            data["channel_member_id"] = Store.one(
-                rtc_session.channel_member_id,
-                fields={"channel": [], "persona": ["name", "im_status", "write_date"]},
-            )
-            store.add(rtc_session, data)
+        store.add_records_fields(self, fields)
 
     @api.model
     def _inactive_rtc_session_domain(self):

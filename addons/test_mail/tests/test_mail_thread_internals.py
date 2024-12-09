@@ -714,7 +714,7 @@ class TestDiscuss(MailCommon, TestRecipients):
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "mail.thread": [
+                        "mail.thread": self._filter_threads_fields(
                             {
                                 "counter": 1,
                                 "counter_bus_id": bus_last_id,
@@ -722,13 +722,13 @@ class TestDiscuss(MailCommon, TestRecipients):
                                 "messages": [["DELETE", [msg.id]]],
                                 "model": "mail.box",
                             }
-                        ],
+                        ),
                     },
                 },
                 {
                     "type": "mail.record/insert",
                     "payload": {
-                        "mail.thread": [
+                        "mail.thread": self._filter_threads_fields(
                             {
                                 "counter": 0,
                                 "counter_bus_id": bus_last_id,
@@ -736,7 +736,7 @@ class TestDiscuss(MailCommon, TestRecipients):
                                 "messages": [["DELETE", [msg.id]]],
                                 "model": "mail.box",
                             }
-                        ],
+                        ),
                     },
                 },
             ],

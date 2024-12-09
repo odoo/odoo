@@ -182,10 +182,7 @@ patch(MockServer.prototype, {
         this.pyEnv["bus.bus"]._sendone(
             this.pyEnv.currentPartner,
             "discuss.channel/transient_message",
-            {
-                body: notifBody,
-                thread: { model: "discuss.channel", id: channel.id },
-            }
+            { body: notifBody, channel_id: channel.id }
         );
         return true;
     },
@@ -808,7 +805,7 @@ patch(MockServer.prototype, {
                 "discuss.channel/transient_message",
                 {
                     body: `<span class="o_mail_notification">${message}</span>`,
-                    thread: { model: "discuss.channel", id: channel.id },
+                    channel_id: channel.id,
                 }
             );
         }

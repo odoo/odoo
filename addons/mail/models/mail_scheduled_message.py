@@ -251,9 +251,12 @@ class MailScheduledMessage(models.Model):
         if self.search_count(domain, limit=1):
             self.env('mail.ir_cron_post_scheduled_message')._trigger()
 
-    def _to_store(self, store: Store):
-        for scheduled_message in self:
-            data = scheduled_message._read_format(['body', 'is_note', 'scheduled_date', 'subject'])[0]
-            data['attachment_ids'] = Store.many(scheduled_message.attachment_ids)
-            data['author'] = Store.one(scheduled_message.author_id)
-            store.add(scheduled_message, data)
+    def _to_store_defaults(self):
+        return [
+            Store.Many("attachment_ids"),
+            Store.One("author_id", rename="author"),
+            "body",
+            "is_note",
+            "scheduled_date",
+            "subject",
+        ]
