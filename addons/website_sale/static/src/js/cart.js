@@ -13,7 +13,7 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     events: {
         'change input.js_quantity[data-product-id]': '_onChangeCartQuantity',
         'click .js_delete_product': '_onClickDeleteProduct',
-        'click a.js_add_suggested_products': '_onClickSuggestedProduct',
+        'click button.js_add_suggested_products': '_onClickSuggestedProduct',
     },
 
     /**

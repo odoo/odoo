@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
 from operator import itemgetter
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, groupby
@@ -195,8 +194,11 @@ class ProductProduct(models.Model):
     def _get_placeholder_filename(self, field):
         image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
         if field in image_fields:
-            return 'product/static/img/placeholder_thumbnail.png'
+            return self._get_product_placeholder_filename()
         return super()._get_placeholder_filename(field)
+
+    def _get_product_placeholder_filename(self):
+        return self.product_tmpl_id._get_product_placeholder_filename()
 
     def _get_barcodes_by_company(self):
         return [

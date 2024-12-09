@@ -35,14 +35,14 @@ registry
             },
             {
                 content: "Verify the combo product's quantity",
-                trigger: 'input.quantity',
+                trigger: 'div[name="website_sale_cart_line_quantity"] input.quantity',
                 run: async () => await waitUntil(
-                    () => queryValue('input.quantity') === '3', { timeout: 1000 }
+                    () => queryValue('div[name="website_sale_cart_line_quantity"] input.quantity') === '3', { timeout: 1000 }
                 ),
             },
             {
                 content: "Verify the combo product's price",
-                trigger: 'div[name="website_sale_cart_line_price"]:contains(93.00)',
+                trigger: 'h6[name="website_sale_cart_line_price"]:contains(93.00)',
             },
             {
                 content: "Verify the order's total price",
@@ -51,14 +51,14 @@ registry
             // Assert that the combo quantity can be updated in the cart.
             {
                 content: "Edit the combo quantity",
-                trigger: 'input.quantity',
-                run: 'edit 2 && click body',
+                trigger: 'div[name="website_sale_cart_line_quantity"] input.quantity',
+                run: "edit 2 && click body",
             },
             wsTourUtils.assertCartContains({ productName: "2 x Product A1" }),
             wsTourUtils.assertCartContains({ productName: "2 x Product B2" }),
             {
                 content: "Verify the combo product's price",
-                trigger: 'div[name="website_sale_cart_line_price"]:contains(62.00)',
+                trigger: 'h6[name="website_sale_cart_line_price"]:contains(62.00)',
             },
         ],
    });
