@@ -93,8 +93,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            ProductScreen.back(),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -145,18 +145,19 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Create another draft order and go back to floor
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            ProductScreen.back(),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.back(),
 
             // At floor screen, there should be 2 synced draft orders
-            FloorScreen.orderCountSyncedInTableIs("5", "2"),
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
 
             // Delete the first order then go back to floor
             FloorScreen.clickTable("5"),
             ProductScreen.isShown(),
+            ProductScreen.back(),
             Chrome.clickMenuOption("Orders"),
             // The order ref ends with -0002 because it is actually the 2nd order made in the session.
             // The first order made in the session is a floating order.
@@ -173,8 +174,9 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.isShown(),
             ProductScreen.back(),
 
-            // There should be 1 synced draft order.
-            FloorScreen.orderCountSyncedInTableIs("5", "2"),
+            // There should be 0 synced draft order as we already deleted -0002.
+            FloorScreen.clickTable("2"),
+            ProductScreen.orderIsEmpty(),
         ].flat(),
 });
 
@@ -187,7 +189,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
     steps: () =>
         [
             // There is one draft synced order from the previous tour
-            FloorScreen.clickTable("5"),
+            FloorScreen.clickTable("2"),
             ProductScreen.totalAmountIs("4.40"),
 
             // Test transfering an order

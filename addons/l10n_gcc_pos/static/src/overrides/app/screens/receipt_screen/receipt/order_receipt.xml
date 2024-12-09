@@ -55,7 +55,7 @@
             <attribute name="t-if">!props.data.is_gcc_country</attribute>
         </xpath>
         <xpath expr="//span[@t-esc='props.formatCurrency(props.data.change)']/.." position="after">
-            <div t-if="props.data.is_gcc_country" class="pos-receipt-amount receipt-change pos-receipt-amount-arabic" t-translation="off">
+            <div t-if="props.data.is_gcc_country and props.data.change" class="pos-receipt-amount receipt-change pos-receipt-amount-arabic" t-translation="off">
                 CHANGE / الباقي
                 <span t-esc="props.formatCurrency(props.data.change)" class="pos-receipt-right-align"/>
             </div>

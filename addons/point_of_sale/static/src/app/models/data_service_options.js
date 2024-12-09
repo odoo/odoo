@@ -44,6 +44,7 @@ export class DataServiceOptions {
         return {
             "pos.order": ["uuid"],
             "pos.order.line": ["uuid"],
+            "pos.payment": ["uuid"],
             "product.product": ["barcode", "pos_categ_ids", "write_date"],
             "account.fiscal.position": ["tax_ids"],
             "product.packaging": ["barcode"],
