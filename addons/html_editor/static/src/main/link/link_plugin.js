@@ -122,6 +122,13 @@ export class LinkPlugin extends Plugin {
                 run: this.toggleLinkTools.bind(this),
             },
             {
+                id: "toggleLinkToolsButton",
+                title: _t("Button"),
+                description: _t("Add a button"),
+                icon: "fa-link",
+                run: this.toggleLinkTools.bind(this, { isButton: true }),
+            },
+            {
                 id: "removeLinkFromSelection",
                 title: _t("Remove Link"),
                 icon: "fa-unlink",
@@ -169,7 +176,7 @@ export class LinkPlugin extends Plugin {
                 title: _t("Button"),
                 description: _t("Add a button"),
                 categoryId: "navigation",
-                commandId: "toggleLinkTools",
+                commandId: "toggleLinkToolsButton",
             },
         ],
 
@@ -279,11 +286,14 @@ export class LinkPlugin extends Plugin {
      * @param {Object} options
      * @param {HTMLElement} options.link
      */
-    toggleLinkTools({ link } = {}) {
+    toggleLinkTools({ link, isButton } = {}) {
         if (!link) {
             link = this.getOrCreateLink();
         }
         this.linkElement = link;
+        if (isButton) {
+            this.linkElement.classList.add("btn", "btn-primary");
+        }
     }
 
     normalizeLink() {
