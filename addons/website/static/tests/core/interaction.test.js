@@ -1448,8 +1448,8 @@ describe("dynamic attributes", () => {
     });
 
     test("t-att-... save previously loaded attributes", async () => {
-        const c = [{}, { a: true }, { b: true }];
-        const s = [{}, { "background-color": "blue" }, { "color": "red" }, {}];
+        const c = [{ a: true }, { b: true }];
+        const s = [{ "background-color": "blue" }, { "color": "red" }];
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {

@@ -176,28 +176,7 @@ export class Colibri {
                 this.addListener(nodes, ev, value);
             } else if (directive.startsWith("t-att-")) {
                 const attr = directive.slice(6);
-                const initialValues = new Map();
-                for (const node of nodes) {
-                    let attrValue;
-                    switch (attr) {
-                        case "class":
-                            attrValue = [...node.classList];
-                            break;
-                        case "style":
-                            attrValue = {};
-                            for (const property of Object.keys(value())) {
-                                attrValue[property] = [
-                                    node.style.getPropertyValue(property),
-                                    node.style.getPropertyPriority(property),
-                                ];
-                            }
-                            break;
-                        default:
-                            attrValue = node.getAttribute(attr);
-                    }
-                    initialValues.set(node, attrValue);
-                }
-                this.dynamicAttrs.push([nodes, attr, value, initialValues]);
+                this.dynamicAttrs.push({nodes, attr, definition: value, initialValues: null});
             } else if (directive === "t-out") {
                 this.tOuts.push([nodes, value]);
             } else if (directive === "t-component") {
@@ -223,19 +202,46 @@ export class Colibri {
         }
         const errors = [];
         const interaction = this.interaction;
-        for (const [nodes, attr, fn] of this.dynamicAttrs) {
+        for (const dynamicAttr of this.dynamicAttrs) {
+            const {nodes, attr, definition, initialValues} = dynamicAttr;
             for (const node of nodes) {
                 try {
-                    const value = fn.call(interaction, node);
+                    const value = definition.call(interaction, node);
+                    if (!initialValues) {
+                        const valuePerNode = new Map();
+                        for (const node of nodes) {
+                            let attrValue;
+                            switch (attr) {
+                                case "class":
+                                    attrValue = [];
+                                    for (const classNames of Object.keys(value)) {
+                                        attrValue[classNames] = node.classList.contains(classNames);
+                                    }
+                                    break;
+                                case "style":
+                                    attrValue = {};
+                                    for (const property of Object.keys(value)) {
+                                        const propertyValue = node.style.getPropertyValue(property);
+                                        const priority = node.style.getPropertyPriority(property);
+                                        attrValue[property] = propertyValue ? (propertyValue + (priority ? ` !${priority}` : "")) : "";
+                                    }
+                                    break;
+                                default:
+                                    attrValue = node.getAttribute(attr);
+                            }
+                            valuePerNode.set(node, attrValue);
+                        }
+                        dynamicAttr.initialValues = valuePerNode;
+                    }
                     this.applyAttr(node, attr, value);
                 } catch (e) {
                     errors.push({ error: e, attribute: attr });
                 }
             }
         }
-        for (const [nodes, fn] of this.tOuts) {
+        for (const [nodes, definition] of this.tOuts) {
             for (const node of nodes) {
-                this.applyTOut(node, fn.call(interaction, node));
+                this.applyTOut(node, definition.call(interaction, node));
             }
         }
         if (errors.length) {
@@ -248,32 +254,13 @@ export class Colibri {
     destroy() {
         // restore t-att to their initial values
         for (const dynAttrs of this.dynamicAttrs) {
-            const [nodes, attr, definition, initialValues] = dynAttrs;
+            const {nodes, attr, definition, initialValues} = dynAttrs;
+            if (!initialValues) {
+                continue;
+            }
             for (const node of nodes) {
                 const initialValue = initialValues.get(node);
-                switch (attr) {
-                    case "class":
-                        // initialValue is an array of class names.
-                        for (const classNames of Object.keys(definition())) {
-                            for (const className of classNames.split(" ")) {
-                                node.classList.toggle(className, initialValue.includes(className));
-                            }
-                        }
-                        continue;
-                    case "style":
-                        // initialValue is an object mapping properties to values and priority.
-                        for (const property of Object.keys(definition())) {
-                            const initialProperty = initialValue[property];
-                            node.style.setProperty(property, initialProperty?.[0], initialProperty?.[1]);
-                        }
-                        continue;
-                    default:
-                        if (initialValue) {
-                            node.setAttribute(attr, initialValue);
-                        } else {
-                            node.removeAttribute(attr);
-                        }
-                }
+                this.applyAttr(node, attr, initialValue);
             }
         }
 
