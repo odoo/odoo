@@ -1998,7 +1998,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         pick01 = so.picking_ids
         pick01.move_ids.write({'quantity': 10, 'picked': True})
         pick01.button_validate()
-        self.assertEqual(so.delivery_status, 'started')
+        self.assertEqual(so.delivery_status, 'preparation')
 
         ship01 = so.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
         ship01.move_ids.write({'quantity': 3, 'picked': True})
