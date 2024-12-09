@@ -23,8 +23,10 @@
                 <field name="name"/>
                 <field name="entry_count"/>
                 <field name="sql_count" optional="hide"/>
-                <field name="speedscope_url" widget="url"/>
                 <field name="duration"/>
+                <button name="download_profile" type="object" icon="fa-download" title="Download" class="btn-link"/>
+                <button name="open_profile" type="object" icon="fa-external-link" title="Open" class="btn-link"/>
+                <button name="open_config_wizard" type="object" icon="fa-cog" title="Options" class="btn-link"/>
             </list>
         </field>
     </record>
@@ -40,7 +42,7 @@
                     <field name="entry_count"/>
                     <!-- Do not rely on sql field for the invisible attrs to avoid fetching whole trace from server. -->
                     <field name="sql_count" invisible="sql_count == 0"/>
-                    <field name="speedscope_url" widget="url"/>
+                    <button name="open_config_wizard" type="object" string="Options" class="btn-primary"/>
                 </group>
                 <group invisible="not qweb">
                     <field name="qweb" widget="profiling_qweb_view" nolabel="1"/>
@@ -68,6 +70,24 @@
                 <footer>
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     <button string="Enable profiling" type="object" name="submit" class="btn btn-primary" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="render_profiling_wizard" model="ir.ui.view">
+        <field name="name">Config profiling render</field>
+        <field name="model">base.render.profiling.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Config profile rendering">
+                <group>
+                    <field name="constant_time"/>
+                    <field name="aggregate_sql"/>
+                </group>
+                <footer>
+                    <button string="Open" type="object" name="open_profile" class="btn btn-primary" data-hotkey="q"/>
+                    <button string="Download" type="object" name="download_profile" class="btn btn-primary" data-hotkey="d"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>
