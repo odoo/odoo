@@ -7,8 +7,8 @@
     >
         <!-- Remove the drag-and-drop handle for combo lines and combo item lines. -->
         <Field position="attributes">
-            <attribute name="t-if">
-                !((isCombo(record) || isComboItem(record)) &amp;&amp; column.widget === 'handle')
+            <attribute name="t-elif">
+                column.widget !== 'handle' || (!props.readonly &amp;&amp; !(isCombo(record) || isComboItem(record)))
             </attribute>
         </Field>
          <!-- Remove the "delete" button for combo item lines. -->

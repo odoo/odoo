@@ -53,7 +53,7 @@
                             <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
                         </t>
                     </t>
-                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" readonly="props.readonly" archInfo="archInfo" translateAlert="translateAlert" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
                 </Layout>
             </div>
         </div>
