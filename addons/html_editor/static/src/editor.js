@@ -1,4 +1,4 @@
-import { MAIN_PLUGINS } from "./plugin_sets";
+// import { MAIN_PLUGINS } from "./plugin_sets";
 import { removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, withSequence } from "./utils/resource";
@@ -115,7 +115,7 @@ export class Editor {
     }
 
     preparePlugins() {
-        const Plugins = sortPlugins(this.config.Plugins || MAIN_PLUGINS);
+        const Plugins = sortPlugins(this.config.Plugins);
         const plugins = new Map();
         for (const P of Plugins) {
             if (P.id === "") {
