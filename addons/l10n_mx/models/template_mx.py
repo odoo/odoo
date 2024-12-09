@@ -18,7 +18,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'cuenta205_06_01',
             'property_stock_account_output_categ_id': 'cuenta107_05_01',
             'property_stock_valuation_account_id': 'cuenta115_01',
-            'property_cash_basis_base_account_id': 'cuenta801_01_99',
         }
 
     @template('mx', 'res.company')
@@ -39,6 +38,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'tax_cash_basis_journal_id': 'cbmx',
                 'account_sale_tax_id': 'tax12',
                 'account_purchase_tax_id': 'tax14',
+                'account_cash_basis_base_account_id': 'cuenta801_01_99',
             },
         }
 
