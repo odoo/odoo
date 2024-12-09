@@ -1461,6 +1461,13 @@ header {
     &.o_header_is_scrolled, &.o_transitioning.o_header_affixed {
         background-color: transparent !important;
     }
+
+    // TEMP : WAITING FOR odoo#189817
+    &.o_transformed_not_affixed {
+        .o_navbar_mobile {
+            display: none;
+        }
+    }
 }
 
 @if o-website-value('header-template') == 'sidebar' {

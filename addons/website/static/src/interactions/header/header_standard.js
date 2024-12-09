@@ -53,6 +53,10 @@ export class HeaderStandard extends BaseHeader {
         const reachHeaderBottom = (scroll > this.getHeaderHeight() + this.topGap);
         const reachTransitionPoint = (scroll > this.transitionPoint + this.topGap) && this.transitionPossible;
 
+        // TEMP : WAITING FOR odoo#189817
+        if (this.atTop == reachHeaderBottom) {
+            this.el.classList.add("o_transformed_not_affixed");
+        }
         this.atTop = !reachHeaderBottom;
 
         reachTransitionPoint
@@ -62,6 +66,8 @@ export class HeaderStandard extends BaseHeader {
                 : this.transformShow()
         void this.el.offsetWidth; // Force a paint refresh
 
+        // TEMP : WAITING FOR odoo#189817
+        this.el.classList.remove("o_transformed_not_affixed");
         this.hideEl?.classList.toggle("hidden", reachHeaderBottom);
 
         this.cssAffixed = reachHeaderBottom;
