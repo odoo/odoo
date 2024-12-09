@@ -38,6 +38,7 @@ describe("DateTimeInput (date)", () => {
             props: {
                 value: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy"),
                 type: "date",
+                class: "custom_class",
             },
         });
 
@@ -45,6 +46,7 @@ describe("DateTimeInput (date)", () => {
         assertDateTimePicker(false);
 
         expect(".o_datetime_input").toHaveValue("09/01/1997");
+        expect(".o_datetime_input").toHaveClass("custom_class");
 
         await click(".o_datetime_input");
         await animationFrame();
