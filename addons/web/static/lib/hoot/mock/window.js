@@ -11,6 +11,17 @@ import {
     mockedSetTimeout,
 } from "@web/../lib/hoot-dom/helpers/time";
 import { getRunner } from "../main_runner";
+import {
+    MockAnimation,
+    mockedAnimate,
+    mockedScroll,
+    mockedScrollBy,
+    mockedScrollIntoView,
+    mockedScrollTo,
+    mockedWindowScroll,
+    mockedWindowScrollBy,
+    mockedWindowScrollTo,
+} from "./animation";
 import { MockConsole } from "./console";
 import { MockDate } from "./date";
 import { MockClipboardItem, mockNavigator } from "./navigator";
@@ -163,6 +174,8 @@ const mockLocalStorage = new MockStorage();
 const mockSessionStorage = new MockStorage();
 let mockTitle = "";
 
+const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
+
 // Mock descriptors
 const DOCUMENT_MOCK_DESCRIPTORS = {
     cookie: {
@@ -176,8 +189,15 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
         set: (value) => (mockTitle = value),
     },
 };
-const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
+const ELEMENT_MOCK_DESCRIPTORS = {
+    animate: { value: mockedAnimate },
+    scroll: { value: mockedScroll },
+    scrollBy: { value: mockedScrollBy },
+    scrollIntoView: { value: mockedScrollIntoView },
+    scrollTo: { value: mockedScrollTo },
+};
 const WINDOW_MOCK_DESCRIPTORS = {
+    Animation: { value: MockAnimation },
     Blob: { value: MockBlob },
     BroadcastChannel: { value: MockBroadcastChannel },
     cancelAnimationFrame: { value: mockedCancelAnimationFrame, writable: false },
@@ -199,6 +219,9 @@ const WINDOW_MOCK_DESCRIPTORS = {
     Request: { value: MockRequest, writable: false },
     requestAnimationFrame: { value: mockedRequestAnimationFrame, writable: false },
     Response: { value: MockResponse, writable: false },
+    scroll: { value: mockedWindowScroll },
+    scrollBy: { value: mockedWindowScrollBy },
+    scrollTo: { value: mockedWindowScrollTo },
     sessionStorage: { value: mockSessionStorage, writable: false },
     setInterval: { value: mockedSetInterval, writable: false },
     setTimeout: { value: mockedSetTimeout, writable: false },
@@ -284,6 +307,7 @@ export function mockTouch(setTouch, { Document, HTMLElement, SVGElement } = glob
  */
 export function patchWindow({ document, window } = globalThis) {
     applyPropertyDescriptors(window, WINDOW_MOCK_DESCRIPTORS);
+    applyPropertyDescriptors(window.Element.prototype, ELEMENT_MOCK_DESCRIPTORS);
     whenReady(() => {
         applyPropertyDescriptors(document, DOCUMENT_MOCK_DESCRIPTORS);
     });

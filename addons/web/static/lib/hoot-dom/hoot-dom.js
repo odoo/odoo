@@ -1,5 +1,9 @@
 /** @odoo-module alias=@odoo/hoot-dom default=false */
 
+import * as dom from "./helpers/dom";
+import * as events from "./helpers/events";
+import { interactor } from "./hoot_dom_utils";
+
 /**
  * @typedef {import("./helpers/dom").Dimensions} Dimensions
  * @typedef {import("./helpers/dom").FormatXmlOptions} FormatXmlOptions
@@ -32,7 +36,6 @@ export {
     isScrollable,
     isVisible,
     matches,
-    observe,
     queryAll,
     queryAllAttributes,
     queryAllProperties,
@@ -45,42 +48,14 @@ export {
     queryRect,
     queryText,
     queryValue,
-    waitFor,
-    waitForNone,
 } from "./helpers/dom";
+export { on } from "./helpers/events";
 export {
-    check,
-    clear,
-    click,
-    dblclick,
-    drag,
-    edit,
-    fill,
-    hover,
-    keyDown,
-    keyUp,
-    leave,
-    dispatch as manuallyDispatchProgrammaticEvent,
-    middleClick,
-    on,
-    pointerDown,
-    pointerUp,
-    press,
-    resize,
-    rightClick,
-    scroll,
-    select,
-    setInputFiles,
-    setInputRange,
-    uncheck,
-    unload,
-} from "./helpers/events";
-export {
-    Deferred,
     advanceFrame,
     advanceTime,
     animationFrame,
     cancelAllTimers,
+    Deferred,
     delay,
     freezeTime,
     microTick,
@@ -89,3 +64,38 @@ export {
     tick,
     waitUntil,
 } from "./helpers/time";
+
+//-----------------------------------------------------------------------------
+// Interactors
+//-----------------------------------------------------------------------------
+
+// DOM
+export const observe = interactor("query", dom.observe);
+export const waitFor = interactor("query", dom.waitFor);
+export const waitForNone = interactor("query", dom.waitForNone);
+
+// Events
+export const check = interactor("event", events.check);
+export const clear = interactor("event", events.clear);
+export const click = interactor("event", events.click);
+export const dblclick = interactor("event", events.dblclick);
+export const drag = interactor("event", events.drag);
+export const edit = interactor("event", events.edit);
+export const fill = interactor("event", events.fill);
+export const hover = interactor("event", events.hover);
+export const keyDown = interactor("event", events.keyDown);
+export const keyUp = interactor("event", events.keyUp);
+export const leave = interactor("event", events.leave);
+export const manuallyDispatchProgrammaticEvent = interactor("event", events.dispatch);
+export const middleClick = interactor("event", events.middleClick);
+export const pointerDown = interactor("event", events.pointerDown);
+export const pointerUp = interactor("event", events.pointerUp);
+export const press = interactor("event", events.press);
+export const resize = interactor("event", events.resize);
+export const rightClick = interactor("event", events.rightClick);
+export const scroll = interactor("event", events.scroll);
+export const select = interactor("event", events.select);
+export const setInputFiles = interactor("event", events.setInputFiles);
+export const setInputRange = interactor("event", events.setInputRange);
+export const uncheck = interactor("event", events.uncheck);
+export const unload = interactor("event", events.unload);

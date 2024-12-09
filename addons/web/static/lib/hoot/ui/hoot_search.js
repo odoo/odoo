@@ -769,8 +769,8 @@ export class HootSearch extends Component {
                 test.status = Test.PASSED;
                 for (const result of test.results) {
                     result.pass = true;
-                    result.errors = [];
-                    for (const assertion of result.assertions) {
+                    result.currentErrors = [];
+                    for (const assertion of result.getEvents("assertion")) {
                         assertion.pass = true;
                     }
                 }

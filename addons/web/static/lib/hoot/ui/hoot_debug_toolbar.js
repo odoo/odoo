@@ -114,7 +114,7 @@ export class HootDebugToolBar extends Component {
     getInfo() {
         const [status, className] = this.getStatus();
         const [assertPassed, assertFailed] = this.groupAssertions(
-            this.props.test.lastResults?.assertions
+            this.props.test.lastResults?.getEvents("assertion")
         );
         return {
             className,

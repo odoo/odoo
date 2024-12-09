@@ -5,9 +5,8 @@ import { parseRegExp } from "../../hoot-dom/hoot_dom_utils";
 import { Test } from "../core/test";
 import { EXCLUDE_PREFIX } from "../core/url";
 import { formatTime, getFuzzyScore, normalize } from "../hoot_utils";
-import { HootLogCounters } from "./hoot_log_counters";
 import { HootJobButtons } from "./hoot_job_buttons";
-import { HootTechnicalValue } from "./hoot_technical_value";
+import { HootLogCounters } from "./hoot_log_counters";
 import { HootTestPath } from "./hoot_test_path";
 import { HootTestResult } from "./hoot_test_result";
 
@@ -77,7 +76,6 @@ export class HootReporting extends Component {
     static components = {
         HootLogCounters,
         HootJobButtons,
-        HootTechnicalValue,
         HootTestPath,
         HootTestResult,
     };

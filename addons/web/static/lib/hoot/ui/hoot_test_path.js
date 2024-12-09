@@ -131,7 +131,7 @@ export class HootTestPath extends Component {
         for (const job of suite.jobs) {
             if (job instanceof Test) {
                 tests++;
-                assertions += job.lastResults?.assertions.length || 0;
+                assertions += job.lastResults?.counts.assertion || 0;
             } else {
                 suites++;
             }
