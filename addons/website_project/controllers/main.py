@@ -8,14 +8,15 @@ from odoo.addons.website.controllers import form
 
 class WebsiteForm(form.WebsiteForm):
     def insert_record(self, request, model, values, custom, meta=None):
-        if model.model == 'project.task':
+        model_name = model.sudo().model
+        if model_name == 'project.task':
             # When a task is created from the web editor, if the key 'user_ids' is not present, the user_ids is filled with the odoo bot. We set it to False to ensure it is not.
             values.setdefault('user_ids', False)
             if custom:
                 custom.replace('email_from', 'Email')
 
         res = super().insert_record(request, model, values, custom, meta=meta)
-        if model.model != 'project.task':
+        if model_name != 'project.task':
             return res
         task = request.env['project.task'].sudo().browse(res)
         default_field = model.website_form_default_field_id
@@ -28,7 +29,7 @@ class WebsiteForm(form.WebsiteForm):
 
     def extract_data(self, model, values):
         data = super().extract_data(model, values)
-        if model.model == 'project.task' and values.get('email_from'):
+        if model.sudo().model == 'project.task' and values.get('email_from'):
             partners_list = request.env['mail.thread'].sudo()._mail_find_partner_from_emails([values['email_from']])
             partner = partners_list[0] if partners_list else self.env['res.partner']
             data['record']['partner_id'] = partner.id
