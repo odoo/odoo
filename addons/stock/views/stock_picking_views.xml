@@ -447,18 +447,6 @@
             </field>
         </record>
 
-        <record id="action_unreserve_picking" model="ir.actions.server">
-            <field name="name">Unreserve</field>
-            <field name="model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_model_id" ref="stock.model_stock_picking"/>
-            <field name="binding_view_types">list,form</field>
-            <field name="state">code</field>
-            <field name="code">
-            if records:
-                records.do_unreserve()
-            </field>
-        </record>
-
         <record id="action_print_labels" model="ir.actions.server">
             <field name="name">Labels</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
