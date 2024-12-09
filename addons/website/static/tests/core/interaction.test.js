@@ -8,6 +8,16 @@ import { Interaction } from "@website/core/interaction";
 import { startInteraction } from "./helpers";
 import { Component, onWillDestroy, xml } from "@odoo/owl";
 
+const TemplateBase = `
+    <div>
+        <span>coucou</span>
+    </div>`
+
+const TemplateTest = `
+    <div class="test">
+        <span>coucou</span>
+    </div>`
+
 describe("event handling", () => {
     test("can add a listener on a single element", async () => {
         let clicked = false;
@@ -23,10 +33,7 @@ describe("event handling", () => {
 
         const { el } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         await click(el.querySelector("span"));
@@ -48,10 +55,7 @@ describe("event handling", () => {
 
         const { el } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         await click(el.querySelector(".test"));
@@ -73,10 +77,7 @@ describe("event handling", () => {
 
         await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         await click(document.body);
@@ -98,10 +99,7 @@ describe("event handling", () => {
 
         await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         window.dispatchEvent(new Event("someevent"));
@@ -123,10 +121,7 @@ describe("event handling", () => {
 
         await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         window.document.dispatchEvent(new Event("someevent"));
@@ -184,10 +179,7 @@ describe("event handling", () => {
 
         await startInteraction(
             Test,
-            `
-                <div class="test">
-                    <span>coucou</span>
-                </div>`,
+            TemplateTest,
         );
         expect.verifySteps(["check"])
         expect(clicked).toBe(false);
@@ -209,10 +201,7 @@ describe("event handling", () => {
         }
         const { el } = await startInteraction(
             Test,
-            `
-                <div class="test">
-                    <span>coucou</span>
-                </div>`,
+            TemplateTest,
         );
 
         el.querySelector(".test").click();
@@ -262,10 +251,7 @@ describe("event handling", () => {
 
         const { el } = await startInteraction(
             Test,
-            `
-            <div class="test">
-                <span>coucou</span>
-            </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(0);
         const span = el.querySelector("span");
@@ -288,10 +274,7 @@ describe("event handling", () => {
 
         const { el, core } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(0);
         await click(el.querySelector("span"));
@@ -316,10 +299,7 @@ describe("event handling", () => {
 
         const { el, core } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(0);
         await click(el.querySelector("span"));
@@ -344,10 +324,7 @@ describe("event handling", () => {
 
         const { el, core } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(0);
         await click(el.querySelector("span"));
@@ -427,10 +404,7 @@ describe("event handling", () => {
 
         const { el, core } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect.verifySteps(["setup", "start", "click1"]);
         core.stopInteractions();
@@ -462,10 +436,7 @@ describe("event handling", () => {
 
         const { el } = await startInteraction(
             Test,
-            `
-            <div class="test">
-                <span>coucou</span>
-            </div>`,
+            TemplateTest,
         );
         await click(el.querySelector("span"));
 
@@ -487,10 +458,7 @@ describe("event handling", () => {
         let error = null;
         try {
             await startInteraction( Test,
-            `
-            <div class="test">
-                <span>coucou</span>
-            </div>`,
+                TemplateTest,
             );
         } catch (e) {
             error = e;
@@ -519,10 +487,7 @@ describe("event handling", () => {
 
         const { el } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         const span = el.querySelector("span");
         expect(span.dataset.count).toBe("1");
@@ -548,10 +513,7 @@ describe("event handling", () => {
 
         const { el } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         await click(el.querySelector("span"));
@@ -574,10 +536,7 @@ describe("event handling", () => {
 
         const { el } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         await click(el.querySelector("span"));
@@ -655,10 +614,7 @@ describe("event handling", () => {
 
         const { el, core } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         await click(el.querySelector("span"));
@@ -685,10 +641,7 @@ describe("event handling", () => {
 
         const { el, core } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         expect(clicked).toBe(false);
         await click(el.querySelector("span"));
@@ -752,7 +705,7 @@ describe("t-out", () => {
 
         const { el } = await startInteraction(
             Test,
-            `<div class="test"><span>coucou</span></div>`,
+            TemplateTest,
         );
         expect(el.querySelector("span").outerHTML).toBe(`<span>colibri</span>`);
     });
@@ -781,10 +734,7 @@ describe("lifecycle", () => {
 
         const { el, core } = await startInteraction(
             Test,
-            `
-            <div class="test">
-                <span>coucou</span>
-            </div>`,
+            TemplateTest,
         );
 
         expect.verifySteps(["setup", "willStart", "start"]);
@@ -821,10 +771,7 @@ describe("lifecycle", () => {
 
         const { core } = await startInteraction(
             Test,
-            `
-            <div class="test">
-                <span>coucou</span>
-            </div>`,
+            TemplateTest,
             {
                 waitForStart: false,
             },
@@ -858,10 +805,7 @@ describe("lifecycle", () => {
 
         const { core } = await startInteraction(
             Test,
-            `
-            <div class="test">
-                <span>coucou</span>
-            </div>`,
+            TemplateTest,
             {
                 waitForStart: false,
             },
@@ -1141,14 +1085,14 @@ describe("dynamic attributes", () => {
 
         const { el, core } = await startInteraction(
             Test,
-            `<div class="test"><span>coucou</span></div>`,
+            TemplateTest,
         );
         expect(el.querySelector(".test").outerHTML).toBe(
             `<div class="test" a="b"><span>coucou</span></div>`,
         );
         core.stopInteractions();
         expect(el.querySelector(".test").outerHTML).toBe(
-            `<div class="test"><span>coucou</span></div>`,
+            TemplateTest,
         );
 
     });
@@ -1205,7 +1149,7 @@ describe("dynamic attributes", () => {
 
         const { el } = await startInteraction(
             Test,
-            `<div><span>coucou</span></div>`,
+            TemplateBase,
         );
         expect(el.querySelector("span").outerHTML).toBe(
             `<span class="a b">coucou</span>`,
@@ -1303,7 +1247,7 @@ describe("dynamic attributes", () => {
 
         const { el } = await startInteraction(
             Test,
-            `<div><span>coucou</span></div>`,
+            TemplateBase,
         );
         expect(el.querySelector("span").outerHTML).toBe(
             `<span a="b">coucou</span>`,
@@ -1327,7 +1271,7 @@ describe("dynamic attributes", () => {
 
         const { el } = await startInteraction(
             Test,
-            `<div><span>coucou</span></div>`,
+            TemplateBase,
         );
         expect(el.querySelector("span").outerHTML).toBe(
             `<span class="b">coucou</span>`,
@@ -1388,7 +1332,7 @@ describe("dynamic attributes", () => {
 
         const { el } = await startInteraction(
             Test,
-            `<div><span>coucou</span></div>`,
+            TemplateBase,
         );
         expect(el.querySelector("span").outerHTML).toBe(
             `<span style="color: red !important;">coucou</span>`,
@@ -1466,7 +1410,7 @@ describe("dynamic attributes", () => {
 
         const { el } = await startInteraction(
             Test,
-            `<div><span>coucou</span></div>`,
+            TemplateBase,
         );
         expect(el.querySelector("span").outerHTML).toBe(
             `<span style="opacity: 1;">coucou</span>`,
@@ -1614,10 +1558,7 @@ describe("insert", () => {
 
         const { core, el } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         const testEl = el.querySelector(".test");
         let insertedEl = testEl.querySelector("inserted");
@@ -1705,10 +1646,7 @@ describe("debounced", () => {
         }
         const { core, el } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         this.core = core;
         expect.verifySteps(["updateContent"]);
@@ -1855,10 +1793,7 @@ describe("throttledForAnimation", () => {
         }
         const { core, el } = await startInteraction(
             Test,
-            `
-        <div class="test">
-            <span>coucou</span>
-        </div>`,
+            TemplateTest,
         );
         this.core = core;
         expect.verifySteps(["updateContent"]);
