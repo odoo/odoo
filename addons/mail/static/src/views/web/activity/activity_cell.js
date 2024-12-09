@@ -4,6 +4,7 @@ import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 import { Component, useRef } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
+import { formatDate } from "@web/core/l10n/dates";
 
 import { formatDate } from "@web/core/l10n/dates";
 
