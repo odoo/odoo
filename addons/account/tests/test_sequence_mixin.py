@@ -547,6 +547,40 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             {'name': 'XMISC/23-24/00002', 'state': 'posted'},
         ))
 
+    @freeze_time('2024-01-01 00:05:00')
+    def test_update_payment_reference(self):
+        """Resequencing INV/2024/00001 into INV/24/00001 updates payment_reference"""
+
+        invoices = self.env['account.move'].create(2 * [{
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'date': '2024-01-01',
+            'line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        }])
+
+        invoices.action_post()
+       
+        self.assertRecordValues(invoices, (
+            {'name': 'INV/2024/00001', 'state': 'posted'},
+            {'name': 'INV/2024/00002', 'state': 'posted'}
+        ))
+
+        # The sequence order should be kept by default
+        resequence_wizard = Form(self.env['account.resequence.wizard'].with_context(active_ids=invoices.ids, active_model='account.move'))
+        resequence_wizard.first_name = "INV/24/00001"
+        resequence_wizard.save().resequence()
+
+        # Ensure the resequencing gives the same result as what was expected and changes the payment_reference
+        self.assertRecordValues(invoices, (
+            {'name': 'INV/24/00001', 'payment_reference': 'INV/24/00001', 'state': 'posted'},
+            {'name': 'INV/24/00002', 'payment_reference': 'INV/24/00002', 'state': 'posted'}
+        ))
+
     def test_sequence_get_more_specific(self):
         """There is the ability to change the format (i.e. from yearly to montlhy)."""
         # Start with a continuous sequence
