@@ -13,8 +13,8 @@ class MailActivityType(models.Model):
     available for all models using activities; or specific to a model in which
     case res_model field should be used. """
     _description = 'Activity Type'
-    _rec_name = 'name'
     _order = 'sequence, id'
+    _rec_name = 'name'
 
     def _get_model_selection(self):
         return [

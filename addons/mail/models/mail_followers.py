@@ -92,11 +92,11 @@ class MailFollowers(models.Model):
         # mail_mail_res_partner_rel is the join table for the m2m recipient_ids field
         self.env.cr.execute("""
             SELECT message.model, message.res_id, mail_partner.res_partner_id
-              FROM mail_mail mail        
+              FROM mail_mail mail
               JOIN mail_mail_res_partner_rel mail_partner ON mail_partner.mail_mail_id = mail.id
               JOIN mail_message message ON mail.mail_message_id = message.id AND message.model != 'discuss.channel'
-              JOIN mail_followers follower ON message.model = follower.res_model 
-               AND message.res_id = follower.res_id 
+              JOIN mail_followers follower ON message.model = follower.res_model
+               AND message.res_id = follower.res_id
                AND mail_partner.res_partner_id = follower.partner_id
              WHERE mail.id IN %(mail_ids)s
         """, {'mail_ids': tuple(mail_ids)})
