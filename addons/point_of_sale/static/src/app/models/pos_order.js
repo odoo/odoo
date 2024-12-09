@@ -72,7 +72,13 @@ export class PosOrder extends Base {
     }
 
     get currency() {
+<<<<<<< master
         return this.models["res.currency"].getFirst();
+||||||| 958fbe0d3a52eac8c15e2a7e15d93cc9f8fc6f1a
+        return this.session_id.config_id.currency_id;
+=======
+        return this.config.currency_id;
+>>>>>>> 691fdb6a7be204ac2d56273a85559bbfe452612e
     }
 
     get pickingType() {
