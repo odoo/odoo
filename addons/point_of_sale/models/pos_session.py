@@ -92,6 +92,16 @@ class PosSession(models.Model):
     is_in_company_currency = fields.Boolean('Is Using Company Currency', compute='_compute_is_in_company_currency')
     update_stock_at_closing = fields.Boolean('Stock should be updated at closing')
     bank_payment_ids = fields.One2many('account.payment', 'pos_session_id', 'Bank Payments', help='Account payments representing aggregated and bank split payments.')
+    sequence_login_number_id = fields.Many2one(
+        "ir.sequence",
+        string="Order IDs Sequence",
+        readonly=True,
+        help="This sequence is automatically created by Odoo but you can change it "
+        "to customize the reference numbers of your orders.",
+        copy=False,
+        ondelete="restrict",
+    )
+
 
     _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique!")]
 
@@ -308,6 +318,19 @@ class PosSession(models.Model):
                 'You cannot close the POS when invoices are not posted.\nInvoices: %s',
                 '\n'.join(f'{invoice.name} - {invoice.state}' for invoice in unposted_invoices)
             ))
+            
+    def _create_sequence(self, sessions):
+        name = sessions.name
+        irsequence = self.env["ir.sequence"].sudo()
+        val = {
+            "name": _("POS Session %s", name),
+            "implementation": "standard",
+            "padding": 3,
+            "prefix": "",
+            "code": "pos.session",
+            "company_id": sessions.company_id.id,
+        }
+        return irsequence.create(val)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -343,19 +366,26 @@ class PosSession(models.Model):
         else:
             sessions = super().create(vals_list)
         sessions.action_pos_session_open()
+        irsequence = self._create_sequence(sessions)
+        sessions.sequence_login_number_id = irsequence.id
 
         return sessions
 
     def unlink(self):
+        # Delete the pos.config records first then delete the sequences linked to them
+        sequences_to_delete = self.sequence_login_number_id
         self.statement_line_ids.unlink()
-        return super(PosSession, self).unlink()
+        res = super(PosSession, self).unlink()
+        sequences_to_delete.unlink()
+        return res
 
     def login(self):
         self.ensure_one()
-        login_number = self.login_number + 1
-        self.write({
-            'login_number': login_number,
-        })
+        login_number = self.sequence_login_number_id._next()
+        try:
+            login_number = int(login_number)
+        except ValueError:
+            login_number = self.login_number + 1
         return login_number
 
     def action_pos_session_open(self):
