@@ -260,6 +260,32 @@ if __name__ == "__main__":
             errors += 1
             print('###!!! Rounding error: got %s , expected %s' % (result, expected))
 
+    # Special case
+    def special_try_round():
+        amount = 14.48 * 30 # 434.40000000000003
+        expected_round = 434.40
+
+        global count, errors; count += 1
+        rounded = float_round(amount, precision_digits=2)
+        # expected: rounded = 434.40, got: rounded = 434.40000000000003. No rounding was applied
+        mantissa = rounded - expected_round
+
+        result = format(mantissa, "e")
+        expected = format(0.0, "e")
+
+        if result != expected:
+            errors += 1
+            print('###!!! Rounding error: got %s , expected %s' % (result, expected))
+
+        mantissa = rounded - amount
+        result = format(mantissa, "e")
+
+        if result == expected:
+            errors += 1
+            print('###!!! Rounding error: No rounding was applied. result(%s) == amount(%s).' % (result, expected))
+
+    special_try_round()
+
     # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
     fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
     expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
