@@ -5,7 +5,7 @@ import configparser
 import contextlib
 import datetime
 from enum import Enum
-from functools import cache
+from functools import cache, wraps
 from importlib import util
 import io
 import logging
@@ -79,6 +79,21 @@ elif platform.system() == 'Linux':
                 subprocess.run(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"], check=False)
                 subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=False)
 
+
+def require_db(function):
+    """Decorator to check if the IoT Box is connected to a server before
+    executing the function
+    """
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        if not get_odoo_server_url():
+            fname = f"<function {function.__module__}.{function.__qualname__}>"
+            _logger.info('Ignoring the function %s without a connected database', fname)
+            return
+        return function(*args, **kwargs)
+    return wrapper
+
+
 def access_point():
     return get_ip() == '10.11.12.1'
 
@@ -135,6 +150,7 @@ def check_certificate():
         return {"status": CertificateStatus.OK, "message": message}
 
 
+@require_db
 def check_git_branch():
     """Check if the local branch is the same as the connected Odoo DB and
     checkout to match it if needed.
@@ -405,30 +421,28 @@ def delete_iot_handlers():
         _logger.exception('Failed to delete old IoT handlers')
 
 
+@require_db
 def download_iot_handlers(auto=True):
-    """
-    Get the drivers from the configured Odoo server
-    """
+    """Get the drivers from the configured Odoo server"""
     server = get_odoo_server_url()
-    if server:
-        try:
-            response = requests.post(
-                server + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
-            )
-            response.raise_for_status()
-        except requests.exceptions.RequestException:
-            _logger.exception('Could not reach configured server to download IoT handlers')
-            return
+    try:
+        response = requests.post(
+            server + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
+        )
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        _logger.exception('Could not reach configured server to download IoT handlers')
+        return
 
-        data = response.content
-        if not data:
-            return
+    data = response.content
+    if not data:
+        return
 
-        delete_iot_handlers()
-        with writable():
-            path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
-            zip_file = zipfile.ZipFile(io.BytesIO(data))
-            zip_file.extractall(path)
+    delete_iot_handlers()
+    with writable():
+        path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
+        zip_file = zipfile.ZipFile(io.BytesIO(data))
+        zip_file.extractall(path)
 
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
