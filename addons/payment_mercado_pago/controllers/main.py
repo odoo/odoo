@@ -1,17 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from functools import partial
 import logging
 import pprint
 
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import float_round
+
+from odoo.addons.payment.controllers.portal import PaymentPortal
+from odoo.addons.payment_mercado_pago.const import INTEGER_ONLY_CURRENCIES
 
 
 _logger = logging.getLogger(__name__)
 
 
-class MercadoPagoController(http.Controller):
+class MercadoPagoController(PaymentPortal):
     _return_url = '/payment/mercado_pago/return'
     _webhook_url = '/payment/mercado_pago/webhook'
 
@@ -62,3 +67,87 @@ class MercadoPagoController(http.Controller):
             except ValidationError:  # Acknowledge the notification to avoid getting spammed.
                 _logger.exception("Unable to handle the notification data; skipping to acknowledge")
         return ''  # Acknowledge the notification.
+
+    def _create_transaction(self, amount, currency_id, provider_id, **kwargs):
+        """
+        Round amounts to integers when paying with Mercado Pago using one of
+        the currencies where they deviate from the ISO 4217 standard.
+        """
+        currency_sudo = request.env['res.currency'].sudo().browse(currency_id)
+        if (
+            currency_sudo.name not in INTEGER_ONLY_CURRENCIES
+            or amount.is_integer()
+            or request.env['payment.provider'].sudo().browse(provider_id).code != 'mercado_pago'
+        ):
+            return super()._create_transaction(
+                amount=amount,
+                currency_id=currency_id,
+                provider_id=provider_id,
+                **kwargs,
+            )
+
+        # Step 1: decide on a rounding method
+        rounding_method = 'HALF-UP'
+        if request.env['ir.module.module']._get('account').state == 'installed':
+            rounding_sudo = request.env['account.cash.rounding'].sudo().search([
+                ('rounding', '=', 1.0),
+                ('company_id', '=', request.env.company.id),
+            ])
+            if len(rounding_sudo) > 1:  # in case of multiple, prefer one referencing Mercado Pago
+                mp_rounding = rounding_sudo.filtered_domain([('name', 'ilike', 'Mercado%Pago')])
+                rounding_sudo = next(iter(mp_rounding or rounding_sudo))
+            rounding_method = rounding_sudo.rounding_method or rounding_method
+
+        float2int = partial(float_round, precision_rounding=1.0, rounding_method=rounding_method)
+        document_amounts = {}
+        custom_create_values = kwargs.get('custom_create_values', {})
+
+        # Step 2: go over sale orders
+        for sale_order_id in (cmd[-1] for cmd in custom_create_values.get('sale_order_ids', [])):
+            order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
+            document_amounts[order_sudo] = order_sudo.amount_total
+            if order_sudo.amount_total.is_integer():
+                continue  # no changes needed
+            diff_balance = float2int(order_sudo.amount_total) - order_sudo.amount_total
+            biggest_tax_line = max(
+                order_sudo.order_line,
+                key=lambda sol: (sol.price_tax, sol.price_subtotal)
+            )
+            if biggest_tax_line.price_tax:
+                biggest_tax_line.price_tax += diff_balance
+            else:
+                biggest_tax_line.price_subtotal += diff_balance
+
+        # Step 3: go over invoices
+        for invoice_id in (cmd[-1] for cmd in custom_create_values.get('invoice_ids', [])):
+            invoice_sudo = request.env['account.move'].sudo().browse(invoice_id)
+            document_amounts[invoice_sudo] = invoice_sudo.amount_total
+            if invoice_sudo.amount_total.is_integer():
+                continue  # no changes needed
+            # create cash rounding if necessary
+            if not rounding_sudo:
+                rounding_sudo = rounding_sudo.create({
+                    'name': f"Mercado Pago: {currency_sudo.name}",
+                    'rounding': 1.0,
+                    'strategy': 'biggest_tax',
+                    'rounding_method': rounding_method,
+                    'company_id': request.env.company.id,
+                })
+            # apply cash rounding to invoice
+            invoice_sudo.invoice_cash_rounding_id = rounding_sudo
+            invoice_sudo._recompute_cash_rounding_lines()
+
+        # Step 4: decide on new amount
+        if currency_sudo.compare_amounts(amount, sum(document_amounts.values())) == 0:
+            # if original amount was sum of all totals, new amount should be too
+            new_amount = sum(doc.amount_total for doc in document_amounts)
+        else:
+            new_amount = float2int(amount)
+
+        # Step 5: continue transaction
+        return super()._create_transaction(
+            amount=round(new_amount, 0),  # sanity round in case of tiny floating point errors
+            currency_id=currency_id,
+            provider_id=provider_id,
+            **kwargs,
+        )
