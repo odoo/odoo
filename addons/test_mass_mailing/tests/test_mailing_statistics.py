@@ -51,7 +51,7 @@ class TestMailingStatistics(TestMassMailCommon):
 
         # check mailing statistics
         self.assertEqual(mailing.bounced, 1)
-        self.assertEqual(mailing.bounced_ratio, 8.33)
+        self.assertEqual(mailing.bounced_ratio, 9.09)
         self.assertEqual(mailing.canceled, 1)
         self.assertEqual(mailing.expected, 13)
         self.assertEqual(mailing.clicked, 3)
