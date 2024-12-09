@@ -339,10 +339,10 @@ READ_GROUP_DISPLAY_FORMAT = {
 #           ...                               / | \
 #                                            A3 A2 A1   <- definition classes
 #       class A(Model):  # A2                 \ | /
-#           _inherit = ['a']                    a       <- registry class: registry['a']
+#           _inherit = 'a'                      a       <- registry class: registry['a']
 #                                               |
 #       class A(Model):  # A3                records    <- model instances, like env['a']
-#           _inherit = ['a']
+#           _inherit = 'a'
 #
 # Note that when the model inherits from another model, we actually make the
 # registry classes inherit from each other, so that extensions to an inherited
@@ -359,7 +359,7 @@ READ_GROUP_DISPLAY_FORMAT = {
 #           _inherit = ['a', 'b']           \   a   /
 #                                            \  |  /
 #       class A(Model):  # A2                 \ | /
-#           _inherit = ['a']                    b
+#           _inherit = 'a'                      b
 #
 #
 # THE FIELDS OF A MODEL
@@ -399,7 +399,7 @@ READ_GROUP_DISPLAY_FORMAT = {
 #           bar = ...                       A2     A1
 #                                            bar    foo, bar
 #       class A2(Model):                      \   /
-#           _inherit = ['a']                     \ /
+#           _inherit = 'a'                     \ /
 #           bar = ...                           a
 #                                                bar
 #
