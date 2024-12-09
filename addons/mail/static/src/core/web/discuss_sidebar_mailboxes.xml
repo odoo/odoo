@@ -29,6 +29,7 @@
                 'o-active': mailbox.eq(store.discuss.thread),
                 'mx-2 justify-content-center position-relative': store.discuss.isSidebarCompact,
                 'mx-3 py-0': !store.discuss.isSidebarCompact,
+                'o-unread': mailbox.counter,
             }"
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
