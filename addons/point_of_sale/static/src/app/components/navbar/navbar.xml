@@ -43,13 +43,13 @@
                                 </span>
                             </div>
                             <div class="p-2 pos-burger-menu-items">
-                                <DropdownItem t-if="!isDisplayStandalone" onSelected="() => window.open(this.appUrl)">
+                                <DropdownItem t-if="!isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)">
                                     Install App
                                 </DropdownItem>
                                 <DropdownItem onSelected="() => this.pos.onTicketButtonClick()">
                                     Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2 float-end" t-esc="orderCount"/>
                                 </DropdownItem>
-                                <DropdownItem t-if="showCashMoveButton" onSelected="() => this.pos.cashMove()">
+                                <DropdownItem t-if="showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
                                     Cash In/Out
                                 </DropdownItem>
                                 <DropdownItem t-if="showToggleProductView" onSelected="() => this.toggleProductView()">
@@ -67,7 +67,7 @@
                                 <DropdownItem onSelected="() => this.pos.closeSession()">
                                     Close Register
                                 </DropdownItem>
-                                <DropdownItem t-if="this.env.debug" onSelected="() => debug.toggleWidget()">
+                                <DropdownItem t-if="this.env.debug and this.pos.cashier._role != 'minimal'" onSelected="() => debug.toggleWidget()">
                                     Debug Window
                                 </DropdownItem>
                                 <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">
