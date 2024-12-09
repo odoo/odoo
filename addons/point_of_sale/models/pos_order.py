@@ -1360,7 +1360,7 @@ class PosOrderLine(models.Model):
         return super().write(values)
 
     @api.model
-    def get_existing_lots(self, company_id, product_id):
+    def get_existing_lots(self, company_id, config_id, product_id):
         self.check_access_rights('read')
         self.check_access_rule('read')
         existing_lots_sudo = self.sudo().env['stock.lot'].search([
@@ -1370,8 +1370,14 @@ class PosOrderLine(models.Model):
             ('product_id', '=', product_id),
         ])
 
-        if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking == 'serial':
-            existing_lots_sudo = existing_lots_sudo.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) >= 0)
+        if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking in ['serial', 'lot']:
+            pos_config = self.env['pos.config'].browse(config_id)
+            if pos_config and pos_config.picking_type_id.default_location_src_id:
+                existing_lots_sudo = existing_lots_sudo.filtered(
+                    lambda lot: float_compare(
+                        lot.product_qty, 1, precision_rounding=lot.product_uom_id.rounding
+                    ) >= 0 and lot.location_id.id == pos_config.picking_type_id.default_location_src_id.id
+                )
 
         return existing_lots_sudo.read(['id', 'name'])
 

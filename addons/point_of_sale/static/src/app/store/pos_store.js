@@ -1725,6 +1725,7 @@ export class PosStore extends Reactive {
         try {
             existingLots = await this.data.call("pos.order.line", "get_existing_lots", [
                 this.company.id,
+                this.config.id,
                 product.id,
             ]);
             if (!canCreateLots && (!existingLots || existingLots.length === 0)) {
