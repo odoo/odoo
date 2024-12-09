@@ -14,6 +14,8 @@ from odoo.addons.hw_drivers.tools import helpers
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
+
+@helpers.require_db
 def send_to_controller(device_type, params):
     """
     Confirm the operation's completion by sending a response back to the Odoo server
@@ -64,15 +66,16 @@ def on_close(ws, close_status_code, close_msg):
     _logger.debug("websocket closed with status: %s", close_status_code)
 
 
+@helpers.require_db
 class WebsocketClient(Thread):
-    iot_channel = ""
+    channel = ""
 
     def on_open(self, ws):
         """
             When the client is setup, this function send a message to subscribe to the iot websocket channel
         """
         ws.send(
-            json.dumps({'event_name': 'subscribe', 'data': {'channels': [self.iot_channel], 'last': 0, 'mac_address': helpers.get_mac_address()}})
+            json.dumps({'event_name': 'subscribe', 'data': {'channels': [self.channel], 'last': 0, 'mac_address': helpers.get_mac_address()}})
         )
 
     def __init__(self, url):
@@ -106,3 +109,11 @@ class WebsocketClient(Thread):
                 _logger.exception("An unexpected exception happened when running the websocket")
             _logger.debug('websocket will try to restart in 10 seconds')
             time.sleep(10)
+
+    def set_channel(self, channel):
+        """Set the channel to subscribe to
+
+        :param channel: the channel to subscribe to
+        """
+        self.channel = channel
+        _logger.debug("Websocket channel set to: %s", channel)

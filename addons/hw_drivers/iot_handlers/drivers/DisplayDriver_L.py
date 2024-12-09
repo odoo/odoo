@@ -70,18 +70,18 @@ class DisplayDriver(Driver):
         browser_state = BrowserState.KIOSK if "/pos-self/" in self.url else BrowserState.FULLSCREEN
         self.browser.open_browser(self.url, browser_state)
 
+    @helpers.require_db
     def get_url_from_db(self):
         server_url = helpers.get_odoo_server_url()
-        if server_url:
-            try:
-                response = requests.get(f"{server_url}/iot/box/{helpers.get_mac_address()}/display_url", timeout=5)
-                response.raise_for_status()
-                data = json.loads(response.content.decode())
-                return data.get(self.device_identifier)
-            except requests.exceptions.RequestException:
-                _logger.exception("Failed to get display URL from server")
-            except json.decoder.JSONDecodeError:
-                return response.content.decode('utf8')
+        try:
+            response = requests.get(f"{server_url}/iot/box/{helpers.get_mac_address()}/display_url", timeout=5)
+            response.raise_for_status()
+            data = json.loads(response.content.decode())
+            return data.get(self.device_identifier)
+        except requests.exceptions.RequestException:
+            _logger.exception("Failed to get display URL from server")
+        except json.decoder.JSONDecodeError:
+            return response.content.decode('utf8')
 
     def _action_update_url(self, data):
         if self.device_identifier != 'distant_display':
