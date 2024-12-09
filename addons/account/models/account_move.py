@@ -5815,18 +5815,19 @@ class AccountMove(models.Model):
         if not disabled:  # it wasn't disabled yet, disable it now
             for env in self.env.transaction.envs:
                 previous_values[env] = env.context.get(key, EMPTY)
-                env.context = frozendict({**env.context, key: target})
+                # TODO remove this HACK which sets context on Environment
+                vars(env)['context'] = frozendict({**env.context, key: target})
         try:
             yield disabled
         finally:
             for env, val in previous_values.items():
                 if val != EMPTY:
-                    env.context = frozendict({**env.context, key: val})
+                    vars(env)['context'] = frozendict({**env.context, key: val})
                 else:
-                    env.context = frozendict({k: v for k, v in env.context.items() if k != key})
+                    vars(env)['context'] = frozendict({k: v for k, v in env.context.items() if k != key})
             for env in (self.env.transaction.envs - previous_envs):
                 if key in env.context:
-                    env.context = frozendict({k: v for k, v in env.context.items() if k != key})
+                    vars(env)['context'] = frozendict({k: v for k, v in env.context.items() if k != key})
 
     # ------------------------------------------------------------
     # MAIL.THREAD
