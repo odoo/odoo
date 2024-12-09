@@ -15,10 +15,10 @@ export function buildEditableInteractions(builders) {
         const mixins = [];
         while (I.name !== "Interaction") {
             const mixin = mixinPerInteraction.get(I);
-            if (mixin === null) {
-                console.log(`No mixin defined for: ${I.name}`);
-            } else {
+            if (mixin) {
                 mixins.push(mixin);
+            } else {
+                console.log(`No mixin defined for: ${I.name}`);
             }
             I = I.__proto__;
         }
