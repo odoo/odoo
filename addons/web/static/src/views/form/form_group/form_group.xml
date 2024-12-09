@@ -25,7 +25,7 @@
 
                 <t t-else="">
                     <div
-                        class="o_cell"
+                        class="o_cell o_cell_custom"
                         t-attf-style="{{ cell.itemSpan > 1 ? 'grid-column: span ' + cell.itemSpan + ';' : '' }}"
                         t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label text-break text-900' : null }}"
                         t-if="cell.isVisible">
