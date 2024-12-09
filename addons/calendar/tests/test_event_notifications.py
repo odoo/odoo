@@ -70,6 +70,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         )
 
     def test_message_invite_self(self):
+        self.event.user_id = self.user
         with self.assertNoNotifications():
             self.event.with_user(self.user).partner_ids = self.partner
 
@@ -191,11 +192,11 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 'interval': 'minutes',
                 'duration': 20,
             })
+            self.event.partner_ids = [fields.Command.link(self.partner.id)]  # update partner to allow update the values after.
             self.event.with_user(self.user).write({
                 'name': 'test event',
                 'start': now + relativedelta(minutes=15),
                 'stop': now + relativedelta(minutes=18),
-                'partner_ids': [fields.Command.link(self.partner.id)],
                 'alarm_ids': [fields.Command.link(alarm.id)],
             })
             self.env.flush_all()  # flush is required to make partner_ids be present in the event
