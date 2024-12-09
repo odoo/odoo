@@ -1,0 +1,6 @@
+id,model_id,group_id/id,operation,domain,name
+access_product_product_group_public,product.product,base.group_public,r,,event.product.product.public
+access_membership_membership_line_group_public,membership.membership_line,base.group_public,r,"[('partner.website_published', '=', True)]",Membership line: Public
+access_membership_membership_line_group_portal,membership.membership_line,base.group_portal,r,"[('partner.website_published', '=', True)]",Membership line: Public
+access_product_template_group_public,product.template,base.group_public,r,"[('website_published', '=', True), ('product_variant_ids.membership', '=', True)]",Product membership: Public
+access_product_template_group_portal,product.template,base.group_portal,r,"[('website_published', '=', True), ('product_variant_ids.membership', '=', True)]",Product membership: Public

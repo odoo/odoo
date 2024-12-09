@@ -12,7 +12,7 @@ Shorten URLs and use them to track clicks and UTMs
     'data': [
         'views/link_tracker_views.xml',
         'views/utm_campaign_views.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'license': 'LGPL-3',
 }

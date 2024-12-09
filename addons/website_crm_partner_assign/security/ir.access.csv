@@ -1,0 +1,16 @@
+id,model_id,group_id/id,operation,domain,name
+access_crm_partner_report_assign_group_sale_salesman,crm.partner.report.assign,sales_team.group_sale_salesman,r,"['|', ('user_id', '=', user.id), ('user_id', '=', False)]",CRM partner assign report: Personal / Global Assignations
+access_crm_partner_report_assign_group_sale_salesman_all_leads,crm.partner.report.assign,sales_team.group_sale_salesman_all_leads,r,,CRM partner assign report: All Assignations
+access_res_partner_grade_group_sale_salesman,res.partner.grade,sales_team.group_sale_salesman,rwc,,res.partner.grade
+access_res_partner_grade_group_user,res.partner.grade,base.group_user,r,,res.partner.grade
+access_res_partner_grade_group_portal,res.partner.grade,base.group_portal,r,"[('website_published','=', True)]",Portal/Public user: read only website published
+access_res_partner_grade_group_public,res.partner.grade,base.group_public,r,"[('website_published','=', True)]",Portal/Public user: read only website published
+access_res_partner_grade_group_sale_manager,res.partner.grade,sales_team.group_sale_manager,rwcd,,res.partner.grade.manager
+access_res_partner_grade_group_account_readonly,res.partner.grade,account.group_account_readonly,r,,res.partner.grade
+access_res_partner_grade_group_account_invoice,res.partner.grade,account.group_account_invoice,r,,res.partner.grade
+access_res_partner_activation_group_user,res.partner.activation,base.group_user,r,,res.partner.activation.user
+access_res_partner_activation_group_partner_manager,res.partner.activation,base.group_partner_manager,rwcd,,res.partner.activation.manager
+access_crm_lead_group_portal,crm.lead,base.group_portal,rw,"[('partner_assigned_id','child_of',user.commercial_partner_id.id)]",Portal Graded Partner: read and write assigned leads
+access_crm_stage_group_portal,crm.stage,base.group_portal,r,,crm.stage
+access_crm_lead_forward_to_partner_group_sale_salesman,crm.lead.forward.to.partner,sales_team.group_sale_salesman,rwc,,access.crm.lead.forward.to.partner
+access_crm_lead_assignation_group_sale_salesman,crm.lead.assignation,sales_team.group_sale_salesman,rwc,,access.crm.lead.assignation

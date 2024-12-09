@@ -1,0 +1,27 @@
+id,model_id,group_id/id,operation,domain,name
+access_lunch_cashmove_group_lunch_user,lunch.cashmove,lunch.group_lunch_user,r,"[('user_id', '=', user.id)]",lunch.cashmove: do not see other people's cashmove
+access_lunch_cashmove_group_lunch_manager,lunch.cashmove,lunch.group_lunch_manager,rwcd,,lunch.cashmove: do see other people's cashmove
+access_lunch_order_group_lunch_user_rc,lunch.order,lunch.group_lunch_user,rc,,Order Line user
+access_lunch_order_group_lunch_user_d,lunch.order,lunch.group_lunch_user,d,"[('state', 'in', ('new', 'cancelled'))]",lunch.order: Only new and cancelled order lines deleted.
+access_lunch_order_group_lunch_user_w,lunch.order,lunch.group_lunch_user,w,"[('state', '!=', 'confirmed'), ('user_id', '=', user.id)]",lunch.order: Don't change confirmed order
+access_lunch_order_group_lunch_manager_rc,lunch.order,lunch.group_lunch_manager,rc,,Order Line user
+access_lunch_order_group_lunch_manager_d,lunch.order,lunch.group_lunch_manager,d,"[('state', 'in', ('new', 'cancelled'))]",lunch.order: Only new and cancelled order lines deleted.
+access_lunch_order_group_lunch_manager_w,lunch.order,lunch.group_lunch_manager,w,,manager can do whatever
+access_lunch_order_global,lunch.order,,rwcd,"[('company_id', 'in', company_ids + [False])]",Lunch order: Multi Company
+access_lunch_product_group_lunch_user,lunch.product,lunch.group_lunch_user,r,,Product user
+access_lunch_product_group_lunch_manager,lunch.product,lunch.group_lunch_manager,rwcd,,Product user
+access_lunch_product_global,lunch.product,,rwcd,"[('company_id', 'in', company_ids + [False])]",Lunch product: Multi Company
+access_lunch_product_category_group_lunch_user,lunch.product.category,lunch.group_lunch_user,r,,Product category user
+access_lunch_product_category_group_lunch_manager,lunch.product.category,lunch.group_lunch_manager,rwcd,,Product category user
+access_lunch_product_category_global,lunch.product.category,,rwcd,"[('company_id', 'in', company_ids + [False])]",Lunch product category: Multi Company
+access_lunch_alert_group_user,lunch.alert,base.group_user,r,,access_lunch_alert_user
+access_lunch_alert_group_lunch_manager,lunch.alert,lunch.group_lunch_manager,rwcd,,access_lunch_alert_manager
+access_lunch_cashmove_report_group_user,lunch.cashmove.report,base.group_user,r,,access_lunch_cashmove_report
+access_lunch_location_group_lunch_user,lunch.location,lunch.group_lunch_user,rw,,access_lunch_location
+access_lunch_location_group_lunch_manager,lunch.location,lunch.group_lunch_manager,rwcd,,access_lunch_location
+access_lunch_location_global,lunch.location,,rwcd,"[('company_id', 'in', company_ids + [False])]",Lunch location: Multi Company
+access_lunch_topping_group_lunch_user,lunch.topping,lunch.group_lunch_user,r,,access_lunch_topping
+access_lunch_topping_group_lunch_manager,lunch.topping,lunch.group_lunch_manager,rwcd,,access_lunch_topping
+access_lunch_supplier_group_lunch_user,lunch.supplier,lunch.group_lunch_user,r,,Lunch Supplier User Rights
+access_lunch_supplier_group_lunch_manager,lunch.supplier,lunch.group_lunch_manager,rwcd,,Lunch Supplier Manager Rights
+access_lunch_supplier_global,lunch.supplier,,rwcd,"[('company_id', 'in', company_ids + [False])]",Lunch supplier: Multi Company

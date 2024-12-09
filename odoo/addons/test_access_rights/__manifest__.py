@@ -4,9 +4,8 @@
     'version': '0.0.1',
     'category': 'Hidden/Tests',
     'data': [
-        'ir.model.access.csv',
-        'security.xml',
         'data.xml',
+        'ir.access.csv',
     ],
     'license': 'LGPL-3',
 }

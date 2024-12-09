@@ -1,0 +1,5 @@
+id,model_id,group_id/id,operation,domain,name
+access_stock_picking_batch_group_stock_user,stock.picking.batch,stock.group_stock_user,rwcd,,stock.picking.batch stock users
+access_stock_picking_batch_global,stock.picking.batch,,rwcd,"[('company_id', 'in', company_ids)]",stock.picking.batch multi-company
+access_stock_picking_to_batch_group_stock_user,stock.picking.to.batch,stock.group_stock_user,rwc,,access.stock.picking.to.batch
+access_stock_add_to_wave_group_stock_user,stock.add.to.wave,stock.group_stock_user,rwc,,access.stock.picking.to.wave
