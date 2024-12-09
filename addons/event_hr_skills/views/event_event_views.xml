@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_event_tree_resume_select" model="ir.ui.view">
+        <field name="name">event.event.list.resume.select</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="/list/field[1]" position="before">
+                <header>
+                    <button string="Mark as attended" type="object" name="action_register_employee"/>
+                </header>
+            </xpath>
+            <xpath expr="/list" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="edit">0</attribute>
+                <attribute name="multi_edit">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_search_resume_select" model="ir.ui.view">
+        <field name="name">event.event.search.resume.select</field>
+        <field name="model">event.event</field>
+        <field name="arch" type="xml">
+            <search string="Events">
+                <filter
+                    string="Past Work Events"
+                    name="filter_resume"
+                    domain="[
+                        ('tag_ids', 'any', [('category_id.show_on_resume', '=', True)]),
+                        ('is_finished', '=', True),
+                    ]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_resume_select_event">
+       <field name="name">Select Event</field>
+       <field name="res_model">event.event</field>
+       <field name="view_mode">list</field>
+       <field name="view_id" ref="view_event_tree_resume_select"/>
+       <field name="search_view_id" ref="view_event_search_resume_select"/>
+       <field name="target">new</field>
+       <field name="context">{'search_default_filter_resume': 1}</field>
+       <field name="domain">[('is_active_employee_registered', '=', False)]</field>
+    </record>
+
+</odoo>
