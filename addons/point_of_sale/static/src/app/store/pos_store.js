@@ -253,6 +253,10 @@ export class PosStore extends Reactive {
     }
 
     async deleteOrders(orders, serverIds = []) {
+        console.log(
+            "delete",
+            orders.map((o) => o.id)
+        );
         const ids = new Set();
         for (const order of orders) {
             if (order && (await this._onBeforeDeleteOrder(order))) {
@@ -1030,23 +1034,10 @@ export class PosStore extends Reactive {
                 context,
             });
 
-            const modelToAdd = {};
-            const newData = {};
-            for (const [model, records] of Object.entries(data)) {
-                const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
+            const missingRecords = await this.data.missingRecursive(data);
+            const newData = this.models.loadData(missingRecords);
 
-                if (!modelKey) {
-                    modelToAdd[model] = records;
-                    continue;
-                }
-
-                Object.assign(
-                    newData,
-                    this.models.replaceDataByKey(modelKey, { [model]: records })
-                );
-            }
-
-            for (const order of [...orders, ...newData["pos.order"]]) {
+            for (const order of newData["pos.order"]) {
                 if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
                     this.addPendingOrder([order.id]);
                 } else {
@@ -1064,10 +1055,9 @@ export class PosStore extends Reactive {
                 }
             }
 
-            this.models.loadData(modelToAdd);
             this.postSyncAllOrders(newData["pos.order"]);
 
-            if (modelToAdd["pos.session"].length > 0) {
+            if (data["pos.session"].length > 0) {
                 // Replace the original session by the rescue one. And the rescue one will have
                 // a higher id than the original one since it's the last one created.
                 const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];

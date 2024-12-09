@@ -9,6 +9,14 @@ class PosOrder(models.Model):
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
     takeaway = fields.Boolean(string="Take Away", default=False)
 
+    def _get_open_order(self, order):
+        domain = [('state', '=', 'draft')]
+        if order.get('table_id', False):
+            domain += ['|', ('id', '=', order.get('id')), ('table_id', '=', order.get('table_id'))]
+        else:
+            domain += [('id', '=', order.get('id'))]
+        return self.env["pos.order"].search(domain, limit=1) if isinstance(order.get('id'), int) or isinstance(order.get('table_id'), int) else False
+
     @api.model
     def remove_from_ui(self, server_ids):
         tables = self.env['pos.order'].search([('id', 'in', server_ids)]).table_id
@@ -55,7 +63,7 @@ class PosOrder(models.Model):
                 messages.append(
                     (
                         "TABLE_ORDER_COUNT",
-                        {"order_count": order_count, "table_ids": table_ids.ids},
+                        {"order_count": order_count, "table_ids": table_ids.ids, 'login_number': self.env.context.get('login_number', False)},
                     )
                 )
         if messages:

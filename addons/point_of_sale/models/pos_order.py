@@ -915,6 +915,12 @@ class PosOrder(models.Model):
                 (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
         return payment_moves
 
+    def _get_open_order(self, order):
+        return self.env["pos.order"].search([
+            '&',
+            ('id', '=', order.get('id', False)), ('state', '=', 'draft')
+        ], limit=1) if isinstance(order.get('id'), int) else False
+
     @api.model
     def sync_from_ui(self, orders):
         """ Create and update Orders from the frontend PoS application.
@@ -932,8 +938,7 @@ class PosOrder(models.Model):
         order_ids = []
         session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
-            existing_draft_order = self.env["pos.order"].search(
-                ['&', ('id', '=', order.get('id', False)), ('state', '=', 'draft')], limit=1) if isinstance(order.get('id'), int) else False
+            existing_draft_order = self._get_open_order(order)
 
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
