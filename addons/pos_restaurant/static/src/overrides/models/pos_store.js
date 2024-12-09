@@ -305,7 +305,7 @@ patch(PosStore.prototype, {
 
             const tableOrders = this.models["pos.order"].filter(
                 (o) =>
-                    o.table_id?.id === table.id &&
+                    o.table_id?.id === table?.id &&
                     // Include the orders that are in tipping state.
                     (!o.finalized || o.uiState.screen_data?.value?.name === "TipScreen")
             );
