@@ -368,6 +368,14 @@
                                 </div>
                                 <field name="currency_id" invisible='1'/>
                                 <field name="cost_currency_id" invisible="1"/>
+                                <label for="base_unit_count" groups="product.group_show_uom_price"/>
+                                <div name="base_unit_price" groups="product.group_show_uom_price" class="d-flex flex-row">
+                                    <field name="base_unit_count" style="width: 4rem;"/>
+                                    <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
+                                    <div class="d-flex flex-row" invisible="not base_unit_price">
+                                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                                    </div>
+                                </div>
                             </group>
                         </group>
                         <group>
@@ -490,6 +498,14 @@
                     <attribute name="duplicate">false</attribute>
                 </form>
                 <xpath expr="//div[@name='standard_price_uom']" position="after">
+                    <label for="base_unit_count" groups="product.group_show_uom_price"/>
+                    <div name="base_unit_price" groups="product.group_show_uom_price" class="d-flex flex-row">
+                        <field name="base_unit_count" style="width: 4rem;"/>
+                        <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
+                        <div class="d-flex flex-row" invisible="not base_unit_price">
+                            (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                        </div>
+                    </div>
                     <field name="default_code"/>
                     <field name="barcode"/>
                 </xpath>

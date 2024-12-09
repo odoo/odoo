@@ -13,16 +13,9 @@ class ProductLabelLayout(models.TransientModel):
     move_quantity = fields.Selection([
         ('move', 'Operation Quantities'),
         ('custom', 'Custom')], string="Quantity to print", required=True, default='custom')
-    print_format = fields.Selection(selection_add=[
-        ('zpl', 'ZPL Labels'),
-        ('zplxprice', 'ZPL Labels with price')
-    ], ondelete={'zpl': 'set default', 'zplxprice': 'set default'})
 
     def _prepare_report_data(self):
         xml_id, data = super()._prepare_report_data()
-
-        if 'zpl' in self.print_format:
-            xml_id = 'stock.label_product_product'
 
         quantities = defaultdict(int)
         uom_unit = self.env.ref('uom.product_uom_categ_unit', raise_if_not_found=False)
