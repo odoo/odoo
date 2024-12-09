@@ -68,7 +68,7 @@ patch(Navbar.prototype, {
                     return this.setFloatingOrder(floating_order);
                 }
                 if (!table && !floating_order) {
-                    const newOrder = this.pos.add_new_order();
+                    const newOrder = this.pos.addNewOrder();
                     newOrder.floating_order_name = table_number;
                     newOrder.setBooked(true);
                     return this.setFloatingOrder(newOrder);
