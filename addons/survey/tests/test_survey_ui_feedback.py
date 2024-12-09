@@ -160,17 +160,31 @@ class TestUiFeedback(HttpCaseWithUserDemo):
             ],
         })
 
+    def setUp_multilang(self, translate_survey=True):
+        self.assertEqual([lang[0] for lang in self.env['res.lang'].get_installed()], ['en_US'])
+        self.env['res.lang']._activate_lang('fr_BE')
+        # If the website module is installed, we must also activate the language for the website
+        if (website := self.env.ref('website.default_website', raise_if_not_found=False)):
+            website.language_ids = self.env['res.lang'].search([('code', 'in', ['en_US', 'fr_BE'])])
+        if translate_survey:
+            self.survey_feedback_fr = self.survey_feedback.with_context(lang='fr_BE')
+            self.survey_feedback_fr.title = "Enquête de satisfaction"
+            for survey_item in self.survey_feedback_fr.question_and_page_ids:
+                survey_item.title = f"FR: {survey_item.with_context(lang='en_US').title}"
+
     def test_01_admin_survey_tour(self):
         access_token = self.survey_feedback.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="admin")
 
     def test_02_demo_survey_tour(self):
+        self.setUp_multilang(translate_survey=False)  # As the survey isn't translated, the lang selector must be absent
         access_token = self.survey_feedback.access_token
         self.start_tour("/survey/start/%s" % access_token, 'test_survey', login="demo")
 
     def test_03_public_survey_tour(self):
+        self.setUp_multilang()
         access_token = self.survey_feedback.access_token
-        self.start_tour("/survey/start/%s" % access_token, 'test_survey')
+        self.start_tour("/survey/start/%s" % access_token, 'test_survey_multilang')
 
     def test_04_public_survey_with_triggers(self):
         """ Check that chained conditional questions are correctly
