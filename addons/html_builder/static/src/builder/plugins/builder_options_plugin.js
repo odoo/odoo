@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 
@@ -46,6 +45,11 @@ export class BuilderOptionsPlugin extends Plugin {
         if (target) {
             this.target = target;
         }
+        if (!this.target || !this.target.isConnected) {
+            this.lastContainers = [];
+            this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+            return;
+        }
         const elementToOptions = new Map();
         for (const option of this.builderOptions) {
             const { selector } = option;
@@ -69,9 +73,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 element,
                 options,
             }));
-        for (const handler of this.getResource("change_current_options_containers_listeners")) {
-            handler(this.lastContainers);
-        }
+        this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
     }
 }
 
