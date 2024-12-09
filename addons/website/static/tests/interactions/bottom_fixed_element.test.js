@@ -62,9 +62,9 @@ test("show button fixed element when over no button (0 button present)", async (
     el.style.overflowY = "scroll";
     const bottomFixedElement = el.querySelector(".o_bottom_fixed_element");
     await scrollToMiddle(el, bottomFixedElement);
-    expect(bottomFixedElement.classList.contains("o_bottom_fixed_element_hidden")).toBe(false);
+    expect(bottomFixedElement).not.toHaveClass("o_bottom_fixed_element_hidden");
     await scrollToBottom(el, bottomFixedElement);
-    expect(bottomFixedElement.classList.contains("o_bottom_fixed_element_hidden")).toBe(false);
+    expect(bottomFixedElement).not.toHaveClass("o_bottom_fixed_element_hidden");
 });
 
 test("show button fixed element when over no button (1 button present)", async () => {
@@ -72,9 +72,9 @@ test("show button fixed element when over no button (1 button present)", async (
     el.style.overflowY = "scroll";
     const bottomFixedElement = el.querySelector(".o_bottom_fixed_element");
     await scrollToMiddle(el, bottomFixedElement);
-    expect(bottomFixedElement.classList.contains("o_bottom_fixed_element_hidden")).toBe(false);
+    expect(bottomFixedElement).not.toHaveClass("o_bottom_fixed_element_hidden");
     await scrollToBottom(el, bottomFixedElement);
-    expect(bottomFixedElement.classList.contains("o_bottom_fixed_element_hidden")).toBe(false);
+    expect(bottomFixedElement).not.toHaveClass("o_bottom_fixed_element_hidden");
 });
 
 test("hide button fixed element when over one button (1 button present)", async () => {
@@ -82,9 +82,9 @@ test("hide button fixed element when over one button (1 button present)", async 
     el.style.overflowY = "scroll";
     const bottomFixedElement = el.querySelector(".o_bottom_fixed_element");
     await scrollToMiddle(el, bottomFixedElement);
-    expect(bottomFixedElement.classList.contains("o_bottom_fixed_element_hidden")).toBe(false);
+    expect(bottomFixedElement).not.toHaveClass("o_bottom_fixed_element_hidden");
     await scrollToBottom(el, bottomFixedElement);
-    expect(bottomFixedElement.classList.contains("o_bottom_fixed_element_hidden")).toBe(true);
+    expect(bottomFixedElement).toHaveClass("o_bottom_fixed_element_hidden");
 });
 
 test("hide button fixed element when over one button (2 button present)", async () => {
@@ -92,7 +92,7 @@ test("hide button fixed element when over one button (2 button present)", async 
     el.style.overflowY = "scroll";
     const bottomFixedElement = el.querySelector(".o_bottom_fixed_element");
     await scrollToMiddle(el, bottomFixedElement);
-    expect(bottomFixedElement.classList.contains("o_bottom_fixed_element_hidden")).toBe(false);
+    expect(bottomFixedElement).not.toHaveClass("o_bottom_fixed_element_hidden");
     await scrollToBottom(el, bottomFixedElement);
-    expect(bottomFixedElement.classList.contains("o_bottom_fixed_element_hidden")).toBe(true);
+    expect(bottomFixedElement).toHaveClass("o_bottom_fixed_element_hidden");
 });
