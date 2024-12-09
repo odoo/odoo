@@ -8,7 +8,7 @@ export class BuilderOptionsPlugin extends Plugin {
     static dependencies = ["selection", "overlay"];
     resources = {
         selectionchange_handlers: this.onSelectionChange.bind(this),
-        step_added_handlers: this.updateOptionContainers.bind(this),
+        step_added_handlers: () => this.updateContainers(),
     };
 
     setup() {
@@ -22,10 +22,10 @@ export class BuilderOptionsPlugin extends Plugin {
             if (!this.dependencies.selection.getEditableSelection().isCollapsed) {
                 return;
             }
-            this.changeSidebarTarget(e.target);
+            this.updateContainers(e.target);
         });
 
-        this.currentOptionsContainers = reactive([]);
+        this.lastContainers = [];
     }
 
     onSelectionChange(selection) {
@@ -39,82 +39,39 @@ export class BuilderOptionsPlugin extends Plugin {
         if (selectionNode.nodeType === Node.TEXT_NODE) {
             selectionNode = selectionNode.parentElement;
         }
-        this.changeSidebarTarget(selectionNode);
+        this.updateContainers(selectionNode);
     }
 
-    getCurrentOptionsByElement() {
-        const optionsByElement = new Map();
+    updateContainers(target) {
+        if (target) {
+            this.target = target;
+        }
+        const elementToOptions = new Map();
         for (const option of this.builderOptions) {
             const { selector } = option;
-            const elements = getClosestElements(this.currentSelectedElement, selector);
+            const elements = getClosestElements(this.target, selector);
             for (const element of elements) {
-                if (optionsByElement.has(element)) {
-                    optionsByElement.get(element).push(option);
+                if (elementToOptions.has(element)) {
+                    elementToOptions.get(element).push(option);
                 } else {
-                    optionsByElement.set(element, [option]);
+                    elementToOptions.set(element, [option]);
                 }
             }
         }
-        return optionsByElement;
-    }
 
-    changeSidebarTarget(selectedElement) {
-        this.currentSelectedElement = selectedElement;
-        this.updateOptionContainers();
-        for (const handler of this.getResource("change_current_options_containers_listeners")) {
-            handler(this.currentOptionsContainers);
-        }
-        return;
-    }
-
-    updateOptionContainers() {
-        const optionsByElement = this.getCurrentOptionsByElement();
-        const elementsWithContainer = new Set(
-            this.currentOptionsContainers.map((optionsContainer) => optionsContainer.element)
-        );
-
-        const elementsToRemove = [...elementsWithContainer].filter(
-            (el) => !optionsByElement.has(el)
-        );
-        for (const element of elementsToRemove) {
-            const index = this.currentOptionsContainers.findIndex(
-                (container) => element === container.element
-            );
-            this.currentOptionsContainers.splice(index, 1);
-        }
-
-        for (const optionContainer of this.currentOptionsContainers) {
-            const visibleOptionIds = new Set(
-                optionsByElement.get(optionContainer.element).map((option) => option.id)
-            );
-            for (const option of optionContainer.options) {
-                option.isVisible = visibleOptionIds.has(option.id);
-            }
-        }
-
-        const elementsToAdd = [...optionsByElement.keys()].filter(
-            (el) => !elementsWithContainer.has(el)
-        );
-        for (const element of elementsToAdd) {
-            const options = optionsByElement.get(element);
-            this.currentOptionsContainers.push({
-                id: uniqueId(),
-                options: this.getProcessOptions(options),
+        const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
+        this.lastContainers = [...elementToOptions]
+            .sort(([a], [b]) => {
+                return b.contains(a) ? 1 : -1;
+            })
+            .map(([element, options]) => ({
+                id: previousElementToIdMap.get(element) || uniqueId(),
                 element,
-            });
+                options,
+            }));
+        for (const handler of this.getResource("change_current_options_containers_listeners")) {
+            handler(this.lastContainers);
         }
-
-        if (elementsToAdd.length) {
-            this.currentOptionsContainers.sort((a, b) => (b.element.contains(a.element) ? 1 : -1));
-        }
-    }
-
-    getProcessOptions(options) {
-        const optionsSet = new Set(options);
-        return this.builderOptions.map((option) => ({
-            ...option,
-            isVisible: optionsSet.has(option),
-        }));
     }
 }
 
