@@ -430,3 +430,49 @@ test("show call participants in discuss sidebar", async () => {
         ],
     });
 });
+
+test("Sort call participants in side bar by name", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create([
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "CCC" }),
+            }),
+            channel_id: channelId,
+        },
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "AAA" }),
+            }),
+            channel_id: channelId,
+        },
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "BBB" }),
+            }),
+            channel_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebarCallParticipants", {
+        contains: [
+            ".o-mail-DiscussSidebarCallParticipants-participant:nth-child(1):contains('AAA')",
+        ],
+    });
+    await contains(" .o-mail-DiscussSidebarCallParticipants", {
+        contains: [
+            ".o-mail-DiscussSidebarCallParticipants-participant:nth-child(2):contains('BBB')",
+        ],
+    });
+    await contains(" .o-mail-DiscussSidebarCallParticipants", {
+        contains: [
+            ".o-mail-DiscussSidebarCallParticipants-participant:nth-child(3):contains('CCC')",
+        ],
+    });
+});
