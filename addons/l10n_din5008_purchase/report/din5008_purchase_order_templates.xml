@@ -29,7 +29,7 @@
                     </tr>
                     <tr t-if="o.incoterm_id">
                         <td>Incoterm:</td>
-                        <td><t t-out="o.incoterm_id"/></td>
+                        <td><t t-out="o.incoterm_id.code"/></td>
                     </tr>
                 </table>
             </div>
@@ -83,7 +83,7 @@
                 </tr>
                 <tr t-if="o.incoterm_id">
                     <td>Incoterm:</td>
-                    <td><t t-out="o.incoterm_id"/></td>
+                    <td><t t-out="o.incoterm_id.code"/></td>
                 </tr>
             </table>
         </div>
