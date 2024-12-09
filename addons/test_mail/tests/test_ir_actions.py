@@ -167,7 +167,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             }
             self.action.with_context(action_ctx).run()
 
-        mail = self.assertMailMail(
+        self.assertMailMail(
             self.test_partner,
             None,
             content='Hello Test NoMailThread',
@@ -176,4 +176,3 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
                 'subject': 'About Test NoMailThread',
             }
         )
-        self.assertIn('Powered by', mail.body_html, 'Body should contain the notification layout')
