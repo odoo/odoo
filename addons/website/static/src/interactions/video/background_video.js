@@ -19,10 +19,10 @@ class BackgroundVideo extends Interaction {
             "t-on-optionalCookiesAccepted": () => this.iframeEl.src = this.videoSrc,
         },
         _window: {
-            "t-on-resize": this.throttledForAnimation(() => this.adjustIframe()),
+            "t-on-resize": this.throttledForAnimation(this.adjustIframe),
         },
         _dropdown: {
-            "t-on-shown.bs.dropdown": this.throttledForAnimation(() => this.adjustIframe()),
+            "t-on-shown.bs.dropdown": this.throttledForAnimation(this.adjustIframe),
         },
         _modal: {
             "t-on-show.bs.modal": () => this.hideVideoContainer = true,

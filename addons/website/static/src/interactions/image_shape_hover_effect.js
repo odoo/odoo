@@ -13,6 +13,8 @@ export class ImageShapeHoverEffect extends Interaction {
     setup() {
         this.lastMouseEvent = Promise.resolve();
         this.originalImgSrc = this.el.getAttribute("src");
+        this.svgInEl = null;
+        this.svgOutEl = null;
     }
 
     destroy() {

@@ -23,7 +23,7 @@ export class RippleEffect extends Interaction {
     }
 
     /**
-     * @param {Event} ev
+     * @param {MouseEvent} ev
      */
     onClick(ev) {
         if (!this.rippleEl) {

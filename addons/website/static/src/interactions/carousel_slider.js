@@ -1,7 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
-import { debounced } from "@website/core/utils";
-// import { debounce } from "@web/core/utils/timing";
 
 export class CarouselSlider extends Interaction {
     static selector = ".carousel";

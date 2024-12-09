@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
-import { throttleForAnimation } from "@web/core/utils/timing";
 
 /**
  * @todo while this solution mitigates the issue, it is not fixing it entirely
@@ -27,13 +26,9 @@ export class ZoomedBackgroundShape extends Interaction {
     static selector = ".o_we_shape";
     dynamicContent = {
         _window: {
-            "t-on-resize": () => this.throttledShapeResize,
+            "t-on-resize": this.throttledForAnimation(this.resizeBackgroundShape),
         },
     };
-
-    setup() {
-        this.throttledShapeResize = throttleForAnimation(() => this.resizeBackgroundShape());
-    }
 
     start() {
         this.resizeBackgroundShape();
@@ -41,7 +36,6 @@ export class ZoomedBackgroundShape extends Interaction {
 
     destroy() {
         this.updateShapePosition();
-        this.throttledShapeResize.cancel();
     }
 
     /**
