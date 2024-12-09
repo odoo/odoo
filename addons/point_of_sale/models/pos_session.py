@@ -496,7 +496,13 @@ class PosSession(models.Model):
                 # Set the uninvoiced orders' state to 'done'
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
+<<<<<<< 4fdc229a7f3c24a1305ef748282ea2a193b5bb60
                 record.move_id.sudo().unlink()
+||||||| 7ee0f2c17da94bf672a879807fc3830424766cb1
+                self.move_id.sudo().unlink()
+=======
+                self.move_id.with_context(force_delete=True).sudo().unlink()
+>>>>>>> 0297dedc52272289a91b0380bc8f5bf8fe6ae8d7
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
         else:
             self.sudo()._post_statement_difference(self.cash_register_difference)
