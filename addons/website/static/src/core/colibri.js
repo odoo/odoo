@@ -178,7 +178,23 @@ export class Colibri {
                 const attr = directive.slice(6);
                 const initialValues = new Map();
                 for (const node of nodes) {
-                    const attrValue = node.getAttribute(attr);
+                    let attrValue;
+                    switch (attr) {
+                        case "class":
+                            attrValue = [...node.classList];
+                            break;
+                        case "style":
+                            attrValue = {};
+                            for (const property of Object.keys(value())) {
+                                attrValue[property] = [
+                                    node.style.getPropertyValue(property),
+                                    node.style.getPropertyPriority(property),
+                                ];
+                            }
+                            break;
+                        default:
+                            attrValue = node.getAttribute(attr);
+                    }
                     initialValues.set(node, attrValue);
                 }
                 this.dynamicAttrs.push([nodes, attr, value, initialValues]);
@@ -232,13 +248,31 @@ export class Colibri {
     destroy() {
         // restore t-att to their initial values
         for (const dynAttrs of this.dynamicAttrs) {
-            const [nodes, attr, _, initialValues] = dynAttrs;
+            const [nodes, attr, definition, initialValues] = dynAttrs;
             for (const node of nodes) {
                 const initialValue = initialValues.get(node);
-                if (initialValue) {
-                    node.setAttribute(attr, initialValue);
-                } else {
-                    node.removeAttribute(attr);
+                switch (attr) {
+                    case "class":
+                        // initialValue is an array of class names.
+                        for (const classNames of Object.keys(definition())) {
+                            for (const className of classNames.split(" ")) {
+                                node.classList.toggle(className, initialValue.includes(className));
+                            }
+                        }
+                        continue;
+                    case "style":
+                        // initialValue is an object mapping properties to values and priority.
+                        for (const property of Object.keys(definition())) {
+                            const initialProperty = initialValue[property];
+                            node.style.setProperty(property, initialProperty?.[0], initialProperty?.[1]);
+                        }
+                        continue;
+                    default:
+                        if (initialValue) {
+                            node.setAttribute(attr, initialValue);
+                        } else {
+                            node.removeAttribute(attr);
+                        }
                 }
             }
         }

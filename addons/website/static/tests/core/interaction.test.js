@@ -1206,6 +1206,31 @@ describe("dynamic attributes", () => {
         expect("span").toHaveClass("b c");
     });
 
+    test("t-att-class does not touch unrelated classes on destroy", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-class": () => ({ b: true }),
+            };
+        }
+
+        const { core, el } = await startInteraction(
+            Test,
+            `<div><span class="a">coucou</span></div>`,
+        );
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span class="a b">coucou</span>`,
+        );
+        el.querySelector("span").classList.add("c");
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span class="a b c">coucou</span>`,
+        );
+        core.stopInteractions();
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span class="a c">coucou</span>`,
+        );
+    });
+
     // T-ATT-STYLE
 
     test("t-att-style can add a style", async () => {
@@ -1240,6 +1265,62 @@ describe("dynamic attributes", () => {
         const { core } = await startInteraction(Test, TemplateBase);
         core.stopInteractions();
         expect("span").not.toHaveStyle({ color: "rgb(255, 0, 0)" });
+    });
+
+    test("t-att-style only resets changed style", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-style": () => ({
+                    "background-color": "black",
+                    "color": "red",
+                }),
+            };
+        }
+
+        const { core, el } = await startInteraction(
+            Test,
+            `<div><span style="background-color: blue">coucou</span></div>`,
+        );
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span style="background-color: black; color: red;">coucou</span>`,
+        );
+        el.querySelector("span").style.setProperty("width", "50%");
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span style="background-color: black; color: red; width: 50%;">coucou</span>`,
+        );
+        core.stopInteractions();
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span style="background-color: blue; width: 50%;">coucou</span>`,
+        );
+    });
+
+    test("t-att-style restores priority on reset", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-style": () => ({
+                    "background-color": "black",
+                    "color": "red",
+                }),
+            };
+        }
+
+        const { core, el } = await startInteraction(
+            Test,
+            `<div><span style="background-color: blue !important">coucou</span></div>`,
+        );
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span style="background-color: black; color: red;">coucou</span>`,
+        );
+        el.querySelector("span").style.setProperty("width", "50%", "important");
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span style="background-color: black; color: red; width: 50% !important;">coucou</span>`,
+        );
+        core.stopInteractions();
+        expect(el.querySelector("span").outerHTML).toBe(
+            `<span style="background-color: blue !important; width: 50% !important;">coucou</span>`,
+        );
     });
 
     test("t-att-style does not override existing styles", async () => {
@@ -1367,8 +1448,8 @@ describe("dynamic attributes", () => {
     });
 
     test("t-att-... save previously loaded attributes", async () => {
-        const c = [{ a: true }, { b: true }];
-        const s = [{ "background-color": "blue" }, { "color": "red" }];
+        const c = [{}, { a: true }, { b: true }];
+        const s = [{}, { "background-color": "blue" }, { "color": "red" }, {}];
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
