@@ -895,12 +895,13 @@ class MrpProduction(models.Model):
                 if not field_values.get('warehouse_id'):
                     field_values['warehouse_id'] = warehouse_id
 
+        moves_to_reassign = self.env['stock.move']
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
             for production in self:
-                if production.state == 'draft' and picking_type != production.picking_type_id:
+                if picking_type != production.picking_type_id:
                     production.name = picking_type.sequence_id.next_by_id()
-
+                    moves_to_reassign |= production.move_raw_ids
         res = super(MrpProduction, self).write(vals)
 
         for production in self:
@@ -929,6 +930,10 @@ class MrpProduction(models.Model):
                 new_date_start = fields.Datetime.to_datetime(vals.get('date_start'))
                 if not production.date_finished or new_date_start >= production.date_finished:
                     production.date_finished = new_date_start + datetime.timedelta(hours=1)
+        if moves_to_reassign:
+            moves_to_reassign._do_unreserve()
+            # TODO check reservation_method later, also in stock & repair
+            moves_to_reassign._action_assign()
         return res
 
     @api.model_create_multi
