@@ -1574,7 +1574,6 @@ class SaleOrder(models.Model):
                 for line in invoice['invoice_line_ids']:
                     line[2]['sequence'] = SaleOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
-
         moves = self._create_account_invoices(invoice_vals_list, final)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
