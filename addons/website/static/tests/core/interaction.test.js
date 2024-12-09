@@ -18,6 +18,13 @@ const TemplateTest = `
         <span>coucou</span>
     </div>`
 
+const getTemplateWithAttribute = function (attribute) {
+    return `
+    <div>
+        <span ${attribute}">coucou</span>
+    </div>`
+}
+
 describe("event handling", () => {
     test("can add a listener on a single element", async () => {
         let clicked = false;
@@ -1075,85 +1082,29 @@ describe("miscellaneous", () => {
 });
 
 describe("dynamic attributes", () => {
-    test("can set an attribute", async () => {
-        class Test extends Interaction {
-            static selector = ".test";
-            dynamicContent = {
-                "_root:t-att-a": () => "b",
-            };
-        }
 
-        const { el, core } = await startInteraction(
-            Test,
-            TemplateTest,
-        );
-        expect(el.querySelector(".test").outerHTML).toBe(
-            `<div class="test" a="b"><span>coucou</span></div>`,
-        );
-        core.stopInteractions();
-        expect(el.querySelector(".test").outerHTML).toBe(
-            TemplateTest,
-        );
+    // T-ATT-CLASS
 
-    });
-
-    test("t-att-class does not override existing classes", async () => {
+    test("t-att-class can add a class ", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
-                "_root:t-att-class": () => ({ b: true }),
+                "_root:t-att-class": () => ({ a: true }),
             };
         }
-
-        const { el } = await startInteraction(
-            Test,
-            `<div><span class="a">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="a b">coucou</span>`,
-        );
+        await startInteraction(Test, TemplateBase);
+        expect("span").toHaveClass("a");
     });
 
-    test("t-att-class does not toggle on undefined", async () => {
+    test("t-att-class can add multiple classes ", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
-                "_root:t-att-class": () => ({ b: undefined }),
+                "_root:t-att-class": () => ({ "a b": true }),
             };
         }
-
-        const { el, core } = await startInteraction(
-            Test,
-            `<div><span class="a b">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="a">coucou</span>`,
-        );
-        core.interactions[0].interaction.updateContent();
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="a">coucou</span>`,
-        );
-    });
-
-    test("t-att-class, basic test", async () => {
-        class Test extends Interaction {
-            static selector = "span";
-            dynamicContent = {
-                "_root:t-att-class": () => ({ a: true, b: this.val }),
-            };
-
-            setup() {
-                this.val = true;
-            }
-        }
-
-        const { el } = await startInteraction(
-            Test,
-            TemplateBase,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="a b">coucou</span>`,
-        );
+        await startInteraction(Test, TemplateBase);
+        expect("span").toHaveClass("a b");
     });
 
     test("t-att-class can remove a class", async () => {
@@ -1163,180 +1114,109 @@ describe("dynamic attributes", () => {
                 "_root:t-att-class": () => ({ a: false }),
             };
         }
-
-        const { el } = await startInteraction(
-            Test,
-            `<div><span class="a">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="">coucou</span>`,
-        );
+        await startInteraction(Test, getTemplateWithAttribute("class='a'"));
+        expect("span").not.toHaveClass("a");
     });
 
-    test("t-att- can remove an attribute with undefined", async () => {
+    test("t-att-class reset at stop", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
-                "_root:t-att-a": () => undefined,
+                "_root:t-att-class": () => ({ a: true }),
             };
         }
-
-        const { el } = await startInteraction(
-            Test,
-            `<span a="b">coucou</span>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span>coucou</span>`,
-        );
+        const { core } = await startInteraction(Test, TemplateBase);
+        core.stopInteractions();
+        expect("span").not.toHaveClass("a");
     });
 
-    test("t-att-class can add multiple classes", async () => {
+    test("t-att-class does not override existing classes", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
-                "_root:t-att-class": () => ({"b c": true}),
+                "_root:t-att-class": () => ({ b: true }),
             };
         }
-
-        const { el } = await startInteraction(
-            Test,
-            `<div><span class="a">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="a b c">coucou</span>`,
-        );
+        const { core } = await startInteraction(Test, getTemplateWithAttribute("class='a'"));
+        expect("span").toHaveClass("a b");
+        core.stopInteractions();
+        expect("span").toHaveClass("a");
+        expect("span").not.toHaveClass("b");
     });
 
-    test("t-att-class can add and remove a class", async () => {
+    test("t-att-class accept variable", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
-                "_root:t-att-class": () => ({a: this.flag, b: !this.flag}),
                 "_root:t-on-click": this.toggle,
+                "_root:t-att-class": () => ({ a: this.var }),
             };
             setup() {
-                this.flag = true;
+                this.var = true;
             }
             toggle() {
-                this.flag = !this.flag;
+                this.var = !this.var;
             }
         }
-
-        const { el } = await startInteraction(
-            Test,
-            `<div><span class="bla">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="bla a">coucou</span>`,
-        );
-        await click(el.querySelector("span"));
+        await startInteraction(Test, TemplateBase);
+        expect("span").toHaveClass("a");
+        await click("span");
         await animationFrame();
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="bla b">coucou</span>`,
-        );
+        expect("span").not.toHaveClass("a");
+        await click("span");
+        await animationFrame();
+        expect("span").toHaveClass("a");
     });
 
-    test("t-att- receive the target as argument", async () => {
-        let target;
+    test("t-att-class does not toggle on undefined", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
-                "_root:t-att-a": (_el) => { target = _el; return "b";},
+                "_root:t-att-class": () => ({ b: undefined }),
             };
         }
-
-        const { el } = await startInteraction(
-            Test,
-            TemplateBase,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span a="b">coucou</span>`,
-        );
-        expect(target).toBe(el.querySelector("span"));
-
+        const { core } = await startInteraction(Test, getTemplateWithAttribute("class='a b'"));
+        expect("span").toHaveClass("a");
+        expect("span").not.toHaveClass("b");
+        core.interactions[0].interaction.updateContent();
+        expect("span").toHaveClass("a");
+        expect("span").not.toHaveClass("b");
     });
 
-    test("t-att-class, another scenario", async () => {
-        const c = [{a: true}, {b: true}];
-        let interaction;
+    test("t-att-class can manipulate multiple classes", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
-                "_root:t-att-class": () => c.pop(),
+                "_root:t-on-click": this.toggle,
+                "_root:t-att-class": () => ({ a: this.var, b: true, c: !this.var }),
             };
             setup() {
-                interaction = this;
+                this.var = true;
+            }
+            toggle() {
+                this.var = !this.var;
             }
         }
-
-        const { el } = await startInteraction(
-            Test,
-            TemplateBase,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="b">coucou</span>`,
-        );
-        interaction.updateContent();
+        await startInteraction(Test, TemplateBase);
+        expect("span").toHaveClass("a b");
+        expect("span").not.toHaveClass("c");
+        await click("span");
         await animationFrame();
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span class="b a">coucou</span>`,
-        );
-
+        expect("span").not.toHaveClass("a");
+        expect("span").toHaveClass("b c");
     });
 
-    test("t-att-style does not override existing styles", async () => {
+    // T-ATT-STYLE
+
+    test("t-att-style can add a style", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
                 "_root:t-att-style": () => ({ color: "red" }),
             };
         }
-
-        const { el } = await startInteraction(
-            Test,
-            `<div><span style="background-color: blue">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: blue; color: red;">coucou</span>`,
-        );
-    });
-
-    test("t-att-style, basic test", async () => {
-        class Test extends Interaction {
-            static selector = "span";
-            dynamicContent = {
-                "_root:t-att-style": () => ({ color: this.val }),
-            };
-
-            setup() {
-                this.val = "red";
-            }
-        }
-
-        const { el } = await startInteraction(
-            Test,
-            `<div><span style="background-color: blue">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: blue; color: red;">coucou</span>`,
-        );
-    });
-
-    test("t-att-style, apply important", async () => {
-        class Test extends Interaction {
-            static selector = "span";
-            dynamicContent = {
-                "_root:t-att-style": () => ({ color: "red !important" }),
-            };
-        }
-
-        const { el } = await startInteraction(
-            Test,
-            TemplateBase,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="color: red !important;">coucou</span>`,
-        );
+        await startInteraction(Test, TemplateBase);
+        expect("span").toHaveStyle({ color: "rgb(255, 0, 0)" });
     });
 
     test("t-att-style can remove a style", async () => {
@@ -1346,75 +1226,180 @@ describe("dynamic attributes", () => {
                 "_root:t-att-style": () => ({ color: undefined }),
             };
         }
-
-        const { el } = await startInteraction(
-            Test,
-            `<div><span style="background-color: blue; color: red;">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: blue;">coucou</span>`,
-        );
+        await startInteraction(Test, getTemplateWithAttribute("style='color: red;'"));
+        expect("span").not.toHaveStyle({ color: "rgb(255, 0, 0)" });
     });
 
-    test("t-att-style can set multiple styles", async () => {
+    test("t-att-style reset at stop", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
-                "_root:t-att-style": () => ({
-                    "background-color": "black",
-                    "color": "red",
-                }),
+                "_root:t-att-style": () => ({ color: "red" }),
             };
         }
-
-        const { el } = await startInteraction(
-            Test,
-            `<div><span style="background-color: blue">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: black; color: red;">coucou</span>`,
-        );
-    });
-
-    test("t-att-style can reset style", async () => {
-        class Test extends Interaction {
-            static selector = "span";
-            dynamicContent = {
-                "_root:t-att-style": () => ({
-                    "background-color": "black",
-                    "color": "red",
-                }),
-            };
-        }
-
-        const { core, el } = await startInteraction(
-            Test,
-            `<div><span style="background-color: blue">coucou</span></div>`,
-        );
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: black; color: red;">coucou</span>`,
-        );
+        const { core } = await startInteraction(Test, TemplateBase);
         core.stopInteractions();
-        expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="background-color: blue">coucou</span>`,
-        );
+        expect("span").not.toHaveStyle({ color: "rgb(255, 0, 0)" });
     });
 
-    test("t-att-style survives non-string", async () => {
+    test("t-att-style does not override existing styles", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-style": () => ({ color: "red" }),
+            };
+        }
+        const { core } = await startInteraction(Test, getTemplateWithAttribute("style='background-color: blue;'"));
+        expect("span").toHaveStyle({ backgroundColor: "rgb(0, 0, 255)", color: "rgb(255, 0, 0)" });
+        core.stopInteractions();
+        expect("span").toHaveStyle({ backgroundColor: "rgb(0, 0, 255)" });
+        expect("span").not.toHaveStyle({ color: "rgb(255, 0, 0)" });
+    });
+
+    test("t-att-style accept variable", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-on-click": this.toggle,
+                "_root:t-att-style": () => ({ color: this.var }),
+            };
+            setup() {
+                this.var = "red";
+            }
+            toggle() {
+                this.var = this.var == "red" ? "blue" : "red";
+            }
+        }
+        await startInteraction(Test, TemplateBase);
+        expect("span").toHaveStyle({ color: "rgb(255, 0, 0)" });
+        await click("span");
+        await animationFrame();
+        expect("span").toHaveStyle({ color: "rgb(0, 0, 255)" });
+        await click("span");
+        await animationFrame();
+        expect("span").toHaveStyle({ color: "rgb(255, 0, 0)" });
+    });
+
+    test("t-att-style accept non-string", async () => {
         class Test extends Interaction {
             static selector = "span";
             dynamicContent = {
                 "_root:t-att-style": () => ({ opacity: 1 }),
             };
         }
+        await startInteraction(Test, TemplateBase);
+        expect("span").toHaveStyle({ opacity: "1" });
+    });
 
-        const { el } = await startInteraction(
-            Test,
-            TemplateBase,
-        );
+    test("t-att-style can manipulate multiple styles", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-on-click": this.toggle,
+                "_root:t-att-style": () => ({ "background-color": this.b, "color": this.c }),
+            };
+            setup() {
+                this.b = "blue";
+                this.c = "red";
+
+            }
+            toggle() {
+                this.b = this.b == "red" ? "blue" : "red";
+                this.c = this.c == "red" ? "blue" : "red";
+            }
+        }
+        await startInteraction(Test, TemplateBase);
+        expect("span").toHaveStyle({ color: "rgb(255, 0, 0)", backgroundColor: "rgb(0, 0, 255)" });
+        await click("span");
+        await animationFrame();
+        expect("span").toHaveStyle({ color: "rgb(0, 0, 255)", backgroundColor: "rgb(255, 0, 0)" });
+    });
+
+    test("t-att-style, apply important", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-style": () => ({ color: "red !important" }),
+            };
+        }
+        const { el } = await startInteraction(Test, TemplateBase);
         expect(el.querySelector("span").outerHTML).toBe(
-            `<span style="opacity: 1;">coucou</span>`,
+            `<span style="color: red !important;">coucou</span>`,
         );
+        // await startInteraction(Test, TemplateBlueBackground);
+        // expect("span").toHaveStyle({ backgroundColor: "rgb(0, 0, 255)", color: "rgb(255, 0, 0) !important" });
+    });
+
+    // T-ATT
+
+    test("t-att-... can add an attribute", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-a": () => "b",
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect("span").toHaveAttribute("a", "b");
+    });
+
+    test("t-att-... can remove an attribute", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-a": () => undefined,
+            };
+        }
+        await startInteraction(Test, getTemplateWithAttribute("a='b'"));
+        expect("span").not.toHaveAttribute("a");
+    });
+
+    test("t-att-... reset at stop", async () => {
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-a": () => "b",
+            };
+        }
+        const { core } = await startInteraction(Test, TemplateTest);
+        core.stopInteractions();
+        expect("span").not.toHaveAttribute("a");
+    });
+
+    test("t-att-... save previously loaded attributes", async () => {
+        const c = [{ a: true }, { b: true }];
+        const s = [{ "background-color": "blue" }, { "color": "red" }];
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-class": () => c.pop(),
+                "_root:t-att-style": () => s.pop(),
+            };
+        }
+        const { core } = await startInteraction(Test, TemplateBase);
+        expect("span").not.toHaveClass("a");
+        expect("span").toHaveClass("b");
+        expect("span").not.toHaveStyle({ backgroundColor: "rgb(0, 0, 255)" });
+        expect("span").toHaveStyle({ color: "rgb(255, 0, 0)" });
+        core.interactions[0].interaction.updateContent();
+        await animationFrame();
+        expect("span").toHaveClass("a");
+        expect("span").toHaveClass("b");
+        expect("span").toHaveStyle({ backgroundColor: "rgb(0, 0, 255)" });
+        expect("span").toHaveStyle({ color: "rgb(255, 0, 0)" });
+    });
+
+    test("t-att-... receive the target as argument", async () => {
+        let target;
+        class Test extends Interaction {
+            static selector = "span";
+            dynamicContent = {
+                "_root:t-att-a": (_el) => { target = _el; return "b"; },
+            };
+        }
+        const { el } = await startInteraction(Test, TemplateBase);
+        expect("span").toHaveAttribute("a", "b");
+        expect(target).toBe(el.querySelector("span"));
     });
 });
 
