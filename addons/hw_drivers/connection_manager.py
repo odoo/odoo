@@ -6,7 +6,6 @@ import logging
 import requests
 from threading import Thread
 import time
-import urllib3
 
 from odoo.addons.hw_drivers.main import iot_devices, manager
 from odoo.addons.hw_drivers.tools import helpers
@@ -40,8 +39,10 @@ class ConnectionManager(Thread):
         }
 
         try:
-            urllib3.disable_warnings()
-            req = requests.post('https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box', json=data, verify=False)
+            requests.packages.urllib3.disable_warnings()
+            req = requests.post(
+                'https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box', json=data, verify=False, timeout=5
+            )
             result = req.json().get('result', {})
             if all(key in result for key in ['pairing_code', 'pairing_uuid']):
                 self.pairing_code = result['pairing_code']
