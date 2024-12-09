@@ -293,27 +293,7 @@ export class FloorScreen extends Component {
     }
     async onWillStart() {
         this.pos.searchProductWord = "";
-        const table = this.pos.selectedTable;
-        const tableByIds = this.pos.models["restaurant.table"].getAllBy("id");
-        if (table) {
-            const orders = this.pos.get_open_orders();
-            const tableOrders = orders.filter(
-                (order) => order.table_id?.id === table.id && !order.finalized
-            );
-            const qtyChange = tableOrders.reduce(
-                (acc, order) => {
-                    const quantityChange = this.pos.getOrderChanges(false, order);
-                    const quantitySkipped = this.pos.getOrderChanges(true, order);
-                    acc.changed += quantityChange.count;
-                    acc.skipped += quantitySkipped.count;
-                    return acc;
-                },
-                { changed: 0, skipped: 0 }
-            );
-
-            tableByIds[table.id].uiState.orderCount = tableOrders.length;
-            tableByIds[table.id].uiState.changeCount = qtyChange.changed;
-        }
+        this.pos.computeTableCount();
         await this.pos.unsetTable();
     }
     get floorBackround() {

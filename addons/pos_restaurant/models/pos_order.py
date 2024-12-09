@@ -9,6 +9,18 @@ class PosOrder(models.Model):
     customer_count = fields.Integer(string='Guests', help='The amount of customers that have been served by this order.', readonly=True)
     takeaway = fields.Boolean(string="Take Away", default=False)
 
+    def _get_open_order(self, order):
+        config_id = self.env['pos.session'].browse(order.get('session_id')).config_id
+        if not config_id.module_pos_restaurant:
+            return super()._get_open_order(order)
+
+        domain = []
+        if order.get('table_id', False) and order.get('state') == 'draft':
+            domain += ['|', ('uuid', '=', order.get('uuid')), ('table_id', '=', order.get('table_id')), ('state', '=', 'draft')]
+        else:
+            domain += [('uuid', '=', order.get('uuid'))]
+        return self.env["pos.order"].search(domain, limit=1)
+
     @api.model
     def remove_from_ui(self, server_ids):
         tables = self.env['pos.order'].search([('id', 'in', server_ids)]).table_id
@@ -51,11 +63,10 @@ class PosOrder(models.Model):
         for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
             if config.current_session_id:
                 a_config = config
-                order_count = config.get_tables_order_count_and_printing_changes()
                 messages.append(
                     (
                         "TABLE_ORDER_COUNT",
-                        {"order_count": order_count, "table_ids": table_ids.ids},
+                        {"table_ids": table_ids.ids, 'login_number': self.env.context.get('login_number', False)},
                     )
                 )
         if messages:

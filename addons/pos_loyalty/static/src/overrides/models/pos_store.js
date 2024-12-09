@@ -417,7 +417,7 @@ patch(PosStore.prototype, {
                         ["code", "=", trimmedCode],
                         ["program_id", "=", program.id],
                     ],
-                    ["points", "source_pos_order_id", "code", "program_id"]
+                    this.data.fields["loyalty.card"]
                 );
 
                 // There should be maximum one gift card for a given code.

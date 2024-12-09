@@ -63,9 +63,7 @@ patch(TicketScreen.prototype, {
         }
     },
     get allowNewOrders() {
-        return this.pos.config.module_pos_restaurant
-            ? Boolean(this.pos.selectedTable)
-            : super.allowNewOrders;
+        return !this.pos.config.module_pos_restaurant && super.allowNewOrders;
     },
     async settleTips() {
         const promises = [];

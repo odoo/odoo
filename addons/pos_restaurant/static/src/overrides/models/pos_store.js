@@ -18,6 +18,8 @@ const NON_IDLE_EVENTS = [
 ];
 let IDLE_TIMER_SETTER;
 
+const { DateTime } = luxon;
+
 patch(PosStore.prototype, {
     /**
      * @override
@@ -25,7 +27,6 @@ patch(PosStore.prototype, {
     async setup() {
         this.orderToTransferUuid = null; // table transfer feature
         this.isEditMode = false;
-        this.tableSyncing = false;
         await super.setup(...arguments);
         this.floorPlanStyle =
             localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
@@ -38,20 +39,19 @@ patch(PosStore.prototype, {
         }
     },
     async getTableOrderCount() {
-        const result = await this.data.call(
-            "pos.config",
-            "get_tables_order_count_and_printing_changes",
-            [this.config.id]
-        );
-        this.ws_syncTableCount({ order_count: result, table_ids: [] });
+        this.lastWsTs = DateTime.now().ts;
         this.bus.subscribe("TABLE_ORDER_COUNT", this.ws_syncTableCount.bind(this));
     },
     // using the same floorplan.
     async ws_syncTableCount(data) {
-        const missingTable = data["order_count"].find(
-            (table) => !(table.id in this.models["restaurant.table"].getAllBy("id"))
-        );
+        if (data.login_number === this.session.login_number) {
+            this.computeTableCount(data);
+            return;
+        }
 
+        const missingTable = data["table_ids"].find(
+            (tableId) => !(tableId in this.models["restaurant.table"].getAllBy("id"))
+        );
         if (missingTable) {
             const response = await this.data.searchRead("restaurant.floor", [
                 ["pos_config_ids", "in", this.config.id],
@@ -60,52 +60,109 @@ patch(PosStore.prototype, {
             const table_ids = response.map((floor) => floor.raw.table_ids).flat();
             await this.data.read("restaurant.table", table_ids);
         }
-        const tableByIds = this.models["restaurant.table"].getAllBy("id");
-        const tables = data["table_ids"].map((id) => this.models["restaurant.table"].get(id));
-        const draftTableOrders = [
-            ...new Set(
-                tables
-                    .map((t) => t["<-pos.order.table_id"])
-                    .flat()
-                    .filter((o) => !o.finalized && typeof o.id === "number")
-            ),
-        ];
-        await this.loadServerOrders([
-            "|",
+        const tableLocalOrders = this.models["pos.order"].filter(
+            (o) => data["table_ids"].includes(o.table_id?.id) && !o.finalized
+        );
+        const localOrderlines = tableLocalOrders
+            .filter((o) => typeof o.id === "number")
+            .flatMap((o) => o.lines)
+            .filter((l) => typeof l.id !== "number");
+        const lineIdByOrderId = localOrderlines.reduce((acc, curr) => {
+            if (!acc[curr.order_id.id]) {
+                acc[curr.order_id.id] = [];
+            }
+            acc[curr.order_id.id].push(curr.id);
+            return acc;
+        }, {});
 
-            // draft table orders in the server
-            ["state", "=", "draft"],
-
-            // draft table orders in client but paid in the server
-            "&",
-            ["state", "in", ["paid", "invoiced"]],
-            ["id", "in", draftTableOrders.map((t) => t.id)],
-
-            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
+        const orders = await this.data.searchRead("pos.order", [
+            ["session_id", "=", this.session.id],
             ["table_id", "in", data["table_ids"]],
-            ["session_id", "=", odoo.pos_session_id],
         ]);
-        for (const table of data["order_count"]) {
-            tableByIds[table.id].uiState.changeCount = table.changes;
-            tableByIds[table.id].uiState.orderCount = table.orders;
-            tableByIds[table.id].uiState.skipCount = table.skip_changes;
+        await this.data.read(
+            "pos.order.line",
+            orders.flatMap((o) => o.lines).map((l) => l.id),
+            ["qty"]
+        );
+        for (const [orderId, lineIds] of Object.entries(lineIdByOrderId)) {
+            const lines = this.models["pos.order.line"].readMany(lineIds);
+            for (const line of lines) {
+                line.update({ order_id: orderId });
+            }
         }
-        if (
-            this.selectedTable &&
-            data["table_ids"].includes(this.selectedTable.id) &&
-            this.selectedOrderUuid
-        ) {
-            const changes = this.getOrderChanges();
-            if (changes.nbrOfChanges > 0) {
-                // at this stage we are sure to be on a concurrent pos session
-                // that needs to update its data from the server
-                try {
-                    this.tableSyncing = true;
-                    await this.syncAllOrders({ cancel_table_notification: true });
-                } finally {
-                    this.tableSyncing = false;
+
+        let isDraftOrder = false;
+        for (const order of orders) {
+            if (order.state !== "draft") {
+                this.removePendingOrder(order);
+                continue;
+            } else {
+                this.addPendingOrder([order.id]);
+            }
+
+            const tableId = order.table_id?.id;
+            if (!tableId) {
+                continue;
+            }
+
+            const draftOrder = this.models["pos.order"].find(
+                (o) => o.table_id?.id === tableId && o.id !== order.id && o.state === "draft"
+            );
+
+            if (!draftOrder) {
+                continue;
+            }
+
+            for (const orphanLine of draftOrder.lines) {
+                const adoptingLine = order.lines.find((l) => l.can_be_merged_with(orphanLine));
+                if (adoptingLine && adoptingLine.id !== orphanLine.id) {
+                    adoptingLine.merge(orphanLine);
+                } else if (!adoptingLine) {
+                    orphanLine.update({ order_id: order });
                 }
             }
+
+            if (this.selectedOrderUuid === draftOrder.uuid) {
+                this.selectedOrderUuid = order.uuid;
+            }
+
+            await this.removeOrder(draftOrder, true);
+            isDraftOrder = true;
+        }
+
+        if (this.get_order()?.finalized) {
+            this.add_new_order();
+        }
+
+        if (isDraftOrder) {
+            await this.syncAllOrders();
+        }
+
+        this.computeTableCount(data);
+    },
+    computeTableCount(data) {
+        const tableIds = data?.table_ids;
+        const tables = tableIds
+            ? this.models["restaurant.table"].readMany(tableIds)
+            : this.models["restaurant.table"].getAll();
+        const orders = this.get_open_orders();
+        for (const table of tables) {
+            const tableOrders = orders.filter(
+                (order) => order.table_id?.id === table.id && !order.finalized
+            );
+            const qtyChange = tableOrders.reduce(
+                (acc, order) => {
+                    const quantityChange = this.getOrderChanges(false, order);
+                    const quantitySkipped = this.getOrderChanges(true, order);
+                    acc.changed += quantityChange.count;
+                    acc.skipped += quantitySkipped.count;
+                    return acc;
+                },
+                { changed: 0, skipped: 0 }
+            );
+
+            table.uiState.orderCount = tableOrders.length;
+            table.uiState.changeCount = qtyChange.changed;
         }
     },
     get categoryCount() {
@@ -130,10 +187,15 @@ patch(PosStore.prototype, {
         }, {});
         return Object.values(categories);
     },
-    createNewOrder() {
+    createNewOrder(data = {}) {
         const order = super.createNewOrder(...arguments);
 
-        if (this.config.module_pos_restaurant && this.selectedTable && !order.table_id) {
+        if (
+            this.config.module_pos_restaurant &&
+            this.selectedTable &&
+            !order.table_id &&
+            !("table_id" in data)
+        ) {
             order.update({ table_id: this.selectedTable });
         }
 
@@ -244,6 +306,7 @@ patch(PosStore.prototype, {
     getSyncAllOrdersContext(orders, options = {}) {
         const context = super.getSyncAllOrdersContext(...arguments);
         context["cancel_table_notification"] = options["cancel_table_notification"] || false;
+        context["login_number"] = this.session.login_number;
         if (this.config.module_pos_restaurant && this.selectedTable) {
             context["table_ids"] = [this.selectedTable.id];
             context["force"] = true;
@@ -260,12 +323,8 @@ patch(PosStore.prototype, {
 
         return {
             paidOrdersNotSent,
-            orderToCreate: orderToCreate.filter(
-                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
-            ),
-            orderToUpdate: orderToUpdate.filter(
-                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
-            ),
+            orderToCreate: orderToCreate.filter((o) => context.table_ids.includes(o.table_id?.id)),
+            orderToUpdate: orderToUpdate.filter((o) => context.table_ids.includes(o.table_id?.id)),
         };
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
@@ -296,6 +355,14 @@ patch(PosStore.prototype, {
         return super.getDefaultSearchDetails();
     },
     async setTable(table, orderUuid = null) {
+        const order = this.models["pos.order"].find(
+            (o) => o.table_id?.id === table.id && !o.finalized
+        );
+
+        if (order) {
+            this.addPendingOrder([order.id]);
+        }
+
         this.selectedTable = table;
         try {
             this.loadingOrderState = true;
@@ -333,7 +400,6 @@ patch(PosStore.prototype, {
     },
     async setTableFromUi(table, orderUuid = null) {
         try {
-            this.tableSyncing = true;
             if (table.parent_id) {
                 table = table.getParent();
             }
@@ -345,7 +411,6 @@ patch(PosStore.prototype, {
             // Reject error in a separate stack to display the offline popup, but continue the flow
             Promise.reject(e);
         } finally {
-            this.tableSyncing = false;
             const orders = this.getTableOrders(table.id);
             if (orders.length > 0) {
                 this.set_order(orders[0]);

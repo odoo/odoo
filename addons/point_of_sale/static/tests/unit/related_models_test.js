@@ -14,18 +14,24 @@ QUnit.module("models with backlinks", () => {
         let models;
 
         hooks.beforeEach(() => {
-            models = createRelatedModels({
-                "product.product": {
-                    category_id: { type: "many2one", relation: "product.category" },
-                },
-                "product.category": {
-                    product_ids: {
-                        type: "one2many",
-                        relation: "product.product",
-                        inverse_name: "category_id",
+            models = createRelatedModels(
+                {
+                    "product.product": {
+                        category_id: { type: "many2one", relation: "product.category" },
+                    },
+                    "product.category": {
+                        product_ids: {
+                            type: "one2many",
+                            relation: "product.product",
+                            inverse_name: "category_id",
+                        },
                     },
                 },
-            }).models;
+                {},
+                {
+                    databaseTable: [],
+                }
+            ).models;
         });
 
         QUnit.test("create operation", (assert) => {
@@ -200,16 +206,22 @@ QUnit.module("models with backlinks", () => {
     QUnit.module("many2one/one2many field relations to own model", (hooks) => {
         let models;
         hooks.beforeEach(() => {
-            models = createRelatedModels({
-                "product.category": {
-                    parent_id: { type: "many2one", relation: "product.category" },
-                    child_ids: {
-                        type: "one2many",
-                        relation: "product.category",
-                        inverse_name: "parent_id",
+            models = createRelatedModels(
+                {
+                    "product.category": {
+                        parent_id: { type: "many2one", relation: "product.category" },
+                        child_ids: {
+                            type: "one2many",
+                            relation: "product.category",
+                            inverse_name: "parent_id",
+                        },
                     },
                 },
-            }).models;
+                {},
+                {
+                    databaseTable: [],
+                }
+            ).models;
         });
 
         QUnit.test("create operation", (assert) => {
@@ -331,24 +343,30 @@ QUnit.module("models with backlinks", () => {
     QUnit.module("many2many field relations to other models", (hooks) => {
         let models;
         hooks.beforeEach(() => {
-            models = createRelatedModels({
-                "product.product": {
-                    name: { type: "char" },
-                    tag_ids: {
-                        type: "many2many",
-                        relation: "product.tag",
-                        relation_table: "product_tag_product_product_rel",
+            models = createRelatedModels(
+                {
+                    "product.product": {
+                        name: { type: "char" },
+                        tag_ids: {
+                            type: "many2many",
+                            relation: "product.tag",
+                            relation_table: "product_tag_product_product_rel",
+                        },
+                    },
+                    "product.tag": {
+                        name: { type: "char" },
+                        product_ids: {
+                            type: "many2many",
+                            relation: "product.product",
+                            relation_table: "product_tag_product_product_rel",
+                        },
                     },
                 },
-                "product.tag": {
-                    name: { type: "char" },
-                    product_ids: {
-                        type: "many2many",
-                        relation: "product.product",
-                        relation_table: "product_tag_product_product_rel",
-                    },
-                },
-            }).models;
+                {},
+                {
+                    databaseTable: [],
+                }
+            ).models;
         });
 
         QUnit.test("create operation, create", (assert) => {
@@ -463,21 +481,27 @@ QUnit.module("models with backlinks", () => {
     QUnit.module("many2many field relations to own model", (hooks) => {
         let models;
         hooks.beforeEach(() => {
-            models = createRelatedModels({
-                "note.note": {
-                    name: { type: "char" },
-                    parent_ids: {
-                        type: "many2many",
-                        relation: "note.note",
-                        relation_table: "note_note_rel",
-                    },
-                    child_ids: {
-                        type: "many2many",
-                        relation: "note.note",
-                        relation_table: "note_note_rel",
+            models = createRelatedModels(
+                {
+                    "note.note": {
+                        name: { type: "char" },
+                        parent_ids: {
+                            type: "many2many",
+                            relation: "note.note",
+                            relation_table: "note_note_rel",
+                        },
+                        child_ids: {
+                            type: "many2many",
+                            relation: "note.note",
+                            relation_table: "note_note_rel",
+                        },
                     },
                 },
-            }).models;
+                {},
+                {
+                    databaseTable: [],
+                }
+            ).models;
         });
 
         QUnit.test("create operation, link", (assert) => {
@@ -588,12 +612,18 @@ QUnit.module("models without backlinks", () => {
         let models;
 
         hooks.beforeEach(() => {
-            models = createRelatedModels({
-                "product.product": {
-                    category_id: { type: "many2one", relation: "product.category" },
+            models = createRelatedModels(
+                {
+                    "product.product": {
+                        category_id: { type: "many2one", relation: "product.category" },
+                    },
+                    "product.category": {},
                 },
-                "product.category": {},
-            }).models;
+                {},
+                {
+                    databaseTable: [],
+                }
+            ).models;
         });
 
         QUnit.test("create operation", (assert) => {
@@ -684,16 +714,22 @@ QUnit.module("models without backlinks", () => {
     QUnit.module("many2many relations", (hooks) => {
         let models;
         hooks.beforeEach(() => {
-            models = createRelatedModels({
-                "product.product": {
-                    tag_ids: {
-                        type: "many2many",
-                        relation: "product.tag",
-                        relation_table: "product_tag_product_product_rel",
+            models = createRelatedModels(
+                {
+                    "product.product": {
+                        tag_ids: {
+                            type: "many2many",
+                            relation: "product.tag",
+                            relation_table: "product_tag_product_product_rel",
+                        },
                     },
+                    "product.tag": {},
                 },
-                "product.tag": {},
-            }).models;
+                {},
+                {
+                    databaseTable: [],
+                }
+            ).models;
         });
 
         QUnit.test("create operation, link", (assert) => {
