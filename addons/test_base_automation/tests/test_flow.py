@@ -926,6 +926,38 @@ if env.context.get('old_values', None):  # on write
         self.assertEqual(len(copy_action_ids), len(action_ids))
         self.assertNotEqual(copy_action_ids, action_ids)
 
+    def test_add_followers_1(self):
+        create_automation(self,
+            model_id=self.env["ir.model"]._get("base.automation.lead.thread.test").id,
+            trigger="on_create",
+            _actions={
+                "state": "followers",
+                "followers_type": "generic",
+                "followers_partner_field_name": "user_id.partner_id"
+            }
+        )
+        user = self.env["res.users"].create({"login": "maggot_brain", "name": "Eddie Hazel"})
+        thread_test = self.env["base.automation.lead.thread.test"].create({
+            "name": "free your mind",
+            "user_id": user.id,
+        })
+        self.assertEqual(thread_test.message_follower_ids.partner_id, user.partner_id)
+
+    def test_add_followers_2(self):
+        user = self.env["res.users"].create({"login": "maggot_brain", "name": "Eddie Hazel"})
+        create_automation(self,
+            model_id=self.env["ir.model"]._get("base.automation.lead.thread.test").id,
+            trigger="on_create",
+            _actions={
+                "state": "followers",
+                "followers_type": "specific",
+                "partner_ids": [Command.link(user.partner_id.id)]
+            }
+        )
+        thread_test = self.env["base.automation.lead.thread.test"].create({
+            "name": "free your mind",
+        })
+        self.assertEqual(thread_test.message_follower_ids.partner_id, user.partner_id)
 
 @common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):
