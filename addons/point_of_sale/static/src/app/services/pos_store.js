@@ -1640,6 +1640,10 @@ export class PosStore extends WithLazyGetterTrap {
     async selectPricelist(pricelist) {
         await this.getOrder().setPricelist(pricelist);
     }
+    // There for override to do something before adding partner to current order from partner list
+    setPartnerToCurrentOrder(partner) {
+        this.getOrder().setPartner(partner);
+    }
     async selectPartner() {
         // FIXME, find order to refund when we are in the ticketscreen.
         const currentOrder = this.getOrder();
@@ -1659,13 +1663,13 @@ export class PosStore extends WithLazyGetterTrap {
         }
         const payload = await makeAwaitable(this.dialog, PartnerList, {
             partner: currentPartner,
-            getPayload: (newPartner) => currentOrder.setPartner(newPartner),
+            getPayload: (newPartner) => this.setPartnerToCurrentOrder(newPartner),
         });
 
         if (payload) {
-            currentOrder.setPartner(payload);
+            this.setPartnerToCurrentOrder(payload);
         } else {
-            currentOrder.setPartner(false);
+            this.setPartnerToCurrentOrder(false);
         }
 
         return currentPartner;
