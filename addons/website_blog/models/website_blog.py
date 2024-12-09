@@ -161,7 +161,14 @@ class BlogPost(models.Model):
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()
         for blog_post in self:
+<<<<<<< 18.0
             blog_post.website_url = "/blog/%s/%s" % (self.env['ir.http']._slug(blog_post.blog_id), self.env['ir.http']._slug(blog_post))
+||||||| d80a86eb55feba2d4af39e486326de5ac00cd718
+            blog_post.website_url = "/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post))
+=======
+            if blog_post.id:
+                blog_post.website_url = "/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post))
+>>>>>>> 060cdf3513e95b6c825d51dbd318349c2bf41b71
 
     def _default_content(self):
         text = html_escape(_("Start writing here..."))
