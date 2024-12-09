@@ -166,14 +166,14 @@ class TestMrpByProduct(common.TransactionCase):
         """
         # Set a specific UOM on the byproduct on purpose to make sure it's not just a default on the unit UOM
         # that makes the test pass.
-        self.product_b.product_tmpl_id.uom_id = self.env.ref('uom.product_uom_dozen')
+        self.product_b.product_tmpl_id.uom_id = self.env.ref('uom.product_uom_pack_6')
         bom = self.MrpBom.create({
             'product_tmpl_id': self.product_a.product_tmpl_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'byproduct_ids': [(0, 0, {'product_id': self.product_b.id, 'product_qty': 1})]
         })
-        self.assertEqual(bom.byproduct_ids.product_uom_id, self.env.ref('uom.product_uom_dozen'))
+        self.assertEqual(bom.byproduct_ids.product_uom_id, self.env.ref('uom.product_uom_pack_6'))
 
     def test_finished_and_byproduct_moves(self):
         """

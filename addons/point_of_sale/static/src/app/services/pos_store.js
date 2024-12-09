@@ -782,10 +782,13 @@ export class PosStore extends WithLazyGetterTrap {
         if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && configure) {
             if (values.product_tmpl_id.isScaleAvailable) {
                 this.isScaleScreenVisible = true;
+                const roundingDigits = this.models["decimal.precision"].find(
+                    (dp) => dp.name === "Product Unit of Measure"
+                ).digits;
                 this.scaleData = {
                     productName: values?.product_id?.display_name,
                     uomName: values.product_tmpl_id.uom_id?.name,
-                    uomRounding: values.product_tmpl_id.uom_id?.rounding,
+                    uomRounding: Math.pow(10, -roundingDigits),
                     productPrice: this.getProductPrice({
                         productTemplate: values.product_tmpl_id,
                     }),

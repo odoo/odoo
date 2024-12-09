@@ -32,6 +32,7 @@ class SaleOrderLine(models.Model):
 
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for order_line in self:
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id')
@@ -58,7 +59,7 @@ class SaleOrderLine(models.Model):
                                and m.state == 'done'
                                and float_compare(m.quantity,
                                                  sum(sub_m.product_uom._compute_quantity(sub_m.quantity, m.product_uom) for sub_m in m.returned_move_ids if sub_m.state == 'done'),
-                                                 precision_rounding=m.product_uom.rounding) > 0)
+                                                 precision_digits=precision_digits) > 0)
                                for m in moves) or not moves:
                             order_line.qty_delivered = 0
                         else:

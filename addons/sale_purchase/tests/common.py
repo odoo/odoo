@@ -11,7 +11,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
         super().setUpClass()
 
         uom_unit = cls.env.ref('uom.product_uom_unit')
-        uom_dozen = cls.env.ref('uom.product_uom_dozen')
+        uom_pack_of_6 = cls.env.ref('uom.product_uom_pack_6')
 
         # Create category
         cls.product_category_purchase = cls.env['product.category'].create({
@@ -44,7 +44,6 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'list_price': 180.0,
             'type': 'service',
             'uom_id': uom_unit.id,
-            'uom_po_id': uom_unit.id,
             'invoice_policy': 'delivery',
             'expense_policy': 'no',
             'default_code': 'SERV_DEL',
@@ -59,8 +58,7 @@ class TestCommonSalePurchaseNoChart(TestSaleCommon):
             'standard_price': 20.0,
             'list_price': 15.0,
             'type': 'service',
-            'uom_id': uom_dozen.id,  # different UoM
-            'uom_po_id': uom_unit.id,
+            'uom_id': uom_pack_of_6.id,  # different UoM
             'invoice_policy': 'order',
             'expense_policy': 'no',
             'default_code': 'SERV_ORD',

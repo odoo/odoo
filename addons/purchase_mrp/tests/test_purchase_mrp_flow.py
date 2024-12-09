@@ -17,8 +17,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         super().setUpClass()
         # Useful models
         cls.UoM = cls.env['uom.uom']
-        cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
-        cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)])
         cls.stock_location = cls.warehouse.lot_stock_id
 
@@ -27,28 +25,10 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         group_user.write({'implied_ids': [(4, grp_uom.id)]})
         cls.env.user.write({'groups_id': [(4, grp_uom.id)]})
 
-        cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm.id), ('uom_type', '=', 'reference')],
-                                                 limit=1)
-        cls.uom_kg.write({
-            'name': 'Test-KG',
-            'rounding': 0.000001})
-        cls.uom_gm = cls.UoM.create({
-            'name': 'Test-G',
-            'category_id': cls.categ_kgm.id,
-            'uom_type': 'smaller',
-            'factor': 1000.0,
-            'rounding': 0.001})
-        cls.uom_unit = cls.env['uom.uom'].search(
-            [('category_id', '=', cls.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
-        cls.uom_unit.write({
-            'name': 'Test-Unit',
-            'rounding': 0.01})
-        cls.uom_dozen = cls.UoM.create({
-            'name': 'Test-DozenA',
-            'category_id': cls.categ_unit.id,
-            'factor_inv': 12,
-            'uom_type': 'bigger',
-            'rounding': 0.001})
+        cls.uom_kg = cls.env.ref('uom.product_uom_kgm')
+        cls.uom_gm = cls.env.ref('uom.product_uom_gram')
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.uom_pack_of_6 = cls.env.ref('uom.product_uom_pack_6')
 
         # Creating all components
         cls.component_a = cls._create_product_with_form('Comp A', cls.uom_unit)
@@ -160,7 +140,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         p.is_storable = True
         p.categ_id = cls.env.ref('product.product_category_goods')
         p.uom_id = uom_id
-        p.uom_po_id = uom_id
         p.route_ids.clear()
         for r in routes:
             p.route_ids.add(r)
@@ -1013,12 +992,11 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
                 Command.create({'partner_id': self.partner_a.id, 'min_qty': 5}),
             ]
         })
-        # Compo D has 1 vendor with a min qty of 1 dozen
+        # Compo D has 1 vendor with a min qty of 1 pack_of_6
         self.component_d.write({
-            'uom_po_id': self.uom_dozen.id,
             'route_ids': [Command.link(buy_route.id)],
             'seller_ids': [
-                Command.create({'partner_id': self.partner_a.id, 'min_qty': 1, 'price': 10}),
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 1, 'product_uom_id': self.uom_pack_of_6.id, 'price': 10}),
             ]
         })
 
@@ -1041,7 +1019,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
                 Command.create({
                     'product_id': self.component_c.id,
                     'product_qty': 1,
-                    'product_uom_id': self.uom_dozen.id,
+                    'product_uom_id': self.uom_pack_of_6.id,
                 }),
                 Command.create({
                     'product_id': self.component_d.id,
@@ -1060,10 +1038,10 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertTrue(compo_b_values['route_alert'], "Should be true as there isn't enough quantity for this vendor")
         compo_c_values = report_values['lines']['components'][2]
         self.assertEqual(compo_c_values['route_detail'], self.partner_a.display_name)
-        self.assertFalse(compo_c_values['route_alert'], "Should be false as 1 dozen > 5 units for this vendor")
+        self.assertFalse(compo_c_values['route_alert'], "Should be false as 1 pack_of_6 > 5 units for this vendor")
         compo_d_values = report_values['lines']['components'][3]
         self.assertEqual(compo_d_values['route_detail'], self.partner_a.display_name, "Compo D should have found the supplier, even without enough qty")
-        self.assertTrue(compo_d_values['route_alert'], "Should be true as 3 units < 1 dozen for this vendor")
+        self.assertTrue(compo_d_values['route_alert'], "Should be true as 3 units < 1 pack_of_6 for this vendor")
 
     def test_valuation_with_backorder(self):
         fifo_category = self.env['product.category'].create({
@@ -1098,7 +1076,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             pol_form.product_id = kit
             pol_form.product_qty = 30
             pol_form.product_uom_id = self.uom_kg
-            pol_form.price_unit = 90000
+            pol_form.price_unit = 90
             pol_form.taxes_id.clear()
         po = po_form.save()
         po.button_confirm()
@@ -1107,9 +1085,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         receipt.move_line_ids[0].quantity = 4
         receipt.move_line_ids[1].quantity = 2
         Form.from_action(self.env, receipt.button_validate()).save().process()
-        # Price Unit for 1 gm of the kit = 90000/1000 = 90
-        # unit_cost for cmp1 = 90 *1000* 3 / 2 / 2 / 1000 = 67.5
-        # unit_cost for cmp2  = 90 *1000* 3 / 2 / 1  * 1000 = 135000000
+        # Price Unit for 1 gm of the kit = 90
+        # unit_cost for cmp1 = 90 * 1000 * 3 / 2 / 2 / 1000 = 67.5
+        # unit_cost for cmp2  = 90 * 1000 * 3 / 2 / 1  * 1000 = 135000000
         svl = po.picking_ids[0].move_ids.stock_valuation_layer_ids
         self.assertEqual(svl[0].unit_cost, 67.5)
         self.assertEqual(svl[1].unit_cost, 135000000)

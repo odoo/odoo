@@ -65,22 +65,22 @@ class StockForecasted_Product_Product(models.AbstractModel):
         if product_template_ids:
             products = self.env['product.template'].browse(product_template_ids)
             res.update({
-                'product_templates' : products.read(fields=['id', 'display_name']),
-                'product_templates_ids' : products.ids,
-                'product_variants' : [{
-                        'id' : pv.id,
-                        'combination_name' : pv.product_template_attribute_value_ids._get_combination_name(),
+                'product_templates': products.read(fields=['id', 'display_name']),
+                'product_templates_ids': products.ids,
+                'product_variants': [{
+                        'id': pv.id,
+                        'combination_name': pv.product_template_attribute_value_ids._get_combination_name(),
                     } for pv in products.product_variant_ids],
-                'product_variants_ids' : products.product_variant_ids.ids,
-                'multiple_product' : len(products.product_variant_ids) > 1,
+                'product_variants_ids': products.product_variant_ids.ids,
+                'multiple_product': len(products.product_variant_ids) > 1,
             })
         elif product_ids:
             products = self.env['product.product'].browse(product_ids)
             res.update({
-                'product_templates' : False,
-                'product_variants' : products.read(fields=['id', 'display_name']),
-                'product_variants_ids' : products.ids,
-                'multiple_product' : len(products) > 1,
+                'product_templates': False,
+                'product_variants': products.read(fields=['id', 'display_name']),
+                'product_variants_ids': products.ids,
+                'multiple_product': len(products) > 1,
             })
 
         res['uom'] = products[:1].uom_id.display_name
@@ -151,22 +151,22 @@ class StockForecasted_Product_Product(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'is_late': is_late,
-            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
+            'quantity': float_round(quantity, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')),
             'move_out': move_out,
             'move_in': move_in,
             'reservation': self._get_reservation_data(reserved_move) if reserved_move else False,
             'in_transit': in_transit,
             'is_matched': any(move_id in [move_in_id, move_out_id] for move_id in move_to_match_ids),
-            'uom_id' : product.uom_id.read()[0] if read else product.uom_id,
+            'uom_id': product.uom_id.read()[0] if read else product.uom_id,
         }
         if move_in:
             document_in = move_in._get_source_document()
             line.update({
                 'move_in': move_in.read(fields=self._get_report_moves_fields())[0] if read else move_in,
-                'document_in' : {
-                    '_name' : document_in._name,
-                    'id' : document_in.id,
-                    'name' : document_in.display_name,
+                'document_in': {
+                    '_name': document_in._name,
+                    'id': document_in.id,
+                    'name': document_in.display_name,
                 } if document_in else False,
                 'receipt_date': format_date(self.env, move_in.date),
             })
@@ -175,10 +175,10 @@ class StockForecasted_Product_Product(models.AbstractModel):
             document_out = move_out._get_source_document()
             line.update({
                 'move_out': move_out.read(fields=self._get_report_moves_fields())[0] if read else move_out,
-                'document_out' : {
-                    '_name' : document_out._name,
-                    'id' : document_out.id,
-                    'name' : document_out.display_name,
+                'document_out': {
+                    '_name': document_out._name,
+                    'id': document_out.id,
+                    'name': document_out.display_name,
                 } if document_out else False,
                 'delivery_date': format_date(self.env, move_out.date),
             })
@@ -213,7 +213,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 if move.location_id.id in wh_stock_sub_location_ids:
                     currents[out.product_id.id, wh_stock_location.id] -= reserved
                 currents[(out.product_id.id, move.location_id.id)] -= reserved
-                if float_compare(reserved_out, out.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+                if float_compare(reserved_out, out.product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')) >= 0:
                     break
 
             return {
@@ -234,7 +234,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 demand = max(move.product_qty - reserved, 0)
                 # to make sure we don't demand more than the out (useful when same pick/pack goes to multiple out)
                 demand = min(demand, demand_out)
-                if float_is_zero(demand, precision_rounding=move.product_id.uom_id.rounding):
+                if float_is_zero(demand, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                     continue
                 # check available qty for move if chained, move available is what was move by orig moves
                 if move.move_orig_ids:
@@ -360,7 +360,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 product_sum[product_loc[0]] += quantity
         lines = []
         for product in (ins | outs).product_id:
-            product_rounding = product.uom_id.rounding
+            product_rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             unreconciled_outs = []
             # remaining stock
             free_stock = currents[product.id, wh_stock_location.id]
@@ -377,7 +377,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     in_transit = bool(reserved_move.move_orig_ids)
                     lines.append(self._prepare_report_line(reserved_out, move_out=out, reserved_move=reserved_move, in_transit=in_transit, read=read))
 
-                if float_is_zero(demand_out, precision_rounding=product_rounding):
+                if float_is_zero(demand_out, precision_digits=product_rounding):
                     continue
 
                 # Reconcile with the current stock.
@@ -385,7 +385,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     demand_out = max(demand_out - taken_from_stock_out, 0)
                     lines.append(self._prepare_report_line(taken_from_stock_out, move_out=out, read=read))
 
-                if float_is_zero(demand_out, precision_rounding=product_rounding):
+                if float_is_zero(demand_out, precision_digits=product_rounding):
                     continue
 
                 # Reconcile with unreservable stock, quantities that are in stock but not in correct location to reserve from (in transit)
@@ -395,31 +395,31 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     transit_stock -= unreservable_qty
                     lines.append(self._prepare_report_line(unreservable_qty, move_out=out, in_transit=True, read=read))
 
-                if float_is_zero(demand_out, precision_rounding=product_rounding):
+                if float_is_zero(demand_out, precision_digits=product_rounding):
                     continue
 
                 # Reconcile with the ins.
-                if not float_is_zero(demand_out, precision_rounding=product_rounding):
+                if not float_is_zero(demand_out, precision_digits=product_rounding):
                     demand_out = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand_out, product_rounding, only_matching_move_dest=True, read=read)
-                if not float_is_zero(demand_out, precision_rounding=product_rounding):
+                if not float_is_zero(demand_out, precision_digits=product_rounding):
                     unreconciled_outs.append((demand_out, out))
 
             # Another pass, in case there are some ins linked to a dest move but that still have some quantity available
             for (demand, out) in unreconciled_outs:
                 demand = _reconcile_out_with_ins(lines, out, ins_per_product[product.id], demand, product_rounding, only_matching_move_dest=False, read=read)
-                if not float_is_zero(demand, precision_rounding=product_rounding):
+                if not float_is_zero(demand, precision_digits=product_rounding):
                     # Not reconciled
                     lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
             # Stock in transit
-            if not float_is_zero(transit_stock, precision_rounding=product_rounding):
+            if not float_is_zero(transit_stock, precision_digits=product_rounding):
                 lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
 
             # Unused remaining stock.
-            if not float_is_zero(free_stock, precision_rounding=product_rounding):
+            if not float_is_zero(free_stock, precision_digits=product_rounding):
                 lines.append(self._prepare_report_line(free_stock, product=product, read=read))
             # In moves not used.
             for in_ in ins_per_product[product.id]:
-                if float_is_zero(in_['qty'], precision_rounding=product_rounding):
+                if float_is_zero(in_['qty'], precision_digits=product_rounding):
                     continue
                 lines.append(self._prepare_report_line(in_['qty'], move_in=in_['move'], read=read))
         return lines

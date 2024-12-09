@@ -274,7 +274,7 @@ class AccountMoveLine(models.Model):
         return self.product_id.is_storable and self.product_id.valuation == 'real_time'
 
     def _get_gross_unit_price(self):
-        if float_is_zero(self.quantity, precision_rounding=self.product_uom_id.rounding):
+        if float_is_zero(self.quantity, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
             return self.price_unit
 
         price_unit = self.price_unit * (1 - self.discount / 100) if self.discount else\

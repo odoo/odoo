@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
+from odoo import Command
 from odoo.tests import Form, TransactionCase
 from odoo.tools import mute_logger
 from odoo.exceptions import UserError
@@ -29,7 +30,10 @@ class TestProcRule(TransactionCase):
         orderpoint_form.location_id = self.env.ref('stock.stock_location_stock')
         orderpoint_form.product_min_qty = 4.0
         orderpoint_form.product_max_qty = 5.1
-        orderpoint_form.qty_multiple = 0.1
+        orderpoint_form.replenishment_uom_id = self.env['uom.uom'].create({
+            'name': 'Test UoM',
+            'relative_factor': 0.1,
+        })
         orderpoint = orderpoint_form.save()
         self.assertAlmostEqual(orderpoint.qty_to_order, orderpoint.product_max_qty)
 
@@ -293,23 +297,28 @@ class TestProcRule(TransactionCase):
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
 
     def test_reordering_rule_3(self):
-        """Test how qty_multiple affects qty_to_order"""
+        """Test how replenishment_uom_id affects qty_to_order"""
         stock_location = self.stock_location = self.env.ref('stock.stock_location_stock')
         self.productA = self.env['product.product'].create({
             'name': 'Desk Combination',
             'is_storable': True,
+        })
+        pack_of_10 = self.env['uom.uom'].create({
+            'name': 'pack of 10',
+            'relative_factor': 10.0,
         })
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.productA.id,
             'location_id': stock_location.id,
             'inventory_quantity': 14.5,
         }).action_apply_inventory()
+
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'name': 'ProductA RR',
             'product_id': self.productA.id,
             'product_min_qty': 15.0,
             'product_max_qty': 30.0,
-            'qty_multiple': 10,
+            'replenishment_uom_id': pack_of_10.id,
         })
         self.assertEqual(orderpoint.qty_to_order, 10.0)  # 15.0 < 14.5 + 10 <= 30.0
         # Test search on computed field
@@ -319,11 +328,14 @@ class TestProcRule(TransactionCase):
         ])
         self.assertTrue(rr)
         orderpoint.write({
-            'qty_multiple': 1,
+            'replenishment_uom_id': self.env['uom.uom'].create({
+                'name': 'Test UoM',
+                'relative_factor': 1,
+            })
         })
         self.assertEqual(orderpoint.qty_to_order, 15.0)  # 15.0 < 14.5 + 15 <= 30.0
         orderpoint.write({
-            'qty_multiple': 0,
+            'replenishment_uom_id': False,
         })
         self.assertEqual(orderpoint.qty_to_order, 15.5)  # 15.0 < 14.5 + 15.5 <= 30.0
 

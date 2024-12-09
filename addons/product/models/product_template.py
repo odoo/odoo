@@ -114,18 +114,10 @@ class ProductTemplate(models.Model):
         'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for all stock operations.")
+    uom_ids = fields.Many2many('uom.uom', string='Packagings')
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
-    uom_category_id = fields.Many2one('uom.category', string='UoM Category', related="uom_id.category_id")
-    uom_po_id = fields.Many2one(
-        'uom.uom', 'Purchase Unit',
-        domain="[('category_id', '=', uom_category_id)]",
-        compute='_compute_uom_po_id', required=True, readonly=False, store=True, precompute=True,
-        help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
-    packaging_ids = fields.One2many(
-        'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
-        help="Gives the different ways to package the same product.")
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', depends_context=('company',))
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
@@ -182,12 +174,6 @@ class ProductTemplate(models.Model):
 
     def _compute_purchase_ok(self):
         pass
-
-    @api.depends('uom_id')
-    def _compute_uom_po_id(self):
-        for template in self:
-            if not template.uom_po_id or template.uom_id.category_id != template.uom_po_id.category_id:
-                template.uom_po_id = template.uom_id
 
     def _compute_item_count(self):
         for template in self:
@@ -354,7 +340,7 @@ class ProductTemplate(models.Model):
         self._set_product_variant_field('barcode')
 
     @api.model
-    def _get_weight_uom_id_from_ir_config_parameter(self):
+    def _get_weight_uom_name_from_ir_config_parameter(self):
         """ Get the unit of measure to interpret the `weight` field. By default, we considerer
         that weights are expressed in kilograms. Users can configure to express them in pounds
         by adding an ir.config_parameter record with "product.product_weight_in_lbs" as key
@@ -362,12 +348,12 @@ class ProductTemplate(models.Model):
         """
         product_weight_in_lbs_param = self.env['ir.config_parameter'].sudo().get_param('product.weight_in_lbs')
         if product_weight_in_lbs_param == '1':
-            return self.env.ref('uom.product_uom_lb')
+            'lb'
         else:
-            return self.env.ref('uom.product_uom_kgm')
+            'kg'
 
     @api.model
-    def _get_length_uom_id_from_ir_config_parameter(self):
+    def _get_length_uom_name_from_ir_config_parameter(self):
         """ Get the unit of measure to interpret the `length`, 'width', 'height' field.
         By default, we considerer that length are expressed in millimeters. Users can configure
         to express them in feet by adding an ir.config_parameter record with "product.volume_in_cubic_feet"
@@ -375,12 +361,12 @@ class ProductTemplate(models.Model):
         """
         product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
         if product_length_in_feet_param == '1':
-            return self.env.ref('uom.product_uom_foot')
+            return 'ft'
         else:
-            return self.env.ref('uom.product_uom_millimeter')
+            return 'mm'
 
     @api.model
-    def _get_volume_uom_id_from_ir_config_parameter(self):
+    def _get_volume_uom_name_from_ir_config_parameter(self):
         """ Get the unit of measure to interpret the `volume` field. By default, we consider
         that volumes are expressed in cubic meters. Users can configure to express them in cubic feet
         by adding an ir.config_parameter record with "product.volume_in_cubic_feet" as key
@@ -388,21 +374,9 @@ class ProductTemplate(models.Model):
         """
         product_length_in_feet_param = self.env['ir.config_parameter'].sudo().get_param('product.volume_in_cubic_feet')
         if product_length_in_feet_param == '1':
-            return self.env.ref('uom.product_uom_cubic_foot')
+            return 'ft³'
         else:
-            return self.env.ref('uom.product_uom_cubic_meter')
-
-    @api.model
-    def _get_weight_uom_name_from_ir_config_parameter(self):
-        return self._get_weight_uom_id_from_ir_config_parameter().display_name
-
-    @api.model
-    def _get_length_uom_name_from_ir_config_parameter(self):
-        return self._get_length_uom_id_from_ir_config_parameter().display_name
-
-    @api.model
-    def _get_volume_uom_name_from_ir_config_parameter(self):
-        return self._get_volume_uom_id_from_ir_config_parameter().display_name
+            return 'm³'
 
     @api.depends('type')
     def _compute_weight_uom_name(self):
@@ -439,19 +413,6 @@ class ProductTemplate(models.Model):
     def _set_default_code(self):
         self._set_product_variant_field('default_code')
 
-    @api.depends('product_variant_ids', 'product_variant_ids.packaging_ids')
-    def _compute_packaging_ids(self):
-        for p in self:
-            if len(p.product_variant_ids) == 1:
-                p.packaging_ids = p.product_variant_ids.packaging_ids
-            else:
-                p.packaging_ids = False
-
-    def _set_packaging_ids(self):
-        for p in self:
-            if len(p.product_variant_ids) == 1:
-                p.product_variant_ids.packaging_ids = p.packaging_ids
-
     @api.depends('type')
     def _compute_product_tooltip(self):
         self.product_tooltip = False
@@ -466,16 +427,6 @@ class ProductTemplate(models.Model):
                 "Combos allow to choose one product amongst a selection of choices per category."
             )
         return tooltip
-
-    @api.constrains('uom_id', 'uom_po_id')
-    def _check_uom(self):
-        if any(template.uom_id and template.uom_po_id and template.uom_id.category_id != template.uom_po_id.category_id for template in self):
-            raise ValidationError(_('The default Unit of Measure and the purchase Unit of Measure must be in the same category.'))
-
-    @api.onchange('uom_id')
-    def _onchange_uom_id(self):
-        if self.uom_id:
-            self.uom_po_id = self.uom_id.id
 
     @api.onchange('type')
     def _onchange_type(self):
@@ -507,7 +458,7 @@ class ProductTemplate(models.Model):
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
-        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'packaging_ids', 'product_properties']
+        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'product_properties']
 
     @api.model_create_multi
     def create(self, vals_list):
