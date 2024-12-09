@@ -402,7 +402,7 @@ class WebsiteEventController(http.Controller):
             'attendees': attendees_sudo,
             'event': event,
             'google_url': urls.get('google_url'),
-            'iCal_url': urls.get('iCal_url')
+            'iCal_url': urls.get('iCal_url'),
         }
 
     # ------------------------------------------------------------
