@@ -40,6 +40,9 @@ from lxml import etree, objectify
 
 import odoo
 import odoo.addons
+from odoo.required import ReadonlyDict  # noqa: F401
+from odoo._monkeypatches.xlwt import xlwt  # noqa: F401
+from odoo._monkeypatches.xlsxwriter import xlsxwriter  # noqa: F401
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F401
@@ -47,6 +50,7 @@ from odoo.loglevels import exception_to_unicode, get_encodings, ustr  # noqa: F4
 from .config import config
 from .float_utils import float_round
 from .which import which
+
 
 K = typing.TypeVar('K')
 T = typing.TypeVar('T')
@@ -417,48 +421,6 @@ def merge_sequences(*iterables: Iterable[T]) -> list[T]:
                 deps[item].append(prev)
             prev = item
     return topological_sort(deps)
-
-
-try:
-    import xlwt
-
-    # add some sanitization to respect the excel sheet name restrictions
-    # as the sheet name is often translatable, can not control the input
-    class PatchedWorkbook(xlwt.Workbook):
-        def add_sheet(self, name, cell_overwrite_ok=False):
-            # invalid Excel character: []:*?/\
-            name = re.sub(r'[\[\]:*?/\\]', '', name)
-
-            # maximum size is 31 characters
-            name = name[:31]
-            return super(PatchedWorkbook, self).add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
-
-    xlwt.Workbook = PatchedWorkbook
-
-except ImportError:
-    xlwt = None
-
-try:
-    import xlsxwriter
-
-    # add some sanitization to respect the excel sheet name restrictions
-    # as the sheet name is often translatable, can not control the input
-    class PatchedXlsxWorkbook(xlsxwriter.Workbook):
-
-        # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
-        def add_worksheet(self, name=None, **kw):
-            if name:
-                # invalid Excel character: []:*?/\
-                name = re.sub(r'[\[\]:*?/\\]', '', name)
-
-                # maximum size is 31 characters
-                name = name[:31]
-            return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
-
-    xlsxwriter.Workbook = PatchedXlsxWorkbook
-
-except ImportError:
-    xlsxwriter = None
 
 
 def get_iso_codes(lang: str) -> str:
@@ -1639,40 +1601,6 @@ def format_duration(value: float) -> str:
 
 
 consteq = hmac_lib.compare_digest
-
-
-class ReadonlyDict(Mapping[K, T], typing.Generic[K, T]):
-    """Helper for an unmodifiable dictionary, not even updatable using `dict.update`.
-
-    This is similar to a `frozendict`, with one drawback and one advantage:
-
-    - `dict.update` works for a `frozendict` but not for a `ReadonlyDict`.
-    - `json.dumps` works for a `frozendict` by default but not for a `ReadonlyDict`.
-
-    This comes from the fact `frozendict` inherits from `dict`
-    while `ReadonlyDict` inherits from `collections.abc.Mapping`.
-
-    So, depending on your needs,
-    whether you absolutely must prevent the dictionary from being updated (e.g., for security reasons)
-    or you require it to be supported by `json.dumps`, you can choose either option.
-
-        E.g.
-          data = ReadonlyDict({'foo': 'bar'})
-          data['baz'] = 'xyz' # raises exception
-          data.update({'baz', 'xyz'}) # raises exception
-          dict.update(data, {'baz': 'xyz'}) # raises exception
-    """
-    def __init__(self, data):
-        self.__data = dict(data)
-
-    def __getitem__(self, key: K) -> T:
-        return self.__data[key]
-
-    def __len__(self):
-        return len(self.__data)
-
-    def __iter__(self):
-        return iter(self.__data)
 
 
 class DotDict(dict):

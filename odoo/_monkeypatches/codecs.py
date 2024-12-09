@@ -5,7 +5,7 @@ import re
 import babel.core
 
 
-def patch_codecs():
+def patch():
     # ---------------------------------------------------------
     # some charset are known by Python under a different name
     # ---------------------------------------------------------
@@ -24,3 +24,8 @@ def patch_codecs():
 
     # To remove when corrected in Babel
     babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
+    return {
+        'encodings': encodings,
+        'codecs': codecs,
+        'babel': babel,
+    }
