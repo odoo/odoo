@@ -15,7 +15,7 @@
     "data": [
         'views/chat_room_templates.xml',
         'views/chat_room_views.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_frontend': [
