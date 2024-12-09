@@ -531,12 +531,30 @@
     <template id="portal_my_details">
         <t t-call="portal.portal_layout">
             <t t-set="additional_title">Contact Details</t>
-            <form action="/my/account" method="post">
-                <div class="row o_portal_details">
-                    <div class="col-lg-8">
+            <form action="/my/account" method="post" enctype="multipart/form-data">
+                <div class="row o_portal_details d-flex flex-md-row-reverse">
+                    <div class="col-md-3">
+                        <div class="card o_card_people">
+                            <div class="card-body ">
+                                <div class="d-flex justify-content-center">
+                                    <img class="o_wportal_avatar_img w-75 mb-3" t-att-src="website.image_url(partner, 'avatar_1024')"/>
+                                </div>
+                                <div class="text-center">
+                                    <a class="o_portal_profile_pic_edit btn btn-primary" aria-label="Edit">
+                                        <i class="fa fa-pencil fa-1g float-sm-none float-md-start" title="Edit"></i>
+                                    </a>
+                                    <a class="btn border-primary o_portal_profile_pic_clear" aria-label="Clear">
+                                        <i class="fa fa-trash-o float-sm-none float-md-end" title="Clear"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
                         <div class="row">
                             <t t-call="portal.portal_my_details_fields"/>
                             <input type="hidden" name="redirect" t-att-value="redirect"/>
+                            <input type="file" class="d-none o_portal_file_upload" name="image_1920" accept="image/*"/>
                         </div>
                         <div class="clearfix text-end mb-5">
                             <a href="/my/" class="btn btn-light me-2">
