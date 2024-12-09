@@ -1008,7 +1008,7 @@ class AccountMove(models.Model):
 
         self.ensure_one()
         tax_totals = self.tax_totals
-        if not tax_totals or self.move_type not in ('out_refund', 'in_refund'):
+        if not tax_totals:
             return tax_totals
 
         fields_to_reverse = (
@@ -1019,16 +1019,17 @@ class AccountMove(models.Model):
             'cash_rounding_base_amount_currency', 'cash_rounding_base_amount',
         )
 
-        invert_dict(tax_totals, fields_to_reverse)
-        for subtotal in tax_totals['subtotals']:
-            invert_dict(subtotal, fields_to_reverse)
-            for tax_group in subtotal['tax_groups']:
-                invert_dict(tax_group, fields_to_reverse)
+        if self.move_type in ('out_refund', 'in_refund'):
+            invert_dict(tax_totals, fields_to_reverse)
+            for subtotal in tax_totals['subtotals']:
+                invert_dict(subtotal, fields_to_reverse)
+                for tax_group in subtotal['tax_groups']:
+                    invert_dict(tax_group, fields_to_reverse)
 
         currency_huf = self.env.ref('base.HUF')
         tax_totals['total_vat_amount_in_huf'] = sum(
-            -line.balance for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
-        )
+            line.balance for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
+        ) * (1 if self.is_purchase_document() else -1)
         tax_totals['formatted_total_vat_amount_in_huf'] = formatLang(
             self.env, tax_totals['total_vat_amount_in_huf'], currency_obj=currency_huf
         )
