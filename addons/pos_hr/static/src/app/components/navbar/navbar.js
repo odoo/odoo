@@ -3,10 +3,10 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Navbar.prototype, {
     get showCreateProductButton() {
-        if (!this.pos.config.module_pos_hr || this.pos.employeeIsAdmin) {
+        if (!this.pos.config.module_pos_hr) {
             return super.showCreateProductButton;
         } else {
-            return false;
+            return !this.pos.isCashier;
         }
     },
 });
