@@ -132,13 +132,14 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'l10n_hu_edi_signature_key': 'some_key',
             'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
         })
+    
+    def _create_simple_move(self, move_type='out_invoice', currency=None):
+        journal = self.company_data['default_journal_sale'] if move_type in self.env['account.move'].get_sale_types() else self.company_data['default_journal_purchase']
 
-    def create_invoice_simple(self):
-        """ Create a really basic invoice - just one line. """
         return self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'journal_id': self.company_data['default_journal_sale'].id,
-            'currency_id': self.env.ref('base.HUF').id,
+            'move_type': move_type,
+            'journal_id': journal.id,
+            'currency_id': (currency or self.env.ref('base.HUF')).id,
             'partner_id': self.partner_company.id,
             'invoice_date': self.today,
             'delivery_date': self.today,
@@ -151,6 +152,22 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                 })
             ]
         })
+
+    def create_invoice_simple(self, currency=None):
+        """ Create a really basic invoice - just one line. """
+        return self._create_simple_move(move_type='out_invoice', currency=currency)
+    
+    def create_bill_simple(self, currency=None):
+        """ Create a really basic bill - just one line. """
+        return self._create_simple_move(move_type='in_invoice', currency=currency)
+    
+    def create_credit_note_simple(self, currency=None):
+        """ Create a really basic credit note - just one line. """
+        return self._create_simple_move(move_type='out_refund', currency=currency)
+    
+    def create_refund_simple(self, currency=None):
+        """ Create a really basic bill refund - just one line. """
+        return self._create_simple_move(move_type='in_refund', currency=currency)
 
     def create_advance_invoice(self):
         """ Create a sale order and an advance invoice. """
