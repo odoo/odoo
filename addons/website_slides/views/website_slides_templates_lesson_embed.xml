@@ -97,12 +97,6 @@
                                             <input type="number" class="form-control text-center" id="page_number" style="min-width: 60px"/>
                                             <span class="input-group-text" id="page_count"/>
                                         </div>
-                                        <span id="zoomout" class="d-none d-sm-inline ms-2 me-2" title="Zoom out" aria-label="Zoom out" role="button">
-                                            <i class="fa fa-search-minus" />
-                                        </span>
-                                        <span id="zoomin" class="d-none d-sm-inline" title="Zoom in" aria-label="Zoom in" role="button">
-                                            <i class="fa fa-search-plus" />
-                                        </span>
                                     </div>
                                     <div class="col text-center o_slide_navigation_buttons">
                                         <span id="first" class="me-1 me-sm-2" title="First slide" aria-label="First slide" role="button"><i class="fa fa-step-backward"/></span>
@@ -115,7 +109,13 @@
                                         </a>
                                     </div>
                                     <div class="col-3 text-end flex-grow-0">
-                                        <span id="fullscreen" class="ms-1 ms-sm-2"
+                                        <span id="zoomout" class="d-inline" title="Zoom out" aria-label="Zoom out" role="button">
+                                            <i class="fa fa-search-minus" />
+                                        </span>
+                                        <span id="zoomin" class="d-inline ms-2 me-2" title="Zoom in" aria-label="Zoom in" role="button">
+                                            <i class="fa fa-search-plus" />
+                                        </span>
+                                        <span id="fullscreen"
                                            title="View fullscreen" aria-label="Fullscreen" role="button">
                                             <i class="fa fa-arrows-alt"/>
                                         </span>
