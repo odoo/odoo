@@ -715,7 +715,7 @@ class IrCron(models.Model):
         :return: a pair ``(cron, progress)``, where the progress has
             been injected inside the cron's context
         """
-        progress = self.env['ir.cron.progress'].create([{
+        progress = self.env['ir.cron.progress'].sudo().create([{
             'cron_id': self.id,
             'remaining': 0,
             'done': 0,
@@ -737,7 +737,7 @@ class IrCron(models.Model):
             return
         if done < 0 or remaining < 0:
             raise ValueError("`done` and `remaining` must be positive integers.")
-        self.env['ir.cron.progress'].browse(progress_id).write({
+        self.env['ir.cron.progress'].sudo().browse(progress_id).write({
             'remaining': remaining,
             'done': done,
             'deactivate': deactivate,
