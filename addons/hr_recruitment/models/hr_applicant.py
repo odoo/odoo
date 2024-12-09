@@ -601,6 +601,7 @@ class HrApplicant(models.Model):
         })
         defaults = {
             'candidate_id': candidate.id,
+            'partner_name': partner_name,
         }
         job_platform = self.env['hr.job.platform'].search([('email', '=', email_from_normalized)], limit=1)
         if msg.get('from') and not job_platform:
