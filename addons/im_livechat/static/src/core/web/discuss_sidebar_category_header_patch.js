@@ -1,8 +1,8 @@
-import { DiscussSidebarCategory } from "@mail/discuss/core/public_web/discuss_sidebar_categories";
+import { DiscussSidebarCategoryHeader } from "@mail/discuss/core/public_web/discuss_sidebar_categories";
 import { patch } from "@web/core/utils/patch";
 
-/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategory} */
-const DiscussSidebarCategoryPatch = {
+/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategoryHeader} */
+const DiscussSidebarCategoryHeaderPatch = {
     get actions() {
         const actions = super.actions;
         if (this.store.has_access_livechat && this.category.livechatChannel && this.category.open) {
@@ -26,4 +26,4 @@ const DiscussSidebarCategoryPatch = {
     },
 };
 
-patch(DiscussSidebarCategory.prototype, DiscussSidebarCategoryPatch);
+patch(DiscussSidebarCategoryHeader.prototype, DiscussSidebarCategoryHeaderPatch);
