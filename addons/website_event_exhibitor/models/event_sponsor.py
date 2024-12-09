@@ -79,6 +79,7 @@ class EventSponsor(models.Model):
     country_flag_url = fields.Char(
         string='Country Flag',
         compute='_compute_country_flag_url', compute_sudo=True)
+    show_on_ticket = fields.Boolean("Show on ticket")
 
     @api.depends('partner_id')
     def _compute_url(self):

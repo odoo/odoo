@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="event_report_full_page_ticket_layout_inherit_exhibitor" inherit_id="event.event_report_full_page_ticket_layout">
-        <xpath expr="//div[hasclass('o_event_full_page_ticket_powered_by')]" position="before">
+    <template id="event_report_template_full_page_ticket_inherit_exhibitor" inherit_id="event.event_report_template_full_page_ticket">
+        <xpath expr="//div[hasclass('o_event_full_page_ticket_details')]" position="inside">
             <div t-if="not responsive_html" class="o_event_full_page_ticket_sponsors_container text-center mb-2">
-                <t t-foreach="event.sponsor_ids.filtered(lambda sponsor: sponsor.image_128 and sponsor.website_published)[:10]"
-                    t-as="sponsor">
+            <t t-set="sponsors" t-value="event.sponsor_ids.filtered(
+                    lambda sponsor: (sponsor.image_128 and sponsor.website_published and sponsor.show_on_ticket)).sorted(
+                    lambda sponsor: (sponsor.sponsor_type_id.sequence, sponsor.sequence))"/>
+                <t t-foreach="sponsors" t-as="sponsor">
                     <div class="o_event_full_page_ticket_sponsor_card d-inline-block">
                         <div class="h-100 p-2 pb-0">
                             <!-- Has to be base64-ified otherwise the reporting engine will sometimes load images
