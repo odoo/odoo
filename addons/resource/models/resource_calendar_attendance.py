@@ -33,6 +33,7 @@ class ResourceCalendarAttendance(models.Model):
     duration_days = fields.Float(compute='_compute_duration_days', string='Duration (days)', store=True, readonly=False)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
     day_period = fields.Selection([
+        ('full_day', 'Full Day'),
         ('morning', 'Morning'),
         ('lunch', 'Break'),
         ('afternoon', 'Afternoon')], required=True, default='morning')
