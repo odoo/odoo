@@ -341,7 +341,7 @@ class HrExpense(models.Model):
     def _compute_total_amount(self):
         AccountTax = self.env['account.tax']
         for expense in self:
-            if expense.is_multiple_currency:
+            if expense.is_multiple_currency and expense.company_id:
                 base_line = expense._prepare_base_line_for_taxes_computation(
                     price_unit=expense.total_amount_currency * expense.currency_rate,
                     quantity=1.0,
@@ -389,6 +389,8 @@ class HrExpense(models.Model):
         """
         AccountTax = self.env['account.tax']
         for expense in self:
+            if not expense.company_id:
+                continue
             base_line = expense._prepare_base_line_for_taxes_computation(
                 price_unit=expense.total_amount_currency,
                 quantity=1.0,
@@ -407,7 +409,7 @@ class HrExpense(models.Model):
         """
         AccountTax = self.env['account.tax']
         for expense in self:
-            if expense.is_multiple_currency:
+            if expense.is_multiple_currency and expense.company_id:
                 base_line = expense._prepare_base_line_for_taxes_computation(
                     price_unit=expense.total_amount,
                     quantity=1.0,
@@ -438,7 +440,7 @@ class HrExpense(models.Model):
                     company=expense.company_id,
                 )[product_id.id]
             else:
-                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
+                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity and expense.company_id else 0.
 
     def _needs_product_price_computation(self):
         # Hook to be overridden.
