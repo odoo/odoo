@@ -1,6 +1,6 @@
 import { Component, useSubEnv } from "@odoo/owl";
 import { defaultOptionComponents } from "./defaultComponents";
-import { useVisibleWithContent } from "../builder_helpers";
+import { useVisibilityObserver, useApplyVisibility } from "../builder_helpers";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";
@@ -15,7 +15,7 @@ export class OptionsContainer extends Component {
             getEditingElement: () => this.props.editingElement,
             weContext: {},
         });
-        useVisibleWithContent("root", "content");
+        useVisibilityObserver("content", useApplyVisibility("root"));
     }
 
     get title() {

@@ -2,7 +2,8 @@ import { Component, EventBus, useRef, useSubEnv } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import {
     basicContainerWeWidgetProps,
-    useVisibleWithContent,
+    useVisibilityObserver,
+    useApplyVisibility,
     useWeComponent,
     WeComponent,
 } from "../builder_helpers";
@@ -23,7 +24,7 @@ export class WeSelect extends Component {
     setup() {
         const button = useRef("button");
         useWeComponent();
-        useVisibleWithContent("root", "content");
+        useVisibilityObserver("content", useApplyVisibility("root"));
         this.dropdown = useDropdownState();
         useSubEnv({
             actionBus: new EventBus(),

@@ -227,25 +227,27 @@ export function useInputWeWidget() {
     };
 }
 
-export function useVisibleWithContent(rootName, contentName) {
-    const rootRef = useRef(rootName);
+export function useApplyVisibility(refName) {
+    const ref = useRef(refName);
+    return (hasContent) => {
+        ref.el?.classList.toggle("d-none", !hasContent);
+    };
+}
+
+export function useVisibilityObserver(contentName, callback) {
     const contentRef = useRef(contentName);
 
     const applyVisibility = () => {
-        rootRef.el?.classList.toggle(
-            "d-none",
-            ![...contentRef.el.childNodes].some((el) =>
-                isTextNode(el) ? el.textContent !== "" : !el.classList.contains("d-none")
-            )
+        const hasContent = [...contentRef.el.childNodes].some((el) =>
+            isTextNode(el) ? el.textContent !== "" : !el.classList.contains("d-none")
         );
+        callback(hasContent);
     };
 
-    const observer = new MutationObserver(() => {
-        applyVisibility();
-    });
+    const observer = new MutationObserver(applyVisibility);
     useEffect(
-        (rootEl, contentEl) => {
-            if (!rootEl || !contentEl) {
+        (contentEl) => {
+            if (!contentEl) {
                 return;
             }
             applyVisibility();
@@ -259,7 +261,7 @@ export function useVisibleWithContent(rootName, contentName) {
                 observer.disconnect();
             };
         },
-        () => [rootRef.el, contentRef.el]
+        () => [contentRef.el]
     );
 }
 

@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { useVisibleWithContent } from "../builder_helpers";
+import { useVisibilityObserver, useApplyVisibility } from "../builder_helpers";
 
 export class WeRow extends Component {
     static template = "html_builder.WeRow";
@@ -10,6 +10,6 @@ export class WeRow extends Component {
     };
 
     setup() {
-        useVisibleWithContent("root", "content");
+        useVisibilityObserver("content", useApplyVisibility("root"));
     }
 }

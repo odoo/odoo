@@ -1,7 +1,8 @@
 import { Component, EventBus, useSubEnv } from "@odoo/owl";
 import {
     basicContainerWeWidgetProps,
-    useVisibleWithContent,
+    useVisibilityObserver,
+    useApplyVisibility,
     useWeComponent,
     WeComponent,
 } from "../builder_helpers";
@@ -20,6 +21,6 @@ export class WeButtonGroup extends Component {
         useSubEnv({
             actionBus: bus,
         });
-        useVisibleWithContent("root", "root");
+        useVisibilityObserver("root", useApplyVisibility("root"));
     }
 }
