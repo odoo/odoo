@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
+import logging
 import requests
 from lxml import etree
 from markupsafe import Markup
@@ -12,6 +13,8 @@ from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
 
 TIMEOUT = 10
+_logger = logging.getLogger(__name__)
+
 
 
 class ResPartner(models.Model):
@@ -99,9 +102,9 @@ class ResPartner(models.Model):
 
         try:
             response = requests.get(smp_url, timeout=TIMEOUT)
-        except requests.exceptions.ConnectionError:
-            return None
-        if response.status_code != 200:
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            _logger.debug(e)
             return None
         return etree.fromstring(response.content)
 
