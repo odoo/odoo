@@ -3,7 +3,7 @@ import string
 import re
 import stdnum
 from stdnum.eu.vat import check_vies
-from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat
+from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat, InvalidLength
 from stdnum.util import clean
 from stdnum import luhn
 
@@ -127,6 +127,66 @@ class ResPartner(models.Model):
             country_code = _eu_country_vat_inverse.get(country_code, country_code)
             return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
         return check_func(vat_number)
+
+    def check_vat_uy(self, vat):
+        """Validate, check, and format a Uruguay VAT number (RUT).
+
+        Args:
+            vat (str): The Uruguay VAT number to validate.
+
+        Returns:
+            str: The formatted VAT number if valid.
+
+        Raises:
+            ValidationError: If the VAT number is invalid with a user-friendly message.
+        """
+        def compact(number):
+            """Convert the number to its minimal representation."""
+            number = clean(number, ' -').upper().strip()
+            if number.startswith('UY'):
+                return number[2:]
+            return number
+
+        def calc_check_digit(number):
+            """Calculate the check digit."""
+            weights = (4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2)
+            total = sum(int(n) * w for w, n in zip(weights, number))
+            return str(-total % 11)
+
+        try:
+            vat = compact(vat)
+            
+            # Validate length
+            if len(vat) != 12:
+                raise InvalidLength()
+
+            # Validate numeric characters
+            if not vat.isdigit():
+                raise InvalidFormat()
+
+            # Validate components
+            if vat[:2] < '01' or vat[:2] > '22':
+                raise InvalidComponent()
+            if vat[2:8] == '000000':
+                raise InvalidComponent()
+            if vat[8:11] != '001':
+                raise InvalidComponent()
+
+            # Validate check digit
+            if vat[-1] != calc_check_digit(vat):
+                raise InvalidChecksum()
+
+        except InvalidLength:
+            raise ValidationError(_("The VAT must have exactly 12 characters."))
+        except InvalidFormat:
+            raise ValidationError(_("The VAT must contain only numbers."))
+        except InvalidComponent:
+            raise ValidationError(_("The VAT contains invalid or unknown components."))
+        except InvalidChecksum:
+            raise ValidationError(_("The VAT check digit does not match."))
+
+        # Return formatted VAT number if valid
+        return '-'.join([vat[:2], vat[2:-4], vat[-4:-1], vat[-1]])
 
     @api.depends('vat', 'country_id')
     def _compute_vies_vat_to_check(self):
