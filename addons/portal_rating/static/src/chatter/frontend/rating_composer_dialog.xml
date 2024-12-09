@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="portal_rating.RatingComposerDialog">
+        <Dialog size="'md'" title="title" footer="false" contentClass="'o-mail-RatingComposerDialog'">
+            <div t-ref="root">
+                <Composer composer="props.composer" autofocus="true" mode="'extended'" onPostCallback.bind="this.onPostCallback"/>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

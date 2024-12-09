@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="portal_rating.RatingComposer">
+        <div t-if="props.options.displayComposer" class="o-mail-RatingComposer" t-ref="root">
+            <button type="button" t-att-class="'btn o_cc3 bg-transparent ' + props.options.linkBtnClasses  or 'btn-primary'" t-on-click="(ev) => this.openComposer(ev)">
+                <i t-if="props.options.icon" t-att-class="props.options.icon"/>
+                <span t-att-class="props.options.textClasses">
+                    <t t-if="props.options.fullScreen">Review</t>
+                    <t t-elif="state.defaultMessageId">Edit Review</t>
+                    <t t-else="">Add Review</t>
+                </span>
+            </button>
+        </div>
+        <div class="position-fixed" style="z-index:1050">
+            <OverlayContainer overlays="overlayService.overlays"/>
+        </div>
+    </t>
+</templates>

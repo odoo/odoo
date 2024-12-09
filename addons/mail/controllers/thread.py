@@ -6,6 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import frozendict
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
@@ -23,14 +24,30 @@ class ThreadController(http.Controller):
             ).get_result()
         return Store(thread, as_thread=True, request_list=request_list).get_result()
 
-    @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="user")
-    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None):
+    def _get_fetch_domain(self, thread, **kwargs):
+        """Restrict the fetched messages according to user type. Non-internal users can only read
+        the messages with non-internal subtypes as a matter of security.
+        `external_subtype_only` param could be sent in kwargs and it means that although the user
+        has access to the messages with both internal and non-internal subtypes, there is a flow
+        that only needs to display the messages with the non-internal subtype."""
         domain = [
-            ("res_id", "=", int(thread_id)),
-            ("model", "=", thread_model),
+            ("res_id", "=", thread.id),
+            ("model", "=", thread._name),
             ("message_type", "!=", "user_notification"),
         ]
-        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
+        if not request.env.user._is_internal() or kwargs.get("external_subtype_only"):
+            domain = expression.AND(
+                [domain, request.env["mail.message"]._get_search_domain_share()]
+            )
+        return domain
+
+    @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="public")
+    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None, **kwargs):
+        thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
+        if not thread:
+            raise NotFound()
+        domain = self._get_fetch_domain(thread, **kwargs)
+        res = thread.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()
@@ -147,17 +164,20 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, partner_ids=None, **kwargs):
+    def mail_message_update_content(self, message_id, update_data, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()
-        guest.env["ir.attachment"].browse(attachment_ids)._check_attachments_access(attachment_tokens)
+        guest.env["ir.attachment"].browse(
+            update_data.get("attachment_ids", [])
+        )._check_attachments_access(update_data.get("attachment_tokens", []))
         message = request.env["mail.message"]._get_with_access(message_id, "create", **kwargs)
         if not message or not self._is_message_editable(message, **kwargs):
             raise NotFound()
         # sudo: mail.message - access is checked in _get_with_access and _is_message_editable
         message = message.sudo()
-        body = Markup(body) if body else body  # may contain HTML such as @mentions
+        body = update_data.get("body")
+        update_data["body"] = Markup(body) if body else body  # may contain HTML such as @mentions
         guest.env[message.model].browse([message.res_id])._message_update_content(
-            message, body=body, attachment_ids=attachment_ids, partner_ids=partner_ids
+            message, **update_data
         )
         return Store(message, for_current_user=True).get_result()
 

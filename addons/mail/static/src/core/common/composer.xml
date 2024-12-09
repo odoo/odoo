@@ -101,15 +101,15 @@
                     <div t-ref="picker-target"/>
                 </div>
                 <div t-else="" class="d-flex align-items-center gap-1 w-100">
-                    <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
-                        <span t-if="props.composer.message" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
+                    <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message or (props.composer.message and env.inPortalRatingComposer) }">
+                        <span t-if="props.composer.message and !env.inPortalRatingComposer" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
                         <t t-else="">
                             <t t-call="mail.Composer.sendButton"/>
-                            <span t-if="!isSendButtonDisabled" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
+                            <span t-if="!isSendButtonDisabled and !env.inPortalRatingComposer" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                         </t>
                     </div>
                     <span class="flex-grow-1"/>
-                    <t t-if="!props.composer.message" t-call="mail.Composer.extraActions"/>
+                    <t t-if="!props.composer.message or env.inPortalRatingComposer" t-call="mail.Composer.extraActions"/>
                 </div>
             </div>
         </div>
@@ -124,13 +124,13 @@
             'btn-link p-1 rounded-pill': !extended,
             'me-2': env.inDiscussApp,
             'border-start-0': env.inDiscussApp and !props.composer.message,
-            'border-0': props.composer.message,
+            'border-0': props.composer.message and !env.inPortalRatingComposer,
         }"
         t-on-click="sendMessage"
         t-att-disabled="isSendButtonDisabled"
         t-att-aria-label="SEND_TEXT"
     >
-        <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
+        <t t-if="showSendButtonText" t-out="SEND_TEXT"/>
         <t t-else=""><i class="fa fa-fw fa-paper-plane-o"/></t>
     </button>
 </t>

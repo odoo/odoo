@@ -1,5 +1,6 @@
 import { Composer } from "@mail/core/common/composer";
 
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
 import { useState } from "@odoo/owl";
@@ -8,13 +9,41 @@ patch(Composer.prototype, {
     setup() {
         super.setup(...arguments);
         this.portalState = useState({
-            ratingValue: 4,
-            starValue: 4,
+            ratingValue: this.defaultRatingValue,
+            starValue:  this.defaultRatingValue,
         });
     },
 
     get allowUpload() {
         return super.allowUpload && !this.props.composer.portalComment;
+    },
+
+    get defaultRatingValue() {
+        return this.message?.rating_id?.rating || this.env.defaultRatingValue || 4
+    },
+
+    get hasValidMessage() {
+        return super.hasValidMessage || (this.message && this.message.rating_value) ||
+        (!this.message && this.portalState.ratingValue);
+    },
+
+    get SEND_TEXT() {
+        if (this.props.composer.message && this.env.inPortalRatingComposer) {
+            return _t("Save");
+        }
+        return super.SEND_TEXT;
+    },
+
+    get showSendButtonText() {
+        return super.showSendButtonText || this.message && this.env.inPortalRatingComposer;
+    },
+
+    get updateData() {
+        const updateData = super.updateData;
+        if (this.env.displayRating) {
+            updateData.rating_value = this.portalState.ratingValue
+        }
+        return updateData;
     },
 
     editMessage() {
@@ -27,10 +56,10 @@ patch(Composer.prototype, {
 
     async savePublisherComment() {
         const data = await rpc("/website/rating/comment", {
-            rating_id: this.message.rating.id,
+            rating_id: this.message.rating_id.id,
             publisher_comment: this.props.composer.text.trim(),
         });
-        this.message.rating = data;
+        this.store.insert(data);
         this.props.onPostCallback();
     },
 
@@ -45,9 +74,16 @@ patch(Composer.prototype, {
 
     get postData() {
         const postData = super.postData;
-        if (this.env.displayRating && !this.message) {
+        if (this.env.displayRating) {
             postData.rating_value = this.portalState.ratingValue;
         }
         return postData;
+    },
+
+    async sendMessage() {
+        if (this.env.inPortalRatingComposer && this.message) {
+            this.editMessage();
+        }
+        return super.sendMessage(...arguments);
     },
 });

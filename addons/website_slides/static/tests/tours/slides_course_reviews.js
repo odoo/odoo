@@ -21,15 +21,15 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             // If it fails here, it means the log note is considered as a review
-            trigger: "span:contains(Add Review)",
+            trigger: "#ratingComposerRoot:shadow span:contains(Add Review)",
             run: "click",
         },
         {
-            trigger: ".modal div.o_portal_chatter_composer_body textarea",
+            trigger: "#ratingComposerRoot:shadow .o-mail-Composer-input",
             run: "edit Great course!",
         },
         {
-            trigger: ".modal button.o_portal_chatter_composer_btn",
+            trigger: "#ratingComposerRoot:shadow .o-mail-Composer-send:enabled",
             run: "click",
         },
         {
@@ -38,11 +38,17 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             // If it fails here, it means the system is allowing you to add another review.
-            trigger: "span:contains(Edit Review)",
+            trigger: "#ratingComposerRoot:shadow span:contains(Edit Review)",
             run: "click",
         },
+
         {
-            trigger: "div.o_portal_chatter_composer_body textarea:value(Great course!)",
+            trigger: "#ratingComposerRoot:shadow .o-mail-Composer-input",
+            run: function() {
+                if (this.anchor.value !== "Great course!") {
+                    throw new Error("Composer should contain previous message body.");
+                }
+            },
         },
     ],
 });

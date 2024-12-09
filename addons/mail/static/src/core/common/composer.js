@@ -305,6 +305,10 @@ export class Composer extends Component {
         return !this.compact && this.props.sidebar;
     }
 
+    get showSendButtonText() {
+        return this.thread && this.thread.model !== "discuss.channel";
+    }
+
     get thread() {
         return this.props.messageToReplyTo?.message?.thread ?? this.props.composer.thread ?? null;
     }
@@ -598,18 +602,21 @@ export class Composer extends Component {
         return ev.isTrusted;
     }
 
+    get hasValidMessage() {
+        return (
+            this.props.composer.text.trim() ||
+            this.props.composer.attachments.length > 0 ||
+            (this.message && this.message.attachment_ids.length > 0)
+        );
+    }
+
     async processMessage(cb) {
         const el = this.ref.el;
-        const attachments = this.props.composer.attachments;
-        if (attachments.some(({ uploading }) => uploading)) {
+        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
             this.env.services.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
-        } else if (
-            this.props.composer.text.trim() ||
-            attachments.length > 0 ||
-            (this.message && this.message.attachment_ids.length > 0)
-        ) {
+        } else if (this.hasValidMessage) {
             if (!this.state.active) {
                 return;
             }
@@ -680,14 +687,24 @@ export class Composer extends Component {
         this.props.messageToReplyTo?.cancel();
     }
 
+    get updateData() {
+        const composer = toRaw(this.props.composer);
+        return {
+            attachments: composer.attachments,
+            mentionedChannels: composer.mentionedChannels,
+            mentionedPartners: composer.mentionedPartners,
+        };
+    }
+
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.text || composer.message.attachment_ids.length > 0) {
+        if (
+            composer.text ||
+            composer.message.attachment_ids.length > 0 ||
+            this.message.rating_value
+        ) {
             await this.processMessage(async (value) =>
-                composer.message.edit(value, composer.attachments, {
-                    mentionedChannels: composer.mentionedChannels,
-                    mentionedPartners: composer.mentionedPartners,
-                })
+                composer.message.edit({ ...this.updateData, body: value })
             );
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {
