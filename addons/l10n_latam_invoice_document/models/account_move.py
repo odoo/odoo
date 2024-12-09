@@ -76,13 +76,13 @@ class AccountMove(models.Model):
     def _compute_name(self):
         """ Change the way that the use_document moves name is computed:
 
-        * If move use document but does not have document type selected then name = '/' to do not show the name.
+        * If move use document but does not have document type selected then name = 'False' to do not show the name.
         * If move use document and are numbered manually do not compute name at all (will be set manually)
-        * If move use document and is in draft state and has not been posted before we restart name to '/' (this is
+        * If move use document and is in draft state and has not been posted before we restart name to False (this is
            when we change the document type) """
         without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
         manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
-        (without_doc_type + manual_documents.filtered(lambda x: not x.name)).name = '/'
+        (without_doc_type + manual_documents.filtered(lambda x: not x.name)).name = False
         # we need to group moves by document type as _compute_name will apply the same name prefix of the first record to the others
         group_by_document_type = defaultdict(self.env['account.move'].browse)
         for move in (self - without_doc_type - manual_documents):
@@ -104,7 +104,7 @@ class AccountMove(models.Model):
 
     @api.depends('name')
     def _compute_l10n_latam_document_number(self):
-        recs_with_name = self.filtered(lambda x: x.name != '/')
+        recs_with_name = self.filtered(lambda x: x.name and x.name != "/")
         for rec in recs_with_name:
             name = rec.name
             doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
@@ -118,7 +118,7 @@ class AccountMove(models.Model):
     def _inverse_l10n_latam_document_number(self):
         for rec in self.filtered(lambda x: x.l10n_latam_document_type_id):
             if not rec.l10n_latam_document_number:
-                rec.name = '/'
+                rec.name = False
             else:
                 l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
                 if rec.l10n_latam_document_number != l10n_latam_document_number:
@@ -130,7 +130,7 @@ class AccountMove(models.Model):
         # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed
         if (self.journal_id.l10n_latam_use_documents and self.l10n_latam_document_type_id
               and not self.l10n_latam_manual_document_number and self.state == 'draft' and not self.posted_before):
-            self.name = '/'
+            self.name = False
             self._compute_name()
 
     @api.depends('journal_id', 'l10n_latam_document_type_id')

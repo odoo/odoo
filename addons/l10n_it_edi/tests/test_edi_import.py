@@ -88,7 +88,6 @@ class TestItEdiImport(TestItEdi):
         https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml
         """
         self._assert_import_invoice('IT01234567890_FPR01.xml.p7m', [{
-            'name': 'BILL/2014/12/0001',
             'ref': '01234567890',
             'invoice_date': fields.Date.from_string('2014-12-18'),
             'amount_untaxed': 5.0,
@@ -119,7 +118,6 @@ class TestItEdiImport(TestItEdi):
         """
         with freeze_time('2019-01-01'):
             self._assert_import_invoice('IT09633951000_NpFwF.xml.p7m', [{
-                'name': 'BILL/2023/09/0001',
                 'ref': '333333333333333',
                 'invoice_date': fields.Date.from_string('2023-09-08'),
                 'amount_untaxed': 57.54,
@@ -147,7 +145,7 @@ class TestItEdiImport(TestItEdi):
                 self.proxy_user,
             )
 
-        invoices = self.env['account.move'].with_company(self.company).search([('name', '=', 'BILL/2019/01/0001')])
+        invoices = self.env['account.move'].with_company(self.company).search([]).filtered(lambda move: move.name_placeholder_form == 'BILL/2019/01/0001')
         self.assertEqual(len(invoices), 1)
 
     def test_cron_receives_bill_from_another_company(self):
