@@ -177,6 +177,15 @@ defineModels([Foo, Color, Product]);
 
 setupChartJsForTests();
 
+test('graph view with "class" attribute', async () => {
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: `<graph class="foobar-class"/>`,
+    });
+    expect(".o_graph_view").toHaveClass("foobar-class");
+});
+
 test("simple bar chart rendering", async () => {
     const view = await mountView({ type: "graph", resModel: "foo" });
 
