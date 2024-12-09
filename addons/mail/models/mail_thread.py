@@ -3422,6 +3422,12 @@ class MailThread(models.AbstractModel):
                 render_values['subtitles'] = subtitles
 
             for recipients_group in recipients_groups_list:
+                if not render_values['show_unfollow']:
+                    render_values['show_unfollow'] = any(
+                        r['is_follower']
+                        for r in recipients_group['recipients_data']
+                        if r['id'] and r['uid'] and not r['ushare']
+                    )
                 yield (lang, render_values, recipients_group)
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False,
@@ -3526,6 +3532,7 @@ class MailThread(models.AbstractModel):
             'company': company,
             'email_add_signature': email_add_signature,
             'lang': lang,
+            'show_unfollow': getattr(self, '_partner_unfollow_enabled', False),
             'signature': signature,
             'website_url': website_url,
             # tools

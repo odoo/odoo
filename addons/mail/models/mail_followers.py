@@ -76,16 +76,16 @@ class MailFollowers(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def _get_mail_recipients_follower_status(self, mail_ids):
+    def _get_mail_doc_to_followers(self, mail_ids):
         """ Get partner mail recipients that follows the related record of the mails.
 
-        Note that followers for message related to discuss.channel are not fetched.
-
         :param list mail_ids: mail_mail ids
-        :return: followers of the related record of the mails limited to the
-            recipients of the mails as a set of tuple (model, res_id, partner_id).
-        :rtype: set
+
+        :return: for each (model, document_id): list of partner ids that are followers
+        :rtype: dict
         """
+        if not mail_ids:
+            return {}
         self.env['mail.mail'].flush_model(['mail_message_id', 'recipient_ids'])
         self.env['mail.followers'].flush_model(['partner_id', 'res_model', 'res_id'])
         self.env['mail.message'].flush_model(['model', 'res_id'])
@@ -94,13 +94,16 @@ class MailFollowers(models.Model):
             SELECT message.model, message.res_id, mail_partner.res_partner_id
               FROM mail_mail mail
               JOIN mail_mail_res_partner_rel mail_partner ON mail_partner.mail_mail_id = mail.id
-              JOIN mail_message message ON mail.mail_message_id = message.id AND message.model != 'discuss.channel'
+              JOIN mail_message message ON mail.mail_message_id = message.id
               JOIN mail_followers follower ON message.model = follower.res_model
                AND message.res_id = follower.res_id
                AND mail_partner.res_partner_id = follower.partner_id
              WHERE mail.id IN %(mail_ids)s
         """, {'mail_ids': tuple(mail_ids)})
-        return set(self.env.cr.fetchall())
+        res = defaultdict(list)
+        for model, doc_id, partner_id in self.env.cr.fetchall():
+            res[(model, doc_id)].append(partner_id)
+        return res
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):
         """ Private method allowing to fetch recipients data based on a subtype.
