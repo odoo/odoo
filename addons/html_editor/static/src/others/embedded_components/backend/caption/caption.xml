@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- caption template -->
+    <t t-name="html_editor.EmbeddedCaption">
+        <figcaption class="mt-2">
+            <input t-attf-class="rounded border-0 p-0"
+                t-ref="autofocus" type="text" maxLength="100" t-att-placeholder="'Write your caption here.'"
+                t-on-input.stop="onInputCaptionInput" t-on-keydown.stop=""
+                t-att-value="state.caption"/>
+        </figcaption>
+    </t>
+</templates>

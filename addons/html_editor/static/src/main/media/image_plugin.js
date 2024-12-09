@@ -7,9 +7,10 @@ import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { boundariesOut } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { ImageTransformButton } from "./image_transform_button";
-import { fillEmpty } from "@html_editor/utils/dom";
 import { closestBlock } from "../../utils/blocks";
 import { isEmptyBlock } from "../../utils/dom_info";
+import { renderToElement } from "@web/core/utils/render";
+import { fillEmpty } from "../../utils/dom";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -17,7 +18,7 @@ function hasShape(imagePlugin, shapeName) {
 
 export class ImagePlugin extends Plugin {
     static id = "image";
-    static dependencies = ["history", "link", "powerbox", "dom", "selection", "split"];
+    static dependencies = ["history", "link", "powerbox", "dom", "selection", "split", "embeddedComponents"];
     resources = {
         user_commands: [
             {
@@ -106,7 +107,6 @@ export class ImagePlugin extends Plugin {
                 groupId: "image_description",
                 commandId: "addImageCaption",
                 text: "Caption",
-                isAvailable: () => !this.getImageCaption(this.getSelectedImage()),
             },
             {
                 id: "shape_rounded",
@@ -189,6 +189,7 @@ export class ImagePlugin extends Plugin {
                 commandId: "deleteImage",
             },
         ],
+        mount_component_handlers: this.setupNewCaption.bind(this),
         paste_url_overrides: this.handlePasteUrl.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
         unsplittable_node_predicates: [
@@ -309,7 +310,7 @@ export class ImagePlugin extends Plugin {
             return;
         }
         const block = closestBlock(image);
-        return block.nodeName === "FIGURE" && block.querySelector("figcaption");
+        return block.nodeName === "FIGURE" && block.querySelector("[data-embedded='caption'] input");
     }
 
     addImageCaption() {
@@ -317,33 +318,60 @@ export class ImagePlugin extends Plugin {
         if (!selectedImg) {
             return;
         }
-        let caption = this.getImageCaption(selectedImg);
-        if (caption) {
-            this.dependencies.selection.setSelection({ anchorNode: caption, anchorOffset: 0 });
-        } else {
-            const block = this.dependencies.split.splitAroundUntil(
-                selectedImg,
-                closestBlock(selectedImg),
-            );
-            if (isEmptyBlock(block.nextSibling)) {
-                block.nextSibling.remove();
-            }
-            const figure = this.document.createElement("figure");
-            block.before(figure);
-            figure.append(...block.childNodes);
-            block.remove();
-            caption = this.document.createElement("figcaption");
-            caption.classList.add("figure-caption", "mt-2");
-            figure.append(caption);
-            // if (selectedImg.nextSibling === caption) {
-            //     selectedImg.after(this.document.createTextNode("\u200B"));
-            // }
-            fillEmpty(caption);
-            this.dependencies.selection.setSelection({ anchorNode: caption, anchorOffset: 0 });
-            selectedImg.setAttribute("data-oe-protected", "false");
-            caption.setAttribute("data-oe-protected", "false");
-            figure.setAttribute("data-oe-protected", "true");
-            this.dependencies.history.addStep();
+        // If there's already a caption, focus and select it.
+        const currentCaption = this.getImageCaption(selectedImg);
+        if (currentCaption) {
+            currentCaption.focus();
+            currentCaption.select();
+            return;
+        }
+        // Move the image within a figure element.
+        const block = this.dependencies.split.splitAroundUntil(
+            selectedImg,
+            closestBlock(selectedImg),
+        );
+        if (isEmptyBlock(block.previousSibling)) {
+            block.previousSibling.remove();
+        }
+        if (isEmptyBlock(block.nextSibling)) {
+            block.nextSibling.remove();
+        }
+        const figure = this.document.createElement("figure");
+        block.before(figure);
+        figure.append(...block.childNodes);
+        block.remove();
+        // Add the caption component.
+        const captionId = "" + Math.floor(Math.random() * Date.now());
+        selectedImg.setAttribute("data-caption-id", captionId);
+        const caption = renderToElement("html_editor.EmbeddedCaptionBlueprint", {
+            embeddedProps: JSON.stringify({
+                id: captionId,
+            }),
+        });
+        figure.append(caption);
+        // Ensure it's not possible to write inside the figure.
+        figure.setAttribute("data-oe-protected", "true");
+        selectedImg.setAttribute("data-oe-protected", "false");
+        // Ensure it's possible to write before and after the figure.
+        if (!figure.previousSibling) {
+            const p = this.document.createElement("p")
+            figure.before(p);
+            fillEmpty(p);
+        }
+        if (!figure.nextSibling) {
+            const p = this.document.createElement("p")
+            figure.after(p);
+            fillEmpty(p);
+        }
+        this.dependencies.history.addStep();
+    }
+
+    setupNewCaption({ name, props }) {
+        if (name === "caption") {
+            Object.assign(props, {
+                editable: this.editable,
+                addHistoryStep: this.dependencies.history.addStep,
+            });
         }
     }
 
