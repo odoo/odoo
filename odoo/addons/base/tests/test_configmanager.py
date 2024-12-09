@@ -289,6 +289,7 @@ class TestConfigManager(TransactionCase):
         self.assertEqual(capture.output, [
             "WARNING:odoo.tools.config:option addons_path, no such directory '/tmp/odoo', skipped",
             "WARNING:odoo.tools.config:option upgrade_path, no such directory '/tmp/upgrade', skipped",
+            "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
         ])
 
     @unittest.skipIf(not IS_POSIX, 'this test is POSIX only')
@@ -447,6 +448,7 @@ class TestConfigManager(TransactionCase):
                 self.config._parse_config(file.read().split())
         self.assertEqual(capture.output, [
             "WARNING:odoo.tools.config:option --without-demo: since 19.0, invalid boolean value: 'rigolo', assume True",
+            "WARNING:odoo.tools.config:test file '/tmp/file-file' cannot be found",
         ])
 
         self.assertConfigEqual({
@@ -605,7 +607,7 @@ class TestConfigManager(TransactionCase):
             (['--stop'], True),
             (['--test-enable'], True),
             (['--test-tags', 'tag'], True),
-            (['--test-file', 'file'], True),
+            (['--test-file', __file__], True),
         ]:
             with self.subTest(args=args):
                 _, options = self.parse_reset(args)

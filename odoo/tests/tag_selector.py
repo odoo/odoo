@@ -29,11 +29,11 @@ class TagsSelector(object):
             elif not tag or tag == '*':
                 # '*' indicates all tests (instead of 'standard' tests only)
                 tag = None
-            module_path = None
+            file_path = None
             if module and (module.endswith('.py')):
-                module_path = module[:-3].replace('/', '.')
+                file_path = f"/{module}"
                 module = None
-            test_filter = (tag, module, klass, method, module_path)
+            test_filter = (tag, module, klass, method, file_path)
 
             if is_include:
                 self.include.add(test_filter)
@@ -55,14 +55,15 @@ class TagsSelector(object):
         test_class = test.test_class
         test_tags = test.test_tags | {test_module}  # module as test_tags deprecated, keep for retrocompatibility,
         test_method = test._testMethodName
+        test_module_path = test.__module__.removeprefix('odoo.addons').replace('.', '/') + '.py'
 
         def _is_matching(test_filter):
-            (tag, module, klass, method, module_path) = test_filter
+            (tag, module, klass, method, file_path) = test_filter
             if tag and tag not in test_tags:
                 return False
-            elif module_path and not test.__module__.endswith(module_path):
+            elif file_path and not file_path.endswith(test_module_path):
                 return False
-            elif not module_path and module and module != test_module:
+            elif not file_path and module and module != test_module:
                 return False
             elif klass and klass != test_class:
                 return False

@@ -165,7 +165,7 @@ class TestSelector(TransactionCase):
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('/module/tests/test_file.py')  # all standard test of a module
-        self.assertEqual({('standard', None, None, None, 'module.tests.test_file'), }, tags.include)
+        self.assertEqual({('standard', None, None, None, '/module/tests/test_file.py'), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('*/module')  # all tests of a module
