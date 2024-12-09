@@ -29,7 +29,7 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
         operator = self.chatbot_script.operator_partner_id
         livechat_discuss_channel = self.env['discuss.channel'].search([
             ('livechat_channel_id', '=', self.livechat_channel.id),
-            ('livechat_operator_id', '=', operator.id),
+            ('chatbot_current_step_id.chatbot_script_id', '=', self.chatbot_script.id),
             ('message_ids', '!=', False),
         ])
 
@@ -102,12 +102,11 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
 
     def test_complete_chatbot_flow_ui(self):
         tests.new_test_user(self.env, login="portal_user", groups="base.group_portal")
-        operator = self.chatbot_script.operator_partner_id
         self.start_tour('/', 'website_livechat_chatbot_flow_tour')
         self._check_complete_chatbot_flow_result()
         self.env['discuss.channel'].search([
             ('livechat_channel_id', '=', self.livechat_channel.id),
-            ('livechat_operator_id', '=', operator.id),
+            ('chatbot_current_step_id.chatbot_script_id', '=', self.chatbot_script.id),
         ]).unlink()
         self.start_tour('/', 'website_livechat_chatbot_flow_tour', login="portal_user")
         self._check_complete_chatbot_flow_result()
@@ -202,3 +201,51 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
         default_website.channel_id = livechat_channel.id
         self.env.ref("website.default_website").channel_id = livechat_channel.id
         self.start_tour("/contactus", "website_livechat.chatbot_trigger_selection")
+
+    def test_chatbot_removed_after_forward_to_operator(self):
+        chatbot_fw_script = self.env["chatbot.script"].create({"title": "Forward Bot"})
+        question_step, _ = tuple(
+            self.env["chatbot.script.step"].create(
+                [
+                    {
+                        "chatbot_script_id": chatbot_fw_script.id,
+                        "message": "Hello, what can I do for you?",
+                        "step_type": "question_selection",
+                    },
+                    {
+                        "chatbot_script_id": chatbot_fw_script.id,
+                        "message": "I'll forward you to an operator.",
+                        "step_type": "forward_operator",
+                    },
+                ]
+            )
+        )
+        self.env["chatbot.script.answer"].create(
+            {
+                "name": "Forward to operator",
+                "script_step_id": question_step.id,
+            }
+        )
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Forward to operator channel",
+                "rule_ids": [
+                    Command.create(
+                        {
+                            "regex_url": "/",
+                            "chatbot_script_id": chatbot_fw_script.id,
+                        }
+                    )
+                ],
+                "user_ids": [self.operator.id],
+            }
+        )
+        default_website = self.env.ref("website.default_website")
+        default_website.channel_id = livechat_channel.id
+        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.start_tour("/", "website_livechat.chatbot_forward")
+        channel = self.env["discuss.channel"].search(
+            [("livechat_channel_id", "=", livechat_channel.id)]
+        )
+        self.assertEqual(channel.livechat_operator_id, self.operator.partner_id)
+        self.assertNotIn(chatbot_fw_script.operator_partner_id, channel.channel_member_ids.partner_id)

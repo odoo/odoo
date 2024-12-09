@@ -54,9 +54,10 @@ class DiscussChannel(models.Model):
                     and m.mail_message_id.author_id == chatbot_script.operator_partner_id
                 ), None) if channel.chatbot_current_step_id.sudo().step_type != 'forward_operator' else None
                 current_step = {
-                    'scriptStep': current_step_sudo.id,
+                    "scriptStep": current_step_sudo.id,
                     "message": Store.one_id(step_message),
-                    'operatorFound': current_step_sudo.step_type == 'forward_operator' and len(channel.channel_member_ids) > 2,
+                    "operatorFound": current_step_sudo.step_type == "forward_operator"
+                    and channel.livechat_operator_id != chatbot_script.operator_partner_id,
                 }
                 channel_info["chatbot"] = {
                     'script': chatbot_script.id,

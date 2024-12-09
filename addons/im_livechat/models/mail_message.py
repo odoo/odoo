@@ -47,7 +47,7 @@ class MailMessage(models.Model):
                         "message": Store.one(message, only_id=True),
                         "scriptStep": Store.one(step, only_id=True),
                         "operatorFound": step.step_type == "forward_operator"
-                        and len(channel.channel_member_ids) > 2,
+                        and channel.livechat_operator_id != chatbot
                     }
                     if answer := chatbot_message.user_script_answer_id:
                         step_data["selectedAnswer"] = Store.one(answer, only_id=True)
