@@ -1161,15 +1161,17 @@ const Wysiwyg = Widget.extend({
                 }
                 this.linkTools.noFocusUrl = options.noFocusUrl;
                 const _onClick = ev => {
+                    const selection = this.odooEditor.document.getSelection();
+                    const isFocusOnInput = closestElement(selection.anchorNode, '.o_url_input');
                     if (
                         !ev.target.closest('#create-link') &&
-                        (!ev.target.closest('.oe-toolbar') || !ev.target.closest('we-customizeblock-option')) &&
+                        (!ev.target.closest('.oe-toolbar') || (!ev.target.closest('we-customizeblock-option') && isFocusOnInput)) &&
                         !ev.target.closest('.ui-autocomplete') &&
                         (!this.linkTools || ![ev.target, ...wysiwygUtils.ancestors(ev.target)].includes(this.linkTools.$link[0]))
                     ) {
                         // Destroy the link tools on click anywhere outside the
                         // toolbar if the target is the orgiginal target not in the original target.
-                        this.destroyLinkTools();
+                        this.destroyLinkTools(ev);
                         this.odooEditor.document.removeEventListener('click', _onClick, true);
                         document.removeEventListener('click', _onClick, true);
                     }
@@ -1257,7 +1259,7 @@ const Wysiwyg = Widget.extend({
     /**
      * Destroy the Link tools/dialog and restore the selection.
      */
-    destroyLinkTools() {
+    destroyLinkTools(ev) {
         if (this.linkTools) {
             const selection = this.odooEditor.document.getSelection();
             const link = this.linkTools.$link[0];
@@ -1281,12 +1283,12 @@ const Wysiwyg = Widget.extend({
                     const commonBlock = selection.rangeCount && closestBlock(selection.getRangeAt(0).commonAncestorContainer);
                     [anchorNode, focusNode] = commonBlock && link.contains(commonBlock) ? [commonBlock, commonBlock] : [link, link];
                 }
-                if (!focusOffset) {
+                if (!focusOffset && focusNode) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
                 }
             }
             this.linkTools.destroy();
-            if (anchorNode) {
+            if (anchorNode && !(ev && this.$editable[0].contains(ev.target))) {
                 setSelection(anchorNode, anchorOffset, focusNode, focusOffset, false);
             }
             this.linkTools = undefined;
