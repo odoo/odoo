@@ -1,9 +1,9 @@
 import json
 import logging
 import pprint
+import requests
 import time
 import urllib.parse
-import urllib3
 import websocket
 
 from threading import Thread
@@ -24,18 +24,9 @@ def send_to_controller(device_type, params):
     params['iot_mac'] = helpers.get_mac_address()
     server_url = helpers.get_odoo_server_url() + routes[device_type]
     try:
-        urllib3.disable_warnings()
-        http = urllib3.PoolManager(cert_reqs='CERT_NONE')
-        http.request(
-            'POST',
-            server_url,
-            body=json.dumps({'params': params}).encode('utf8'),
-            headers={
-                'Content-type': 'application/json',
-                'Accept': 'text/plain',
-            },
-        )
-    except Exception:
+        response = requests.post(server_url, json={'params': params}, timeout=5)
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
         _logger.exception('Could not reach confirmation status URL: %s', server_url)
 
 

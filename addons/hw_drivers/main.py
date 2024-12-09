@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from traceback import format_exc
-import json
 import platform
 import logging
+import requests
 from threading import Thread
 import time
-import urllib3
 
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
@@ -62,32 +60,22 @@ class Manager(Thread):
                 }
             devices_list_to_send = {
                 key: value for key, value in devices_list.items() if key != 'distant_display'
-            }
-            data = {
-                'params': {
-                    'iot_box': iot_box,
-                    'devices': devices_list_to_send,
-                }  # Don't send distant_display to the db
-            }
-            # disable certifiacte verification
-            urllib3.disable_warnings()
-            http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+            }  # Don't send distant_display to the db
             try:
-                resp = http.request(
-                    'POST',
+                response = requests.post(
                     self.server_url + "/iot/setup",
-                    body=json.dumps(data).encode('utf8'),
-                    headers={
-                        'Content-type': 'application/json',
-                        'Accept': 'text/plain',
-                    },
+                    json={'params': {'iot_box': iot_box, 'devices': devices_list_to_send}},
+                    timeout=5,
                 )
+                response.raise_for_status()
+                data = response.json()
+
                 if iot_client:
-                    iot_client.iot_channel = json.loads(resp.data).get('result', '')
-            except json.decoder.JSONDecodeError:
-                _logger.exception('Could not load JSON data: Received data is not in valid JSON format\ncontent:\n%s', resp.data)
-            except Exception:
+                    iot_client.iot_channel = data.get('result', '')
+            except requests.exceptions.RequestException:
                 _logger.exception('Could not reach configured server to send all IoT devices')
+            except ValueError:
+                _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
         else:
             _logger.info('Ignoring sending the devices to the database: no associated database')
 

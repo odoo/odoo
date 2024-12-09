@@ -10,10 +10,10 @@ import os
 from pathlib import Path
 from queue import Queue, Empty
 import re
+import requests
 import subprocess
 from threading import Lock
 import time
-import urllib3
 from usb import util
 
 from odoo import http
@@ -86,12 +86,13 @@ class KeyboardUSBDriver(Driver):
     def send_layouts_list(cls):
         server = helpers.get_odoo_server_url()
         if server:
-            urllib3.disable_warnings()
-            pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
             server = server + '/iot/keyboard_layouts'
             try:
-                pm.request('POST', server, fields={'available_layouts': json.dumps(cls.available_layouts)})
-            except Exception:
+                response = requests.post(
+                    server, data={'available_layouts': json.dumps(cls.available_layouts)}, timeout=5
+                )
+                response.raise_for_status()
+            except requests.exceptions.RequestException:
                 _logger.exception('Could not reach configured server to send available layouts')
 
     @classmethod
