@@ -198,8 +198,12 @@ export class BaseHeader extends Interaction {
     //--------------------------------------------------------------
 
     getHeaderHeight() {
+        if (uiUtils.getSize() < SIZES.LG) {
+            // Ensure we don't consider the hiddenOnScroll element on mobile
+            return this.el.getBoundingClientRect().height;
+        }
         if (this.hideEl?.classList.contains("hidden")) {
-            // Ensure the header height stays the same
+            // Ensure the header height stays the same on desktop
             return this.hideElHeight + this.el.getBoundingClientRect().height;
         }
         this.hideElHeight = this.hideEl?.getBoundingClientRect().height || this.hideElHeight;
