@@ -146,4 +146,11 @@ body {
         scrollbar-color: $-foreground-color $-background-color;
         scrollbar-width: thin;
     }
+
+    
+    @include media-breakpoint-down(md) {
+        &:has(.modal-open) {
+            overflow: hidden;
+        }
+    }
 }
