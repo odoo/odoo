@@ -13,6 +13,7 @@ class ResConfigSettings(models.TransientModel):
     pos_module_pos_restaurant_appointment = fields.Boolean(related="pos_config_id.module_pos_restaurant_appointment", readonly=False)
     pos_takeaway = fields.Boolean(related="pos_config_id.takeaway", readonly=False)
     pos_takeaway_fp_id = fields.Many2one(related="pos_config_id.takeaway_fp_id", readonly=False)
+    pos_default_screen = fields.Selection(related="pos_config_id.default_screen", readonly=False)
 
     @api.depends('pos_module_pos_restaurant', 'pos_config_id')
     def _compute_pos_module_pos_restaurant(self):

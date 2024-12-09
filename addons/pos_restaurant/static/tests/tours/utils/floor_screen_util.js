@@ -1,6 +1,5 @@
 import { queryOne } from "@odoo/hoot-dom";
-import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
-import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
     let trigger = `.floor-map .table${withClass}`;
@@ -55,15 +54,23 @@ export function clickSaveEditButton() {
         },
     ];
 }
-export function goTo(name) {
+export function clickTableSelectorButton() {
     return [
         {
-            content: `click on Go To button`,
-            trigger: `.navbar-menu .btn:contains("Table")`,
+            content: "click on table selector button",
+            trigger: ".floor-screen .right-buttons button.btn-secondary:contains('#')",
             run: "click",
         },
-        ...NumberPopup.enterValue(name),
-        Dialog.confirm(),
+    ];
+}
+export function goTo(name) {
+    return [
+        ...clickTableSelectorButton(),
+        ...Numpad.enterValue(name),
+        {
+            trigger: ".floor-screen .right-buttons .jump-button",
+            run: "click",
+        },
     ];
 }
 export function selectedFloorIs(name) {
@@ -132,6 +139,9 @@ export function isChildTable(child) {
         content: `Verify that table ${child} is a child table`,
         trigger: table({ name: child }).trigger + ` .info.opacity-25`,
     };
+}
+export function clickNewOrder() {
+    return { trigger: ".left-buttons .new-order", run: "click" };
 }
 
 import { TourHelpers } from "@web_tour/tour_service/tour_helpers";

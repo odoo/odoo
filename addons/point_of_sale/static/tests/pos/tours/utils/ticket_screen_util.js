@@ -91,7 +91,7 @@ export function search(field, searchWord) {
 export function settleTips() {
     return [
         {
-            trigger: ".ticket-screen .buttons .settle-tips",
+            trigger: ".ticket-screen .controls .settle-tips",
             run: "click",
         },
         isSyncStatusConnected(),
@@ -119,7 +119,7 @@ export function checkStatus(orderName, status) {
     return [
         {
             isActive: ["desktop"],
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(7):contains(${status})`,
+            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(6):contains(${status})`,
         },
         {
             isActive: ["mobile"],
@@ -144,13 +144,6 @@ export function contains(string) {
     return [
         {
             trigger: `.ticket-screen .orders:contains("${string}")`,
-        },
-    ];
-}
-export function noNewTicketButton() {
-    return [
-        {
-            trigger: ".ticket-screen .controls .buttons:nth-child(1):has(.discard)",
         },
     ];
 }

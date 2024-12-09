@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Dialog.confirm("Open Register"),
 
             // Create a floating order. The idea is to have one of the draft orders be a floating order during the tour.
-            Chrome.createFloatingOrder(),
+            FloorScreen.clickNewOrder(),
 
             // Dine in / Takeaway can be toggled.
             ProductScreen.clickControlButton("Switch to Takeaway"),
@@ -70,14 +70,12 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.setTab("Test"),
             Chrome.clickPlanButton(),
-            // Check if there is no active Order
-            Chrome.activeTableOrOrderIs("Table"),
 
             // Create first order
             FloorScreen.clickTable("105"),
-            ProductScreen.orderBtnIsPresent(),
-            Chrome.isTabActive("105"),
+            Chrome.isTabActive("T 105"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", run: "dblclick" })),
             ProductScreen.clickDisplayedProduct("Water", true),
@@ -90,6 +88,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
+            FloorScreen.clickTable("105"),
             ProductScreen.orderlinesHaveNoChange(),
             checkOrderChanges([]),
             ProductScreen.totalAmountIs("4.40"),
@@ -113,13 +112,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             ReceiptScreen.clickNextOrder(),
-            // Check if there ids no active Order
-            Chrome.activeTableOrOrderIs("Table"),
 
             // order on another table with a product variant
             FloorScreen.orderCountSyncedInTableIs("105", "1"),
             FloorScreen.clickTable("104"),
-            ProductScreen.orderBtnIsPresent(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", false),
             {
                 ...Dialog.confirm(),
@@ -133,6 +129,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
+            FloorScreen.clickTable("104"),
             ProductScreen.orderlinesHaveNoChange(),
             checkOrderChanges([]),
             ProductScreen.totalAmountIs("5.87"),
@@ -157,10 +154,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             FloorScreen.orderCountSyncedInTableIs("105", "1"),
 
             // Delete the first order then go back to floor
-            Chrome.clickMenuOption("Orders"),
+            Chrome.clickOrders(),
             // The order ref ends with -00002 because it is actually the 2nd order made in the session.
             // The first order made in the session is a floating order.
-            TicketScreen.deleteOrder("-00002"),
+            TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
             {
                 ...Dialog.confirm(),
@@ -168,7 +165,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
             Chrome.isSyncStatusConnected(),
-            TicketScreen.selectOrder("-00005"),
+            TicketScreen.selectOrder("005"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
@@ -231,6 +228,7 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
             ProductScreen.clickOrderButton(),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -309,6 +307,7 @@ registry.category("web_tour.tours").add("OrderChange", {
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
