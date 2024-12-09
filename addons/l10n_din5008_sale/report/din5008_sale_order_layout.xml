@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_din5008_saleorder" inherit_id="l10n_din5008.external_layout_din5008">
+            <xpath expr="//div[@id='din5008_report_main_address']" position="before">
+                <t t-if="doc and doc._name == 'sale.order' and doc.partner_id">
+                    <t t-set="address">
+                        <t t-if="doc.env.context.get('proforma')">
+                            <address class="mb-0" t-field="doc.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                            <t t-set="main_addr_id" t-value="doc.partner_invoice_id"/>
+                            <div t-if="doc.partner_id.commercial_partner_id == doc.partner_invoice_id and main_addr_id.vat" id="partner_vat_address_same_as_shipping">
+                                <t t-if="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                <t t-else="">Tax ID</t>: <span t-field="main_addr_id.vat"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <address class="mb-0" t-field="doc.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                            <t t-set="main_addr_id" t-value="doc.partner_id.commercial_partner_id"/>
+                            <div t-if="main_addr_id.vat" id="partner_vat_address_same_as_shipping">
+                                <t t-if="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                <t t-else="">Tax ID</t>: <span t-field="main_addr_id.vat"/>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

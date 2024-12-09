@@ -25,6 +25,7 @@ import {
     useChildSubEnv,
     xml,
     reactive,
+    status,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
@@ -880,6 +881,19 @@ export function makeActionManager(env, router = _router) {
                     Promise.reject(error);
                     return;
                 }
+                if (!this.isMounted && status(this) === "mounted") {
+                    // The error occured during an onMounted hook of one of the components.
+                    env.bus.trigger("ACTION_MANAGER:UPDATE", {
+                        id: ++id,
+                        Component: BlankComponent,
+                        componentProps: {
+                            onMounted: () => {},
+                            withControlPanel: action.type === "ir.actions.act_window",
+                        },
+                    });
+                    Promise.reject(error);
+                    return;
+                }
                 // forward the error to the _updateUI caller then restore the action container
                 // to an unbroken state
                 reject(error);
@@ -1487,6 +1501,7 @@ export function makeActionManager(env, router = _router) {
                 ];
                 const context = {
                     ...action.context,
+                    ...(embeddedAction.context ? makeContext([embeddedAction.context]) : {}),
                     active_id: params.resId,
                     active_model: params.resModel,
                     current_embedded_action_id: embeddedActionId,

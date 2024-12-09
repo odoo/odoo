@@ -202,6 +202,15 @@ test('pivot view without "string" attribute', async () => {
     expect(model.metaData.title.toString()).toBe(_t("Untitled"));
 });
 
+test('pivot view with "class" attribute', async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `<pivot class="foobar-class"/>`,
+    });
+    expect(".o_pivot_view").toHaveClass("foobar-class");
+});
+
 test("simple pivot rendering", async () => {
     expect.assertions(4);
 
