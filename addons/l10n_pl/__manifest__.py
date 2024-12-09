@@ -25,7 +25,6 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
     ],
     'auto_install': ['account'],
     'data': [
-        'security/ir.model.access.csv',
         'data/l10n_pl.l10n_pl_tax_office.csv',
         'data/res.country.state.csv',
         'data/account.account.tag.csv',
@@ -34,6 +33,7 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

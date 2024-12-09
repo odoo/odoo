@@ -1,0 +1,19 @@
+id,model_id,group_id/id,operation,domain,name
+access_event_track_group_public,event.track,base.group_public,r,"[('website_published', '=', True)]",Event Tracks: public/portal: published
+access_event_track_group_portal,event.track,base.group_portal,r,"[('website_published', '=', True)]",Event Tracks: public/portal: published
+access_event_track_group_user,event.track,base.group_user,r,,event.track
+access_event_track_group_event_user,event.track,event.group_event_user,rwc,,event.track.user
+access_event_track_group_event_manager,event.track,event.group_event_manager,rwcd,,event.track.manager
+access_event_track_tag_group_public,event.track.tag,base.group_public,r,"['&', ('color', '!=', False), ('color', '!=', 0)]",Event Track Tag: public/portal: color = published
+access_event_track_tag_group_portal,event.track.tag,base.group_portal,r,"['&', ('color', '!=', False), ('color', '!=', 0)]",Event Track Tag: public/portal: color = published
+access_event_track_tag_group_user,event.track.tag,base.group_user,r,,event.track.tag
+access_event_track_tag_group_event_user,event.track.tag,event.group_event_user,rwc,,event.track.tag.user
+access_event_track_tag_group_event_manager,event.track.tag,event.group_event_manager,rwcd,,event.track.tag.manager
+access_event_track_location_group_event_user,event.track.location,event.group_event_user,rwc,,event.track.location.user
+access_event_track_location_group_event_manager,event.track.location,event.group_event_manager,rwcd,,event.track.location.manager
+access_event_track_stage_group_public,event.track.stage,base.group_public,r,,event.track.stage
+access_event_track_stage_group_portal,event.track.stage,base.group_portal,r,,event.track.stage
+access_event_track_stage_group_user,event.track.stage,base.group_user,r,,event.track.stage
+access_event_track_stage_group_event_manager,event.track.stage,event.group_event_manager,rwcd,,event.track.stage.manager
+access_event_track_visitor_group_event_manager,event.track.visitor,event.group_event_manager,rwcd,,event.track.visitor.manager
+access_event_track_tag_category_group_event_user,event.track.tag.category,event.group_event_user,rwcd,,event.track.tag.category.user

@@ -11,7 +11,6 @@ Create booths for your favorite event.
     """,
     'depends': ['event'],
     'data': [
-        'security/ir.model.access.csv',
         'views/event_booth_category_views.xml',
         'views/event_type_booth_views.xml',
         'views/event_booth_views.xml',
@@ -21,6 +20,7 @@ Create booths for your favorite event.
         'data/event_booth_category_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_templates.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/event_booth_demo.xml',
