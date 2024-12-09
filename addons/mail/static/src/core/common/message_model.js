@@ -80,10 +80,7 @@ export class Message extends Record {
     is_note;
     /** @type {boolean} */
     is_transient;
-    link_preview_ids = Record.many("mail.link.preview", {
-        inverse: "message_id",
-        onDelete: (r) => r.delete(),
-    });
+    message_link_preview_ids = Record.many("mail.message.link.preview", { inverse: "message_id" });
     /** @type {number[]} */
     parentMessage = Record.one("mail.message");
     /**
@@ -313,8 +310,8 @@ export class Message extends Record {
             this.body.startsWith("<a") &&
             this.body.endsWith("/a>") &&
             this.body.match(/<\/a>/im)?.length === 1 &&
-            this.link_preview_ids.length === 1 &&
-            this.link_preview_ids[0].isImage
+            this.message_link_preview_ids.length === 1 &&
+            this.message_link_preview_ids[0].link_preview_id.isImage
         );
     }
 
@@ -457,6 +454,12 @@ export class Message extends Record {
             _t('You are no longer following "%(thread_name)s".', { thread_name: thread.name }),
             { type: "success" }
         );
+    }
+
+    hideAllLinkPreviews() {
+        rpc("/mail/link_preview/hide", {
+            message_link_preview_ids: this.message_link_preview_ids.map((lpm) => lpm.id),
+        });
     }
 }
 
