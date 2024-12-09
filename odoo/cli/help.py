@@ -1,7 +1,10 @@
 import textwrap
 
-from .command import PROG_NAME, Command, commands, load_addons_commands, load_internal_commands
+import odoo.addons
+import odoo.modules
 import odoo.release
+
+from .command import PROG_NAME, Command, commands, load_addons_commands, load_internal_commands
 
 
 class Help(Command):
@@ -21,6 +24,7 @@ class Help(Command):
 
     def run(self, args):
         load_internal_commands()
+        odoo.modules.initialize_sys_path()
         load_addons_commands()
 
         padding = max(len(cmd_name) for cmd_name in commands) + 2
