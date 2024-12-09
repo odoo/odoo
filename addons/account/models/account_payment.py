@@ -427,6 +427,15 @@ class AccountPayment(models.Model):
     def _get_method_codes_needing_bank_account(self):
         return []
 
+    def action_open_business_doc(self):
+        return {
+            'name': _("Payment"),
+            'type': 'ir.actions.act_window',
+            'views': [(False, 'form')],
+            'res_model': 'account.payment',
+            'res_id': self.id,
+        }
+
     @api.depends('payment_method_code')
     def _compute_show_require_partner_bank(self):
         """ Computes if the destination bank account must be displayed in the payment form view. By default, it
