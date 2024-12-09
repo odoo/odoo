@@ -27,13 +27,12 @@
         'views/res_partner_views.xml',
 
         # Security.
-        'security/ir.model.access.csv',
-        'security/payment_security.xml',
 
         # Wizard views.
         'wizards/payment_capture_wizard_views.xml',
         'wizards/payment_link_wizard_views.xml',
         'wizards/payment_onboarding_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_frontend': [

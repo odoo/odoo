@@ -15,7 +15,6 @@
     ],
     'data': [
         'data/utm.xml',
-        'security/ir.model.access.csv',
         'report/mailing_trace_report_views.xml',
         'views/mailing_list_views.xml',
         'views/mailing_contact_views.xml',
@@ -26,6 +25,7 @@
         'views/mailing_sms_menus.xml',
         'wizard/sms_composer_views.xml',
         'wizard/mailing_sms_test_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/mailing_list_contact.xml',

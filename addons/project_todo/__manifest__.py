@@ -12,12 +12,12 @@
     ],
     'auto_install': True,
     'data': [
-        'security/ir.model.access.csv',
         'security/project_todo_security.xml',
         'data/todo_template.xml',
         'views/project_task_views.xml',
         'views/project_todo_menus.xml',
         'wizard/mail_activity_todo_create.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'application': True,

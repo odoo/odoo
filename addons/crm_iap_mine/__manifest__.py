@@ -16,12 +16,12 @@
         'data/crm.iap.lead.seniority.csv',
         'data/mail_template_data.xml',
         'data/ir_sequence_data.xml',
-        'security/ir.model.access.csv',
         'views/crm_lead_views.xml',
         'views/crm_iap_lead_mining_request_views.xml',
         'views/res_config_settings_views.xml',
         'views/mail_templates.xml',
         'views/crm_menus.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'assets': {

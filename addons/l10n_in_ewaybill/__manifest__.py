@@ -20,8 +20,6 @@ Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Co
 Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.
     """,
     'data': [
-        'security/ir.model.access.csv',
-        'security/ir_rules.xml',
         'data/ewaybill_type_data.xml',
         'views/l10n_in_ewaybill_views.xml',
         'views/account_move_views.xml',
@@ -30,6 +28,7 @@ Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-c
         'wizard/l10n_in_ewaybill_cancel_views.xml',
         'report/ewaybill_report_views.xml',
         'report/ewaybill_report.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
