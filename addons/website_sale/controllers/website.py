@@ -14,7 +14,7 @@ class WebsiteSaleForm(WebsiteForm):
 
     @route('/website/form/shop.sale.order', type='http', auth="public", methods=['POST'], website=True)
     def website_form_saleorder(self, **kwargs):
-        model_record = request.env.ref('sale.model_sale_order')
+        model_record = request.env.ref('sale.model_sale_order').sudo()
         try:
             data = self.extract_data(model_record, kwargs)
         except ValidationError as e:

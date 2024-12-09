@@ -311,9 +311,9 @@ class WebsiteHrRecruitment(WebsiteForm):
             return False
         return super()._should_log_authenticate_message(record)
 
-    def extract_data(self, model, values):
+    def extract_data(self, model_sudo, values):
         candidate = request.env['hr.candidate']
-        if model.model == 'hr.applicant':
+        if model_sudo.model == 'hr.applicant':
             # pop the fields since there are only useful to generate a candidate record
             partner_name = values.pop('partner_name')
             partner_phone = values.pop('partner_phone', None)
@@ -341,7 +341,7 @@ class WebsiteHrRecruitment(WebsiteForm):
                     'partner_phone': partner_phone,
                     'company_id': company_id,
                 })
-        data = super().extract_data(model, values)
+        data = super().extract_data(model_sudo, values)
         if candidate:
             data['record']['candidate_id'] = candidate.id
         return data
