@@ -18,7 +18,7 @@ class MailTemplate(models.Model):
     "Templates for sending email"
     _inherit = ['mail.render.mixin', 'template.reset.mixin']
     _description = 'Email Templates'
-    _order = 'user_id,name,id'
+    _order = 'user_id, name, id'
 
     _unrestricted_rendering = True
 
