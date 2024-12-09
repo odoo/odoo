@@ -608,6 +608,63 @@ export class SelfOrder extends Reactive {
         }
     }
 
+<<<<<<< saas-17.4
+||||||| 74373629bc5bac5a8aa9a061020a6588f79ff766
+    updateCategoryList() {
+        let now = luxon.DateTime.now();
+        now = now.hour + now.minute / 60;
+        const availableCategories = this.pos_category
+            .sort((a, b) => a.sequence - b.sequence)
+            .filter((c) => this.productsGroupedByCategory[c.id])
+            .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id));
+        this.categoryList = new Set(availableCategories);
+
+        this.availableCategoryListIds = availableCategories
+            .filter((c) => {
+                return now > c.hour_after && now < c.hour_until;
+            })
+            .map((c) => c.id);
+        this.currentCategory = this.pos_category.length > 0 ? [...this.categoryList][0] : null;
+    }
+
+    isCategoryAvailable(categoryId) {
+        return this.availableCategoryListIds.includes(categoryId);
+    }
+
+=======
+    updateCategoryList() {
+        let now = luxon.DateTime.now();
+        now = now.hour + now.minute / 60;
+        const availableCategories = this.pos_category
+            .sort((a, b) => a.sequence - b.sequence)
+            .filter((c) => this.productsGroupedByCategory[c.id])
+            .sort((a, b) => categorySorter(a, b, this.config.iface_start_categ_id));
+        this.categoryList = new Set(availableCategories);
+
+        this.availableCategoryListIds = availableCategories
+            .filter((c) => {
+                const hourStart = c.hour_after;
+                const hourUntil = c.hour_until;
+                if (hourStart === hourUntil || (hourStart === 0 && hourUntil === 24)) {
+                    // if equal, it means open the whole day
+                    return true;
+                } else if (hourStart < hourUntil) {
+                    // in this case, if current time is in between, then shop is open
+                    return now >= hourStart && now <= hourUntil;
+                } else {
+                    // in this case, if current time is in between, then shop is closed
+                    return !(now >= hourStart && now <= hourUntil);
+                }
+            })
+            .map((c) => c.id);
+        this.currentCategory = this.pos_category.length > 0 ? [...this.categoryList][0] : null;
+    }
+
+    isCategoryAvailable(categoryId) {
+        return this.availableCategoryListIds.includes(categoryId);
+    }
+
+>>>>>>> 24f845e517b759aacb9683228f3fc631d810387b
     cancelOrder() {
         const lineToDelete = [];
         for (const line of this.currentOrder.lines) {
