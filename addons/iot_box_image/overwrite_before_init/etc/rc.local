@@ -11,15 +11,6 @@
 #
 # By default this script does nothing.
 
-# Print the IP address
-_IP=$(hostname -I) || true
-if [ "$_IP" ]; then
-  printf "My IP address is %s\n" "$_IP"
-fi
-
-mkdir -p /var/run/odoo
-chown pi:pi /var/run/odoo
-
-/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh &
+/etc/init_image.sh 2>&1 | tee /home/pi/init_image.log
 
 exit 0

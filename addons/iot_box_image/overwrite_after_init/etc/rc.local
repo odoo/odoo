@@ -11,6 +11,15 @@
 #
 # By default this script does nothing.
 
-/etc/init_posbox_image.sh 2>&1 | tee /home/pi/init_posbox_image.log
+# Print the IP address
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+
+mkdir -p /var/run/odoo
+chown pi:pi /var/run/odoo
+
+/home/pi/odoo/addons/iot_box_image/configuration/wireless_ap.sh &
 
 exit 0
