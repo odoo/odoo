@@ -78,11 +78,17 @@ function assertPageCanonicalUrlIs(url) {
 function checkIsTemplate(isTemplate, pageTitle = undefined) {
     return [
         ...openCreatePageDialog,
-        ...waitForSelector('a[data-id="custom"]'),
+        {
+            trigger: ".modal li:first a:not(:contains(loading...))",
+        },
         {
             content: "Go to custom section",
-            trigger: 'a[data-id="custom"]',
+            trigger: ".modal li:last a",
             run: "click",
+        },
+        {
+            content: "check custom is active",
+            trigger: ".modal li:last a[data-id=custom].active",
         },
         ...(isTemplate
             ? [
@@ -356,7 +362,7 @@ registerWebsitePreviewTour(
         ...openCreatePageDialog,
         {
             content: "Use blank template",
-            trigger: ".o_page_template .o_button_area",
+            trigger: ".o_page_template .o_button_area:not(:visible)",
             run: "click",
         },
         {
