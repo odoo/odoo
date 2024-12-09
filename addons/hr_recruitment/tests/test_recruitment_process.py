@@ -47,7 +47,7 @@ class TestRecruitmentProcess(TestHrCommon):
             ('name', '=', 'resume.pdf'),
             ('res_model', '=', self.env['hr.applicant']._name),
             ('res_id', '=', applicant.id)])
-        self.assertEqual(applicant.partner_name, 'Application for the post of Jr.application Programmer.', 'Applicant name does not match.')
+        self.assertEqual(applicant.partner_name, 'Mr. Richard Anderson', 'Applicant name does not match.')
         self.assertEqual(applicant.stage_id, self.env.ref('hr_recruitment.stage_job0'),
             "Stage should be 'New' and is '%s'." % (applicant.stage_id.name))
         self.assertTrue(resume_ids, 'Resume is not attached.')
