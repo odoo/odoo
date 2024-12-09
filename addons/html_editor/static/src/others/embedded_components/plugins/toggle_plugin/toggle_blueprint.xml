@@ -1,0 +1,13 @@
+<templates>
+    <t t-name="html_editor.ToggleBlueprint">
+        <div data-embedded="toggle"
+            data-oe-protected="true" contenteditable="false" t-att-data-embedded-props="embeddedProps" class="mb-2">
+            <div data-embedded-editable="title">
+                <p><t t-if="baseTitle" t-out="baseTitle"/><br/></p>
+            </div>
+            <div data-embedded-editable="content">
+                <p><br/></p>
+            </div>
+        </div>
+    </t>
+</templates>
