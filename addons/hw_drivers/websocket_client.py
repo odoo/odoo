@@ -14,15 +14,20 @@ from odoo.addons.hw_drivers.tools import helpers
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
 
-def send_to_controller(device_type, params):
-    """
-    Confirm the operation's completion by sending a response back to the Odoo server
+
+@helpers.require_db
+def send_to_controller(device_type, params, server_url=None):
+    """Confirm the operation's completion by sending a response back to the Odoo server
+
+    :param device_type: the type of device that the operation was performed on
+    :param params: the parameters to send back to the server
+    :param server_url: URL of the Odoo server (provided by decorator).
     """
     routes = {
         "printer": "/iot/printer/status",
     }
     params['iot_mac'] = helpers.get_mac_address()
-    server_url = helpers.get_odoo_server_url() + routes[device_type]
+    server_url += routes[device_type]
     try:
         response = requests.post(server_url, json={'params': params}, timeout=5)
         response.raise_for_status()
@@ -64,22 +69,29 @@ def on_close(ws, close_status_code, close_msg):
     _logger.debug("websocket closed with status: %s", close_status_code)
 
 
+@helpers.require_db
 class WebsocketClient(Thread):
-    iot_channel = ""
+    channel = ""
 
     def on_open(self, ws):
         """
             When the client is setup, this function send a message to subscribe to the iot websocket channel
         """
         ws.send(
-            json.dumps({'event_name': 'subscribe', 'data': {'channels': [self.iot_channel], 'last': 0, 'mac_address': helpers.get_mac_address()}})
+            json.dumps({'event_name': 'subscribe', 'data': {'channels': [self.channel], 'last': 0, 'mac_address': helpers.get_mac_address()}})
         )
 
-    def __init__(self, url):
-        url_parsed = urllib.parse.urlsplit(url)
+    def __init__(self, channel, server_url=None):
+        """This class will not be instantiated if no db is connected.
+
+        :param str channel: the channel to subscribe to
+        :param str server_url: URL of the Odoo server (provided by decorator).
+        """
+        self.channel = channel
+        url_parsed = urllib.parse.urlsplit(server_url)
         scheme = url_parsed.scheme.replace("http", "ws", 1)
         self.url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
-        Thread.__init__(self)
+        super().__init__()
 
     def run(self):
         self.ws = websocket.WebSocketApp(self.url,
