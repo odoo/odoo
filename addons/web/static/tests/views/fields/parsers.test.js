@@ -51,6 +51,7 @@ test("parseFloatTime", () => {
     expect(parseFloatTime("1:")).toBe(1);
     expect(parseFloatTime(":12")).toBe(0.2);
 
+    expect(() => parseFloatTime(":125")).toThrow();
     expect(() => parseFloatTime("a:1")).toThrow();
     expect(() => parseFloatTime("1:a")).toThrow();
     expect(() => parseFloatTime("1:1:")).toThrow();
