@@ -223,7 +223,7 @@ class Partner(models.Model):
                     field
                     for field in fields
                     if field
-                    not in ["country", "display_name", "isAdmin", "notification_type", "user"]
+                    not in ["country", "display_name", "isAdmin", "notification_type", "signature", "user"]
                 ],
                 load=False,
             )[0]
@@ -248,6 +248,8 @@ class Partner(models.Model):
                     data["isAdmin"] = main_user._is_admin()
                 if "notification_type" in fields:
                     data["notification_preference"] = main_user.notification_type
+                if "signature" in fields:
+                    data["signature"] = main_user.signature
             store.add(partner, data)
 
     @api.readonly
