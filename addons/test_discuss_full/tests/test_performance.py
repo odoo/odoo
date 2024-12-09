@@ -407,6 +407,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "is_discuss_sidebar_category_channel_open": True,
                     "is_discuss_sidebar_category_chat_open": True,
                     "livechat_lang_ids": [],
+                    "livechat_tag_ids": [],
                     "livechat_username": False,
                     "push_to_talk_key": False,
                     "use_push_to_talk": False,
