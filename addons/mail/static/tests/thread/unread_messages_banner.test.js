@@ -22,6 +22,7 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -65,7 +66,50 @@ test("mark thread as read from unread messages banner", async () => {
         text: "Mark as Read",
         parent: ["span", { text: "30 new messagesMark as Read" }],
     });
-    await contains(".o-mail-Thread-jumpToUnread", { count: 0 });
+});
+
+test("reset new message separator from unread messages banner", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    let lastMessageId;
+    for (let i = 0; i < 30; ++i) {
+        lastMessageId = pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    const [selfMember] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    const env = await start();
+    // Wait for the mark as read notification to update the local state.
+    const markAsReadNotification = [
+        env,
+        "mail.record/insert",
+        {
+            "discuss.channel.member": [
+                {
+                    id: selfMember,
+                    thread: { id: channelId, model: "discuss.channel" },
+                    persona: { id: serverState.partnerId, type: "partner" },
+                    seen_message_id: lastMessageId,
+                },
+            ],
+            "res.partner": [{ id: serverState.partnerId, name: "Mitchell Admin" }],
+        },
+    ];
+    await Promise.all([openDiscuss(channelId), waitNotifications(markAsReadNotification)]);
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
+        text: "message 0",
+    });
+    await click("span", {
+        text: "Mark as Read",
+        parent: ["span", { text: "30 new messagesMark as Read" }],
+    });
+    await contains("span", { text: "30 new messagesMark as Read", count: 0 });
 });
 
 test("scroll to unread notification", async () => {
