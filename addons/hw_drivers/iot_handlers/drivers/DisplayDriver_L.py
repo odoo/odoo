@@ -85,26 +85,24 @@ class DisplayDriver(Driver):
         browser_state = BrowserState.KIOSK if "/pos-self/" in self.url else BrowserState.FULLSCREEN
         self.browser.open_browser(self.url, browser_state)
 
-    def load_url(self):
-        url = None
-        if helpers.get_odoo_server_url():
-            # disable certifiacte verification
-            urllib3.disable_warnings()
-            http = urllib3.PoolManager(cert_reqs='CERT_NONE')
-            try:
-                response = http.request(
-                    'GET',
-                    "%s/iot/box/%s/display_url" % (helpers.get_odoo_server_url(), helpers.get_mac_address())
-                )
-                if response.status == 200:
-                    data = json.loads(response.data.decode('utf8'))
-                    url = data[self.device_identifier]
-            except json.decoder.JSONDecodeError:
-                url = response.data.decode('utf8')
-            except Exception:
-                pass
 
-        return url
+    @helpers.require_db
+    def load_url(self):
+        # disable certifiacte verification
+        urllib3.disable_warnings()
+        http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+        try:
+            response = http.request(
+                'GET',
+                "%s/iot/box/%s/display_url" % (helpers.get_odoo_server_url(), helpers.get_mac_address())
+            )
+            if response.status == 200:
+                data = json.loads(response.data.decode('utf8'))
+                return data[self.device_identifier]
+        except json.decoder.JSONDecodeError:
+            return response.data.decode('utf8')
+        except Exception:
+            pass
 
     def _action_update_url(self, data):
         if self.device_identifier != 'distant_display':

@@ -5,7 +5,7 @@ import configparser
 import contextlib
 import datetime
 from enum import Enum
-from functools import cache
+from functools import cache, wraps
 from importlib import util
 import io
 import json
@@ -80,6 +80,22 @@ elif platform.system() == 'Linux':
                 subprocess.run(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"], check=False)
                 subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=False)
 
+
+def require_db(function):
+    """Decorator to check if the IoT Box is connected to a server before
+    executing the function
+    """
+    fname = f"<function {function.__module__}.{function.__qualname__}>"
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+        if not get_odoo_server_url():
+            _logger.info('Ignoring the function %s without a connected database', fname)
+            return
+        return function(*args, **kwargs)
+    return wrapper
+
+
 def access_point():
     return get_ip() == '10.11.12.1'
 
@@ -136,6 +152,7 @@ def check_certificate():
         return {"status": CertificateStatus.OK, "message": message}
 
 
+@require_db
 def check_git_branch():
     """
     Check if the local branch is the same than the connected Odoo DB and
@@ -412,26 +429,24 @@ def delete_iot_handlers():
     except OSError:
         _logger.exception('Failed to delete old IoT handlers')
 
+
+@require_db
 def download_iot_handlers(auto=True):
-    """
-    Get the drivers from the configured Odoo server
-    """
-    server = get_odoo_server_url()
-    if server:
-        urllib3.disable_warnings()
-        pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
-        server = server + '/iot/get_handlers'
-        try:
-            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
-            if resp.data:
-                delete_iot_handlers()
-                with writable():
-                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
-                    path = path_file(str(Path().joinpath(*drivers_path)))
-                    zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                    zip_file.extractall(path)
-        except Exception:
-            _logger.exception('Could not reach configured server to download IoT handlers')
+    """Get the drivers from the configured Odoo server"""
+    urllib3.disable_warnings()
+    pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
+    server = get_odoo_server_url() + '/iot/get_handlers'
+    try:
+        resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
+        if resp.data:
+            delete_iot_handlers()
+            with writable():
+                drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
+                path = path_file(str(Path().joinpath(*drivers_path)))
+                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
+                zip_file.extractall(path)
+    except Exception:
+        _logger.exception('Could not reach configured server to download IoT handlers')
 
 def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
     return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
