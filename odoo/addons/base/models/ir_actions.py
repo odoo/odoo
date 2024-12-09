@@ -738,8 +738,8 @@ class IrServerObjectLines(models.Model):
 
     @api.constrains('col1', 'evaluation_type')
     def _raise_many2many_error(self):
-        if self.filtered(lambda line: line.col1.ttype == 'many2many' and line.evaluation_type == 'reference'):
-            raise ValidationError(_('many2many fields cannot be evaluated by reference'))
+        if self.filtered(lambda line: line.col1.ttype == 'many2many' and line.evaluation_type == 'value'):
+            raise ValidationError(_('many2many fields cannot be evaluated by value'))
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
@@ -753,6 +753,8 @@ class IrServerObjectLines(models.Model):
             expr = line.value
             if line.evaluation_type == 'equation':
                 expr = safe_eval(line.value, eval_context)
+            elif line.col1.ttype == 'many2many':
+                expr = [Command.link(int(line.value))]
             elif line.col1.ttype in ['many2one', 'integer']:
                 try:
                     expr = int(line.value)
