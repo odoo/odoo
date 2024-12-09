@@ -276,7 +276,8 @@ class TestDevice(TestHttpBase):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
         session['_trace_disable'] = True
         odoo.http.root.session_store.save(session)
-        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw')
+        res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
+        self.assertEqual(res.status_code, 200)
         devices, logs = self.get_devices_logs(self.user_admin)
         self.assertEqual(len(devices), 0)
         self.assertEqual(len(logs), 0)
