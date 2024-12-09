@@ -188,18 +188,24 @@ class PropertiesCase(TestPropertiesMixin):
             # missing 'type'
             self.message_1.attributes = [{'name': 'name', 'definition_changed': True}]
 
-    def test_properties_field_parameters_raised(self):
-        # check that the keys not valid for the given type are raised
-        with self.assertRaises(ValueError):
-            self.message_1.attributes = [{
-                'name': 'discussion_color_code',
-                'string': 'Color Code',
-                'type': 'char',
-                'default': 'blue',
-                'value': 'Test',
-                'definition_changed': True,
-                'selection': [['a', 'A']],  # selection key is not valid for char type
-            }]
+    def test_properties_field_parameters_cleanup(self):
+        # check that the keys not valid for the given type are removed
+        self.message_1.attributes = [{
+            'name': 'discussion_color_code',
+            'string': 'Color Code',
+            'type': 'char',
+            'default': 'blue',
+            'value': 'Test',
+            'definition_changed': True,
+            'selection': [['a', 'A']],  # selection key is not valid for char type
+        }]
+        values = self._get_sql_definition(self.message_1.discussion)
+        self.assertEqual(values, [{
+            'name': 'discussion_color_code',
+            'string': 'Color Code',
+            'type': 'char',
+            'default': 'blue',
+        }])
 
     def test_properties_field_injection(self):
         for c in '!#"\'- |+/\\':

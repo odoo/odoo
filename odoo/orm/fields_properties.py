@@ -212,7 +212,9 @@ class Properties(Field):
 
                 if type_ == 'many2one':
                     default = [default] if default else []
-                    property_value = [property_value] if property_value else []
+                    property_value = [property_value] if isinstance(property_value, int) else []
+                elif not is_list_of(property_value, int):
+                    property_value = []
 
                 ids_per_model[comodel].update(default)
                 ids_per_model[comodel].update(property_value)
@@ -466,18 +468,17 @@ class Properties(Field):
                 all_tags = {tag[0] for tag in property_definition.get('tags') or ()}
                 property_value = [tag for tag in property_value if tag in all_tags]
 
-            elif property_type == 'many2one' and property_value:
-                if not isinstance(property_value, int):
-                    raise ValueError(f'Wrong many2one value: {property_value!r}.')
-
-                if res_model not in env or property_value not in res_ids_per_model[res_model]:
+            elif property_type == 'many2one':
+                if not isinstance(property_value, int) \
+                        or res_model not in env \
+                        or property_value not in res_ids_per_model[res_model]:
                     property_value = False
 
-            elif property_type == 'many2many' and property_value:
+            elif property_type == 'many2many':
                 if not is_list_of(property_value, int):
-                    raise ValueError(f'Wrong many2many value: {property_value!r}.')
+                    property_value = []
 
-                if len(property_value) != len(set(property_value)):
+                elif len(property_value) != len(set(property_value)):
                     # remove duplicated value and preserve order
                     property_value = list(dict.fromkeys(property_value))
 
@@ -670,40 +671,34 @@ class PropertiesDefinition(Field):
                 continue
 
             # don't modify the value in cache
-            property_definition = dict(property_definition)
+            property_definition = copy.deepcopy(property_definition)
 
-            # check if the model still exists in the environment, the module of the
-            # model might have been uninstalled so the model might not exist anymore
-            property_model = property_definition.get('comodel')
-            if property_model and property_model not in record.env:
-                property_definition['comodel'] = property_model = False
+            type_ = property_definition.get('type')
+            
+            if type_ in ('many2one', 'many2many'):
+                # check if the model still exists in the environment, the module of the
+                # model might have been uninstalled so the model might not exist anymore
+                property_model = property_definition.get('comodel')
+                if property_model not in record.env:
+                    property_definition['comodel'] = False
+                    property_definition.pop('domain', None)
+                elif property_domain := property_definition.get('domain'):
+                    # some fields in the domain might have been removed
+                    # (e.g. if the module has been uninstalled)
+                    # check if the domain is still valid
+                    try:
+                        expression.expression(
+                            ast.literal_eval(property_domain),
+                            record.env[property_model],
+                        )
+                    except ValueError:
+                        del property_definition['domain']
 
-            if not property_model and 'domain' in property_definition:
-                del property_definition['domain']
-
-            if property_definition.get('type') in ('selection', 'tags'):
+            elif type_ in ('selection', 'tags'):
                 # always set at least an empty array if there's no option
-                key = property_definition['type']
-                property_definition[key] = property_definition.get(key) or []
-
-            property_domain = property_definition.get('domain')
-            if property_domain:
-                # some fields in the domain might have been removed
-                # (e.g. if the module has been uninstalled)
-                # check if the domain is still valid
-                try:
-                    expression.expression(
-                        ast.literal_eval(property_domain),
-                        record.env[property_model],
-                    )
-                except ValueError:
-                    del property_definition['domain']
+                property_definition[type_] = property_definition.get(type_) or []
 
             result.append(property_definition)
-
-            for property_parameter, allowed_types in self.PROPERTY_PARAMETERS_MAP.items():
-                if property_definition.get('type') not in allowed_types:
-                    property_definition.pop(property_parameter, None)
 
         return result
 
@@ -722,10 +717,14 @@ class PropertiesDefinition(Field):
 
     @classmethod
     def _validate_properties_definition(cls, properties_definition, env):
-        """Raise an error if the property definition is not valid."""
+        """Cleanup property parameters and raise an error if the property definition is not valid."""
         properties_names = set()
 
         for property_definition in properties_definition:
+            for property_parameter, allowed_types in cls.PROPERTY_PARAMETERS_MAP.items():
+                if property_definition.get('type') not in allowed_types and property_parameter in property_definition:
+                    property_definition.pop(property_parameter, None)
+
             property_definition_keys = set(property_definition.keys())
 
             invalid_keys = property_definition_keys - set(cls.ALLOWED_KEYS)
@@ -778,7 +777,3 @@ class PropertiesDefinition(Field):
                 if len(all_tags) != len(set(all_tags)):
                     duplicated = set(filter(lambda x: all_tags.count(x) > 1, all_tags))
                     raise ValueError(f'Some tags are duplicated: {", ".join(duplicated)}.')
-
-            for property_parameter, allowed_types in cls.PROPERTY_PARAMETERS_MAP.items():
-                if property_definition.get('type') not in allowed_types and property_parameter in property_definition:
-                    raise ValueError(f'Invalid property parameter {property_parameter!r}')
