@@ -82,13 +82,13 @@ class ResPartner(models.Model):
             ]
         )
         partners = self._search_mention_suggestions(domain, limit)
-        members = self.env["discuss.channel.member"].search(
-            [
-                ("channel_id", "=", channel.id),
-                ("partner_id", "in", partners.ids),
-            ]
-        )
-        return Store(members, fields={"channel": [], "persona": []}).add(partners).get_result()
+        members_domain = [("channel_id", "=", channel.id), ("partner_id", "in", partners.ids)]
+        members = self.env["discuss.channel.member"].search(members_domain)
+        member_fields = [
+            Store.One("channel_id", [], as_thread=True, rename="thread"),
+            *self.env["discuss.channel.member"]._to_store_persona([]),
+        ]
+        return Store(members, member_fields).add(partners).get_result()
 
     def _can_return_content(self, field_name=None, access_token=None):
         if field_name == "avatar_128":

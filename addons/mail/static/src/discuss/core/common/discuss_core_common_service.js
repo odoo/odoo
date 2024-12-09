@@ -47,7 +47,7 @@ export class DiscussCoreCommon {
             this._handleNotificationNewMessage(payload, metadata)
         );
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
-            const { body, thread } = payload;
+            const { body, channel_id } = payload;
             const lastMessageId = this.store.getLastMessageId();
             const message = this.store["mail.message"].insert(
                 {
@@ -56,7 +56,7 @@ export class DiscussCoreCommon {
                     id: lastMessageId + 0.01,
                     is_note: true,
                     is_transient: true,
-                    thread,
+                    thread: { id: channel_id, model: "discuss.channel" },
                 },
                 { html: true }
             );

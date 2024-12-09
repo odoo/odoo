@@ -11,10 +11,10 @@ class MailMessage(models.Model):
         super()._extras_to_store(store, format_reply=format_reply)
         if format_reply:
             # sudo: mail.message: access to parent is allowed
-            for message in self.sudo().filtered(lambda message: message.model == "discuss.channel"):
-                store.add(
-                    message, {"parentMessage": Store.one(message.parent_id, format_reply=False)}
-                )
+            store.add(
+                self.sudo().filtered(lambda message: message.model == "discuss.channel"),
+                Store.One("parent_id", format_reply=False, rename="parentMessage"),
+            )
 
     def _bus_channel(self):
         self.ensure_one()

@@ -41,7 +41,8 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             )
         channel_info = data["discuss.channel"][0]
         self.assertEqual(channel_info['anonymous_name'], "Visitor 22")
-        self.assertEqual(channel_info['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
+        self.assertEqual(channel_info["anonymous_country"], belgium.id)
+        self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
 
         # ensure persona info are hidden (in particular email and real name when livechat username is present)
         channel = self.env["discuss.channel"].browse(channel_info["id"])
@@ -92,7 +93,8 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         })
         channel_info = data["discuss.channel"][0]
         self.assertFalse(channel_info['anonymous_name'])
-        self.assertEqual(channel_info['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
+        self.assertEqual(channel_info["anonymous_country"], belgium.id)
+        self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
         operator_member_domain = [
             ('channel_id', '=', channel_info['id']),
             ('partner_id', '=', operator.partner_id.id),
@@ -108,11 +110,15 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             self._filter_partners_fields(
                 {
                     "active": True,
-                    "country": {
-                        "code": "BE",
-                        "id": belgium.id,
-                        "name": "Belgium",
-                    },
+                    "country": False,
+                    "id": operator.partner_id.id,
+                    "is_public": False,
+                    "user_livechat_username": "Michel Operator",
+                    "write_date": fields.Datetime.to_string(operator.write_date),
+                },
+                {
+                    "active": True,
+                    "country": belgium.id,
                     "id": test_user.partner_id.id,
                     "isAdmin": False,
                     "isInternalUser": True,
@@ -122,14 +128,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "userId": test_user.id,
                     "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(test_user.write_date),
-                },
-                {
-                    "active": True,
-                    "country": False,
-                    "id": operator.partner_id.id,
-                    "is_public": False,
-                    "user_livechat_username": "Michel Operator",
-                    "write_date": fields.Datetime.to_string(operator.write_date),
                 },
                 {
                     "active": False,
@@ -149,6 +147,16 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["discuss.channel.member"],
             [
                 {
+                    "create_date": fields.Datetime.to_string(operator_member.create_date),
+                    "fetched_message_id": False,
+                    "id": operator_member.id,
+                    "is_bot": False,
+                    "last_seen_dt": False,
+                    "persona": {"id": operator.partner_id.id, "type": "partner"},
+                    "seen_message_id": False,
+                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
+                },
+                {
                     "create_date": fields.Datetime.to_string(visitor_member.create_date),
                     "fetched_message_id": False,
                     "id": visitor_member.id,
@@ -162,19 +170,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "seen_message_id": False,
                     "thread": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
-                {
-                    "create_date": fields.Datetime.to_string(operator_member.create_date),
-                    "fetched_message_id": False,
-                    "id": operator_member.id,
-                    "is_bot": False,
-                    "last_seen_dt": False,
-                    "persona": {"id": operator.partner_id.id, "type": "partner"},
-                    "seen_message_id": False,
-                    "thread": {"id": channel_info["id"], "model": "discuss.channel"},
-                },
             ],
         )
-
+        self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
         # ensure visitor info are correct when operator is testing themselves
         operator = self.operators[0]
         self.authenticate(operator.login, self.password)

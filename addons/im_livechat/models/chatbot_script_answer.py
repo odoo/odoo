@@ -55,7 +55,5 @@ class ChatbotScriptAnswer(models.Model):
 
         return domain
 
-    def _to_store(self, store: Store, /, *, fields=None):
-        if fields is None:
-            fields = ["name", "redirect_link"]
-        store.add("chatbot.script.answer", self._read_format(fields, load=False))
+    def _to_store_defaults(self):
+        return ["name", "redirect_link"]

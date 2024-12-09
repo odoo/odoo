@@ -103,12 +103,12 @@ class Im_LivechatChannel(models.Model):
     def action_join(self):
         self.ensure_one()
         self.user_ids = [Command.link(self.env.user.id)]
-        self.env.user._bus_send_store(self, fields=["are_you_inside", "name"])
+        self.env.user._bus_send_store(self, ["are_you_inside", "name"])
 
     def action_quit(self):
         self.ensure_one()
         self.user_ids = [Command.unlink(self.env.user.id)]
-        self.env.user._bus_send_store(self, fields=["are_you_inside", "name"])
+        self.env.user._bus_send_store(self, ["are_you_inside", "name"])
 
     def action_view_rating(self):
         """ Action to display the rating relative to the channel, so all rating of the
@@ -330,11 +330,6 @@ class Im_LivechatChannel(models.Model):
             info['options'] = self._get_channel_infos()
             info['options']["default_username"] = username
         return info
-
-    def _to_store(self, store: Store, /, *, fields=None):
-        if fields is None:
-            fields = []
-        store.add(self._name, self._read_format(fields))
 
 
 class Im_LivechatChannelRule(models.Model):

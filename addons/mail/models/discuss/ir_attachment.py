@@ -18,13 +18,12 @@ class IrAttachment(models.Model):
             return guest._bus_channel()
         return super()._bus_channel()
 
-    def _to_store(self, store: Store, **kwargs):
-        super()._to_store(store, **kwargs)
-        for attachment in self:
-            # TODO master: make a real computed / inverse field and stop propagating
-            # kwargs through hook methods
-            # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible attachments is fine
-            store.add(attachment, {"voice": bool(attachment.sudo().voice_ids)})
+    def _to_store_defaults(self):
+        # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible
+        # attachments is fine
+        return super()._to_store_defaults() + [
+            Store.Attr("voice", lambda a: bool(a.sudo().voice_ids))
+        ]
 
     def _post_add_create(self, **kwargs):
         super()._post_add_create(**kwargs)

@@ -38,7 +38,7 @@ class WebclientController(http.Controller):
             self._process_request_for_internal_user(store, **kwargs)
         return store.get_result()
 
-    def _process_request_for_all(self, store, **kwargs):
+    def _process_request_for_all(self, store: Store, **kwargs):
         if "init_messaging" in kwargs:
             if not request.env.user._is_public():
                 user = request.env.user.sudo(False)
@@ -61,7 +61,7 @@ class WebclientController(http.Controller):
                 )
             store.add(request.env["discuss.channel"].search(channels_domain))
 
-    def _process_request_for_logged_in_user(self, store, **kwargs):
+    def _process_request_for_logged_in_user(self, store: Store, **kwargs):
         if kwargs.get("failures"):
             domain = [
                 ("author_id", "=", request.env.user.partner_id.id),
@@ -75,17 +75,15 @@ class WebclientController(http.Controller):
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
             notifications.mail_message_id._message_notifications_to_store(store)
 
-    def _process_request_for_internal_user(self, store, **kwargs):
+    def _process_request_for_internal_user(self, store: Store, **kwargs):
         if kwargs.get("systray_get_activities"):
             # sudo: bus.bus: reading non-sensitive last id
             bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
             groups = request.env["res.users"]._get_activity_groups()
-            store.add(
-                {
-                    "activityCounter": sum(group.get("total_count", 0) for group in groups),
-                    "activity_counter_bus_id": bus_last_id,
-                    "activityGroups": groups,
-                }
+            store.add_global_values(
+                activityCounter=sum(group.get("total_count", 0) for group in groups),
+                activity_counter_bus_id=bus_last_id,
+                activityGroups=groups,
             )
         if kwargs.get("canned_responses"):
             domain = [

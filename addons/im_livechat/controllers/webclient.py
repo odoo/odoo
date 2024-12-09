@@ -2,7 +2,7 @@
 
 from odoo.http import request, route
 from odoo.addons.mail.controllers.webclient import WebclientController
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.discuss import Store
 
 
 class WebClient(WebclientController):
@@ -16,9 +16,7 @@ class WebClient(WebclientController):
             },
         )
 
-    def _process_request_for_internal_user(self, store, **kwargs):
+    def _process_request_for_internal_user(self, store: Store, **kwargs):
         super()._process_request_for_internal_user(store, **kwargs)
         if kwargs.get("livechat_channels"):
-            store.add(
-                request.env["im_livechat.channel"].search([]), fields=["are_you_inside", "name"]
-            )
+            store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])

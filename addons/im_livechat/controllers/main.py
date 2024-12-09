@@ -154,20 +154,18 @@ class LivechatController(http.Controller):
                 }
                 store.add(chatbot_script)
                 store.add(welcome_steps)
+            operator = request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"])
             channel_info = {
                 "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
                 "name": channel_vals["name"],
-                "operator": Store.one(
-                    request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"]),
-                    fields=["user_livechat_username", "write_date"],
-                ),
+                "operator": Store.One(operator, ["user_livechat_username", "write_date"]),
                 "scrollUnread": False,
                 "state": "open",
                 "channel_type": "livechat",
                 "chatbot": chatbot_data,
             }
-            store.add("discuss.channel", channel_info)
+            store.add_model_values("discuss.channel", channel_info)
         else:
             channel = request.env['discuss.channel'].with_context(
                 mail_create_nosubscribe=False,
@@ -187,10 +185,9 @@ class LivechatController(http.Controller):
             channel.channel_member_ids.filtered(lambda m: m.is_self).fold_state = "open"
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
-            store.add(channel)
-            store.add(channel, {"isLoaded": not chatbot_script, "scrollUnread": False})
+            store.add(channel, extra_fields={"isLoaded": not chatbot_script, "scrollUnread": False})
             if guest:
-                store.add({"guest_token": guest._format_auth_cookie()})
+                store.add_global_values(guest_token=guest._format_auth_cookie())
         request.env["res.users"]._init_store_data(store)
         return store.get_result()
 

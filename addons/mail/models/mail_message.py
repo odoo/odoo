@@ -898,7 +898,7 @@ class MailMessage(models.Model):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
         reactions = self.env["mail.message.reaction"].search(group_domain)
         reaction_group = (
-            Store.many(reactions, "ADD")
+            Store.Many(reactions, mode="ADD")
             if reactions
             else [("DELETE", {"message": self.id, "content": content})]
         )
@@ -908,7 +908,46 @@ class MailMessage(models.Model):
     # STORE / NOTIFICATIONS
     # ------------------------------------------------------
 
-    def _to_store(self, store, /, *, fields=None, format_reply=True, msg_vals=None,
+    def _to_store_defaults(self):
+        com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
+        note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
+        field_names = [
+            # sudo: mail.message - reading attachments on accessible message is allowed
+            Store.Many("attachment_ids", sort="id", sudo=True),
+            "body",
+            "create_date",
+            "date",
+            Store.Attr("is_note", lambda m: m.subtype_id.id == note_id),
+            Store.Attr("is_discussion", lambda m: m.subtype_id.id == com_id),
+            # sudo: mail.message - reading link preview on accessible message is allowed
+            Store.Many(
+                "link_preview_ids",
+                value=lambda m: m.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden),
+            ),
+            "message_format",
+            "message_type",
+            "model",  # keep for iOS app
+            "pinned_at",
+            # sudo: mail.message - reading reactions on accessible message is allowed
+            Store.Many("reaction_ids", rename="reactions", sudo=True),
+            # sudo: res.partner: reading limited data of recipients is acceptable
+            Store.Many("partner_ids", ["name", "write_date"], rename="recipients", sudo=True),
+            "res_id",  # keep for iOS app
+            "subject",
+            # sudo: mail.message.subtype - reading description on accessible message is allowed
+            Store.Attr("subtype_description", lambda m: m.subtype_id.sudo().description),
+            "write_date",
+        ]
+        if self.env.user._is_internal():
+            field_names.append(
+                Store.Many(
+                    "notification_ids",
+                    value=lambda m: m.notification_ids._filtered_for_web_client(),
+                )
+            )
+        return field_names
+
+    def _to_store(self, store: Store, fields, *, format_reply=True, msg_vals=None,
                   for_current_user=False, add_followers=False, followers=None):
         """Add the messages to the given store.
 
@@ -930,20 +969,10 @@ class MailMessage(models.Model):
             them. It lessen query count in some optimized use cases.
             Only applicable if ``add_followers`` is True.
         """
-        if fields is None:
-            fields = [
-                "body",
-                "create_date",
-                "date",
-                "message_type",
-                "model",  # keep for iOS app
-                "pinned_at",
-                "res_id",  # keep for iOS app
-                "subject",
-                "write_date",
-            ]
-        com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
-        note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
+        if "message_format" not in fields:
+            store.add_records_fields(self, fields)
+            return
+        fields.remove("message_format")
         # fetch scheduled notifications once, only if msg_vals is not given to
         # avoid useless queries when notifying Inbox right after a message_post
         scheduled_dt_by_msg_id = {}
@@ -960,15 +989,14 @@ class MailMessage(models.Model):
         record_by_message = self._record_by_message()
         records = record_by_message.values()
         non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
+        current_partner = self.env.user.partner_id
         if for_current_user and add_followers and non_channel_records:
             if followers is None:
                 domain = expression.OR(
                     [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
                     for model, records in groupby(non_channel_records, key=lambda r: r._name)
                 )
-                domain = expression.AND(
-                    [domain, [("partner_id", "=", self.env.user.partner_id.id)]]
-                )
+                domain = expression.AND([domain, [("partner_id", "=", current_partner.id)]])
                 # sudo: mail.followers - reading followers of current partner
                 followers = self.env["mail.followers"].sudo().search(domain)
             follower_by_record_and_partner = {
@@ -978,24 +1006,34 @@ class MailMessage(models.Model):
                 ): follower
                 for follower in followers
             }
+        record_fields = [
+            # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
+            Store.Attr(
+                "name",
+                lambda record: record.sudo().display_name,
+                predicate=lambda record: record._name != "discuss.channel",
+            ),
+            Store.Attr(
+                "module_icon",
+                lambda record: modules.module.get_module_icon(self.env[record._name]._original_module),
+                predicate=lambda record: self.env[record._name]._original_module,
+            ),
+        ]
+        if for_current_user and add_followers and non_channel_records:
+            record_fields.append(
+                Store.One(
+                    "selfFollower",
+                    ["is_active", Store.One("partner_id", [], rename="partner")],
+                    value=lambda r: follower_by_record_and_partner.get((r, current_partner)),
+                )
+            )
         for record in records:
-            thread_data = {}
-            if record._name != "discuss.channel":
-                # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
-                thread_data["name"] = record.sudo().display_name
-            if self.env[record._name]._original_module:
-                thread_data["module_icon"] = modules.module.get_module_icon(
-                    self.env[record._name]._original_module
-                )
-            if for_current_user and add_followers:
-                thread_data["selfFollower"] = Store.one(
-                    follower_by_record_and_partner.get((record, self.env.user.partner_id)),
-                    fields={"is_active": True, "partner": []},
-                )
-            store.add(record, thread_data, as_thread=True)
+            store.add(record, record_fields, as_thread=True)
+        if for_current_user:
+            fields.append("starred")
+        store.add(self, fields)
         for message in self:
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
-            data = message._read_format(fields, load=False)[0]
             record = record_by_message.get(message)
             if record:
                 # sudo: if mentionned in a non accessible thread, user should be able to see the name
@@ -1007,28 +1045,12 @@ class MailMessage(models.Model):
             else:
                 record_name = False
                 default_subject = False
-            data["default_subject"] = default_subject
-            vals = {
-                # sudo: mail.message - reading attachments on accessible message is allowed
-                "attachment_ids": Store.many(message.sudo().attachment_ids.sorted("id")),
-                # sudo: mail.message - reading link preview on accessible message is allowed
-                "link_preview_ids": Store.many(
-                    message.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden)
-                ),
-                # sudo: mail.message - reading reactions on accessible message is allowed
-                "reactions": Store.many(message.sudo().reaction_ids),
+            data = {
+                "default_subject": default_subject,
                 "record_name": record_name,  # keep for iOS app
-                "is_note": message.subtype_id.id == note_id,
-                "is_discussion": message.subtype_id.id == com_id,
-                # sudo: mail.message.subtype - reading description on accessible message is allowed
-                "subtype_description": message.subtype_id.sudo().description,
-                # sudo: res.partner: reading limited data of recipients is acceptable
-                "recipients": Store.many(message.sudo().partner_ids, fields=["name", "write_date"]),
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
-                "thread": Store.one(record, as_thread=True, only_id=True),
+                "thread": Store.One(record, [], as_thread=True),
             }
-            if self.env.user._is_internal():
-                vals["notification_ids"] = Store.many(message.notification_ids._filtered_for_web_client())
             if for_current_user:
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(
@@ -1042,13 +1064,10 @@ class MailMessage(models.Model):
                 notifications_partners = message.sudo().notification_ids.filtered(
                     lambda n: not n.is_read
                 ).res_partner_id
-                vals["needaction"] = (
-                    not self.env.user._is_public()
-                    and self.env.user.partner_id in notifications_partners
+                data["needaction"] = (
+                    not self.env.user._is_public() and current_partner in notifications_partners
                 )
-                vals["starred"] = message.starred
-                vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
-            data.update(vals)
+                data["trackingValues"] = displayed_tracking_ids._tracking_value_format()
             store.add(message, data)
         # sudo: mail.message: access to author is allowed
         self.sudo()._author_to_store(store)
@@ -1065,12 +1084,10 @@ class MailMessage(models.Model):
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
-                data["author"] = Store.one(guest_author, fields=["name", "write_date"])
+                data["author"] = Store.One(guest_author, ["name", "write_date"])
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
-                data["author"] = Store.one(
-                    author, fields=["name", "is_company", "user", "write_date"]
-                )
+                data["author"] = Store.One(author, ["name", "is_company", "user", "write_date"])
             store.add(message, data)
 
     def _extras_to_store(self, store: Store, format_reply):
@@ -1083,22 +1100,27 @@ class MailMessage(models.Model):
         Notifications hold the information about each recipient of a message: if
         the message was successfully sent or if an exception or bounce occurred.
         """
-        for message in self:
-            message_data = {
-                "author": Store.one(message.author_id, only_id=True),
-                "date": message.date,
-                "message_type": message.message_type,
-                "body": message.body,
-                "notification_ids": Store.many(message.notification_ids._filtered_for_web_client()),
-                "thread": (
-                    Store.one(
-                        self.env[message.model].browse(message.res_id) if message.model else False,
-                        as_thread=True,
-                        fields=["modelName"],
-                    )
+        store.add(
+            self,
+            [
+                Store.One("author_id", [], rename="author"),
+                "body",
+                "date",
+                "message_type",
+                Store.Many(
+                    "notification_ids",
+                    value=lambda m: m.notification_ids._filtered_for_web_client(),
                 ),
-            }
-            store.add(message, message_data)
+                Store.One(
+                    "thread",
+                    Store.Attr(
+                        "modelName",
+                        lambda thread: self.env["ir.model"]._get(thread._name).display_name,
+                    ),
+                    as_thread=True,
+                ),
+            ],
+        )
 
     def _notify_message_notification_update(self):
         """Send bus notifications to update status of notifications in the web
@@ -1152,14 +1174,16 @@ class MailMessage(models.Model):
             star_count_by_partner_id = dict(self.env.cr.fetchall())
             for partner in outdated_starred_partners:
                 partner._bus_send_store(
-                    "mail.thread",
-                    {
-                        "counter": star_count_by_partner_id.get(partner.id, 0),
-                        "counter_bus_id": bus_last_id,
-                        "id": "starred",
-                        "messages": Store.many(self, "DELETE", only_id=True),
-                        "model": "mail.box",
-                    },
+                    Store().add_model_values(
+                        "mail.thread",
+                        {
+                            "counter": star_count_by_partner_id.get(partner.id, 0),
+                            "counter_bus_id": bus_last_id,
+                            "id": "starred",
+                            "messages": Store.Many(self, [], mode="DELETE"),
+                            "model": "mail.box",
+                        },
+                    )
                 )
 
     def _filter_empty(self):
