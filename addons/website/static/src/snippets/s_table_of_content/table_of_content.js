@@ -162,7 +162,7 @@ export class TableOfContent extends Interaction {
         const link = this.tocElement.querySelector(queries.join(","));
         link.classList.add(CLASS_NAME_ACTIVE);
         if (link.classList.contains(CLASS_NAME_DROPDOWN_ITEM)) {
-            link.closest(SELECTOR_DROPDOWN).querySelector(SELECTOR_DROPDOWN_TOGGLE, link.closest(SELECTOR_DROPDOWN)).classList.add(CLASS_NAME_ACTIVE);
+            link.closest(SELECTOR_DROPDOWN).querySelector(SELECTOR_DROPDOWN_TOGGLE).classList.add(CLASS_NAME_ACTIVE);
         } else {
             parents(link, SELECTOR_NAV_LIST_GROUP).forEach(listGroup => {
                 // Set triggered links parents as active
