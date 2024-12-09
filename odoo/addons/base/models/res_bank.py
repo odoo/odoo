@@ -74,6 +74,7 @@ class ResPartnerBank(models.Model):
     active = fields.Boolean(default=True)
     acc_type = fields.Selection(selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_acc_type', string='Type', help='Bank account type: Normal or IBAN. Inferred from the bank account number.')
     acc_number = fields.Char('Account Number', required=True)
+    clearing_number = fields.Char('Clearing Number')
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
     acc_holder_name = fields.Char(string='Account Holder Name', help="Account holder name, in case it is different than the name of the Account Holder", compute='_compute_account_holder_name', readonly=False, store=True)
     partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)], required=True)
@@ -90,6 +91,14 @@ class ResPartnerBank(models.Model):
         'unique(sanitized_acc_number, partner_id)',
         "The combination Account Number/Partner must be unique.",
     )
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if clearing_number_label := self.env.company.country_id.clearing_number_label:
+            for node in arch.iterfind(".//field[@name='clearing_number']"):
+                node.set("string", clearing_number_label)
+        return arch, view
 
     @api.depends('acc_number')
     def _compute_sanitized_acc_number(self):
