@@ -94,6 +94,13 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
 
             wSaleUtils.updateCartNavBar(data);
             wSaleUtils.showWarning(data.notification_info.warning);
+            // Hide the rental period when last rental product is removed
+            // from the cart
+            if (this.el.classList.contains('o_cart_contains_rental')) {
+                if (!this.el.querySelector('.o_product_is_rental')) {
+                    this.el.querySelector('#cart_rental_period')?.classList.add('d-none');
+                }
+            };
             // Propagating the change to the express checkout forms
             Component.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);
         });
