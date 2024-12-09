@@ -86,7 +86,7 @@ test("no call with odoobot", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-header");
+    await contains(".o-mail-DiscussHeader");
     await contains("[title='Start a Call']", { count: 0 });
 });
 
@@ -483,12 +483,12 @@ test("start call when accepting from push notification", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss();
-    await contains(".o-mail-Discuss-threadName[title=Inbox]");
+    await contains(".o-mail-DiscussHeader-threadName[title=Inbox]");
     browser.navigator.serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId, joinCall: true } },
         })
     );
-    await contains(".o-mail-Discuss-threadName[title=General]");
+    await contains(".o-mail-DiscussHeader-threadName[title=General]");
     await contains(`.o-discuss-CallParticipantCard[title='${serverState.partnerName}']`);
 });

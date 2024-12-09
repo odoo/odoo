@@ -158,9 +158,9 @@ test("remove banner when opening thread at the bottom", async () => {
     await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
     await contains(".o-mail-Thread-banner", { text: "1 new message" });
     await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
-    await contains(".o-mail-Discuss-threadName[title='Inbox']");
+    await contains(".o-mail-DiscussHeader-threadName[title='Inbox']");
     await click(".o-mail-DiscussSidebarChannel", { text: "general" });
-    await contains(".o-mail-Discuss-threadName[title='general']");
+    await contains(".o-mail-DiscussHeader-threadName[title='general']");
     await contains(".o-mail-Thread-banner", { text: "1 new message", count: 0 });
 });
 
