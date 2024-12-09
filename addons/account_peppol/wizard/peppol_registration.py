@@ -37,7 +37,7 @@ class PeppolRegistration(models.TransientModel):
         string='EDI user',
         compute='_compute_edi_user_id',
     )
-    account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
+    account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)  # TODO remove in master
     edi_mode_constraint = fields.Selection(
         selection=[('demo', 'Demo'), ('test', 'Test'), ('prod', 'Live')],
         compute='_compute_edi_mode_constraint',
@@ -45,14 +45,18 @@ class PeppolRegistration(models.TransientModel):
     )
     phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
-    verification_code = fields.Char(related='edi_user_id.peppol_verification_code', readonly=False)
+    verification_code = fields.Char(related='edi_user_id.peppol_verification_code', readonly=False)  # TODO remove in master
     peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False, required=True)
     peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False, required=True)
     peppol_warnings = fields.Json(
         string="Peppol warnings",
         compute="_compute_peppol_warnings",
     )
-    smp_registration = fields.Boolean(string='Register as a receiver')
+    smp_registration = fields.Boolean(
+        string='Register as a receiver',
+        help="If not check, you will only be able to send invoices but not receive them.",
+        default=True,
+    )
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -135,7 +139,7 @@ class PeppolRegistration(models.TransientModel):
 
     def _action_open_peppol_form(self, reopen=True):
         action_dict = {
-            'name': _("Send via Peppol"),
+            'name': _("Activate Electronic Invoicing (via Peppol)"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'peppol.registration',
@@ -192,12 +196,13 @@ class PeppolRegistration(models.TransientModel):
             raise ValidationError(_("Please enter a primary contact email to verify your application."))
 
         company = self.company_id
-        if self.smp_registration:
-            self.edi_user_id._check_company_on_peppol(self.company_id, f'{self.peppol_eas}:{self.peppol_endpoint}')
-
         edi_user = self.edi_user_id.sudo()._register_proxy_user(company, 'peppol', self.edi_mode)
         if not self.edi_user_id:
             self.edi_user_id = edi_user
+
+        if self.smp_registration:
+            self.edi_user_id._peppol_migrate_registration()  # automatically migrate the user if we can
+            self.edi_user_id._check_company_on_peppol(self.company_id, f'{self.peppol_eas}:{self.peppol_endpoint}')
 
         # if there is an error when activating the participant below,
         # the client side is rolled back and the edi user is deleted on the client side
@@ -272,6 +277,7 @@ class PeppolRegistration(models.TransientModel):
 
         edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'
         if self.smp_registration:
+            self.edi_user_id._peppol_migrate_registration()
             self.edi_user_id._check_company_on_peppol(self.company_id, edi_identification)
 
         params = {
