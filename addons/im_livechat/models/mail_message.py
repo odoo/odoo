@@ -21,12 +21,17 @@ class MailMessage(models.Model):
         for message in self:
             message.parent_body = message.parent_id.body if message.parent_id else False
 
-    def _to_store(self, store: Store, **kwargs):
+    def _to_store_defaults(self):
+        return super()._to_store_defaults() + ["chatbot_current_step"]
+
+    def _to_store(self, store: Store, fields, **kwargs):
         """If we are currently running a chatbot.script, we include the information about
         the chatbot.message related to this mail.message.
         This allows the frontend display to include the additional features
         (e.g: Show additional buttons with the available answers for this step)."""
-        super()._to_store(store, **kwargs)
+        super()._to_store(store, [f for f in fields if f != "chatbot_current_step"], **kwargs)
+        if "chatbot_current_step" not in fields:
+            return
         channel_messages = self.filtered(lambda message: message.model == "discuss.channel")
         channel_by_message = channel_messages._record_by_message()
         for message in channel_messages.filtered(
@@ -35,7 +40,7 @@ class MailMessage(models.Model):
             channel = channel_by_message[message]
             # sudo: chatbot.script.step - checking whether the current message is from chatbot
             chatbot = channel.chatbot_current_step_id.sudo().chatbot_script_id.operator_partner_id
-            if (channel.chatbot_current_step_id and message.author_id == chatbot):
+            if channel.chatbot_current_step_id and message.author_id == chatbot:
                 chatbot_message = (
                     self.env["chatbot.message"]
                     .sudo()
@@ -44,17 +49,16 @@ class MailMessage(models.Model):
                 if step := chatbot_message.script_step_id:
                     step_data = {
                         "id": (step.id, channel.id),
-                        "message": Store.one(message, only_id=True),
-                        "scriptStep": Store.one(step, only_id=True),
+                        "message": message.id,
+                        "scriptStep": step.id,
                         "operatorFound": step.step_type == "forward_operator"
                         and len(channel.channel_member_ids) > 2,
                     }
                     if answer := chatbot_message.user_script_answer_id:
-                        step_data["selectedAnswer"] = Store.one(answer, only_id=True)
-                    store.add("ChatbotStep", step_data)
+                        step_data["selectedAnswer"] = answer.id
+                    store.add_model_values("ChatbotStep", step_data)
                     store.add(
-                        message,
-                        {"chatbotStep": {"scriptStep": step.id, "message": message.id}},
+                        message, {"chatbotStep": {"scriptStep": step.id, "message": message.id}}
                     )
 
     def _author_to_store(self, store: Store):
@@ -68,13 +72,11 @@ class MailMessage(models.Model):
             lambda message: channel_by_message[message].channel_type == "livechat"
         )
         super(MailMessage, self - messages_w_author_livechat)._author_to_store(store)
-        for message in messages_w_author_livechat:
-            store.add(
-                message,
-                {
-                    "author": Store.one(
-                        message.author_id,
-                        fields=["is_company", "user_livechat_username", "user", "write_date"],
-                    ),
-                },
-            )
+        store.add(
+            messages_w_author_livechat,
+            Store.One(
+                "author_id",
+                ["is_company", "user_livechat_username", "user", "write_date"],
+                rename="author",
+            ),
+        )

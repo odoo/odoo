@@ -421,12 +421,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             },
                         ],
-                        "res.partner": self._filter_partners_fields(
-                            {
-                                "id": self.user_admin.partner_id.id,
-                                "name": self.user_admin.partner_id.name,
-                            },
-                        ),
                     },
                 },
                 {
@@ -443,7 +437,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "res.partner": self._filter_partners_fields(
                             {
                                 "id": self.user_admin.partner_id.id,
+                                "im_status": "offline",
                                 "name": self.user_admin.partner_id.name,
+                                "write_date": fields.Datetime.to_string(
+                                    self.user_admin.partner_id.write_date
+                                ),
                             },
                         ),
                     },
@@ -811,10 +809,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br>Type <b>/command</b> to execute a command."
                             "<br>Type <b>:shortcut</b> to insert a canned response in your message."
                             "</span>",
-                        "thread": {
-                            "id": channel.id,
-                            "model": "discuss.channel",
-                        },
+                        "channel_id": channel.id,
                     },
                 },
             ],
@@ -852,10 +847,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "<br>Type <b>/command</b> to execute a command."
                             "<br>Type <b>:shortcut</b> to insert a canned response in your message."
                             "</span>",
-                        "thread": {
-                            "id": test_group.id,
-                            "model": "discuss.channel",
-                        },
+                        "channel_id": test_group.id,
                     },
                 },
             ],

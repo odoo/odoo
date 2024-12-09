@@ -20,7 +20,7 @@ export class MailScheduledMessage extends models.ServerModel {
         for (const message of messages) {
             store.add("mail.scheduled.message", {
                 attachment_ids: mailDataHelpers.Store.many(
-                    IrAttachment.browse(message.attachment_ids),
+                    IrAttachment.browse(message.attachment_ids)
                 ),
                 author: mailDataHelpers.Store.one(ResPartner.browse(message.author_id)),
                 body: message.body,

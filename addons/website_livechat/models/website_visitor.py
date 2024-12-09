@@ -100,8 +100,8 @@ class WebsiteVisitor(models.Model):
         channel_members.write({
             'fold_state': 'open',
         })
-        operator._bus_send(
-            "website_livechat.send_chat_request", Store(discuss_channels).get_result()
+        operator._bus_send_store(
+            discuss_channels, notification_type="website_livechat.send_chat_request"
         )
 
     def _merge_visitor(self, target):

@@ -644,7 +644,7 @@ export class DiscussChannel extends models.ServerModel {
         const [partner] = ResPartner.read(this.env.user.partner_id);
         BusBus._sendone(partner, "discuss.channel/transient_message", {
             body: notifBody,
-            thread: { model: "discuss.channel", id: channel.id },
+            channel_id: channel.id,
         });
         return true;
     }
@@ -694,7 +694,7 @@ export class DiscussChannel extends models.ServerModel {
             const [partner] = ResPartner.read(this.env.user.partner_id);
             BusBus._sendone(partner, "discuss.channel/transient_message", {
                 body: `<span class="o_mail_notification">${message}</span>`,
-                thread: { model: "discuss.channel", id: channel.id },
+                channel_id: channel.id,
             });
         }
     }

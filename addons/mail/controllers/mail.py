@@ -200,21 +200,18 @@ class MailController(http.Controller):
             if request.env.user._is_public():
                 return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
             raise Unauthorized()
-
         # sudo: public user can access some relational fields of mail.message
         if message.sudo()._filter_empty():
             raise NotFound()
         if not request.env.user._is_internal():
             thread = request.env[message.model].search([('id', '=', message.res_id)])
             if message.model == 'discuss.channel':
-                store = Store({'isChannelTokenSecret': True})
-                store.add(thread, {'highlightMessage': Store.one(message, only_id=True)})
+                store = Store().add_global_values(isChannelTokenSecret=True)
+                store.add(thread, {"highlightMessage": message.id})
                 return PublicPageController()._response_discuss_channel_invitation(store, thread)
-            elif hasattr(thread, '_get_share_url'):
+            if hasattr(thread, "_get_share_url"):
                 return request.redirect(thread._get_share_url(share_token=False))
-            else:
-                raise Unauthorized()
-
+            raise Unauthorized()
         if message.model == 'discuss.channel':
             url = f'/odoo/action-mail.action_discuss?active_id={message.res_id}&highlight_message_id={message_id}'
         else:
