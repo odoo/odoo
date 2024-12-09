@@ -695,3 +695,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_snippet_visibility_option(self):
         self.start_tour("/", "snippet_visibility_option", login="admin")
+
+    def test_website_font_family(self):
+        self.start_tour("/", "website_font_family", login="admin")
