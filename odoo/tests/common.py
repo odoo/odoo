@@ -1845,6 +1845,18 @@ class HttpCase(TransactionCase):
         # v8 api with correct xmlrpc exception handling.
         cls.xmlrpc_url = f'{cls.base_url()}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+        with contextlib.suppress(ImportError):
+            from odoo.addons.bus.models.bus import BusBus
+
+            original_send_one = BusBus._sendone
+
+            def patched_send_one(self, target, notification_type, message):
+                original_send_one(self, target, notification_type, message)
+                self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+                self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+            patched_send_one = unittest.mock.patch.object(BusBus, "_sendone", patched_send_one)
+            cls.startClassPatcher(patched_send_one)
 
     @classmethod
     def base_url(cls):
@@ -1866,6 +1878,9 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr), use_datetime=True)
         # setup an url opener helper
         self.opener = Opener(self.cr)
+        with contextlib.suppress(ImportError):
+            from odoo.addons.bus.websocket import CloseCode, _kick_all
+            self.addCleanup(partial(_kick_all, CloseCode.KILL_NOW))
 
     def parse_http_location(self, location):
         """ Parse a Location http header typically found in 201/3xx
