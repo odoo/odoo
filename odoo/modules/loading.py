@@ -8,7 +8,6 @@ from __future__ import annotations
 import itertools
 import logging
 import sys
-import threading
 import time
 import typing
 import warnings
@@ -73,19 +72,12 @@ def load_data(env: Environment, idref, mode: str, kind: str, package: Node) -> b
         return files
 
     filename = None
-    try:
-        if kind in ('demo', 'test'):
-            threading.current_thread().testing = True
-        for filename in _get_files_of_kind(kind):
-            _logger.info("loading %s/%s", package.name, filename)
-            noupdate = False
-            if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
-                noupdate = True
-            tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
-    finally:
-        if kind in ('demo', 'test'):
-            threading.current_thread().testing = False
-
+    for filename in _get_files_of_kind(kind):
+        _logger.info("loading %s/%s", package.name, filename)
+        noupdate = False
+        if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+            noupdate = True
+        tools.convert_file(env, package.name, filename, idref, mode, noupdate, kind)
     return bool(filename)
 
 

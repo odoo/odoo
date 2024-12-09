@@ -6155,4 +6155,4 @@ class AccountMove(models.Model):
 
         :returns: True if commit is acceptable, False otherwise.
         """
-        return not tools.config['test_enable'] and not modules.module.current_test
+        return not modules.module.current_test

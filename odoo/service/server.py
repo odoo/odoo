@@ -51,7 +51,7 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
-from odoo.modules import get_modules
+from odoo import modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config, osutil
@@ -1275,10 +1275,10 @@ def load_test_file_py(registry, test_file):
     # pylint: disable=import-outside-toplevel
     from odoo.tests import loader  # noqa: PLC0415
     from odoo.tests.suite import OdooSuite  # noqa: PLC0415
-    threading.current_thread().testing = True
+    modules.module.current_test = True
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
-        for mod in [m for m in get_modules() if '%s%s%s' % (os.path.sep, m, os.path.sep) in test_file]:
+        for mod in [m for m in modules.get_modules() if m in test_file.split(os.path.sep)]:
             for mod_mod in loader.get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
                 if test_path == config._normalize(mod_path):
@@ -1290,7 +1290,7 @@ def load_test_file_py(registry, test_file):
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
     finally:
-        threading.current_thread().testing = False
+        modules.module.current_test = False
 
 
 def preload_registries(dbnames):
