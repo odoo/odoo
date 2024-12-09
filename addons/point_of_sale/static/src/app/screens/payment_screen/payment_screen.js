@@ -53,7 +53,6 @@ export class PaymentScreen extends Component {
 
     onMounted() {
         const order = this.pos.getOrder();
-        this.pos.addPendingOrder([order.id]);
 
         for (const payment of order.payment_ids) {
             const pmid = payment.payment_method_id.id;
@@ -110,7 +109,8 @@ export class PaymentScreen extends Component {
         return config;
     }
     get currentOrder() {
-        return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
+        return this.pos.models["pos.order"].find((order) => order.uuid === this.props.orderUuid);
+        // return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
     }
     get paymentLines() {
         return this.currentOrder.payment_ids;
@@ -290,19 +290,12 @@ export class PaymentScreen extends Component {
             }
         }
 
-        this.pos.addPendingOrder([this.currentOrder.id]);
         this.currentOrder.state = "paid";
 
         this.env.services.ui.block();
-        let syncOrderResult;
         try {
-            // 1. Save order to server.
-            syncOrderResult = await this.pos.syncAllOrders({ throw: true });
-            if (!syncOrderResult) {
-                return;
-            }
-
-            // 2. Invoice.
+            this.currentOrder.recomputeOrderData();
+            // Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.isToInvoice()) {
                 if (this.currentOrder.raw.account_move) {
                     await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
@@ -329,21 +322,8 @@ export class PaymentScreen extends Component {
             this.env.services.ui.unblock();
         }
 
-        // 3. Post process.
-        if (syncOrderResult && syncOrderResult.length > 0 && this.currentOrder.waitForPushOrder()) {
-            await this.postPushOrderResolve(syncOrderResult.map((res) => res.id));
-        }
-
-        await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
-    }
-    async postPushOrderResolve(ordersServerId) {
-        const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
-        if (!postPushResult) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Error: no internet connection."),
-                body: _t("Some, if not all, post-processing after syncing order failed."),
-            });
-        }
+        // Post process.
+        await this.afterOrderValidation();
     }
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to

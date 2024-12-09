@@ -43,7 +43,6 @@ patch(Navbar.prototype, {
         this.pos.showScreen(screenName || "ProductScreen", props);
     },
     async onClickTableTab() {
-        await this.pos.syncAllOrders();
         this.dialog.add(TableSelector, {
             title: _t("Table Selector"),
             placeholder: _t("Enter a table number"),
