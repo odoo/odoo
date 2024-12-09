@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the existing form view to add configuration fields Tenant code and Site code-->
+        <record id="view_res_partner_inherit_tenant_code" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.custom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!-- Add the fields in the appropriate position -->
+                <xpath expr="//form/sheet/group/group" position="inside">
+                    <field name="tenant_code_id" string="Tenant ID"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
