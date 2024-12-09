@@ -2910,6 +2910,21 @@ we-select.o_grid we-toggler {
             [data-snippet="s_numbers_charts"] .s_chart {
                 display: none;
             }
+            [data-snippet="s_floating_blocks"] {
+                height: 750px;
+                overflow: hidden;
+
+                .o_block:nth-child(1) {
+                    transition: all .3s;
+                    margin: 3% 0 -20%;
+                    transform-origin: center top;
+                    transform: scale(0.98);
+                }
+            }
+            &:hover [data-snippet="s_floating_blocks"] .o_block:nth-child(1) {
+                margin: 3% 0 -30%;
+                transform: scale(.95);
+            }
             .o_full_screen_height, .o_half_screen_height {
                 height: unset !important;
                 min-height: unset !important;
