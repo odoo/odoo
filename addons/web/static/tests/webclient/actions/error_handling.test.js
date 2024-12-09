@@ -1,20 +1,24 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockFetch, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
     defineModels,
+    fields,
     getService,
     models,
     mountWithCleanup,
     onRpc,
+    patchWithCleanup,
     stepAllNetworkCalls,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
+import { BooleanField } from "@web/views/fields/boolean/boolean_field";
+import { FormController } from "@web/views/form/form_controller";
 import { WebClient } from "@web/webclient/webclient";
 
 const actionRegistry = registry.category("actions");
@@ -206,4 +210,62 @@ test("connection lost when coming back to kanban from form", async () => {
     await runAllTimers();
     await animationFrame();
     expect.verifySteps(["/web/webclient/version_info"]);
+});
+
+test("error on onMounted", async () => {
+    expect.errors(1);
+
+    Partner._fields.bar = fields.Boolean();
+    Partner._views = {
+        "kanban,1": `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="display_name"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "form,false": `<form><field name="display_name"/><field name="bar"/></form>`,
+        "search,false": `<search/>`,
+    };
+    stepAllNetworkCalls();
+    patchWithCleanup(BooleanField.prototype, {
+        setup() {
+            super.setup();
+            onMounted(() => {
+                throw new Error("faulty on mounted");
+            });
+        },
+    });
+    patchWithCleanup(FormController.prototype, {
+        setup() {
+            super.setup();
+            onMounted(() => {
+                // If a onMounted hook is faulty, the rest of the onMounted will not be executed
+                // leading to inconsistent views.
+                throw new Error("Never Executed code");
+            });
+        },
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await animationFrame();
+    expect(".o_kanban_view").toHaveCount(1);
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+    ]);
+
+    await contains(".o_kanban_record").click();
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(0);
+    // check that the action manager is empty
+    expect(".o_action_manager").toHaveText("");
+    expect(".o_error_dialog").toHaveCount(1);
+    expect.verifySteps(["web_read"]);
+    expect.verifyErrors(["Error: faulty on mounted"]);
 });
