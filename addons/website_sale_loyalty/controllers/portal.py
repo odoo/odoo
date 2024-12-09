@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.http import request
+from odoo.http import request, route
 from odoo.tools.misc import format_amount
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
@@ -8,8 +8,12 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 
 class CustomerPortalLoyalty(CustomerPortal):
 
-    def get_card_history_values(self, card_id):
-        res = super().get_card_history_values(card_id)
+    @route()
+    def portal_get_card_history_values(self, card_id):
+        """
+        Add published trigger products for the loyalty program.
+        """
+        res = super().portal_get_card_history_values(card_id)
         program_sudo = request.env['loyalty.program'].sudo().search([
             ('coupon_ids', '=', int(card_id)),
         ])
@@ -18,16 +22,14 @@ class CustomerPortalLoyalty(CustomerPortal):
 
         res['program']['trigger_products'] = []
         for product in program_sudo.trigger_product_ids:
-            taxes = product.taxes_id.filtered(lambda t: t.company_id == request.env.company)
-            tax_data = taxes.compute_all(
-                product.lst_price,
-                currency=request.env.company.currency_id,
-                quantity=1,
-                product=product,
-                partner=request.env.user.partner_id,
-            )
+            if not product.website_published:
+                continue
             res['program']['trigger_products'].append({
                 'id': product.id,
-                'total_price': format_amount(self.env, tax_data['total_included'], request.env.company.currency_id),
+                'total_price': format_amount(
+                    self.env,
+                    product.lst_price,
+                    request.env.company.currency_id
+                ),
             })
         return res
