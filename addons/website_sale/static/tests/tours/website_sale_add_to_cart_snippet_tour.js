@@ -26,10 +26,22 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
 
         // Product with 2 variants with visitor choice (will open modal)
         ...editAddToCartSnippet(),
+<<<<<<< 18.0
         ...selectElementInWeSelectWidget('product_template_picker_opt', 'Product Yes Variant 1', true),
         ...clickOnSave(),
         clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
         clickOnElement('continue shopping', ':iframe .modal button:contains(Continue Shopping)'),
+||||||| 73852747a78dbeb9ff05ca88757ea002a8bae3bc
+        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Product Yes Variant 1', true),
+        ...wTourUtils.clickOnSave(),
+        wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
+        wTourUtils.clickOnElement('continue shopping', ':iframe span:contains(Continue Shopping)'),
+=======
+        ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Product Yes Variant 1', true),
+        ...wTourUtils.clickOnSave(),
+        wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
+        wTourUtils.clickOnElement('continue shopping', ':iframe .modal button:contains(Continue Shopping)'),
+>>>>>>> f0bbc153e12281f83e93f6297f9a135519c1dcb8
 
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),
