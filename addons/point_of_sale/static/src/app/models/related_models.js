@@ -203,7 +203,7 @@ export class Base extends WithLazyGetterTrap {
         const serializedData = this.model.serialize(this, { orm });
 
         if (orm) {
-            const fields = toRaw(this.model.fields);
+            const fields = this.model.fields;
             const serializedDataOrm = {};
 
             // We only care about the fields present in python model
@@ -606,7 +606,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     result[name] = record[name] !== undefined ? record[name] : false;
                 }
             }
-            return toRaw(result);
+            return result;
         }
         // aliases
         getAllBy() {
