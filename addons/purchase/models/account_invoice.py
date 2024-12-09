@@ -480,3 +480,18 @@ class AccountMoveLine(models.Model):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
         values['purchase_line_id'] = self.purchase_line_id.id
+
+    def _get_line_balance(self):
+        self.ensure_one()
+        balance = None
+        if self.purchase_line_id:
+            price_unit = self.purchase_line_id.price_unit_discounted
+            if (
+                (bill_only_discount := self.discount - self.purchase_line_id.discount) != 0 or
+                price_unit != self.purchase_line_id.price_unit
+            ):
+                discount = 1 - (bill_only_discount / 100)
+                balance = abs(self.company_id.currency_id.round(price_unit * discount * self.quantity / self.currency_rate))
+        if balance is None:
+            balance = abs(super()._get_line_balance())
+        return balance if self.amount_currency >= 0 else -balance
