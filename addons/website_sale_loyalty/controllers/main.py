@@ -147,3 +147,8 @@ class WebsiteSale(main.WebsiteSale):
             # and does not follow the request's context
             request.website = request.website.with_context(website_sale_loyalty_delete=True)
         return super().cart_update_json(*args, set_qty=set_qty, **kwargs)
+
+    @route('/topup/pay', type='http', methods=['GET', 'POST'], auth='user', website=True, sitemap=False)
+    def topup_pay(self, **kwargs):
+        self.cart_update(product_id=int(kwargs['trigger_product_id']))
+        return request.redirect('/shop/cart')
