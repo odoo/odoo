@@ -21,6 +21,8 @@
         <field name="name">Customer lots</field>
         <field name="res_model">stock.lot.report</field>
         <field name="view_mode">list</field>
+        <field name="domain">[('partner_id', 'child_of', active_ids)]</field>
+        <field name="context">{'search_default_filter_not_has_return': True, 'active_test': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No data yet!
