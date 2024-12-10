@@ -109,9 +109,9 @@ class PosConfig(models.Model):
             'pos_restaurant.drinks',
         ])
         presets = self.get_record_by_ref([
-            'point_of_sale.pos_takein_preset',
-            'point_of_sale.pos_takeout_preset',
-            'point_of_sale.pos_delivery_preset',
+            'pos_restaurant.pos_takein_preset',
+            'pos_restaurant.pos_takeout_preset',
+            'pos_restaurant.pos_delivery_preset',
         ])
         config = self.env['pos.config'].create({
             'name': _('Restaurant'),
