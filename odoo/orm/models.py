@@ -6463,10 +6463,10 @@ class BaseModel(metaclass=MetaModel):
                         # no need to match r'.*' in else because we only use .match()
 
                     like_regex = re.compile("".join(build_like_regex(unaccent(value), comparator.startswith("="))))
-                if comparator in ('=', '!=') and field.type in ('char', 'text', 'html') and not value:
-                    # use the comparator 'in' for falsy comparison of strings
+                falsy_value = field.falsy_value
+                if falsy_value is not None and comparator in ('=', '!=') and not value and falsy_value is not False:
                     comparator = 'in' if comparator == '=' else 'not in'
-                    value = ['', False]
+                    value = [falsy_value, False]
                 if comparator in ('in', 'not in'):
                     if isinstance(value, COLLECTION_TYPES):
                         value = set(value)
@@ -6479,6 +6479,17 @@ class BaseModel(metaclass=MetaModel):
                         value |= {False, ""}
                 elif field.type in ('date', 'datetime'):
                     value = Datetime.to_datetime(value)
+                match comparator:
+                    case '<':
+                        inequality = operator.lt
+                    case '>':
+                        inequality = operator.gt
+                    case '<=':
+                        inequality = operator.le
+                    case '>=':
+                        inequality = operator.ge
+                    case _:
+                        inequality = None
 
                 matching_ids = set()
                 for record in self:
@@ -6508,14 +6519,11 @@ class BaseModel(metaclass=MetaModel):
                         ok = value and any(x in value for x in data)
                     elif comparator == 'not in':
                         ok = not (value and any(x in value for x in data))
-                    elif comparator == '<':
-                        ok = any(x is not False and x is not None and x < value for x in data)
-                    elif comparator == '>':
-                        ok = any(x is not False and x is not None and x > value for x in data)
-                    elif comparator == '<=':
-                        ok = any(x is not False and x is not None and x <= value for x in data)
-                    elif comparator == '>=':
-                        ok = any(x is not False and x is not None and x >= value for x in data)
+                    elif inequality is not None:
+                        if falsy_value is None:
+                            ok = any(x is not False and x is not None and inequality(x, value) for x in data)
+                        else:
+                            ok = any(inequality(x or falsy_value, value) for x in data)
                     elif comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                         ok = any(like_regex.match(unaccent(x)) for x in data)
                         if comparator.startswith('not'):
