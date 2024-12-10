@@ -2861,6 +2861,104 @@ options.registry.topMenuColor = options.Class.extend({
     },
 });
 
+options.registry.BreadcrumbOptions = VisibilityPageOptionUpdate.extend({
+    pageOptionName: "breadcrumb_visible",
+    showOptionWidgetName: "regular_breadcrumb_visibility_opt",
+
+    async visibility(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        await this._changeVisibility(widgetValue);
+        const targetWindow = this.$target[0].ownerDocument.defaultView;
+        targetWindow.dispatchEvent(new targetWindow.Event("resize"));
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _changeVisibility(widgetValue) {
+        if (!(widgetValue !== "hidden")) {
+            return;
+        }
+        const transparent = (widgetValue === "transparent");
+        await new Promise((resolve, reject) => {
+            this.trigger_up("action_demand", {
+                actionName: "toggle_page_option",
+                params: [{name: "breadcrumb_overlay", value: transparent}],
+                onSuccess: () => resolve(),
+                onFailure: reject,
+            });
+        });
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        const _super = this._super.bind(this);
+        if (methodName === "visibility") {
+            this.shownValue = await new Promise((resolve, reject) => {
+                this.trigger_up("action_demand", {
+                    actionName: "get_page_option",
+                    params: ["breadcrumb_overlay"],
+                    onSuccess: v => resolve(v ? "transparent" : "regular"),
+                    onFailure: reject,
+                });
+            });
+        }
+        return _super(...arguments);
+    },
+});
+
+options.registry.BreadcrumbColor = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async selectStyle(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (widgetValue && !isCSSColor(widgetValue)) {
+            widgetValue = params.colorPrefix + widgetValue;
+        }
+        await new Promise((resolve, reject) => {
+            this.trigger_up("action_demand", {
+                actionName: "toggle_page_option",
+                params: [{name: params.pageOptionName, value: widgetValue}],
+                onSuccess: resolve,
+                onFailure: reject,
+            });
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeVisibility() {
+        const show = await this._super(...arguments);
+        if (!show) {
+            return false;
+        }
+        return new Promise((resolve, reject) => {
+            this.trigger_up("action_demand", {
+                actionName: "get_page_option",
+                params: ["breadcrumb_overlay"],
+                onSuccess: value => resolve(!!value),
+                onFailure: reject,
+            });
+        });
+    },
+});
+
 /**
  * Manage the visibility of snippets on mobile/desktop.
  */
