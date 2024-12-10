@@ -33,6 +33,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                         is_page: { type: "boolean" },
                         title: { type: "char", string: "Title" },
                         random_questions_count: { type: "integer", string: "Question Count" },
+                        sequence: { type: "integer" },
                     },
                     records: [
                         {
@@ -40,12 +41,14 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                             is_page: true,
                             title: "firstSectionTitle",
                             random_questions_count: 4,
+                            sequence: 1,
                         },
                         {
                             id: 2,
                             is_page: false,
                             title: "recordTitle",
                             random_questions_count: 5,
+                            sequence: 2,
                         },
                     ],
                 },
@@ -301,4 +304,64 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             assert.strictEqual(target.querySelector(".o_is_section [name=title]").innerText, "a");
         }
     );
+
+    QUnit.test("full page list question creation", async (assert) => {
+        const questions = [];
+        for (let i = 1; i <= 45; i++) {
+            questions.push({
+                id: i,
+                is_page: false,
+                title: `question ${i}`,
+                sequence: i,
+            });
+        }
+        let lastQuestionSequence = 45;
+
+        serverData.models.survey_question.records = questions;
+        serverData.models.survey.records[0].question_and_page_ids = questions.map((q) => q.id);
+        await makeView({
+            type: "form",
+            resModel: "survey",
+            resId: 1,
+            serverData,
+            arch: `
+            <form>
+                <field name="question_and_page_ids" widget="question_page_one2many">
+                    <tree>
+                        <field name="is_page" invisible="1" />
+                        <field name="title" />
+                        <field name="random_questions_count" />
+                        <field name="sequence" widget="handle"/>
+                        <control>
+                            <create name="add_question_control" string="Add a question" context="{'question_create': True}"/>
+                        </control>
+                    </tree>
+                </field>
+            </form>
+        `,
+            mockRPC(route, args) {
+                if (args.method === "web_save" && args.model === "survey") {
+                    const sequence = args.args[1].question_and_page_ids[0][2].sequence;
+                    assert.ok(sequence > lastQuestionSequence);
+                    lastQuestionSequence = sequence;
+                }
+            },
+        });
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+
+        for (let i = 1; i <= 3; i++) {
+            await editInput(
+                target,
+                ".o_dialog:not(.o_inactive_modal) .modal-body [name='title'] input",
+                `New Question ${i}`
+            );
+            await click(
+                target.querySelector(".o_dialog:not(.o_inactive_modal) .o_form_button_save_new")
+            );
+        }
+        assert.strictEqual(
+            target.querySelector(".o_form_renderer .o_pager_value").innerText,
+            "41-48"
+        );
+    });
 });
