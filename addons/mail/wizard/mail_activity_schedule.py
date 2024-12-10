@@ -228,7 +228,8 @@ class MailActivitySchedule(models.TransientModel):
                     summary=template.summary,
                     note=template.note,
                     user_id=responsible.id,
-                    date_deadline=date_deadline
+                    date_deadline=date_deadline,
+                    activity_plan_id=self.plan_id.id,
                 )
                 activity_descriptions.append(
                     _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',

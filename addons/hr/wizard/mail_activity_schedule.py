@@ -2,7 +2,7 @@
 
 from markupsafe import Markup
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 
 

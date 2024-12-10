@@ -91,6 +91,7 @@ class ActivityScheduleCase(MailCommon):
             self.assertEqual(activity.date_deadline, expected_deadline)
             self.assertEqual(activity.note, template.note)
             self.assertEqual(activity.summary, template.summary)
+            self.assertEqual(activity.activity_plan_id, template.plan_id)
             self.assertFalse(activity.automated)
             if expected_responsible:
                 self.assertEqual(activity.user_id, expected_responsible)
