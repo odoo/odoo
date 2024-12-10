@@ -39,9 +39,8 @@ class XlsxCreatorCase(common.HttpCase):
     def make(self, values, context=None):
         return self.model.with_context(**(context or {})).create(values)
 
-    def export(self, values, fields=[], params={}, context=None):
+    def export(self, fields=[], params={}):
         self.worksheet = {}
-        self.make(values, context=context)
 
         if fields and 'fields' not in params:
             params['fields'] = [
@@ -92,10 +91,8 @@ class TestExport(XlsxCreatorCase):
             {'int_sum': 0, 'float_monetary': 0.0, 'bool_and': False, 'float_min': 0.0},
             {},
         ]
-        export = self.export(
-            values,
-            fields=['int_sum', 'float_monetary', 'bool_and', 'float_min'],
-        )
+        self.make(values)
+        export = self.export(fields=['int_sum', 'float_monetary', 'bool_and', 'float_min'])
         # FIXME assertExportEqual doesn't test the real information show in the export file
         self.assertExportEqual(
             export,
@@ -134,17 +131,69 @@ class TestExport(XlsxCreatorCase):
 @tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
 
-    def test_archived_groupped(self):
+    def test_archived_grouped(self):
         values = [
             {'int_sum': 1, 'active': False},
+            {'int_sum': 1, 'active': True},
         ]
-        export = self.export(values, fields=['int_sum', 'active'], params={'groupby': ['int_sum']})
-
+        self.make(values)
+        export = self.export(fields=['int_sum', 'active'], params={'groupby': ['int_sum'], 'domain': [('active', '=', False)]})
         self.assertExportEqual(
             export,
             [
                 ['Int Sum', 'Active'],
                 ['1 (1)', ''],
+                ['1', 'False'],
+            ],
+        )
+
+    def test_unarchived_grouped(self):
+        values = [
+            {'int_sum': 1, 'active': False},
+            {'int_sum': 1, 'active': True},
+        ]
+        self.make(values)
+        export = self.export(fields=['int_sum', 'active'], params={'groupby': ['int_sum']})
+        self.assertExportEqual(
+            export,
+            [
+                ['Int Sum', 'Active'],
+                ['1 (1)', ''],
+                ['1', 'True'],
+            ],
+        )
+
+    def test_archived_grouped_by_ids(self):
+        values = [
+            {'int_sum': 1, 'active': False},
+            {'int_sum': 1, 'active': True},
+        ]
+        ids = [rec.id for rec in self.make(values)]
+        export = self.export(fields=['int_sum', 'active'], params={'groupby': ['int_sum'], 'ids': ids})
+        self.assertExportEqual(
+            export,
+            [
+                ['Int Sum', 'Active'],
+                ['1 (2)', ''],
+                ['1', 'False'],
+                ['1', 'True'],
+            ],
+        )
+
+    def test_archived_grouped_by_ids_one2many(self):
+        sub_rec_active = self.env['export.aggregator.one2many'].create({ 'name': 'active', 'active': True })
+        sub_rec_non_active = self.env['export.aggregator.one2many'].create({ 'name': 'non active', 'active': False })
+        values = [
+            { 'int_sum': 1, 'active': False, 'one2many': [sub_rec_active.id, sub_rec_non_active.id]},
+        ]
+        ids = [rec.id for rec in self.make(values)]
+        export = self.export(fields=['int_sum', 'active', 'one2many'], params={'groupby': ['int_sum'], 'ids': ids})
+        self.assertExportEqual(
+            export,
+            [
+                ['Int Sum', 'Active', 'One2Many'],
+                ['1 (1)', '', ''],
+                ['1', 'False', 'active'],
             ],
         )
 
@@ -154,7 +203,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 10, 'int_max': 50},
             {'int_sum': 20, 'int_max': 30},
         ]
-        export = self.export(values, fields=['int_sum', 'int_max'], params={'groupby': ['int_sum', 'int_max']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'int_max'], params={'groupby': ['int_sum', 'int_max']})
         self.assertExportEqual(
             export,
             [
@@ -170,7 +220,7 @@ class TestGroupedExport(XlsxCreatorCase):
             ],
         )
 
-        export = self.export([], fields=['int_max', 'int_sum'], params={'groupby': ['int_sum', 'int_max']})
+        export = self.export(fields=['int_max', 'int_sum'], params={'groupby': ['int_sum', 'int_max']})
 
         self.assertExportEqual(
             export,
@@ -193,7 +243,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 10, 'float_min': 222.0},
             {'int_sum': 20, 'float_min': 333.0},
         ]
-        export = self.export(values, fields=['int_sum', 'float_min'], params={'groupby': ['int_sum', 'float_min']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'float_min'], params={'groupby': ['int_sum', 'float_min']})
 
         self.assertExportEqual(
             export,
@@ -216,7 +267,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 10, 'float_avg': 200.0},
             {'int_sum': 20, 'float_avg': 300.0},
         ]
-        export = self.export(values, fields=['int_sum', 'float_avg'], params={'groupby': ['int_sum', 'float_avg']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'float_avg'], params={'groupby': ['int_sum', 'float_avg']})
 
         self.assertExportEqual(
             export,
@@ -240,7 +292,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 10, 'int_max': 30, 'float_avg': 200.0},
             {'int_sum': 10, 'int_max': 20, 'float_avg': 600.0},
         ]
-        export = self.export(values, fields=['int_sum', 'float_avg'], params={'groupby': ['int_sum', 'int_max', 'float_avg']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'float_avg'], params={'groupby': ['int_sum', 'int_max', 'float_avg']})
 
         self.assertExportEqual(
             export,
@@ -265,7 +318,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 10, 'int_max': 30, 'float_avg': False},
             {'int_sum': 10, 'int_max': 30, 'float_avg': False},
         ]
-        export = self.export(values, fields=['int_sum', 'float_avg'], params={'groupby': ['int_sum', 'int_max', 'float_avg']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'float_avg'], params={'groupby': ['int_sum', 'int_max', 'float_avg']})
 
         self.assertExportEqual(
             export,
@@ -288,7 +342,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 10, 'date_max': date(2000, 1, 1)},
             {'int_sum': 20, 'date_max': date(1980, 1, 1)},
         ]
-        export = self.export(values, fields=['int_sum', 'date_max'], params={'groupby': ['int_sum', 'date_max:month']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'date_max'], params={'groupby': ['int_sum', 'date_max:month']})
 
         self.assertExportEqual(
             export,
@@ -312,7 +367,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 20, 'bool_and': True},
             {'int_sum': 20, 'bool_and': False},
         ]
-        export = self.export(values, fields=['int_sum', 'bool_and'], params={'groupby': ['int_sum', 'bool_and']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'bool_and'], params={'groupby': ['int_sum', 'bool_and']})
 
         self.assertExportEqual(
             export,
@@ -337,7 +393,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 20, 'bool_or': False},
             {'int_sum': 20, 'bool_or': False},
         ]
-        export = self.export(values, fields=['int_sum', 'bool_or'], params={'groupby': ['int_sum', 'bool_or']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'bool_or'], params={'groupby': ['int_sum', 'bool_or']})
 
         self.assertExportEqual(
             export,
@@ -360,7 +417,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 10, 'many2one': self.env['export.integer'].create({}).id},
             {'int_sum': 10},
         ]
-        export = self.export(values, fields=['int_sum', 'many2one'], params={'groupby': ['int_sum', 'many2one']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'many2one'], params={'groupby': ['int_sum', 'many2one']})
 
         self.assertExportEqual(
             export,
@@ -391,8 +449,8 @@ class TestGroupedExport(XlsxCreatorCase):
                 'many2one': self.env['export.integer'].create({}).id,
             },
         ]
+        self.make(values)
         export = self.export(
-            values,
             params={
                 'groupby': ['int_sum', 'date_max:month'],
                 'fields': [
@@ -425,8 +483,8 @@ class TestGroupedExport(XlsxCreatorCase):
                 ],
             }
         ]
+        self.make(values)
         export = self.export(
-            values,
             params={
                 'groupby': ['int_sum'],
                 'fields': [
@@ -451,7 +509,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 10, 'date_max': False},
         ]
         # Group and aggregate by date, but date fields are not set for all records
-        export = self.export(values, fields=['int_sum', 'date_max'], params={'groupby': ['int_sum', 'date_max:month']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'date_max'], params={'groupby': ['int_sum', 'date_max:month']})
 
         self.assertExportEqual(
             export,
@@ -482,7 +541,8 @@ class TestGroupedExport(XlsxCreatorCase):
             {'int_sum': 3, 'currency_id': currency.id, 'float_monetary': 0.0},
             {'currency_id': currency.id},
         ]
-        export = self.export(values, fields=['int_sum', 'float_monetary'], params={'groupby': ['int_sum', 'float_monetary']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'float_monetary'], params={'groupby': ['int_sum', 'float_monetary']})
         self.assertExportEqual(
             export,
             [
@@ -514,7 +574,8 @@ class TestGroupedExport(XlsxCreatorCase):
         values = [
             {'int_sum': 1, 'float_min': 86420.864},
         ]
-        export = self.export(values, fields=['int_sum', 'float_min'], params={'groupby': ['int_sum', 'float_min']})
+        self.make(values)
+        export = self.export(fields=['int_sum', 'float_min'], params={'groupby': ['int_sum', 'float_min']})
 
         self.assertExportEqual(
             export,
