@@ -28,8 +28,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     _query_count_init_store = 11
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
-    #   1: fetch res_company (building ir.rules)
-    #   1: fetch res_users (for current user, first occurence _init_messaging of mail_bot)
+    #   1: fetch res_users (for current user, first occurence _get_channels_as_member of _init_messaging)
     #   4: _get_channels_as_member
     #       - search channel_ids of current partner (_search_is_member, building member_domain)
     #       - fetch channel_ids of current partner (active test filtering, _search_is_member)
@@ -42,14 +41,17 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _bus_last_id
     #       - _get_needaction_count (inbox counter)
     #       - starred counter
-    #   29: _process_request_for_all (discuss):
+    #   23: _process_request_for_all (discuss):
     #       - search discuss_channel (channels_domain)
-    #       28: channel _to_store:
-    #           - _bus_last_id
-    #           - manual query to search discuss_channel_member
-    #           10: channel member _to_store:
-    #               - fetch discuss_channel_member
-    #               9: partner _to_store:
+    #       22: channel add:
+    #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
+    #           - read group member (_compute_invited_member_ids)
+    #           - search discuss_channel_rtc_session
+    #           - fetch discuss_channel_rtc_session
+    #           - search member (channel_member_ids)
+    #           - fetch discuss_channel_member (manual prefetch)
+    #           10: member _to_store:
+    #               10: partner _to_store:
     #                   - fetch res_partner (partner _to_store)
     #                   - fetch res_users (_compute_im_status)
     #                   - search bus_presence (_compute_im_status)
@@ -59,26 +61,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - fetch hr_employee (_compute_im_status override)
     #                   - search hr_leave (out_of_office_date_end)
     #                   - fetch res_users (internal user)
-    #           - fetch res_groups (authorizedGroupFullName)
-    #           - fetch ir_module_category (authorizedGroupFullName)
-    #           - search discuss_channel_member (is_member, channel ACL)
+    #           - _bus_last_id (_to_store_defaults)
     #           - search ir_attachment (_compute_avatar_128)
-    #           - search group_ids (group_based_subscription)
     #           - count discuss_channel_member (member_count)
     #           - _compute_message_needaction
-    #           - search discuss_channel_rtc_session
-    #           8: rtc session _to_store:
-    #               - fetch discuss_channel_rtc_session
-    #               7. channel member _to_store:
-    #                   - fetch discuss_channel_member
-    #                   6: partner _to_store:
-    #                       - fetch res_parter
-    #                       - fetch res_users (_compute_im_status)
-    #                       - search bus_presence (_compute_im_status)
-    #                       - _get_on_leave_ids (_compute_im_status override)
-    #                       - search hr_employee (_compute_im_status override)
-    #                       - fetch hr_employee (_compute_im_status override)
-    _query_count_init_messaging = 41
+    #           - fetch res_groups (authorizedGroupFullName)
+    #           - fetch ir_module_category (authorizedGroupFullName)
+    #           - search group_ids (group_based_subscription)
+    _query_count_init_messaging = 34
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   1: fetch res_users (for current user: first occurence current persona, _search_is_member)
@@ -87,11 +77,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch channel_ids of current partner (active test filtering, _search_is_member)
     #       - search discuss_channel (member_domain)
     #       - search discuss_channel (pinned_member_domain)
-    #   31: channel _to_store:
-    #       - _bus_last_id
-    #       - manual query to search discuss_channel_member
-    #       16: channel member _to_store:
-    #           - fetch discuss_channel_member
+    #   31: channel _to_store_defaults:
+    #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
+    #       - read group member (_compute_invited_member_ids)
+    #       - search discuss_channel_rtc_session
+    #       - fetch discuss_channel_rtc_session
+    #       - search member (channel_member_ids)
+    #       - fetch discuss_channel_member (manual prefetch)
+    #       01: member _to_store_defaults (livechat override):
+    #           - search im_livechat_channel_rule (is_bot)
+    #       14: member _to_store:
     #           12: partner _to_store:
     #               - fetch res_partner (partner _to_store)
     #               - fetch res_users (_compute_im_status)
@@ -108,33 +103,28 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           2: guest _to_store:
     #               - fetch bus_presence (_compute_im_status)
     #               - fetch mail_guest
-    #           - im_livechat_channel_rule (is_bot)
-    #       - fetch res_groups (authorizedGroupFullName)
-    #       - fetch ir_module_category (authorizedGroupFullName)
-    #       - search discuss_channel_member (is_member, channel ACL)
+    #       - _bus_last_id (_to_store_defaults)
     #       - search ir_attachment (_compute_avatar_128)
-    #       - search group_ids (group_based_subscription)
     #       - count discuss_channel_member (member_count)
     #       - _compute_message_needaction
+    #       - fetch res_groups (authorizedGroupFullName)
+    #       - fetch ir_module_category (authorizedGroupFullName)
+    #       - search group_ids (group_based_subscription)
     #       - _compute_message_unread
-    #       - search discuss_channel_rtc_session
-    #       2: rtc session _to_store:
-    #           - fetch discuss_channel_rtc_session
-    #           - fetch discuss_channel_member
     #       - fetch im_livechat_channel
     #       - fetch country (anonymous_country)
     #   - _get_last_messages
     #   14: message _to_store:
     #       - search mail_message_schedule
     #       - fetch mail_message
-    #       - search mail_message_reaction
-    #       - fetch mail_message_reaction
     #       - search message_attachment_rel
     #       - search mail_link_preview
-    #       - search mail_message_subtype
+    #       - search mail_message_reaction
     #       - search mail_message_res_partner_rel
+    #       - search mail_message_subtype
     #       - search mail_notification
     #       - fetch mail_notification
+    #       - fetch mail_message_reaction
     #       - search mail_tracking_value
     #       - search mail_message_res_partner_starred_rel
     #       - search rating_rating
@@ -429,10 +419,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_channel(self.channel_chat_1),
             ],
             "discuss.channel.member": [
-                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_1, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_1, self.users[14].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
+                self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
             ],
             "discuss.channel.rtc.session": [
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
@@ -449,8 +439,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": "inbox",
                     "model": "mail.box",
                 },
-                "starred":
-                {
+                "starred": {
                     "counter": 1,
                     "counter_bus_id": bus_last_id,
                     "id": "starred",
@@ -480,26 +469,26 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_channel(self.channel_livechat_2),
             ],
             "discuss.channel.member": [
-                self._expected_result_for_channel_member(self.channel_general, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_channel_public_1, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_channel_public_2, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_channel_group_1, self.users[2].partner_id),
-                self._expected_result_for_channel_member(self.channel_channel_group_2, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_group_1, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_group_1, self.users[12].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_1, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_1, self.users[14].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_2, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_2, self.users[15].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_3, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_3, self.users[2].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_4, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_chat_4, self.users[3].partner_id),
-                self._expected_result_for_channel_member(self.channel_livechat_1, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_livechat_1, self.users[1].partner_id),
-                self._expected_result_for_channel_member(self.channel_livechat_2, self.users[0].partner_id),
-                self._expected_result_for_channel_member(self.channel_livechat_2, guest=True),
+                self._res_for_member(self.channel_general, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_public_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_public_2, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
+                self._res_for_member(self.channel_channel_group_2, self.users[0].partner_id),
+                self._res_for_member(self.channel_group_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_group_1, self.users[12].partner_id),
+                self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
+                self._res_for_member(self.channel_chat_2, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_2, self.users[15].partner_id),
+                self._res_for_member(self.channel_chat_3, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_3, self.users[2].partner_id),
+                self._res_for_member(self.channel_chat_4, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_4, self.users[3].partner_id),
+                self._res_for_member(self.channel_livechat_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_livechat_1, self.users[1].partner_id),
+                self._res_for_member(self.channel_livechat_2, self.users[0].partner_id),
+                self._res_for_member(self.channel_livechat_2, guest=True),
             ],
             "discuss.channel.rtc.session": [
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
@@ -535,6 +524,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 *self._expected_result_for_message_reactions(self.channel_general),
                 *self._expected_result_for_message_reactions(self.channel_channel_public_1),
             ],
+            "res.country": [
+                {"code": "IN", "id": self.env.ref("base.in").id, "name": "India"},
+                {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"},
+            ],
             "res.partner": self._filter_partners_fields(
                 self._expected_result_for_persona(
                     self.users[0],
@@ -560,393 +553,429 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_general:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": self.group_user.full_name,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.user_root.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": "General announcements for all employees.",
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": True,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
+                "livechatChannel": False,
                 "member_count": len(self.group_user.users),
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "general",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_channel_public_1:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
+                "livechatChannel": False,
                 "member_count": 5,
-                "message_needaction_counter": 1,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 1,
+                "mute_until_dt": False,
                 "name": "public channel 1",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_channel_public_2:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
+                "livechatChannel": False,
                 "member_count": 5,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "public channel 2",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_channel_group_1:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": self.group_user.full_name,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", [member_0.id]]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
+                "livechatChannel": False,
                 "member_count": 5,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "group restricted channel 1",
+                "operator": False,
                 "parent_channel_id": False,
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
                 "rtcInvitingSession": member_2.sudo().rtc_session_ids.id,
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
                 "rtcSessions": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_channel_group_2:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": self.group_user.full_name,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": self.group_user.full_name,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
+                "livechatChannel": False,
                 "member_count": 5,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "group restricted channel 2",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_group_1:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "group",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
+                "livechatChannel": False,
                 "member_count": 2,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_chat_1:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
+                "livechatChannel": False,
                 "member_count": 2,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "Ernest Employee, test14",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "open",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_chat_2:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
+                "livechatChannel": False,
                 "member_count": 2,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "Ernest Employee, test15",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_chat_3:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
+                "livechatChannel": False,
                 "member_count": 2,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "Ernest Employee, test2",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_chat_4:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
                 "anonymous_country": False,
                 "anonymous_name": False,
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.user.id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": False,
+                "livechatChannel": False,
                 "member_count": 2,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
+                "message_needaction_counter": 0,
+                "mute_until_dt": False,
                 "name": "Ernest Employee, test3",
+                "operator": False,
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "custom_notifications": False,
-                "mute_until_dt": False,
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_livechat_1:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
-                "anonymous_country": {
-                    "code": "IN",
-                    "id": self.env.ref("base.in").id,
-                    "name": "India",
-                },
+                "anonymous_country": self.env.ref("base.in").id,
                 "anonymous_name": False,
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "livechat",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.users[1].id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "livechatChannel": self.im_livechat_channel.id,
                 "member_count": 2,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
-                "name": "test1 Ernest Employee",
-                "parent_channel_id": False,
-                "custom_notifications": False,
+                "message_needaction_counter": 0,
                 "mute_until_dt": False,
+                "name": "test1 Ernest Employee",
                 "operator": {"id": self.users[0].partner_id.id, "type": "partner"},
+                "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         if channel == self.channel_livechat_2:
             return {
                 "allow_public_upload": False,
-                "authorizedGroupFullName": False,
-                "anonymous_country": {
-                    "id": self.env.ref("base.be").id,
-                    "code": "BE",
-                    "name": "Belgium",
-                },
+                "anonymous_country": self.env.ref("base.be").id,
                 "anonymous_name": "anon 2",
+                "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "livechat",
-                "custom_channel_name": False,
-                "default_display_mode": False,
-                "fetchChannelInfoState": "fetched",
-                "id": channel.id,
-                "from_message_id": False,
                 "create_uid": self.env.ref("base.public_user").id,
+                "custom_channel_name": False,
+                "custom_notifications": False,
+                "default_display_mode": False,
                 "description": False,
+                "fetchChannelInfoState": "fetched",
+                "from_message_id": False,
                 "group_based_subscription": False,
+                "id": channel.id,
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "livechatChannel": self.im_livechat_channel.id,
                 "member_count": 2,
-                "message_needaction_counter": 0,
                 "message_needaction_counter_bus_id": bus_last_id,
-                "name": "anon 2 Ernest Employee",
-                "custom_notifications": False,
+                "message_needaction_counter": 0,
                 "mute_until_dt": False,
+                "name": "anon 2 Ernest Employee",
                 "operator": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
                 "state": "closed",
                 "uuid": channel.uuid,
+                "whatsapp_channel_valid_until": False,
+                "whatsapp_partner_id": False,
             }
         return {}
 
-    def _expected_result_for_channel_member(self, channel, partner=None, guest=None):
+    def _res_for_member(self, channel, partner=None, guest=None):
         members = channel.channel_member_ids
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
         member_0_last_interest_dt = fields.Datetime.to_string(member_0.last_interest_dt)
@@ -1583,11 +1612,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[1]:
             res = {
                 "active": True,
-                "country": {
-                    "code": "IN",
-                    "id": self.env.ref("base.in").id,
-                    "name": "India",
-                },
+                "country": self.env.ref("base.in").id,
                 "id": user.partner_id.id,
                 "isInternalUser": True,
                 "is_company": False,

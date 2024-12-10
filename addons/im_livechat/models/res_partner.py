@@ -17,7 +17,7 @@ class ResPartner(models.Model):
         if channel.channel_type != "livechat" or not self:
             return
         lang_name_by_code = dict(self.env["res.lang"].get_installed())
-        invite_by_self_count_by_partner_id = dict(
+        invite_by_self_count_by_partner = dict(
             self.env["discuss.channel.member"]._read_group(
                 [["create_uid", "=", self.env.user.id], ["partner_id", "in", self.ids]],
                 groupby=["partner_id"],
@@ -31,7 +31,7 @@ class ResPartner(models.Model):
             store.add(
                 partner,
                 {
-                    "invite_by_self_count": invite_by_self_count_by_partner_id.get(partner, 0),
+                    "invite_by_self_count": invite_by_self_count_by_partner.get(partner, 0),
                     "is_available": partner in active_livechat_partners,
                     "lang_name": lang_name_by_code[partner.lang],
                 },
@@ -42,12 +42,11 @@ class ResPartner(models.Model):
         for partner in self:
             partner.user_livechat_username = next(iter(partner.user_ids.mapped('livechat_username')), False)
 
-    def _to_store(self, store: Store, /, *, fields=None, **kwargs):
+    def _to_store(self, store: Store, fields, **kwargs):
         """Override to add name when user_livechat_username is not set."""
-        super()._to_store(store, fields=fields, **kwargs)
-        if fields and "user_livechat_username" in fields:
-            if partners := self.filtered(lambda p: not p.user_livechat_username):
-                super(ResPartner, partners)._to_store(store, fields=["name"])
+        super()._to_store(store, fields, **kwargs)
+        if "user_livechat_username" in fields:
+            store.add(self.filtered(lambda p: not p.user_livechat_username), "name")
 
     def _bus_send_history_message(self, channel, page_history):
         message_body = _("No history found")

@@ -94,7 +94,7 @@ export class Thread extends Record {
         inverse: "thread",
         onDelete: (r) => r.delete(),
     });
-    correspondentCountry = Record.one("Country", {
+    correspondentCountry = Record.one("res.country", {
         /** @this {import("models").Thread} */
         compute() {
             return this.correspondent?.persona?.country ?? this.anonymous_country;

@@ -65,11 +65,15 @@ class MailCannedResponse(models.Model):
 
     def _broadcast(self, /, *, delete=False):
         for canned_response in self:
-            store = Store(canned_response, delete=delete)
-            (self.env.user | canned_response.create_uid)._bus_send_store(store)
+            store = Store()
+            if delete:
+                store.delete(canned_response)
+            else:
+                store.add(canned_response)
+            user = self.env.user | canned_response.create_uid
+            if not (user.groups_id & canned_response.group_ids):
+                user._bus_send_store(store)
             canned_response.group_ids._bus_send_store(store)
 
-    def _to_store(self, store: Store, /, *, fields=None):
-        if fields is None:
-            fields = ["source", "substitution"]
-        store.add(self._name, self._read_format(fields))
+    def _to_store_defaults(self):
+        return ["source", "substitution"]

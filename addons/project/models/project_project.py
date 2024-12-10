@@ -1052,12 +1052,12 @@ class ProjectProject(models.Model):
         for partner, tasks in dict_tasks_per_partner.items():
             tasks.message_subscribe(dict_partner_ids_to_subscribe_per_partner[partner])
 
-    def _thread_to_store(self, store: Store, /, *, request_list=None, **kwargs):
-        super()._thread_to_store(store, request_list=request_list, **kwargs)
+    def _thread_to_store(self, store: Store, fields, *, request_list=None):
+        super()._thread_to_store(store, fields, request_list=request_list)
         if request_list and "followers" in request_list:
             store.add(
                 self,
-                {"collaborator_ids": Store.many(self.collaborator_ids.partner_id, only_id=True)},
+                {"collaborator_ids": Store.Many(self.collaborator_ids.partner_id, [])},
                 as_thread=True,
             )
 
