@@ -228,18 +228,15 @@ class ProductProduct(models.Model):
                     shipment_rate = carrier.rate_shipment(dummy_order)
                     if not shipment_rate['success']: 
                         continue
-                    if currency.is_zero(shipment_rate['price']): # free shipping
-                        best_free_shipping_threshold[country] = 0.0
-                    else:
-                        best_carrier_by_country[country] = min(
-                            best_carrier_by_country[country],
-                            (shipment_rate['price'], carrier)
+                    best_carrier_by_country[country] = min(
+                        best_carrier_by_country[country],
+                        (shipment_rate['price'], carrier)
+                    )
+                    if carrier.free_over:
+                        best_free_shipping_threshold[country] = min(
+                            carrier.amount,
+                            best_free_shipping_threshold[country]
                         )
-                        if carrier.free_over:
-                            best_free_shipping_threshold[country] = min(
-                                carrier.amount,
-                                best_free_shipping_threshold[country]
-                            )
             vals.update({
                 # Required
                 'description': product.description_ecommerce or "",

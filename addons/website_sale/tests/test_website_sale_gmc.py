@@ -150,8 +150,33 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
         self.white_mouse_values = self.values[self.mouse_white]
         self.black_mouse_values = self.values[self.mouse_black]
 
-    def test_00_gmc_product_id(self):
+    def test_product_gmc_only_consu_or_combo(self):
+        self.products += self.env['product.product'].create([
+            {
+                'name': 'Consu Type Product',
+                'type': 'consu',
+            },
+            {
+                'name': 'Combo Type Product',
+                'type': 'combo',
+            },
+            {
+                'name': 'Service Type Product',
+                'type': 'service',
+            }
+        ])
+        *consu_combo, service_product = self.products
         self.update_values()
+        self.assertNotIn(service_product, self.values, 'Services are not allowed in a product data feed')
+        for prod in consu_combo:
+            self.assertIn(
+                prod,
+                self.values,
+                'Other types of products can be part of a product data feed',
+            )
+
+    def test_00_gmc_product_id(self):
+        values = self
         self.assertIn('id', self.white_mouse_values, 'An `id` is required.')
         self.assertIn('id', self.black_mouse_values, 'An `id` is required.')
         self.assertEqual(
@@ -452,7 +477,96 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
         )
 
     def test_10_gmc_product_shipping(self):
-        ...
+        shipping_product = self.env['product.product'].create(
+            { 'name': 'Shipping', 'list_price': 14.99 }
+        )
+        local_shipping_product = self.env['product.product'].create(
+            { 'name': 'Cheap Local Shipping', 'list_price': 2.99 }
+        )
+        belgium = self.delivery_countries.search([('code', '=', 'BE')])
+        self.delivery_carriers.fixed_price = 100000.0
+        self.delivery_carriers += self.env['delivery.carrier'].create([
+            {
+                'name': 'Local Shipping',
+                'delivery_type': 'fixed',
+                'country_ids': [
+                    Command.set(belgium.ids)
+                ],
+                'product_id': local_shipping_product.id,
+                'active': True,
+            },
+            {
+                'name': 'Free above $90',
+                'delivery_type': 'fixed',
+                'country_ids': [
+                    Command.set(self.delivery_countries.ids)
+                ],
+                'free_over': 90.0,
+                'product_id': shipping_product.id,
+                'active': True,
+            },
+            {
+                'name': 'Local Free above $50',
+                'delivery_type': 'fixed',
+                'country_ids': [
+                    Command.set(belgium.ids)
+                ],
+                'free_over': 50.0,
+                'product_id': shipping_product.id,
+                'max_weight': 20.0,
+                'active': True,
+            },
+        ])
+        self.products += self.env['product.product'].create({
+            'name': 'Heavy product',
+            'weight': 100.0,
+        })
+        heavy_product = self.products[-1]
+        self.update_values()
+        self.assertEqual(
+            14.99, 
+            float(self.white_mouse_values['shipping'][0]['price']),
+            'The best shipping outside of Belgium should be 14.99 for the white mouse it since '
+            'does not get the free over $90.'
+        )
+        self.assertEqual(
+            2.99, 
+            self.white_mouse_values['shipping'][0]['price'],
+            'The best shipping in Belgium should be 2.99 for the white mouse since it '
+            'does not get the free over $90.'
+        )
+        self.assertEqual(
+            0.0, 
+            self.black_mouse_values['shipping'],
+            'The best shipping for all the coutries should be free since black mouse price is '
+            'above $90.'
+        )
+        self.assertEqual(
+            50.0,
+            self.white_mouse_values['free_shipping_threshold'],
+            'In Belgium, best free over rule is $50.'
+        )
+        self.assertEqual(
+            90.0,
+            self.white_mouse_values['free_shipping_threshold'],
+            'Outside of Belgium, best free over rule is $90.'
+        )
+        self.assertEqual(
+            50.0,
+            self.black_mouse_values['free_shipping_threshold'],
+            'In Belgium, best free over rule is $50 as well for the black mouse.'
+        )
+        self.assertEqual(
+            90.0,
+            self.black_mouse_values['free_shipping_threshold'],
+            'Outside of Belgium, best free over rule is $90 as well for the black mouse.'
+        )
+        self.assertEqual(
+            90.0,
+            self.values[heavy_product]['free_shipping_threshold'],
+            'For the heavy product, the best free over rule is $90'
+        )
+        
 
     def test_11_gmc_product_availability(self):
         self.update_values()
