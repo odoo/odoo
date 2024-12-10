@@ -505,13 +505,15 @@ class AccountEdiFormat(models.Model):
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[0] or "OTH",
             "taxableAmount": self._l10n_in_round_value(line.balance * sign),
         }
-        if tax_details_by_code.get("igst_rate") or (line.move_id.l10n_in_state_id.l10n_in_tin != line.company_id.state_id.l10n_in_tin):
-            line_details.update({"igstRate": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00))})
-        else:
-            line_details.update({
-                "cgstRate": self._l10n_in_round_value(tax_details_by_code.get("cgst_rate", 0.00)),
-                "sgstRate": self._l10n_in_round_value(tax_details_by_code.get("sgst_rate", 0.00)),
-            })
+        gst_types = {'cgst', 'sgst', 'igst'}
+        gst_tax_rates = {
+            f"{gst_type}Rate": self._l10n_in_round_value(tax_details_by_code[f"{gst_type}_rate"])
+            for gst_type in gst_types
+            if tax_details_by_code.get(f"{gst_type}_rate")
+        }
+        line_details.update(
+            gst_tax_rates or dict.fromkeys({f"{gst_type}Rate" for gst_type in gst_types}, 0.00)
+        )
         if tax_details_by_code.get("cess_rate"):
             line_details.update({"cessRate": self._l10n_in_round_value(tax_details_by_code.get("cess_rate"))})
         return line_details
