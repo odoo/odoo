@@ -6,7 +6,7 @@
             <field name="model">mail.compose.message</field>
             <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="arch" type="xml">
-                <form string="Compose Email" class="pt-0 pb-0 o_mail_composer_form" disable_autofocus="1" js_class="mail_composer_form">
+                <form string="Compose Email" class="pt-0 pb-0 o_mail_composer_form" js_class="mail_composer_form">
                     <group>
                         <!-- truly invisible fields for control and options -->
                         <field name="author_id" invisible="1"/>
@@ -16,6 +16,8 @@
                         <field name="composition_mode" invisible="1"/>
                         <field name="email_layout_xmlid" invisible="1"/>
                         <field name="force_send" invisible="1"/>
+                        <field name="in_forward_mode" invisible="1"/>
+                        <field name="in_reply_mode" invisible="1"/>
                         <field name="lang" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
                         <field name="model" invisible="1"/>
@@ -37,8 +39,8 @@
                             invisible="composition_mode != 'mass_mail'"/>
                         <label for="partner_ids" string="To" invisible="composition_mode != 'comment' or subtype_is_log"/>
                         <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log">
-                            <widget invisible="not model or composition_mode == 'mass_mail'" name="mail_composer_recipient_list" thread_model_field="model" thread_id_field="res_ids"/>
-                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
+                            <widget invisible="not model or composition_mode == 'mass_mail' or in_forward_mode or in_reply_mode" name="mail_composer_recipient_list" thread_model_field="model" thread_id_field="res_ids"/>
+                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..." required="in_forward_mode"
                                 options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
@@ -80,7 +82,7 @@
                         <widget name="mail_composer_send_dropdown" invisible="composition_batch or composition_mode != 'comment'"/>
                         <button string="Discard" class="btn-secondary w-auto" special="cancel" data-hotkey="x" />
                         <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not can_edit_body"/>
-                        <field name="template_id" widget="mail_composer_template_selector"/>
+                        <field name="template_id" widget="mail_composer_template_selector" invisible="in_reply_mode or in_forward_mode"/>
                         <field name="body" widget="mail_composer_chatgpt" invisible="not can_edit_body"/>
                     </footer>
                 </form>
