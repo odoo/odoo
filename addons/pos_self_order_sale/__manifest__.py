@@ -8,12 +8,6 @@
         "views/res_config_settings_views.xml",
         "data/kiosk_sale_team.xml",
     ],
-    "assets": {
-        # Assets
-        "pos_self_order.assets": [
-            "pos_self_order_sale/static/src/app/**/**",
-        ],
-    },
     "author": "Odoo S.A.",
     "license": "LGPL-3",
 }
