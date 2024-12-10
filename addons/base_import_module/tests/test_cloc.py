@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 from io import BytesIO
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZIP_STORED
 
 from odoo.tools import cloc
 from odoo.addons.base.tests import test_cloc
@@ -224,7 +224,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
         self.assertEqual(cl.code.get('test_imported_module', 0), 0)
 
     def test_exclude_cloc_imported_module(self):
-        manifest_content = json.dumps({
+        manifest_content = repr({
             'name': 'test_imported_module',
             'description': 'Test',
             'data': ['data/test.xml'],
@@ -243,7 +243,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
         })
 
         stream = BytesIO()
-        with ZipFile(stream, 'w', compression=ZIP_DEFLATED) as archive:
+        with ZipFile(stream, 'w', compression=ZIP_STORED) as archive:
             archive.writestr('test_imported_module/__manifest__.py', manifest_content)
             archive.writestr('test_imported_module/static/src/js/test.js', test_cloc.JS_TEST)
             archive.writestr('test_imported_module/static/src/js/test.scss', test_cloc.SCSS_TEST)
@@ -252,7 +252,31 @@ class TestClocFields(test_cloc.TestClocCustomization):
         # Import test module
         self.env['ir.module.module']._import_zipfile(stream)
 
-
         cl = cloc.Cloc()
         cl.count_customization(self.env)
         self.assertEqual(cl.code.get('test_imported_module', 0), 0)
+
+    def test_exclude_cloc_imported_module_twice(self):
+        manifest_content = repr({
+            'name': '%MODULE_NAME%',
+            'description': 'Test',
+            'data': ['data/test.xml'],
+            'cloc_exclude': [
+                'data/test.xml',
+            ],
+            'license': 'LGPL-3',
+        })
+        names = ['test_imported_module', 'test_imported_module_2']
+
+        for module_name in names:
+            stream = BytesIO()
+            manifest = manifest_content.replace('%MODULE_NAME%', module_name)
+            with ZipFile(stream, 'w', compression=ZIP_STORED) as archive:
+                archive.writestr(f'{module_name}/__manifest__.py', manifest)
+                archive.writestr(f'{module_name}/data/test.xml', VALID_XML_2)
+            self.env['ir.module.module']._import_zipfile(stream)
+
+        cl = cloc.Cloc()
+        cl.count_customization(self.env)
+        for module_name in names:
+            self.assertEqual(cl.code.get(module_name, 0), 0)
