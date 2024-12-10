@@ -11,6 +11,11 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_hr_expense_alias_prefix',
         store=True,
         readonly=False)
+    hr_expense_alias_domain_id = fields.Many2one(
+        comodel_name='mail.alias.domain',
+        compute='_compute_hr_expense_alias_domain_id',
+        inverse='_inverse_hr_expense_alias_domain_id',
+        readonly=False)
     hr_expense_use_mailgateway = fields.Boolean(string='Let your employees record expenses by email',
                                              config_parameter='hr_expense.use_mailgateway')
     module_hr_payroll_expense = fields.Boolean(string='Reimburse Expenses in Payslip')
@@ -29,6 +34,7 @@ class ResConfigSettings(models.TransientModel):
         expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False)
         res.update(
             hr_expense_alias_prefix=expense_alias.alias_name if expense_alias else False,
+            hr_expense_alias_domain_id=expense_alias.alias_domain_id if expense_alias else False,
         )
         return res
 
@@ -56,3 +62,13 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('hr_expense_use_mailgateway')
     def _compute_hr_expense_alias_prefix(self):
         self.filtered(lambda w: not w.hr_expense_use_mailgateway).hr_expense_alias_prefix = False
+
+    @api.depends('hr_expense_use_mailgateway')
+    def _compute_hr_expense_alias_domain_id(self):
+        self.filtered(lambda w: not w.hr_expense_use_mailgateway).hr_expense_alias_domain_id = False
+
+    def _inverse_hr_expense_alias_domain_id(self):
+        expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False)
+        for record in self:
+            if expense_alias and expense_alias.alias_domain_id != record.hr_expense_alias_domain_id:
+                expense_alias.alias_domain_id = record.hr_expense_alias_domain_id
