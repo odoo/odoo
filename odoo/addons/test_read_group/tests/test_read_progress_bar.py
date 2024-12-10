@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import common
+from odoo.tools import mute_logger
 
 
 @common.tagged('post_install', '-at_install')
@@ -27,7 +28,7 @@ class TestReadProgressBar(common.TransactionCase):
 
     def test_week_grouping(self):
         """The labels associated to each record in read_progress_bar should match
-        the ones from read_group, even in edge cases like en_US locale on sundays
+        the ones from web_read_group, even in edge cases like en_US locale on sundays
         """
         context = {"lang": "en_US"}
         groupby = "date:week"
@@ -41,8 +42,8 @@ class TestReadProgressBar(common.TransactionCase):
             }
         }
 
-        groups = self.Model.with_context(context).read_group(
-            [('name', "like", "testWeekGrouping%")], fields=['date', 'name'], groupby=[groupby])
+        groups = self.Model.with_context(context).web_read_group(
+            [('name', "like", "testWeekGrouping%")], groupby=[groupby])['groups']
         progressbars = self.Model.with_context(context).read_progress_bar(
             [('name', "like", "testWeekGrouping%")], group_by=groupby, progress_bar=progress_bar)
         self.assertEqual(len(groups), 2)
@@ -54,10 +55,11 @@ class TestReadProgressBar(common.TransactionCase):
             next(record_name for record_name, count in data.items() if count): group_name
             for group_name, data in progressbars.items()
         }
+        # TODO compare raw value or labeled one. (raw) I think
+        self.assertEqual(groups[0][groupby][0], pg_groups["testWeekGrouping_first"])
+        self.assertEqual(groups[1][groupby][0], pg_groups["testWeekGrouping_second"])
 
-        self.assertEqual(groups[0][groupby], pg_groups["testWeekGrouping_first"])
-        self.assertEqual(groups[1][groupby], pg_groups["testWeekGrouping_second"])
-
+    @mute_logger('odoo.osv.expression')
     def test_simple(self):
         model = self.env['ir.model'].create({
             'model': 'x_progressbar',
@@ -120,9 +122,9 @@ class TestReadProgressBar(common.TransactionCase):
         # check date aggregation and format
         result = self.env['x_progressbar'].read_progress_bar([], 'x_date:week', progress_bar)
         self.assertEqual(result, {
-            'W1 2019': {'foo': 3, 'bar': 1, 'baz': 1},
-            'W2 2019': {'foo': 3, 'bar': 2, 'baz': 2},
-            'W3 2019': {'foo': 0, 'bar': 0, 'baz': 3},
+            '2018-12-30': {'foo': 3, 'bar': 1, 'baz': 1},
+            '2019-01-06': {'foo': 3, 'bar': 2, 'baz': 2},
+            '2019-01-13': {'foo': 0, 'bar': 0, 'baz': 3},
         })
 
         # add a computed field on model

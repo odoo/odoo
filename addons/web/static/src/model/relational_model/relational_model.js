@@ -5,6 +5,7 @@ import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { shallowEqual } from "@web/core/utils/arrays";
+import { pick } from "@web/core/utils/objects";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
@@ -15,6 +16,7 @@ import { Record } from "./record";
 import { StaticList } from "./static_list";
 import {
     extractInfoFromGroupData,
+    getAggregateSpecifications,
     getBasicEvalContext,
     getFieldsSpec,
     isRelational,
@@ -252,6 +254,17 @@ export class RelationalModel extends Model {
             if (this.maxGroupByDepth) {
                 config.groupBy = config.groupBy.slice(0, this.maxGroupByDepth);
             }
+            // apply month granularity if none explicitly given 
+            // TODO: accept only explicit granularity
+            config.groupBy = config.groupBy.map((g) => {
+                if (
+                    g in config.fields &&
+                    ['date', 'datetime'].includes(config.fields[g].type)
+                ) {
+                    return `${g}:month`
+                }
+                return g;
+            })
 
             // orderBy
             config.orderBy = "orderBy" in params ? params.orderBy : config.orderBy;
@@ -363,13 +376,7 @@ export class RelationalModel extends Model {
                 config.activeFields[propertiesFieldName] = makeActiveField();
             }
         }
-        const orderBy = config.orderBy.filter(
-            (o) =>
-                o.name === firstGroupByName ||
-                o.name === "__count" ||
-                (o.name in config.activeFields && config.fields[o.name].aggregator !== undefined)
-        );
-        const response = await this._webReadGroup(config, orderBy);
+        const response = await this._webReadGroup(config);
         const { groups: groupsData, length } = response;
         const groupBy = config.groupBy.slice(1);
         const groupByField = config.fields[config.groupBy[0].split(":")[0]];
@@ -680,20 +687,43 @@ export class RelationalModel extends Model {
         }
     }
 
-    async _webReadGroup(config, orderBy) {
-        const aggregates = Object.values(config.fields)
-            .filter((field) => field.aggregator && field.name in config.activeFields)
-            .map((field) => `${field.name}:${field.aggregator}`);
+    async _webReadGroup(config) {
+        const aggregates = [
+            '__count',
+            ...getAggregateSpecifications(
+                pick(config.fields, ...Object.keys(config.activeFields))
+            ),
+        ];
+        const groupBy = [config.groupBy[0]];
+        const orderBy = [];
+        let groupByInsideOrder = false;
+        for (const {name, asc} of config.orderBy) {
+            if (name === config.groupBy[0].split(':')[0]) {
+                groupByInsideOrder = true
+                orderBy.push({name: config.groupBy[0], asc: asc})
+            } else {
+                for (const agg of aggregates) {
+                    if (agg.split(':')[0] === name) {
+                        orderBy.push({name: agg, asc: asc})
+                        break;
+                    }
+                }
+            }
+        }
+        if (!groupByInsideOrder) {
+            // To always have a complete order
+            orderBy.push({name: config.groupBy[0], asc: true})
+        }
+
         return this.orm.webReadGroup(
             config.resModel,
             config.domain,
+            groupBy,
             aggregates,
-            [config.groupBy[0]],
             {
-                orderby: orderByToString(orderBy),
-                lazy: true,
+                order: orderByToString(orderBy),  // TODO: make orderBy compatible
                 offset: config.offset,
-                limit: config.limit, // TODO: remove limit when == MAX_integer
+                limit: config.limit !== Number.MAX_SAFE_INTEGER ? config.limit : undefined,
                 context: config.context,
             }
         );
