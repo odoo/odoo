@@ -135,7 +135,7 @@ class WebsiteCore {
         const interactions = [];
         for (const interaction of this.interactions.slice().reverse()) {
             if (el === interaction.el || el.contains(interaction.el)) {
-                // console.log(`[colibri] stopping ${interaction.constructor.name}`);
+                // console.log(`[colibri] stopping ${interaction.interaction.constructor.name}`);
                 interaction.destroy();
                 this.activeInteractions.delete(interaction.el, interaction.I);
             } else {

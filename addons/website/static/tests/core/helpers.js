@@ -6,7 +6,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { registry } from "@web/core/registry";
-import { buildEditableInteractions } from "@web/legacy/js/public/interaction_util";
+import { buildEditableInteractions } from "@website/core/website_edit_service";
 
 let activeInteractions = null;
 let elementRegistry = registry.category("website.active_elements");

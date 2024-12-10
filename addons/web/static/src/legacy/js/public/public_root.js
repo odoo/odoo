@@ -11,8 +11,6 @@ import { _t } from "@web/core/l10n/translation";
 import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
 import { App, Component, whenReady } from "@odoo/owl";
 import { RPCError } from '@web/core/network/rpc';
-import { registry } from "@web/core/registry";
-import { buildEditableInteractions } from "@web/legacy/js/public/interaction_util";
 
 const { Settings } = luxon;
 
@@ -51,9 +49,7 @@ export const PublicRoot = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this.env = env;
         this.publicWidgets = [];
-        this.editableInteractions = null;
-        this.websiteCore = this.bindService("website_core");
-        this.editMode = false;
+        this.websiteEdit = null;
     },
     /**
      * @override
@@ -131,9 +127,6 @@ export const PublicRoot = publicWidget.Widget.extend({
      */
     _startWidgets: function ($from, options) {
         var self = this;
-        const editMode = options?.editableMode || false;
-        const shouldActivateEditInteractions = this.editMode !== editMode;
-        this.editMode = editMode;
 
         if ($from === undefined) {
             $from = this.$('#wrapwrap');
@@ -150,20 +143,11 @@ export const PublicRoot = publicWidget.Widget.extend({
 
         this._stopWidgets($from);
         if (!options?.starting) {
-            // interactions are already started. we only restart them if the
-            // public root is not just starting.
-            const target = $from ? $from[0] : undefined;
-            
-            this.websiteCore.stopInteractions(target);
-            if (shouldActivateEditInteractions) {
-                if (!this.editableInteractions) {
-                    const builders = registry.category("website.editable_active_elements_builders").getAll();
-                    this.editableInteractions = buildEditableInteractions(builders);
-                }
-                this.websiteCore.activate(this.editableInteractions);
-            } else {
-                this.websiteCore.startInteractions(target);
+            if (!this.websiteEdit) {
+                this.websiteEdit = this.bindService("website_edit");
             }
+            const target = $from ? $from[0] : undefined;
+            this.websiteEdit.update(target, options?.editableMode || false);
         }
 
         var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {

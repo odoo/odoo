@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { Interaction } from "@website/core/interaction";
-import { buildEditableInteractions } from "@web/legacy/js/public/interaction_util";
+import { buildEditableInteractions } from "@website/core/website_edit_service";
 
 test("buildEditableInteractions concrete", async () => {
     class Base extends Interaction {
