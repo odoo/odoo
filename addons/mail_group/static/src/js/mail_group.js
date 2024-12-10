@@ -12,8 +12,9 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.mailgroupId = this.$el.find('.o_mg_subscribe_form').data('id');
-        this.isMember = this.$el.find('.o_mg_subscribe_form').data('isMember') || false;
+        this.form = this.$el.find('.o_mg_subscribe_form')
+        this.mailgroupId = this.form.data('id');
+        this.isMember = this.form.data('isMember') || false;
         const searchParams = (new URL(document.location.href)).searchParams;
         this.token = searchParams.get('token');
         this.forceUnsubscribe = searchParams.has('unsubscribe');
@@ -56,11 +57,11 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
         const email = $email.val();
 
         if (!email.match(/.+@.+/)) {
-            this.$el.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
+            this.form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
             return false;
         }
 
-        this.$el.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
+        this.form.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
 
         const action = (this.isMember || this.forceUnsubscribe) ? 'unsubscribe' : 'subscribe';
 
@@ -83,7 +84,7 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
             this._updateMembersCount('removed');
         } else if (response === 'email_sent') {
             // The confirmation email has been sent
-            this.$el.html(
+            this.form.html(
                 $('<div class="o_mg_alert alert alert-success" role="alert"/>')
                 .text(_t('An email with instructions has been sent.'))
             );
