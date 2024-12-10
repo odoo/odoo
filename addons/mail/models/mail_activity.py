@@ -588,7 +588,20 @@ class MailActivity(models.Model):
 
     def _to_store_defaults(self):
         return [
-            "all",
+            "activity_category",
+            "activity_type_id",
+            "can_write",
+            "chaining_type",
+            "create_date",
+            "create_uid",
+            "date_deadline",
+            "date_done",
+            "icon",
+            "note",
+            "res_id",
+            "res_model",
+            "state",
+            "summary",
             Store.Many("attachment_ids", ["name"]),
             Store.Attr(
                 "mail_template_ids",
@@ -596,13 +609,6 @@ class MailActivity(models.Model):
             ),
             Store.One("persona", value=lambda activity: activity.user_id.partner_id),
         ]
-
-    def _to_store(self, store: Store, fields):
-        if "all" in fields:
-            fields.remove("all")
-            for activity in self:
-                store.add(activity, activity.read()[0])
-        store.add_records_fields(self, fields)
 
     @api.readonly
     @api.model

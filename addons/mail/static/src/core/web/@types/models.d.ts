@@ -1,5 +1,3 @@
-import { DateTime } from "luxon";
-
 declare module "models" {
     export interface Discuss  {
         inbox: Thread,
