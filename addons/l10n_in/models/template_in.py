@@ -49,6 +49,19 @@ class AccountChartTemplate(models.AbstractModel):
             }
         }
 
+    @template('in', 'account.account')
+    def _get_in_account_account(self):
+        company = self.env.company
+        return {
+            'p810100': {
+                'name': company.name and _('%s Capital Account', company.name) or _('Capital Account'),
+                'code': 810100,
+                'account_type': 'equity',
+                'tag_ids': '',
+                'reconcile': False,
+            }
+        }
+
     @template('in', 'account.fiscal.position')
     def _get_in_account_fiscal_position(self):
         company = self.env.company
