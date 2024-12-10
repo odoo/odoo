@@ -22,7 +22,7 @@
     </t>
     
     <t t-name="mail.MessageReactionList.preview">
-        <div class="o-mail-MessageReactionList-preview px-0 py-1 border cursor-pointer d-flex" t-on-click="(ev) => this.props.openReactionMenu(props.reaction)" t-ref="reactionList">
+        <div class="o-mail-MessageReactionList-preview px-0 py-1 border cursor-pointer d-flex" t-on-click="(ev) => this.onClickReactionList(props.reaction)" t-ref="reactionList">
             <div class="d-flex align-items-center mx-2 gap-2">
                 <span class="fs-1" t-esc="props.reaction.content"/>
                 <span class="o-mail-MessageReactionList-previewText small me-1" t-esc="previewText(props.reaction)"/>
