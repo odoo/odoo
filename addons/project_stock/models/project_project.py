@@ -27,6 +27,11 @@ class ProjectProject(models.Model):
             context['restricted_picking_type_code'] = picking_type
             if picking_type == 'outgoing':
                 context['default_partner_id'] = self.partner_id.id
+                if self.env.user.property_warehouse_id:
+                    context['default_picking_type_id'] = self.env.user.property_warehouse_id.out_type_id.id
+            if picking_type == 'incoming':
+                if self.env.user.property_warehouse_id:
+                    context['default_picking_type_id'] = self.env.user.property_warehouse_id.in_type_id.id
         return {
             'name': action_name,
             'type': 'ir.actions.act_window',
