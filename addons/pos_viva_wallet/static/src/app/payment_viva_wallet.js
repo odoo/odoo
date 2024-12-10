@@ -6,6 +6,10 @@ import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
 
+// Due to consistency issues with the webhook, we also poll
+// the status of the payment periodically as a fallback.
+const POLLING_INTERVAL_MS = 5000;
+
 export class PaymentVivaWallet extends PaymentInterface {
     /*
      Developer documentation:
@@ -107,7 +111,9 @@ export class PaymentVivaWallet extends PaymentInterface {
             cashRegisterId: this.pos.getCashier().name,
         };
         return this._call_viva_wallet(data, "viva_wallet_send_payment_cancel").then((data) => {
-            this._viva_wallet_handle_response(data);
+            if (data.error) {
+                this._show_error(data.error);
+            }
             return true;
         });
     }
@@ -142,6 +148,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         // we use the handlePaymentResponse method on the payment line
         const resolver = this.paymentLineResolvers?.[line.uuid];
         if (resolver) {
+            this.paymentLineResolvers[line.uuid] = null;
             resolver(isPaymentSuccessful);
         } else {
             line.handlePaymentResponse(isPaymentSuccessful);
@@ -158,7 +165,29 @@ export class PaymentVivaWallet extends PaymentInterface {
 
     waitForPaymentConfirmation() {
         return new Promise((resolve) => {
-            this.paymentLineResolvers[this.pending_viva_wallet_line().uuid] = resolve;
+            const paymentLine = this.pending_viva_wallet_line();
+            this.paymentLineResolvers[paymentLine.uuid] = resolve;
+            const intervalId = setInterval(async () => {
+                if (!this.paymentLineResolvers[paymentLine.uuid]) {
+                    clearInterval(intervalId);
+                    return;
+                }
+
+                const result = await this._call_viva_wallet(
+                    paymentLine.sessionId,
+                    "viva_wallet_get_payment_status"
+                );
+                if ("success" in result && this.paymentLineResolvers[paymentLine.uuid]) {
+                    clearInterval(intervalId);
+                    if (this.isPaymentSuccessful(result)) {
+                        this.handleSuccessResponse(paymentLine, result);
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                    this.paymentLineResolvers[paymentLine.uuid] = null;
+                }
+            }, POLLING_INTERVAL_MS);
         });
     }
 
