@@ -60,8 +60,7 @@ export class WeComponent extends Component {
     }
 }
 
-// TODO find a better name
-function multiQuerySelector(targets, selector) {
+function querySelectorAll(targets, selector) {
     const elements = new Set();
     for (const target of targets) {
         for (const el of target.querySelectorAll(selector)) {
@@ -76,9 +75,9 @@ export function useWeComponent() {
     const newEnv = {};
     const oldEnv = useEnv();
     if (comp.props.applyTo) {
-        let editingElements = multiQuerySelector(oldEnv.getEditingElements(), comp.props.applyTo);
+        let editingElements = querySelectorAll(oldEnv.getEditingElements(), comp.props.applyTo);
         useBus(oldEnv.editorBus, "UPDATE_EDITING_ELEMENT", () => {
-            editingElements = multiQuerySelector(oldEnv.getEditingElements(), comp.props.applyTo);
+            editingElements = querySelectorAll(oldEnv.getEditingElements(), comp.props.applyTo);
         });
         newEnv.getEditingElements = () => {
             return editingElements;
@@ -249,7 +248,6 @@ export function useInputWeWidget() {
         }
         const [actionId, actionParam] = getActions()[0];
         return {
-            // TODO just first value ? Or no value if diff ?
             value: actionsRegistry.get(actionId).getValue({
                 editingElement,
                 param: actionParam,
