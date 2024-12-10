@@ -147,4 +147,80 @@
             </t>
         </Dialog>
     </t>
+
+    <t t-name="point_of_sale.OptionalProductLine" >
+        <div t-att-class="{ 'd-flex justify-content-between': !ui.isSmall}">
+            <!-- Product Details -->
+            <div class="d-flex flex-column align-items-left">
+                <t t-set="product" t-value="props.productTemplate"/>
+                <div class="d-flex align-items-center flex-grow-1">
+                    <img t-att-src="product.getImageUrl()" alt="Product Image" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;"/>
+                    <div>
+                        <h5 class="mb-1">
+                            <t t-if="product.attribute_line_ids.length" t-out="this.state.product?.display_name || product.display_name"/>
+                            <t t-else="" t-out="product.display_name"/>
+                        </h5>
+                        <p class="text-muted small mb-1"><t t-out="getMarkupPublicDescription(product)"/></p>
+                    </div>
+                </div>
+
+                <!-- Attribute Selection -->
+                <div t-if="product.attribute_line_ids.length" t-ref="input-area" class="mt-3 ms-5 ps-4">
+                    <div t-foreach="product.attribute_line_ids" t-as="attributeLine" t-key="attributeLine.id" class="attribute mb-3">
+                        <div class="attribute_name mb-2 fw-bold">
+                            <t t-esc="attributeLine.attribute_id.name"/>
+                        </div>
+                        <RadioProductAttribute t-if="attributeLine.attribute_id.display_type === 'radio'" attributeLine="attributeLine"/>
+                        <PillsProductAttribute t-elif="attributeLine.attribute_id.display_type === 'pills'" attributeLine="attributeLine"/>
+                        <SelectProductAttribute t-elif="attributeLine.attribute_id.display_type === 'select'" attributeLine="attributeLine"/>
+                        <ColorProductAttribute t-elif="attributeLine.attribute_id.display_type === 'color'" attributeLine="attributeLine"/>
+                        <MultiProductAttribute t-elif="attributeLine.attribute_id.display_type === 'multi'" attributeLine="attributeLine"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Add to Cart Buttons -->
+            <div class="btn-group d-flex align-items-center" role="group">
+                <t t-if="!state.qty">
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        t-on-click="() => this.changeQuantity(true)">
+                        + Add
+                    </button>
+                </t>
+                <t t-else="">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        t-on-click="() => this.changeQuantity(false)">
+                        －
+                    </button>
+                    <input
+                        type="number"
+                        class="form-control text-center px-3"
+                        style="max-width: 70px;"
+                        t-att-value="state.qty"
+                        t-on-blur="(event) => this.onInputChangeQuantity(event.target.value)" />
+                    <button
+                        type="button"
+                        class="btn btn-secondary m-0"
+                        t-on-click="() => this.changeQuantity(true)">
+                        ＋
+                    </button>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.OptionalProductPopup">
+        <Dialog title.translate="Optional Products">
+            <div t-foreach="props.productTemplate.pos_optional_product_ids" t-as="optional_product" t-key="optional_product.id" class="border-bottom py-2">
+                <OptionalProductLine productTemplate="optional_product" isButtonDisable.bind="isButtonDisable"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="confirm" t-att-disabled="state.buttonDisabled" data-hotkey="q">Add</button>
+                <button class="btn btn-secondary" t-on-click="cancel" data-hotkey="x">Discard</button>
+            </t>
+        </Dialog>
+    </t>
 </templates>
