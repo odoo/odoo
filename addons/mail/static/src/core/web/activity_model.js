@@ -63,7 +63,7 @@ export class Activity extends Record {
         /** @type {import("models").Activity} */
         const activity = this.preinsert(data);
         if (data.request_partner_id) {
-            data.request_partner_id = data.request_partner_id[0];
+            data.request_partner_id = data.request_partner_id.id;
         }
         assignDefined(activity, data);
         if (broadcast) {
