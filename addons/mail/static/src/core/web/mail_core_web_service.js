@@ -22,14 +22,6 @@ export class MailCoreWeb {
                 this.store.activityCounter--;
             }
         });
-        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
-            if (message.needaction && notifId > this.store.inbox.counter_bus_id) {
-                this.store.inbox.counter--;
-            }
-            if (message.starred && notifId > this.store.starred.counter_bus_id) {
-                this.store.starred.counter--;
-            }
-        });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
             const { "mail.message": messages = [] } = this.store.insert(payload, { html: true });
             /** @type {import("models").Message} */
