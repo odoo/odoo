@@ -222,14 +222,15 @@ class MailActivitySchedule(models.TransientModel):
                 else:
                     responsible = template._determine_responsible(self.plan_on_demand_user_id, record)['responsible']
                 date_deadline = template._get_date_deadline(self.plan_date)
-                record.activity_schedule(
+                activity = record.activity_schedule(
                     activity_type_id=template.activity_type_id.id,
                     automated=False,
-                    summary=template.summary,
+                    summary=self._get_activity_summary(record, template),
                     note=template.note,
                     user_id=responsible.id,
                     date_deadline=date_deadline
                 )
+                activity.plan_id = self.plan_id
                 activity_descriptions.append(
                     _('%(activity)s, assigned to %(name)s, due on the %(deadline)s',
                       activity=template.summary or template.activity_type_id.name,
@@ -259,6 +260,10 @@ class MailActivitySchedule(models.TransientModel):
             'target': 'current',
             'domain': [('id', 'in', applied_on.ids)],
         }
+
+    def _get_activity_summary(self, record, template):
+        """ To be overridden """
+        return template.summary
 
     def _check_plan_templates_error(self, applied_on):
         self.ensure_one()

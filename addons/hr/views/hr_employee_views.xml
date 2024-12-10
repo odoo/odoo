@@ -40,6 +40,7 @@
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter name="group_activity_plans_ids" string="Activity Plan" domain="[]" context="{'group_by': 'activity_plans_ids'}"/>
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday'}"/>
@@ -278,7 +279,7 @@
             <field name="arch" type="xml">
                 <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
                     <header>
-                        <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
+                        <button name="%(plan_wizard_action_list)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
