@@ -131,10 +131,10 @@ registerWebsitePreviewTour('website_page_breadcrumb', {
     ...clickOnSave(),
     {
         content: "Check that the breadcrumb is in black-50",
-        trigger: ":iframe .page_breadcrumb:has(section)",
+        trigger: ":iframe .page_breadcrumb",
         run: () => {
             const iframeEl = document.querySelector("iframe");
-            const sectionEl = iframeEl.contentDocument.querySelector("main section");
+            const sectionEl = iframeEl.contentDocument.querySelector("main div.page_breadcrumb nav");
             const rgbString = getComputedStyle(sectionEl)['background-color'];
             return rgbString === 'rgba(0, 0, 0, 0.5)';
         },
