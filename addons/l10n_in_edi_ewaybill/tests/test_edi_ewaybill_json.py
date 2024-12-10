@@ -82,7 +82,7 @@ class TestEdiEwaybillJson(TestEdiJson):
             "docNo": "INV/2019/00002",
             "itemList": [{
                 "productName": "product_a", "hsnCode": "01111", "productDesc": "product_a", "quantity": 1.0,
-                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0
+                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0, 'igstRate': 0.0,
             }],
             "totalValue": 0.0,
             "cgstValue": 0.0,
@@ -101,7 +101,7 @@ class TestEdiEwaybillJson(TestEdiJson):
             "docNo": "INV/2019/00003",
             "itemList": [{
                 "productName": "product_a", "hsnCode": "01111", "productDesc": "product_a", "quantity": 0.0,
-                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0
+                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0, 'igstRate': 0.0,
             }],
             "totalValue": 0.0,
             "cgstValue": 0.0,
