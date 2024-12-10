@@ -346,8 +346,3 @@ class WebsiteHrRecruitment(WebsiteForm):
                 ' You can continue if it\'s not a mistake.'
             )
         }
-
-    def _should_log_authenticate_message(self, record):
-        if record._name == "hr.applicant" and not request.session.uid:
-            return False
-        return super()._should_log_authenticate_message(record)
