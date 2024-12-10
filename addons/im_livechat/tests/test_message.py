@@ -123,6 +123,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                 ),
                 "mail.thread": self._filter_threads_fields(
                     {
+                        "display_name": "test1 Ernest Employee",
                         "id": channel_livechat_1.id,
                         "model": "discuss.channel",
                         "module_icon": "/mail/static/description/icon.png",
@@ -227,6 +228,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                                 ),
                                 "mail.thread": self._filter_threads_fields(
                                     {
+                                        "display_name": "Chell Gladys Ernest Employee",
                                         "id": channel.id,
                                         "model": "discuss.channel",
                                         "module_icon": "/mail/static/description/icon.png",

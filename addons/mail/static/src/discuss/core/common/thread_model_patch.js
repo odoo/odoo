@@ -116,6 +116,8 @@ const threadPatch = {
             },
         });
         this.member_count = undefined;
+        /** @type {string} name: only for channel. For generic thread, @see display_name */
+        this.name = undefined;
         this.onlineMembers = Record.many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
@@ -202,6 +204,9 @@ const threadPatch = {
             return formatList(
                 this.channel_member_ids.map((channelMember) => channelMember.persona.name)
             );
+        }
+        if (this.model === "discuss.channel" && this.name) {
+            return this.name;
         }
         return super.displayName;
     },

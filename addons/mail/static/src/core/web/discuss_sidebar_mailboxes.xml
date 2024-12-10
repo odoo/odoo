@@ -14,7 +14,7 @@
             <t t-call="mail.Mailbox.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden" t-ref="floating">
-                    <span class="text-muted user-select-none" t-esc="mailbox.name"/>
+                    <span class="text-muted user-select-none" t-esc="mailbox.display_name"/>
                 </div>
             </t>
         </Dropdown>
@@ -37,7 +37,7 @@
         >
             <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'mx-2')" thread="mailbox"/>
             <t t-if="!store.discuss.isSidebarCompact">
-                <div class="me-2 text-truncate small" style="line-height: 1.65;" t-esc="mailbox.name"/>
+                <div class="me-2 text-truncate small" style="line-height: 1.65;" t-esc="mailbox.display_name"/>
                 <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
             </t>
             <span

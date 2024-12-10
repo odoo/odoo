@@ -919,10 +919,10 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
             ],
             "mail.thread": self._filter_threads_fields(
                 {
+                    "display_name": "Test",
                     "id": test_record.id,
                     "model": "mail.test.simple",
                     "module_icon": "/base/static/description/icon.png",
-                    "name": "Test",
                     "selfFollower": False,
                 },
             ),

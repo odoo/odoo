@@ -32,19 +32,19 @@ const StorePatch = {
     onStarted() {
         super.onStarted(...arguments);
         this.inbox = {
+            display_name: _t("Inbox"),
             id: "inbox",
             model: "mail.box",
-            name: _t("Inbox"),
         };
         this.starred = {
+            display_name: _t("Starred"),
             id: "starred",
             model: "mail.box",
-            name: _t("Starred"),
         };
         this.history = {
+            display_name: _t("History"),
             id: "history",
             model: "mail.box",
-            name: _t("History"),
         };
         try {
             // useful for synchronizing activity data between multiple tabs
