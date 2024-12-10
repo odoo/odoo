@@ -166,12 +166,15 @@ async function get_emoji_bundle(request) {
 patch(mailDataHelpers, {
     async processRequest(request) {
         const store = await super.processRequest(...arguments);
-        const { livechat_channels } = await parseRequestParams(request);
+        const { livechat_channels, chatbots } = await parseRequestParams(request);
         if (livechat_channels) {
             store.add(
                 this.env["im_livechat.channel"].search([]),
                 makeKwArgs({ fields: ["are_you_inside", "name"] })
             );
+        }
+        if (chatbots) {
+            store.add(this.env["chatbot.script"].search([]), makeKwArgs({ fields: ["title"] }));
         }
         return store;
     },
