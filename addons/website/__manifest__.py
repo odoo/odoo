@@ -302,6 +302,7 @@
         'web.assets_unit_tests_setup': [
             'website/static/lib/multirange/*.js',
             'website/static/src/core/**/*',
+            'website/static/src/utils/**/*',
             'website/static/src/interactions/**/*',
             'website/static/src/snippets/**/*.js',
             ('remove', 'website/static/src/snippets/**/000.js'),
