@@ -143,7 +143,7 @@ class ChannelController(http.Controller):
     @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_join(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].sudo().search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
         channel._find_or_create_member_for_self()
