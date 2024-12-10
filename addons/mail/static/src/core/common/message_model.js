@@ -243,17 +243,17 @@ export class Message extends Record {
     }
 
     get isSubjectSimilarToThreadName() {
-        if (!this.subject || !this.thread || !this.thread.name) {
+        if (!this.subject || !this.thread || !this.thread.display_name) {
             return false;
         }
         const regexPrefix = /^((re|fw|fwd)\s*:\s*)*/i;
-        const cleanedThreadName = this.thread.name.replace(regexPrefix, "");
+        const cleanedThreadName = this.thread.display_name.replace(regexPrefix, "");
         const cleanedSubject = this.subject.replace(regexPrefix, "");
         return cleanedSubject === cleanedThreadName;
     }
 
     get isSubjectDefault() {
-        const name = this.thread?.name;
+        const name = this.thread?.display_name;
         const threadName = name ? name.trim().toLowerCase() : "";
         const defaultSubject = this.default_subject ? this.default_subject.toLowerCase() : "";
         const candidates = new Set([defaultSubject, threadName]);
@@ -454,7 +454,9 @@ export class Message extends Record {
         const thread = this.thread;
         await thread.selfFollower.remove();
         this.store.env.services.notification.add(
-            _t('You are no longer following "%(thread_name)s".', { thread_name: thread.name }),
+            _t('You are no longer following "%(thread_name)s".', {
+                thread_name: thread.display_name,
+            }),
             { type: "success" }
         );
     }
