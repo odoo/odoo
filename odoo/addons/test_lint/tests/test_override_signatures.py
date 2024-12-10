@@ -1,8 +1,7 @@
 import collections
 import inspect
-import itertools
 
-import odoo
+import odoo.models
 from odoo.modules.registry import Registry
 from odoo.tests.common import get_db_name, tagged
 from .lint_case import LintCase

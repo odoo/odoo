@@ -6,8 +6,8 @@ import os
 import re
 import shutil
 
-import odoo
-from odoo.tools.config import config
+import odoo.api
+import odoo.modules
 
 VERSION = 1
 DEFAULT_EXCLUDE = [
