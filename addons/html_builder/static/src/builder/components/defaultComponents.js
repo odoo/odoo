@@ -9,6 +9,7 @@ import { WeSelect } from "./WeSelect";
 import { WeSelectItem } from "./WeSelectItem";
 import { WeColorpicker } from "./WeColorpicker";
 import { WeTextInput } from "./WeTextInput";
+import { WeCheckbox } from "./WeCheckbox";
 
 export const defaultOptionComponents = {
     WeRow,
@@ -22,4 +23,5 @@ export const defaultOptionComponents = {
     WeColorpicker,
     WeSelect,
     WeSelectItem,
+    WeCheckbox,
 };

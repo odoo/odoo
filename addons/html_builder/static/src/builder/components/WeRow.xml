@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.WeRow">
     <WeComponent dependencies="props.dependencies">
-        <div class="d-flex p-1 px-2 hb-row" t-ref="root">
+        <div class="d-flex p-1 px-2 hb-row" t-att-class="props.extraClassName or ''" t-ref="root">
             <div class="d-flex" style="flex-grow: 0.4; flex-basis: 0; min-width: 0;" t-att-data-tooltip="props.tooltip">
                 <span class="text-nowrap text-truncate" t-out="props.label"/>
             </div>

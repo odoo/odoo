@@ -16,6 +16,7 @@ export class WeRow extends Component {
         dependencies: { type: [String, Array], optional: true },
         tooltip: { type: String, optional: true },
         slots: { type: Object, optional: true },
+        extraClassName: { type: String, optional: true },
     };
 
     setup() {
