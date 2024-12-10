@@ -24,4 +24,16 @@ export class MailActivity extends mailModels.MailActivity {
         this.env["calendar.event"].unlink(eventIds);
         return res;
     }
+
+    /** @param {number[]} ids */
+    _to_store(ids, store) {
+        super._to_store(...arguments);
+        for (const activity of this.browse(ids)) {
+            if (activity.calendar_event_id) {
+                store.add(this.browse(activity.id), {
+                    calendar_event_id: activity.calendar_event_id,
+                });
+            }
+        }
+    }
 }
