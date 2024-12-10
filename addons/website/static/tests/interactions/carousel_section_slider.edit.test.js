@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import {
-    startEditInteractions,
+    startInteractions,
     setupInteractionWhiteList,
 } from "../core/helpers";
 
@@ -38,8 +38,8 @@ const carouselHtml = `
     </div>
 `;
 
-test.todo("carousel section slider resets slide to attributes", async () => {
-    const { core, el } = await startEditInteractions(carouselHtml);
+test("carousel section slider resets slide to attributes", async () => {
+    const { core, el } = await startInteractions(carouselHtml, { editMode: true });
     expect(core.interactions.length).toBe(1);
     const controlEls = el.querySelectorAll(".carousel-control-prev, .carousel-control-next");
     const indicatorEls = el.querySelectorAll(".carousel-indicators > *");
