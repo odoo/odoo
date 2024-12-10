@@ -33,6 +33,8 @@ odoo.define('website.s_website_form', function (require) {
                     }
                 });
             }
+            // Make below changes in XML itself in master.
+            this.el.querySelector(".s_website_form_send").classList.add("oe_unremovable");
             return this._super(...arguments);
         },
     });
