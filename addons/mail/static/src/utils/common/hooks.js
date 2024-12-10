@@ -79,7 +79,7 @@ export function onExternalClick(refName, cb) {
  * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
  * @param {number, () => void} [param1.onHovering] array where 1st param is duration until start hovering
  *   and function to be executed at this delay duration after hovering is kept true.
- * @returns {({ isHover: boolean })}
+ * @returns {({ isHover: boolean , setHover: function})}
  */
 export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
     refNames = Array.isArray(refNames) ? refNames : [refNames];
@@ -133,7 +133,7 @@ export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
             }
         }
         wasHovering = hovering;
-    }
+    };
     function onmouseenter(ev) {
         if (state.isHover) {
             return;
@@ -177,7 +177,7 @@ export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
             true
         );
     }
-    return state;
+    return { state, setHover };
 }
 
 /**
