@@ -38,6 +38,9 @@ export async function startInteractions(
         html = `<div id="wrapwrap">${html}</div>`;
     }
     fixture.innerHTML = html;
+    if (options.translateMode) {
+        fixture.closest("html").dataset.edit_translations = "1";
+    }
     if (activeInteractions) {
         clearRegistry(elementRegistry);
         if (!options.editMode) {
@@ -52,9 +55,6 @@ export async function startInteractions(
     }
     const env = await makeMockEnv();
     const core = env.services.website_core;
-    if (options.translateMode) {
-        core.el.closest("html").dataset.edit_translations = "1";
-    }
     if (options.editMode) {
         core.stopInteractions();
         const unmatchedInteractions = activeInteractions ? new Set(activeInteractions) : new Set();
@@ -74,7 +74,10 @@ export async function startInteractions(
     if (options.waitForStart) {
         await core.isReady;
     }
-    after(() => core.stopInteractions());
+    after(() => {
+        delete fixture.closest("html").dataset.edit_translations;
+        core.stopInteractions();
+    });
 
     return {
         el: fixture,

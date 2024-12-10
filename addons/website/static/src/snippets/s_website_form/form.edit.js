@@ -1,4 +1,6 @@
 import { registry } from "@web/core/registry";
+import { Interaction } from "@website/core/interaction";
+import { patch } from "@web/core/utils/patch";
 import {
     formatDate,
     formatDateTime,
@@ -6,38 +8,39 @@ import {
 const { DateTime } = luxon;
 import { Form } from "./form";
 
-const FormEdit = I => class extends I {
+export class FormDateFormatterEdit extends Interaction {
+    static selector = ".s_website_form form .s_website_form_field .s_website_form_input.datetimepicker-input, form.s_website_form .s_website_form_field .s_website_form_input.datetimepicker-input"; // !compatibility
+
+    start() {
+        // We do not initialize the datetime picker in edit mode but want the dates to be formatted.
+        const value = this.el.getAttribute("value");
+        if (value) {
+            const format =
+                this.el.closest(".s_website_form_field").dataset.type === "date"
+                    ? formatDate
+                    : formatDateTime;
+                this.el.value = format(DateTime.fromSeconds(parseInt(value)));
+        }
+    }
+}
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.form_date_formatter", {
+        Interaction: FormDateFormatterEdit,
+    });
+
+// Translation mode.
+patch(Form.prototype, {
     setup() {
         super.setup();
         this.editTranslations = this.services.website_edit.isEditingTranslations();
-    }
-
-    prepareDateFields() {
-        // We do not initialize the datetime picker in edit mode but want the dates to be formated
-        this.el.querySelectorAll(".s_website_form_input.datetimepicker-input").forEach(el => {
-            const value = el.getAttribute("value");
-            if (value) {
-                const format =
-                    el.closest(".s_website_form_field").dataset.type === "date"
-                        ? formatDate
-                        : formatDateTime;
-                    el.value = format(DateTime.fromSeconds(parseInt(value)));
-            }
-        });
-        // Do not call super !
-    }
+    },
 
     prefillValues() {
         if (this.editTranslations) {
             return;
         }
         super.prefillValues();
-    }
-};
-
-registry
-    .category("website.editable_active_elements_builders")
-    .add("website.form", {
-        Interaction: Form,
-        mixin: FormEdit,
-    });
+    },
+});
