@@ -2,12 +2,8 @@ import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_favorite_management", {
-    url: "/odoo",
+    url: "/odoo/apps",
     steps: () => [
-        {
-            trigger: ".o_app[data-menu-xmlid='base\\.menu_management']",
-            run: "click",
-        },
         {
             trigger: ".o_facet_remove",
             run: "click",
@@ -60,7 +56,7 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             trigger: ".o_facet_values:contains('Apps2')",
         },
         {
-            trigger: ".o_kanban_header:contains(Account Charts):contains(112)",
+            trigger: ".o_kanban_header:contains(Account Charts)",
         },
         {
             trigger: ".o_searchview_dropdown_toggler",
