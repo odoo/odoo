@@ -1390,7 +1390,7 @@ export class Model extends Array {
     }
 
     // Default fields, common to all models
-    id = fields.Integer({ readonly: true });
+    id = fields.Integer({ readonly: true, aggregator: undefined });
     display_name = fields.Char({ compute: "_compute_display_name" });
     create_date = fields.Datetime({
         string: "Created on",
