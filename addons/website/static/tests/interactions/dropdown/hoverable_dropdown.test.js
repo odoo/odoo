@@ -28,10 +28,8 @@ test("hoverable_dropdown is started when there is an element header.o_hoverable_
     expect(core.interactions.length).toBe(1);
 });
 
-test("[hover] show / hide content", async () => {
-    const { core } = await startInteractions(getTemplate());
-    const I = core.interactions[0].interaction;
-    I.isSmall = false;
+test.tags("desktop")("[hover] show / hide content", async () => {
+    await startInteractions(getTemplate());
     expect(".dropdown-toggle").not.toHaveClass("show");
     expect(".dropdown-menu > a").not.toBeVisible();
     await hover(".dropdown");

@@ -6,7 +6,7 @@ import {
 
 setupInteractionWhiteList("website.full_screen_height");
 
-test("full screen height is not set on visible section", async () => {
+test.tags("desktop")("full screen height is not set on visible section", async () => {
     const { core, el } = await startInteractions(`
     <main>
         <section class="o_full_screen_height">content</section>

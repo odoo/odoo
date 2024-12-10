@@ -84,9 +84,9 @@ class WebsiteCore {
                 root.destroy();
                 compElem.remove();
             }
-         };
+        };
     }
-    
+
     async _mountComponent(el, C) {
         const root = this.prepareRoot(el, C);
         this.roots.push(root);
@@ -100,7 +100,6 @@ class WebsiteCore {
                 this._startInteraction(el, I, proms);
             } else {
                 for (const _el of el.querySelectorAll(I.selector)) {
-                    // console.log("starting", name);
                     this._startInteraction(_el, I, proms);
                 }
             }
@@ -120,7 +119,7 @@ class WebsiteCore {
         this.activeInteractions.add(el, I);
         if (I.prototype instanceof Interaction) {
             try {
-                console.log(`[colibri] starting ${I.name}`);
+                // console.log(`[colibri] starting ${I.name}`);
                 const interaction = new Colibri(this, I, el);
                 this.interactions.push(interaction);
                 proms.push(interaction.startProm);
@@ -136,7 +135,7 @@ class WebsiteCore {
         const interactions = [];
         for (const interaction of this.interactions.slice().reverse()) {
             if (el === interaction.el || el.contains(interaction.el)) {
-                console.log(`[colibri] stopping ${interaction.constructor.name}`);
+                // console.log(`[colibri] stopping ${interaction.constructor.name}`);
                 interaction.destroy();
                 this.activeInteractions.delete(interaction.el, interaction.I);
             } else {

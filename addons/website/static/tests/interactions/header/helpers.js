@@ -49,9 +49,9 @@ export const checkHeader = function (header, main, core, expectedStatus) {
 
 export const getTemplateWithoutHideOnScroll = function (class_name) {
     return `
-    <header class="${class_name}" style="height:50px; background-color:#CCFFCC">
+    <header class="${class_name}" style="height:50px; background-color:#CCFFCC;">
     </header>
-    <main style="height:2000px;  background-color:#CCCCFF">
+    <main style="height:2000px;  background-color:#CCCCFF;">
     </main>
     `
 }
@@ -59,10 +59,10 @@ export const getTemplateWithoutHideOnScroll = function (class_name) {
 export const getTemplateWithHideOnScroll = function (class_name) {
     return `
     <header class="${class_name}" style="background-color:#CCFFCC">
-        <div class="o_header_hide_on_scroll" style="height: 20px; background-color:#CCFF33"></div>
-        <div style="height: 30px; background-color:#33FFCC"></div>
+        <div class="o_header_hide_on_scroll" style="height: 20px; background-color:#CCFF33;"></div>
+        <div style="height: 30px; background-color:#33FFCC;"></div>
     </header>
-    <main style="height:2000px;  background-color:#CCCCFF">
+    <main style="height:2000px;  background-color:#CCCCFF;">
     </main>
     `
 }

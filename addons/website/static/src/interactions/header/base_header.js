@@ -1,7 +1,10 @@
-import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+
+const isSmall = function () {
+    return uiUtils.getSize() < SIZES.LG
+}
 
 export class BaseHeader extends Interaction {
     dynamicContent = {
@@ -75,7 +78,7 @@ export class BaseHeader extends Interaction {
     //--------------------------------------------------------------
 
     disableScroll() {
-        if (uiUtils.getSize() < SIZES.LG) {
+        if (isSmall()) {
             this.bodyNoScroll = true;
         }
     }
@@ -108,7 +111,7 @@ export class BaseHeader extends Interaction {
         this.adjustScrollbar();
         if (
             document.body.classList.contains('overflow-hidden')
-            && uiUtils.getSize() >= SIZES.LG
+            && !isSmall()
         ) {
             const offCanvasEls = this.el.querySelectorAll(".offcanvas.show");
             for (const offCanvasEl of offCanvasEls) {
@@ -120,6 +123,9 @@ export class BaseHeader extends Interaction {
             for (const collapseEl of collapseEls) {
                 Collapse.getOrCreateInstance(collapseEl).hide();
             }
+        }
+        else {
+            this.adjustMainPadding();
         }
     }
 
@@ -198,7 +204,7 @@ export class BaseHeader extends Interaction {
     //--------------------------------------------------------------
 
     getHeaderHeight() {
-        if (uiUtils.getSize() < SIZES.LG) {
+        if (isSmall()) {
             // Ensure we don't consider the hiddenOnScroll element on mobile
             return this.el.getBoundingClientRect().height;
         }

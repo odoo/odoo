@@ -86,7 +86,7 @@ test("table of content does nothing if there is no s_table_of_content_navbar_sti
     expect(core.interactions.length).toBe(0);
 });
 
-test.tags("desktop")("table of content scrolls to targetted location", async () => {
+test.tags("desktop")("table of content scrolls to targetted location (desktop)", async () => {
     const { core, el } = await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${defaultToc}
@@ -96,23 +96,25 @@ test.tags("desktop")("table of content scrolls to targetted location", async () 
     const wrapEl = el.querySelector("#wrapwrap");
     const aEls = el.querySelectorAll("a[href]");
     const h2Els = el.querySelectorAll("h2[id]");
+    // Only works if the elements are displayed
     expect(aEls[0]).toHaveClass("active");
     expect(aEls[1]).not.toHaveClass("active");
     expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
-    expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(aEls[1], wrapEl)).toBe(true);
     expect(isElementVerticallyInViewportOf(h2Els[0], wrapEl)).toBe(true);
     expect(isElementVerticallyInViewportOf(h2Els[1], wrapEl)).toBe(false);
     await click(aEls[1]);
     await animationFrame();
+    // Only works if the elements are displayed
     expect(aEls[0]).not.toHaveClass("active");
     expect(aEls[1]).toHaveClass("active");
     expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
-    expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(aEls[1], wrapEl)).toBe(true);
     expect(isElementVerticallyInViewportOf(h2Els[0], wrapEl)).toBe(false);
     expect(isElementVerticallyInViewportOf(h2Els[1], wrapEl)).toBe(true);
 });
 
-test.tags("desktop")("table of content highlights reached header", async () => {
+test.tags("mobile")("table of content scrolls to targetted location (mobile)", async () => {
     const { core, el } = await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
             ${defaultToc}
@@ -122,18 +124,68 @@ test.tags("desktop")("table of content highlights reached header", async () => {
     const wrapEl = el.querySelector("#wrapwrap");
     const aEls = el.querySelectorAll("a[href]");
     const h2Els = el.querySelectorAll("h2[id]");
+    // Only works if the elements are displayed
+    expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(aEls[1], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(h2Els[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(h2Els[1], wrapEl)).toBe(false);
+    await click(aEls[1]);
+    await animationFrame();
+    // Only works if the elements are displayed
+    expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(aEls[1], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(h2Els[0], wrapEl)).toBe(false);
+    expect(isElementVerticallyInViewportOf(h2Els[1], wrapEl)).toBe(true);
+});
+
+test.tags("desktop")("table of content highlights reached header (desktop)", async () => {
+    const { core, el } = await startInteractions(`
+        <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
+            ${defaultToc}
+        </div>
+    `);
+    expect(core.interactions.length).toBe(1);
+    const wrapEl = el.querySelector("#wrapwrap");
+    const aEls = el.querySelectorAll("a[href]");
+    const h2Els = el.querySelectorAll("h2[id]");
+    // Only works if the elements are displayed
     expect(aEls[0]).toHaveClass("active");
     expect(aEls[1]).not.toHaveClass("active");
     expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
-    expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(aEls[1], wrapEl)).toBe(true);
     expect(isElementVerticallyInViewportOf(h2Els[0], wrapEl)).toBe(true);
     expect(isElementVerticallyInViewportOf(h2Els[1], wrapEl)).toBe(false);
     await scroll(wrapEl, { top: h2Els[1].getBoundingClientRect().top });
     await animationFrame();
+    // Only works if the elements are displayed
     expect(aEls[0]).not.toHaveClass("active");
     expect(aEls[1]).toHaveClass("active");
     expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(aEls[1], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(h2Els[0], wrapEl)).toBe(false);
+    expect(isElementVerticallyInViewportOf(h2Els[1], wrapEl)).toBe(true);
+});
+
+test.tags("mobile")("table of content highlights reached header (mobile)", async () => {
+    const { core, el } = await startInteractions(`
+        <div id="wrapwrap" style="overflow: scroll; max-height: 300px;">
+            ${defaultToc}
+        </div>
+    `);
+    expect(core.interactions.length).toBe(1);
+    const wrapEl = el.querySelector("#wrapwrap");
+    const aEls = el.querySelectorAll("a[href]");
+    const h2Els = el.querySelectorAll("h2[id]");
+    // Only works if the elements are displayed
     expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(aEls[1], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(h2Els[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(h2Els[1], wrapEl)).toBe(false);
+    await scroll(wrapEl, { top: h2Els[1].getBoundingClientRect().top });
+    await animationFrame();
+    // Only works if the elements are displayed
+    expect(isElementVerticallyInViewportOf(aEls[0], wrapEl)).toBe(true);
+    expect(isElementVerticallyInViewportOf(aEls[1], wrapEl)).toBe(true);
     expect(isElementVerticallyInViewportOf(h2Els[0], wrapEl)).toBe(false);
     expect(isElementVerticallyInViewportOf(h2Els[1], wrapEl)).toBe(true);
 });
