@@ -69,6 +69,7 @@
                             t-model="props.composer.text"
                             t-att-placeholder="placeholder"
                             t-att-readOnly="!state.active"
+                            tabindex="0"
                         />
                         <!--
                              This is an invisible textarea used to compute the composer
@@ -151,7 +152,7 @@
 </t>
 
 <t t-name="mail.Composer.quickActionButton">
-    <button class="btn border-0 rounded-circle" t-att-class="{ 'o-large': ui.isSmall and env.inChatWindow, 'o-small': !ui.isSmall or !env.inChatWindow }" t-attf-class="{{ action.btnClass }}" t-att-title="action.name" t-on-click="(ev) => action.onClick?.(ev)" t-att-data-hotkey="action.hotkey" t-att-disabled="action.disabledCondition or areAllActionsDisabled" t-att-name="action.id" t-ref="{{ action.id }}"><i class="fa-fw fa-lg" t-att-class="action.icon"/></button>
+    <button class="btn border-0 rounded-circle" t-att-class="{ 'o-large': ui.isSmall and env.inChatWindow, 'o-small': !ui.isSmall or !env.inChatWindow }" t-attf-class="{{ action.btnClass }}" t-att-title="action.name" t-on-click="(ev) => action.onClick?.(ev)" t-att-data-hotkey="action.hotkey" t-att-disabled="action.disabledCondition or areAllActionsDisabled" t-att-name="action.id" t-ref="{{ action.id }}" tabindex="0"><i class="fa-fw fa-lg" t-att-class="action.icon"/></button>
 </t>
 
 <t t-name="mail.Composer.moreActions">
