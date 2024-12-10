@@ -432,13 +432,35 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
         )
         
     def test_09_gmc_product_labels(self):
-        ...
+        tags = [f'tag {i}' for i in range(10)]
+        self.mouse_template.write({
+            'product_tag_ids': [
+                Command.create({ 'name': tag, 'sequence': i })
+                for i, tag in enumerate(tags)
+            ]
+        })
+        self.update_values()
+        self.assertEqual(
+            5,
+            len(self.white_mouse_values['custom_label']),
+            'Google only supports up to 5 custom labels',
+        )
+        self.assertListEqual(
+            tags[:5],
+            list(name for _, name in self.white_mouse_values['custom_label']),
+            'Since we are limited, take the highest priority ones according to `sequence`',
+        )
 
     def test_10_gmc_product_shipping(self):
         ...
 
     def test_11_gmc_product_availability(self):
-        ...
+        self.update_values()
+        self.assertEqual(
+            'in£_stock',
+            self.white_mouse_values['availability'],
+            'The availability should always be `in_stock`. (Could be overiden in `stock` module)',
+        )
 
     def test_12_gmc_product_unit_pricing(self):
         ...
