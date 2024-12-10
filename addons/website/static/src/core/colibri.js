@@ -18,6 +18,8 @@ export class Colibri {
         this.dynamicAttrs = [];
         this.tOuts = [];
         this.cleanups = [];
+        this.listeners = new Map();
+        this.dynamicNodes = new Map();
         this.core = core;
         this.interaction = new I(el, core.env, this);
         if (I.dynamicContent) {
@@ -71,19 +73,54 @@ export class Colibri {
             event = groups.event;
             groups = re.exec(event)?.groups;
         }
-        const handler = (ev) => {
-            if (SKIP_IMPLICIT_UPDATE !== fn.call(this.interaction, ev)) {
-                this.updateContent();
-            }
-        };
-        const removeListeners = [];
+        const handler = fn.isHandler
+            ? fn
+            : (ev) => {
+                if (SKIP_IMPLICIT_UPDATE !== fn.call(this.interaction, ev)) {
+                    this.updateContent();
+                }
+            };
+        handler.isHandler = true;
         for (const node of nodes) {
             node.addEventListener(event, handler, options);
-            const removeListener = () => node.removeEventListener(event, handler, options);
-            this.cleanups.push(removeListener);
-            removeListeners.push(removeListener);
+            this.cleanups.push(() => node.removeEventListener(event, handler, options));
         }
-        return removeListeners;
+        return [event, handler, options];
+    }
+
+    refreshListeners() {
+        for (const sel of this.listeners.keys()) {
+            const nodes = this.getNodes(sel);
+            const newNodes = new Set(nodes);
+            const oldNodes = this.dynamicNodes.get(sel);
+            const events = this.listeners.get(sel);
+            const toRemove = new Set();
+            for (const node of oldNodes) {
+                if (newNodes.has(node)) {
+                    newNodes.delete(node);
+                } else {
+                    toRemove.add(node);
+                }
+            }
+            for (const event of Object.keys(events)) {
+                const [handler, options] = events[event];
+                for (const node of toRemove) {
+                    node.removeEventListener(event, handler, options);
+                }
+                if (newNodes.size) {
+                    this.addListener(newNodes, event, handler, options);
+                }
+            }
+            this.dynamicNodes.set(sel, nodes);
+        }
+    }
+
+    mapSelectorToListeners(sel, event, handler, options) {
+        if (this.listeners.has(sel)) {
+            this.listeners.get(sel)[event] = [handler, options];
+        } else {
+            this.listeners.set(sel, { [event]: [handler, options] });
+        }
     }
 
     mountComponent(nodes, C, props) {
@@ -144,33 +181,31 @@ export class Colibri {
         }
     }
 
+    getNodes(sel) {
+        const selectors = this.interaction.dynamicSelectors;
+        if (sel in selectors) {
+            const elem = selectors[sel]();
+            return elem ? [elem] : [];
+        }
+        return this.interaction.el.querySelectorAll(sel);
+    }
+
     processContent(content) {
-        const interaction = this.interaction;
-
-        const el = interaction.el;
-        const nodes = {};
-        const selectors = interaction.dynamicSelectors;
-
-
-        const getNodes = (sel) => {
-            if (sel in selectors) {
-                const elem = selectors[sel]();
-                return elem ? [elem] : [];
-            }
-            if (!(sel in nodes)) {
-                nodes[sel] = el.querySelectorAll(sel);
-            }
-            return nodes[sel];
-        };
-
         for (const sel in content) {
+            let nodes;
+            if (this.dynamicNodes.has(sel)) {
+                nodes = this.dynamicNodes.get(sel);
+            } else {
+                nodes = this.getNodes(sel);
+                this.dynamicNodes.set(sel, nodes);
+            }
             const descr = content[sel];
             for (const directive in descr) {
-                const value = descr[directive]
-                const nodes = getNodes(sel);
+                const value = descr[directive];
                 if (directive.startsWith("t-on-")) {
                     const ev = directive.slice(5);
-                    this.addListener(nodes, ev, value);
+                    const [event, handler, options] = this.addListener(nodes, ev, value);
+                    this.mapSelectorToListeners(sel, event, handler, options);
                 } else if (directive.startsWith("t-att-")) {
                     const attr = directive.slice(6);
                     this.dynamicAttrs.push({ nodes, attr, definition: value, initialValues: null });
@@ -271,6 +306,8 @@ export class Colibri {
             cleanup();
         }
         this.cleanups = [];
+        this.listeners.clear();
+        this.dynamicNodes.clear();
         this.interaction.destroy();
         this.core = null;
         this.isDestroyed = true;

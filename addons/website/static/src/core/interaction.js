@@ -252,19 +252,20 @@ export class Interaction {
      * cleaned up when the interaction is destroyed.
      * Returns a function to remove the listener(s).
      *
-     * @param {EventTarget | string} target an element, a bus or a selector
+     * @param {EventTarget|EventTarget[]|HTMLCollection} target one or more element(s) / bus
      * @param {string} event
      * @param {Function} fn
      * @param {Object} [options]
      * @returns {Function} removes the listeners
      */
     addListener(target, event, fn, options) {
-        const nodes =
-            typeof target === "string"
-                ? this.el.querySelectorAll(target)
-                : [target];
-        const removeListeners = this.__colibri__.addListener(nodes, event, fn, options);
-        return () => removeListeners.forEach(r => r());
+        const nodes = target instanceof EventTarget ? [target] : target;
+        const [ev, handler, opts] = this.__colibri__.addListener(nodes, event, fn, options);
+        return () => nodes.forEach((node) => node.removeEventListener(ev, handler, opts));
+    }
+
+    refreshListeners() {
+        this.__colibri__.refreshListeners();
     }
 
     /**

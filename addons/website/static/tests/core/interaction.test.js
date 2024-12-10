@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 
-import { animationFrame, click, dblclick, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, dblclick, queryAll } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Colibri } from "@website/core/colibri";
@@ -52,7 +52,7 @@ describe("adding listeners", () => {
         expect(clicked).toBe(1);
     });
 
-    test("can add a listener on a multiple elements", async () => {
+    test("can add a listener on multiple elements", async () => {
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
@@ -68,7 +68,7 @@ describe("adding listeners", () => {
         expect(clicked).toBe(2);
     });
 
-    test.tags("desktop")("can add multiple listeners on a element", async () => {
+    test.tags("desktop")("can add multiple listeners on an element", async () => {
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
@@ -83,6 +83,22 @@ describe("adding listeners", () => {
         expect(clicked).toBe(0);
         await dblclick("span");
         expect(clicked).toBe(3); // event dblclick = click + click + dblclick
+    });
+
+    test("can use addListener on HTMLCollection", async () => {
+        let clicked = 0;
+        class Test extends Interaction {
+            static selector = ".test";
+            start() {
+                this.addListener(this.el.querySelectorAll("span"), "click", () => clicked++);
+            }
+        }
+        await startInteraction(Test, TemplateTestDoubleSpan);
+        expect(clicked).toBe(0);
+        const spans = queryAll("span");
+        await click(spans[0]);
+        await click(spans[1]);
+        expect(clicked).toBe(2);
     });
 
     test("listener is added between willstart and start", async () => {
@@ -182,6 +198,42 @@ describe("using selectors", () => {
         expect(clicked).toBe(1);
     });
 
+    test("can refresh listeners", async () => {
+        let clicked = 0;
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                ".me": {
+                    "t-on-click": (ev) => {
+                        clicked++;
+                        ev.currentTarget.parentElement
+                            .querySelectorAll("span:not(.me)")
+                            .forEach((el) => el.classList.add("me"));
+                        ev.currentTarget.classList.remove("me");
+                        this.refreshListeners();
+                    },
+                },
+            };
+        }
+        await startInteraction(Test, `
+            <div class="test">
+                <span class="me">span1</span>
+                <span>span2</span>
+                <span>span3</span>
+            </div>
+        `);
+        async function clickAll() {
+            for (const el of queryAll(".me")) {
+                await click(el);
+            }
+        }
+        expect(clicked).toBe(0);
+        await clickAll();
+        expect(clicked).toBe(1);
+        await clickAll();
+        expect(clicked).toBe(3);
+    });
+
     test("does not crash if no modal is found", async () => {
         let clicked = 0;
         class Test extends Interaction {
@@ -244,7 +296,7 @@ describe("removing listeners", () => {
         class Test extends Interaction {
             static selector = ".test";
             start() {
-                this.addListener("span", "click", () => clicked++);
+                this.addListener(this.el.querySelector("span"), "click", () => clicked++);
             }
         }
         const { core } = await startInteraction(Test, TemplateTest);
@@ -261,7 +313,9 @@ describe("removing listeners", () => {
         class Test extends Interaction {
             static selector = ".test";
             start() {
-                this.removeListener = this.addListener("span", "click", () => clicked++);
+                this.removeListener = this.addListener(
+                    this.el.querySelector("span"), "click", () => clicked++
+                );
             }
         }
         const { core } = await startInteraction(Test, TemplateTest);
@@ -278,7 +332,9 @@ describe("removing listeners", () => {
         class Test extends Interaction {
             static selector = ".test";
             start() {
-                this.removeListener = this.addListener("span", "click", () => clicked++);
+                this.removeListener = this.addListener(
+                    this.el.querySelectorAll("span"), "click", () => clicked++
+                );
             }
         }
         const { el, core } = await startInteraction(Test, TemplateTestDoubleSpan);
@@ -375,7 +431,7 @@ describe("handling crashes", () => {
         class Test extends Interaction {
             static selector = ".test";
             setup() {
-                this.addListener("span", "click", () => clicked++);
+                this.addListener(this.el.querySelector("span"), "click", () => clicked++);
             }
         }
         let error = null;
@@ -798,7 +854,7 @@ describe("waitFor...", () => {
             }
             await startInteraction(Test, TemplateTest);
             expect.verifySteps([]);
-            await click(queryOne(".test"));
+            await click(".test");
             expect.verifySteps(["waitfor", "clicked", "updatecontent"]);
         });
     });
