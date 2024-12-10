@@ -99,6 +99,10 @@ export class Activity extends Record {
     write_date;
     /** @type {[number, string]} */
     write_uid;
+
+    serialize() {
+        return JSON.parse(JSON.stringify(this.toData()));
+    }
 }
 
 Activity.register();
