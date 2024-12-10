@@ -22,22 +22,22 @@
         <field name="line_ids">
             <record id="l10n_kr_general_tp_vat_fi" model="account.report.line">
                 <field name="name">1. Filing Information</field>
-                <field name="code">FI</field>
+                <field name="code">KR_FI</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kr_general_tp_vat_ot" model="account.report.line">
                         <field name="name">Tax Base and Output Tax</field>
-                        <field name="code">OT</field>
+                        <field name="code">KR_OT</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_otvt" model="account.report.line">
                                 <field name="name">VAT Taxed</field>
-                                <field name="code">OTVT</field>
+                                <field name="code">KR_OTVT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_otvttii" model="account.report.line">
                                         <field name="name">(1) Tax Invoice Issued</field>
-                                        <field name="code">OTVTTII</field>
+                                        <field name="code">KR_OTVTTII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_otvttii_balance"
@@ -56,7 +56,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_otvttip" model="account.report.line">
                                         <field name="name">(2) Tax invoice issued by purchasee</field>
-                                        <field name="code">OTVTTIP</field>
+                                        <field name="code">KR_OTVTTIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_otvttip_balance"
@@ -75,7 +75,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_otvtc" model="account.report.line">
                                         <field name="name">(3) Card or Cash Receipt Issued</field>
-                                        <field name="code">OTVTC</field>
+                                        <field name="code">KR_OTVTC</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_otvtc_balance"
@@ -94,7 +94,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_otvto" model="account.report.line">
                                         <field name="name">(4) Others</field>
-                                        <field name="code">OTVTO</field>
+                                        <field name="code">KR_OTVTO</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_otvto_balance"
@@ -115,12 +115,12 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_otzr" model="account.report.line">
                                 <field name="name">Zero Rate</field>
-                                <field name="code">OTZR</field>
+                                <field name="code">KR_OTZR</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_otzrtii" model="account.report.line">
                                         <field name="name">(5) Tax Invoice Issued</field>
-                                        <field name="code">OTZRTII</field>
+                                        <field name="code">KR_OTZRTII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_otzrtii_balance"
@@ -139,7 +139,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_otzro" model="account.report.line">
                                         <field name="name">(6) Others</field>
-                                        <field name="code">OTZRO</field>
+                                        <field name="code">KR_OTZRO</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_otzro_balance"
@@ -160,24 +160,24 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_otur" model="account.report.line">
                                 <field name="name">(7) Taxes Unreported in the preliminary return</field>
-                                <field name="code">OTUR</field>
+                                <field name="code">KR_OTUR</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_otur_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">UTPRZRT.balance</field>
+                                        <field name="formula">KR_UTPRZRT.balance</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_otur_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">UTPRZRT.tax</field>
+                                        <field name="formula">KR_UTPRZRT.tax</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_otbd" model="account.report.line">
                                 <field name="name">(8) Addition / subtraction of bad debts tax credit</field>
-                                <field name="code">OTBD</field>
+                                <field name="code">KR_OTBD</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_otbd_balance" model="account.report.expression">
@@ -196,22 +196,22 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_ott" model="account.report.line">
                                 <field name="name">(9) Total</field>
-                                <field name="code">OTT</field>
+                                <field name="code">KR_OTT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ott_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">OTVTTII.balance + OTVTTIP.balance + OTVTC.balance +
-                                            OTVTO.balance + OTZRTII.balance + OTZRO.balance + OTUR.balance +
-                                            OTBD.balance
+                                        <field name="formula">KR_OTVTTII.balance + KR_OTVTTIP.balance + KR_OTVTC.balance +
+                                            KR_OTVTO.balance + KR_OTZRTII.balance + KR_OTZRO.balance + KR_OTUR.balance +
+                                            KR_OTBD.balance
                                         </field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_ott_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">OTVTTII.tax + OTVTTIP.tax + OTVTC.tax + OTVTO.tax +
-                                            OTZRTII.tax + OTZRO.tax + OTUR.tax + OTBD.tax
+                                        <field name="formula">KR_OTVTTII.tax + KR_OTVTTIP.tax + KR_OTVTC.tax + KR_OTVTO.tax +
+                                            KR_OTZRTII.tax + KR_OTZRO.tax + KR_OTUR.tax + KR_OTBD.tax
                                         </field>
                                     </record>
                                 </field>
@@ -220,17 +220,17 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_it" model="account.report.line">
                         <field name="name">Input Tax</field>
-                        <field name="code">IT</field>
+                        <field name="code">KR_IT</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_itr" model="account.report.line">
                                 <field name="name">The amount for which tax invoice received</field>
-                                <field name="code">ITR</field>
+                                <field name="code">KR_ITR</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_itpgs" model="account.report.line">
                                         <field name="name">(10) Purchases of Goods/Services</field>
-                                        <field name="code">ITPGS</field>
+                                        <field name="code">KR_ITPGS</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_itpgs_balance"
@@ -251,7 +251,7 @@
                                         <field name="name">(10-1) Deferral of Payment for Exporting Companies for Import
                                             of Goods
                                         </field>
-                                        <field name="code">ITDPECIG</field>
+                                        <field name="code">KR_ITDPECIG</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_itdpecig_balance"
@@ -272,7 +272,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_itpfa" model="account.report.line">
                                         <field name="name">(11) Purchase of Fixed Asset</field>
-                                        <field name="code">ITPFA</field>
+                                        <field name="code">KR_ITPFA</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_itpfa_balance"
@@ -293,25 +293,25 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_ittupr" model="account.report.line">
                                 <field name="name">(12) Taxes unreported in preliminary return</field>
-                                <field name="code">ITTUPR</field>
+                                <field name="code">KR_ITTUPR</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ittupr_balance"
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">UTPRT.balance</field>
+                                        <field name="formula">KR_UTPRT.balance</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_ittupr_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">UTPRT.tax</field>
+                                        <field name="formula">KR_UTPRT.tax</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_ittiip" model="account.report.line">
                                 <field name="name">(13) Tax invoice issued by purchaser</field>
-                                <field name="code">ITTIIP</field>
+                                <field name="code">KR_ITTIIP</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ittiip_balance"
@@ -329,75 +329,75 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_itotdp" model="account.report.line">
                                 <field name="name">(14) Other tax-deductible purchase</field>
-                                <field name="code">ITOTDP</field>
+                                <field name="code">KR_ITOTDP</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_itotdp_balance"
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">SSRCCSST.balance</field>
+                                        <field name="formula">KR_SSRCCSST.balance</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_itotdp_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">ITOTDP.balance * 0.1</field>
+                                        <field name="formula">KR_ITOTDP.balance * 0.1</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_itt" model="account.report.line">
                                 <field name="name">(15) Total (10)-(10-1)+(11)+(12)+(13)+(14)</field>
-                                <field name="code">ITT</field>
+                                <field name="code">KR_ITT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_itt_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">ITPGS.balance - ITDPECIG.balance + ITPFA.balance +
-                                            ITTUPR.balance + ITTIIP.balance + ITOTDP.balance
+                                        <field name="formula">KR_ITPGS.balance - KR_ITDPECIG.balance + KR_ITPFA.balance +
+                                            KR_ITTUPR.balance + KR_ITTIIP.balance + KR_ITOTDP.balance
                                         </field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_itt_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">ITPGS.tax - ITDPECIG.tax + ITPFA.tax + ITTUPR.tax +
-                                            ITTIIP.tax + ITOTDP.tax
+                                        <field name="formula">KR_ITPGS.tax - KR_ITDPECIG.tax + KR_ITPFA.tax + KR_ITTUPR.tax +
+                                            KR_ITTIIP.tax + KR_ITOTDP.tax
                                         </field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_itndit" model="account.report.line">
                                 <field name="name">(16) Non-deductible input-tax</field>
-                                <field name="code">ITNDIT</field>
+                                <field name="code">KR_ITNDIT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_itndit_balance"
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">NDITT.balance</field>
+                                        <field name="formula">KR_NDITT.balance</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_itndit_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">NDITT.tax</field>
+                                        <field name="formula">KR_NDITT.tax</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_itb" model="account.report.line">
                                 <field name="name">(17) Balance (15)-(16)</field>
-                                <field name="code">ITB</field>
+                                <field name="code">KR_ITB</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_itb_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">ITT.balance - ITNDIT.balance</field>
+                                        <field name="formula">KR_ITT.balance - KR_ITNDIT.balance</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_itb_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">ITT.tax - ITNDIT.tax</field>
+                                        <field name="formula">KR_ITT.tax - KR_ITNDIT.tax</field>
                                     </record>
                                 </field>
                             </record>
@@ -405,36 +405,36 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_tp" model="account.report.line">
                         <field name="name">Taxes Payable (refundable) (output tax(9)-input tax(17))</field>
-                        <field name="code">TP</field>
+                        <field name="code">KR_TP</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_tp_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">OTT.tax-ITB.tax</field>
+                                <field name="formula">KR_OTT.tax-KR_ITB.tax</field>
                             </record>
                         </field>
                     </record>
                     <record id="l10n_kr_general_tp_vat_tred" model="account.report.line">
                         <field name="name">Tax reduction/exemption or deduction</field>
-                        <field name="code">TRED</field>
+                        <field name="code">KR_TRED</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_otred" model="account.report.line">
                                 <field name="name">(18) Other taxes reduced/exmpted or deducted</field>
-                                <field name="code">OTRED</field>
+                                <field name="code">KR_OTRED</field>
                                 <field name="hierarchy_level">4</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_otred_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">DOTCRT.tax</field>
+                                        <field name="formula">KR_DOTCRT.tax</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_ccsid" model="account.report.line">
                                 <field name="name">(19) Credit card slip issuance deduction</field>
-                                <field name="code">CCSID</field>
+                                <field name="code">KR_CCSID</field>
                                 <field name="hierarchy_level">4</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ccsid_balance" model="account.report.expression">
@@ -453,13 +453,13 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_tredt" model="account.report.line">
                                 <field name="name">(20) Total</field>
-                                <field name="code">TREDT</field>
+                                <field name="code">KR_TREDT</field>
                                 <field name="hierarchy_level">4</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tredt_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">OTRED.tax + CCSID.tax</field>
+                                        <field name="formula">KR_OTRED.tax + KR_CCSID.tax</field>
                                     </record>
                                 </field>
                             </record>
@@ -467,7 +467,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_sbvd" model="account.report.line">
                         <field name="name">(20-1) Small business VAT deduction</field>
-                        <field name="code">SBVD</field>
+                        <field name="code">KR_SBVD</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_sbvd_balance" model="account.report.expression">
@@ -486,7 +486,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_tupr" model="account.report.line">
                         <field name="name">(21) Taxes unrefunded in preliminary return</field>
-                        <field name="code">TUPR</field>
+                        <field name="code">KR_TUPR</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_tupr_balance" model="account.report.expression">
@@ -505,7 +505,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_tapr" model="account.report.line">
                         <field name="name">(22) Taxes assessed for preliminary return</field>
-                        <field name="code">TAPR</field>
+                        <field name="code">KR_TAPR</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_tapr_balance" model="account.report.expression">
@@ -524,7 +524,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_tpbt" model="account.report.line">
                         <field name="name">(23) Tax paid by business transferee</field>
-                        <field name="code">TPBT</field>
+                        <field name="code">KR_TPBT</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_tpbt_tax" model="account.report.expression">
@@ -537,7 +537,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_ptspg" model="account.report.line">
                         <field name="name">(24) Prepaid tax of special payments by gold ingot purchaser</field>
-                        <field name="code">PTSPG</field>
+                        <field name="code">KR_PTSPG</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_ptspg_tax" model="account.report.expression">
@@ -550,7 +550,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_ptccc" model="account.report.line">
                         <field name="name">(25) Prepaid tax by credit card company</field>
-                        <field name="code">PTCCC</field>
+                        <field name="code">KR_PTCCC</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_ptccc_tax" model="account.report.expression">
@@ -563,31 +563,31 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_tpp" model="account.report.line">
                         <field name="name">(26) Penalties</field>
-                        <field name="code">TPP</field>
+                        <field name="code">KR_TPP</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_tpp_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">STPVATPT.balance</field>
+                                <field name="formula">KR_STPVATPT.balance</field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_tpp_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">STPVATPT.tax</field>
+                                <field name="formula">KR_STPVATPT.tax</field>
                             </record>
                         </field>
                     </record>
                     <record id="l10n_kr_general_tp_vat_tpt" model="account.report.line">
                         <field name="name">(27) Total of tax payable (refundable)</field>
-                        <field name="code">TPT</field>
+                        <field name="code">KR_TPT</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_tpt_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">TP.tax - TREDT.tax - SBVD.tax - TUPR.tax - TAPR.tax - TPBT.tax -
-                                    PTSPG.tax - PTCCC.tax - TPP.tax
+                                <field name="formula">KR_TP.tax - KR_TREDT.tax - KR_SBVD.tax - KR_TUPR.tax - KR_TAPR.tax - KR_TPBT.tax -
+                                    KR_PTSPG.tax - KR_PTCCC.tax - KR_TPP.tax
                                 </field>
                             </record>
                         </field>
@@ -596,14 +596,14 @@
                         <field name="name">Total of tax payable(refundable) by main business place that pays VAT for all
                             other sub-business places
                         </field>
-                        <field name="code">TPTMB</field>
+                        <field name="code">KR_TPTMB</field>
                         <field name="hierarchy_level">1</field>
                     </record>
                 </field>
             </record>
             <record id="l10n_kr_general_tp_vat_batr" model="account.report.line">
                 <field name="name">2. Bank Account for Tax Refund</field>
-                <field name="code">BATR</field>
+                <field name="code">KR_BATR</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="l10n_kr_general_tp_vat_batr_balance" model="account.report.expression">
@@ -622,7 +622,7 @@
             </record>
             <record id="l10n_kr_general_tp_vat_rbc" model="account.report.line">
                 <field name="name">3. Report for Business Closure</field>
-                <field name="code">RBC</field>
+                <field name="code">KR_RBC</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="l10n_kr_general_tp_vat_rbc_balance" model="account.report.expression">
@@ -641,7 +641,7 @@
             </record>
             <record id="l10n_kr_general_tp_vat_rzrt" model="account.report.line">
                 <field name="name">4. Reciprocity of Zero Rate Tax</field>
-                <field name="code">RZRT</field>
+                <field name="code">KR_RZRT</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
                     <record id="l10n_kr_general_tp_vat_rzrt_balance" model="account.report.expression">
@@ -660,12 +660,12 @@
             </record>
             <record id="l10n_kr_general_tp_vat_tbi" model="account.report.line">
                 <field name="name">5. Tax Base Information</field>
-                <field name="code">TBI</field>
+                <field name="code">KR_TBI</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kr_general_tp_vat_bt1" model="account.report.line">
                         <field name="name">(28)</field>
-                        <field name="code">BT1</field>
+                        <field name="code">KR_BT1</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_bt1_balance" model="account.report.expression">
@@ -677,7 +677,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_bt2" model="account.report.line">
                         <field name="name">(29)</field>
-                        <field name="code">BT2</field>
+                        <field name="code">KR_BT2</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_bt2_balance" model="account.report.expression">
@@ -689,7 +689,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_bt3" model="account.report.line">
                         <field name="name">(30)</field>
-                        <field name="code">BT3</field>
+                        <field name="code">KR_BT3</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_bt3_balance" model="account.report.expression">
@@ -701,7 +701,7 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_ime" model="account.report.line">
                         <field name="name">(31) Import amount exemption</field>
-                        <field name="code">IME</field>
+                        <field name="code">KR_IME</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_ime_balance" model="account.report.expression">
@@ -713,13 +713,13 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_ttb" model="account.report.line">
                         <field name="name">(32) Total</field>
-                        <field name="code">TTB</field>
+                        <field name="code">KR_TTB</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_kr_general_tp_vat_ttb_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">BT1.balance + BT2.balance + BT3.balance - IME.balance</field>
+                                <field name="formula">KR_BT1.balance + KR_BT2.balance + KR_BT3.balance - KR_IME.balance</field>
                             </record>
                         </field>
                     </record>
@@ -727,27 +727,27 @@
             </record>
             <record id="l10n_kr_general_tp_vat_opt" model="account.report.line">
                 <field name="name">Only If Applicable</field>
-                <field name="code">OPT</field>
+                <field name="code">KR_OPT</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kr_general_tp_vat_utpr" model="account.report.line">
                         <field name="name">Unreported Taxes in the preliminary return</field>
-                        <field name="code">UTPR</field>
+                        <field name="code">KR_UTPR</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_utprs" model="account.report.line">
                                 <field name="name">Sales</field>
-                                <field name="code">UTPRS</field>
+                                <field name="code">KR_UTPRS</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_utprsvt" model="account.report.line">
                                         <field name="name">VAT-Taxed</field>
-                                        <field name="code">UTPRSVT</field>
+                                        <field name="code">KR_UTPRSVT</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="children_ids">
                                             <record id="l10n_kr_general_tp_vat_utprsvtti" model="account.report.line">
                                                 <field name="name">(33) Tax invoice</field>
-                                                <field name="code">UTPRSVTTI</field>
+                                                <field name="code">KR_UTPRSVTTI</field>
                                                 <field name="hierarchy_level">4</field>
                                                 <field name="expression_ids">
                                                     <record id="l10n_kr_general_tp_vat_utprsvtti_balance"
@@ -761,13 +761,13 @@
                                                             model="account.report.expression">
                                                         <field name="label">tax</field>
                                                         <field name="engine">aggregation</field>
-                                                        <field name="formula">UTPRSVTTI.balance * 0.1</field>
+                                                        <field name="formula">KR_UTPRSVTTI.balance * 0.1</field>
                                                     </record>
                                                 </field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_utprsvtto" model="account.report.line">
                                                 <field name="name">(34) VAT-Taxed Other</field>
-                                                <field name="code">UTPRSVTTO</field>
+                                                <field name="code">KR_UTPRSVTTO</field>
                                                 <field name="hierarchy_level">4</field>
                                                 <field name="expression_ids">
                                                     <record id="l10n_kr_general_tp_vat_utprsvtto_balance"
@@ -781,7 +781,7 @@
                                                             model="account.report.expression">
                                                         <field name="label">tax</field>
                                                         <field name="engine">aggregation</field>
-                                                        <field name="formula">UTPRSVTTO.balance * 0.1</field>
+                                                        <field name="formula">KR_UTPRSVTTO.balance * 0.1</field>
                                                     </record>
                                                 </field>
                                             </record>
@@ -789,12 +789,12 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_utprszr" model="account.report.line">
                                         <field name="name">Zero Rate</field>
-                                        <field name="code">UTPRSZR</field>
+                                        <field name="code">KR_UTPRSZR</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="children_ids">
                                             <record id="l10n_kr_general_tp_vat_utprzrti" model="account.report.line">
                                                 <field name="name">(35) Tax Invoice</field>
-                                                <field name="code">UTPRZRTI</field>
+                                                <field name="code">KR_UTPRZRTI</field>
                                                 <field name="hierarchy_level">4</field>
                                                 <field name="expression_ids">
                                                     <record id="l10n_kr_general_tp_vat_utprzrti_balance"
@@ -815,7 +815,7 @@
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_utprzro" model="account.report.line">
                                                 <field name="name">(36) Other</field>
-                                                <field name="code">UTPRZRO</field>
+                                                <field name="code">KR_UTPRZRO</field>
                                                 <field name="hierarchy_level">4</field>
                                                 <field name="expression_ids">
                                                     <record id="l10n_kr_general_tp_vat_utprzro_balance"
@@ -836,23 +836,23 @@
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_utprzrt" model="account.report.line">
                                                 <field name="name">(37) Total</field>
-                                                <field name="code">UTPRZRT</field>
+                                                <field name="code">KR_UTPRZRT</field>
                                                 <field name="hierarchy_level">3</field>
                                                 <field name="expression_ids">
                                                     <record id="l10n_kr_general_tp_vat_utprzrt_balance"
                                                             model="account.report.expression">
                                                         <field name="label">balance</field>
                                                         <field name="engine">aggregation</field>
-                                                        <field name="formula">UTPRSVTTI.balance + UTPRSVTTO.balance +
-                                                            UTPRZRTI.balance + UTPRZRO.balance
+                                                        <field name="formula">KR_UTPRSVTTI.balance + KR_UTPRSVTTO.balance +
+                                                            KR_UTPRZRTI.balance + KR_UTPRZRO.balance
                                                         </field>
                                                     </record>
                                                     <record id="l10n_kr_general_tp_vat_utprzrt_tax"
                                                             model="account.report.expression">
                                                         <field name="label">tax</field>
                                                         <field name="engine">aggregation</field>
-                                                        <field name="formula">UTPRSVTTI.tax + UTPRSVTTO.tax +
-                                                            UTPRZRTI.tax + UTPRZRO.tax
+                                                        <field name="formula">KR_UTPRSVTTI.tax + KR_UTPRSVTTO.tax +
+                                                            KR_UTPRZRTI.tax + KR_UTPRZRO.tax
                                                         </field>
                                                     </record>
                                                 </field>
@@ -863,12 +863,12 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_utprp" model="account.report.line">
                                 <field name="name">Purchase</field>
-                                <field name="code">UTPRP</field>
+                                <field name="code">KR_UTPRP</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_utprpti" model="account.report.line">
                                         <field name="name">(38) Tax invoice</field>
-                                        <field name="code">UTPRPTI</field>
+                                        <field name="code">KR_UTPRPTI</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_utprpti_balance"
@@ -889,7 +889,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_utprodit" model="account.report.line">
                                         <field name="name">(39) Other deductible input tax</field>
-                                        <field name="code">UTPRODIT</field>
+                                        <field name="code">KR_UTPRODIT</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_utprodit_balance"
@@ -910,20 +910,20 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_utprt" model="account.report.line">
                                         <field name="name">(40) Total</field>
-                                        <field name="code">UTPRT</field>
+                                        <field name="code">KR_UTPRT</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_utprt_balance"
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">UTPRPTI.balance + UTPRODIT.balance</field>
+                                                <field name="formula">KR_UTPRPTI.balance + KR_UTPRODIT.balance</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_utprt_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">UTPRPTI.tax + UTPRODIT.tax</field>
+                                                <field name="formula">KR_UTPRPTI.tax + KR_UTPRODIT.tax</field>
                                             </record>
                                         </field>
                                     </record>
@@ -933,17 +933,17 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_odip" model="account.report.line">
                         <field name="name">Other deductible input tax</field>
-                        <field name="code">ODIP</field>
+                        <field name="code">KR_ODIP</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_ssrccss" model="account.report.line">
                                 <field name="name">Specification of reception such as credit card sales slip</field>
-                                <field name="code">SSRCCSS</field>
+                                <field name="code">KR_SSRCCSS</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_gs" model="account.report.line">
                                         <field name="name">(41) General Sales</field>
-                                        <field name="code">GS</field>
+                                        <field name="code">KR_GS</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_gs_balance"
@@ -962,7 +962,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_fa" model="account.report.line">
                                         <field name="name">(42) Fixed Asset</field>
-                                        <field name="code">FA</field>
+                                        <field name="code">KR_FA</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_fa_balance"
@@ -983,7 +983,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_dit" model="account.report.line">
                                 <field name="name">(43) Deemed input tax</field>
-                                <field name="code">DIT</field>
+                                <field name="code">KR_DIT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_dit_balance" model="account.report.expression">
@@ -1001,7 +1001,7 @@
                             <record id="l10n_kr_general_tp_vat_itcrsm" model="account.report.line">
                                 <field name="name">(44) Input tax credit for recycling of scrapped materials, etc
                                 </field>
-                                <field name="code">ITCRSM</field>
+                                <field name="code">KR_ITCRSM</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_itcrsm_balance"
@@ -1020,7 +1020,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_itcctb" model="account.report.line">
                                 <field name="name">(45) Input tax credit for conversion to taxable business</field>
-                                <field name="code">ITCCTB</field>
+                                <field name="code">KR_ITCCTB</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_itcctb_balance"
@@ -1040,7 +1040,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_iit" model="account.report.line">
                                 <field name="name">(46) Inventory input tax</field>
-                                <field name="code">IIT</field>
+                                <field name="code">KR_IIT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_iit_balance" model="account.report.expression">
@@ -1059,7 +1059,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_cbdt" model="account.report.line">
                                 <field name="name">(47) Collected bad debt tax</field>
-                                <field name="code">CBDT</field>
+                                <field name="code">KR_CBDT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_cbdt_balance" model="account.report.expression">
@@ -1078,7 +1078,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_itcrft" model="account.report.line">
                                 <field name="name">(48) Input tax credit for refund made to foreign tourists</field>
-                                <field name="code">ITCRFT</field>
+                                <field name="code">KR_ITCRFT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_itcrft_balance"
@@ -1098,22 +1098,22 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_ssrccsst" model="account.report.line">
                                 <field name="name">(49) Total</field>
-                                <field name="code">SSRCCSST</field>
+                                <field name="code">KR_SSRCCSST</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ssrccsst_balance"
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">GS.balance + FA.balance + DIT.balance + ITCRSM.balance +
-                                            ITCCTB.balance + IIT.balance + CBDT.balance + ITCRFT.balance
+                                        <field name="formula">KR_GS.balance + KR_FA.balance + KR_DIT.balance + KR_ITCRSM.balance +
+                                            KR_ITCCTB.balance + KR_IIT.balance + KR_CBDT.balance + KR_ITCRFT.balance
                                         </field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_ssrccsst_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">GS.tax + FA.tax + DIT.tax + ITCRSM.tax + ITCCTB.tax +
-                                            IIT.tax + CBDT.tax + ITCRFT.tax
+                                        <field name="formula">KR_GS.tax + KR_FA.tax + KR_DIT.tax + KR_ITCRSM.tax + KR_ITCCTB.tax +
+                                            KR_IIT.tax + KR_CBDT.tax + KR_ITCRFT.tax
                                         </field>
                                     </record>
                                 </field>
@@ -1122,12 +1122,12 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_ndits" model="account.report.line">
                         <field name="name">Non-deductible input tax</field>
-                        <field name="code">NDITS</field>
+                        <field name="code">KR_NDITS</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_ndit" model="account.report.line">
                                 <field name="name">(50) Non-deductible input-tax</field>
-                                <field name="code">NDIT</field>
+                                <field name="code">KR_NDIT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ndit_balance" model="account.report.expression">
@@ -1144,7 +1144,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_citctfb" model="account.report.line">
                                 <field name="name">(51) Common input tax credit for tax-free business</field>
-                                <field name="code">CITCTFB</field>
+                                <field name="code">KR_CITCTFB</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_citctfb_balance"
@@ -1164,7 +1164,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_bdta" model="account.report.line">
                                 <field name="name">(52) Bad debt tax amount</field>
-                                <field name="code">BDTA</field>
+                                <field name="code">KR_BDTA</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_bdta_balance" model="account.report.expression">
@@ -1183,18 +1183,18 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_nditt" model="account.report.line">
                                 <field name="name">(53) Total</field>
-                                <field name="code">NDITT</field>
+                                <field name="code">KR_NDITT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_nditt_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">NDIT.balance + CITCTFB.balance + BDTA.balance</field>
+                                        <field name="formula">KR_NDIT.balance + KR_CITCTFB.balance + KR_BDTA.balance</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_nditt_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">NDIT.tax + CITCTFB.tax + BDTA.tax</field>
+                                        <field name="formula">KR_NDIT.tax + KR_CITCTFB.tax + KR_BDTA.tax</field>
                                     </record>
                                 </field>
                             </record>
@@ -1202,12 +1202,12 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_dotcr" model="account.report.line">
                         <field name="name">Details of other tax credit/reduction</field>
-                        <field name="code">DOTCR</field>
+                        <field name="code">KR_DOTCR</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_tcef" model="account.report.line">
                                 <field name="name">(54) Tax credit for e-filing</field>
-                                <field name="code">TCEF</field>
+                                <field name="code">KR_TCEF</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tcef_tax" model="account.report.expression">
@@ -1220,7 +1220,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_tcetii" model="account.report.line">
                                 <field name="name">(55) Tax credit for e-tax-invoice issuance</field>
-                                <field name="code">TCETII</field>
+                                <field name="code">KR_TCETII</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tcetii_tax" model="account.report.expression">
@@ -1233,7 +1233,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_rttsp" model="account.report.line">
                                 <field name="name">(56) Reduced tax for taxi service provider</field>
-                                <field name="code">RTTSP</field>
+                                <field name="code">KR_RTTSP</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_rttsp_tax" model="account.report.expression">
@@ -1246,7 +1246,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_tcpmtp" model="account.report.line">
                                 <field name="name">(57) Tax credit for payment made by third party</field>
-                                <field name="code">TCPMTP</field>
+                                <field name="code">KR_TCPMTP</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tcpmtp_tax" model="account.report.expression">
@@ -1259,7 +1259,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_tccrso" model="account.report.line">
                                 <field name="name">(58) Tax credit for Cash Receipt System Operator</field>
-                                <field name="code">TCCRSO</field>
+                                <field name="code">KR_TCCRSO</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tccrso_tax" model="account.report.expression">
@@ -1272,7 +1272,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_dotcro" model="account.report.line">
                                 <field name="name">(59) Others</field>
-                                <field name="code">DOTCRO</field>
+                                <field name="code">KR_DOTCRO</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_dotcro_tax" model="account.report.expression">
@@ -1285,14 +1285,14 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_dotcrt" model="account.report.line">
                                 <field name="name">(60) Total</field>
-                                <field name="code">DOTCRT</field>
+                                <field name="code">KR_DOTCRT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_dotcrt_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">TCEF.tax + TCETII.tax + RTTSP.tax + TCPMTP.tax +
-                                            TCCRSO.tax + DOTCRO.tax
+                                        <field name="formula">KR_TCEF.tax + KR_TCETII.tax + KR_RTTSP.tax + KR_TCPMTP.tax +
+                                            KR_TCCRSO.tax + KR_DOTCRO.tax
                                         </field>
                                     </record>
                                 </field>
@@ -1301,12 +1301,12 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_p" model="account.report.line">
                         <field name="name">Penalties</field>
-                        <field name="code">P</field>
+                        <field name="code">KR_P</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_frb" model="account.report.line">
                                 <field name="name">(61) Failure to register business</field>
-                                <field name="code">FRB</field>
+                                <field name="code">KR_FRB</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_frb_balance" model="account.report.expression">
@@ -1318,18 +1318,18 @@
                                     <record id="l10n_kr_general_tp_vat_frb_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">FRB.balance * 0.01</field>
+                                        <field name="formula">KR_FRB.balance * 0.01</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_fiti" model="account.report.line">
                                 <field name="name">Failure to issue tax invoice</field>
-                                <field name="code">FITI</field>
+                                <field name="code">KR_FITI</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_fitidi" model="account.report.line">
                                         <field name="name">(62) Delay of issuance</field>
-                                        <field name="code">FITIDI</field>
+                                        <field name="code">KR_FITIDI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_fitidi_balance"
@@ -1343,13 +1343,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">FITIDI.balance * 0.01</field>
+                                                <field name="formula">KR_FITIDI.balance * 0.01</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_fitidr" model="account.report.line">
                                         <field name="name">(63) Delay of reception</field>
-                                        <field name="code">FITIDR</field>
+                                        <field name="code">KR_FITIDR</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_fitidr_balance"
@@ -1363,13 +1363,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">FITIDR.balance * 0.005</field>
+                                                <field name="formula">KR_FITIDR.balance * 0.005</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_fitifi" model="account.report.line">
                                         <field name="name">(64) Failure of issuance</field>
-                                        <field name="code">FITIFI</field>
+                                        <field name="code">KR_FITIFI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_fitifi_balance"
@@ -1392,12 +1392,12 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_fieti" model="account.report.line">
                                 <field name="name">Failure to issue e-tax invoice</field>
-                                <field name="code">FIETI</field>
+                                <field name="code">KR_FIETI</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_fietidi" model="account.report.line">
                                         <field name="name">(65) Delay of issuance</field>
-                                        <field name="code">FIETIDI</field>
+                                        <field name="code">KR_FIETIDI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_fietidi_balance"
@@ -1411,13 +1411,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">FIETIDI.balance * 0.003</field>
+                                                <field name="formula">KR_FIETIDI.balance * 0.003</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_fietifi" model="account.report.line">
                                         <field name="name">(66) Failure of issuance</field>
-                                        <field name="code">FIETIFI</field>
+                                        <field name="code">KR_FIETIFI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_fietifi_balance"
@@ -1431,7 +1431,7 @@
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">FIETIFI.balance * 0.005</field>
+                                                <field name="formula">KR_FIETIFI.balance * 0.005</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1441,12 +1441,12 @@
                                 <field name="name">Failure to aggregate summary of tax invoices classified by
                                     purchaser
                                 </field>
-                                <field name="code">FASTICP</field>
+                                <field name="code">KR_FASTICP</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_fasticpfs" model="account.report.line">
                                         <field name="name">(67) Failure to submit</field>
-                                        <field name="code">FASTICPFS</field>
+                                        <field name="code">KR_FASTICPFS</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_fasticpfs_balance"
@@ -1460,13 +1460,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">FASTICPFS.balance * 0.005</field>
+                                                <field name="formula">KR_FASTICPFS.balance * 0.005</field>
                                             </record>
                                         </field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_fasticpds" model="account.report.line">
                                         <field name="name">(68) Delayed Submission</field>
-                                        <field name="code">FASTICPDS</field>
+                                        <field name="code">KR_FASTICPDS</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_fasticpds_balance"
@@ -1480,7 +1480,7 @@
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">aggregation</field>
-                                                <field name="formula">FASTICPDS.balance * 0.003</field>
+                                                <field name="formula">KR_FASTICPDS.balance * 0.003</field>
                                             </record>
                                         </field>
                                     </record>
@@ -1488,12 +1488,12 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_ffrur" model="account.report.line">
                                 <field name="name">Failure to file returns/under-reporting</field>
-                                <field name="code">FFRUR</field>
+                                <field name="code">KR_FFRUR</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_general_tp_vat_ffrurg" model="account.report.line">
                                         <field name="name">(69) Failure to submit (General)</field>
-                                        <field name="code">FFRURG</field>
+                                        <field name="code">KR_FFRURG</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_ffrurg_balance"
@@ -1514,7 +1514,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_ffruri" model="account.report.line">
                                         <field name="name">(70) Failure to submit (Intentional)</field>
-                                        <field name="code">FFRURI</field>
+                                        <field name="code">KR_FFRURI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_ffruri_balance"
@@ -1535,7 +1535,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_ffruruerg" model="account.report.line">
                                         <field name="name">(71) Understatement/Excess Report (General)</field>
-                                        <field name="code">FFRURUERG</field>
+                                        <field name="code">KR_FFRURUERG</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_ffruruerg_balance"
@@ -1556,7 +1556,7 @@
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_ffrurueri" model="account.report.line">
                                         <field name="name">(72) Understatement/Excess Report (Intentional)</field>
-                                        <field name="code">FFRURUERI</field>
+                                        <field name="code">KR_FFRURUERI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
                                             <record id="l10n_kr_general_tp_vat_ffrurueri_balance"
@@ -1579,7 +1579,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_ffrurnput" model="account.report.line">
                                 <field name="name">(73) Delayed Payment of tax</field>
-                                <field name="code">FFRURNPUT</field>
+                                <field name="code">KR_FFRURNPUT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ffrurnput_balance"
@@ -1601,7 +1601,7 @@
                                 <field name="name">(74) Failure to report or under-reporting of tax base for
                                     zero-rating
                                 </field>
-                                <field name="code">FFRURURZR</field>
+                                <field name="code">KR_FFRURURZR</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ffrururzr_balance"
@@ -1614,13 +1614,13 @@
                                     <record id="l10n_kr_general_tp_vat_ffrururzr_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">FFRURURZR.balance * 0.005</field>
+                                        <field name="formula">KR_FFRURURZR.balance * 0.005</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_ffrurdcs" model="account.report.line">
                                 <field name="name">(75) Failure to submit details of cash sales</field>
-                                <field name="code">FFRURDCS</field>
+                                <field name="code">KR_FFRURDCS</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ffrurdcs_balance"
@@ -1633,13 +1633,13 @@
                                     <record id="l10n_kr_general_tp_vat_ffrurdcs_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">FFRURDCS.balance * 0.01</field>
+                                        <field name="formula">KR_FFRURDCS.balance * 0.01</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_ffrurfssp" model="account.report.line">
                                 <field name="name">(76) Failure to submit details of sales of properties</field>
-                                <field name="code">FFRURFSSP</field>
+                                <field name="code">KR_FFRURFSSP</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_ffrurfssp_balance"
@@ -1652,7 +1652,7 @@
                                     <record id="l10n_kr_general_tp_vat_ffrurfssp_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">FFRURFSSP.balance * 0.01</field>
+                                        <field name="formula">KR_FFRURFSSP.balance * 0.01</field>
                                     </record>
                                 </field>
                             </record>
@@ -1660,12 +1660,12 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_stpvatp" model="account.report.line">
                         <field name="name">Special Taxation for Payment of Value-Added Tax by Purchasers</field>
-                        <field name="code">STPVATP</field>
+                        <field name="code">KR_STPVATP</field>
                         <field name="hierarchy_level">2</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_stpvatpfta" model="account.report.line">
                                 <field name="name">(77) Failure to use transaction account</field>
-                                <field name="code">STPVATPFTA</field>
+                                <field name="code">KR_STPVATPFTA</field>
                                 <field name="hierarchy_level">4</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_stpvatpfta_balance"
@@ -1686,7 +1686,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_stpvatpdpta" model="account.report.line">
                                 <field name="name">(78) Delayed payment to the transaction account</field>
-                                <field name="code">STPVATPDPTA</field>
+                                <field name="code">KR_STPVATPDPTA</field>
                                 <field name="hierarchy_level">4</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_stpvatpdpta_balance"
@@ -1707,7 +1707,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_stpvatpfsccs" model="account.report.line">
                                 <field name="name">(79) Failure to submit credit card sales</field>
-                                <field name="code">STPVATPFSCCS</field>
+                                <field name="code">KR_STPVATPFSCCS</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_stpvatpfsccs_balance"
@@ -1721,31 +1721,31 @@
                                             model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">STPVATPFSCCS.balance * 0.005</field>
+                                        <field name="formula">KR_STPVATPFSCCS.balance * 0.005</field>
                                     </record>
                                 </field>
                             </record>
                             <record id="l10n_kr_general_tp_vat_stpvatpt" model="account.report.line">
                                 <field name="name">(80) Total</field>
-                                <field name="code">STPVATPT</field>
+                                <field name="code">KR_STPVATPT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_stpvatpt_balance"
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">FFRURG.balance + FFRURI.balance + FFRURUERG.balance +
-                                            FFRURUERI.balance + FFRURNPUT.balance + FFRURURZR.balance + FFRURDCS.balance
-                                            + FFRURFSSP.balance + STPVATPFTA.balance + STPVATPDPTA.balance +
-                                            STPVATPFSCCS.balance
+                                        <field name="formula">KR_FFRURG.balance + KR_FFRURI.balance + KR_FFRURUERG.balance +
+                                            KR_FFRURUERI.balance + KR_FFRURNPUT.balance + KR_FFRURURZR.balance + KR_FFRURDCS.balance
+                                            + KR_FFRURFSSP.balance + KR_STPVATPFTA.balance + KR_STPVATPDPTA.balance +
+                                            KR_STPVATPFSCCS.balance
                                         </field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_stpvatpt_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">FFRURG.tax + FFRURI.tax + FFRURUERG.tax + FFRURUERI.tax +
-                                            FFRURNPUT.tax + FFRURURZR.tax + FFRURDCS.tax + FFRURFSSP.tax +
-                                            STPVATPFTA.tax + STPVATPDPTA.tax + STPVATPFSCCS.tax
+                                        <field name="formula">KR_FFRURG.tax + KR_FFRURI.tax + KR_FFRURUERG.tax + KR_FFRURUERI.tax +
+                                            KR_FFRURNPUT.tax + KR_FFRURURZR.tax + KR_FFRURDCS.tax + KR_FFRURFSSP.tax +
+                                            KR_STPVATPFTA.tax + KR_STPVATPDPTA.tax + KR_STPVATPFSCCS.tax
                                         </field>
                                     </record>
                                 </field>
@@ -1754,12 +1754,12 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_totfb" model="account.report.line">
                         <field name="name">Turnover of sales of VAT-free business</field>
-                        <field name="code">TOTFB</field>
+                        <field name="code">KR_TOTFB</field>
                         <field name="hierarchy_level">0</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_tfbt1" model="account.report.line">
                                 <field name="name">(81)</field>
-                                <field name="code">TFBT1</field>
+                                <field name="code">KR_TFBT1</field>
                                 <field name="hierarchy_level">1</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tfbt1_balance" model="account.report.expression">
@@ -1771,7 +1771,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_tfbt2" model="account.report.line">
                                 <field name="name">(82)</field>
-                                <field name="code">TFBT2</field>
+                                <field name="code">KR_TFBT2</field>
                                 <field name="hierarchy_level">1</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tfbt2_balance" model="account.report.expression">
@@ -1783,7 +1783,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_tfbt3" model="account.report.line">
                                 <field name="name">(83) Imported amount exmpted</field>
-                                <field name="code">TFBT3</field>
+                                <field name="code">KR_TFBT3</field>
                                 <field name="hierarchy_level">1</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tfbt3_balance" model="account.report.expression">
@@ -1795,13 +1795,13 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_tfbtt" model="account.report.line">
                                 <field name="name">(84) Total</field>
-                                <field name="code">TFBTT</field>
+                                <field name="code">KR_TFBTT</field>
                                 <field name="hierarchy_level">1</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tfbtt_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">TFBT1.balance + TFBT2.balance - TFBT3.balance</field>
+                                        <field name="formula">KR_TFBT1.balance + KR_TFBT2.balance - KR_TFBT3.balance</field>
                                     </record>
                                 </field>
                             </record>
@@ -1809,12 +1809,12 @@
                     </record>
                     <record id="l10n_kr_general_tp_vat_tfiir" model="account.report.line">
                         <field name="name">Amount for which tax-free invoice issued/received</field>
-                        <field name="code">TFIIR</field>
+                        <field name="code">KR_TFIIR</field>
                         <field name="hierarchy_level">0</field>
                         <field name="children_ids">
                             <record id="l10n_kr_general_tp_vat_tfii" model="account.report.line">
                                 <field name="name">(85) Invoice Issued</field>
-                                <field name="code">TFII</field>
+                                <field name="code">KR_TFII</field>
                                 <field name="hierarchy_level">1</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tfii_balance" model="account.report.expression">
@@ -1826,7 +1826,7 @@
                             </record>
                             <record id="l10n_kr_general_tp_vat_tfir" model="account.report.line">
                                 <field name="name">(86) Invoice Received</field>
-                                <field name="code">TFIR</field>
+                                <field name="code">KR_TFIR</field>
                                 <field name="hierarchy_level">1</field>
                                 <field name="expression_ids">
                                     <record id="l10n_kr_general_tp_vat_tfir_balance" model="account.report.expression">
