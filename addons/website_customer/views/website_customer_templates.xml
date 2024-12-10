@@ -135,7 +135,7 @@
             <li class="nav-item"><a class="nav-link mr8" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                 <span class="fa fa-1x fa-tags"/> All </a></li>
             <li t-foreach="tags" t-as="o_tag" class="nav-item">
-                <a t-attf-class="nav-link badge bg-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+                <a t-attf-class="bg-#{o_tag.classname} nav-link badge text-bg-#{o_tag.classname if o_tag.classname != 'default' else 'light'}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
                     t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
             </li>
         </ul>
