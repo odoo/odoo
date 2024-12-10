@@ -61,8 +61,15 @@ class ResPartner(models.Model):
     def _get_participant_info(self, edi_identification):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
+<<<<<<< saas-17.4
         peppol_user = self.env.company.sudo().account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
         edi_mode = peppol_user and peppol_user.edi_mode or 'prod'
+||||||| 34d0ae0ccb965e340d31bdbd7a7436af98e6dd48
+        peppol_user = self.env.company.sudo().account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
+        edi_mode = peppol_user and peppol_user.edi_mode or self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+=======
+        edi_mode = self.env.company._get_peppol_edi_mode()
+>>>>>>> e5bf8dcdf89f6ddfad55fa4a9c4a59edfdf9efb2
         sml_zone = 'acc.edelivery' if edi_mode == 'test' else 'edelivery'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
 
