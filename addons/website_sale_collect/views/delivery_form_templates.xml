@@ -45,6 +45,13 @@
                 </t>
             </t>
         </div>
+        <span name="o_pickup_location_selector" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="{{'' if len(dm.warehouse_ids) > 1 else 'd-none'}}"
+                separator=" "
+            />
+        </span>
     </template>
 
 </odoo>
