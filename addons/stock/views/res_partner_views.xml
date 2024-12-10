@@ -39,9 +39,12 @@
             </page>
 
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button type="object"
-                    name="action_view_stock_lots"
-                    class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
+                <button
+                    type="action"
+                    name="stock.action_lot_report"
+                    class="oe_stat_button"
+                    icon="fa-bars"
+                    groups="stock.group_production_lot">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Lot/Serial Numbers</span>
                     </div>
