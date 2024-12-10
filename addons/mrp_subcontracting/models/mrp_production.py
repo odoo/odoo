@@ -107,6 +107,7 @@ class MrpProduction(models.Model):
             else:
                 move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and not ml.lot_id)
             # Update reservation and quantity done
+            move_lines_to_keep = []
             for ml in move_lines:
                 rounding = ml.product_uom_id.rounding
                 if float_compare(quantity, 0, precision_rounding=rounding) <= 0:
@@ -118,18 +119,17 @@ class MrpProduction(models.Model):
                 if float_compare(quantity_to_process, ml.quantity, precision_rounding=rounding) >= 0:
                     ml.write({
                         'quantity': quantity_to_process,
-                        'picked': True,
                         'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                     })
                 else:
                     ml.write({
                         'quantity': quantity_to_process,
-                        'picked': True,
                         'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                     })
+                move_lines_to_keep.append(ml)
 
             if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) > 0:
-                self.env['stock.move.line'].create({
+                new_move_line = self.env['stock.move.line'].create({
                     'move_id': subcontract_move_id.id,
                     'picking_id': subcontract_move_id.picking_id.id,
                     'product_id': self.product_id.id,
@@ -137,11 +137,12 @@ class MrpProduction(models.Model):
                     'location_dest_id': subcontract_move_id.location_dest_id.id,
                     'product_uom_id': self.product_uom_id.id,
                     'quantity': quantity,
-                    'picked': True,
                     'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                 })
+                move_lines_to_keep.append(new_move_line)
+
             if not self._get_quantity_to_backorder():
-                subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked).unlink()
+                subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and ml not in move_lines_to_keep).unlink()
                 subcontract_move_id._recompute_state()
 
     def _subcontracting_filter_to_done(self):
