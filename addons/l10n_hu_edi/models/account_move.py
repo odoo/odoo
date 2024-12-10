@@ -899,7 +899,7 @@ class AccountMove(models.Model):
 
             if line.display_type == 'product':
                 vat_tax = line.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)
-                price_unit_signed = sign * line.price_unit
+                price_unit_signed = sign * line.price_subtotal / (1 - line.discount / 100.0) / line.quantity
                 price_net_signed = self.currency_id.round(price_unit_signed * line.quantity * (1 - line.discount / 100.0))
                 discount_value_signed = self.currency_id.round(price_unit_signed * line.quantity - price_net_signed)
                 price_total_signed = sign * line.price_total
