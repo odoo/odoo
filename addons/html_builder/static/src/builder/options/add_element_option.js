@@ -6,6 +6,8 @@ export class AddElementOption extends Component {
     static components = {
         ...defaultOptionComponents,
     };
+    static props = {};
+
     addText() {
         console.log("addText");
     }
