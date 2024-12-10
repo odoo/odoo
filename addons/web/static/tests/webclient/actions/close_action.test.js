@@ -17,7 +17,7 @@ import { formView } from "@web/views/form/form_view";
 import { listView } from "@web/views/list/list_view";
 import { WebClient } from "@web/webclient/webclient";
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 
 class Partner extends models.Model {
     _rec_name = "display_name";
@@ -46,7 +46,7 @@ class Partner extends models.Model {
     };
 }
 
-defineModels([Partner, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {

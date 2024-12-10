@@ -89,7 +89,7 @@ import { useBus } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 
 class Foo extends models.Model {
     foo = fields.Char();
@@ -198,7 +198,7 @@ class Currency extends models.Model {
     ];
 }
 
-defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
+defineModels([Foo, Bar, Currency, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 async function clickControlPanelAction(buttonName) {
     if (getMockEnv().isSmall) {
@@ -4886,15 +4886,13 @@ test(`fields are translatable in list view`, async () => {
         fr_BE: "Frenglish",
     });
 
-    onRpc("/web/dataset/call_kw/foo/get_field_translations", () => {
-        return [
-            [
-                { lang: "en_US", source: "yop", value: "yop" },
-                { lang: "fr_BE", source: "yop", value: "valeur français" },
-            ],
-            { translation_type: "char", translation_show_source: false },
-        ];
-    });
+    onRpc("/web/dataset/call_kw/foo/get_field_translations", () => [
+        [
+            { lang: "en_US", source: "yop", value: "yop" },
+            { lang: "fr_BE", source: "yop", value: "valeur français" },
+        ],
+        { translation_type: "char", translation_show_source: false },
+    ]);
 
     await mountView({
         resModel: "foo",

@@ -10,6 +10,7 @@ import {
 
 import { cookie } from "@web/core/browser/cookie";
 import { rpcBus } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 
 class Company extends models.Model {
     _name = "res.company";
@@ -58,9 +59,9 @@ test("do not reload webclient when updating a res.company, but there is an error
 
 test("extract allowed company ids from cookies", async () => {
     serverState.companies = [
-        { id: 1, name: "Company 1", sequence: 1, parent_id: false, child_ids: [] },
-        { id: 2, name: "Company 2", sequence: 2, parent_id: false, child_ids: [] },
-        { id: 3, name: "Company 3", sequence: 3, parent_id: false, child_ids: [] },
+        { id: 1, name: "Company 1", sequence: 1, parent_id: false, child_ids: [], country_id: 1 },
+        { id: 2, name: "Company 2", sequence: 2, parent_id: false, child_ids: [], country_id: 2 },
+        { id: 3, name: "Company 3", sequence: 3, parent_id: false, child_ids: [], country_id: 2 },
     ];
     cookie.set("cids", "3-1");
     await makeMockEnv();
@@ -69,4 +70,7 @@ test("extract allowed company ids from cookies", async () => {
     ]);
     expect(getService("company").activeCompanyIds).toEqual([3, 1]);
     expect(getService("company").currentCompany.id).toBe(3);
+
+    expect(user.context.allowed_company_ids).toEqual([3, 1]);
+    expect(user.context.current_company_country_code).toEqual("PE");
 });

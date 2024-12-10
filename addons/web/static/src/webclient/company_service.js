@@ -64,7 +64,10 @@ export const companyService = {
 
         // update browser data
         cookie.set("cids", activeCompanyIds.join(CIDS_SEPARATOR));
-        user.updateContext({ allowed_company_ids: activeCompanyIds });
+        user.updateContext({
+            allowed_company_ids: activeCompanyIds,
+            current_company_country_code: allowedCompanies[activeCompanyIds[0]].country_code,
+        });
 
         // reload the page if changes are being done to `res.company`
         rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
@@ -118,7 +121,10 @@ export const companyService = {
                 }
 
                 cookie.set("cids", newCompanyIds.join(CIDS_SEPARATOR));
-                user.updateContext({ allowed_company_ids: newCompanyIds });
+                user.updateContext({
+                    allowed_company_ids: newCompanyIds,
+                    current_company_country_code: allowedCompanies[newCompanyIds[0]].country_code,
+                });
 
                 const controller = action.currentController;
                 const state = {};

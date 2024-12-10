@@ -22,7 +22,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 
 class Partner extends models.Model {
     _rec_name = "display_name";
@@ -56,7 +56,7 @@ class Partner extends models.Model {
     };
 }
 
-defineModels([Partner, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {
@@ -337,16 +337,14 @@ describe("new", () => {
             </form>`;
         Partner._views["form,1000"] = `<form>Another action</form>`;
 
-        onRpc("method", () => {
-            return {
-                id: 1000,
-                name: "Another window action",
-                res_model: "partner",
-                target: "new",
-                type: "ir.actions.act_window",
-                views: [[1000, "form"]],
-            };
-        });
+        onRpc("method", () => ({
+            id: 1000,
+            name: "Another window action",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [[1000, "form"]],
+        }));
 
         await mountWithCleanup(WebClient);
         await getService("action").doAction(999);

@@ -28,7 +28,7 @@ import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSetupAction } from "@web/search/action_hook";
 import { WebClient } from "@web/webclient/webclient";
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 const actionRegistry = registry.category("actions");
 
 class Partner extends models.Model {
@@ -76,7 +76,7 @@ class Pony extends models.Model {
     };
 }
 
-defineModels([Partner, Pony, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, Pony, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {
@@ -707,9 +707,7 @@ test("local state, global state, and race conditions", async () => {
             this.id = id++;
             expect.step(this.props.state || "no state");
             useSetupAction({
-                getLocalState: () => {
-                    return { fromId: this.id };
-                },
+                getLocalState: () => ({ fromId: this.id }),
             });
             onWillStart(() => def);
         }

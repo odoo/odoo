@@ -15,7 +15,7 @@ import {
 import { user } from "@web/core/user";
 import { WebClient } from "@web/webclient/webclient";
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 
 class Partner extends models.Model {
     _rec_name = "display_name";
@@ -48,7 +48,7 @@ class Partner extends models.Model {
     };
 }
 
-defineModels([Partner, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {
@@ -112,15 +112,13 @@ test("rainbowman integrated to webClient", async () => {
 test.tags("desktop");
 test("on close with effect from server", async () => {
     patchWithCleanup(user, { showEffect: true });
-    onRpc("/web/dataset/call_button/*", () => {
-        return {
-            type: "ir.actions.act_window_close",
-            effect: {
-                type: "rainbow_man",
-                message: "button called",
-            },
-        };
-    });
+    onRpc("/web/dataset/call_button/*", () => ({
+        type: "ir.actions.act_window_close",
+        effect: {
+            type: "rainbow_man",
+            message: "button called",
+        },
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);

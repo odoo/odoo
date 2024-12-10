@@ -44,7 +44,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import { WebClient } from "@web/webclient/webclient";
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 
 function clickListNew() {
     return contains(".o_control_panel_main_buttons .o_list_button_add").click();
@@ -141,7 +141,7 @@ class Project extends models.Model {
     };
 }
 
-defineModels([Partner, Pony, Project, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, Pony, Project, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {
@@ -606,14 +606,12 @@ test("Props are updated and kept when switching/restoring views", async () => {
             </group>
         </form>`;
 
-    onRpc("get_formview_action", ({ args, model }) => {
-        return {
-            res_id: args[0][0],
-            res_model: model,
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", ({ args, model }) => ({
+        res_id: args[0][0],
+        res_model: model,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1232,15 +1230,13 @@ test("requests for execute_action of type object: disable buttons", async () => 
 
 test.tags("desktop");
 test("action with html help returned by a call_button", async () => {
-    onRpc("/web/dataset/call_button/*", () => {
-        return {
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "list"]],
-            help: "<p>I am not a helper</p>",
-            domain: [[0, "=", 1]],
-        };
-    });
+    onRpc("/web/dataset/call_button/*", () => ({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+        help: "<p>I am not a helper</p>",
+        domain: [[0, "=", 1]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1419,15 +1415,13 @@ test("can open a many2one external window", async () => {
         </form>`;
 
     stepAllNetworkCalls();
-    onRpc("get_formview_action", () => {
-        return {
-            name: "Partner",
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            res_id: 3,
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        res_id: 3,
+        views: [[false, "form"]],
+    }));
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
     // open first record in form view
@@ -1904,14 +1898,12 @@ test("execute action from dirty, new record, and come back", async () => {
             <field name="bar" readonly="1"/>
         </form>`;
 
-    onRpc("get_formview_action", () => {
-        return {
-            res_id: 1,
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        res_id: 1,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -2009,14 +2001,12 @@ test("go back to action with form view as main view, and res_id", async () => {
     ]);
     Partner._views["form,44"] = '<form><field name="m2o"/></form>';
 
-    onRpc("get_formview_action", () => {
-        return {
-            res_id: 3,
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("get_formview_action", () => ({
+        res_id: 3,
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(999);
@@ -2049,9 +2039,7 @@ test("action with res_id, load another res_id, do new action, restore previous",
     defineActions([action]);
 
     Partner._views["form,44"] = '<form><field name="m2o"/></form>';
-    onRpc("get_formview_action", () => {
-        return { ...action, res_id: 3 };
-    });
+    onRpc("get_formview_action", () => ({ ...action, res_id: 3 }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(999, { props: { resIds: [1, 2] } });
@@ -2238,16 +2226,14 @@ test.tags("desktop");
 test("executing a window action with onchange warning does not hide it", async () => {
     Partner._views["form,false"] = `<form><field name="foo"/></form>`;
 
-    onRpc("onchange", () => {
-        return {
-            value: {},
-            warning: {
-                title: "Warning",
-                message: "Everything is alright",
-                type: "dialog",
-            },
-        };
-    });
+    onRpc("onchange", () => ({
+        value: {},
+        warning: {
+            title: "Warning",
+            message: "Everything is alright",
+            type: "dialog",
+        },
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -2670,27 +2656,25 @@ test("sample server: populate groups", async () => {
             </pivot>`,
         "search,false": `<search/>`,
     };
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    date_count: 0,
-                    "write_date:month": "December 2022",
-                    __range: {
-                        "write_date:month": {
-                            from: "2022-12-01",
-                            to: "2023-01-01",
-                        },
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                date_count: 0,
+                "write_date:month": "December 2022",
+                __range: {
+                    "write_date:month": {
+                        from: "2022-12-01",
+                        to: "2023-01-01",
                     },
-                    __domain: [
-                        ["write_date", ">=", "2022-12-01"],
-                        ["write_date", "<", "2023-01-01"],
-                    ],
                 },
-            ],
-            length: 1,
-        };
-    });
+                __domain: [
+                    ["write_date", ">=", "2022-12-01"],
+                    ["write_date", "<", "2023-01-01"],
+                ],
+            },
+        ],
+        length: 1,
+    }));
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction({

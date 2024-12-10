@@ -23,7 +23,7 @@ import { runAllTimers, mockTouch } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 
 class Partner extends models.Model {
     _rec_name = "display_name";
@@ -104,7 +104,7 @@ class Pony extends models.Model {
     };
 }
 
-defineModels([Partner, Pony, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, Pony, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {
@@ -242,15 +242,13 @@ test("can click on a embedded action and execute the corresponding action (with 
 
 test("can click on a embedded action and execute the corresponding action (with python_method)", async () => {
     await mountWithCleanup(WebClient);
-    onRpc("do_python_method", () => {
-        return {
-            id: 4,
-            name: "Favorite Ponies from python action",
-            res_model: "pony",
-            type: "ir.actions.act_window",
-            views: [[false, "kanban"]],
-        };
-    });
+    onRpc("do_python_method", () => ({
+        id: 4,
+        name: "Favorite Ponies from python action",
+        res_model: "pony",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+    }));
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();
@@ -271,15 +269,13 @@ test("can click on a embedded action and execute the corresponding action (with 
 
 test("breadcrumbs are updated when clicking on embeddeds", async () => {
     await mountWithCleanup(WebClient);
-    onRpc("do_python_method", () => {
-        return {
-            id: 4,
-            name: "Favorite Ponies from python action",
-            res_model: "pony",
-            type: "ir.actions.act_window",
-            views: [[false, "kanban"]],
-        };
-    });
+    onRpc("do_python_method", () => ({
+        id: 4,
+        name: "Favorite Ponies from python action",
+        res_model: "pony",
+        type: "ir.actions.act_window",
+        views: [[false, "kanban"]],
+    }));
     await getService("action").doAction(1);
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
     await contains(".o_embedded_actions .dropdown").click();

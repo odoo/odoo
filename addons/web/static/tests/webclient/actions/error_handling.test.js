@@ -23,7 +23,7 @@ import { WebClient } from "@web/webclient/webclient";
 
 const actionRegistry = registry.category("actions");
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 
 class Partner extends models.Model {
     _rec_name = "display_name";
@@ -46,7 +46,7 @@ class Partner extends models.Model {
     };
 }
 
-defineModels([Partner, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {
