@@ -45,10 +45,10 @@ class TestWebsiteSaleGMCCommon(HttpCase):
         ) = cls.env['product.public.category'].create([
             { 'name': 'Electronics' },
             { 'name': 'Electronics Accessories' },
-            { 'name': 'Computer Accessories' },
+            { 'name': 'Computer Accessories', 'sequence': 2 },
             { 'name': 'Electronics Accessories' },
             { 'name': 'Computer Components' },
-            { 'name': 'Input Devices' },
+            { 'name': 'Input Devices', 'sequence': 1 },
         ])
         computer_acc.parent_id = elec_acc_sub
         elec_acc_sub.parent_id = elec_root
@@ -143,26 +143,34 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        with MockRequest(
-            cls.mouse_template.with_user(cls.public_user).env, 
-            website=cls.website.with_user(cls.public_user),
-        ):
-            cls.values = cls.mouse_products._get_gmc_values()
-        cls.white_mouse_values = cls.values[cls.mouse_white]
-        cls.black_mouse_values = cls.values[cls.mouse_black]
+
+    def update_values(self):
+        with self.mock_public_request():
+            self.values = self.mouse_products._get_gmc_values()
+        self.white_mouse_values = self.values[self.mouse_white]
+        self.black_mouse_values = self.values[self.mouse_black]
 
     def test_00_gmc_product_id(self):
+        self.update_values()
+        self.assertIn('id', self.white_mouse_values, 'An `id` is required.')
+        self.assertIn('id', self.black_mouse_values, 'An `id` is required.')
         self.assertEqual(
             self.mouse_white.code, 
             self.white_mouse_values['id'], 
-            'ID should use the internal reference if it exists',
+            '`id` should use the internal reference if it exists',
         )
+        self.assertEqual(self.mouse_black.id, self.black_mouse_values['id'])
     
     def test_01_gmc_product_meta_info(self):
-        self.assertEqual(self.mouse_white.name, self.white_mouse_values['title'])
-        # TODO: check description etc. every text
+        self.update_values()
+        self.assertIn('title', self.white_mouse_values, 'The `title` is required.')
+        self.assertIn('description', self.white_mouse_values, 'A `description` is required.')
+        self.assertIn('title', self.black_mouse_values, 'The `title` is required.')
+        self.assertIn('description', self.black_mouse_values, 'A `description` is required.')
     
     def test_02_gmc_product_link(self):
+        self.update_values()
+        self.assertIn('link', self.white_mouse_values, 'A `link` to the product page is required.')
         response = self.url_open(self.white_mouse_values['link'])
         self.assertEqual(200, response.status_code)
         self.assertURLEqual(
@@ -170,8 +178,18 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
             response.url, 
             'Customer should be redirected to the product page',
         )
+        response = self.url_open(self.black_mouse_values['link'])
+        self.assertEqual(200, response.status_code)
+        self.assertURLEqual(
+            self.mouse_black.website_url, 
+            response.url, 
+            'Customer should be redirected to the product page',
+        )
 
     def test_03_gmc_product_prices(self):
+        self.update_values()
+        self.assertIn('price', self.white_mouse_values, 'The `price` field is required.')
+        self.assertIn('price', self.black_mouse_values, 'The `price` field is required.')
         response = self.url_open(self.white_mouse_values['link'])
         white_mouse_page = html.fromstring(response.content)
         white_mouse_price = white_mouse_page.xpath('//span[@itemprop="price"]')[0].text
@@ -181,19 +199,165 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
             f'{float(white_mouse_price)} {white_mouse_currency}', 
             'Price send to Google should match the price on the website',
         )
+        response = self.url_open(self.black_mouse_values['link'])
+        black_mouse_page = html.fromstring(response.content)
+        black_mouse_price = black_mouse_page.xpath('//span[@itemprop="price"]')[0].text
+        black_mouse_currency = black_mouse_page.xpath('//span[@itemprop="priceCurrency"]')[0].text
+        self.assertEqual(
+            self.black_mouse_values['price'], 
+            f'{float(black_mouse_price)} {black_mouse_currency}', 
+            'Price send to Google should match the price on the website',
+        )
 
     def test_04_gmc_product_images(self):
-        # f = io.BytesIO()
-        # Image.new('RGB', (1920, 1080), color_blue).save(f, 'JPEG')
-        # f.seek(0)
-        # blue_image = base64.b64encode(f.read())
-        ...
+        f = io.BytesIO()
+        Image.new('RGB', (1920, 1080), 'green').save(f, 'JPEG')
+        f.seek(0)
+        self.image_template = base64.b64encode(f.read())
+        f = io.BytesIO()
+        Image.new('RGB', (1920, 1080), 'white').save(f, 'JPEG')
+        f.seek(0)
+        self.image_white_mouse = base64.b64encode(f.read())
+        f = io.BytesIO()
+        Image.new('RGB', (1920, 1080), 'red').save(f, 'JPEG')
+        f.seek(0)
+        self.extra_image_template = base64.b64encode(f.read())
+        f = io.BytesIO()
+        Image.new('RGB', (1920, 1080), 'black').save(f, 'JPEG')
+        f.seek(0)
+        self.extra_image_black_mouse = base64.b64encode(f.read())
+
+        self.mouse_template.write({
+            'image_1920': self.image_template,
+            'product_template_image_ids': [
+                Command.create({
+                    'name': 'ergo_mouse_extra_image',
+                    'image_1920': self.extra_image_template,
+                })
+            ]
+        })
+        self.mouse_white.write({
+            'image_variant_1920': self.image_white_mouse,
+        })
+        self.mouse_black.write({
+            'product_variant_image_ids': [
+                Command.create({
+                    'name': 'black_mouse_extra_image',
+                    'image_1920': self.extra_image_black_mouse,
+                })
+            ]
+        })
+        self.update_values()
+        self.assertIn('image_link', self.white_mouse_values, 'An `image_link` is required.')
+        self.assertIn('image_link', self.black_mouse_values, 'An `image_link` is required.')
+        self.assertEqual(
+            1,
+            len(self.white_mouse_values['additionnal_image_link']), 
+            'Since it inherits from the mouse template, it should have its extra image.',
+        )
+        self.assertEqual(
+            2,
+            len(self.black_mouse_values['additionnal_image_link']), 
+            'Since it inherits from the mouse template, it should have its extra image, plus the '
+            'variant specific extra image.',
+        )
+        response = self.url_open(self.white_mouse_values['image_link'])
+        response_image = base64.encodebytes(response.content).replace(b'\n', b'')
+        self.assertEqual(
+            response_image, 
+            self.image_white_mouse, 
+            'White mouse has a variant image, so it should be used.',
+        )
+        response = self.url_open(self.black_mouse_values['image_link'])
+        response_image = base64.encodebytes(response.content).replace(b'\n', b'')
+        self.assertEqual(
+            response_image, 
+            self.image_template, 
+            'Black mouse does not have a variant image, should fall back to the template image.',
+        )
+        response = self.url_open(self.white_mouse_values['additionnal_image_link'][0])
+        response_image = base64.encodebytes(response.content).replace(b'\n', b'')
+        self.assertEqual(
+            response_image, 
+            self.extra_image_template,
+            'If the template has some extra image, and there is space left for additionnal images '
+            '(limited to 5), then it should use them.',
+        )
+        response = self.url_open(self.black_mouse_values['additionnal_image_link'][0])
+        response_image = base64.encodebytes(response.content).replace(b'\n', b'')
+        self.assertEqual(
+            response_image, 
+            self.extra_image_black_mouse, 
+            'Black mouse does have a variant extra image, so it should be first in the list.',
+        )
+        response = self.url_open(self.black_mouse_values['additionnal_image_link'][1])
+        response_image = base64.encodebytes(response.content).replace(b'\n', b'')
+        self.assertEqual(
+            response_image, 
+            self.extra_image_template, 
+            'If the template has some extra image, and there is space left for additionnal images '
+            '(limited to 5), then it should use them.',
+        )
+
+        self.mouse_black.write({
+            'product_variant_image_ids': [
+                Command.create({
+                    'name': f'image {i}',
+                    'image_1920': self.extra_image_black_mouse,
+                })
+                for i in range(9) # add 9 more, total = 10 + template extra image = 11
+            ]
+        })
+        self.update_values()
+        self.assertEqual(
+            10,
+            len(self.black_mouse_values['additionnal_image_link']),
+            'Google supports up to 10 additionnal images',
+        )
 
     def test_05_gmc_product_identifier(self):
-        ...
+        self.assertEqual(
+            self.mouse_white.barcode, 
+            self.white_mouse_values['gtin'], 
+            'If the product has a barcode, then it should be sent as `gtin`',
+        )
+        self.assertEqual(
+            'yes',
+            self.white_mouse_values['identifier_exists'],
+            'White mouse does have an identifier, so it should be told to Google',
+        )
+        self.assertNotIn(
+            'gtin',
+            self.black_mouse_values,
+            'Black mouse does not have any identifier, so it should be told to Google',
+        )
+        self.assertEqual(
+            'no',
+            self.black_mouse_values['identifier_exists'],
+            'Black mouse does not have any identifier, so it should be specified to Google',
+        )
 
     def test_06_gmc_product_type(self):
-        ...
+        # ordered
+        self.assertListEqual(
+            list(self.public_categories.sorted('sequence').mapped('name')),
+            self.white_mouse_values['product_type'],
+            'Product type should follow the sequence order as the first in the list will have the '
+            'most impact in Google algorithms',
+        )
+
+        self.mouse_template.write({
+            'public_categ_ids': [
+                Command.create({ 'name': f'Category {i}' })
+                for i in range(5)  # add 5 more, total = 7
+            ]
+        })
+        self.update_values()
+        self.assertEqual(
+            5,
+            len(self.white_mouse_values['product_type']),
+            'Google supports up to 5 product type.',
+        )
 
     def test_07_gmc_product_variants(self):
         ...
@@ -210,5 +374,5 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
     def test_11_gmc_product_availability(self):
         ...
 
-    def test_11_gmc_product_unit_pricing(self):
+    def test_12_gmc_product_unit_pricing(self):
         ...
