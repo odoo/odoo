@@ -51,6 +51,7 @@ class MailingTrace(models.Model):
       * bounced: triggered by gateway bounce (mail) or in _prepare_mass_sms_trace_values
         if sms_number_format error when sending sms (sms)
     """
+    _name = 'mailing.trace'
     _description = 'Mailing Statistics'
     _rec_name = 'id'
     _order = 'create_date DESC'

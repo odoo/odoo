@@ -19,7 +19,7 @@ class ResUsersDeletion(models.Model):
     indexed). This model just remove the users added in the deletion queue, remaining code
     must deal with other consideration (archiving, blacklist email...).
     """
-
+    _name = 'res.users.deletion'
     _description = 'Users Deletion Request'
     _rec_name = 'user_id'
 

@@ -496,6 +496,7 @@ class IrActionsServer(models.Model):
     - 'Execute several actions': define an action that triggers several other
       server actions
     """
+    _name = 'ir.actions.server'
     _description = 'Server Actions'
     _table = 'ir_act_server'
     _inherit = ['ir.actions.actions']
@@ -1074,6 +1075,7 @@ class IrActionsTodo(models.Model):
     """
     Configuration Wizards
     """
+    _name = 'ir.actions.todo'
     _description = "Configuration Wizards"
     _rec_name = 'action_id'
     _order = "sequence, id"
