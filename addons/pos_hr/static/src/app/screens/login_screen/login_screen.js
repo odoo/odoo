@@ -4,6 +4,7 @@ import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_scree
 import { patch } from "@web/core/utils/patch";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { onWillUnmount, useExternalListener, useState } from "@odoo/owl";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 patch(LoginScreen.prototype, {
     setup() {
@@ -53,12 +54,14 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         } else {
             const employee = await this.selectCashier();
-            if (
-                employee &&
-                (employee._role === "manager" || employee.user_id?.id === this.pos.user.id)
-            ) {
+            if (employee && employee.user_id?.id == this.pos.user.id) {
                 super.clickBack();
                 return;
+            } else {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Access Denied"),
+                    body: _t("You are not allowed to the Backend."),
+                });
             }
         }
     },
