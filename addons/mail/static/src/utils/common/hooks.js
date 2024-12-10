@@ -79,9 +79,11 @@ export function onExternalClick(refName, cb) {
  * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
  * @param {number, () => void} [param1.onHovering] array where 1st param is duration until start hovering
  *   and function to be executed at this delay duration after hovering is kept true.
+ * @param {Object} [param1.externalState] object representing the external state of a component, used to 
+ * manage and synchronize the hover behavior of this hook.
  * @returns {({ isHover: boolean })}
  */
-export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
+export function useHover(refNames, { onHover, onAway, externalState, onHovering } = {}) {
     refNames = Array.isArray(refNames) ? refNames : [refNames];
     const targets = [];
     let wasHovering = false;
@@ -175,6 +177,15 @@ export function useHover(refNames, { onHover, onAway, onHovering } = {}) {
             "mouseleave",
             (ev) => onmouseleave(ev),
             true
+        );
+    }
+
+    if (externalState) {
+        useEffect(
+            () => {
+                setHover(externalState.isOpen);
+            },
+            () => [externalState?.isOpen]
         );
     }
     return state;
