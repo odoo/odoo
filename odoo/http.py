@@ -193,7 +193,7 @@ except ImportError:
 
 import odoo
 from .exceptions import UserError, AccessError, AccessDenied
-from .modules.module import get_manifest
+from .modules import module as module_manager
 from .modules.registry import Registry
 from .service import security, model as service_model
 from .tools import (config, consteq, file_path, get_lang, json_default,
@@ -2268,6 +2268,17 @@ class Application:
     """ Odoo WSGI application """
     # See also: https://www.python.org/dev/peps/pep-3333
 
+    def initialize(self):
+        """
+        Initialize the application.
+
+        This is to be called when setting up a WSGI application after
+        initializing the configuration values.
+        """
+        module_manager.initialize_sys_path()
+        from odoo.service.server import load_server_wide_modules  # noqa: PLC0415
+        load_server_wide_modules()
+
     @lazy_property
     def statics(self):
         """
@@ -2277,7 +2288,7 @@ class Application:
         mod2path = {}
         for addons_path in odoo.addons.__path__:
             for module in os.listdir(addons_path):
-                manifest = get_manifest(module)
+                manifest = module_manager.get_manifest(module)
                 static_path = opj(addons_path, module, 'static')
                 if (manifest
                         and (manifest['installable'] or manifest['assets'])
