@@ -24,7 +24,7 @@ export class LayoutOption extends Component {
         }));
     }
     getRow() {
-        return this.env.getEditingElements()[0].querySelector(".row");
+        return this.env.getEditingElement().querySelector(".row");
     }
     isGrid() {
         const rowEl = this.getRow();
@@ -35,7 +35,7 @@ export class LayoutOption extends Component {
             // Prevent toggling grid mode twice.
             return;
         }
-        _toggleGridMode(this.env.getEditingElements()[0].querySelector(".container"));
+        _toggleGridMode(this.env.getEditingElement().querySelector(".container"));
         this.env.editor.shared.history.addStep();
     }
     setColumnLayout() {

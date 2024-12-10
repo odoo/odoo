@@ -15,9 +15,9 @@ import { useBus } from "@web/core/utils/hooks";
 
 export function useDomState(getState) {
     const env = useEnv();
-    const state = useState(getState(env.getEditingElements()));
+    const state = useState(getState(env.getEditingElement()));
     useBus(env.editorBus, "STEP_ADDED", () => {
-        Object.assign(state, getState(env.getEditingElements()));
+        Object.assign(state, getState(env.getEditingElement()));
     });
     return state;
 }
@@ -82,6 +82,9 @@ export function useWeComponent() {
         });
         newEnv.getEditingElements = () => {
             return editingElements;
+        };
+        newEnv.getEditingElement = () => {
+            return editingElements[0];
         };
     }
     const weContext = {};
@@ -239,13 +242,12 @@ export function useInputWeWidget() {
             }
         }
     });
-    function getState(editingElements) {
-        if (!editingElements.length) {
+    function getState(editingElement) {
+        if (!editingElement) {
             // TODO try to remove it. We need to move hook in WeComponent
             return {};
         }
         const [actionId, actionParam] = getActions()[0];
-        const editingElement = editingElements[0];
         return {
             // TODO just first value ? Or no value if diff ?
             value: actionsRegistry.get(actionId).getValue({
