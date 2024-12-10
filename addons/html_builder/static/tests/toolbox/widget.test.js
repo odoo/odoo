@@ -205,6 +205,31 @@ describe("WeButton", () => {
         expect("[data-class-action='my-custom-class1']").toHaveClass("active");
         expect("[data-class-action='my-custom-class2']").not.toHaveClass("active");
     });
+    test("apply classAction on multi elements", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<WeButton applyTo="'.target-apply'" classAction="'my-custom-class'"/>`,
+        });
+        const { getEditor } = await setupWebsiteBuilder(`
+            <div class="test-options-target">
+                <div class="target-apply">a</div>
+                <div class="target-apply">b</div>
+            </div>`);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target").click();
+        expect(editor.editable).toHaveInnerHTML(`
+            <div class="test-options-target">
+                <div class="target-apply">a</div>
+                <div class="target-apply">b</div>
+            </div>`);
+
+        await contains("[data-class-action='my-custom-class']").click();
+        expect(editor.editable).toHaveInnerHTML(`
+            <div class="test-options-target">
+                <div class="target-apply my-custom-class">a</div>
+                <div class="target-apply my-custom-class">b</div>
+            </div>`);
+    });
     test("hide/display base on applyTo", async () => {
         addOption({
             selector: ".parent-target",

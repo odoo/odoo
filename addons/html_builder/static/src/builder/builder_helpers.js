@@ -15,9 +15,9 @@ import { useBus } from "@web/core/utils/hooks";
 
 export function useDomState(getState) {
     const env = useEnv();
-    const state = useState(getState(env.getEditingElement()));
+    const state = useState(getState(env.getEditingElements()));
     useBus(env.editorBus, "STEP_ADDED", () => {
-        Object.assign(state, getState(env.getEditingElement()));
+        Object.assign(state, getState(env.getEditingElements()));
     });
     return state;
 }
@@ -60,17 +60,28 @@ export class WeComponent extends Component {
     }
 }
 
+// TODO find a better name
+function multiQuerySelector(targets, selector) {
+    const elements = new Set();
+    for (const target of targets) {
+        for (const el of target.querySelectorAll(selector)) {
+            elements.add(el);
+        }
+    }
+    return [...elements];
+}
+
 export function useWeComponent() {
     const comp = useComponent();
     const newEnv = {};
     const oldEnv = useEnv();
     if (comp.props.applyTo) {
-        let editingElement = oldEnv.getEditingElement().querySelector(comp.props.applyTo);
+        let editingElements = multiQuerySelector(oldEnv.getEditingElements(), comp.props.applyTo);
         useBus(oldEnv.editorBus, "UPDATE_EDITING_ELEMENT", () => {
-            editingElement = oldEnv.getEditingElement().querySelector(comp.props.applyTo);
+            editingElements = multiQuerySelector(oldEnv.getEditingElements(), comp.props.applyTo);
         });
-        newEnv.getEditingElement = () => {
-            return editingElement;
+        newEnv.getEditingElements = () => {
+            return editingElements;
         };
     }
     const weContext = {};
@@ -140,11 +151,13 @@ export function useClickableWeWidget() {
     if (comp.env.actionBus) {
         useBus(comp.env.actionBus, "BEFORE_CALL_ACTIONS", () => {
             for (const [actionId, actionParam, actionValue] of getActions()) {
-                actionsRegistry.get(actionId).clean?.({
-                    editingElement: comp.env.getEditingElement(),
-                    param: actionParam,
-                    value: actionValue,
-                });
+                for (const editingElement of comp.env.getEditingElements()) {
+                    actionsRegistry.get(actionId).clean?.({
+                        editingElement,
+                        param: actionParam,
+                        value: actionValue,
+                    });
+                }
             }
         });
     }
@@ -152,14 +165,16 @@ export function useClickableWeWidget() {
     function callActions() {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
         for (const [actionId, actionParam, actionValue] of getActions()) {
-            actionsRegistry.get(actionId).apply({
-                editingElement: comp.env.getEditingElement(),
-                param: actionParam,
-                value: actionValue,
-                // todo: should not be necessary if the actions are registred
-                // through a plugin resource
-                editor: comp.env.editor,
-            });
+            for (const editingElement of comp.env.getEditingElements()) {
+                actionsRegistry.get(actionId).apply({
+                    editingElement,
+                    param: actionParam,
+                    value: actionValue,
+                    // todo: should not be necessary if the actions are registred
+                    // through a plugin resource
+                    editor: comp.env.editor,
+                });
+            }
         }
     }
     function getActions() {
@@ -186,11 +201,13 @@ export function useClickableWeWidget() {
         return actions;
     }
     function isActive() {
-        const editingElement = comp.env.getEditingElement();
-        if (!editingElement) {
+        const editingElements = comp.env.getEditingElements();
+        if (!editingElements.length) {
             return;
         }
         return getActions().every(([actionId, actionParam, actionValue]) => {
+            // TODO isActive === first editing el or all ?
+            const editingElement = editingElements[0];
             return actionsRegistry.get(actionId).isActive?.({
                 editingElement,
                 param: actionParam,
@@ -210,23 +227,27 @@ export function useInputWeWidget() {
     const state = useDomState(getState);
     const applyValue = comp.env.editor.shared.history.makePreviewableOperation((value) => {
         for (const [actionId, actionParam] of getActions()) {
-            actionsRegistry.get(actionId).apply({
-                editingElement: comp.env.getEditingElement(),
-                param: actionParam,
-                value,
-                // todo: should not be necessary if the actions are registred
-                // through a plugin resource
-                editor: comp.env.editor,
-            });
+            for (const editingElement of comp.env.getEditingElements()) {
+                actionsRegistry.get(actionId).apply({
+                    editingElement,
+                    param: actionParam,
+                    value,
+                    // todo: should not be necessary if the actions are registred
+                    // through a plugin resource
+                    editor: comp.env.editor,
+                });
+            }
         }
     });
-    function getState(editingElement) {
-        if (!editingElement) {
+    function getState(editingElements) {
+        if (!editingElements.length) {
             // TODO try to remove it. We need to move hook in WeComponent
             return {};
         }
         const [actionId, actionParam] = getActions()[0];
+        const editingElement = editingElements[0];
         return {
+            // TODO just first value ? Or no value if diff ?
             value: actionsRegistry.get(actionId).getValue({
                 editingElement,
                 param: actionParam,
