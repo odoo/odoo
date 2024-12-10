@@ -542,3 +542,14 @@ class TestProjectSubtasks(TestProjectCommon):
             task_form.parent_id = Task
         self.assertEqual(task.project_id, self.task_1.project_id, "project_id should be affected")
         self.assertTrue(task.display_in_project, "display_in_project should be True when there is no parent task")
+
+    def test_action_convert_to_subtask(self):
+        """
+        Test the 'Convert to Subtask' functionality by assigning task_2
+        as the parent of task_1, and verify that the parent-child
+        relationships are updated correctly.
+        """
+        with Form(self.task_1, view="project.project_task_convert_to_subtask_view_form") as subtask:
+            subtask.parent_id = self.task_2
+        self.assertTrue(self.task_2 in self.task_1.parent_id, "Subtask must have parent task.")
+        self.assertTrue(self.task_1 in self.task_2.child_ids, "Parent task must have child tasks.")
