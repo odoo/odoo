@@ -11,6 +11,14 @@
                         <group>
                             <field name="name" widget="char"/>
                             <field name="position" widget="radio"/>
+                            <field name="style" widget="radio"/>
+                            <field name="assign" widget="radio"/>
+                            <label for="new_period" string=""/>
+                            <div invisible="assign != 'new'"
+                                class="text-muted"
+                            >
+                                For <field name="new_period" class="oe_inline"/> days after publication.
+                            </div>
                         </group>
                         <group>
                             <field name="text_color" widget="color"/>
