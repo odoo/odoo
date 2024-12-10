@@ -47,6 +47,7 @@ declare module "models" {
         readonly lastSelfMessageSeenByEveryone: Message,
         member_count: number | undefined,
         readonly membersThatCanSeen: ChannelMember[],
+        name: string,
         newMessageBannerText: string,
         onClickUnreadMessagesBanner(): void,
         onlineMembers: ChannelMember[],

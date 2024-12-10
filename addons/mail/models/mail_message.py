@@ -1008,11 +1008,7 @@ class MailMessage(models.Model):
             }
         record_fields = [
             # sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
-            Store.Attr(
-                "name",
-                lambda record: record.sudo().display_name,
-                predicate=lambda record: record._name != "discuss.channel",
-            ),
+            Store.Attr("display_name", sudo=True),
             Store.Attr(
                 "module_icon",
                 lambda record: modules.module.get_module_icon(self.env[record._name]._original_module),
