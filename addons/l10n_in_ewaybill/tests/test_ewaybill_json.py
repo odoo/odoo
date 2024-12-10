@@ -112,7 +112,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "docNo": "INV/18-19/0003",
             "itemList": [{
                 "productName": "product_a", "hsnCode": "111111", "productDesc": "product_a", "quantity": 1.0,
-                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0
+                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0, 'igstRate': 0.0,
             }],
             "totalValue": 0.0,
             "cgstValue": 0.0,
@@ -131,7 +131,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "docNo": "INV/18-19/0004",
             "itemList": [{
                 "productName": "product_a", "hsnCode": "111111", "productDesc": "product_a", "quantity": 0.0,
-                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0
+                "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0, 'igstRate': 0.0,
             }],
             "totalValue": 0.0,
             "cgstValue": 0.0,
