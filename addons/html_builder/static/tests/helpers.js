@@ -40,7 +40,10 @@ export function defineWebsiteModels() {
     defineModels([Website, IrUiView]);
 }
 
-export async function setupWebsiteBuilder(websiteContent, { snippets, openEditor = true } = {}) {
+export async function setupWebsiteBuilder(
+    websiteContent,
+    { snippets, openEditor = true, loadIframeBundles = false } = {}
+) {
     const pyEnv = await startServer();
     pyEnv["website"].create({});
     let editor;
@@ -68,6 +71,15 @@ export async function setupWebsiteBuilder(websiteContent, { snippets, openEditor
 
     const iframe = queryOne("iframe[data-src='/website/force/1']");
     iframe.contentDocument.body.innerHTML = `<div id="wrapwrap">${websiteContent}</div>`;
+    if (loadIframeBundles) {
+        loadBundle("html_builder.inside_builder_style", {
+            targetDoc: iframe.contentDocument,
+        });
+        loadBundle("web.assets_frontend", {
+            targetDoc: iframe.contentDocument,
+            js: false,
+        });
+    }
     if (openEditor) {
         await openSnippetsMenu();
     }
