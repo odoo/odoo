@@ -6,7 +6,6 @@ import { computeDelay } from "@mail/utils/common/dates";
 import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { url } from "@web/core/utils/urls";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
@@ -101,13 +100,5 @@ export class ActivityListPopoverItem extends Component {
         this.env.services.orm
             .unlink("mail.activity", [this.props.activity.id])
             .then(() => this.props.onActivityChanged?.());
-    }
-
-    get activityAssigneeAvatar() {
-        return url("/web/image", {
-            field: "avatar_128",
-            id: this.props.activity.user_id[0],
-            model: "res.users",
-        });
     }
 }
