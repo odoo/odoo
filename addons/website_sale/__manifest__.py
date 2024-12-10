@@ -138,6 +138,7 @@
             # backend.
             'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/js/location_selector/**/*',
+            'website_sale/static/src/js/att_value_dialog/*',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
