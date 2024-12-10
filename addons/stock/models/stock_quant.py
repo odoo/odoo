@@ -624,7 +624,7 @@ class StockQuant(models.Model):
     def check_lot_id(self):
         for quant in self:
             if quant.lot_id.product_id and quant.lot_id.product_id != quant.product_id:
-                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.location_id.name))
+                raise ValidationError(_('The Lot/Serial number (%s) is linked to another product.', quant.lot_id.name))
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
