@@ -26,6 +26,9 @@ beforeEach(() => {
         closed: false,
         get document() {
             const doc = popoutIframe.contentDocument;
+            if (!doc) {
+                return undefined;
+            }
             const originalWrite = doc.write;
             doc.write = (content) => {
                 // This avoids duplicating the test script in the popoutWindow
