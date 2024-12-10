@@ -56,15 +56,15 @@ const messagePatch = {
     /**
      * @override
      */
-    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
+    async edit(updateData) {
         const validChannels = (await Promise.all(this.mentionedChannelPromises)).filter(
             (channel) => channel !== undefined
         );
-        const allChannels = this.store.Thread.insert([...validChannels, ...mentionedChannels]);
-        super.edit(body, attachments, {
-            mentionedChannels: allChannels,
-            mentionedPartners,
-        });
+        updateData.mentionedChannels = this.store.Thread.insert([
+            ...validChannels,
+            ...(updateData.mentionedChannels || []),
+        ]);
+        super.edit(updateData);
     },
 };
 patch(Message.prototype, messagePatch);

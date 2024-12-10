@@ -680,14 +680,20 @@ export class Composer extends Component {
         this.props.messageToReplyTo?.cancel();
     }
 
+    get updateData() {
+        const composer = toRaw(this.props.composer);
+        return {
+            attachments: composer.attachments,
+            mentionedChannels: composer.mentionedChannels,
+            mentionedPartners: composer.mentionedPartners,
+        };
+    }
+
     async editMessage() {
         const composer = toRaw(this.props.composer);
         if (composer.text || composer.message.attachment_ids.length > 0) {
             await this.processMessage(async (value) =>
-                composer.message.edit(value, composer.attachments, {
-                    mentionedChannels: composer.mentionedChannels,
-                    mentionedPartners: composer.mentionedPartners,
-                })
+                composer.message.edit({ ...this.updateData, body: value })
             );
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {

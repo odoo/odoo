@@ -130,8 +130,8 @@ patch(MockServer.prototype, {
         }
         if (route === "/mail/message/update_content") {
             this.pyEnv["mail.message"].write([args.message_id], {
-                body: args.body,
-                attachment_ids: args.attachment_ids,
+                body: args.update_data.body,
+                attachment_ids: args.update_data.attachment_ids,
             });
             this.pyEnv["bus.bus"]._sendone(
                 this._mockMailMessage__busNotificationTarget(args.message_id),
@@ -139,9 +139,9 @@ patch(MockServer.prototype, {
                 {
                     "mail.message": {
                         id: args.message_id,
-                        body: args.body,
+                        body: args.update_data.body,
                         attachment_ids: this._mockIrAttachment_attachmentFormat(
-                            args.attachment_ids
+                            args.update_data.attachment_ids
                         ),
                     },
                 }
