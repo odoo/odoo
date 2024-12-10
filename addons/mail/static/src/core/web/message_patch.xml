@@ -21,7 +21,7 @@
                             </t>
                         </ul>
                     </t>
-                    <div t-if="message.body" t-call="mail.Message.bodyAsNotification" t-ref="body"/>
+                    <div t-if="!message.isEmpty and message.body" t-call="mail.Message.bodyAsNotification" t-ref="body"/>
                 </div>
             </t>
             <t t-else="">$0</t>

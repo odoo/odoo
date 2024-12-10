@@ -12,7 +12,6 @@ const { DateTime } = luxon;
 export class NotificationItem extends Component {
     static components = { ActionSwiper, ImStatus };
     static props = [
-        "body?",
         "counter?",
         "datetime?",
         "first?",

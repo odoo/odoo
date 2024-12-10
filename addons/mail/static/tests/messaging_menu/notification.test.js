@@ -275,6 +275,7 @@ test("marked as read thread notifications are ordered by last message date", asy
 });
 
 test("thread notifications are re-ordered on receiving a new message", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const bobUserId = pyEnv["res.users"].create({ name: "Bob" });
     const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob", user_id: bobUserId.id });
@@ -291,11 +292,13 @@ test("thread notifications are re-ordered on receiving a new message", async () 
     pyEnv["mail.message"].create([
         {
             date: "2019-01-01 00:00:00",
+            body: "some text",
             model: "discuss.channel",
             res_id: channelId_1,
         },
         {
             date: "2020-01-01 00:00:00",
+            body: "some text 2",
             model: "discuss.channel",
             res_id: channelId_2,
         },

@@ -196,9 +196,6 @@ class MailController(http.Controller):
             if request.env.user._is_public():
                 return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
             raise Unauthorized()
-        # sudo: public user can access some relational fields of mail.message
-        if message.sudo()._filter_empty():
-            raise NotFound()
         return self._mail_thread_message_redirect(message)
 
     def _mail_thread_message_redirect(self, message):

@@ -165,20 +165,6 @@ test("display day separator before first message of the day", async () => {
     await contains(".o-mail-DateSection");
 });
 
-test("do not display day separator if all messages of the day are empty", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    pyEnv["mail.message"].create({
-        body: "",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
-    await contains(".o-mail-DateSection", { count: 0 });
-});
-
 test("scroll position is kept when navigating from one channel to another [CAN FAIL DUE TO WINDOW SIZE]", async () => {
     mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
@@ -455,51 +441,6 @@ test("show empty placeholder when thread contains no message", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await contains(".o-mail-Message", { count: 0 });
-});
-
-test("show empty placeholder when thread contains only empty messages", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({ model: "discuss.channel", res_id: channelId });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
-    await contains(".o-mail-Message", { count: 0 });
-});
-
-test("message list with a full page of empty messages should load more messages until there are some non-empty", async () => {
-    // Technical assumptions :
-    // - /discuss/channel/messages fetching exactly 30 messages,
-    // - empty messages not being displayed
-    // - auto-load more being triggered on scroll, not automatically when the 30 first messages are empty
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    for (let i = 0; i < 50; i++) {
-        pyEnv["mail.message"].create({
-            body: "not empty",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-    }
-    let newestMessageId;
-    for (let i = 0; i < 50; i++) {
-        newestMessageId = pyEnv["mail.message"].create({
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-    }
-    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
-        ["partner_id", "=", serverState.partnerId],
-        ["channel_id", "=", channelId],
-    ]);
-    pyEnv["discuss.channel.member"].write([selfMember.id], {
-        new_message_separator: newestMessageId + 1,
-    });
-    await start();
-    await openDiscuss(channelId);
-    // initial load: +30 empty ; (auto) load more: +20 empty +10 non-empty
-    await contains(".o-mail-Message", { count: 10 });
-    await contains("button", { text: "Load More" }); // still 40 non-empty
 });
 
 test("Mention a partner with special character (e.g. apostrophe ')", async () => {

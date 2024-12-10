@@ -120,7 +120,11 @@ export class Message extends Record {
             div.innerHTML = this.body;
             const bodyWithoutTags = div.textContent;
             const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
-            return bodyWithoutTags.length > 0 && withoutEmojis.trim().length === 0;
+            return (
+                bodyWithoutTags.length > 0 &&
+                bodyWithoutTags.match(EMOJI_REGEX) &&
+                withoutEmojis.trim().length === 0
+            );
         },
     });
     /** @type {string} */
@@ -169,7 +173,7 @@ export class Message extends Record {
     }
 
     get editable() {
-        if (!this.allowsEdition) {
+        if (this.isEmpty || !this.allowsEdition) {
             return false;
         }
         return this.message_type === "comment";
@@ -325,6 +329,9 @@ export class Message extends Record {
     }
 
     get inlineBody() {
+        if (this.isEmpty) {
+            return _t("This message has been removed");
+        }
         if (!this.body) {
             return "";
         }

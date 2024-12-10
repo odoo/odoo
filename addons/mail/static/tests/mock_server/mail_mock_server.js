@@ -269,7 +269,7 @@ async function discuss_get_or_create_chat(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._get_or_create_chat(partners_to)
+    return DiscussChannel._get_or_create_chat(partners_to);
 }
 
 registerRoute("/discuss/channel/create_channel", discuss_create_channel);
@@ -279,7 +279,7 @@ async function discuss_create_channel(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_channel(name, group_id)
+    return DiscussChannel._create_channel(name, group_id);
 }
 
 registerRoute("/discuss/channel/create_group", discuss_create_group);
@@ -291,7 +291,7 @@ async function discuss_create_group(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_group(partners_to, name)
+    return DiscussChannel._create_group(partners_to, name);
 }
 
 registerRoute("/discuss/channel/fold", discuss_channel_fold);
@@ -748,10 +748,6 @@ async function mail_message_update_content(request) {
         msg_values.attachment_ids = attachment_ids;
     }
     MailMessage.write([message_id], msg_values);
-    if (body === "" && attachment_ids.length === 0) {
-        MailMessage.write([message_id], { pinned_at: false });
-        MailMessage._cleanup_side_records([message_id]);
-    }
     BusBus._sendone(
         MailMessage._bus_notification_target(message.id),
         "mail.record/insert",

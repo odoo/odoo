@@ -9,10 +9,9 @@
     <div t-if="!(ui.isSmall and env.inDiscussApp and store.discuss.activeTab === 'main')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu`">
         <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto flex-grow-1 list-group list-group-flush px-2 py-1 gap-1" t-ref="notification-list">
             <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
-                <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
+                <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
-                    body="message?.inlineBody or message?.subtype_description"
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
                     iconSrc="thread.avatarUrl"
@@ -31,6 +30,9 @@
                             <span class="text-truncate min-w-0" t-esc="thread.displayName"/>
                         </div>
                         <t t-else="" t-esc="thread.displayName"/>
+                    </t>
+                    <t t-set-slot="body">
+                        <t t-esc="message?.inlineBody or message?.subtype_description" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                     <t t-set-slot="icon">
                         <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" member="thread.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
