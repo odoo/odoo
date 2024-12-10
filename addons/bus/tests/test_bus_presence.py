@@ -22,3 +22,11 @@ class TestBusPresence(HttpCase):
         self.env["bus.presence"]._gc_bus_presence()
         presence = self.env["bus.presence"].search([("user_id", "=", user.id)])
         self.assertFalse(presence)
+
+    def test_im_status_invalidation(self):
+        bob_user = new_test_user(self.env, login="bob_user")
+        self.assertEqual(bob_user.im_status, "offline")
+        self.env["bus.presence"]._update_presence(
+            inactivity_period=0, identity_field="user_id", identity_value=bob_user.id
+        )
+        self.assertEqual(bob_user.im_status, "online")
