@@ -119,7 +119,7 @@ export class PosOrder extends Base {
      * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
      */
     get taxTotals() {
-        const currency = this.config_id.currency_id;
+        const currency = this.config.currency_id;
         const company = this.company_id;
         const extraValues = { currency_id: currency };
         const orderLines = this.lines;
