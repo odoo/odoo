@@ -37,3 +37,4 @@ from . import test_website_sale_show_compare_list_price
 from . import test_website_sale_snippets
 from . import test_website_sale_visitor
 from . import test_website_sequence
+from . import test_website_sale_product_ribbon

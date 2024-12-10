@@ -311,14 +311,13 @@
                     <span t-field="image_holder.image_1920"
                         t-options="{'widget': 'image', 'preview_image': image_type, 'class': 'h-100 w-100 position-absolute'}"
                         class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
-
-                    <t t-set="bg_color" t-value="td_product['ribbon'].bg_color"/>
-                    <t t-set="text_color" t-value="td_product['ribbon'].text_color"/>
-                    <t t-set="bg_class" t-value="td_product['ribbon']._get_position_class()"/>
+                    <t t-set="bg_color" t-value="ribbon.bg_color"/>
+                    <t t-set="text_color" t-value="ribbon.text_color"/>
                     <span
-                        t-attf-class="o_ribbon o_not_editable #{bg_class}"
+                        t-att-data-ribbon-id="ribbon.id"
+                        t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()}"
                         t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
-                        t-out="td_product['ribbon'].name or ''"
+                        t-out="ribbon.name or ''"
                     />
                 </a>
             </div>
@@ -345,7 +344,6 @@
                     <t t-call="website_sale.product_variant_preview" />
                 </div>
                 <div class="o_wsale_product_sub d-flex align-items-center justify-content-between flex-nowrap gap-3">
-                    <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="product_price">
                         <span class="h6 mb-0"
                               t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
@@ -738,19 +736,24 @@
                                                    t-value="(td_product['x'] &gt;= td_product['y'] * 2)"/>
                                                 <t t-set="col_is_custom_portrait"
                                                    t-value="not col_is_stretched and (col_height &gt; td_product['x'])"/>
+                                                <t t-set="product" t-value="td_product['product']"/>
+                                                <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
+                                                <t
+                                                    t-set="ribbon"
+                                                    t-value="product._get_ribbon(
+                                                        price_vals=template_price_vals,
+                                                        auto_assign_ribbons=auto_assign_ribbons,
+                                                    )"
+                                                />
                                                 <div
                                                     t-attf-class="oe_product {{col_is_custom_portrait and 'oe_product_custom_portrait'}} {{col_class}} {{col_class_md}} {{col_class_lg}} {{col_is_stretched and 'oe_product_size_stretch'}}"
                                                     t-attf-style="--o-wsale-products-grid-product-col-height: {{col_height}};"
-                                                    t-att-data-ribbon-id="td_product['ribbon'].id"
                                                     t-att-data-colspan="td_product['x'] != 1 and td_product['x']"
                                                     t-att-data-rowspan="td_product['y'] != 1 and td_product['y']"
                                                     t-att-data-name="product_block_name"
                                                 >
                                                     <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                        <t t-call="website_sale.products_item">
-                                                            <t t-set="product"
-                                                               t-value="td_product['product']"/>
-                                                        </t>
+                                                        <t t-call="website_sale.products_item"/>
                                                     </div>
                                                 </div>
                                             </t>
@@ -3965,14 +3968,22 @@
     <!-- Product page images -->
     <template id="website_sale.shop_product_images" name="Shop Product Images">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
-        <t t-set="ribbon" t-value="product_variant.sudo().variant_ribbon_id or product.sudo().website_ribbon_id"/>
-        <t t-set="bg_color" t-value="ribbon['bg_color'] or ''"/>
-        <t t-set="text_color" t-value="ribbon['text_color']"/>
-        <t t-set="bg_class" t-value="ribbon._get_position_class()"/>
+        <t
+            t-set="ribbon"
+            t-value="product.sudo()._get_ribbon(price_vals=combination_info, variant=product_variant)"
+        />
+        <t t-set="bg_color" t-value="ribbon.bg_color"/>
+        <t t-set="text_color" t-value="ribbon.text_color"/>
         <t t-call="website_sale.shop_product_#{website.product_page_image_layout}"/>
     </template>
 
     <template id="website_sale.shop_product_image">
+        <span
+            t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()} z-1"
+            t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+            t-att-data-ribbon-id="ribbon.id"
+            t-out="ribbon.name or ''"
+        />
         <div
             t-if="product_image._name == 'product.image' and product_image.embed_code"
             t-att-class="image_classes + ' ratio ratio-16x9'"
@@ -3983,11 +3994,7 @@
             t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
             class="position-relative d-inline-flex overflow-hidden m-auto w-100"
         >
-            <span t-attf-class="o_ribbon #{ribbon._get_position_class()} z-1"
-                  t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
-                  t-out="ribbon['name'] or ''"
-            />
-            <div
+            <span
                 t-field="product_image.image_1920"
                 name="o_img_with_max_suggested_width"
                 class="d-flex align-items-start justify-content-center w-100 oe_unmovable"
@@ -3999,6 +4006,7 @@
                     'zoom': product_image.can_image_1024_be_zoomed and 'image_1920',
                 }"
             />
+
         </div>
         <div
             t-else=""
@@ -4025,10 +4033,12 @@
             <div
                 class="o_carousel_product_outer carousel-outer position-relative d-flex align-items-center w-100 overflow-hidden"
             >
-                <span t-if="len(product_images) > 1"
-                      t-attf-class="o_ribbon #{ribbon._get_position_class()} z-1"
-                      t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
-                      t-out="ribbon['name'] or ''"
+                <span
+                    t-if="len(product_images) > 1"
+                    t-attf-class="o_ribbons #{ribbon._get_css_classes()} z-1"
+                    t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+                    t-out="ribbon.name or ''"
+                    t-att-data-ribbon-id="ribbon.id"
                 />
                 <div class="carousel-inner h-100">
                     <t t-set="image_classes" t-value="'d-flex align-items-center justify-content-center h-100'"/>
@@ -4164,9 +4174,11 @@
             t-att-data-grid_columns="website.product_page_grid_columns"
         >
             <div class="container position-relative overflow-hidden">
-                <span t-attf-class="o_ribbon #{ribbon._get_position_class()}"
-                      t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
-                      t-out="ribbon['name'] or ''"
+                <span
+                    t-attf-class="o_ribbons #{ribbon._get_css_classes()}"
+                    t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+                    t-out="ribbon.name or ''"
+                    t-att-data-ribbon-id="ribbon.id"
                 />
                 <!-- One row for every two images -->
                 <t t-set="image_classes" t-value="'w-100'"/>

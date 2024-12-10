@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-
 from collections import defaultdict
 
 from odoo import _, api, fields, models
@@ -964,3 +963,34 @@ class ProductTemplate(models.Model):
         if self.description_ecommerce:
             markup_data['description'] = text_from_html(self.description_ecommerce)
         return markup_data
+
+    def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
+        """Return the ribbon to display for the current template.
+
+        It'll be either the ribbon set on the first variant, or the template, or the first
+        applicable ribbon in the automatically assigned ribbons.
+
+        :param dict price_vals: price values for the current product
+        :param auto_assign_ribbons: automatically assigned recordsets, as a `product.ribbon`
+            recordset
+        :param product.product variant: if any, the displayed variant whose ribbon we're looking
+            for.
+
+        :returns: the ribbon to display, if there is one.
+        :rtype: `product.ribbon` recordset
+        """
+        variant = variant or self.product_variant_id
+        ribbon = variant.variant_ribbon_id or self.website_ribbon_id
+        if not ribbon:
+            # The None check ensures that we do not recompute the ribbons when no ribbons were
+            # previously found.
+            if auto_assign_ribbons is None:
+                # On product page, the auto_assign_ribbons are not provided.
+                auto_assign_ribbons = self.env['product.ribbon'].search([
+                    ('assign', '!=', 'manual'),
+                ])
+            for rb in auto_assign_ribbons:
+                if rb._is_applicable_for(variant, price_vals):
+                    return rb
+
+        return ribbon

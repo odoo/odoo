@@ -458,6 +458,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ) or ''
 
         values = {
+            'auto_assign_ribbons': lazy(
+                lambda: self.env['product.ribbon'].sudo().search([('assign', '!=', 'manual')])
+            ),
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
             'order': post.get('order', ''),
