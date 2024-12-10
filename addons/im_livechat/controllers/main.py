@@ -83,18 +83,16 @@ class LivechatController(http.Controller):
         # extract url
         url = request.httprequest.headers.get('Referer')
         # find the first matching rule for the given country and url
-        matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
-        if matching_rule and (not matching_rule.chatbot_script_id or matching_rule.chatbot_script_id.script_step_ids):
+        if matching_rule := request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id):
             matching_rule = matching_rule.with_context(lang=request.env['chatbot.script']._get_chatbot_language())
             rule = {
-                'action': matching_rule.action,
-                'auto_popup_timer': matching_rule.auto_popup_timer,
-                'regex_url': matching_rule.regex_url,
+                "action": matching_rule.action,
+                "auto_popup_timer": matching_rule.auto_popup_timer,
+                "regex_url": matching_rule.regex_url,
+                "chatbotScript": matching_rule.chatbot_script_id._format_for_frontend()
+                if matching_rule.chatbot_script_id
+                else None,
             }
-            if matching_rule.chatbot_script_id.active and (not matching_rule.chatbot_only_if_no_operator or
-               (not operator_available and matching_rule.chatbot_only_if_no_operator)) and matching_rule.chatbot_script_id.script_step_ids:
-                chatbot_script = matching_rule.chatbot_script_id
-                rule.update({'chatbotScript': chatbot_script._format_for_frontend()})
         store = Store()
         request.env["res.users"]._init_store_data(store)
         return {
