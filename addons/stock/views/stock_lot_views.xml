@@ -71,6 +71,8 @@
                 <field name="create_date" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="last_delivery_partner_id" optional="hide" string="Transfer to"/>
+                <field name="last_delivery_date" string="Last transfer date" column_invisible="context.get('show_transfer_info', True)"/>
+                <field name="quantity" string="Total transfer quantity" column_invisible="context.get('show_transfer_info', True)"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="lot_properties" optional="hide"/>
                 <field name="product_qty" optional="hide"/>
@@ -101,6 +103,8 @@
         <field name="arch" type="xml">
             <search string="Product Lots Filter">
                 <field name="name" string="Lot/Serial Number" filter_domain="['|', ('name', 'ilike', self),('ref', 'ilike', self)]"/>
+                <field name="last_delivery_partner_id" string="Customer"/>
+                <field name="partner_ids" invisible="1"/>
                 <field name="product_id"/>
                 <field name="lot_properties"/>
                 <field name="create_date"/>

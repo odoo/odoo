@@ -64,6 +64,9 @@
                         <span t-if="col and line.reference === col" t-att-class="!line.unfoldable ? 'o_stock_reports_nofoldable' : ''">
                             <a class="o_stock_reports_web_action" href="#" t-on-click.prevent="() => this.onClickBoundLink(line)" t-esc="col"/>
                         </span>
+                        <span t-elif="col and ((line.picking_type_code == 'incoming' and line.location_source === col) or (line.picking_type_code == 'outgoing' and line.location_destination === col))">
+                            <a class="o_stock_report_partner_action" href="#" t-on-click.prevent="() => this.onClickPartner(line)" t-esc="col"/>
+                        </span>
                         <span t-elif="col and line.lot_name === col">
                             <span class="o_stock_report_lot_action" t-esc="col" />
                         </span>
