@@ -200,13 +200,15 @@ class Store:
         return fields
 
     def _get_records_data(self, records, fields):
-        abstract_fields = [field for field in fields if isinstance(field, Store.Attr)]
+        abstract_fields = [field for field in fields if isinstance(field, (dict, Store.Attr))]
         records_data = records._read_format(
             [f for f in fields if f not in abstract_fields], load=False
         )
         for record, data in zip(records, records_data):
             for field in abstract_fields:
-                if not field.predicate or field.predicate(record):
+                if isinstance(field, dict):
+                    data.update(field)
+                elif not field.predicate or field.predicate(record):
                     data[field.rename or field.field_name] = field._get_value(record)
         return records_data
 

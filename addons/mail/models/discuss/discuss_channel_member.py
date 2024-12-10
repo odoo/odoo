@@ -573,10 +573,10 @@ class DiscussChannelMember(models.Model):
             [
                 Store.One("channel_id", [], as_thread=True, rename="thread"),
                 "message_unread_counter",
-                Store.Attr("message_unread_counter_bus_id", bus_last_id),
+                {"message_unread_counter_bus_id": bus_last_id},
                 "new_message_separator",
                 *self.env["discuss.channel.member"]._to_store_persona([]),
-                Store.Attr("syncUnread", sync),
+                {"syncUnread": sync},
             ],
         )
 
