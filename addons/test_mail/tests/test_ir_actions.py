@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import tagged
@@ -106,6 +107,15 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertEqual(len(self.test_partner.message_ids), 3,
                          '2 new messages produced')
         self.assertEqual(self.test_partner.message_partner_ids, self.test_partner)
+
+    # def test_action_discuss_post(self):
+    #     self.action.write({
+    #         'state': 'discuss_post',
+    #         'discuss_post_type': 'user',
+    #         'partner_ids': [(4, self.test_partner.id)],
+    #         'discuss_post_message': Markup('<p>hello <b>world</b></p>'),
+    #     })
+    #     self.action.with_context(self.context).run()
 
     def test_action_next_activity(self):
         self.action.write({

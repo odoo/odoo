@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -15,12 +15,14 @@ class IrActionsServer(models.Model):
     state = fields.Selection(
         selection_add=[
             ('next_activity', 'Create Activity'),
+            ('discuss_post', 'Send Message'),
             ('mail_post', 'Send Email'),
             ('followers', 'Add Followers'),
             ('remove_followers', 'Remove Followers'),
             ('object_create',),
         ],
         ondelete={'mail_post': 'cascade',
+                  'discuss_post': 'cascade',
                   'followers': 'cascade',
                   'remove_followers': 'cascade',
                   'next_activity': 'cascade',
@@ -44,6 +46,30 @@ class IrActionsServer(models.Model):
         string='Send Email As',
         compute='_compute_mail_post_method',
         readonly=False, store=True)
+
+    # Discussion Post
+    discuss_post_type = fields.Selection(
+        string='Send To',
+        selection=[('user', 'Users'), ('channel', 'Channels')],
+        default='user',
+        compute='_compute_discuss_post_type',
+        readonly=False, store=True
+    )
+    discuss_channel_ids = fields.Many2many(
+        comodel_name='discuss.channel',
+        relation='ir_actions_server_discuss_channel_rel',
+        column1='action_id',
+        column2='channel_id',
+        compute='_compute_discuss_channel_ids',
+        readonly=False, store=True,
+        string='Channels',
+    )
+    discuss_template_id = fields.Many2one(
+        'discuss.template', 'Message Template',
+        domain="[('model_id', '=', model_id)]",
+        compute='_compute_discuss_template_id',
+        ondelete='set null', readonly=False, store=True,
+    )
 
     # Next Activity
     activity_type_id = fields.Many2one(
@@ -90,6 +116,30 @@ class IrActionsServer(models.Model):
                 action.available_model_ids = mail_models.ids
         super(IrActionsServer, self - mail_thread_based)._compute_available_model_ids()
 
+    @api.depends('state')
+    def _compute_discuss_channel_ids(self):
+        to_reset = self.filtered(lambda act: act.state != 'discuss_post')
+        if to_reset:
+            to_reset.discuss_channel_ids = False
+
+    @api.depends('state')
+    def _compute_discuss_post_type(self):
+        to_reset = self.filtered(lambda act: act.state != 'discuss_post')
+        if to_reset:
+            to_reset.discuss_post_type = False
+        other = self - to_reset
+        if other:
+            other.discuss_post_type = 'user'
+
+    @api.depends('model_id', 'state')
+    def _compute_discuss_template_id(self):
+        to_reset = self.filtered(
+            lambda act: act.state != 'discuss_post' or
+                        (act.model_id != act.discuss_template_id.model_id)
+        )
+        if to_reset:
+            to_reset.discuss_template_id = False
+
     @api.depends('model_id', 'state')
     def _compute_template_id(self):
         to_reset = self.filtered(
@@ -119,7 +169,7 @@ class IrActionsServer(models.Model):
 
     @api.depends('state')
     def _compute_partner_ids(self):
-        to_reset = self.filtered(lambda act: act.state != 'followers')
+        to_reset = self.filtered(lambda act: act.state not in {'discuss_post', 'followers'})
         if to_reset:
             to_reset.partner_ids = False
 
@@ -254,6 +304,32 @@ class IrActionsServer(models.Model):
                     res_id,
                     force_send=False,
                     raise_exception=False
+                )
+        return False
+
+    def _run_action_discuss_post_multi(self, eval_context=None):
+        if not self.discuss_template_id or (not self._context.get('active_ids') and not self._context.get('active_id')):
+            return False
+        res_ids = self._context.get('active_ids', [self._context.get('active_id')])
+        subjects = self.discuss_template_id._render_field('subject', res_ids)
+        bodies = self.discuss_template_id._render_field('body', res_ids)
+
+        if self.discuss_post_type == 'user':
+            channels = []
+            for partner in self.partner_ids:
+                channels.append(
+                    self.env['discuss.channel'].with_user(SUPERUSER_ID).channel_get(partners_to=[partner.id])
+                )
+        else:
+            channels = self.discuss_channel_ids
+
+        for channel in channels:
+            for res_id in res_ids:
+                channel.with_user(SUPERUSER_ID).message_post(
+                    subject=subjects[res_id],
+                    body=bodies[res_id],
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment'
                 )
         return False
 
