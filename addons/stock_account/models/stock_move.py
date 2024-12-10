@@ -453,12 +453,16 @@ class StockMove(models.Model):
             new_std_price = product_value / product_qty
             product.with_company(layers.company_id.id).with_context(disable_auto_svl=True).sudo().write({'standard_price': new_std_price})
 
-    def _get_accounting_data_for_valuation(self):
+    def _get_accounting_data_for_valuation(self, svl=False):
         """ Return the accounts and journal to use to post Journal Entries for
         the real-time valuation of the quant. """
-        self.ensure_one()
         self = self.with_company(self.company_id)
-        accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
+        if svl:
+            product = svl.product_id
+        else:
+            self.ensure_one()
+            product = self.product_id
+        accounts_data = product.product_tmpl_id.get_product_accounts()
 
         acc_src = self._get_src_account(accounts_data)
         acc_dest = self._get_dest_account(accounts_data)
@@ -523,14 +527,20 @@ class StockMove(models.Model):
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
         """
-        self.ensure_one()
+        if not self:
+            company = self.env['stock.valuation.layer'].browse(svl_id)
+        else:
+            self.ensure_one()
+            company = self.company_id
 
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         # the company currency... so we need to use round() before creating the accounting entries.
-        debit_value = self.company_id.currency_id.round(cost)
+        debit_value = company.currency_id.round(cost)
         credit_value = debit_value
-
-        valuation_partner_id = self._get_partner_id_for_valuation_lines()
+        if self:
+            valuation_partner_id = self._get_partner_id_for_valuation_lines()
+        else:
+            valuation_partner_id = False # TODO: This logic is double and stupid anyways
         res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description).values()]
 
         return res
@@ -588,18 +598,17 @@ class StockMove(models.Model):
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         # This method returns a dictionary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
-        self.ensure_one()
+        svl = self.env['stock.valuation.layer'].browse(svl_id)
 
         line_vals = {
             'name': description,
-            'product_id': self.product_id.id,
+            'product_id': svl.product_id.id or self.product_id.id,
             'quantity': qty,
-            'product_uom_id': self.product_id.uom_id.id,
+            'product_uom_id': svl.product_id.uom_id.id,
             'ref': description,
             'partner_id': partner_id,
         }
 
-        svl = self.env['stock.valuation.layer'].browse(svl_id)
         if svl.account_move_line_id.analytic_distribution:
             line_vals['analytic_distribution'] = svl.account_move_line_id.analytic_distribution
 
@@ -644,8 +653,10 @@ class StockMove(models.Model):
         return vals
 
     def _prepare_account_move_vals(self, credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost):
-        self.ensure_one()
-        valuation_partner_id = self._get_partner_id_for_valuation_lines()
+        if self:
+            valuation_partner_id = self._get_partner_id_for_valuation_lines()
+        else:
+            valuation_partner_id = False
         move_ids = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, svl_id, description)
         svl = self.env['stock.valuation.layer'].browse(svl_id)
         if self.env.context.get('force_period_date'):
@@ -664,7 +675,7 @@ class StockMove(models.Model):
             'stock_valuation_layer_ids': [(6, None, [svl_id])],
             'move_type': 'entry',
             'is_storno': self.env.context.get('is_returned') and self.company_id.account_storno,
-            'company_id': self.company_id.id,
+            'company_id': svl.company_id.id,
         }
 
     def _account_analytic_entry_move(self):
@@ -680,6 +691,61 @@ class StockMove(models.Model):
         """
         self.ensure_one()
         return self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id
+
+    def _account_entry_move2(self, svl, cost, direction='move', description="blabla"):
+        am_vals = []
+        if self: # direction "move"
+            self.ensure_one()
+            company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
+            company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
+            direction = self._is_out() and 'out' or 'in'
+            direction = self._is_dropshipped() and 'dropship' or direction
+            direction = self._is_dropshipped_returned() and 'dropship_return' or direction
+        else:
+            company_from = (direction == 'out') and svl.company_id or False
+            company_to  = (direction == 'in') and svl.company_id or False
+        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(svl=svl)
+
+        # Create Journal Entry for products arriving in the company; in case of routes making the link between several
+        # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
+        qty = 0
+        if direction == 'in':
+            if cost < 0: # in case cost is negative, we suppose return
+                am_vals.append(
+                    self.with_company(company_to).with_context(is_returned=True)._prepare_account_move_vals(acc_dest,
+                                                                                                            acc_valuation,
+                                                                                                            journal_id,
+                                                                                                            qty,
+                                                                                                            description,
+                                                                                                            svl.id,
+                                                                                                            cost))
+            else:
+                am_vals.append(
+                    self.with_company(company_to)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty,
+                                                                             description, svl.id, cost))
+
+        # Create Journal Entry for products leaving the company
+        if direction == 'out':
+            cost = -1 * cost
+            if cost < 0:
+                am_vals.append(
+                    self.with_company(company_from).with_context(is_returned=True)._prepare_account_move_vals(
+                        acc_valuation, acc_src, journal_id, qty, description, svl.id, cost))
+            else:
+                am_vals.append(
+                    self.with_company(company_from)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty,
+                                                                               description, svl.id, cost))
+
+        if self.company_id.anglo_saxon_accounting:
+            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
+            anglosaxon_am_vals = self._prepare_anglosaxon_account_move_vals(acc_src, acc_dest, acc_valuation,
+                                                                            journal_id, qty, description, svl.id, cost,
+                                                                            direction=direction)
+            if anglosaxon_am_vals:
+                am_vals.append(anglosaxon_am_vals)
+
+        return am_vals
+
 
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
@@ -719,16 +785,19 @@ class StockMove(models.Model):
 
         return am_vals
 
-    def _prepare_anglosaxon_account_move_vals(self, acc_src, acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost):
+    def _prepare_anglosaxon_account_move_vals(self, acc_src, acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost, direction="move"):
         anglosaxon_am_vals = {}
-        if self._is_dropshipped():
+        if direction == "move":
+            direction = self._is_dropshipped() and 'dropship' or direction
+            direction = self._is_dropshipped_returned() and 'dropship_return' or direction
+        if direction == "dropship":
             if cost > 0:
                 anglosaxon_am_vals = self.with_company(self.company_id)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
             else:
                 cost = -1 * cost
                 anglosaxon_am_vals = self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
-        elif self._is_dropshipped_returned():
-            if cost > 0 and self.location_dest_id._should_be_valued():
+        elif direction == "dropship_return":
+            if cost > 0 and self and self.location_dest_id._should_be_valued():
                 anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
             elif cost > 0:
                 anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)

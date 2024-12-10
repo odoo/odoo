@@ -264,21 +264,26 @@ class StockValuationLayer(models.Model):
         if account_moves:
             account_moves._post()
 
+    def _account_entry(self):
+        self.ensure_one()
+        move = self.stock_move_id
+        direction = 'move'
+        if not move:
+            move = self.stock_valuation_layer_id.stock_move_id
+        if not move:
+            direction = 'in' if self.value > 0 else 'out'
+        return move.with_company(self.company_id)._account_entry_move2(self, self.value, direction=direction, description=self.description)
+
     def _create_grouped_accounting_entries(self):
         to_group_vals = []
         if len(self.mapped('company_id')) > 1:
             raise UserError(_("You can only create valuation entries for one company at a time. "))
         for svl in self:
-            if svl.account_move_id:
+            if svl.account_move_id and svl.account_move_id.move_type == 'entry':
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
-            move = svl.stock_move_id
-            if not move:
-                move = svl.stock_valuation_layer_id.stock_move_id
-            if not move:
-                continue # TODO: if there is a revaluation or something, it should also go into this account move
-            am_vals = move.with_company(svl.company_id)._account_entry_move(svl.quantity, svl.description, svl.id, svl.value)
+            am_vals = svl._account_entry()
             for am_val in am_vals:
                 journal = am_val['journal_id']
                 for line_compose in am_val['line_ids']:
