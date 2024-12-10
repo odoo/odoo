@@ -40,11 +40,13 @@ export async function startInteractions(
     fixture.innerHTML = html;
     if (activeInteractions) {
         clearRegistry(elementRegistry);
-        for (const name of activeInteractions) {
-            if (name in content) {
-                elementRegistry.add(name, content[name][1]);
-            } else {
-                throw new Error(`White-listed Interaction does not exist: ${name}.`);
+        if (!options.editMode) {
+            for (const name of activeInteractions) {
+                if (name in content) {
+                    elementRegistry.add(name, content[name][1]);
+                } else {
+                    throw new Error(`White-listed Interaction does not exist: ${name}.`);
+                }
             }
         }
     }
@@ -55,11 +57,16 @@ export async function startInteractions(
     }
     if (options.editMode) {
         core.stopInteractions();
+        const unmatchedInteractions = activeInteractions ? new Set(activeInteractions) : new Set();
         const builders = registry.category("website.editable_active_elements_builders").getEntries();
         for (const [key, builder] of builders) {
             if (activeInteractions && !activeInteractions.includes(key)) {
                 builder.isAbstract = true;
             }
+            unmatchedInteractions.delete(key);
+        }
+        if (unmatchedInteractions.size) {
+            throw new Error(`White-listed Interaction does not exist: ${[...unmatchedInteractions]}.`);
         }
         const editableInteractions = buildEditableInteractions(builders.map((builder) => builder[1]));
         core.activate(editableInteractions);
