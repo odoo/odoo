@@ -98,6 +98,12 @@ export class Popup extends Interaction {
         this.bsModal.show();
         this.releaseFocus = this.trapFocus();
         this.registerCleanup(() => {
+            // Do not call .hide() directly, because it is queued whereas
+            // .dispose() is not, making it crash. As we don't have to wait for
+            // animations here, bypass the issue with ._hideModal().
+            // Additionally, .hide() triggers `hide.bs.modal`, which triggers
+            // onHideModal() and sets a cookie: we don't want that on destroy.
+            this.bsModal._hideModal();
             if (this.releaseFocus) {
                 this.releaseFocus();
             }
