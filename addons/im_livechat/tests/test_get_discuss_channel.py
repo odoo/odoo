@@ -65,24 +65,35 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "active": True,
                     "country": False,
                     "id": operator.partner_id.id,
-                    "is_public": False,
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.write_date),
                 },
                 {
                     "active": False,
                     "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "isInternalUser": True,
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
-                    "userId": self.user_root.id,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
             ),
         )
-
+        self.assertEqual(
+            data["res.users"],
+            [
+                {
+                    "active": True,
+                    "id": operator.id,
+                    "is_public": False,
+                },
+                {
+                    "active": False,
+                    "id": self.user_root.id,
+                    "im_status": "bot",
+                    "share": False,
+                },
+            ],
+        )
         # ensure visitor info are correct with real user
         self.authenticate(test_user.login, self.password)
         data = self.make_jsonrpc_request('/im_livechat/get_session', {
@@ -112,7 +123,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "active": True,
                     "country": False,
                     "id": operator.partner_id.id,
-                    "is_public": False,
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.write_date),
                 },
@@ -120,12 +130,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "active": True,
                     "country": belgium.id,
                     "id": test_user.partner_id.id,
-                    "isAdmin": False,
-                    "isInternalUser": True,
-                    "is_public": False,
                     "name": "Roger",
-                    "notification_preference": "email",
-                    "userId": test_user.id,
                     "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(test_user.write_date),
                 },
@@ -133,15 +138,35 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "active": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "isInternalUser": True,
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
-                    "userId": self.user_root.id,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
             ),
+        )
+        self.assertEqual(
+            data["res.users"],
+            [
+                {
+                    "active": True,
+                    "id": test_user.id,
+                    "isAdmin": False,
+                    "share": False,
+                    "is_public": False,
+                    "notification_type": "email",
+                },
+                {
+                    "active": True,
+                    "id": operator.id,
+                    "is_public": False,
+                },
+                {
+                    "active": False,
+                    "id": self.user_root.id,
+                    "share": False,
+                },
+            ],
         )
         self.assertEqual(
             data["discuss.channel.member"],
@@ -201,12 +226,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "active": True,
                     "country": False,
                     "id": operator.partner_id.id,
-                    "isAdmin": False,
-                    "isInternalUser": True,
-                    "is_public": False,
                     "name": "Michel",
-                    "notification_preference": "email",
-                    "userId": operator.id,
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.partner_id.write_date),
                 },
@@ -214,15 +234,32 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "active": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "isInternalUser": True,
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
-                    "userId": self.user_root.id,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
             ),
+        )
+        self.assertEqual(
+            data["res.users"],
+            [
+                {
+                    "active": True,
+                    "id": operator.id,
+                    "isAdmin": False,
+                    "is_public": False,
+                    "notification_type": "email",
+                    "share": False,
+                },
+                {
+                    "active": False,
+                    "id": self.user_root.id,
+                    "im_status": "bot",
+                    "is_company": False,
+                    "share": False,
+                },
+            ],
         )
         self.assertEqual(
             data["discuss.channel.member"],

@@ -19,18 +19,9 @@ import { session } from "@web/session";
 let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
 
-export const pyToJsModels = {
-    "discuss.channel": "Thread",
-    "mail.guest": "Persona",
-    "mail.thread": "Thread",
-    "res.partner": "Persona",
-};
+export const pyToJsModels = { "discuss.channel": "Thread", "mail.thread": "Thread" };
 
-export const addFieldsByPyModel = {
-    "discuss.channel": { model: "discuss.channel" },
-    "mail.guest": { type: "guest" },
-    "res.partner": { type: "partner" },
-};
+export const addFieldsByPyModel = { "discuss.channel": { model: "discuss.channel" } };
 
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
@@ -77,8 +68,15 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
-    /** This is the current logged partner / guest */
-    self = Record.one("Persona");
+    /** This is the current logged guest / guest */
+    self = Record.one("Persona", {
+        /** @this {import("models").Store} */
+        compute() {
+            return (this.user?.partner_id || this.guest)?.persona;
+        },
+    });
+    guest = Record.one("mail.guest");
+    user = Record.one("res.users");
     /**
      * Indicates whether the current user is using the application through the
      * public page.

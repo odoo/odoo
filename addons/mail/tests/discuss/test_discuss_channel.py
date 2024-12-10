@@ -130,13 +130,17 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "res.partner": self._filter_partners_fields(
                                     {
                                         "id": self.env.user.partner_id.id,
-                                        "isInternalUser": True,
                                         "is_company": False,
                                         "name": "Ernest Employee",
-                                        "userId": self.env.user.id,
                                         "write_date": emp_partner_write_date,
                                     },
                                 ),
+                                "res.users": [
+                                    {
+                                        "id": self.env.user.id,
+                                        "share": False,
+                                    },
+                                ],
                             },
                             "id": channel.id,
                         },
@@ -162,11 +166,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
-                                    "isInternalUser": False,
                                     "is_company": False,
                                     "name": "Test Partner",
                                     "out_of_office_date_end": False,
-                                    "userId": False,
                                     "write_date": test_partner_write_date,
                                 },
                             ),
@@ -206,11 +208,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
-                                    "isInternalUser": False,
                                     "is_company": False,
                                     "name": "Test Partner",
                                     "out_of_office_date_end": False,
-                                    "userId": False,
                                     "write_date": test_partner_write_date,
                                 }
                             ),

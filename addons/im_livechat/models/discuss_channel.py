@@ -43,7 +43,9 @@ class DiscussChannel(models.Model):
             "chatbot_current_step",
             Store.One("country_id", ["code", "name"], rename="anonymous_country"),
             Store.One(
-                "livechat_operator_id", ["user_livechat_username", "write_date"], rename="operator"
+                "livechat_operator_id",
+                self.env["res.partner"]._livechat_avatar_fields(),
+                rename="operator",
             ),
         ]
         if self.env.user._is_internal():

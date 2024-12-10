@@ -1444,15 +1444,19 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 },
                                 {
                                     "id": self.env.user.partner_id.id,
-                                    "isInternalUser": True,
                                     "is_company": False,
                                     "name": "OdooBot",
-                                    "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(
                                         self.env.user.partner_id.write_date
                                     ),
                                 },
                             ),
+                            "res.users": [
+                                {
+                                    "id": self.env.user.id,
+                                    "share": False,
+                                },
+                            ],
                         },
                     },
                     {
@@ -1547,15 +1551,19 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 },
                                 {
                                     "id": self.env.user.partner_id.id,
-                                    "isInternalUser": True,
                                     "is_company": False,
                                     "name": "OdooBot",
-                                    "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(
                                         self.env.user.partner_id.write_date
                                     ),
                                 },
                             ),
+                            "res.users": [
+                                {
+                                    "id": self.env.user.id,
+                                    "share": False,
+                                },
+                            ],
                         },
                     },
                 ],

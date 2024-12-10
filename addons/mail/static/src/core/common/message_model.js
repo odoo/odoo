@@ -344,12 +344,7 @@ export class Message extends Record {
     }
 
     get canToggleStar() {
-        return Boolean(
-            !this.is_transient &&
-                this.thread &&
-                this.store.self.type === "partner" &&
-                this.store.self.isInternalUser
-        );
+        return Boolean(!this.is_transient && this.thread && this.store.user?.share === false);
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */

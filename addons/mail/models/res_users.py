@@ -143,11 +143,7 @@ class ResUsers(models.Model):
                 )
         if 'notification_type' in vals:
             for user in user_notification_type_modified:
-                user._bus_send_store(
-                    user.partner_id,
-                    "notification_type",
-                    main_user_by_partner={user.partner_id: user},
-                )
+                user._bus_send_store(user, "notification_type")
 
         return write_res
 
@@ -272,15 +268,20 @@ class ResUsers(models.Model):
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
             store.add_global_values(
-                store_self=Store.One(
-                    self.env.user.partner_id,
-                    ["active", "isAdmin", "name", "notification_type", "user", "write_date"],
-                    main_user_by_partner={self.env.user.partner_id: self.env.user},
+                user=Store.One(
+                    self.env.user,
+                    [
+                        "active",
+                        "im_status",
+                        Store.Attr("isAdmin", lambda u: u._is_admin()),
+                        "notification_type",
+                        Store.One("partner_id", [*self.env["res.partner"]._avatar_fields(), "active"]),
+                    ],
                 ),
                 settings=settings._res_users_settings_format(),
             )
         elif guest := self.env["mail.guest"]._get_guest_from_context():
-            store.add_global_values(store_self=Store.One(guest, ["name", "write_date"]))
+            store.add_global_values(guest=Store.One(guest, self.env["mail.guest"]._avatar_fields()))
 
     def _init_messaging(self, store: Store):
         self.ensure_one()

@@ -227,12 +227,9 @@ export class ResPartner extends webModels.ResPartner {
                     mainUser = users[0];
                 }
                 data.userId = mainUser ? mainUser.id : false;
-                data.isInternalUser = mainUser ? !mainUser.share : false;
+                data.share = mainUser ? mainUser.share : true;
                 if (fields.includes("isAdmin")) {
                     data.isAdmin = true; // mock server simplification
-                }
-                if (fields.includes("notification_type")) {
-                    data.notification_preference = mainUser.notification_type;
                 }
             }
             store.add(this.browse(partner.id), data);

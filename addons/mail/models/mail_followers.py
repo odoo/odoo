@@ -35,7 +35,6 @@ class MailFollowers(models.Model):
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.")
     name = fields.Char('Name', related='partner_id.name')
     email = fields.Char('Email', related='partner_id.email')
-    is_active = fields.Boolean('Is Active', related='partner_id.active')
 
     def _invalidate_documents(self, vals_list=None):
         """ Invalidate the cache of the documents followed by ``self``.
@@ -520,11 +519,4 @@ GROUP BY fol.id%s%s""" % (
     # --------------------------------------------------
 
     def _to_store_defaults(self):
-        return [
-            "display_name",
-            "email",
-            "is_active",
-            "name",
-            Store.One("partner_id", rename="partner"),
-            Store.One("thread", [], as_thread=True),
-        ]
+        return [Store.One("partner_id", rename="partner"), Store.One("thread", [], as_thread=True)]

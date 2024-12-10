@@ -97,7 +97,7 @@ class MailGuest(models.Model):
         if len(name) > 512:
             raise UserError(_("Guest's name is too long."))
         self.name = name
-        store = Store(self, ["name", "write_date"])
+        store = Store(self, self.env["mail.guest"]._avatar_fields())
         self.channel_ids._bus_send_store(store)
         self._bus_send_store(store)
 
@@ -112,8 +112,11 @@ class MailGuest(models.Model):
         """
         self.env.cr.execute(query, (timezone, self.id))
 
+    def _avatar_fields(self):
+        return ["name", "write_date"]
+
     def _to_store_defaults(self):
-        return ["im_status", "name", "write_date"]
+        return [*self.env["mail.guest"]._avatar_fields(), "im_status"]
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route

@@ -42,12 +42,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.user_livechat_username = next(iter(partner.user_ids.mapped('livechat_username')), False)
 
-    def _to_store(self, store: Store, fields, **kwargs):
-        """Override to add name when user_livechat_username is not set."""
-        super()._to_store(store, fields, **kwargs)
-        if "user_livechat_username" in fields:
-            store.add(self.filtered(lambda p: not p.user_livechat_username), "name")
-
     def _bus_send_history_message(self, channel, page_history):
         message_body = _("No history found")
         if page_history:
@@ -76,3 +70,11 @@ class ResPartner(models.Model):
             if self.env["chatbot.script"].sudo().search_count(domain, limit=1):
                 return True
         return super()._can_return_content(field_name, access_token)
+
+    def _livechat_avatar_fields(self):
+        return [
+            "is_company",
+            Store.Attr("name", predicate=lambda p: not p.user_livechat_username),
+            "user_livechat_username",
+            "write_date",
+        ]

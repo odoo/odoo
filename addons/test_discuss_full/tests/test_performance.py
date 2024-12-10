@@ -360,25 +360,34 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "isInternalUser": True,
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
-                    "userId": self.user_root.id,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
                     "active": True,
                     "id": self.users[0].partner_id.id,
-                    "isAdmin": False,
-                    "isInternalUser": True,
                     "name": "Ernest Employee",
-                    "notification_preference": "inbox",
-                    "userId": self.users[0].id,
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
             ),
+            "res.users": [
+                {
+                    "active": False,
+                    "id": self.user_root.id,
+                    "im_status": "bot",
+                    "share": False,
+                },
+                {
+                    "active": True,
+                    "id": self.users[0].id,
+                    "isAdmin": False,
+                    "notification_type": "inbox",
+                    "partner_id": self.users[0].partner_id.id,
+                    "share": False,
+                },
+            ],
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
@@ -432,6 +441,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.users[2], only_inviting=True),
                 self._expected_result_for_persona(self.users[14]),
             ),
+            "res.users": [
+                self._res_for_user(self.users[0]),
+                self._res_for_user(self.users[2], only_inviting=True),
+                self._res_for_user(self.users[14]),
+            ],
             "Store": {
                 "inbox": {
                     "counter": 1,
@@ -541,6 +555,19 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.users[3]),
                 self._expected_result_for_persona(self.users[1], also_livechat=True),
             ),
+            "res.users": [
+                self._res_for_user(
+                    self.users[0],
+                    also_livechat=True,
+                    also_notification=True,
+                ),
+                self._res_for_user(self.users[2]),
+                self._res_for_user(self.users[12]),
+                self._res_for_user(self.users[14]),
+                self._res_for_user(self.users[15]),
+                self._res_for_user(self.users[3]),
+                self._res_for_user(self.users[1], also_livechat=True),
+            ],
         }
 
     def _expected_result_for_channel(self, channel):
@@ -1590,12 +1617,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "email": "e.e@example.com",
                 "id": user.partner_id.id,
-                "im_status": "online",
                 "is_company": False,
-                "isInternalUser": True,
                 "name": "Ernest Employee",
                 "out_of_office_date_end": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1614,11 +1638,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "country": self.env.ref("base.in").id,
                 "id": user.partner_id.id,
-                "isInternalUser": True,
                 "is_company": False,
                 "is_public": False,
                 "name": "test1",
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1628,7 +1650,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             if only_inviting:
                 return {
                     "id": user.partner_id.id,
-                    "im_status": "offline",
                     "name": "test2",
                     "write_date": fields.Datetime.to_string(user.partner_id.write_date),
                 }
@@ -1636,12 +1657,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "email": "test2@example.com",
                 "id": user.partner_id.id,
-                "im_status": "offline",
                 "is_company": False,
-                "isInternalUser": True,
                 "name": "test2",
                 "out_of_office_date_end": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[3]:
@@ -1649,12 +1667,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "email": False,
                 "id": user.partner_id.id,
-                "im_status": "offline",
                 "is_company": False,
-                "isInternalUser": True,
                 "name": "test3",
                 "out_of_office_date_end": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
         if user == self.users[12]:
@@ -1662,12 +1677,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "email": False,
                 "id": user.partner_id.id,
-                "im_status": "offline",
                 "is_company": False,
-                "isInternalUser": True,
                 "name": "test12",
                 "out_of_office_date_end": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[14]:
@@ -1675,12 +1687,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "email": False,
                 "id": user.partner_id.id,
-                "im_status": "offline",
                 "is_company": False,
-                "isInternalUser": True,
                 "name": "test14",
                 "out_of_office_date_end": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[15]:
@@ -1688,12 +1697,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "email": False,
                 "id": user.partner_id.id,
-                "im_status": "offline",
                 "is_company": False,
-                "isInternalUser": True,
                 "name": "test15",
                 "out_of_office_date_end": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if guest:
@@ -1728,3 +1734,73 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "rating_avg": 0.0,
             "rating_count": 0,
         }
+
+    def _res_for_user(
+        self, user=None, only_inviting=False, also_livechat=False, also_notification=False
+    ):
+        if user == self.users[0]:
+            res = {
+                "active": True,
+                "id": user.id,
+                "im_status": "online",
+                "share": False,
+            }
+            if also_livechat:
+                res.update(
+                    {
+                        "is_public": False,
+                        "user_livechat_username": False,
+                    }
+                )
+            return res
+        if user == self.users[1]:
+            res = {
+                "active": True,
+                "id": user.id,
+                "share": False,
+                "is_public": False,
+            }
+            if also_livechat:
+                res["user_livechat_username"] = False
+            return res
+        if user == self.users[2]:
+            if only_inviting:
+                return {
+                    "id": user.id,
+                    "im_status": "offline",
+                }
+            return {
+                "active": True,
+                "id": user.id,
+                "im_status": "offline",
+                "share": False,
+            }
+        if user == self.users[3]:
+            return {
+                "active": True,
+                "id": user.id,
+                "im_status": "offline",
+                "share": False,
+            }
+        if user == self.users[12]:
+            return {
+                "active": True,
+                "id": user.id,
+                "im_status": "offline",
+                "share": False,
+            }
+        if user == self.users[14]:
+            return {
+                "active": True,
+                "id": user.id,
+                "im_status": "offline",
+                "share": False,
+            }
+        if user == self.users[15]:
+            return {
+                "active": True,
+                "id": user.id,
+                "im_status": "offline",
+                "share": False,
+            }
+        return {}
