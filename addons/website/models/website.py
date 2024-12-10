@@ -1033,6 +1033,9 @@ class Website(models.Model):
             fallback_create_missing_industry_image('s_wavy_grid_default_image_2', 's_image_text_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_3', 's_text_image_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_4', 's_carousel_default_image_1')
+            fallback_create_missing_industry_image('s_carousel_cards_default_image_1', 's_carousel_default_image_1')
+            fallback_create_missing_industry_image('s_carousel_cards_default_image_2', 's_carousel_default_image_2')
+            fallback_create_missing_industry_image('s_carousel_cards_default_image_3', 's_carousel_default_image_3')
 
         except Exception:
             pass

@@ -846,7 +846,26 @@ table.table_desc tr td {
 
 // Variables shared between carousel snippets and s_image_gallery
 $-o-carousel-indicators-dots-size: .75rem;
-$-o-carousel-controllers-size: map-get($spacers, 5);
+$-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacers, 5)});
+
+%o_horizontal_controllers {
+    @include media-breakpoint-up(md) {
+        .carousel-indicators {
+            position: relative;
+            min-width: 0;
+            margin: 0;
+        }
+
+        .carousel-control-prev, .carousel-control-next {
+            position: relative;
+            width: auto;
+        }
+    }
+
+    .o_arrows_wrapper {
+        display: flex;
+    }
+}
 
 // This style is shared by old versions of carousels
 // 000 for s_carousel & 000 and 001 for s_quotes_carousel
@@ -1023,7 +1042,7 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
         }
 
         &:not(.s_carousel_arrows_hidden) .carousel-indicators {
-            $-margin-x: map-get($spacers, 3) * 2 + $-o-carousel-controllers-size;
+            $-margin-x: calc(#{map-get($spacers, 3)} * 2 + #{$-o-carousel-controllers-size});
 
             min-height: $-o-carousel-controllers-size;
             margin: 0 $-margin-x map-get($spacers, 3);
@@ -1085,6 +1104,14 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
         }
     }
 
+    .o_horizontal_controllers {
+        @extend %o_horizontal_controllers;
+    }
+
+    &.s_carousel_arrows_hidden .o_horizontal_controllers .o_arrows_wrapper {
+        display: none;
+    }
+
     // Content
     .carousel-inner {
         // Create a new stacking context to ensure that elements like indicators
@@ -1135,17 +1162,42 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
         }
 
         &.s_carousel_indicators_numbers {
-            flex-wrap: wrap;
+            justify-content: start;
             height: auto;
             counter-reset: numberList;
+            overflow: auto;
+            transition: scrollbar-color .2s ease-in-out; // $transition-base duration & bezier
+            scrollbar-color: var(--IndicatorsNumbers__Scrollbar-color, #{rgba($carousel-indicator-active-bg, .15)}) transparent;
+            scrollbar-width: thin;
+
+            &::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border-radius: $btn-border-radius-sm;
+                background: var(--IndicatorsNumbers__Scrollbar-color, #{rgba($carousel-indicator-active-bg, .15)});
+            }
+
+            &::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            &:hover {
+                scrollbar-color: var(--IndicatorsNumbers__Scrollbar-color, #{$carousel-indicator-active-bg}) transparent;
+
+                &::-webkit-scrollbar-thumb {
+                    background: var(--IndicatorsNumbers__Scrollbar-color, $carousel-indicator-active-bg);
+                }
+            }
 
             button {
                 display: flex;
                 align-items: center;
-                gap: map-get($spacers, 1);
                 width: auto;
                 height: auto;
                 margin: 0;
+                border: 0;
                 padding: 0 map-get($spacers, 2) 0;
                 background: none;
                 color: $carousel-indicator-active-bg;
@@ -1160,18 +1212,28 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
                     counter-increment: numberList;
                 }
 
-                @include media-breakpoint-up(md) {
-                    &:after {
-                        display: block;
-                        width: 0;
-                        border-top: $border-width * 2 solid $carousel-indicator-active-bg;
-                        transition: width .2s ease-in-out; // $transition-base duration & bezier
-                        content: '';
-                    }
+                &:after {
+                    display: block;
+                    width: 0;
+                    margin-left: map-get($spacers, 1);
+                    border-top: $border-width * 2 solid $carousel-indicator-active-bg;
+                    transition: width .2s ease-in-out; // $transition-base duration & bezier
+                    content: '';
+                }
 
-                    &.active:after {
-                        width: map-get($spacers, 4);
-                    }
+                &.active:after {
+                    width: map-get($spacers, 4);
+                }
+
+                // As flexbox's "safe" property (e.g. justify-content: safe center;) is not yet
+                // fully supported, this will maintain centered alignment with overflowing
+                // elements.
+                &:first-child {
+                    margin-left: auto;
+                }
+
+                &:last-child {
+                    margin-right: auto;
                 }
             }
         }
@@ -1188,6 +1250,12 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
             &:after {
                 border-color: $carousel-dark-indicator-active-bg;
             }
+        }
+
+        --IndicatorsNumbers__Scrollbar-color: #{rgba($carousel-dark-indicator-active-bg, .15)};
+
+        &:hover {
+            --IndicatorsNumbers__Scrollbar-color: #{$carousel-dark-indicator-active-bg};
         }
     }
 
