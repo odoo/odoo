@@ -225,7 +225,7 @@ class GoogleEvent(abc.Set):
     def get_meeting_url(self):
         if not self.conferenceData or not self.conferenceData.get('entryPoints'):
             return False
-        video_meeting = list(filter(lambda entryPoints: entryPoints.get('entryPointType') == 'video', self.conferenceData.get('entryPoints')))
+        video_meeting = list(filter(lambda entryPoints: entryPoints.get('entryPointType') == 'video', self.conferenceData.get('entryPoints', [])))
         return video_meeting[0].get('uri') if video_meeting else False
 
     def is_available(self):
