@@ -27,8 +27,8 @@ class TestWebsiteSaleGMCCommon(HttpCase):
         cls.color_attribute = cls.env['product.attribute'].create({
             'name': 'Color',
             'value_ids': [
-                Command.create({'name': 'white', 'sequence': 1}),
-                Command.create({'name': 'black', 'sequence': 2, 'default_extra_price': 20.0}),
+                Command.create({ 'name': 'white', 'sequence': 1 }),
+                Command.create({ 'name': 'black', 'sequence': 2, 'default_extra_price': 20.0 }),
             ],
         })
         (
@@ -71,7 +71,7 @@ class TestWebsiteSaleGMCCommon(HttpCase):
         (
             cls.mouse_white,
             cls.mouse_black,
-        ) = cls.mouse_products = cls.mouse_template.product_variant_ids
+        ) = cls.products = cls.mouse_template.product_variant_ids
         cls.mouse_white.write({
             'code': 'MAGIC-W',
             'barcode': '0195949655968',
@@ -146,7 +146,7 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
 
     def update_values(self):
         with self.mock_public_request():
-            self.values = self.mouse_products._get_gmc_values()
+            self.values = self.products._get_gmc_values()
         self.white_mouse_values = self.values[self.mouse_white]
         self.black_mouse_values = self.values[self.mouse_black]
 
@@ -316,6 +316,7 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
         )
 
     def test_05_gmc_product_identifier(self):
+        self.update_values()
         self.assertEqual(
             self.mouse_white.barcode, 
             self.white_mouse_values['gtin'], 
@@ -338,14 +339,13 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
         )
 
     def test_06_gmc_product_type(self):
-        # ordered
+        self.update_values()
         self.assertListEqual(
             list(self.public_categories.sorted('sequence').mapped('name')),
             self.white_mouse_values['product_type'],
             'Product type should follow the sequence order as the first in the list will have the '
             'most impact in Google algorithms',
         )
-
         self.mouse_template.write({
             'public_categ_ids': [
                 Command.create({ 'name': f'Category {i}' })
@@ -360,10 +360,76 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
         )
 
     def test_07_gmc_product_variants(self):
-        ...
+        some_attribute = self.env['product.attribute'].create([
+            {
+                'name': 'Color',
+                'value_ids': [Command.create({ 'name': 'white', 'sequence': 1 })],
+            },
+            {
+                'name': 'Material',
+                'value_ids': [Command.create({ 'name': 'wood', 'sequence': 1 })],
+            },
+        ])
+        product_no_variant = self.env['product.product'].create({
+            'name': 'Test product',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attr.id,
+                    'value_ids': [Command.set(attr.value_ids.ids)],
+                })
+                for attr in some_attribute
+            ],
+            'list_price': 49.0,
+            'is_published': True,
+        })
+        self.products |= product_no_variant
+        self.update_values()
+        self.assertEqual(
+            self.mouse_template.id,
+            self.white_mouse_values['item_group_id'],
+            'This white mouse is a variant, so it should be linked to its template.',
+        )
+        self.assertEqual(
+            self.mouse_template.id,
+            self.black_mouse_values['item_group_id'],
+            'This black mouse is a variant, so it should be linked to its template.',
+        )
+        self.assertNotIn(
+            'item_group_id',
+            self.values[product_no_variant],
+            'A product that has no variant, or only one with attributes, should not be linked to a '
+            'group.'
+        )
 
     def test_08_gmc_product_bundles(self):
-        ...
+        keyboard = self.env['product.product'].create({
+            'name': 'Keybaord',
+            'list_price': 129.0,
+        })
+        product_bundle = self.env['product.product'].create({
+            'name': 'Keyboard + Mouse',
+            'type': 'combo',
+            'combo_ids': [
+                Command.create({
+                    'name': 'Keyboard + Mouse Combo',
+                    'combo_item_ids': [keyboard.id, self.mouse_white.id],
+                })
+            ],
+            'list_price': 199.0,
+        })
+        self.products |= product_bundle
+        self.update_values()
+
+        self.assertEqual(
+            'yes',
+            self.values[product_bundle]['is_bundle'],
+            'Combo products should be considered as bundles in Google.',
+        )
+        self.assertEqual(
+            'no',
+            self.white_mouse_values['is_bundle'],
+            'Consu products should not be considered as bundles in Google.',
+        )
         
     def test_09_gmc_product_labels(self):
         ...
