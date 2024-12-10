@@ -20,29 +20,30 @@ export class WeColorpicker extends Component {
 
     setup() {
         useWeComponent();
-        this.currentColors = useDomState((editingElement) => ({
-            backgroundColor: editingElement
-                ? getComputedStyle(editingElement).backgroundColor
+        this.currentColors = useDomState((editingElements) => ({
+            // TODO just first el ?
+            backgroundColor: editingElements.length
+                ? getComputedStyle(editingElements[0]).backgroundColor
                 : undefined,
         }));
         this.colorButton = useRef("colorButton");
         onMounted(this.updateColorButton.bind(this));
         this.applyColor = this.env.editor.shared.history.makePreviewableOperation(
             ({ color, mode }) => {
-                this.env.editor.shared.color.colorElement(
-                    this.env.getEditingElement(),
-                    color,
-                    "backgroundColor"
-                );
+                for (const element of this.env.getEditingElements()) {
+                    this.env.editor.shared.color.colorElement(element, color, "backgroundColor");
+                }
+
                 this.updateColorButton();
             }
         );
     }
     updateColorButton() {
-        if (!this.colorButton.el || !this.env.getEditingElement()) {
+        const editingElements = this.env.getEditingElements();
+        if (!this.colorButton.el || !editingElements.length) {
             return;
         }
-        const color = this.env.editor.shared.color.getElementColors(this.env.getEditingElement())[
+        const color = this.env.editor.shared.color.getElementColors(editingElements[0])[
             "backgroundColor"
         ];
         this.env.editor.shared.color.colorElement(this.colorButton.el, color, "backgroundColor");
