@@ -1263,7 +1263,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         # operator: inequality
         if operator in ('>', '<', '>=', '<='):
             can_be_null = False
-            if (null_value := self.falsy_value) is not None and not isinstance(null_value, str):  # TODO remove check on str
+            if (null_value := self.falsy_value) is not None:
                 value = self.convert_to_cache(value, model) or null_value
                 can_be_null = (
                     null_value < value if operator == '<' else
