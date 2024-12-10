@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { Component } from "@odoo/owl";
 
 const CookiesBar = publicWidget.registry.cookies_bar;
 
 CookiesBar.include({
-    /**
-     * @override
-     */
-    destroy() {
-        this._destroyScssProductComparisonButton();
-        return this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -20,15 +14,25 @@ CookiesBar.include({
     /**
      * @private
      */
-    _onAcceptClick() {
+    _onHideModal() {
         this._destroyScssProductComparisonButton();
-        return this._super(...arguments);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _showPopup() {
+        this._super(...arguments);
+        const productCompareButtonEl = document.querySelector(".o_product_feature_panel");
+        if (productCompareButtonEl) {
+            Component.env.bus.trigger("cookiebar_open");
+        }
+    },
     /**
      * @private
      * Remove the custom css for `--move-cookie-over-modal`, to position the

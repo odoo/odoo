@@ -7,6 +7,7 @@ import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import website_sale_utils from "@website_sale/js/website_sale_utils";
 import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
+import { Component } from "@odoo/owl";
 
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
 
@@ -71,10 +72,9 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 window.location.href = Object.keys(self.comparelist_product_ids || {}).length === 0 ? '/shop' : newLink;
             });
         });
-        const cookieModalDialogEl = document.querySelector("#website_cookies_bar .s_popup_bottom");
-        if (cookieModalDialogEl) {
-            this._setObserver(cookieModalDialogEl);
-        }
+        Component.env.bus.addEventListener("cookiebar_open", () => {
+            this._checkCookieModalDialog();
+        });
         return this._super.apply(this, arguments);
     },
     /**
@@ -165,32 +165,6 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             : "";
             this.el?.style.setProperty("--move-cookie-over-modal", bottom);
         }
-    },
-    /**
-     * @private
-     *
-     * We set an observer on the modal because, upon reload, the modal initially has
-     * the class d-none. It then changes to block, but during that initial period,
-     * the modal is not accessible. By adding an observer, we can call the
-     * _checkCookieModalDialog function for every state change, ensuring proper
-     * functionality.
-     */
-    _setObserver: function (element) {
-        this.observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === "attributes" && mutation.attributeName === "style") {
-                    const displayStyle = window.getComputedStyle(element).display;
-                    if (displayStyle === "block") {
-                        this._checkCookieModalDialog();
-                    }
-                }
-            });
-        });
-        const config = {
-            attributes: true,
-            attributeFilter: ["style"],
-        };
-        this.observer.observe(element, config);
     },
     /**
      * @private
