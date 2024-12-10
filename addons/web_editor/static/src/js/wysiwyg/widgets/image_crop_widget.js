@@ -41,6 +41,7 @@ const ImageCropWidget = Widget.extend({
         this.aspectRatio = data.aspectRatio || "0/0";
         const mimetype = data.mimetype || src.endsWith('.png') ? 'image/png' : 'image/jpeg';
         this.mimetype = options.mimetype || mimetype;
+        this.resetImage = options.resetImage || false;
     },
     /**
      * @override
@@ -49,7 +50,9 @@ const ImageCropWidget = Widget.extend({
         await this._super.apply(this, arguments);
         await loadImageInfo(this.media, this._rpc.bind(this));
         const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
-        await this._scrollToInvisibleImage();
+        if (!this.resetImage) {
+            await this._scrollToInvisibleImage();
+        }
         if (this.media.dataset.originalSrc && !isIllustration) {
             this.originalSrc = this.media.dataset.originalSrc;
             this.originalId = this.media.dataset.originalId;
@@ -74,6 +77,7 @@ const ImageCropWidget = Widget.extend({
         }
         const _super = this._super.bind(this);
         const $cropperWrapper = this.$('.o_we_cropper_wrapper');
+        const $cropButtons = this.$('.o_we_crop_buttons');
 
         // Replacing the src with the original's so that the layout is correct.
         await loadImage(this.originalSrc, this.media);
@@ -86,6 +90,8 @@ const ImageCropWidget = Widget.extend({
         offset.left += parseInt(this.$media.css('padding-left'));
         offset.top += parseInt(this.$media.css('padding-right'));
         $cropperWrapper.offset(offset);
+        offset.top += parseInt(cropperImage.style.height) + 10;
+        $cropButtons.offset(offset);
 
         await loadImage(this.originalSrc, cropperImage);
         await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.media.dataset);
