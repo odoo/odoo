@@ -20,10 +20,10 @@ export class WeColorpicker extends Component {
 
     setup() {
         useWeComponent();
-        this.currentColors = useDomState((editingElements) => ({
+        this.currentColors = useDomState((editingElement) => ({
             // TODO just first el ?
-            backgroundColor: editingElements.length
-                ? getComputedStyle(editingElements[0]).backgroundColor
+            backgroundColor: editingElement
+                ? getComputedStyle(editingElement).backgroundColor
                 : undefined,
         }));
         this.colorButton = useRef("colorButton");
@@ -39,13 +39,12 @@ export class WeColorpicker extends Component {
         );
     }
     updateColorButton() {
-        const editingElements = this.env.getEditingElements();
-        if (!this.colorButton.el || !editingElements.length) {
+        const editingElement = this.env.getEditingElement();
+        if (!this.colorButton.el || !editingElement) {
             return;
         }
-        const color = this.env.editor.shared.color.getElementColors(editingElements[0])[
-            "backgroundColor"
-        ];
+        const color =
+            this.env.editor.shared.color.getElementColors(editingElement)["backgroundColor"];
         this.env.editor.shared.color.colorElement(this.colorButton.el, color, "backgroundColor");
     }
 }
