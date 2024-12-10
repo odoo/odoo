@@ -178,14 +178,15 @@ test("chat window: basic rendering", async () => {
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header", { text: "General" });
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-threadAvatar");
-    await contains(".o-mail-ChatWindow-command", { count: 4 });
+    await contains(".o-mail-ChatWindow-command", { count: 5 });
     await contains("[title='Start a Call']");
+    await contains("[title='Start a Video Call']");
     await contains("[title='Open Actions Menu']");
     await contains("[title='Fold']");
     await contains("[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow .o-mail-Thread", { text: "The conversation is empty." });
     await click("[title='Open Actions Menu']");
-    await contains(".o-mail-ChatWindow-command", { count: 14 });
+    await contains(".o-mail-ChatWindow-command", { count: 15 });
     await contains(".o-dropdown-item", { text: "Attachments" });
     await contains(".o-dropdown-item", { text: "Pinned Messages" });
     await contains(".o-dropdown-item", { text: "Members" });

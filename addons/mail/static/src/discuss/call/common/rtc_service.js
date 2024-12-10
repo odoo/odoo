@@ -732,6 +732,7 @@ export class Rtc extends Record {
         const data = await rpc(
             "/mail/rtc/channel/join_call",
             {
+                camera,
                 channel_id: channel.id,
                 check_rtc_session_ids: channel.rtcSessions.map((session) => session.id),
             },
@@ -787,6 +788,9 @@ export class Rtc extends Record {
             { leading: true, trailing: true }
         );
         this.state.channel.rtcInvitingSession = undefined;
+        if (camera) {
+            await this.toggleVideo("camera");
+        }
         await this._initConnection();
         if (!this.state.channel?.id) {
             return;
@@ -800,9 +804,6 @@ export class Rtc extends Record {
         await this.resetAudioTrack({ force: audio });
         if (!this.state.channel?.id) {
             return;
-        }
-        if (camera) {
-            await this.toggleVideo("camera");
         }
     }
 

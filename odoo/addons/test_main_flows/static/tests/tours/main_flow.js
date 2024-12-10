@@ -873,9 +873,6 @@ stepUtils.autoExpandMoreButtons(),
     trigger: ".o_control_panel_navigation .btn .fa-search",
     run: "click",
 }, {
-    trigger: ".o_searchview_facet:contains('To Reorder') .o_facet_remove",
-    run: "click",
-}, {
     isActive: ["desktop"],
     trigger: "td:contains('the_flow.component2')",
     run: "click",
