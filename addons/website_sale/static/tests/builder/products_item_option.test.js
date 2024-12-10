@@ -28,6 +28,11 @@ test("add a new ribbon", async () => {
                             <span class="o_ribbon o_not_editable d-none" style=""></span>
                         </a>
                     </div>
+                    <span
+                        data-ribbon-id=""
+                        class="o_ribbons o_not_editable"
+                        style=""
+                    />
                     <div class="o_wsale_product_information">
                             <div class="o_wsale_product_information_text">
                                 <h6 class="o_wsale_products_item_title">
@@ -51,5 +56,5 @@ test("add a new ribbon", async () => {
     );
     await contains(":iframe .oe_product").click();
     await contains("button[data-action-id='createRibbon']").click();
-    expect(":iframe .oe_product .o_ribbon").toHaveText("Ribbon Name");
+    expect(":iframe .oe_product .o_ribbons").toHaveText("Ribbon Name");
 });
