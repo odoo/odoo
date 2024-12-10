@@ -131,6 +131,15 @@ export function clickBack() {
         },
     ];
 }
+export function clickBackToProductScreen() {
+    return [
+        {
+            content: "click back to product screen",
+            trigger: ".payment-screen .back-button",
+            run: "click",
+        },
+    ];
+}
 export function clickTipButton() {
     return [
         {
