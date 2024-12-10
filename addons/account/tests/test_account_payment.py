@@ -593,3 +593,20 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         invoice_2.action_post()
         register_payment_and_assert_state(invoice_2, 100.0, is_community=False)
         self.assertFalse(invoice_2.matched_payment_ids.move_id)
+
+    def test_payment_confirmation_with_bank_outstanding_account(self):
+        """ Ensures that when the outstanding account of the payment method is set to a bank,
+            the validation process of a payment is skipped therefore reaching paid status after confirmation of payment. """
+        bank_journal = self.company_data['default_journal_bank']
+        outstanding_account = bank_journal.default_account_id
+        # Sets the outstanding account to a bank
+        bank_journal.inbound_payment_method_line_ids.payment_account_id = outstanding_account
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'journal_id': bank_journal.id,
+            'amount': 2629,
+        })
+        payment.action_post()
+        self.assertEqual(payment.state, 'paid')
