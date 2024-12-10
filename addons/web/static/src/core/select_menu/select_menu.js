@@ -166,6 +166,13 @@ export class SelectMenu extends Component {
         this.filterOptions();
     }
 
+    onOpened() {
+        const inputEl = this.inputRef.el;
+        if (inputEl) {
+            inputEl.focus();
+        }
+    }
+
     onStateChanged(open) {
         this.isOpen = open;
         if (open) {
@@ -220,9 +227,9 @@ export class SelectMenu extends Component {
         // Combine previously selected choices + newly selected choice from
         // the searched choices and then filter the choices based on
         // props.value i.e. valueSet.
-        return [...(this.selectedChoice || []), ...choices].filter((c, index, self) =>
-            valueSet.has(c.value)
-            && self.findIndex((t) => t.value === c.value) === index
+        return [...(this.selectedChoice || []), ...choices].filter(
+            (c, index, self) =>
+                valueSet.has(c.value) && self.findIndex((t) => t.value === c.value) === index
         );
     }
 
