@@ -984,7 +984,7 @@ class DiscussChannel(models.Model):
             forward_member_field("custom_notifications"),
             "default_display_mode",
             "description",
-            Store.Attr("fetchChannelInfoState", "fetched"),
+            {"fetchChannelInfoState": "fetched"},
             Store.One("from_message_id"),
             Store.Attr("group_based_subscription", lambda c: bool(c.group_ids)),
             Store.Many(
@@ -1002,7 +1002,7 @@ class DiscussChannel(models.Model):
             "member_count",
             forward_member_field("mute_until_dt"),
             "message_needaction_counter",
-            Store.Attr("message_needaction_counter_bus_id", bus_last_id),
+            {"message_needaction_counter_bus_id": bus_last_id},
             "name",
             Store.One("parent_channel_id"),
             Store.Many("rtc_session_ids", mode="ADD", extra=True, rename="rtcSessions"),
@@ -1017,7 +1017,7 @@ class DiscussChannel(models.Model):
                 extra_fields=[
                     "last_interest_dt",
                     "message_unread_counter",
-                    Store.Attr("message_unread_counter_bus_id", bus_last_id),
+                    {"message_unread_counter_bus_id": bus_last_id},
                     "new_message_separator",
                 ],
                 only_data=True,
