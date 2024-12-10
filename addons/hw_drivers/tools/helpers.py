@@ -385,14 +385,19 @@ def delete_iot_handlers():
 
 
 def download_iot_handlers(auto=True):
-    """
-    Get the drivers from the configured Odoo server
+    """Get the drivers from the configured Odoo server.
+    If drivers did not change on the server, download
+    will be skipped.
     """
     server = get_odoo_server_url()
     if server:
+        etag = get_conf('iot_handlers_etag')
         try:
             response = requests.post(
-                server + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
+                server + '/iot/get_handlers',
+                data={'mac': get_mac_address(), 'auto': auto},
+                timeout=8,
+                headers={'If-None-Match': etag} if etag else None,
             )
             response.raise_for_status()
         except requests.exceptions.RequestException:
@@ -400,8 +405,14 @@ def download_iot_handlers(auto=True):
             return
 
         data = response.content
-        if not data:
+        if response.status_code == 304 or not data:
+            _logger.info('No new IoT handler to download')
             return
+
+        try:
+            update_conf({'iot_handlers_etag': response.headers['ETag'].strip('"')})
+        except KeyError:
+            _logger.exception('No ETag in the response headers')
 
         delete_iot_handlers()
         with writable():
