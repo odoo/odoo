@@ -68,7 +68,7 @@ export class Call extends Component {
     }
 
     get isActiveCall() {
-        return Boolean(this.props.thread.eq(this.rtc.state?.channel));
+        return Boolean(this.props.thread.eq(this.rtc.channel));
     }
 
     get minimized() {
@@ -120,19 +120,16 @@ export class Call extends Component {
                 });
             }
         }
-        raisingHandCards.sort((c1, c2) => {
-            return c1.session.raisingHand - c2.session.raisingHand;
-        });
-        sessionCards.sort((c1, c2) => {
-            return (
+        raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
+        sessionCards.sort(
+            (c1, c2) =>
                 c1.session.channel_member_id?.persona?.name?.localeCompare(
                     c2.session.channel_member_id?.persona?.name
                 ) ?? 1
-            );
-        });
-        invitationCards.sort((c1, c2) => {
-            return c1.member.persona?.name?.localeCompare(c2.member.persona?.name) ?? 1;
-        });
+        );
+        invitationCards.sort(
+            (c1, c2) => c1.member.persona?.name?.localeCompare(c2.member.persona?.name) ?? 1
+        );
         return raisingHandCards.concat(sessionCards, invitationCards);
     }
 

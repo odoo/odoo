@@ -40,8 +40,15 @@ callActionsRegistry
     })
     .add("camera-on", {
         condition: (component) => component.rtc,
-        name: (component) =>
-            component.rtc.selfSession.is_camera_on ? _t("Stop camera") : _t("Turn camera on"),
+        unavailable: (component) => component.rtc?.isRemote,
+        name: (component) => {
+            if (component.rtc?.isRemote) {
+                return _t("Camera feature not available when not in the tab hosting the call");
+            }
+            return component.rtc.selfSession.is_camera_on
+                ? _t("Stop camera")
+                : _t("Turn camera on");
+        },
         isActive: (component) => component.rtc.selfSession?.is_camera_on,
         icon: "fa-video-camera",
         activeClass: "text-success",
@@ -59,10 +66,17 @@ callActionsRegistry
     })
     .add("share-screen", {
         condition: (component) => component.rtc && !isMobileOS(),
-        name: (component) =>
-            component.rtc.selfSession.is_screen_sharing_on
+        unavailable: (component) => component.rtc?.isRemote,
+        name: (component) => {
+            if (component.rtc?.isRemote) {
+                return _t(
+                    "Screen sharing feature not available when not in the tab hosting the call"
+                );
+            }
+            return component.rtc.selfSession.is_screen_sharing_on
                 ? _t("Stop Sharing Screen")
-                : _t("Share Screen"),
+                : _t("Share Screen");
+        },
         isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
         icon: "fa-desktop",
         activeClass: "text-success",
@@ -104,6 +118,9 @@ function transformAction(component, id, action) {
         /** Condition to display this action */
         get condition() {
             return action.condition(component);
+        },
+        get unavailable() {
+            return action.unavailable?.(component);
         },
         /** Name of this action, displayed to the user */
         get name() {

@@ -337,7 +337,7 @@ class DiscussChannelMember(models.Model):
                 "Rtc",
                 {
                     "iceServers": ice_servers or False,
-                    "selfSession": Store.One(rtc_session),
+                    "hostSession": Store.One(rtc_session),
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
