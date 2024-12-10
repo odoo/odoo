@@ -8,7 +8,9 @@
     'data': [
         'security/ir.model.access.csv',
         'view.xml',
-        'data/test_translation_import_data.xml'
+        'data/test_translation_import_data.xml',
+        'data/test.translation.import.model1.csv',
+        'data/test.translation.import.model1-translated.csv',
     ],
     'installable': True,
     'assets': {

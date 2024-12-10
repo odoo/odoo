@@ -40,7 +40,7 @@ from typing import Iterator
 
 ROOT = Path(__file__).parent.parent
 UPGRADE = ROOT / 'upgrade_code'
-AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv')
+AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv', '.po', '.pot')
 
 
 try:
@@ -120,11 +120,11 @@ class FileManager:
         return self._files.get(str(path))
 
     if sys.stdout.isatty():
-        def print_progress(self, current, total=None):
+        def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
             total = total or len(self) or 1
-            print(f'{current / total:>4.0%}', end='\r', file=sys.stderr)  # noqa: T201
+            print(f'\033[K{current / total:>4.0%} \033[37m{file_name}\033[0m', end='\r', file=sys.stderr)  # noqa: T201
     else:
-        def print_progress(self, current, total=None):
+        def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
             pass
 
 
