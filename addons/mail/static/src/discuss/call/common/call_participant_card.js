@@ -63,6 +63,24 @@ export class CallParticipantCard extends Component {
         );
     }
 
+    get isRemoteVideo() {
+        return (
+            this.rtc.isRemote &&
+            (this.rtcSession.is_screen_sharing_on || this.rtcSession.is_camera_on)
+        );
+    }
+
+    get showLiveLabel() {
+        return (
+            this.isRemoteVideo ||
+            (this.rtcSession.is_screen_sharing_on && !this.props.minimized && !this.isOfActiveCall)
+        );
+    }
+
+    get showRemoteWarning() {
+        return !this.props.minimized && !this.props.inset && this.isRemoteVideo;
+    }
+
     get rtcSession() {
         return this.props.cardData.session;
     }
@@ -72,7 +90,7 @@ export class CallParticipantCard extends Component {
     }
 
     get isOfActiveCall() {
-        return Boolean(this.rtcSession && this.rtcSession.channel?.eq(this.rtc.state.channel));
+        return Boolean(this.rtcSession && this.rtcSession.channel?.eq(this.rtc.channel));
     }
 
     get showConnectionState() {
