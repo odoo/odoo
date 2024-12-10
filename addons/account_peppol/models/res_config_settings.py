@@ -34,6 +34,36 @@ class ResConfigSettings(models.TransientModel):
         trial_param = self.env['ir.config_parameter'].sudo().get_param('saas_trial.confirm_token')
         self.account_peppol_mode_constraint = trial_param and 'demo' or mode_constraint or 'prod'
 
+<<<<<<< saas-17.4
+||||||| 34d0ae0ccb965e340d31bdbd7a7436af98e6dd48
+    @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
+    def _compute_account_peppol_edi_mode(self):
+        edi_mode = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+        for config in self:
+            if config.account_peppol_edi_user:
+                config.account_peppol_edi_mode = config.account_peppol_edi_user.edi_mode
+            else:
+                config.account_peppol_edi_mode = edi_mode or 'prod'
+
+    def _inverse_account_peppol_edi_mode(self):
+        for config in self:
+            if not config.account_peppol_edi_user and config.account_peppol_edi_mode:
+                self.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', config.account_peppol_edi_mode)
+                return
+
+=======
+    @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
+    def _compute_account_peppol_edi_mode(self):
+        for config in self:
+            config.account_peppol_edi_mode = config.company_id._get_peppol_edi_mode()
+
+    def _inverse_account_peppol_edi_mode(self):
+        for config in self:
+            if not config.account_peppol_edi_user and config.account_peppol_edi_mode:
+                self.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', config.account_peppol_edi_mode)
+                return
+
+>>>>>>> e5bf8dcdf89f6ddfad55fa4a9c4a59edfdf9efb2
     @api.depends("company_id.account_edi_proxy_client_ids")
     def _compute_account_peppol_edi_user(self):
         for config in self:

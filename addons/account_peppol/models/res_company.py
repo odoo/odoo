@@ -222,6 +222,7 @@ class ResCompany(models.Model):
         self._sanitize_peppol_endpoint_in_values(vals)
         return super().write(vals)
 
+<<<<<<< saas-17.4
     # -------------------------------------------------------------------------
     # PEPPOL PARTICIPANT MANAGEMENT
     # -------------------------------------------------------------------------
@@ -263,3 +264,12 @@ class ResCompany(models.Model):
             for module, identifiers in self._peppol_modules_document_types().items()
             for identifier, document_name in identifiers.items()
         }
+||||||| 34d0ae0ccb965e340d31bdbd7a7436af98e6dd48
+=======
+    def _get_peppol_edi_mode(self):
+        self.ensure_one()
+        config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+        # by design, we can only have zero or one proxy user per company with type Peppol
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+        return peppol_user.edi_mode or config_param or 'prod'
+>>>>>>> e5bf8dcdf89f6ddfad55fa4a9c4a59edfdf9efb2
