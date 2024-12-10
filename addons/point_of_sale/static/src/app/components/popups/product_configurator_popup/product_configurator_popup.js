@@ -1,51 +1,43 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { useRefListener, useService } from "@web/core/utils/hooks";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 
 export class BaseProductAttribute extends Component {
     static template = "";
-    static props = ["attributeLine"];
+    static props = ["attribute"];
     setup() {
-        this.attributeLine = this.props.attributeLine;
-        this.values = this.attributeLine.product_template_value_ids;
+        this.attribute = this.props.attribute;
+        this.values = Object.values(this.attribute.values);
         this.state = useState({
-            attribute_value_ids: this.values[0].id.toString(),
+            attribute_value_ids: parseInt(this.values.filter((value) => !value.disabled)[0].id),
             custom_value: "",
         });
 
-        onMounted(() => {
-            this.env.attribute_components.push(this);
-            this.env.computeProductProduct();
-        });
+        useEffect(
+            () => {
+                this.attribute.setSelectedValues(this.getSelectedValues());
+            },
+            () => [this.state.attribute_value_ids]
+        );
+
+        useEffect(
+            () => {
+                const selectedValues = this.getSelectedValues();
+                if (selectedValues.length > 0) {
+                    selectedValues[0].custom_value = this.state.custom_value;
+                }
+            },
+            () => [this.state.custom_value]
+        );
     }
 
-    getValue() {
-        const attribute_value_ids =
-            this.attributeLine.attribute_id.display_type === "multi"
-                ? this.values.filter((val) => this.state.attribute_value_ids[val.id])
-                : [this.values.find((val) => val.id === parseInt(this.state.attribute_value_ids))];
+    onChange(value) {
+        this.state.attribute_value_ids = parseInt(value.id);
+    }
 
-        const extra = attribute_value_ids.reduce((acc, val) => acc + val.price_extra, 0);
-        const valueIds = attribute_value_ids.map((val) => val.id);
-        const value = attribute_value_ids
-            .map((val) => {
-                if (val.is_custom && this.state.custom_value) {
-                    return `${val.name}: ${this.state.custom_value}`;
-                }
-                return val.name;
-            })
-            .join(", ");
-        const hasCustom = attribute_value_ids.some((val) => val.is_custom);
-
-        return {
-            value,
-            valueIds,
-            custom_value: this.state.custom_value,
-            extra,
-            hasCustom,
-        };
+    getSelectedValues() {
+        return [this.values.find((val) => val.id === parseInt(this.state.attribute_value_ids))];
     }
 
     getFormatPriceExtra(val) {
@@ -56,19 +48,6 @@ export class BaseProductAttribute extends Component {
 
 export class RadioProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.RadioProductAttribute";
-
-    setup() {
-        super.setup();
-        this.root = useRef("root");
-        onMounted(this.onMounted);
-    }
-    onMounted() {
-        // With radio buttons `t-model` selects the default input by searching for inputs with
-        // a matching `value` attribute. In our case, we use `t-att-value` so `value` is
-        // not found yet and no radio is selected by default.
-        // We then manually select the first input of each radio attribute.
-        this.root.el.querySelector("input[type=radio]").checked = true;
-    }
 }
 
 export class PillsProductAttribute extends BaseProductAttribute {
@@ -88,18 +67,21 @@ export class MultiProductAttribute extends BaseProductAttribute {
 
     setup() {
         super.setup();
-        this.state = useState({
-            attribute_value_ids: {},
-            custom_value: "",
-        });
-
-        this.initAttribute();
+        this.state.attribute_value_ids = this.values.reduce((acc, value) => {
+            acc[value.id] = false;
+            return acc;
+        }, {});
     }
 
-    initAttribute() {
-        for (const value of this.values) {
-            this.state.attribute_value_ids[value.id] = false;
-        }
+    onChange(value) {
+        this.state.attribute_value_ids = {
+            ...this.state.attribute_value_ids,
+            [value.id]: true,
+        };
+    }
+
+    getSelectedValues() {
+        return this.values.filter((val) => this.state.attribute_value_ids[val.id]);
     }
 }
 
@@ -117,99 +99,178 @@ export class ProductConfiguratorPopup extends Component {
     static props = ["productTemplate", "getPayload", "close"];
 
     setup() {
-        useSubEnv({
-            attribute_components: [],
-            computeProductProduct: this.computeProductProduct.bind(this),
-        });
         this.pos = usePos();
-        this.ui = useState(useService("ui"));
-        this.inputArea = useRef("input-area");
+
         this.state = useState({
-            productTemplate: this.props.productTemplate,
             product: null,
-            payload: this.env.attribute_components,
+            selected_attribute_values: new Map(
+                this.props.productTemplate.attribute_line_ids
+                    .filter(({ attribute_id }) => attribute_id.display_type !== "multi")
+                    .map((attribute) => [
+                        attribute.attribute_id.id,
+                        [attribute.product_template_value_ids[0]],
+                    ])
+            ),
+            attributes: new Map(
+                this.props.productTemplate.attribute_line_ids.map((attribute) => [
+                    attribute.attribute_id.id,
+                    {
+                        ...attribute,
+                        values: this.initAttributeValues(attribute),
+                        setSelectedValues: (values) => {
+                            this.state.selected_attribute_values.set(
+                                attribute.attribute_id.id,
+                                values
+                            );
+                            this.state.selected_attribute_values = new Map(
+                                this.state.selected_attribute_values
+                            );
+                        },
+                    },
+                ])
+            ),
         });
 
-        useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
-        useRefListener(this.inputArea, "click", this.computeProductProduct.bind(this));
+        this.state.attributes.forEach(({ values }) => {
+            Object.values(values).forEach((value) => {
+                value.exclude_for.forEach((e) => {
+                    const target = this.state.attributes.get(e.attribute_id.id).values[e.id]
+                        .exclude_for;
+                    if (!target.find((exclude) => value.id === exclude.id)) {
+                        target.push(value);
+                    }
+                });
+            });
+        });
+
+        this.leafAttributes.forEach((id) => {
+            this.checkAttrCompatibility(this.state.attributes.get(id));
+        });
+
+        useEffect(
+            () => {
+                this.computeProduct();
+                this.checkCompatibility();
+            },
+            () => [this.state.selected_attribute_values]
+        );
     }
-    computePayload() {
-        const attribute_custom_values = [];
-        let attribute_value_ids = [];
-        var price_extra = 0.0;
 
-        this.state.payload.forEach((attribute_component) => {
-            const { valueIds, extra, custom_value, hasCustom } = attribute_component.getValue();
-            attribute_value_ids.push(valueIds);
+    get attributes() {
+        return this.state.attributes.values();
+    }
 
-            if (hasCustom) {
-                // for custom values, it will never be a multiple attribute
-                attribute_custom_values[valueIds[0]] = custom_value;
+    get selectedAttributeValues() {
+        return Array.from(this.state.selected_attribute_values.values()).flat();
+    }
+
+    get leafAttributes() {
+        const seen = new Set();
+        const leafs = new Set();
+        let last = null;
+
+        const dfs = (value) => {
+            if (seen.has(value.id)) {
+                return;
             }
-            const attr = this.pos.data.models["product.template.attribute.value"].get(valueIds[0]);
-            if (attr && attr.attribute_id.create_variant === "no_variant") {
-                price_extra += extra;
+            value = this.state.attributes.get(value.attribute_id.id).values[value.id];
+            last = value.attribute_id.id;
+            seen.add(value.id);
+            value.exclude_for.forEach((value) => dfs(value));
+        };
+
+        this.selectedAttributeValues.forEach((value) => {
+            last = null;
+            dfs(value);
+            if (last) {
+                leafs.add(last);
             }
         });
 
-        attribute_value_ids = attribute_value_ids.flat();
+        return leafs;
+    }
+
+    initAttributeValues(attribute) {
+        return attribute.product_template_value_ids.reduce((values, value) => {
+            values[value.id] = {
+                ...value,
+                // attribute_id: attribute.attribute_id,
+                exclude_for: value.exclude_for.flatMap(({ value_ids }) => value_ids),
+                disabled: false,
+                custom_value: "",
+            };
+            return values;
+        }, {});
+    }
+
+    computePayload() {
         return {
-            attribute_value_ids,
-            attribute_custom_values,
-            price_extra,
+            attribute_value_ids: this.selectedAttributeValues.map((val) => val.id),
+            attribute_custom_values: this.selectedAttributeValues
+                .filter((value) => value.is_custom)
+                .reduce((acc, value) => {
+                    acc[value.id] = value.custom_value;
+                    return acc;
+                }, []),
+            price_extra: this.selectedAttributeValues
+                .filter((value) => value.attribute_id.create_variant === "no_variant")
+                .reduce((acc, val) => acc + val.price_extra, 0),
         };
     }
-    computeProductProduct() {
-        let product = null;
-        const formattedPayload = this.computePayload();
-        const alwaysVariants = this.props.productTemplate.attribute_line_ids.every(
+
+    computeProduct() {
+        const alwaysVariants = this.attributes.every(
             (line) => line.attribute_id.create_variant === "always"
         );
 
         if (alwaysVariants) {
-            const newProduct = this.pos.models["product.product"]
-                .filter((p) => p.raw?.product_template_variant_value_ids?.length > 0)
-                .find((p) =>
-                    p.raw.product_template_variant_value_ids.every((v) =>
-                        formattedPayload.attribute_value_ids.includes(v)
+            const selectedAttributeValuesIds = this.selectedAttributeValues.map(({ id }) => id);
+            const newProduct = this.pos.models["product.product"].find(
+                (product) =>
+                    product.product_template_variant_value_ids?.length > 0 &&
+                    product.product_template_variant_value_ids.every(({ id }) =>
+                        selectedAttributeValuesIds.includes(id)
                     )
-                );
+            );
             if (newProduct) {
-                product = newProduct;
+                this.state.product = newProduct;
             }
         }
+    }
 
-        this.state.product = product;
+    doSelectedValuesHasConflictWith(exclude_for) {
+        const excludedIds = exclude_for.map(({ id }) => id);
+        return this.selectedAttributeValues.some(({ id }) => excludedIds.includes(id));
     }
-    get imageUrl() {
-        const product = this.props.productTemplate;
-        return `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
+
+    checkAttrCompatibility(attribute) {
+        Object.values(attribute.values).forEach((value) => {
+            value.disabled = this.doSelectedValuesHasConflictWith(value.exclude_for);
+        });
     }
-    get unitPrice() {
-        return this.env.utils.formatCurrency(this.props.productTemplate.list_price);
+
+    checkCompatibility() {
+        this.attributes.forEach((attribute) => {
+            this.checkAttrCompatibility(attribute);
+        });
     }
+
+    isArchivedCombination() {
+        const selectedValuesIds = this.selectedAttributeValues
+            .filter((value) => value.attribute_id.create_variant === "always")
+            .map(({ id }) => id);
+        return (
+            selectedValuesIds.length > 0 &&
+            this.props.productTemplate._isArchivedCombination(selectedValuesIds)
+        );
+    }
+
     close() {
         this.props.close();
     }
+
     confirm() {
         this.props.getPayload(this.computePayload());
         this.props.close();
-    }
-    isArchivedCombination() {
-        const variantAttributeValueIds = this.getVariantAttributeValueIds();
-        if (variantAttributeValueIds.length === 0) {
-            return false;
-        }
-        return this.props.productTemplate._isArchivedCombination(variantAttributeValueIds);
-    }
-    getVariantAttributeValueIds() {
-        const attribute_value_ids = [];
-        this.state.payload.forEach((att_component) => {
-            const { valueIds } = att_component.getValue();
-            if (att_component.attributeLine.attribute_id.create_variant === "always") {
-                attribute_value_ids.push(valueIds);
-            }
-        });
-        return attribute_value_ids.flat();
     }
 }
