@@ -8,6 +8,7 @@ export class ProductCatalogOrderLine extends Component {
         quantity: Number,
         price: Number,
         productType: String,
+        packaging: { type: Object, optional: true },
         readOnly: { type: Boolean, optional: true },
         warning: { type: String, optional: true},
     };
@@ -18,6 +19,10 @@ export class ProductCatalogOrderLine extends Component {
      */
     _onFocus(ev) {
         ev.target.select();
+    }
+
+    addPackagingQty() {
+        this.env.updatePackagingQuantity(this.props.packaging);
     }
 
     //--------------------------------------------------------------------------
