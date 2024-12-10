@@ -73,11 +73,29 @@ class WebsiteEventSaleController(WebsiteEventController):
             # order does not contain any lines related to the event, meaning we are confirming only free tickets of this event
             return res
 
+        # Extract primary attendee details
+        event_attendee_info = registrations[0]
+        partner_values = {key: event_attendee_info.get(key) for key in ('name', 'email', 'phone')}
+
+        # Ensure all required details are present to skip the address form
+        if all(partner_values.values()):
+            Partner = request.env['res.partner'].sudo()
+            partner_sudo = Partner.search([('email', '=', partner_values['email'])], limit=1)
+            if partner_sudo:
+                partner_sudo.write(partner_values)
+            else:
+                partner_sudo = Partner.create(partner_values)
+            order_sudo.update({'partner_id': partner_sudo.id})
+        else:
+            # Store registrations in session to prefill address form
+            if order_sudo._is_anonymous_cart():
+                request.session['event_attendee'] = partner_values
+
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info['event_ticket_id'] for info in registrations):
             if order_sudo.amount_total:
                 request.session['sale_last_order_id'] = order_sudo.id
-                return request.redirect("/shop/checkout")
+                return request.redirect("/shop/checkout?try_skip_step=true")
             # free tickets -> order with amount = 0: auto-confirm, no checkout
             elif order_sudo:
                 order_sudo.action_confirm()  # tde notsure: email sending ?
