@@ -45,7 +45,9 @@ export class ScheduledMessage extends Record {
     }
 
     get isSubjectThreadName() {
-        return this.thread.name?.trim().toLowerCase() === this.subject?.trim().toLowerCase();
+        return (
+            this.thread.display_name?.trim().toLowerCase() === this.subject?.trim().toLowerCase()
+        );
     }
 
     /**
