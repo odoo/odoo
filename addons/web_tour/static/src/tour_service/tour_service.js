@@ -14,6 +14,7 @@ import {
     TourRecorder,
 } from "@web_tour/tour_service/tour_recorder/tour_recorder";
 import { redirect } from "@web/core/utils/urls";
+import { tourRecorderState } from "@web_tour/tour_service/tour_recorder/tour_recorder_state";
 
 const StepSchema = {
     id: { type: [String], optional: true },
@@ -227,6 +228,7 @@ export const tourService = {
                         onClose: () => {
                             remove();
                             browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
+                            tourRecorderState.clear();
                         },
                     },
                     { sequence: 99999 }
@@ -265,6 +267,7 @@ export const tourService = {
                         onClose: () => {
                             remove();
                             browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
+                            tourRecorderState.clear();
                         },
                     },
                     { sequence: 99999 }
