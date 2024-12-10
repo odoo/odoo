@@ -346,6 +346,10 @@ body {
     }
 }
 
+.navbar-light .o_navbar_mobile {
+    @include o-add-gradient('menu-gradient');
+}
+
 // TODO this should be reviewed. While it allowed to choose a color for the
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
