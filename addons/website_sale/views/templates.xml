@@ -2304,9 +2304,8 @@
         </div>
         <t t-set="new_address_ref" position="after">
             <t
-                t-if="address_type == 'delivery'"
                 t-set="new_address_href"
-                t-valuef="/shop/address?address_type=delivery&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+                t-valuef="/shop/address?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
             />
         </t>
     </template>
@@ -2332,6 +2331,9 @@
                 </div>
             </div>
         </div>
+        <form name="address_form" position="attributes">
+            <attribute name="t-att-action">'/shop/address/submit'</attribute>
+        </form>
         <div id="errors" position="before">
             <div
                 t-if="use_delivery_as_billing and not only_services"

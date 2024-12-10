@@ -31,6 +31,7 @@
             t-att-class="'all_%s row row-cols-md-2 row-cols-lg-4 g-3 flex-nowrap flex-md-wrap' % address_type"
             style="min-height: 200px"
         >
+            <t t-set="new_address_ref" t-value="'/portal/address?address_type=' + address_type"/>
             <div t-foreach="addresses" t-as="address" class="col-md">
                 <t t-call="portal.address_kanban">
                     <t t-set="contact" t-value="address"/>
@@ -38,7 +39,6 @@
                     <t t-set="selected" t-value="address == selected_address"/>
                 </t>
             </div>
-            <t t-set="new_address_ref" t-value="'/portal/address?address_type=' + address_type"/>
             <div name="add_address" class="col-md">
                 <a
                     role="button"
@@ -65,9 +65,8 @@
             <div class="card-body d-flex flex-column justify-content-between">
                 <t t-out="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 <div class="mt-3" t-if="contact._can_edited_by_current_customer()">
-                    <t t-set="new_address_ref" t-value="'/portal/address?address_type=' + address_type"/>
                     <a
-                        t-att-href="'/portal/address?partner_id=' + str(contact.id) + '&amp;address_type=' + address_type"
+                        t-att-href="new_address_ref + '&amp;partner_id=' + str(contact.id)"
                         class="js_edit_address btn btn-link p-0 mt-auto"
                         role="button"
                         title="Edit this address"

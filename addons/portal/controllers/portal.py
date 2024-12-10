@@ -352,9 +352,18 @@ class CustomerPortal(Controller):
         :return: The rendered address form.
         :rtype: str
         """
-        partner_id = partner_id and int(partner_id)
-        address_form_values = self._prepare_address_form_values(partner_sudo, address_type, **query_params)
+        address_form_values = self._get_address_values(partner_id, address_type, **query_params)
         return request.render('portal.address', address_form_values)
+
+    def _get_address_form_values(self, partner_id, address_type, **kwargs):
+        partner_id = partner_id and int(partner_id)
+        PartnerSudo = request.env['res.partner'].with_context(show_address=1).sudo()
+        partner_sudo = PartnerSudo.browse(partner_id)
+
+        if partner_sudo and not partner_sudo._can_edited_by_current_customer():
+            raise Forbidden()
+
+        return self._prepare_address_form_values(partner_sudo, address_type, **kwargs)
 
     def _prepare_address_form_values(
         self, partner_sudo, address_type, callback='', **kwargs
@@ -420,6 +429,36 @@ class CustomerPortal(Controller):
 
     def _is_billing_address(self, address_type, **kwargs):
         return address_type == 'billing'
+
+    @route(
+        '/portal/address/submit', type='http', methods=['POST'], auth='public', website=True,
+        sitemap=False
+    )
+    def shop_address_submit(
+        self, partner_id=None, address_type='billing', callback=None,
+        required_fields=None, **form_data
+    ):
+        """ Create or update an address.
+
+        If it succeeds, it returns the URL to redirect (client-side) to. If it fails (missing or
+        invalid information), it highlights the problematic form input with the appropriate error
+        message.
+
+        :param str partner_id: The partner whose address to update with the address form, if any.
+        :param str address_type: The type of the address: 'billing' or 'delivery'.
+        :param str use_delivery_as_billing: Whether the provided address should be used as both the
+                                            billing and the delivery address. 'true' or 'false'.
+        :param str callback: The URL to redirect to in case of successful address creation/update.
+        :param str required_fields: The additional required address values, as a comma-separated
+                                    list of `res.partner` fields.
+        :param dict form_data: The form data to process as address values.
+        :return: A JSON-encoded feedback, with either the success URL or an error message.
+        :rtype: str
+        """
+        partner_id = partner_id and int(partner_id)
+        PartnerSudo = request.env['res.partner'].with_context(show_address=1).sudo()
+        partner_sudo = PartnerSudo.browse(partner_id)
+        required_fields = required_fields or ''
 
     @route(
         ['/portal/country_info/<model("res.country"):country>'],

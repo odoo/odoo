@@ -1040,7 +1040,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         }
 
     @route(
-        '/shop/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False
+        '/portal/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False
     )
     def shop_address(
         self, partner_id=None, address_type='billing', use_delivery_as_billing=None, **query_params
@@ -1059,9 +1059,27 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The rendered address form.
         :rtype: str
         """
+        address_form_values = self._get_address_form_values(
+            partner_id,
+            address_type,
+            use_delivery_as_billing=use_delivery_as_billing,
+            **query_params
+        )
+        return request.render('website_sale.address', address_form_values)
+
+    def _get_address_form_values(self, partner_id, address_type, use_delivery_as_billing=False, **kwargs):
+        order_sudo = request.website.sale_get_order()
+        if not order_sudo: # If no order found then it's comming from portal/address
+            return super()._get_address_form_values(
+                partner_id=partner_id,
+                address_type=address_type,
+                order_sudo=order_sudo,
+                use_delivery_as_billing=use_delivery_as_billing,
+                **kwargs
+            )
+
         partner_id = partner_id and int(partner_id)
         use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
-        order_sudo = request.website.sale_get_order()
 
         if redirection := self._check_cart(order_sudo):
             return redirection
@@ -1076,15 +1094,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             )
 
-        # Render the address form.
-        address_form_values = self._prepare_address_form_values(
-            partner_sudo,
-            address_type,
+        return super()._get_address_form_values(
+            partner_id=partner_id,
+            address_type=address_type,
             order_sudo=order_sudo,
             use_delivery_as_billing=use_delivery_as_billing,
-            **query_params
+            **kwargs
         )
-        return request.render('website_sale.address', address_form_values)
 
     def _prepare_address_form_values(self, *args, order_sudo=False, use_delivery_as_billing=False, **kwargs):
         """ Prepare and return the values to use to render the address form.
