@@ -136,7 +136,63 @@ export function useClickableWeWidget() {
     useWeComponent();
     const comp = useComponent();
     const getAction = comp.env.editor.shared.builderActions.getAction;
-    const call = comp.env.editor.shared.history.makePreviewableOperation(callActions);
+    const _call = comp.env.editor.shared.history.makePreviewableOperation(callActions);
+    const action = getCustomAction();
+    const load = action?.actionId && getAction(action.actionId).load;
+    const callWithLoad = async (fn, { isCancel } = {}) => {
+        await Promise.all(
+            comp.env.getEditingElements().map((editingElement) => {
+                return load({
+                    editingElement,
+                    param: action.actionParam,
+                    value: action.actionValue,
+                }).then((loadResult) => {
+                    if (isCancel?.()) {
+                        return;
+                    }
+                    fn(loadResult);
+                });
+            })
+        );
+    };
+    const call = {
+        commit: () => {
+            comp.env.callable.cancel?.();
+            return comp.env.mutex.exec(async () => {
+                if (load) {
+                    await callWithLoad(_call.commit, { fromCommit: true });
+                } else {
+                    _call.commit();
+                }
+            });
+        },
+        preview: () => {
+            comp.env.callable.cancel?.();
+            comp.env.callable.cancel = () => {
+                cancel = true;
+                comp.env.callable.cancel = null;
+            };
+            let cancel = false;
+
+            const fn = () => {
+                if (cancel) {
+                    return;
+                }
+                if (load) {
+                    return callWithLoad(_call.preview, { isCancel: () => cancel });
+                } else {
+                    _call.preview();
+                }
+            };
+
+            return comp.env.mutex.exec(fn);
+        },
+        revert: () => {
+            comp.env.callable.cancel?.();
+            return comp.env.mutex.exec(_call.revert, { force: true });
+        },
+    };
+
     if (
         comp.props.preview === false ||
         (comp.env.weContext.preview === false && comp.props.preview !== true)
@@ -162,7 +218,7 @@ export function useClickableWeWidget() {
         });
     }
 
-    function callActions() {
+    function callActions(loadResult) {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
         for (const [actionId, actionParam, actionValue] of getActions()) {
             for (const editingElement of comp.env.getEditingElements()) {
@@ -170,6 +226,7 @@ export function useClickableWeWidget() {
                     editingElement,
                     param: actionParam,
                     value: actionValue,
+                    loadResult,
                 });
             }
         }
@@ -190,12 +247,21 @@ export function useClickableWeWidget() {
             }
         }
 
-        const action = comp.env.weContext.action || comp.props.action;
-        const actionParam = comp.env.weContext.actionParam || comp.props.actionParam;
-        if (action) {
-            actions.push([action, actionParam, comp.props.actionValue]);
+        const { actionId, actionParam, actionValue } = getCustomAction() || {};
+        if (actionId) {
+            actions.push([actionId, actionParam, actionValue]);
         }
         return actions;
+    }
+    function getCustomAction() {
+        const action = {
+            actionId: comp.env.weContext.action || comp.props.action,
+            actionParam: comp.env.weContext.actionParam || comp.props.actionParam,
+            actionValue: comp.props.actionValue,
+        };
+        if (action.actionId) {
+            return action;
+        }
     }
     function isActive() {
         const editingElements = comp.env.getEditingElements();

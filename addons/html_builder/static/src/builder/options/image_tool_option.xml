@@ -21,6 +21,23 @@
         <WeButton title.translate="Transform the picture" action="'transformImage'" icon="'fa-object-ungroup'" id="'transformImage'" />
         <WeButton title.translate="Reset transformation" action="'resetTransformImage'" dependencies="'transformImage'">Reset</WeButton>
     </WeRow>
+    <WeRow label.translate="Filter">
+        <WeSelect>
+            <WeSelectItem action="'glFilter'" actionParam="''">None</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'blur'">Blur</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'1977'">1977</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'aden'">Aden</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'brannan'">Brannan</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'earlybird'">EarlyBird</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'inkwell'">Inkwell</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'maven'">Maven</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'toaster'">Toaster</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'walden'">Walden</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'valencia'">Valencia</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'xpro'">Xpro</WeSelectItem>
+            <WeSelectItem action="'glFilter'" actionParam="'custom'" id="custom_glfilter_opt">Custom</WeSelectItem>
+        </WeSelect>
+    </WeRow>
 </t>
 
 </templates>

@@ -82,12 +82,14 @@ export class SnippetsMenu extends Component {
         this.editor = new Editor(
             {
                 Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN, ...websitePlugins],
-                onChange: () => {
+                onChange: ({ isPreviewing }) => {
                     this.state.canUndo = this.editor.shared.history.canUndo();
                     this.state.canRedo = this.editor.shared.history.canRedo();
-                    this.updateInvisibleEls();
+                    if (!isPreviewing) {
+                        this.updateInvisibleEls();
+                    }
                     editorBus.trigger("UPDATE_EDITING_ELEMENT");
-                    editorBus.trigger("STEP_ADDED");
+                    editorBus.trigger("STEP_ADDED", { isPreviewing });
                 },
                 resources: {
                     change_current_options_containers_listeners: (currentOptionsContainers) => {

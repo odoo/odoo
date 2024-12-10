@@ -29,7 +29,12 @@ export class WeSelectItem extends Component {
                 this.env.weSetSelectLabel?.(item.el.innerHTML);
             }
         };
-        useBus(this.env.editorBus, "STEP_ADDED", setSelectLabel);
+        useBus(this.env.editorBus, "STEP_ADDED", (ev) => {
+            if (ev.detail.isPreviewing) {
+                return;
+            }
+            return setSelectLabel();
+        });
         onMounted(setSelectLabel);
 
         this.state = state;

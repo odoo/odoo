@@ -339,7 +339,7 @@ export async function processImageCrop(
     setAttribute("aspectRatio", aspectRatio);
 
     delete image.dataset.resizeWidth;
-    const initialSrc = await applyModifications(image, cropper, {
+    const initialSrc = await applyModifications(image, {
         forceModification: true,
         mimetype,
     });

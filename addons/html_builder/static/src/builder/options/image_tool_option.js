@@ -1,5 +1,9 @@
 import { cropperAspectRatios, processImageCrop } from "@html_editor/main/media/image_crop";
-import { activateCropper, loadImage } from "@html_editor/utils/image_processing";
+import {
+    activateCropper,
+    applyModifications,
+    loadImage,
+} from "@html_editor/utils/image_processing";
 import { Component } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
@@ -29,7 +33,7 @@ class ImageToolOptionPlugin extends Plugin {
                 },
             },
             resetCrop: {
-                apply: async ({ editingElement }) => {
+                load: async ({ editingElement }) => {
                     // todo: This seems quite heavy for a simple reset. Retrieve some
                     // metadata, to load the image crop, to call processImageCrop, just to
                     // reset the crop. We might want to simplify this.
@@ -45,15 +49,11 @@ class ImageToolOptionPlugin extends Plugin {
                     const mimetime = getImageMimetype(croppedImage);
                     await loadImage(croppedImage.dataset.originalSrc, originalImage);
                     let aspectRatio = croppedImage.dataset.aspectRatio || "0/0";
-                    let readyResolve;
-                    const readyPromise = new Promise((resolve) => (readyResolve = resolve));
                     const cropper = await activateCropper(
                         originalImage,
                         cropperAspectRatios[aspectRatio].value,
-                        croppedImage.dataset,
-                        { ready: readyResolve }
+                        croppedImage.dataset
                     );
-                    await readyPromise;
                     cropper.reset();
                     if (aspectRatio !== "0/0") {
                         aspectRatio = "0/0";
@@ -67,9 +67,12 @@ class ImageToolOptionPlugin extends Plugin {
                     );
                     container.remove();
                     cropper.destroy();
-                    croppedImage.setAttribute("src", newSrc);
+                    return newSrc;
+                },
+                apply: ({ editingElement, editor, loadResult: newSrc }) => {
+                    editingElement.setAttribute("src", newSrc);
                     // todo: Should re-apply a shape if it was applied before.
-                    this.dependencies.history.addStep();
+                    editor.shared.history.addStep();
                 },
             },
             transformImage: {
@@ -90,6 +93,27 @@ class ImageToolOptionPlugin extends Plugin {
                         )
                     );
                     this.dependencies.history.addStep();
+                },
+            },
+            glFilter: {
+                isActive: ({ editingElement, param: glFilterName }) => {
+                    if (glFilterName) {
+                        return editingElement.dataset.glFilter === glFilterName;
+                    } else {
+                        return !editingElement.dataset.glFilter;
+                    }
+                },
+                load: async ({ editingElement, param: glFilterName }) => {
+                    await loadBundle("html_editor.assets_image_cropper");
+                    editingElement.dataset.glFilter = glFilterName;
+                    const newSrc = await applyModifications(editingElement, {
+                        mimetype: getImageMimetype(editingElement),
+                    });
+                    return newSrc;
+                },
+                apply: ({ editingElement, editor, loadResult: newSrc }) => {
+                    editingElement.setAttribute("src", newSrc);
+                    editor.shared.history.addStep();
                 },
             },
         };
