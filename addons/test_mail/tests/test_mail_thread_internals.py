@@ -23,13 +23,12 @@ class TestAPI(MailCommon, TestRecipients):
         super().setUpClass()
         cls.test_partner = cls.env['res.partner'].create({
             'email': '"Test External" <test.external@example.com>',
-            'mobile': '+32455001122',
+            'phone': '+32455001122',
             'name': 'Test External',
         })
         cls.ticket_record = cls.env['mail.test.ticket.mc'].create({
             'company_id': cls.user_employee.company_id.id,
             'email_from': '"Paulette Vachette" <paulette@test.example.com>',
-            'mobile_number': '+32455998877',
             'phone_number': 'wrong',
             'name': 'Test',
             'user_id': cls.user_employee.id,
@@ -43,7 +42,7 @@ class TestAPI(MailCommon, TestRecipients):
                 'name': 'Multi Email',
             }, {
                 'email_from': 'wrong',
-                'mobile_number': '+32455000001',
+                'phone_number': '+32455000001',
                 'name': 'Wrong email',
             }, {
                 'email_from': False,
@@ -166,7 +165,6 @@ class TestAPI(MailCommon, TestRecipients):
             (new_multi, [{  # not the actual record customer hence no mobile / phone, see _get_customer_information
                 # 'company_id': self.user_employee.company_id,
                 'email': 'multi@test.example.com',
-                'mobile': False,
                 'name': 'Multi Customer',
                 'phone': False,
             }]),
@@ -282,7 +280,6 @@ class TestAPI(MailCommon, TestRecipients):
         other = res[0]
         # self.assertEqual(other.company_id, self.user_employee.company_id)
         self.assertEqual(other.email, "raoul@test.example.com")
-        self.assertFalse(other.mobile)
         self.assertEqual(other.name, "raoul@test.example.com")
         # new - linked to record
         customer = res[1]
@@ -385,7 +382,7 @@ class TestAPI(MailCommon, TestRecipients):
             'partner_id': self.partner_employee.id,
             'reason': 'Responsible',
         }, {
-            'create_values': {'mobile': '+32455998877', 'phone': 'wrong'},
+            'create_values': {'phone': 'wrong'},
             'email': '"Paulette Vachette" <paulette@test.example.com>',
             'lang': None,
             'name': '"Paulette Vachette" <paulette@test.example.com>',
@@ -397,7 +394,7 @@ class TestAPI(MailCommon, TestRecipients):
         ticket_partner_email = self.env['mail.test.ticket.mc'].create({
             'customer_id': False,
             'email_from': self.test_partner.email_formatted,
-            'mobile_number': '+33199001015',
+            'phone_number': '+33199001015',
             'user_id': self.env.user.id,  # should not be proposed, already follower
         })
         # existing partner -> should propose it

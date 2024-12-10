@@ -59,7 +59,6 @@
                 <list string="Contacts" sample="1" multi_edit="1">
                     <field name="complete_name" string="Name"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
-                    <field name="mobile" optional="hide"/>
                     <field name="email" optional="show"/>
                     <field name="user_id" optional="show" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                     <field name="street" optional="hide"/>
@@ -95,7 +94,6 @@
                         <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
                         <field name="email" widget="email" context="{'gravatar_image': True}" required="True"/>
                         <field name="phone" widget="phone" options="{'enable_sms': false}"/>
-                        <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                     </group>
                 </form>
             </field>
@@ -201,7 +199,6 @@
                             <field name="function" placeholder="e.g. Sales Director"
                                 invisible="is_company"/>
                             <field name="phone" widget="phone"/>
-                            <field name="mobile" widget="phone"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="title" options='{"no_open": True}' placeholder="e.g. Mister"
@@ -238,7 +235,6 @@
                                                     <field name="country_id"/>
                                                 </div>
                                                 <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
-                                                <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
                                             </main>
                                         </t>
                                     </templates>
@@ -284,7 +280,6 @@
                                             <group>
                                                 <field name="email" widget="email"/>
                                                 <field name="phone" widget="phone"/>
-                                                <field name="mobile" widget="phone"/>
                                             </group>
                                         </group>
                                         <group>
@@ -347,7 +342,6 @@
                             </group>
                             <group>
                                 <field name="phone" widget="phone" options="{'enable_sms': false}"/>
-                                <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                                 <field name="email"/>
                                 <field name="lang"/>
                             </group>
@@ -374,7 +368,7 @@
                        filter_domain="['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', 'ilike', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self)]"/>
                     <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>
                     <field name="email" filter_domain="[('email', 'ilike', self)]"/>
-                    <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', 'ilike', self)]"/>
+                    <field name="phone" filter_domain="[('phone', 'ilike', self)]"/>
                     <field name="category_id" string="Tag" operator="child_of"/>
                     <field name="user_id"/>
                     <separator/>
