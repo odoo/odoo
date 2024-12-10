@@ -46,7 +46,7 @@ export class BootstrapDialog extends Component {
                     <div class="modal-header">
                         <t t-slot="header" />
                     </div>
-                    <div class="modal-body position-relative" style="max-height: 70vh; min-height: 40vh;">
+                    <div class="modal-body position-relative dialog-body">
                         <t t-slot="body" />
                     </div>
                     <div class="modal-footer">

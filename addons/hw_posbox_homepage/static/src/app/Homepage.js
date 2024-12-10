@@ -108,8 +108,8 @@ export class Homepage extends Component {
         </t>
     </LoadingFullScreen>
 
-    <div t-if="!this.state.loading" class="w-100 d-flex flex-column align-items-center justify-content-center" style="background-color: #F1F1F1; height: 100vh">
-        <div class="bg-white p-4 rounded overflow-auto position-relative" style="width: 100%; max-width: 600px;">
+    <div t-if="!this.state.loading" class="w-100 d-flex flex-column align-items-center justify-content-center background">
+        <div class="bg-white p-4 rounded overflow-auto position-relative w-100 main-container">
             <div class="position-absolute end-0 top-0 mt-3 me-4 d-flex gap-1">
                 <IconButton onClick.bind="toggleAdvanced" icon="this.store.advanced ? 'fa-cog' : 'fa-cogs'" />
                 <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
@@ -167,7 +167,7 @@ export class Homepage extends Component {
             </div>
         </div>
     </div>
-    <div t-else="" class="w-100 d-flex align-items-center justify-content-center" style="background-color: #F1F1F1; height: 100vh">
+    <div t-else="" class="w-100 d-flex align-items-center justify-content-center background">
         <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
