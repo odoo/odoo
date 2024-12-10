@@ -100,6 +100,21 @@ async function fetchInternalMetaData(url) {
     return result;
 }
 
+async function fetchAttachmentMetaData(url, ormService) {
+    try {
+        const urlParsed = new URL(url, window.location.origin);
+        const attachementId = parseInt(urlParsed.pathname.split("/").pop());
+        const [{ name, mimetype }] = await ormService.read(
+            "ir.attachment",
+            [attachementId],
+            ["name", "mimetype"]
+        );
+        return { name, mimetype };
+    } catch {
+        return { name: url, mimetype: undefined };
+    }
+}
+
 /**
  * @typedef { Object } LinkShared
  * @property { LinkPlugin['createLink'] } createLink
@@ -212,6 +227,9 @@ export class LinkPlugin extends Plugin {
 
         this.getExternalMetaData = memoize(fetchExternalMetaData);
         this.getInternalMetaData = memoize(fetchInternalMetaData);
+        this.getAttachmentMetadata = memoize((url) =>
+            fetchAttachmentMetaData(url, this.services.orm)
+        );
     }
 
     destroy() {
@@ -314,6 +332,7 @@ export class LinkPlugin extends Plugin {
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
+            getAttachmentMetadata: this.getAttachmentMetadata,
         };
         if (!selectionData.documentSelectionIsInEditable) {
             // note that data-prevent-closing-overlay also used in color picker but link popover
@@ -401,6 +420,8 @@ export class LinkPlugin extends Plugin {
                     this.removeCurrentLinkIfEmtpy();
                     this.dependencies.history.addStep();
                 },
+                fileUploadEnabled: !this.config.disableFile,
+                uploadFile: this.uploadFile.bind(this),
             };
 
             if (linkEl.isConnected) {
@@ -689,6 +710,19 @@ export class LinkPlugin extends Plugin {
         [targetNode, targetOffset] = edge === "start" ? leftPos(targetNode) : rightPos(targetNode);
         splitOrLineBreakCallback({ ...params, targetNode, targetOffset });
         return true;
+    }
+
+    async uploadFile() {
+        const { upload, getURL } = this.services.uploadLocalFiles;
+        const { resModel, resId } = this.config.getRecordInfo?.() || {};
+        const [attachment] = await upload({ resModel, resId, accessToken: true });
+        if (!attachment) {
+            // No file selected or upload failed
+            return null;
+        }
+        this.config.onAttachmentChange?.(attachment);
+        const url = getURL(attachment, { download: true, unique: true, accessToken: true });
+        return { url, filename: attachment.name };
     }
 }
 
