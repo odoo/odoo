@@ -134,17 +134,33 @@ class TestExport(XlsxCreatorCase):
 @tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
 
-    def test_archived_groupped(self):
+    def test_archived_grouped(self):
         values = [
             {'int_sum': 1, 'active': False},
+            {'int_sum': 1, 'active': True},
         ]
-        export = self.export(values, fields=['int_sum', 'active'], params={'groupby': ['int_sum']})
-
+        export = self.export(values, fields=['int_sum', 'active'], params={'groupby': ['int_sum'], 'domain': [('active', '=', False)]})
         self.assertExportEqual(
             export,
             [
                 ['Int Sum', 'Active'],
                 ['1 (1)', ''],
+                ['1', 'False'],
+            ],
+        )
+
+    def test_unarchived_grouped(self):
+        values = [
+            {'int_sum': 1, 'active': False},
+            {'int_sum': 1, 'active': True},
+        ]
+        export = self.export(values, fields=['int_sum', 'active'], params={'groupby': ['int_sum']})
+        self.assertExportEqual(
+            export,
+            [
+                ['Int Sum', 'Active'],
+                ['1 (1)', ''],
+                ['1', 'True'],
             ],
         )
 
