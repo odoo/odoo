@@ -195,10 +195,6 @@ For more specific needs, you may also assign custom-defined actions
         'web.tests_assets': [
             'mail/static/tests/legacy/helpers/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'mail/static/tests/legacy/**/*',
-            ('remove', 'mail/static/tests/legacy/helpers/**/*'),
-        ],
         'mail.assets_odoo_sfu': [
             'mail/static/lib/odoo_sfu/odoo_sfu.js',
         ],
