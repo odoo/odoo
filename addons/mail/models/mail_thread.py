@@ -4529,7 +4529,7 @@ class MailThread(models.AbstractModel):
         if body is not None:
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
-            res.append(Store.Attr("translationValue", False))
+            res.append({"translationValue": False})
         message._bus_send_store(message, res)
 
     # ------------------------------------------------------
