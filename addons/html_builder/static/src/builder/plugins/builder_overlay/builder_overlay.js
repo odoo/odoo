@@ -484,32 +484,53 @@ export class BuilderOverlay {
             let changeTotal = false;
             for (const dir of directions) {
                 const configValues = dir.config.values;
-                // `delta` is the number of pixels by which the mouse moved,
-                // compared to the initial position of the handle.
+                const currentIndex = dir.currentIndex;
+                const currentValue = configValues[currentIndex];
+
+                // Get the number of pixels by which the pointer moved, compared
+                // to the initial position of the handle.
                 const delta =
                     ev[`page${dir.XY}`] - dir.initialPageXY + configValues[dir.initialIndex];
-                const next =
-                    dir.currentIndex + (dir.currentIndex + 1 === configValues.length ? 0 : 1);
-                const prev = dir.currentIndex > 0 ? dir.currentIndex - 1 : 0;
+
+                // Compute the indexes of the next step and the step before it,
+                // based on the delta.
+                let nextIndex, beforeIndex;
+                if (delta > currentValue) {
+                    const nextValue = configValues.find((v) => v > delta);
+                    nextIndex = nextValue
+                        ? configValues.indexOf(nextValue)
+                        : configValues.length - 1;
+                    beforeIndex = nextIndex > 0 ? nextIndex - 1 : currentIndex;
+                } else if (delta < currentValue) {
+                    const nextValue = configValues.findLast((v) => v < delta);
+                    nextIndex = nextValue ? configValues.indexOf(nextValue) : 0;
+                    beforeIndex =
+                        nextIndex < configValues.length - 1 ? nextIndex + 1 : currentIndex;
+                }
 
                 let change = false;
-                // If the mouse moved to the right/down by at least 2/3 of
-                // the space between the previous and the next steps, the
-                // handle is snapped to the next step and the class is
-                // replaced by the one matching this step.
-                if (delta > (2 * configValues[next] + configValues[dir.currentIndex]) / 3) {
-                    this.replaceSizingClass(dir.classRegex, dir.config.classes[next]);
-                    dir.currentIndex = next;
-                    change = true;
-                }
-                // Same as above but to the left/up.
-                if (
-                    prev !== dir.currentIndex &&
-                    delta < (2 * configValues[prev] + configValues[dir.currentIndex]) / 3
-                ) {
-                    this.replaceSizingClass(dir.classRegex, dir.config.classes[prev]);
-                    dir.currentIndex = prev;
-                    change = true;
+                if (delta !== currentValue) {
+                    // First, catch up with the pointer (in the case we moved
+                    // really fast).
+                    if (beforeIndex !== currentIndex) {
+                        this.replaceSizingClass(dir.classRegex, dir.config.classes[beforeIndex]);
+                        dir.currentIndex = beforeIndex;
+                        change = true;
+                    }
+                    // If the pointer moved by at least 2/3 of the space between
+                    // the current and the next step, the handle is snapped to
+                    // the next step and the class is replaced by the one
+                    // matching this step.
+                    const threshold =
+                        (2 * configValues[nextIndex] + configValues[dir.currentIndex]) / 3;
+                    if (
+                        (delta > currentValue && delta > threshold) ||
+                        (delta < currentValue && delta < threshold)
+                    ) {
+                        this.replaceSizingClass(dir.classRegex, dir.config.classes[nextIndex]);
+                        dir.currentIndex = nextIndex;
+                        change = true;
+                    }
                 }
 
                 if (change) {
