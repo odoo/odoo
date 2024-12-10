@@ -20,6 +20,7 @@
         </xpath>
     </template>
 
+   <!-- TODO: manage this case
     <template id="account_payment.portal_docs_entry" inherit_id="portal.portal_docs_entry">
         <xpath expr="//a" position="inside">
             <button
@@ -29,23 +30,18 @@
                 Pay Now
             </button>
         </xpath>
-    </template>
+    </template>-->
 
-    <template id="portal_my_home_account_payment" name="Overdue invoices" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-            <t t-set="portal_alert_category_enable" t-value="True"/>
-        </xpath>
-        <div id="portal_alert_category" position="inside">
-            <t t-call="portal.portal_docs_entry">
-                <t t-set="bg_color" t-value="'alert alert-primary align-items-center'"/>
-                <t t-set="placeholder_count" t-value="'overdue_invoice_count'"/>
-                <t t-set="title">Invoices to pay</t>
-                <t t-set="url" t-value="'/my/invoices?filterby=overdue_invoices'"/>
-                <t t-set="show_count" t-value="True"/>
-                <t t-set="show_pay_overdue_invoices_button" t-value="True"/>
-            </t>
-        </div>
-    </template>
+    <data noupdate="1">
+        <record id="portal_entry_overdue_invoices" model="portal.entry">
+            <field name="title">Invoices to pay</field>
+            <field name="url">/my/invoices?filterby=overdue_invoices</field>
+            <field name="bg_color">alert alert-primary align-items-center</field>
+            <field name="placeholder_count">overdue_invoice_count</field>
+            <field name="is_alert">True</field>
+        </record>
+    </data>
+
 
     <template id="portal_overdue_invoices_page" name="Overdue payments">
         <t t-call="portal.portal_layout">
