@@ -17,9 +17,11 @@ export class MessageReactionList extends Component {
         this.loadEmoji = loadEmoji;
         this.store = useState(useService("mail.store"));
         this.ui = useService("ui");
+        this.preview = useDropdownState();
         this.hover = useHover(["reactionButton", "reactionList*"], {
             onHover: () => (this.preview.isOpen = true),
             onAway: () => (this.preview.isOpen = false),
+            stateObserver: () => [this.preview?.isOpen],
         });
         this.state = useState({ emojiLoaded: Boolean(loader.loaded) });
         if (!loader.loaded) {
@@ -27,15 +29,12 @@ export class MessageReactionList extends Component {
         }
         onMounted(() => void this.state.emojiLoaded);
         onPatched(() => void this.state.emojiLoaded);
-        this.preview = useDropdownState();
     }
 
     /** @param {import("models").MessageReactions} reaction */
     previewText(reaction) {
         const { count, content: emoji } = reaction;
-        const personNames = reaction.personas
-              .slice(0, 3)
-              .map(persona => persona.name);
+        const personNames = reaction.personas.slice(0, 3).map((persona) => persona.name);
         const shortcode = loader.loaded?.emojiValueToShortcode?.[emoji] ?? "?";
         switch (count) {
             case 1:
@@ -97,5 +96,10 @@ export class MessageReactionList extends Component {
             ev.preventDefault();
             this.props.openReactionMenu();
         }
+    }
+
+    onClickReactionList(reaction) {
+        this.preview.isOpen = false; // closes dropdown immediately as to not recover focus after dropdown closes
+        this.props.openReactionMenu(reaction);
     }
 }
