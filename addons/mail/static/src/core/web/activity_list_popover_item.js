@@ -106,7 +106,7 @@ export class ActivityListPopoverItem extends Component {
     get activityAssigneeAvatar() {
         return url("/web/image", {
             field: "avatar_128",
-            id: this.props.activity.user_id[0],
+            id: this.props.activity.persona.userId,
             model: "res.users",
         });
     }
