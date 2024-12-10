@@ -65,7 +65,7 @@ export class Failure extends Record {
     }
 
     get body() {
-        return _t("An error occurred when sending an email");
+        return { text: _t("An error occurred when sending an email") };
     }
 
     get datetime() {
