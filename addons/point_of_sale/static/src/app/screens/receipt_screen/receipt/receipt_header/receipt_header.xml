@@ -7,7 +7,7 @@
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
                 <!-- contact address -->
-                <div t-if="props.data.company.partner_id?.[1]" t-esc="props.data.company.partner_id[1]" />
+                <div t-if="props.data.company.name" t-esc="props.data.company.name" />
                 <t t-if="props.data.company.phone">
                     <div>Tel:<t t-esc="props.data.company.phone" /></div>
                 </t>
