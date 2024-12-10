@@ -107,7 +107,7 @@ class WebsiteSnippetFilter(models.Model):
         limit = self.env.context.get('limit')
         hide_variants = False
         if search_domain and 'hide_variants' in search_domain:
-            hide_variants = True
+            hide_variants = kwargs['hide_variants'] = True
             search_domain.remove('hide_variants')
         domain = expression.AND([
             [('website_published', '=', True)] if self.env.user._is_public() or self.env.user._is_portal() else [],
@@ -228,6 +228,8 @@ class WebsiteSnippetFilter(models.Model):
             if website.prevent_zero_price_sale:
                 products = products.filtered(lambda p: p._get_contextual_price())
             if products:
+                if kwargs.get('hide_variants'):
+                    products = products.product_tmpl_id.product_variant_id
                 domain = expression.AND([
                     domain,
                     [('id', 'in', products.ids)],
@@ -236,4 +238,3 @@ class WebsiteSnippetFilter(models.Model):
                     display_default_code=False,
                 ).search(domain, limit=limit)
         return products
-
