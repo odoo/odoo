@@ -878,7 +878,7 @@ class AccountPayment(models.Model):
         return outstanding_account
 
     def write(self, vals):
-        if vals.get('state') == 'in_process' and not vals.get('move_id'):
+        if vals.get('state') in ('in_process', 'paid') and not vals.get('move_id'):
             self.filtered(lambda p: not p.move_id)._generate_journal_entry()
             self.move_id.action_post()
 
@@ -1027,6 +1027,7 @@ class AccountPayment(models.Model):
                     method_name=self.payment_method_line_id.name,
                     partner=payment.partner_id.display_name,
                 ))
+        self.filtered(lambda pay: pay.outstanding_account_id.account_type == 'asset_cash').state = 'paid'
         # Avoid going back one state when clicking on the confirm action in the payment list view and having paid expenses selected
         # We need to set values to each payment to avoid recomputation later
         self.filtered(lambda pay: pay.state in {False, 'draft', 'in_process'}).state = 'in_process'
