@@ -501,6 +501,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
     start: function () {
         this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'end' : 'start';
         this.isRtl = !!this.el.closest('#wrapwrap.o_rtl');
+        this._checkActivePageLinks();
         return this._super.apply(this, arguments);
     },
 
@@ -562,6 +563,36 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
 
         $menu.addClass('dropdown-menu-' + alignment);
     },
+    /**
+     * @private
+     */
+    _checkActivePageLinks() {
+        const currentPathName = window.location.pathname;
+        if (this.el.id === "top_menu") {
+            const isHighlightedMenu = this.el.parentElement.querySelectorAll('ul > li > a.nav-link.active').length;
+            if (!isHighlightedMenu) {
+                const megaMenusEls = this.el.querySelectorAll(".o_mega_menu, .dropdown-menu");
+                megaMenusEls.forEach( megaMenuEl => {
+                    const linksEls = megaMenuEl.querySelectorAll(`a:not([href="#"])`);
+                    linksEls.forEach( el => {
+                        const href = new URL(el.href);
+                        if (href.pathname === currentPathName) {
+                            const navLinkEl = megaMenuEl.previousElementSibling;
+                            navLinkEl.classList.toggle("active", true);
+                        }
+                    })
+                })
+            }
+        } else {
+            const linkEls = this.el.querySelectorAll(`a.nav-link:not([href="#"])`);
+            linkEls.forEach( el => {
+                const href = new URL(el.href)
+                if (href.pathname === currentPathName) {
+                    el.classList.toggle("active", true);
+                }
+            })
+        }
+    }
 });
 
 publicWidget.registry.hoverableDropdown = animations.Animation.extend({
