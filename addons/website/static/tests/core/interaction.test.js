@@ -1228,6 +1228,49 @@ describe("t-att and t-out", () => {
         expect(target).toBe(el.querySelector("span"));
     });
 
+    test("t-att-... restores all values on stop", async () => {
+        class Test extends Interaction {
+            static selector = "div";
+            dynamicContent = {
+                "span:t-att-data-animal": () => undefined,
+            };
+        }
+        const { core, el } = await startInteraction(Test, `
+            <div>
+                <span data-animal="colibri">1</span>
+                <span data-animal="owlet">2</span>
+            </div>
+        `);
+        const spanEls = el.querySelectorAll("span");
+        expect(spanEls[0].dataset.animal).toBe(undefined);
+        expect(spanEls[1].dataset.animal).toBe(undefined);
+        core.stopInteractions();
+        expect(spanEls[0].dataset.animal).toBe("colibri");
+        expect(spanEls[1].dataset.animal).toBe("owlet");
+    });
+
+    test("t-att-... restores all values on stop even if swapped", async () => {
+        class Test extends Interaction {
+            static selector = "div";
+            dynamicContent = {
+                "span:t-att-data-animal": () => undefined,
+            };
+        }
+        const { core, el } = await startInteraction(Test, `
+            <div>
+                <span data-animal="colibri">1</span>
+                <span data-animal="owlet">2</span>
+            </div>
+        `);
+        const spanEls = el.querySelectorAll("span");
+        expect(spanEls[0].dataset.animal).toBe(undefined);
+        expect(spanEls[1].dataset.animal).toBe(undefined);
+        spanEls[0].parentElement.appendChild(spanEls[0]); // swap
+        core.stopInteractions();
+        expect(spanEls[0].dataset.animal).toBe("colibri");
+        expect(spanEls[1].dataset.animal).toBe("owlet");
+    });
+
     test("can do a simple t-out", async () => {
         class Test extends Interaction {
             static selector = ".test";

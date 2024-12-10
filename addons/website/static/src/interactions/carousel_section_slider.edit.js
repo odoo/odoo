@@ -14,23 +14,16 @@ export class CarouselSectionSliderEdit extends Interaction {
         },
     };
 
-    // TODO See if slide indices need to be re-generated or is restore
-    // sufficient.
-    /*
     destroy() {
-        super.destroy();
-        /*
-        if (this.editableMode && this.el.matches("section > .carousel")) {
-            // TODO Handle translation mode.
-//                && !this.options.wysiwyg.options.enableTranslation) {
+        const editTranslations = this.services.website_edit.isEditingTranslations();
+        if (!editTranslations) {
             // Restore the carousel controls.
             const indicatorEls = this.el.querySelectorAll(".carousel-indicators > *");
-            this.options.wysiwyg.odooEditor.observerUnactive("restore_controls");
+            // this.options.wysiwyg.odooEditor.observerUnactive("restore_controls");
             indicatorEls.forEach((indicatorEl, i) => indicatorEl.setAttribute("data-bs-slide-to", i));
-            this.options.wysiwyg.odooEditor.observerActive("restore_controls");
+            // this.options.wysiwyg.odooEditor.observerActive("restore_controls");
         }
     }
-    */
 
     /**
      * Redirects a carousel control click on the active slide.

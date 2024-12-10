@@ -204,34 +204,35 @@ export class Colibri {
         const interaction = this.interaction;
         for (const dynamicAttr of this.dynamicAttrs) {
             const {nodes, attr, definition, initialValues} = dynamicAttr;
+            let valuePerNode;
+            if (!initialValues) {
+                valuePerNode = new Map();
+                dynamicAttr.initialValues = valuePerNode;
+            }
             for (const node of nodes) {
                 try {
                     const value = definition.call(interaction, node);
                     if (!initialValues) {
-                        const valuePerNode = new Map();
-                        for (const node of nodes) {
-                            let attrValue;
-                            switch (attr) {
-                                case "class":
-                                    attrValue = [];
-                                    for (const classNames of Object.keys(value)) {
-                                        attrValue[classNames] = node.classList.contains(classNames);
-                                    }
-                                    break;
-                                case "style":
-                                    attrValue = {};
-                                    for (const property of Object.keys(value)) {
-                                        const propertyValue = node.style.getPropertyValue(property);
-                                        const priority = node.style.getPropertyPriority(property);
-                                        attrValue[property] = propertyValue ? (propertyValue + (priority ? ` !${priority}` : "")) : "";
-                                    }
-                                    break;
-                                default:
-                                    attrValue = node.getAttribute(attr);
-                            }
-                            valuePerNode.set(node, attrValue);
+                        let attrValue;
+                        switch (attr) {
+                            case "class":
+                                attrValue = [];
+                                for (const classNames of Object.keys(value)) {
+                                    attrValue[classNames] = node.classList.contains(classNames);
+                                }
+                                break;
+                            case "style":
+                                attrValue = {};
+                                for (const property of Object.keys(value)) {
+                                    const propertyValue = node.style.getPropertyValue(property);
+                                    const priority = node.style.getPropertyPriority(property);
+                                    attrValue[property] = propertyValue ? (propertyValue + (priority ? ` !${priority}` : "")) : "";
+                                }
+                                break;
+                            default:
+                                attrValue = node.getAttribute(attr);
                         }
-                        dynamicAttr.initialValues = valuePerNode;
+                        valuePerNode.set(node, attrValue);
                     }
                     this.applyAttr(node, attr, value);
                 } catch (e) {
