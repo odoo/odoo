@@ -34,8 +34,8 @@ threadCompareRegistry.add(
      * @param {import("models").Thread thread2}
      */
     (thread1, thread2) => {
-        const aMessageDatetime = thread1.newestPersistentNotEmptyOfAllMessage?.datetime;
-        const bMessageDateTime = thread2.newestPersistentNotEmptyOfAllMessage?.datetime;
+        const aMessageDatetime = thread1.newestPersistentOfAllMessage?.datetime;
+        const bMessageDateTime = thread2.newestPersistentOfAllMessage?.datetime;
         if (!aMessageDatetime && bMessageDateTime) {
             return 1;
         }

@@ -52,26 +52,6 @@ test("Unpin message", async () => {
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
 });
 
-test("Deleted messages are not pinned", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({
-        body: "Hello world!",
-        message_type: "comment",
-        model: "discuss.channel",
-        res_id: channelId,
-        pinned_at: "2023-03-30 11:27:11",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Pinned Messages']");
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
-    await click(".o-mail-Message [title='Expand']");
-    await click(".dropdown-item", { text: "Delete" });
-    await click("button", { text: "Confirm" });
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", { count: 0 });
-});
-
 test("Open pinned panel from notification", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

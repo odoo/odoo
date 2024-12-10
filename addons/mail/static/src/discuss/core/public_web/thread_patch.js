@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     get orderedMessages() {
         const result = super.orderedMessages;
-        if (this.props.thread.from_message_id && !this.props.thread.from_message_id.isEmpty) {
+        if (this.props.thread.from_message_id) {
             if (this.props.order === "asc") {
                 result.unshift(this.props.thread.from_message_id);
             } else {

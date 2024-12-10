@@ -432,7 +432,7 @@ export class Thread extends Component {
 
     get PRESENT_THRESHOLD() {
         const viewportHeight = (this.getViewportEl?.clientHeight ?? 0) * PRESENT_VIEWPORT_THRESHOLD;
-        const messagesHeight = [...this.props.thread.nonEmptyMessages]
+        const messagesHeight = [...this.props.thread.messages]
             .reverse()
             .slice(0, PRESENT_MESSAGE_THRESHOLD)
             .map((message) => this.refByMessageId.get(message.id))
@@ -502,12 +502,7 @@ export class Thread extends Component {
         if (this.props.thread.model === "mail.box") {
             return false;
         }
-        if (
-            !prevMsg ||
-            prevMsg.message_type === "notification" ||
-            prevMsg.isEmpty ||
-            this.env.inChatter
-        ) {
+        if (!prevMsg || prevMsg.message_type === "notification" || this.env.inChatter) {
             return false;
         }
 
@@ -554,8 +549,8 @@ export class Thread extends Component {
 
     get orderedMessages() {
         return this.props.order === "asc"
-            ? [...this.props.thread.nonEmptyMessages]
-            : [...this.props.thread.nonEmptyMessages].reverse();
+            ? [...this.props.thread.messages]
+            : [...this.props.thread.messages].reverse();
     }
 
     setScroll(value) {

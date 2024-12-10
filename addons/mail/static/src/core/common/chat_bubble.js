@@ -17,7 +17,7 @@ class ChatBubblePreview extends Component {
     }
 
     get previewContent() {
-        const lastMessage = this.thread?.newestPersistentNotEmptyOfAllMessage;
+        const lastMessage = this.thread?.newestPersistentOfAllMessage;
         if (!lastMessage) {
             return false;
         }

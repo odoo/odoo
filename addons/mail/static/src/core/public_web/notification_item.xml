@@ -31,7 +31,7 @@
                 <div class="d-flex">
                     <div class="o-mail-NotificationItem-text opacity-75" t-att-class="{ 'fw-bold': !props.muted, 'text-truncate': props.textTruncate, 'text-start': !props.textTruncate  }" t-att-style="props.textMaxLine !== undefined ? webkitLineClamp(props.textMaxLine) : ''">
                         <t t-slot="body-icon"/>
-                        <t t-if="props.body" t-esc="props.body" name="notificationBody"/>
+                        <t t-if="props.slots?.body" name="notificationBody" t-slot="body"/>
                     </div>
                     <div class="flex-grow-1"/>
                     <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 opacity-75 flex-shrink-0 align-self-end" t-att-class="{ 'fw-bold': !props.muted }" t-att-title="props.datetime?.toLocaleString(DateTime.DATETIME_SHORT) ?? ''">
@@ -39,8 +39,8 @@
                     </small>
                 </div>
             </div>
-            <t t-if="props.slots and props.slots.extraContent">
-                <t t-slot="extraContent" />
+            <t t-if="props.slots and props.slots.sideContent">
+                <t t-slot="sideContent" />
             </t>
         </button>
     </ActionSwiper>

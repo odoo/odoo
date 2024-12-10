@@ -18,7 +18,7 @@
             <div class="text-truncate base-fs fw-bolder mb-0 mx-2" t-esc="props.chatWindow.displayName"/>
             <div t-if="previewContent" class="text-truncate small mx-2 text-muted">
                 <t t-call="mail.message_preview_prefix">
-                    <t t-set="message" t-value="thread?.newestPersistentNotEmptyOfAllMessage"/>
+                    <t t-set="message" t-value="thread?.newestPersistentOfAllMessage"/>
                 </t>
                 <t t-esc="previewContent"/>
             </div>

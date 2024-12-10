@@ -4607,10 +4607,6 @@ class MailThread(models.AbstractModel):
             else:
                 self.env['mail.message.schedule'].sudo()._send_message_notifications(message)
 
-        # cleanup related message data if the message is empty
-        empty_messages = message.sudo()._filter_empty()
-        empty_messages._cleanup_side_records()
-        empty_messages.write({'pinned_at': None})
         res = [
             Store.Many("attachment_ids", sort="id"),
             "body",
