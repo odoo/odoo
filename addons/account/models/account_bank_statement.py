@@ -219,6 +219,7 @@ class AccountBankStatement(models.Model):
         previous = self.env['account.bank.statement'].search(
             [
                 ('first_line_index', '<', self.first_line_index),
+                ('first_line_index', '!=', False),
                 ('journal_id', '=', self.journal_id.id),
             ],
             limit=1,
