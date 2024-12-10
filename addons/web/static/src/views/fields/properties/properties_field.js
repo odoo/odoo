@@ -507,7 +507,10 @@ export class PropertiesField extends Component {
         event.preventDefault();
         if (!(await this.checkDefinitionWriteAccess())) {
             this.notification.add(
-                _t("You need edit access on the parent document to update these property fields"),
+                _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
+                    parentName: this.parentName,
+                    parentFieldLabel: this.parentString,
+                }),
                 { type: "warning" }
             );
             return;
@@ -596,10 +599,16 @@ export class PropertiesField extends Component {
 
     async onPropertyCreate() {
         if (!this.state.canChangeDefinition || !(await this.checkDefinitionWriteAccess())) {
-            this.notification.add(
-                _t("You need edit access on the parent document to update these property fields"),
-                { type: "warning" }
-            );
+            const message =
+                !this.definitionRecordId || !this.definitionRecordModel
+                    ? _t("Oops! A %(parentFieldLabel)s is needed to add property fields.", {
+                          parentFieldLabel: this.parentString,
+                      })
+                    : _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
+                          parentName: this.parentName,
+                          parentFieldLabel: this.parentString,
+                      });
+            this.notification.add(message, { type: "warning" });
             return;
         }
         const propertiesDefinitions = this.propertiesList || [];
