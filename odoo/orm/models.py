@@ -1707,7 +1707,8 @@ class BaseModel(metaclass=MetaModel):
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
         if not search_fnames:
             _logger.warning("Cannot search on display_name, no _rec_name or _rec_names_search defined on %s", self._name)
-            return expression.FALSE_DOMAIN
+            # do not restrain anything
+            return expression.TRUE_DOMAIN
         if operator.endswith('like') and not value and '=' not in operator:
             # optimize out the default criterion of ``like ''`` that matches everything
             # return all when operator is positive
