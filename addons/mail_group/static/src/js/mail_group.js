@@ -37,12 +37,24 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
         this.$el.find('.o_mg_unsubscribe_btn').removeClass('d-none');
     },
 
+    _updateMembersCount: function (response) {
+        membersCountEle = this.find("o_mg_members_count");
+        console.log(membersCount);
+        membersCount = membersCount.text();
+        if (action === 'added'){
+            membersCount.text(membersCount + 1)
+        }
+        else if (action === 'removed'){
+            if (membersCount > 0){
+                membersCount.text(membersCount.text(membersCount - 1));
+            }
+        }
+    }
+
     _onSubscribeBtnClick: async function (ev) {
         ev.preventDefault();
         const $email = this.$el.find(".o_mg_subscribe_email");
         const email = $email.val();
-
-        console.log(email);
 
         if (!email.match(/.+@.+/)) {
             this.$el.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
@@ -64,9 +76,12 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
         if (response === 'added') {
             this.isMember = true;
             this._showUnSubscriptionMode();
+            this._updateMembersCount('added');
+            console.log("pass inside added.")
         } else if (response === 'removed') {
             this.isMember = false;
             this._showSubscriptionMode();
+            this._updateMembersCount('removed');
         } else if (response === 'email_sent') {
             // The confirmation email has been sent
             this.$el.html(

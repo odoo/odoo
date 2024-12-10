@@ -22,7 +22,7 @@
                 <div t-if="'unsubscribe' in request.params" class="offset-lg-9 col-lg-3 alert alert-info" role="status">
                     <h5>Need to unsubscribe? <br/>It's right here! <span class="oi fa-2x oi-arrow-down float-end" role="img" aria-label="" title="Read this !"/></h5>
                 </div>
-                <div class="row mb-4" t-foreach="mail_groups" t-as="group_data">
+                <div class="row mb-4 o_mail_group" t-foreach="mail_groups" t-as="group_data">
                     <t t-set="group" t-value="group_data['group']"/>
                     <t t-set="is_member" t-value="group_data['is_member']"/>
                     <div class="col-lg-5">
@@ -39,14 +39,14 @@
                         <div t-field="group.description" class="text-muted d-flex"/>
                     </div>
                     <div class="col-lg-3">
-                        <i class="fa fa-fw fa-user" role="img" aria-label="Recipients" title="Recipients"/> <t t-esc="group.member_count"/> members<br />
+                        <i class="fa fa-fw fa-user" role="img" aria-label="Recipients" title="Recipients"/> <span class="o_mg_members_count" t-out="group.member_count"/> members<br />
                         <t t-if="group.mail_group_message_last_month_count">
                             <i class="fa fa-fw fa-envelope-o" role="img" aria-label="Traffic" title="Traffic"/> <t t-esc="group.mail_group_message_last_month_count"/> messages / month
                         </t>
                     </div>
                     <div class="col-lg-4">
                         <t t-set="force_unsubscribe" t-value="'unsubscribe' in request.params"/>
-                        <div class="o_mail_group" t-att-data-id="group.id" t-att-data-is-member="force_unsubscribe or is_member">
+                        <div t-att-data-id="group.id" t-att-data-is-member="force_unsubscribe or is_member">
                             <div class="o_mg_subscribe_form" t-att-data-id="group.id" t-att-data-is-member="force_unsubscribe or is_member">
                                 <div class="d-flex justify-content-end">
                                     <button href="#" t-attf-class="{{ 'd-none' if not (force_unsubscribe or is_member) else '' }} btn btn-outline-primary o_mg_subscribe_btn o_mg_unsubscribe_btn">Unsubscribe</button>
