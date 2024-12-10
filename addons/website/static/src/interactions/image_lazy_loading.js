@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
-import { onceAllImagesLoaded } from "@website/interactions/utils";
+import { onceAllImagesLoaded } from "@website/utils/images";
 /**
  * The websites, by default, use image lazy loading via the loading="lazy"
  * attribute on <img> elements. However, this does not work great on all

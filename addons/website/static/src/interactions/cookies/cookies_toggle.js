@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
-import { onceAllImagesLoaded } from "../utils";
+import { onceAllImagesLoaded } from "@website/utils/images";
 
 export class CookiesToggle extends Interaction {
     static selector = ".o_cookies_bar_toggle";

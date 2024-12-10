@@ -1,5 +1,5 @@
 import { session } from "@web/session";
-import { setUtmsHtmlDataset, unhideConditionalElements } from "@website/core/utils";
+import { setUtmsHtmlDataset, unhideConditionalElements } from "@website/utils/misc";
 
 // TODO: remove this export after refactor of `slides_course_fullscreen_player.js`
 // into Interaction

@@ -193,12 +193,13 @@
     'assets': {
         'web.assets_frontend': [
             'website/static/src/interactions/**/*',
+            'website/static/src/core/**/*',
+            'website/static/src/utils/**/*',
             ('remove', 'website/static/src/interactions/**/*.edit.js'),
             # Multi-range is an opt-in feature.
             ('remove', 'website/static/src/interactions/multirange_input.js'),
             # Activated on-demand by website.ripple_effect_js.
             ('remove', 'website/static/src/interactions/ripple_effect.js'),
-            'website/static/src/core/**/*',
             ('remove', 'website/static/src/core/website_edit_service.js'),
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
@@ -223,7 +224,7 @@
             'website/static/src/snippets/observing_cookie_mixin.js',
         ],
         'web.assets_frontend_minimal': [
-            'website/static/src/core/utils.js',
+            'website/static/src/utils/misc.js',
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
@@ -231,7 +232,7 @@
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
-            ('remove', 'website/static/src/core/utils.js'),
+            ('remove', 'website/static/src/utils/misc.js'),
             ('remove', 'website/static/src/js/content/inject_dom.js'),
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),

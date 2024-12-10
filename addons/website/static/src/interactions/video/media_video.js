@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
 
-import { setupAutoplay, triggerAutoplay } from "../../core/video_utils";
+import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
 
 class MediaVideo extends Interaction {
     static selector = ".media_iframe_video";

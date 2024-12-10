@@ -6,7 +6,7 @@ import {
     startInteractions,
     setupInteractionWhiteList,
 } from "../../core/helpers";
-import { onceAllImagesLoaded } from "@website/interactions/utils";
+import { onceAllImagesLoaded } from "@website/utils/images";
 
 setupInteractionWhiteList("website.gallery_slider");
 

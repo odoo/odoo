@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-import { PairSet } from "@website/core/utils";
+import { PairSet } from "@website/utils/misc";
 
 describe.current.tags("headless");
 

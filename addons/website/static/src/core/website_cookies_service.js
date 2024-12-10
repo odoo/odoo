@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { EventBus } from "./utils";
+import { EventBus } from "@website/utils/misc";
 
 registry.category("services").add("website_cookies", {
     dependencies: ["website_core"],
@@ -10,7 +10,7 @@ registry.category("services").add("website_cookies", {
          * Updates the element's iframe according to whether the cookies should
          * be approved (marked by `_post_processing_att` server-side).
          *
-         * @param {HTMLIframeElement} iframeEl
+         * @param {HTMLIFrameElement} iframeEl
          * @param {string} src - src to set on the iframe.
          */
         function manageIframeSrc(iframeEl, src) {

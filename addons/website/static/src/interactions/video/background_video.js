@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 
-import { setupAutoplay, triggerAutoplay } from "../../core/video_utils";
+import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
 
 class BackgroundVideo extends Interaction {
     static selector = ".o_background_video";

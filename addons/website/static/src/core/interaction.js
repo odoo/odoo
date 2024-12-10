@@ -1,6 +1,5 @@
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { SKIP_IMPLICIT_UPDATE } from "./colibri"
-import { EventBus } from "./utils";
 
 /**
  * This is the base class to describe interactions. The Interaction class
