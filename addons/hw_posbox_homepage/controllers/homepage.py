@@ -34,9 +34,8 @@ CONTENT_SECURITY_POLICY = (
     "default-src 'none';"
     "script-src 'self' 'unsafe-eval';"  # OWL requires `unsafe-eval` to render templates
     "connect-src 'self';"
-    "img-src 'self';"
+    "img-src 'self' data:;"             # `data:` scheme required as Bootstrap uses it for embedded SVGs
     "style-src 'self';"
-    "style-src-attr 'unsafe-inline';"   # Allows style="..." attributes to work
     "font-src 'self';"
 )
 
