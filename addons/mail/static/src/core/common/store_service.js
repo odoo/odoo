@@ -46,6 +46,7 @@ export class Store extends BaseStore {
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
+    IS_FAILURE = true;
 
     /** @returns {import("models").Store|import("models").Store[]} */
     static insert() {

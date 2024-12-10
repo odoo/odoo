@@ -4,6 +4,55 @@
     }
 }
 
+.o-mail-Discuss-failure {
+    animation: o-mail-Discuss-failureAnimation ease-in-out .5s forwards;
+    border: 3px solid transparent;
+    z-index: 1054;
+}
+
+.o-mail-Discuss-failureIndication {
+    bottom: 3px;
+    left: 3px;
+    background-color: rgba($warning, .5);
+    animation: o-mail-Discuss-failureSpanAnimation ease-in-out .5s forwards;
+}
+
+.o-mail-Discuss-failureIcon {
+    animation: o-mail-Discuss-failureIconAnimation 0.5s;
+    animation-direction: alternate;
+    animation-timing-function: cubic-bezier(.5, 0.95, 0, .5);
+    animation-iteration-count: 9;
+}
+
+.o-mail-Discuss-failureLabel {
+    color: $black;
+}
+
+@keyframes o-mail-Discuss-failureAnimation {
+    from {
+        border-color: rgba($warning, .25);
+    }
+    to {
+        border-color: rgba($warning, .5);
+    }
+}
+@keyframes o-mail-Discuss-failureSpanAnimation {
+    from {
+        opacity: 50%;
+    }
+    to {
+        opacity: 100%;
+    }
+}
+@keyframes o-mail-Discuss-failureIconAnimation {
+    from {
+        opacity: 0%;
+    }
+    to {
+        opacity: 100%;
+    }
+}
+
 .o-mail-Discuss-core {
     background-color: var(--mail-Discuss-coreBgColor, $body-bg);
 }

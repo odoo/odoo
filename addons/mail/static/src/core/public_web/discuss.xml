@@ -3,7 +3,7 @@
 
 <t t-name="mail.Discuss">
     <t t-set="partitionedActions" t-value="threadActions.partition"/>
-    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1 position-relative" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
         <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>
         <div t-if="!(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
             <div class="o-mail-Discuss-header px-3 d-flex flex-shrink-0 align-items-center border-bottom border-secondary z-1 flex-grow-0" t-ref="header">
@@ -106,6 +106,9 @@
             </div>
         </div>
         <MessagingMenu t-if="ui.isSmall"/>
+        <div t-if="store.IS_FAILURE" class="position-absolute h-100 w-100 o-mail-Discuss-failure o-pointer-events-none">
+            <span class="position-fixed pe-1 pt-1 fw-bold o-xsmaller rounded-end-3 rounded-bottom-0 o-mail-Discuss-failureIndication"><i class="fa fa-warning fa-fw me-1 text-warning o-mail-Discuss-failureIcon"/><span class="o-mail-Discuss-failureLabel">Chat connection lost...</span></span>
+        </div>
     </div>
 </t>
 
