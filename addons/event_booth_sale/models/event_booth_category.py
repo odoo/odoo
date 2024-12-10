@@ -5,6 +5,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -34,6 +35,14 @@ class EventBoothCategory(models.Model):
         compute_sudo=True
     )
     image_1920 = fields.Image(compute='_compute_image_1920', readonly=False, store=True)
+
+    @api.constrains('product_id')
+    def _check_service_tracking(self):
+        for record in self:
+            if record.product_id and record.product_id.service_tracking != 'event_booth':
+                raise ValidationError(
+                    'This product is used for Event Booth, it must have service_tracking set to "Event Booth".'
+                )
 
     @api.depends('product_id')
     def _compute_image_1920(self):
