@@ -8,7 +8,7 @@ import {
     queryAllTexts,
     queryFirst,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTimeZone, mockTouch, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockTimeZone, mockTouch, runAllTimers, tick } from "@odoo/hoot-mock";
 import {
     Component,
     EventBus,
@@ -4951,6 +4951,7 @@ test(`keynav: switching to another record from an invalid one`, async () => {
 
     await contains(`.o_field_widget[name=foo] input`).edit("");
     await press(["alt", "n"]);
+    await tick();
     await animationFrame();
     expect(`.o_breadcrumb`).toHaveText("first record");
     expect(`.o_form_status_indicator .text-danger`).toHaveAttribute(
@@ -4977,6 +4978,7 @@ test.tags("desktop")(
 
         await contains(`.o_field_widget[name=foo] input`).edit("");
         await press(["alt", "n"]);
+        await tick();
         await animationFrame();
         expect(`.o_pager_counter`).toHaveText("1 / 2");
     }
@@ -5059,11 +5061,13 @@ test(`keynav: switching to another record from a dirty one`, async () => {
 
     await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
     await press(["alt", "n"]);
+    await tick();
     await animationFrame();
     expect.verifySteps(["web_save"]);
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
 
     await press(["alt", "p"]);
+    await tick();
     await animationFrame();
     expect.verifySteps([]);
     expect(`.o_field_widget[name=foo] input`).toHaveValue("new value");
@@ -5084,10 +5088,12 @@ test.tags("desktop")(
 
         await contains(`.o_field_widget[name=foo] input`).edit("new value", { confirm: false });
         await press(["alt", "n"]);
+        await tick();
         await animationFrame();
         expect(`.o_pager_counter`).toHaveText("2 / 2");
 
         await press(["alt", "p"]);
+        await tick();
         await animationFrame();
         expect(`.o_pager_counter`).toHaveText("1 / 2");
     }
