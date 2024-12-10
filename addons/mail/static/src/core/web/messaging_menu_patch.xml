@@ -42,16 +42,16 @@
             <t t-if="installationRequest.isShown and !store.discuss.searchTerm">
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
-                    body="installationRequest.body"
                     iconSrc="installationRequest.iconSrc"
                     onClick="installationRequest.onClick"
                     onSwipeRight="hasTouch() ? { action: () => this.pwa.decline(), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
                 >
+                    <t t-set-slot="body" t-esc="installationRequest.body"/>
                     <t t-set-slot="name"><t  t-esc="installationRequest.displayName"/></t>
                     <t t-set-slot="icon">
                         <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
-                    <t t-set-slot="extraContent">
+                    <t t-set-slot="sideContent">
                         <a t-if="ui.isSmall" class="btn fa fa-cloud-download" />
                         <t t-else="">
                             <a class="btn btn-primary px-2 py-1 smaller">Install</a>
@@ -64,15 +64,15 @@
             <t t-if="notificationRequest.isShown and !store.discuss.searchTerm">
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
-                    body="notificationRequest.body"
                     iconSrc="notificationRequest.iconSrc"
                     onClick="() => notification.requestPermission()"
                 >
+                    <t t-set-slot="body" t-esc="notificationRequest.body"/>
                     <t t-set-slot="name"><t t-esc="notificationRequest.displayName"/></t>
                     <t t-set-slot="icon">
                         <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
-                    <t t-set-slot="extraContent">
+                    <t t-set-slot="sideContent">
                         <a t-if="ui.isSmall" class="btn fa fa-bell" />
                         <t t-else="">
                             <a class="btn btn-primary px-2 py-1 smaller">Enable</a>
@@ -85,7 +85,6 @@
                 <t t-foreach="store.failures" t-as="failure" t-key="failure.id">
                     <NotificationItem
                         isActive="state.activeIndex === itemIndex"
-                        body="failure.body"
                         counter="failure.notifications.length > 1 ? failure.notifications.length : undefined"
                         datetime="failure.datetime"
                         iconSrc="failure.iconSrc"
@@ -93,6 +92,7 @@
                         onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
                         onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
                     >
+                        <t t-set-slot="body" t-esc="failure.body"/>
                         <t t-set-slot="name"><t t-esc="getFailureNotificationName(failure)"/></t>
                     </NotificationItem>
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
