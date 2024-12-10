@@ -718,9 +718,8 @@ registry.Parallax = Animation.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         this._updateBgCss({
+            height: '',
             transform: '',
-            top: '',
-            bottom: '',
         });
 
         $(window).off('.animation_parallax');
@@ -761,8 +760,7 @@ registry.Parallax = Animation.extend({
         // Provide a "safe-area" to limit parallax
         const absoluteRatio = Math.abs(this.ratio);
         this._updateBgCss({
-            top: -absoluteRatio,
-            bottom: -absoluteRatio,
+            height: `calc(100% + ${2 * absoluteRatio}px)`,
         });
     },
     /**
@@ -808,7 +806,9 @@ registry.Parallax = Animation.extend({
         var vpEndOffset = scrollOffset + this.viewport;
         if (vpEndOffset >= this.visibleArea[0]
          && vpEndOffset <= this.visibleArea[1]) {
-            this._updateBgCss({'transform': 'translateY(' + _getNormalizedPosition.call(this, vpEndOffset) + 'px)'});
+            const pos = _getNormalizedPosition.call(this, vpEndOffset);
+            // Default is to center the layer with `-50%, -50%`
+            this._updateBgCss({'transform': `translate(-50%, calc(-50% + ${pos}px))`});
         }
 
         function _getNormalizedPosition(pos) {
@@ -1823,11 +1823,10 @@ registry.ZoomedBackgroundShape = publicWidget.Widget.extend({
      * Updates the left and right offset of the shape.
      *
      * @private
-     * @param {string} offset
+     * @param {string} [offset]
      */
-    _updateShapePosition(offset = '') {
-        this.el.style.left = offset;
-        this.el.style.right = offset;
+    _updateShapePosition(offset) {
+        this.el.style.width = offset ? `calc(100% - ${2 * offset}px)` : '';
     },
 
     //--------------------------------------------------------------------------
@@ -1850,7 +1849,7 @@ registry.ZoomedBackgroundShape = publicWidget.Widget.extend({
             let offset = (decimalPart < 0.5 ? decimalPart : decimalPart - 1) / 2;
             // This never causes the horizontal scrollbar to appear because it
             // only appears if the overflow to the right exceeds 0.333px.
-            this._updateShapePosition(offset + 'px');
+            this._updateShapePosition(offset);
         }
     },
 });
