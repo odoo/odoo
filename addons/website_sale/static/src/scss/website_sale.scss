@@ -1683,3 +1683,52 @@ a.no-decoration {
 body.modal-open:has(.js_sale.o_wsale_product_page) {
     overflow: hidden;
 }
+
+// Product Ribbon Classes
+.oe_website_sale{
+    @mixin o-ribbon-tag() {
+        margin: 0;
+        @include font-size(0.8rem);
+        white-space: nowrap;
+        text-align: center;
+        pointer-events: none;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    .o_wsale_ribbon {
+        @include o-ribbon-tag();
+        padding: map-get($spacers, 2) $ribbon-padding;
+        transform-origin: top right;
+    }
+
+    .o_wsale_badge {
+        @include o-ribbon-tag();
+        padding: map-get($spacers, 1) map-get($spacers, 2);
+        border-radius: var(--border-radius) !important;
+    }
+
+    .o_wsale_ribbon.o_right {
+        @include o-position-absolute($top: 0, $right: 0);
+        // 0.708 is 1 - cos(45deg)
+        // Transforms are applied right-to-left
+        // Cannot use matrix because of the use of % values.
+        transform: translateX(calc(-0.708 * (100% - #{2 * $ribbon-padding}))) rotate(45deg) translateX(calc(100% - #{$ribbon-padding}));
+    }
+
+    .o_wsale_ribbon.o_left{
+        @include o-position-absolute($top: 0, $left: 0);
+        transform: translateX(calc(0.708 * (100% - #{2 * $ribbon-padding}) - 100%)) rotate(-45deg) translateX($ribbon-padding);
+    }
+
+    .o_wsale_badge.o_left {
+        @include o-position-absolute($top: map-get($spacers, 2), $left: map-get($spacers, 2));
+    }
+
+    .o_wsale_badge.o_right {
+        @include o-position-absolute($top: map-get($spacers, 2), $right: map-get($spacers, 2));
+    }
+
+}

@@ -57,6 +57,14 @@ class ProductPageOptionPlugin extends Plugin {
                 }
             });
         },
+        patch_builder_options: [
+            {
+                target_name: 'ProductsRibbonOption',
+                target_element: 'selector',
+                method: 'add',
+                value: productPageSelector,
+            },
+        ],
     };
     setup() {
         const mainEl = this.document.querySelector(productPageSelector);

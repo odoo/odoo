@@ -7,7 +7,6 @@ export class ProductsItemOption extends BaseOptionComponent {
     static props = {
         loadInfo: Function,
         itemSize: Object,
-        count: Object,
     };
 
     setup() {
@@ -16,15 +15,11 @@ export class ProductsItemOption extends BaseOptionComponent {
         this.tableRef = useRef("table");
 
         this.state = useState({
-            ribbons: [],
-            ribbonEditMode: false,
             itemSize: this.props.itemSize,
         });
 
         onWillStart(async () => {
-            const [ribbons, defaultSort] = await this.props.loadInfo();
-            this.state.ribbons = ribbons;
-            this.defaultSort = defaultSort;
+            this.defaultSort = await this.props.loadInfo();
 
             // need to display "re-order" option only if shop_default_sort is 'website_sequence asc'
             this.displayReOrder = this.defaultSort[0].shop_default_sort === "website_sequence asc";

@@ -1,4 +1,3 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -13,16 +12,8 @@ class ProductsItemOptionPlugin extends Plugin {
         "setItemSize",
         "setProductTemplateID",
         "getProductTemplateID",
-        "addProductTemplatesRibbons",
-        "getRibbonsObject",
-        "setRibbonObject",
-        "addRibbon",
-        "getRibbons",
-        "deleteRibbon",
-        "setRibbon",
     ];
     itemSize = reactive({ x: 1, y: 1 });
-    count = reactive({ value: 0 });
 
     resources = {
         builder_options: [
@@ -31,7 +22,6 @@ class ProductsItemOptionPlugin extends Plugin {
                 props: {
                     loadInfo: this.loadInfo.bind(this),
                     itemSize: this.itemSize,
-                    count: this.count,
                 },
                 selector: "#products_grid .oe_product",
                 editableOnly: false,
@@ -43,52 +33,17 @@ class ProductsItemOptionPlugin extends Plugin {
         builder_actions: {
             SetItemSizeAction,
             ChangeSequenceAction,
-            SetRibbonAction,
-            CreateRibbonAction,
-            ModifyRibbonAction,
-            DeleteRibbonAction,
         },
     };
 
     setup() {
         this.currentWebsiteId = this.services.website.currentWebsiteId;
-        this.ribbonPositionClasses = {
-            left: "o_ribbon_left",
-            right: "o_ribbon_right",
-        };
-
-        this.productTemplatesRibbons = [];
-        this.deletedRibbonClasses = "";
         this.editMode = false;
     }
 
     async loadInfo() {
-        [this.ribbons, this.defaultSort] = await Promise.all([
-            this.loadRibbons(),
-            this.getDefaultSort(),
-        ]);
-
-        this.ribbonsObject = {};
-        for (const ribbon of this.ribbons) {
-            this.ribbonsObject[ribbon.id] = ribbon;
-        }
-
-        this.originalRibbons = JSON.parse(JSON.stringify(this.ribbonsObject));
-
-        return [this.ribbons, this.defaultSort];
-    }
-
-    async loadRibbons() {
-        return (
-            this.ribbons ||
-            reactive(
-                await this.services.orm.searchRead(
-                    "product.ribbon",
-                    [],
-                    ["id", "name", "bg_color", "text_color", "position"]
-                )
-            )
-        );
+        this.defaultSort = await this.getDefaultSort();
+        return this.defaultSort;
     }
 
     async getDefaultSort() {
@@ -101,192 +56,6 @@ class ProductsItemOptionPlugin extends Plugin {
             ))
         );
     }
-
-    setRibbon(editingElement, ribbon, save = true) {
-        const ribbonId = ribbon.id;
-        const editableBody = editingElement.ownerDocument.body;
-        editingElement.dataset.ribbonId = ribbonId;
-
-        // Find or create ribbon element
-        let ribbonElement = editingElement.querySelector(".o_ribbon");
-        if (!ribbonElement && ribbonId) {
-            ribbonElement = this.document.createElement("span");
-            ribbonElement.classList.add("o_ribbon o_ribbon_left");
-            editingElement.appendChild(ribbonElement);
-        }
-
-        // Update all ribbons with this ID
-        const ribbons = editableBody.querySelectorAll(`[data-ribbon-id="${ribbonId}"] .o_ribbon`);
-
-        for (const ribbonElement of ribbons) {
-            ribbonElement.textContent = "";
-            ribbonElement.textContent = ribbon.name;
-
-            const htmlClasses = this._getRibbonClasses();
-            ribbonElement.classList.remove(...htmlClasses.trim().split(" "));
-
-            if (ribbonElement.classList.contains("d-none")) {
-                ribbonElement.classList.remove("d-none");
-            }
-
-            ribbonElement.classList.add(this.ribbonPositionClasses[ribbon.position]);
-            ribbonElement.style.backgroundColor = ribbon.bg_color || "";
-            ribbonElement.style.color = ribbon.text_color || "";
-        }
-
-        return save ? this._saveRibbons() : "";
-    }
-    /**
-     * Returns all ribbon classes, current and deleted, so they can be removed.
-     *
-     */
-    _getRibbonClasses() {
-        const ribbonClasses = [];
-        for (const ribbon of Object.values(this.ribbons)) {
-            ribbonClasses.push(this.ribbonPositionClasses[ribbon.position]);
-        }
-        return ribbonClasses.join(" ") + " " + this.deletedRibbonClasses;
-    }
-
-    async _saveRibbons() {
-        const originalIds = Object.keys(this.originalRibbons).map((id) => parseInt(id));
-        const currentIds = this.ribbons.map((ribbon) => parseInt(ribbon.id));
-
-        const created = this.ribbons.filter((ribbon) => !originalIds.includes(ribbon.id));
-        const deletedIds = originalIds.filter((id) => !currentIds.includes(id));
-        const modified = this.ribbons.filter((ribbon) => {
-            if (created.includes(ribbon)) {
-                return false;
-            }
-            const original = this.originalRibbons[ribbon.id];
-            return Object.entries(ribbon).some(([key, value]) => value !== original[key]);
-        });
-
-        const createdRibbonProms = [];
-        let createdRibbonIds;
-        if (created.length > 0) {
-            createdRibbonProms.push(
-                this.services.orm
-                    .create(
-                        "product.ribbon",
-                        created.map((ribbon) => {
-                            ribbon = Object.assign({}, ribbon);
-                            this.originalRibbons[ribbon.id] = ribbon;
-                            delete ribbon.id;
-                            return ribbon;
-                        })
-                    )
-                    .then((ids) => (createdRibbonIds = ids))
-            );
-        }
-        await Promise.all(createdRibbonProms);
-
-        const localToServer = Object.assign(
-            this.ribbonsObject,
-            Object.fromEntries(
-                created.map((ribbon, index) => [
-                    ribbon.id,
-                    { ...this.ribbonsObject[ribbon.id], id: createdRibbonIds[index] },
-                ])
-            ),
-            {
-                false: {
-                    id: "",
-                },
-            }
-        );
-        const proms = [];
-        for (const ribbon of modified) {
-            const ribbonData = {
-                name: ribbon.name,
-                bg_color: ribbon.bg_color,
-                text_color: ribbon.text_color,
-                position: ribbon.position,
-            };
-            const serverId = localToServer[ribbon.id]?.id || ribbon.id;
-            proms.push(this.services.orm.write("product.ribbon", [serverId], ribbonData));
-            this.originalRibbons[ribbon.id] = Object.assign({}, ribbon);
-        }
-
-        if (deletedIds.length > 0) {
-            proms.push(this.services.orm.unlink("product.ribbon", deletedIds));
-        }
-
-        await Promise.all(proms);
-
-        // Building the final template to ribbon-id map
-        const finalTemplateRibbons = this.productTemplatesRibbons.reduce(
-            (acc, { templateId, ribbonId }) => {
-                acc[templateId] = ribbonId;
-                return acc;
-            },
-            {}
-        );
-        // Inverting the relationship so that we have all templates that have the same ribbon to reduce RPCs
-        const ribbonTemplates = {};
-        for (const templateId in finalTemplateRibbons) {
-            const ribbonId = finalTemplateRibbons[templateId];
-            if (!ribbonTemplates[ribbonId]) {
-                ribbonTemplates[ribbonId] = [];
-            }
-            ribbonTemplates[ribbonId].push(parseInt(templateId));
-        }
-
-        const promises = [];
-        for (const ribbonId in ribbonTemplates) {
-            const templateIds = ribbonTemplates[ribbonId];
-            const parsedId = parseInt(ribbonId);
-            const validRibbonId = currentIds.includes(parsedId) ? ribbonId : false;
-            promises.push(
-                this.services.orm.write("product.template", templateIds, {
-                    website_ribbon_id: localToServer[validRibbonId]?.id || false,
-                })
-            );
-        }
-
-        return Promise.all(promises);
-    }
-
-    /**
-     * Deletes a ribbon.
-     *
-     */
-    deleteRibbon(editingElement) {
-        const ribbonId = parseInt(editingElement.dataset.ribbonId);
-        if (this.ribbonsObject[ribbonId]) {
-            this.deletedRibbonClasses += `${
-                this.ribbonPositionClasses[this.ribbonsObject[ribbonId].position]
-            } `;
-
-            const ribbonIndex = this.ribbons.indexOf(
-                this.ribbons.find((ribbon) => ribbon.id === ribbonId)
-            );
-            if (ribbonIndex >= 0) {
-                this.ribbons.splice(ribbonIndex, 1);
-            }
-            delete this.ribbonsObject[ribbonId];
-
-            // update "reactive" count to trigger rerendering the BuilderSelect component (which has the value as a t-key)
-            this.count.value++;
-        }
-
-        this.productTemplateID = parseInt(
-            editingElement
-                .querySelector('[data-oe-model="product.template"]')
-                .getAttribute("data-oe-id")
-        );
-        editingElement.dataset.ribbonId = "";
-        this.productTemplatesRibbons.push({
-            templateId: this.productTemplateID,
-            ribbonId: false,
-        });
-
-        const ribbonElement = editingElement.querySelector(".o_ribbon");
-        if (ribbonElement) {
-            ribbonElement.classList.add("d-none");
-        }
-        this._saveRibbons();
-    }
     setItemSize(x, y) {
         this.itemSize.x = x;
         this.itemSize.y = y;
@@ -296,21 +65,6 @@ class ProductsItemOptionPlugin extends Plugin {
     }
     getProductTemplateID() {
         return this.productTemplateID;
-    }
-    addProductTemplatesRibbons(value) {
-        this.productTemplatesRibbons.push(value);
-    }
-    getRibbonsObject() {
-        return this.ribbonsObject;
-    }
-    setRibbonObject(key, value) {
-        this.ribbonsObject[key] = value;
-    }
-    addRibbon(value) {
-        this.ribbons.push(value);
-    }
-    getRibbons() {
-        return this.ribbons;
     }
 }
 
@@ -368,131 +122,6 @@ export class ChangeSequenceAction extends BuilderAction {
             product_id: this.productItemPlugin.getProductTemplateID(),
             sequence: value,
         });
-    }
-}
-export class SetRibbonAction extends BuilderAction {
-    static id = "setRibbon";
-    static dependencies = ["productsItemOptionPlugin"];
-    setup() {
-        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
-    }
-    isApplied({ editingElement, value }) {
-        return (parseInt(editingElement.dataset.ribbonId) || "") === value;
-    }
-    apply({ isPreviewing, editingElement, value }) {
-        this.productItemPlugin.setProductTemplateID(
-            parseInt(
-                editingElement
-                    .querySelector('[data-oe-model="product.template"]')
-                    .getAttribute("data-oe-id")
-            )
-        );
-        const ribbonId = value;
-        this.productItemPlugin.addProductTemplatesRibbons({
-            templateId: this.productItemPlugin.getProductTemplateID(),
-            ribbonId: ribbonId,
-        });
-
-        const ribbon = this.productItemPlugin.getRibbonsObject()[ribbonId] || {
-            id: "",
-            name: "",
-            bg_color: "",
-            text_color: "",
-            position: "left",
-        };
-
-        return this.productItemPlugin.setRibbon(editingElement, ribbon, !isPreviewing);
-    }
-}
-export class CreateRibbonAction extends BuilderAction {
-    static id = "createRibbon";
-    static dependencies = ["productsItemOptionPlugin"];
-    setup() {
-        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
-    }
-    apply({ editingElement }) {
-        this.productItemPlugin.setProductTemplateID(
-            parseInt(
-                editingElement
-                    .querySelector('[data-oe-model="product.template"]')
-                    .getAttribute("data-oe-id")
-            )
-        );
-        const ribbonId = Date.now();
-        this.productItemPlugin.addProductTemplatesRibbons({
-            templateId: this.productItemPlugin.getProductTemplateID(),
-            ribbonId: ribbonId,
-        });
-        const ribbon = reactive({
-            id: ribbonId,
-            name: "Ribbon Name",
-            bg_color: "",
-            text_color: "purple",
-            position: "left",
-        });
-        this.productItemPlugin.addRibbon(ribbon);
-        this.productItemPlugin.setRibbonObject(ribbonId, ribbon);
-        return this.productItemPlugin.setRibbon(editingElement, ribbon);
-    }
-}
-export class ModifyRibbonAction extends BuilderAction {
-    static id = "modifyRibbon";
-    static dependencies = ["productsItemOptionPlugin"];
-    setup() {
-        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
-    }
-    getValue({ editingElement, params }) {
-        const field = params.mainParam;
-        const ribbonId = parseInt(editingElement.dataset.ribbonId);
-        if (!ribbonId) {
-            return;
-        }
-
-        return this.productItemPlugin.getRibbonsObject()[ribbonId][field];
-    }
-    isApplied({ editingElement, params, value }) {
-        const field = params.mainParam;
-        let ribbonId = parseInt(editingElement.dataset.ribbonId);
-        if (!ribbonId) {
-            return;
-        }
-        if (!this.productItemPlugin.getRibbonsObject()[ribbonId]) {
-            ribbonId = Object.keys(this.productItemPlugin.getRibbonsObject()).find(
-                (key) => this.productItemPlugin.getRibbonsObject()[key].id === ribbonId
-            );
-            editingElement.dataset.ribbonId = ribbonId;
-        }
-        return this.productItemPlugin.getRibbonsObject()[ribbonId][field] === value;
-    }
-    apply({ isPreviewing, editingElement, params, value }) {
-        const setting = params.mainParam;
-        const ribbonId = parseInt(editingElement.dataset.ribbonId);
-        this.productItemPlugin.getRibbonsObject()[ribbonId][setting] = value;
-
-        const ribbon = this.productItemPlugin.getRibbons().find((ribbon) => ribbon.id == ribbonId);
-        ribbon[setting] = value;
-
-        return this.productItemPlugin.setRibbon(editingElement, ribbon, !isPreviewing);
-    }
-}
-export class DeleteRibbonAction extends BuilderAction {
-    static id = "deleteRibbon";
-    static dependencies = ["productsItemOptionPlugin"];
-    setup() {
-        this.productItemPlugin = this.dependencies.productsItemOptionPlugin;
-    }
-    async apply({ editingElement }) {
-        const save = await new Promise((resolve) => {
-            this.services.dialog.add(ConfirmationDialog, {
-                body: _t("Are you sure you want to delete this ribbon?"),
-                confirm: () => resolve(true),
-                cancel: () => resolve(false),
-            });
-        });
-        if (!save) {
-            return;
-        }
-        return this.productItemPlugin.deleteRibbon(editingElement);
     }
 }
 
