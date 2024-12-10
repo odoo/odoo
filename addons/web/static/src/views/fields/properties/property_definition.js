@@ -45,6 +45,12 @@ export class PropertyDefinition extends Component {
         // prop needed by the popover service
         close: { type: Function, optional: true },
     };
+    static _propertyParametersMap = new Map([
+        ['comodel', ['many2one', 'many2many']],
+        ['domain', ['many2one', 'many2many']],
+        ['selection', ['selection']],
+        ['tags', ['tags']],
+    ]);
 
     setup() {
         this.orm = useService("orm");
@@ -219,6 +225,12 @@ export class PropertyDefinition extends Component {
         }
 
         delete propertyDefinition.comodel;
+
+        PropertyDefinition._propertyParametersMap.forEach((types, param) => {
+            if (!types.includes(propertyDefinition.type)) {
+                delete propertyDefinition[param];
+            }
+        });
 
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;

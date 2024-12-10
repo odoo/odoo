@@ -717,13 +717,13 @@ class PropertiesDefinition(Field):
 
     @classmethod
     def _validate_properties_definition(cls, properties_definition, env):
-        """Cleanup property parameters and raise an error if the property definition is not valid."""
+        """Raise an error if the property definition is not valid."""
         properties_names = set()
 
         for property_definition in properties_definition:
             for property_parameter, allowed_types in cls.PROPERTY_PARAMETERS_MAP.items():
                 if property_definition.get('type') not in allowed_types and property_parameter in property_definition:
-                    property_definition.pop(property_parameter, None)
+                    raise ValueError(f'Invalid property parameter {property_parameter!r}')
 
             property_definition_keys = set(property_definition.keys())
 
