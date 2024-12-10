@@ -70,12 +70,15 @@
         &.o-sendMessageActive {
             background-color: rgba($o-action, .75);
             opacity: 100% !important;
+            &:focus-visible {
+                outline: darken($o-action, 15%) solid 1px;
+            }
         }
         i.fa-paper-plane-o {
             transform: translate(-1px);
             scale: .85;
         }
-        &:hover {
+        &:hover, &:focus {
             opacity: 100% !important;
         }
         &:disabled {
