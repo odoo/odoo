@@ -294,17 +294,19 @@ export class Form extends Interaction {
         new FormData(this.el).forEach((value, key) => {
             formFields.push({ name: key, value: value });
         });
-        for (const inputEntry of this.el.querySelectorAll("input[type=file]:not([disabled])")) {
-            const [outerIndex, inputEl] = inputEntry;
-            for (const fileEntry of inputEl.files) {
-                const [index, file] = fileEntry;
+        let outerIndex = 0;
+        for (const inputEl of this.el.querySelectorAll("input[type=file]:not([disabled])")) {
+            let index = 0;
+            for (const file of inputEl.files) {
                 // Index field name as ajax won't accept arrays of files
                 // when aggregating multiple files into a single field value
                 formFields.push({
                     name: `${inputEl.name}[${outerIndex}][${index}]`,
                     value: file,
                 });
+                index++;
             }
+            outerIndex++;
         }
 
         // Serialize form inputs into a single object
