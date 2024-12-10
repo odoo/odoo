@@ -2,6 +2,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
+import { getTabableElements } from "@web/core/utils/ui";
 import { Interaction } from "@website/core/interaction";
 
 export class Popup extends Interaction {
@@ -30,6 +31,7 @@ export class Popup extends Interaction {
         this.registerCleanup(() => {
             this.bsModal.dispose();
         });
+        this.releaseFocus = null;
 
         this.modalShownOnClickEl = this.el.querySelector(".modal[data-display='onClick']");
         if (this.modalShownOnClickEl) {
@@ -94,6 +96,12 @@ export class Popup extends Interaction {
             return;
         }
         this.bsModal.show();
+        this.releaseFocus = this.trapFocus();
+        this.registerCleanup(() => {
+            if (this.releaseFocus) {
+                this.releaseFocus();
+            }
+        });
     }
 
     /**
@@ -124,6 +132,50 @@ export class Popup extends Interaction {
         );
     }
 
+    /**
+     * Traps the focus within the modal.
+     *
+     * @returns {Function} refocuses the element that was focused before the
+     * modal opened.
+     */
+    trapFocus() {
+        let tabableEls = getTabableElements(this.el);
+        const previouslyFocusedEl = document.activeElement || document.body;
+        if (tabableEls.length) {
+            tabableEls[0].focus();
+        } else {
+            this.el.focus();
+        }
+        // The focus should stay free for no backdrop popups.
+        if (this.el.querySelector(".s_popup_no_backdrop")) {
+            return () => previouslyFocusedEl.focus();
+        }
+        const onKeydown = (ev) => {
+            if (ev.key !== "Tab") {
+                return;
+            }
+            // Update tabableEls: they might have changed in the meantime.
+            tabableEls = getTabableElements(this.el);
+            if (!tabableEls.length) {
+                ev.preventDefault();
+                return;
+            }
+            if (!ev.shiftKey && ev.target === tabableEls[tabableEls.length - 1]) {
+                ev.preventDefault();
+                tabableEls[0].focus();
+            }
+            if (ev.shiftKey && ev.target === tabableEls[0]) {
+                ev.preventDefault();
+                tabableEls[tabableEls.length - 1].focus();
+            }
+        };
+        const removeOnKeydown = this.addListener(this.el, "keydown", onKeydown);
+        return () => {
+            removeOnKeydown();
+            previouslyFocusedEl.focus();
+        };
+    }
+
     onCloseClick() {
         this.hidePopup();
     }
@@ -145,6 +197,12 @@ export class Popup extends Interaction {
         this.el.querySelectorAll(".media_iframe_video iframe").forEach((iframeEl) => {
             iframeEl.src = "";
         });
+        if (this.releaseFocus) {
+            this.releaseFocus();
+            // Reset to avoid calling it twice. It may happen with cookie bars
+            // or in the destroy.
+            this.releaseFocus = null;
+        }
     }
 
     onShowModal() {
