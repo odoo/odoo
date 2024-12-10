@@ -103,5 +103,13 @@
             <field name="context">{'plan_mode': True}</field>
             <field name="target">new</field>
         </record>
+
+        <record id="plan_wizard_action_list" model="ir.actions.act_window">
+            <field name="name">Launch Plan</field>
+            <field name="res_model">mail.activity.schedule</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'plan_mode': True, 'from_list': True}</field>
+            <field name="target">new</field>
+        </record>
     </data>
 </odoo>
