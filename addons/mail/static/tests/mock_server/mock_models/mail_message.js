@@ -293,12 +293,6 @@ export class MailMessage extends models.ServerModel {
                 messageByPartnerId[message.author_id].push(message);
             }
         }
-        for (const [partnerId, messages] of Object.entries(messageByPartnerId)) {
-            const [partner] = this.env["res.partner"].browse(parseInt(partnerId));
-            this.env["bus.bus"]._sendone(partner, "mail.message/delete", {
-                message_ids: messages.map(({ id }) => id),
-            });
-        }
         return super.unlink(...arguments);
     }
 

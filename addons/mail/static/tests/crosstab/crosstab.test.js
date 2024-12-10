@@ -180,31 +180,3 @@ test("Remove attachment from message", async () => {
     await click(".modal-footer .btn", { text: "Ok", target: env2 });
     await contains(".o-mail-AttachmentCard", { count: 0, target: env1, text: "test.txt" });
 });
-
-test("Message delete notification", async () => {
-    const pyEnv = await startServer();
-    const messageId = pyEnv["mail.message"].create({
-        body: "Needaction message",
-        model: "res.partner",
-        res_id: serverState.partnerId,
-        needaction: true,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_type: "inbox",
-        notification_status: "sent",
-        res_partner_id: serverState.partnerId,
-    });
-    await start();
-    await openDiscuss();
-    await click("[title='Mark as Todo']");
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
-    await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
-    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
-        message_ids: [messageId],
-    });
-    await contains(".o-mail-Message", { count: 0 });
-    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
-    await contains("button", { text: "Starred", contains: [".badge", { count: 0 }] });
-});

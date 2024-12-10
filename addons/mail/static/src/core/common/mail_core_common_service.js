@@ -22,16 +22,6 @@ export class MailCoreCommon {
             const attachment = this.store["ir.attachment"].get(attachmentId);
             attachment?.delete();
         });
-        this.busService.subscribe("mail.message/delete", (payload, { id: notifId }) => {
-            for (const messageId of payload.message_ids) {
-                const message = this.store["mail.message"].get(messageId);
-                if (!message) {
-                    continue;
-                }
-                this.env.bus.trigger("mail.message/delete", { message, notifId });
-                message.delete();
-            }
-        });
         this.busService.subscribe("mail.message/toggle_star", (payload, metadata) =>
             this._handleNotificationToggleStar(payload, metadata)
         );

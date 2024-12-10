@@ -734,9 +734,6 @@ class MailMessage(models.Model):
                 elem.partner_ids & partners_with_user | elem.notification_ids.author_id
             ):
                 messages_by_partner[partner] |= elem
-        # Notify front-end of messages deletion for partners having a user
-        for partner, messages in messages_by_partner.items():
-            partner._bus_send("mail.message/delete", {"message_ids": messages.ids})
         return super().unlink()
 
     def export_data(self, fields_to_export):
