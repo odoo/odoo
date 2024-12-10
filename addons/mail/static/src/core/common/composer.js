@@ -379,27 +379,23 @@ export class Composer extends Component {
                 return {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionThread",
-                    options: suggestions.map((suggestion) => {
-                        return {
-                            label: suggestion.parent_channel_id
-                                ? `${suggestion.parent_channel_id.displayName} > ${suggestion.displayName}`
-                                : suggestion.displayName,
-                            thread: suggestion,
-                            classList: "o-mail-Composer-suggestion",
-                        };
-                    }),
+                    options: suggestions.map((suggestion) => ({
+                        label: suggestion.parent_channel_id
+                            ? `${suggestion.parent_channel_id.displayName} > ${suggestion.displayName}`
+                            : suggestion.displayName,
+                        thread: suggestion,
+                        classList: "o-mail-Composer-suggestion",
+                    })),
                 };
             case "ChannelCommand":
                 return {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionChannelCommand",
-                    options: suggestions.map((suggestion) => {
-                        return {
-                            label: suggestion.name,
-                            help: suggestion.help,
-                            classList: "o-mail-Composer-suggestion",
-                        };
-                    }),
+                    options: suggestions.map((suggestion) => ({
+                        label: suggestion.name,
+                        help: suggestion.help,
+                        classList: "o-mail-Composer-suggestion",
+                    })),
                 };
             case "mail.canned.response":
                 return {
@@ -407,14 +403,12 @@ export class Composer extends Component {
                     autoSelectFirst: false,
                     hint: _t("Tab to select"),
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
-                    options: suggestions.map((suggestion) => {
-                        return {
-                            cannedResponse: suggestion,
-                            source: suggestion.source,
-                            label: suggestion.substitution,
-                            classList: "o-mail-Composer-suggestion",
-                        };
-                    }),
+                    options: suggestions.map((suggestion) => ({
+                        cannedResponse: suggestion,
+                        source: suggestion.source,
+                        label: suggestion.substitution,
+                        classList: "o-mail-Composer-suggestion",
+                    })),
                 };
             default:
                 return props;

@@ -122,10 +122,10 @@ export class MailMessage extends models.ServerModel {
             const [data] = this._read_format(message.id, fields, false);
             const thread = message.model && this.env[message.model].browse(message.res_id)[0];
             if (thread) {
-                const thread_data = { module_icon: "/base/static/description/icon.png" };
-                if (message.model !== "discuss.channel") {
-                    thread_data.name = thread.name ?? thread.display_name;
-                }
+                const thread_data = {
+                    display_name: thread.name ?? thread.display_name,
+                    module_icon: "/base/static/description/icon.png",
+                };
                 if (for_current_user && add_followers) {
                     thread_data.selfFollower = mailDataHelpers.Store.one(
                         MailFollowers.browse(

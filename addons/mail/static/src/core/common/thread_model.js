@@ -113,6 +113,8 @@ export class Thread extends Record {
     custom_channel_name;
     /** @type {string} */
     description;
+    /** @type {string} */
+    display_name;
     displayToSelf = Record.attr(false, {
         compute() {
             return (
@@ -206,8 +208,6 @@ export class Thread extends Record {
         inverse: "threadAsNeedaction",
         sort: (message1, message2) => message1.id - message2.id,
     });
-    /** @type {string} */
-    name;
     /** @type {'open' | 'folded' | 'closed'} */
     state;
     status = "new";
@@ -292,9 +292,7 @@ export class Thread extends Record {
         const attachments = this.attachments.filter(
             (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
         );
-        attachments.sort((a1, a2) => {
-            return a2.id - a1.id;
-        });
+        attachments.sort((a1, a2) => a2.id - a1.id);
         return attachments;
     }
 
@@ -326,7 +324,7 @@ export class Thread extends Record {
     }
 
     get displayName() {
-        return this.name;
+        return this.display_name;
     }
 
     computeIsDisplayed() {

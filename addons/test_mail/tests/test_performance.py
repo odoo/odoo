@@ -1426,10 +1426,10 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ],
                             "mail.thread": self._filter_threads_fields(
                                 {
+                                    "display_name": "Test",
                                     "id": record.id,
                                     "model": "mail.test.simple",
                                     "module_icon": "/base/static/description/icon.png",
-                                    "name": "Test",
                                     "selfFollower": follower_1.id,
                                 },
                             ),
@@ -1529,10 +1529,10 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ],
                             "mail.thread": self._filter_threads_fields(
                                 {
+                                    "display_name": "Test",
                                     "id": record.id,
                                     "model": "mail.test.simple",
                                     "module_icon": "/base/static/description/icon.png",
-                                    "name": "Test",
                                     "selfFollower": follower_2.id,
                                 },
                             ),
