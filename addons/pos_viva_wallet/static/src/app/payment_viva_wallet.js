@@ -7,6 +7,10 @@ import { sprintf } from "@web/core/utils/strings";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 
+// Due to consistency issues with the webhook, we also poll
+// the status of the payment periodically as a fallback.
+const POLLING_INTERVAL_MS = 5000
+
 export class PaymentVivaWallet extends PaymentInterface {
 
     /*
@@ -112,7 +116,9 @@ export class PaymentVivaWallet extends PaymentInterface {
             "cashRegisterId": this.pos.get_cashier().name
         };
         return this._call_viva_wallet(data, 'viva_wallet_send_payment_cancel').then((data) => {
-            this._viva_wallet_handle_response(data);
+            if (data.error) {
+                this._show_error(data.error);
+            }
             return true;
         });
     }
@@ -149,6 +155,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         // we use the handle_payment_response method on the payment line
         const resolver = this.paymentLineResolvers?.[line.cid];
         if (resolver) {
+            this.paymentLineResolvers[line.cid] = null;
             resolver(isPaymentSuccessful);
         } else {
             line.handle_payment_response(isPaymentSuccessful);
@@ -166,7 +173,29 @@ export class PaymentVivaWallet extends PaymentInterface {
 
     waitForPaymentConfirmation() {
         return new Promise((resolve) => {
-            this.paymentLineResolvers[this.pending_viva_wallet_line().cid] = resolve;
+            const paymentLine = this.pending_viva_wallet_line();
+            this.paymentLineResolvers[paymentLine.cid] = resolve;
+            const intervalId = setInterval(async () => {
+                if (!this.paymentLineResolvers[paymentLine.cid]) {
+                    clearInterval(intervalId);
+                    return;
+                }
+                
+                const result = await this._call_viva_wallet(
+                    paymentLine.sessionId,
+                    'viva_wallet_get_payment_status'
+                );
+                if ('success' in result && this.paymentLineResolvers[paymentLine.cid]) {
+                    clearInterval(intervalId);
+                    if (this.isPaymentSuccessful(result)) {
+                        this.handleSuccessResponse(paymentLine, result);
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                    this.paymentLineResolvers[paymentLine.cid] = null;
+                }
+            }, POLLING_INTERVAL_MS);
         });
     }
 
