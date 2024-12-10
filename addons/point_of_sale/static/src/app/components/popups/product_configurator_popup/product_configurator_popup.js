@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, useRef, useState, useSubEnv, markup } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useRefListener, useService } from "@web/core/utils/hooks";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
@@ -211,5 +211,106 @@ export class ProductConfiguratorPopup extends Component {
             }
         });
         return attribute_value_ids.flat();
+    }
+}
+
+export class OptionalProductLine extends ProductConfiguratorPopup {
+    static template = "point_of_sale.OptionalProductLine";
+    static components = {
+        RadioProductAttribute,
+        PillsProductAttribute,
+        SelectProductAttribute,
+        ColorProductAttribute,
+        MultiProductAttribute,
+    };
+
+    static props = ["productTemplate", "disableButton"];
+
+    setup() {
+        super.setup();
+        this.state = useState({
+            ...this.state,
+            qty: 0,
+        });
+
+        onMounted(() => {
+            this.env.product_lines.push(this);
+            this.computeProductProduct();
+        });
+    }
+    getMarkupPublicDescription(product) {
+        return product.public_description ? markup(product.public_description) : "";
+    }
+    changeQuantity(increase) {
+        const currentQty = this.state.qty;
+        if (increase) {
+            this.state.qty = currentQty + 1;
+        } else {
+            this.state.qty = currentQty - 1;
+        }
+        this.props.disableButton();
+    }
+    onInputChangeQuantity(quantity) {
+        quantity = parseInt(quantity);
+        this.state.qty = quantity >= 0 ? quantity : 0;
+        this.props.disableButton();
+    }
+
+    async getValue() {
+        const values = {
+            product_tmpl_id: this.props.productTemplate,
+            product_id: this.state.product || this.props.productTemplate.product_variant_ids[0],
+            qty: this.state.qty,
+            price_extra: 0,
+        };
+        const configurableData = await this.pos.processConfigurableData(
+            this.computePayload(),
+            values,
+            this.props.productTemplate
+        );
+        Object.assign(values, configurableData);
+        return values;
+    }
+}
+
+export class OptionalProductPopup extends Component {
+    static template = "point_of_sale.OptionalProductPopup";
+    static components = {
+        OptionalProductLine,
+        Dialog,
+    };
+
+    static props = ["close", "productTemplate"];
+
+    setup() {
+        useSubEnv({
+            product_lines: [],
+        });
+        this.pos = usePos();
+        this.state = useState({
+            payload: this.env.product_lines,
+            buttonDisabled: true,
+        });
+    }
+    cancel() {
+        this.props.close();
+    }
+    disableButton() {
+        this.state.buttonDisabled = !this.state.payload.some((line) => line.state.qty);
+    }
+    confirm() {
+        this.state.payload.forEach(async (payload) => {
+            const payloadVlaue = await payload.getValue();
+            const configure = payloadVlaue.product_tmpl_id.isCombo() ? true : false;
+            if (payloadVlaue.qty > 0) {
+                await this.pos.addLineToCurrentOrder(payloadVlaue, {}, configure);
+            }
+            if (payloadVlaue.product_tmpl_id.isCombo()) {
+                for (const line of this.pos.getOrder().getSelectedOrderline().combo_line_ids) {
+                    line.setQuantity(payloadVlaue.qty, true);
+                }
+            }
+        });
+        this.props.close();
     }
 }
