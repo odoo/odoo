@@ -357,6 +357,16 @@ class TestDomainComplement(TransactionExpressionCase):
         self._search(Model, [('number2', '<', 1)])
         self._search(Model, [('number2', '<=', 1)])
 
+    def test_inequalities_char(self):
+        Model = self.env['test_new_api.empty_char']
+        Model.create([{}])
+        Model.create([{'name': n} for n in (False, '', 'hello', 'world')])
+        self._search(Model, [('name', '>', 'a')])
+        self._search(Model, [('name', '>', 'z')])
+        self._search(Model, [('name', '<', 'k')])
+        self._search(Model, [('name', '<=', 'k')])
+        self._search(Model, [('name', '<', '')])
+
 
 class TestDomainOptimize(TransactionCase):
     number_domain = Domain('number', '>', 5)
