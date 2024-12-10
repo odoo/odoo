@@ -1,16 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import random
-import threading
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, modules, tools
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
-from odoo.exceptions import MissingError
 
 
 _logger = logging.getLogger(__name__)
@@ -142,7 +139,7 @@ class EventMail(models.Model):
         """ Main scheduler method when running in event-based mode aka
         'after_event' or 'before_event'. This is a global communication done
         once i.e. we do not track each registration individually. """
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
         ) or 50  # be sure to not have 0, as otherwise no iteration is done
@@ -206,7 +203,7 @@ class EventMail(models.Model):
         self.ensure_one()
         context_registrations = self.env.context.get('event_mail_registration_ids')
 
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
         ) or 50  # be sure to not have 0, as otherwise no iteration is done
@@ -437,6 +434,6 @@ You receive this email because you are:
                 self.env.invalidate_all()
                 self._warn_template_error(scheduler, e)
             else:
-                if autocommit and not getattr(threading.current_thread(), 'testing', False):
+                if autocommit and not modules.module.current_test:
                     self.env.cr.commit()
         return True

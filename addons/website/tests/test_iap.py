@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import threading
 from unittest.mock import patch
 
 import odoo.tests
+from odoo import modules
 
 @odoo.tests.tagged('website_nightly', '-standard')
 class TestIap(odoo.tests.HttpCase):
@@ -12,7 +12,7 @@ class TestIap(odoo.tests.HttpCase):
         supported by the configurator."""
         def _get_industries(lang):
             # Calls to IAP are disabled during testing, we need to remove the testing flag to let it perform the calls
-            with patch.object(threading.current_thread(), 'testing', False):
+            with patch.object(modules.module, 'current_test', False):
                 industries = self.env['website']._website_api_rpc('/api/website/1/configurator/industries', {'lang': lang})['industries']
             return {industry['id']: industry['label'] for industry in industries}
 

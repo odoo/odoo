@@ -876,6 +876,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         unlinked_mails = set()
 
         with self.assertQueryCount(admin=30, employee=30), \
+             self.mock_mail_gateway(), \
              patch.object(type(self.env['mail.mail']), 'unlink', _patched_unlink):
             self.env['mail.mail'].sudo().browse(mails.ids).send()
 
