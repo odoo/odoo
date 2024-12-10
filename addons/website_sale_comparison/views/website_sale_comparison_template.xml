@@ -3,10 +3,10 @@
 
     <template id="add_to_compare" inherit_id="website_sale.products_item" name="Comparison List" priority="22">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
-            <t t-set="categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
+            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <button
-                t-if="product_variant_id and categories"
+                t-if="product_variant_id and attrib_categories"
                 type="button"
                 role="button"
                 class="d-none d-md-inline-block btn btn-light o_add_compare"
@@ -22,9 +22,9 @@
 
     <template id="product_add_to_compare" name='Add to comparison in product page' inherit_id="website_sale.product" priority="8">
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
-            <t t-set="categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
+            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <button t-if="product_variant_id and categories"
+            <button t-if="product_variant_id and attrib_categories"
                 type="button"
                 role="button"
                 class="d-none d-md-block btn btn-link px-0 o_add_compare_dyn"
@@ -39,8 +39,8 @@
     <template id="product_attributes_body" inherit_id="website_sale.product" name="Product attributes table">
         <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
         <xpath expr="//div[@id='product_full_description']" position="after">
-            <t t-set="categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
-            <t t-if="categories">
+            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
+            <t t-if="attrib_categories">
                 <section class="pt32 pb32" id="product_full_spec">
                     <div class="container">
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -48,7 +48,7 @@
                         </div>
                         <div id="product_specifications">
                             <div class="row">
-                                <t t-foreach="categories" t-as="category">
+                                <t t-foreach="attrib_categories" t-as="category">
                                     <div class="col-lg-6">
                                         <t t-call="website_sale_comparison.specifications_table"/>
                                     </div>
@@ -90,7 +90,7 @@
     >
         <xpath expr="//div[@id='more_information_accordion_item']" position="before">
             <t t-if="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()">
-                <t t-foreach="categories" t-as="category">
+                <t t-foreach="attrib_categories" t-as="category">
                     <div class="accordion-item">
                         <div class="accordion-header my-0 h6">
                             <button
@@ -125,7 +125,7 @@
 
     <template id="specifications_table" name="Specifications Table">
         <table t-attf-class="table {{is_accordion and 'table-sm mb-0'}}">
-            <t t-if="len(categories) > 1 and not is_accordion">
+            <t t-if="len(attrib_categories) > 1 and not is_accordion">
                 <tr>
                     <th class="text-start" colspan="2">
                         <span t-if="category" t-field="category.name"/>
@@ -134,7 +134,7 @@
                 </tr>
             </t>
             <tr
-                t-foreach="categories[category].filtered(lambda l: len(l.value_ids) > 1)"
+                t-foreach="attrib_categories[category].filtered(lambda l: len(l.value_ids) > 1)"
                 t-as="ptal"
             >
                 <t
@@ -152,7 +152,7 @@
             </tr>
             <t
                 t-set="single_value_attributes"
-                t-value="categories[category]._prepare_single_value_for_display()"
+                t-value="attrib_categories[category]._prepare_single_value_for_display()"
             />
             <tr t-foreach="single_value_attributes" t-as="attribute">
                 <t
@@ -180,10 +180,10 @@
                     <section class="container">
                         <h3>Compare Products</h3>
                         <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
-                            <t t-set="categories" t-value="products._prepare_categories_for_display()"/>
+                            <t t-set="attrib_categories" t-value="products._prepare_categories_for_display()"/>
                             <thead>
                                 <tr>
-                                    <td t-if="len(categories)" class='o_ws_compare_image td-top-left border-bottom-0'/>
+                                    <td t-if="len(attrib_categories)" class='o_ws_compare_image td-top-left border-bottom-0'/>
                                     <td t-foreach="products" t-as="product" class="o_ws_compare_image position-relative border-bottom-0">
                                         <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
                                             <strong>x</strong>
@@ -194,7 +194,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td t-if="len(categories)" class='td-top-left border-top-0'/>
+                                    <td t-if="len(attrib_categories)" class='td-top-left border-top-0'/>
                                     <td t-foreach="products" t-as="product" class="border-top-0">
                                         <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
                                         <div class='product_summary'>
@@ -246,16 +246,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <t t-foreach="categories" t-as="category">
-                                    <t t-if="len(categories) &gt; 1">
+                                <t t-foreach="attrib_categories" t-as="category">
+                                    <t t-if="len(attrib_categories) &gt; 1">
                                         <tr class="clickable" data-bs-toggle="collapse" t-att-data-bs-target="'.o_ws_category_%d' % category.id">
                                             <th class="text-start" t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span t-if="category" t-field="category.name"/><span t-else="">Uncategorized</span></th>
                                         </tr>
                                     </t>
-                                    <tr t-foreach="categories[category]" t-as="attribute" t-att-class="'collapse show o_ws_category_%d' % category.id">
+                                    <tr t-foreach="attrib_categories[category]" t-as="attribute" t-att-class="'collapse show o_ws_category_%d' % category.id">
                                         <td><span t-field="attribute.name"/></td>
-                                        <td t-foreach="categories[category][attribute]" t-as="product">
-                                            <t t-foreach="categories[category][attribute][product]" t-as="ptav">
+                                        <td t-foreach="attrib_categories[category][attribute]" t-as="product">
+                                            <t t-foreach="attrib_categories[category][attribute][product]" t-as="ptav">
                                                 <span t-field="ptav.name"/><t t-if="not ptav_last">, </t>
                                             </t>
                                         </td>
