@@ -213,3 +213,96 @@ export class ProductConfiguratorPopup extends Component {
         return attribute_value_ids.flat();
     }
 }
+
+export class OptionalProductLine extends ProductConfiguratorPopup {
+    static template = "point_of_sale.OptionalProductLine";
+    static components = {
+        RadioProductAttribute,
+        PillsProductAttribute,
+        SelectProductAttribute,
+        ColorProductAttribute,
+        MultiProductAttribute,
+    };
+
+    static props = ["productTemplate", "isButtonDisable"];
+
+    setup() {
+        super.setup();
+        this.state = useState({
+            ...this.state,
+            qty: 0,
+        });
+
+        onMounted(() => {
+            this.env.product_lines.push(this);
+            this.computeProductProduct();
+        });
+    }
+    changeQuantity(increase) {
+        this.state.qty += increase ? 1 : -1;
+        this.props.isButtonDisable();
+    }
+    onInputChangeQuantity(quantity) {
+        quantity = parseInt(quantity);
+        this.state.qty = quantity >= 0 ? quantity : 0;
+        this.props.isButtonDisable();
+    }
+
+    async getValue() {
+        const values = {
+            product_tmpl_id: this.props.productTemplate,
+            product_id: this.state.product || this.props.productTemplate.product_variant_ids[0],
+            qty: this.state.qty,
+            price_extra: 0,
+        };
+        const configurableData = await this.pos.processConfigurableData(
+            this.computePayload(),
+            values,
+            this.props.productTemplate
+        );
+        Object.assign(values, configurableData);
+        return values;
+    }
+}
+
+export class OptionalProductPopup extends Component {
+    static template = "point_of_sale.OptionalProductPopup";
+    static components = {
+        OptionalProductLine,
+        Dialog,
+    };
+
+    static props = ["close", "productTemplate"];
+
+    setup() {
+        useSubEnv({
+            product_lines: [],
+        });
+        this.pos = usePos();
+        this.state = useState({
+            payload: this.env.product_lines,
+            buttonDisabled: true,
+        });
+    }
+    cancel() {
+        this.props.close();
+    }
+    isButtonDisable() {
+        this.state.buttonDisabled = !this.state.payload.some((line) => line.state.qty);
+    }
+    confirm() {
+        this.state.payload.forEach(async (payload) => {
+            const payloadVlaue = await payload.getValue();
+            const configure = payloadVlaue.product_tmpl_id.isCombo() ? true : false;
+            if (payloadVlaue.qty > 0) {
+                await this.pos.addLineToCurrentOrder(payloadVlaue, {}, configure);
+            }
+            if (payloadVlaue.product_tmpl_id.isCombo()) {
+                for (const line of this.pos.getOrder().getSelectedOrderline().combo_line_ids) {
+                    line.setQuantity(payloadVlaue.qty, true);
+                }
+            }
+        });
+        this.props.close();
+    }
+}

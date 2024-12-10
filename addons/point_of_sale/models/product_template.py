@@ -21,6 +21,13 @@ class ProductTemplate(models.Model):
         string="Product Description",
         translate=True
     )
+    pos_optional_product_ids = fields.Many2many(
+        comodel_name='product.template',
+        relation='pos_product_optional_rel',
+        column1='src_id',
+        column2='dest_id',
+        string="POS Optional Products",
+        help="Optional products are suggested when customers add items to their cart (e.g., adding a burger suggests cold drinks or fries).")
 
     def create_product_variant_from_pos(self, attribute_value_ids, config_id):
         """ Create a product variant from the POS interface. """
@@ -50,7 +57,8 @@ class ProductTemplate(models.Model):
         return [
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
-            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description'
+            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description',
+            'pos_optional_product_ids'
         ]
 
     def _load_pos_data(self, data):
@@ -247,10 +255,16 @@ class ProductTemplate(models.Model):
                          'values': [{'name': attr_name, 'search': f'{self.name} {attr_name}'} for attr_name in attribute_line.value_ids.mapped('name')]}
                         for attribute_line in self.attribute_line_ids]
 
+        # optional products
+        optional_products = [
+            {'name': p.name, 'price': p.list_price} for p in self.pos_optional_product_ids
+        ]
+
         return {
             'all_prices': all_prices,
             'pricelists': pricelist_list,
             'warehouses': warehouse_list,
             'suppliers': supplier_list,
-            'variants': variant_list
+            'variants': variant_list,
+            'optional_products': optional_products,
         }

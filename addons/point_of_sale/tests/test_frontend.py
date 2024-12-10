@@ -629,7 +629,20 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ProductConfiguratorTour')
 
-    def test_05_ticket_screen(self):
+    def test_05_optional_product(self):
+        # optional product in pos
+        self.desk_pad.write({'pos_optional_product_ids': [
+            Command.set([ self.small_shelf.id ])
+        ]})
+
+        self.letter_tray.write({'pos_optional_product_ids': [
+            Command.set([ self.configurable_chair.id ])
+        ]})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('OptionalProductTour')
+
+    def test_06_ticket_screen(self):
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('account.group_account_invoice').id),

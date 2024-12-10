@@ -22,6 +22,7 @@ import {
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
+import { OptionalProductPopup } from "@point_of_sale/app/components/popups/product_configurator_popup/product_configurator_popup";
 
 const { DateTime } = luxon;
 
@@ -381,7 +382,12 @@ export class ProductScreen extends Component {
     }
 
     async addProductToOrder(product) {
-        await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, {});
+        const line = await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, {});
+        if (line?.product_id?.product_tmpl_id?.pos_optional_product_ids?.length) {
+            this.dialog.add(OptionalProductPopup, {
+                productTemplate: product,
+            });
+        }
     }
 
     async onProductInfoClick(productTemplate) {
