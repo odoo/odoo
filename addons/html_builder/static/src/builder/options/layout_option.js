@@ -4,13 +4,11 @@ import { defaultOptionComponents } from "../components/defaultComponents";
 import { useDomState } from "../builder_helpers";
 import { SpacingOption } from "./spacing_option";
 import { AddElementOption } from "./add_element_option";
-
-// TODO to import in html_builder
 import {
-    _convertToNormalColumn,
-    _reloadLazyImages,
-    _toggleGridMode,
-} from "@web_editor/js/common/grid_layout_utils";
+    convertToNormalColumn,
+    reloadLazyImages,
+    toggleGridMode,
+} from "@html_builder/builder/utils/grid_layout_utils";
 
 export class LayoutOption extends Component {
     static template = "html_builder.LayoutOption";
@@ -35,7 +33,7 @@ export class LayoutOption extends Component {
             // Prevent toggling grid mode twice.
             return;
         }
-        _toggleGridMode(this.env.getEditingElement().querySelector(".container"));
+        toggleGridMode(this.env.getEditingElement().querySelector(".container"));
         this.env.editor.shared.history.addStep();
     }
     setColumnLayout() {
@@ -52,9 +50,9 @@ export class LayoutOption extends Component {
 
         for (const columnEl of columnEls) {
             // Reloading the images.
-            _reloadLazyImages(columnEl);
+            reloadLazyImages(columnEl);
             // Removing the grid properties.
-            _convertToNormalColumn(columnEl);
+            convertToNormalColumn(columnEl);
         }
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;
