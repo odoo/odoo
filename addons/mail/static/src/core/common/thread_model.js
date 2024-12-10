@@ -360,7 +360,7 @@ export class Thread extends Record {
     newestMessage = Record.one("mail.message", {
         inverse: "threadAsNewest",
         compute() {
-            return this.messages.findLast((msg) => !msg.isEmpty);
+            return this.messages.at(-1);
         },
     });
 
@@ -384,12 +384,6 @@ export class Thread extends Record {
         },
     });
 
-    newestPersistentNotEmptyOfAllMessage = Record.one("mail.message", {
-        compute() {
-            return this.newestPersistentAllMessages.find((message) => !message.isEmpty);
-        },
-    });
-
     get oldestPersistentMessage() {
         return this.messages.find((msg) => Number.isInteger(msg.id));
     }
@@ -404,7 +398,7 @@ export class Thread extends Record {
     }
 
     get isEmpty() {
-        return !this.messages.some((message) => !message.isEmpty);
+        return this.messages.length === 0;
     }
 
     get nonEmptyMessages() {

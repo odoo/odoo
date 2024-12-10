@@ -6,7 +6,6 @@ from . import test_ir_ui_menu
 from . import test_link_preview
 from . import test_mail_activity
 from . import test_mail_composer
-from . import test_mail_message
 from . import test_mail_message_translate
 from . import test_mail_render
 from . import test_mail_template

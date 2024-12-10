@@ -74,7 +74,7 @@ test("new message opens the @ command palette", async () => {
     await contains(".o_command_palette input[placeholder='Search a conversation']");
 });
 
-test("channel preview ignores empty message", async () => {
+test("channel preview show deleted messages", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -96,7 +96,9 @@ test("channel preview ignores empty message", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "before last" });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem-text", { text: "Demo: before last" });
+    await contains(".o-mail-NotificationItem-text", {
+        text: "Demo: This message has been removed",
+    });
 });
 
 test("channel preview ignores transient message", async () => {
