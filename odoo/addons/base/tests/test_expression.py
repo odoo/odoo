@@ -407,7 +407,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         # more intuitive that the union returns all the records, and that
         # a domain like ('parent_id', 'not in', [0]) will return all
         # the records. For instance, if you perform a search for the companies
-        # that don't have OpenERP has a parent company, you expect to find,
+        # that don't have OpenERP as a parent company, you expect to find,
         # among others, the companies that don't have parent company.
         #
 

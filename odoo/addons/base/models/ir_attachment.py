@@ -25,7 +25,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IrAttachment(models.Model):
-    """Attachments are used to link binary files or url to any openerp document.
+    """Attachments are used to link binary files or url to any Odoo document.
 
     External attachment storage
     ---------------------------

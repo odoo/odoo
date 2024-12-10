@@ -24,7 +24,7 @@ class test_inherits(common.TransactionCase):
         # This test checks if the new added column of a parent model
         # is accessible from the child model. This test has been written
         # to verify the purpose of the inheritance computing of the class
-        # in the openerp.osv.orm._build_model.
+        # in the odoo.osv.orm._build_model.
         mother = self.env['test.inherit.mother']
         daughter = self.env['test_inherit_daughter']
 

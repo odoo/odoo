@@ -154,7 +154,7 @@ class IrCron(models.Model):
         except BadModuleState:
             _logger.warning('Skipping database %s because of modules to install/upgrade/remove.', db_name)
         except psycopg2.errors.UndefinedTable:
-            # The table ir_cron does not exist; this is probably not an OpenERP database.
+            # The table ir_cron does not exist; this is probably not an Odoo database.
             _logger.warning('Tried to poll an undefined table on database %s.', db_name)
         except psycopg2.ProgrammingError as e:
             raise

@@ -23,7 +23,7 @@ from odoo.tools.misc import SENTINEL
 from . import db as modules_db
 from .graph import Graph
 from .migration import MigrationManager
-from .module import adapt_version, initialize_sys_path, load_openerp_module
+from .module import adapt_version, initialize_sys_path, load_odoo_module
 from .registry import Registry
 
 if typing.TYPE_CHECKING:
@@ -206,7 +206,7 @@ def load_module_graph(
             if package.name != 'base':
                 env.flush_all()
 
-        load_openerp_module(package.name)
+        load_odoo_module(package.name)
 
         if new_install:
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]

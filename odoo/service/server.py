@@ -1248,7 +1248,7 @@ server_phoenix = False
 def load_server_wide_modules():
     for m in config['server_wide_modules']:
         try:
-            odoo.modules.module.load_openerp_module(m)
+            odoo.modules.module.load_odoo_module(m)
         except Exception:
             msg = ''
             if m == 'web':
@@ -1258,7 +1258,7 @@ Maybe you forgot to add those addons in your addons_path configuration."""
             _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
 def _reexec(updated_modules=None):
-    """reexecute openerp-server process with (nearly) the same arguments"""
+    """reexecute odoo-server process with (nearly) the same arguments"""
     if osutil.is_running_as_nt_service():
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)

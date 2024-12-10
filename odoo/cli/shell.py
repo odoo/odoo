@@ -127,7 +127,6 @@ class Shell(Command):
 
     def shell(self, dbname):
         local_vars = {
-            'openerp': odoo,
             'odoo': odoo,
         }
         if dbname:

@@ -240,7 +240,7 @@ def init_logger():
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
 
-    # Check that handler.stream has a fileno() method: when running OpenERP
+    # Check that handler.stream has a fileno() method: when running Odoo
     # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
     # which has no fileno() method. (mod_wsgi.Log is what is being bound to
     # sys.stderr when the logging.StreamHandler is being constructed above.)

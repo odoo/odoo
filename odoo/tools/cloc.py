@@ -12,7 +12,6 @@ from odoo.tools.config import config
 VERSION = 1
 DEFAULT_EXCLUDE = [
     "__manifest__.py",
-    "__openerp__.py",
     "tests/**/*",
     "static/lib/**/*",
     "static/tests/**/*",

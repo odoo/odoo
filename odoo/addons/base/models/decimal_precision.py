@@ -71,4 +71,3 @@ class DecimalPrecision(models.Model):
 dp = sys.modules['odoo.addons.base.models.decimal_precision']
 odoo.addons.decimal_precision = dp
 sys.modules['odoo.addons.decimal_precision'] = dp
-sys.modules['openerp.addons.decimal_precision'] = dp

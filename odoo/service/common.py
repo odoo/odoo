@@ -35,13 +35,13 @@ def exp_version():
     return RPC_VERSION_1
 
 def exp_about(extended=False):
-    """Return information about the OpenERP Server.
+    """Return information about the Odoo Server.
 
     @param extended: if True then return version info
     @return string if extended is False else tuple
     """
 
-    info = _('See http://openerp.com')
+    info = _('See https://odoo.com')
 
     if extended:
         return info, odoo.release.version

@@ -18,7 +18,7 @@ from .module import (
     get_resource_from_path,
     initialize_sys_path,
     get_manifest,
-    load_openerp_module,
+    load_odoo_module,
 )
 
 from . import registry

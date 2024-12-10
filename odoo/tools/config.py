@@ -184,7 +184,7 @@ class configmanager:
         group.add_option("-c", "--config", dest="config", type='path', file_loadable=False,
                          help="specify alternate config file")
         group.add_option("-s", "--save", action="store_true", dest="save", my_default=False, file_loadable=False,
-                         help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
+                         help="save configuration to ~/.odoorc")
         group.add_option("-i", "--init", dest="init", type='comma', metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update", type='comma',  metavar="MODULE,...", my_default=[], file_loadable=False,
@@ -460,14 +460,10 @@ class configmanager:
 
         if rcfilepath := os.getenv('ODOO_RC'):
             pass
-        elif rcfilepath := os.getenv('OPENERP_SERVER'):
-            self._warn("Since ages ago, the OPENERP_SERVER environment variable has been replaced by ODOO_RC", DeprecationWarning)
         elif os.name == 'nt':
             rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.odoorc')):
             pass
-        elif os.path.isfile(rcfilepath := os.path.expanduser('~/.openerp_serverrc')):
-            self._warn("Since ages ago, the ~/.openerp_serverrc file has been replaced by ~/.odoorc", DeprecationWarning)
         else:
             rcfilepath = '~/.odoorc'
         self._default_options['config'] = self._normalize(rcfilepath)
@@ -501,7 +497,7 @@ class configmanager:
         """ Parse the configuration file (if any) and the command-line
         arguments.
 
-        This method initializes odoo.tools.config and openerp.conf (the
+        This method initializes odoo.tools.config and odoo.conf (the
         former should be removed in the future) with library-wide
         configuration values.
 

@@ -96,7 +96,7 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     # To correct this, we add a very small epsilon value, scaled to the
     # the order of magnitude of the value, to tip the tie-break in the right
     # direction.
-    # Credit: discussion with OpenERP community members on bug 882036
+    # Credit: discussion with Odoo community members on bug 882036
     epsilon_magnitude = math.log2(abs(normalized_value))
     # `2**(epsilon_magnitude - 52)` would be the minimal size, but we increase it to be
     # more tolerant of inaccuracies accumulated after multiple floating point operations

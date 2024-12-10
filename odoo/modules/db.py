@@ -168,7 +168,7 @@ def has_unaccent(cr: BaseCursor) -> FunctionStatus:
     """ Test whether the database has function 'unaccent' and return its status.
 
     The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
-    module but any similar function will be picked by OpenERP.
+    module but any similar function will be picked by Odoo.
 
     :rtype: FunctionStatus
     """

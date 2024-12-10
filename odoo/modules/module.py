@@ -45,7 +45,7 @@ __all__ = [
     "get_modules_with_version",
     "get_resource_from_path",
     "initialize_sys_path",
-    "load_openerp_module",
+    "load_odoo_module",
 ]
 
 MANIFEST_NAMES = ['__manifest__.py']
@@ -104,7 +104,7 @@ TYPED_FIELD_DEFINITION_RE = re.compile(r'''
 _logger = logging.getLogger(__name__)
 
 current_test: bool = False
-"""Indicates whteher we are in a test mode"""
+"""Indicates whether we are in a test mode"""
 
 
 class UpgradeHook:
@@ -359,8 +359,8 @@ def _get_manifest_cached(module, mod_path=None):
     return load_manifest(module, mod_path)
 
 
-def load_openerp_module(module_name: str) -> None:
-    """ Load an OpenERP module, if not already loaded.
+def load_odoo_module(module_name: str) -> None:
+    """ Load an Odoo module, if not already loaded.
 
     This loads the module and register all of its models, thanks to either
     the MetaModel metaclass, or the explicit instantiation of the model.

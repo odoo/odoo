@@ -590,9 +590,9 @@ form: module.record_id""" % (xml_id,)
         }
 
     def parse(self, de):
-        assert de.tag in self.DATA_ROOTS, "Root xml tag must be <openerp>, <odoo> or <data>."
+        assert de.tag in self.DATA_ROOTS, "Root xml tag must be <odoo> or <data>."
         self._tag_root(de)
-    DATA_ROOTS = ['odoo', 'data', 'openerp']
+    DATA_ROOTS = ['odoo', 'data']
 
 def convert_file(env, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
     if pathname is None:

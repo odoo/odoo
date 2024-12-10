@@ -6,7 +6,7 @@ safe_eval module - methods intended to provide more restricted alternatives to
                    evaluate simple and/or untrusted code.
 
 Methods in this module are typically used as alternatives to eval() to parse
-OpenERP domain strings, conditions and expressions, mostly based on locals
+Odoo domain strings, conditions and expressions, mostly based on locals
 condition/math builtins.
 """
 
@@ -346,7 +346,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     objects directly provided in context.
 
     This can be used to e.g. evaluate
-    an OpenERP domain expression from an untrusted source.
+    an Odoo domain expression from an untrusted source.
 
     :param filename: optional pseudo-filename for the compiled expression,
                      displayed for example in traceback frames

@@ -29,7 +29,7 @@ an infix notation, and the available operators, and possible left and
 right operands differ with those of the previous level. Here is a
 possible term::
 
-    ('company_id.name', '=', 'OpenERP')
+    ('company_id.name', '=', 'Odoo')
 
 The left and right operand don't have the same possible values. The
 left operand is field name (related to the model for which the domain
@@ -42,10 +42,10 @@ operator can be used, and thus the right operand should be a list.
 
 Note: the non-uniform syntax could have been more uniform, but this
 would hide an important limitation of the domain syntax. Say that the
-term representation was ['=', 'company_id.name', 'OpenERP']. Used in a
+term representation was ['=', 'company_id.name', 'Odoo']. Used in a
 complete domain, this would look like::
 
-    ['!', ['=', 'company_id.name', 'OpenERP']]
+    ['!', ['=', 'company_id.name', 'Odoo']]
 
 and you would be tempted to believe something like this would be
 possible::
@@ -106,7 +106,7 @@ You can check unaccent is working:
 
     > psql9 <database> -c"select unaccent('hélène')"
 
-Finally, to instruct OpenERP to really use the unaccent function, you have to
+Finally, to instruct Odoo to really use the unaccent function, you have to
 start the server specifying the ``--unaccent`` flag.
 
 """

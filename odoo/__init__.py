@@ -2,7 +2,7 @@
 # ruff: noqa: E402, F401
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-""" OpenERP core library."""
+""" Odoo core library."""
 
 # ----------------------------------------------------------
 # odoo must be a namespace package for odoo.addons to become one too

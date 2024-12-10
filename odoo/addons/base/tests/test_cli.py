@@ -115,7 +115,6 @@ class TestCommand(BaseCase):
         self.assertEqual(shell.stdout.read().splitlines(), [
             Like("No environment set..."),
             Like("odoo: <module 'odoo' from '/.../odoo/__init__.py'>"),
-            Like("openerp: <module 'odoo' from '/.../odoo/__init__.py'>"),
             ">>> Hello from Python!",
             '>>> '
         ])

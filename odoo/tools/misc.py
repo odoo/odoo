@@ -469,7 +469,7 @@ def get_iso_codes(lang: str) -> str:
 
 
 def scan_languages() -> list[tuple[str, str]]:
-    """ Returns all languages supported by OpenERP for translation
+    """ Returns all languages supported by Odoo for translation
 
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
