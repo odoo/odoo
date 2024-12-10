@@ -2730,82 +2730,70 @@ const VisibilityPageOptionUpdate = options.Class.extend({
     },
 });
 
-options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
-    pageOptionName: 'header_visible',
-    showOptionWidgetName: 'regular_header_visibility_opt',
+const BaseVisibilityOption = VisibilityPageOptionUpdate.extend({
+    // Define common attributes that subclasses can override
+    pageOptionName: null,  // To be defined by subclasses
+    overlayOptionName: null,  // To be defined by subclasses
+    showOptionWidgetName: null,  // To be defined by subclasses
 
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Handles the switching between 3 differents visibilities of the header.
-     *
-     * @see this.selectClass for params
-     */
     async visibility(previewMode, widgetValue, params) {
         await this._super(...arguments);
         await this._changeVisibility(widgetValue);
-        // TODO this is hacky but changing the header visibility may have an
-        // effect on features like FullScreenHeight which depend on viewport
-        // size so we simulate a resize.
+
+        // Simulate resize to update dependent features
         const targetWindow = this.$target[0].ownerDocument.defaultView;
-        targetWindow.dispatchEvent(new targetWindow.Event('resize'));
+        targetWindow.dispatchEvent(new targetWindow.Event("resize"));
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
     async _changeVisibility(widgetValue) {
-        const show = (widgetValue !== 'hidden');
-        if (!show) {
+        if (widgetValue === "hidden") {
             return;
         }
-        const transparent = (widgetValue === 'transparent');
+        const transparent = widgetValue === "transparent";
+
+        
+        // Toggle overlay option
         await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_overlay', value: transparent}],
-                onSuccess: () => resolve(),
+            this.trigger_up("action_demand", {
+                actionName: "toggle_page_option",
+                params: [{ name: this.overlayOptionName, value: transparent }],
+                onSuccess: resolve,
                 onFailure: reject,
             });
         });
-        if (!transparent) {
-            return;
+        // Additional changes for transparent state can be added by subclasses
+        if (transparent) {
+            await this._handleTransparentState();
         }
-        // TODO should be able to change both options at the same time, as the
-        // `params` list suggests.
-        await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_color', value: ''}],
-                onSuccess: () => resolve(),
-                onFailure: reject,
-            });
-        });
-        await new Promise(resolve => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_text_color', value: ''}],
-                onSuccess: () => resolve(),
-            });
-        });
+        await this._calcBreadCrumbHeight();
     },
-    /**
-     * @override
-     */
+
+    async _calcBreadCrumbHeight() {
+        // this is to maintain header and breadcrumb when over the content is on for both
+        // to be tested
+        const headerHeight = this.ownerDocument.querySelector("header#top").getBoundingClientRect().height;
+        const breadCrumbEl = this.ownerDocument.querySelector("div.page_breadcrumb")
+        if(breadCrumbEl){
+            breadCrumbEl.style.top = `${headerHeight}px`;
+        }
+    },
+
+    async _handleTransparentState() {
+        // No-op by default; subclasses can override if needed
+    },
+
     async _computeWidgetState(methodName, params) {
         const _super = this._super.bind(this);
-        if (methodName === 'visibility') {
+        if (methodName === "visibility") {
             this.shownValue = await new Promise((resolve, reject) => {
-                this.trigger_up('action_demand', {
-                    actionName: 'get_page_option',
-                    params: ['header_overlay'],
-                    onSuccess: v => resolve(v ? 'transparent' : 'regular'),
+                this.trigger_up("action_demand", {
+                    actionName: "get_page_option",
+                    params: [this.overlayOptionName],
+                    onSuccess: v => resolve(v ? "transparent" : "regular"),
                     onFailure: reject,
                 });
             });
@@ -2813,6 +2801,33 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
         return _super(...arguments);
     },
 });
+
+
+options.registry.TopMenuVisibility = BaseVisibilityOption.extend({
+    pageOptionName: "header_visible",
+    overlayOptionName: "header_overlay",
+    showOptionWidgetName: "regular_header_visibility_opt",
+
+    async _handleTransparentState() {
+        // Handle additional transparent state options
+        await new Promise((resolve, reject) => {
+            this.trigger_up("action_demand", {
+                actionName: "toggle_page_option",
+                params: [{ name: "header_color", value: "" }],
+                onSuccess: resolve,
+                onFailure: reject,
+            });
+        });
+        await new Promise(resolve => {
+            this.trigger_up("action_demand", {
+                actionName: "toggle_page_option",
+                params: [{ name: "header_text_color", value: "" }],
+                onSuccess: resolve,
+            });
+        });
+    },
+});
+
 
 options.registry.topMenuColor = options.Class.extend({
 
@@ -2861,54 +2876,12 @@ options.registry.topMenuColor = options.Class.extend({
     },
 });
 
-options.registry.BreadcrumbOptions = VisibilityPageOptionUpdate.extend({
+options.registry.BreadcrumbOptions = BaseVisibilityOption.extend({
     pageOptionName: "breadcrumb_visible",
+    overlayOptionName: "breadcrumb_overlay",
     showOptionWidgetName: "regular_breadcrumb_visibility_opt",
 
-    async visibility(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        await this._changeVisibility(widgetValue);
-        const targetWindow = this.$target[0].ownerDocument.defaultView;
-        targetWindow.dispatchEvent(new targetWindow.Event("resize"));
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _changeVisibility(widgetValue) {
-        if (!(widgetValue !== "hidden")) {
-            return;
-        }
-        const transparent = (widgetValue === "transparent");
-        await new Promise((resolve, reject) => {
-            this.trigger_up("action_demand", {
-                actionName: "toggle_page_option",
-                params: [{name: "breadcrumb_overlay", value: transparent}],
-                onSuccess: () => resolve(),
-                onFailure: reject,
-            });
-        });
-    },
-    /**
-     * @override
-     */
-    async _computeWidgetState(methodName, params) {
-        const _super = this._super.bind(this);
-        if (methodName === "visibility") {
-            this.shownValue = await new Promise((resolve, reject) => {
-                this.trigger_up("action_demand", {
-                    actionName: "get_page_option",
-                    params: ["breadcrumb_overlay"],
-                    onSuccess: v => resolve(v ? "transparent" : "regular"),
-                    onFailure: reject,
-                });
-            });
-        }
-        return _super(...arguments);
+    async _handleTransparentState() {
     },
 });
 

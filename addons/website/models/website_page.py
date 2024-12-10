@@ -29,8 +29,7 @@ class WebsitePage(models.Model):
     is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     is_new_page_template = fields.Boolean(string="New Page Template", help='Add this page to the "+New" page templates. It will be added to the "Custom" category.')
-    has_parent_page = fields.Boolean(help="Improve site navigation and hierarchy by incorporating parent pages in the breadcrumb format.")
-    parent_page_id = fields.Many2one('website.page', string="Parent Page", domain="[('website_id','=?',website_id),('id','!=',id)]", store=True, readonly=False)
+    parent_id = fields.Many2one('website.page', string="Parent Page", domain="[('website_id','=?',website_id),('id','!=',id)]", store=True, readonly=False)
 
     # Page options
     header_overlay = fields.Boolean()
@@ -90,13 +89,13 @@ class WebsitePage(models.Model):
             previous_page = page
         return self.browse(ids)
 
-    @api.constrains('parent_page_id')
-    def _check_parent_page_id(self):
-        for page in self:
-            if page.parent_page_id.id == page.id:
-                raise ValidationError(_("Page '%s' cannot be parent of itself") % page.name)
-            if page.is_homepage and page.parent_page_id:
-                raise ValidationError(_("Homepage '%s' cannot have a parent page") % page.name)
+    # @api.constrains('parent_id')
+    # def _check_parent_id(self):
+    #     for page in self:
+    #         if page.parent_id.id == page.id:
+    #             raise ValidationError(_("Page '%s' cannot be parent of itself") % page.name)
+    #         if page.is_homepage and page.parent_id:
+    #             raise ValidationError(_("Homepage '%s' cannot have a parent page") % page.name)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

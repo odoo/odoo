@@ -287,23 +287,27 @@
 
     <!-- Breadcrumb -->
     <xpath expr="//main/*[1]" position="before">
-        <t t-if="'has_parent_page' in main_object and main_object['has_parent_page']">
-            <div class="page_breadcrumb" data-name="Breadcrumb">
-                <t t-set="parent_page" t-value="main_object.parent_page_id"/>
-                <section>
-                    <div class="container o_not_editable py-2">
-                        <t t-if="parent_page.parent_page_id">
-                            <a t-att-href="parent_page.parent_page_id.url" t-out="parent_page.parent_page_id.name"/>
+        <t t-if="'parent_id' in main_object and main_object['parent_id']">
+            <div class="page_breadcrumb " data-name="Breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <t t-set="parent_page" t-value="main_object.parent_id"/>
+                    <ul class="breadcrumb mb-0 container p-2">
+                        <li>
+                            <t t-if="parent_page.parent_id and parent_page.parent_id.url">
+                                <a t-att-href="parent_page.parent_id.url" t-out="parent_page.parent_id.name"/>
+                                <span> / </span>
+                            </t>
+                            <a t-att-href="parent_page.url" t-out="parent_page.name"/>
                             <span> / </span>
-                        </t>
-                        <a t-att-href="parent_page.url" t-out="parent_page.name"/>
-                        <span> / </span>
-                        <span t-out="main_object.name"/>
-                    </div>
-                </section>
+                            <span t-out="main_object.name"/>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </t>
     </xpath>
+   
+
 
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
@@ -371,11 +375,11 @@
         <attribute name="t-att-data-invisible">'1' if 'footer_visible' in main_object and not main_object.footer_visible else None</attribute>
     </xpath>
     <xpath expr="//main" position="attributes">
-        <attribute name="t-attf-class" add="#{'o_breadcrumb_overlay' if 'breadcrumb_overlay' in main_object and main_object.breadcrumb_overlay else ''}" separator=" "/>
+        <attribute name="t-attf-class" add="#{'o_breadcrumb_overlay' if 'breadcrumb_overlay' in main_object and main_object.breadcrumb_overlay else ''}" />
     </xpath>
     <xpath expr="//div[hasclass('page_breadcrumb')]" position="attributes">
-        <attribute name="t-attf-class" add="page_breadcrumb #{breadcrumb_bg_color_class} #{breadcrumb_text_color_class}"/>
-        <attribute name="t-attf-style" add="#{breadcrumb_bg_color_style and ('background-color: %s;' % breadcrumb_bg_color_style)} #{breadcrumb_text_color_style and ('color: %s;' % breadcrumb_text_color_style)}"/>
+        <attribute name="t-attf-class" add="page_breadcrumb #{breadcrumb_bg_color_class} #{breadcrumb_text_color_class}" separator=" "/>
+        <attribute name="t-attf-style" add="#{breadcrumb_bg_color_style and ('background-color: %s;' % breadcrumb_bg_color_style)} #{breadcrumb_text_color_style and ('color: %s;' % breadcrumb_text_color_style)}"  separator=" "/>
     </xpath>
     <xpath expr="//div[hasclass('page_breadcrumb')]" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'breadcrumb_visible' in main_object and not main_object.breadcrumb_visible else ''}" separator=" "/>

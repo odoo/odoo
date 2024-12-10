@@ -201,12 +201,13 @@ body {
         @include body-image-bg-style();
     }
 
-    > main {
-        > .page_breadcrumb {
+    > main:not(.o_breadcrumb_overlay) {
+        > div.page_breadcrumb {
+            background-color: transparent !important;
             a {
                 color: inherit !important;
             }
-            > section {
+            > nav {
                 @include o-apply-colors('breadcrumb');
                 @include o-apply-colors('breadcrumb-custom');
                 @include o-add-gradient('breadcrumb-gradient');
@@ -215,10 +216,13 @@ body {
     }
 
     > main.o_breadcrumb_overlay {
-        > .page_breadcrumb {
+        > div.page_breadcrumb {
             @include o-position-absolute(auto, 0, auto, 0);
-            z-index: 99 !important;
-            > section {
+            z-index: 1000 !important;
+            a {
+                color: inherit !important;
+            }
+            > nav {
                 @include o-apply-colors(1);
                 background-color: transparent !important;
                 background-image: none !important;
