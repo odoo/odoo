@@ -14,6 +14,10 @@ export class ResPartner extends webModels.ResPartner {
         relation: "ir.attachment",
         string: "Main attachment",
     });
+    // Mock server simplification.
+    // This allows the manipulation of the admin status in tests that require a
+    // user without admin privilege
+    isAdmin = fields.Boolean({ default: true });
 
     _views = {
         [`search, ${DEFAULT_MAIL_SEARCH_ID}`]: /* xml */ `<search/>`,
@@ -194,13 +198,7 @@ export class ResPartner extends webModels.ResPartner {
                 partner.id,
                 fields.filter(
                     (field) =>
-                        ![
-                            "country",
-                            "display_name",
-                            "isAdmin",
-                            "notification_type",
-                            "user",
-                        ].includes(field)
+                        !["country", "display_name", "notification_type", "user"].includes(field)
                 ),
                 false
             );
@@ -228,9 +226,6 @@ export class ResPartner extends webModels.ResPartner {
                 }
                 data.userId = mainUser ? mainUser.id : false;
                 data.isInternalUser = mainUser ? !mainUser.share : false;
-                if (fields.includes("isAdmin")) {
-                    data.isAdmin = true; // mock server simplification
-                }
                 if (fields.includes("notification_type")) {
                     data.notification_preference = mainUser.notification_type;
                 }

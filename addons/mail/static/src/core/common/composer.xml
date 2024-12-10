@@ -68,7 +68,7 @@
                             t-on-paste="onPaste"
                             t-model="props.composer.text"
                             t-att-placeholder="placeholder"
-                            t-att-readOnly="!state.active"
+                            t-att-readOnly="!state.active || thread?.isReadOnly"
                         />
                         <!--
                              This is an invisible textarea used to compute the composer
@@ -83,7 +83,7 @@
                             disabled="1"
                         />
                     </div>
-                    <t t-call="mail.Composer.quickActions"/>
+                    <t t-if="!thread?.isReadOnly" t-call="mail.Composer.quickActions"/>
                 </div>
             </div>
             <div class="o-mail-Composer-footer overflow-auto">

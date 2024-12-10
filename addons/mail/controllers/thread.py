@@ -130,8 +130,7 @@ class ThreadController(http.Controller):
         thread = request.env[thread_model]._get_thread_with_access(
             thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs
         )
-        if not thread:
-            raise NotFound()
+        self._check_message_post_access(thread)
         if not request.env[thread_model]._get_thread_with_access(thread_id, "write"):
             thread.env.context = frozendict(
                 thread.env.context, mail_create_nosubscribe=True, mail_post_autofollow=False
@@ -144,6 +143,10 @@ class ThreadController(http.Controller):
         # sudo: mail.thread - users can post on accessible threads
         message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
         return Store(message, for_current_user=True).get_result()
+
+    def _check_message_post_access(self, thread):
+        if not thread:
+            raise NotFound()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
