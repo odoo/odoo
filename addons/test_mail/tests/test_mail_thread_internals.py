@@ -695,56 +695,6 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
 
-    def test_delete_starred_message(self):
-        msg = self.test_record.message_post(body="Hello!", message_type="comment")
-        msg_2 = self.test_record.message_post(body="Goodbye!", message_type="comment")
-        msg.with_user(self.user_admin).toggle_message_starred()
-        msg.with_user(self.user_employee).toggle_message_starred()
-        msg_2.with_user(self.user_employee).toggle_message_starred()
-        self.assertIn(self.partner_admin, msg.starred_partner_ids)
-        self.assertIn(self.partner_employee, msg.starred_partner_ids)
-        self._reset_bus()
-        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        self.test_record._message_update_content(message=msg, body="")
-        self.assertFalse(msg.starred)
-        self.assertBusNotifications(
-            [
-                (self.cr.dbname, "res.partner", self.partner_admin.id),
-                (self.cr.dbname, "res.partner", self.partner_employee.id),
-            ],
-            [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "mail.thread": self._filter_threads_fields(
-                            {
-                                "counter": 1,
-                                "counter_bus_id": bus_last_id,
-                                "id": "starred",
-                                "messages": [["DELETE", [msg.id]]],
-                                "model": "mail.box",
-                            }
-                        ),
-                    },
-                },
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
-                        "mail.thread": self._filter_threads_fields(
-                            {
-                                "counter": 0,
-                                "counter_bus_id": bus_last_id,
-                                "id": "starred",
-                                "messages": [["DELETE", [msg.id]]],
-                                "model": "mail.box",
-                            }
-                        ),
-                    },
-                },
-            ],
-            check_unique=False,
-        )
-
     def test_inbox_message_fetch_needaction(self):
         user1 = self.env['res.users'].create({'login': 'user1', 'name': 'User 1'})
         user1.notification_type = 'inbox'

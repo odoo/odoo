@@ -1153,39 +1153,6 @@ class MailMessage(models.Model):
     # TOOLS
     # ------------------------------------------------------
 
-    def _cleanup_side_records(self):
-        """ Clean related data: notifications, stars, ... to avoid lingering
-        notifications / unreachable counters with void messages notably. """
-        outdated_starred_partners = self.starred_partner_ids.sorted("id")
-        self.write({
-            'starred_partner_ids': [(5, 0, 0)],
-            'notification_ids': [(5, 0, 0)],
-        })
-        if outdated_starred_partners:
-            # sudo: bus.bus: reading non-sensitive last id
-            bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-            self.env.cr.execute("""
-                SELECT res_partner_id, count(*)
-                  FROM mail_message_res_partner_starred_rel
-                 WHERE res_partner_id IN %s
-              GROUP BY res_partner_id
-              ORDER BY res_partner_id
-            """, [tuple(outdated_starred_partners.ids)])
-            star_count_by_partner_id = dict(self.env.cr.fetchall())
-            for partner in outdated_starred_partners:
-                partner._bus_send_store(
-                    Store().add_model_values(
-                        "mail.thread",
-                        {
-                            "counter": star_count_by_partner_id.get(partner.id, 0),
-                            "counter_bus_id": bus_last_id,
-                            "id": "starred",
-                            "messages": Store.Many(self, [], mode="DELETE"),
-                            "model": "mail.box",
-                        },
-                    )
-                )
-
     def _filter_empty(self):
         """ Return subset of "void" messages """
         return self.filtered(
