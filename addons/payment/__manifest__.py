@@ -37,7 +37,6 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment/static/lib/jquery.payment/jquery.payment.js',
             'payment/static/src/**/*',
         ],
         'web.assets_backend': [
