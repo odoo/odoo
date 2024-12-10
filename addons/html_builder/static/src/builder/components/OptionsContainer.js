@@ -16,13 +16,12 @@ export class OptionsContainer extends Component {
             dependencyManager: new DependencyManager(),
             getEditingElement: () => this.props.editingElement,
             getEditingElements: () => [this.props.editingElement],
-            getEditingElement: () => this.props.editingElement,
             weContext: {},
         });
         useVisibilityObserver("content", useApplyVisibility("root"));
     }
 
     get title() {
-        return this.props.editingElement.dataset.name;
+        return this.env.getEditingElement().dataset.name;
     }
 }

@@ -21,7 +21,6 @@ export class WeColorpicker extends Component {
     setup() {
         useWeComponent();
         this.currentColors = useDomState((editingElement) => ({
-            // TODO just first el ?
             backgroundColor: editingElement
                 ? getComputedStyle(editingElement).backgroundColor
                 : undefined,
