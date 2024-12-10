@@ -19,7 +19,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_default_sending_method(self, move) -> set:
         """ By default, we use the sending method set on the partner or email. """
-        return move.partner_id.with_company(move.company_id).invoice_sending_method or 'email'
+        return {move.partner_id.with_company(move.company_id).invoice_sending_method or 'email'}
 
     @api.model
     def _get_all_extra_edis(self) -> dict:
@@ -41,7 +41,15 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_default_pdf_report_id(self, move):
-        return move.partner_id.with_company(move.company_id).invoice_template_pdf_report_id or self.env.ref('account.account_invoices')
+        if partner_default_template := move.partner_id.with_company(move.company_id).invoice_template_pdf_report_id:
+            return partner_default_template
+
+        fallback_template = self.env.ref('account.account_invoices')
+
+        if fallback_template.is_available(move):
+            return fallback_template
+
+        raise UserError(_("There is no template that applies to this move type."))
 
     @api.model
     def _get_default_mail_template_id(self, move):
@@ -56,7 +64,7 @@ class AccountMoveSend(models.AbstractModel):
             return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key) if from_cron else default_value
 
         vals = {
-            'sending_methods': get_setting('sending_methods', default_value={self._get_default_sending_method(move)}) or {},
+            'sending_methods': get_setting('sending_methods', default_value=self._get_default_sending_method(move)) or {},
             'invoice_edi_format': get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move)),
             'extra_edis': get_setting('extra_edis', default_value=self._get_default_extra_edis(move)) or {},
             'pdf_report': get_setting('pdf_report') or self._get_default_pdf_report_id(move),
@@ -101,7 +109,7 @@ class AccountMoveSend(models.AbstractModel):
         if moves.invoice_pdf_report_id:
             alerts['account_pdf_exist'] = {
                 'level': 'info',
-                'message': _("Some invoice(s) already have a generated pdf. The existing pdf will be used for sending. "
+                'message': _("The existing pdfs will be used for sending. "
                              "If you want to regenerate them, please delete the attachment from the invoice."),
             }
         return alerts
@@ -302,15 +310,16 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _is_applicable_to_company(self, method, company):
         """ TO OVERRIDE - used to determine if we should display the sending method in the selection."""
-        return True
+        # We never want to display the manual method on the wizards.
+        return method != 'manual'
 
     @api.model
     def _is_applicable_to_move(self, method, move):
         """ TO OVERRIDE - """
         if method == 'email':
             return bool(move.partner_id.email)
-        else:
-            return method == 'manual'
+
+        return True
 
     @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
@@ -666,8 +675,7 @@ class AccountMoveSend(models.AbstractModel):
         This is a security in case the method is called directly without going through the wizards.
         """
         self._check_move_constrains(moves)
-        assert all(self._get_default_pdf_report_id(move).is_invoice_report for move in moves)
-        assert custom_settings['pdf_report'].is_invoice_report if custom_settings.get('pdf_report') else True
+        assert all(custom_settings['pdf_report'].is_available(move) for move in moves) if custom_settings.get('pdf_report') else True
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
             for sending_method in custom_settings.get('sending_methods', [])

@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "[name=move_type] [raw-value=out_invoice]",
     },
     {
-        trigger: "button[name=action_invoice_sent]:contains(print & send)",
+        trigger: "button[name=action_invoice_sent]:contains(send)",
         content: _t("Send the invoice to the customer and check what he'll receive."),
         tooltipPosition: "bottom",
         run: "click",
@@ -147,7 +147,7 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
     },
     {
-        trigger: "button[name=action_invoice_sent]:contains(print & send)",
+        trigger: "button[name=action_invoice_sent]:contains(send)",
         content: _t("Send the invoice and check what the customer will receive."),
         run: "click",
     },
