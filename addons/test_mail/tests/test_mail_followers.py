@@ -934,13 +934,17 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
                 },
                 {
                     "id": self.user_admin.partner_id.id,
-                    "isInternalUser": True,
                     "is_company": False,
                     "name": "Mitchell Admin",
-                    "userId": self.user_admin.id,
                     "write_date": fields.Datetime.to_string(self.user_admin.write_date),
                 },
             ),
+            "res.users": [
+                {
+                    "id": self.user_admin.id,
+                    "share": False,
+                },
+            ],
         }
         self.assertEqual(data, expected)
 

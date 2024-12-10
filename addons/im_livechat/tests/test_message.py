@@ -142,12 +142,16 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                     {
                         "id": self.users[1].partner_id.id,
                         "is_company": False,
-                        "isInternalUser": True,
                         "user_livechat_username": "chuck",
-                        "userId": self.users[1].id,
                         "write_date": fields.Datetime.to_string(self.users[1].write_date),
                     },
                 ),
+                "res.users": [
+                    {
+                        "id": self.users[1].id,
+                        "share": False,
+                    },
+                ],
             },
         )
 
@@ -245,16 +249,20 @@ class TestImLivechatMessage(HttpCase, MailCommon):
                                 "res.partner": self._filter_partners_fields(
                                     {
                                         "id": self.env.user.partner_id.id,
-                                        "isInternalUser": False,
                                         "is_company": False,
                                         "name": "Chell Gladys",
-                                        "userId": self.env.user.id,
                                         "user_livechat_username": False,
                                         "write_date": fields.Datetime.to_string(
                                             self.env.user.write_date
                                         ),
                                     },
                                 ),
+                                "res.users": [
+                                    {
+                                        "id": self.env.user.id,
+                                        "share": True,
+                                    },
+                                ],
                             },
                             "id": channel.id,
                         },

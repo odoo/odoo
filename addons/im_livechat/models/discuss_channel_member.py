@@ -39,11 +39,10 @@ class DiscussChannelMember(models.Model):
         self.ensure_one()
         if self.channel_id.channel_type == 'livechat':
             return [
+                *self.env["res.partner"]._livechat_avatar_fields(),
                 "active",
                 Store.One("country_id", ["code", "name"], rename="country"),
                 "is_public",
-                "user_livechat_username",
-                "write_date",
             ]
         return super()._get_store_partner_fields(fields)
 

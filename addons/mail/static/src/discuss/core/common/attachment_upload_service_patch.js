@@ -10,7 +10,7 @@ patch(AttachmentUploadService.prototype, {
                 Thread &&
                 "allow_public_upload" in Thread &&
                 !Thread.allow_public_upload &&
-                !this.store.self.isInternalUser
+                this.store.user?.share !== false
             ) {
                 const attachments = [...this.store.Thread.insert(Thread).composer.attachments];
                 for (const attachment of attachments) {

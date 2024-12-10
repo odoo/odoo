@@ -151,7 +151,8 @@ export class DiscussCommandPalette {
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
         let personas = Object.values(this.store.Persona.records).filter(
             (persona) =>
-                persona.isInternalUser && cleanTerm(persona.name).includes(this.cleanedTerm)
+                persona.partner?.main_user?.share === false &&
+                cleanTerm(persona.name).includes(this.cleanedTerm)
         );
         personas = this.suggestion
             .sortPartnerSuggestions(personas, this.cleanedTerm)

@@ -4522,7 +4522,7 @@ class MailThread(models.AbstractModel):
         res = [
             Store.Many("attachment_ids", sort="id"),
             "body",
-            Store.Many("partner_ids", ["name", "write_date"], rename="recipients"),
+            Store.Many("partner_ids", "name", rename="recipients"),
             "pinned_at",
             "write_date",
         ]

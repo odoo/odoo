@@ -18,12 +18,10 @@ export class Follower extends Record {
         return super.insert(...arguments);
     }
 
-    thread = Record.one("Thread");
     /** @type {number} */
     id;
-    /** @type {boolean} */
-    is_active;
     partner = Record.one("Persona");
+    thread = Record.one("Thread");
 
     /** @returns {boolean} */
     get isEditable() {

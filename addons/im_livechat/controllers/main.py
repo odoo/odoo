@@ -159,7 +159,7 @@ class LivechatController(http.Controller):
                 "id": -1,  # only one temporary thread at a time, id does not matter.
                 "isLoaded": True,
                 "name": channel_vals["name"],
-                "operator": Store.One(operator, ["user_livechat_username", "write_date"]),
+                "operator": Store.One(operator, self.env["res.partner"]._livechat_avatar_fields()),
                 "scrollUnread": False,
                 "state": "open",
                 "channel_type": "livechat",

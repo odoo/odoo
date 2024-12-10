@@ -8,10 +8,13 @@ declare module "models" {
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
+    import { MailGuest as MailGuestClass } from "@mail/core/common/mail_guest_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
+    import { ResPartner as ResPartnerClass } from "@mail/core/common/res_partner_model";
+    import { ResUsers as ResUsersClass } from "@mail/core/common/res_users_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
@@ -27,10 +30,13 @@ declare module "models" {
     export interface Failure extends FailureClass {}
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
+    export interface MailGuest extends MailGuestClass {}
     export interface Message extends MessageClass {}
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
     export interface Persona extends PersonaClass {}
+    export interface ResPartner extends ResPartnerClass {}
+    export interface ResUsers extends ResUsersClass {}
     export interface Settings extends SettingsClass {}
     export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
@@ -45,12 +51,15 @@ declare module "models" {
         "ir.attachment": Attachment,
         "mail.canned.response": CannedResponse,
         "mail.followers": Follower,
+        "mail.guest": MailGuest,
         "mail.link.preview": LinkPreview,
         "mail.message": Message,
         "mail.notification": Notification,
         "MessageReactions": MessageReactions,
         "Persona": Persona,
         "res.country": Country,
+        "res.partner": ResPartner,
+        "res.users": ResUsers,
         "Settings": Settings,
         "Store": Store,
         "Thread": Thread,

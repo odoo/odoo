@@ -35,6 +35,7 @@ export class Persona extends Record {
     }
     static IM_STATUS_DEBOUNCE_DELAY = 1000;
 
+    guest = Record.one("mail.guest", { inverse: "persona" });
     /** @type {number} */
     id;
     /** @type {boolean | undefined} */
@@ -44,6 +45,7 @@ export class Persona extends Record {
     /** @type {string} */
     mobileNumber;
     debouncedSetImStatus;
+    partner = Record.one("res.partner", { inverse: "persona" });
     storeAsTrackedImStatus = Record.one("Store", {
         /** @this {import("models").Persona} */
         compute() {
@@ -78,16 +80,17 @@ export class Persona extends Record {
     country = Record.one("res.country");
     /** @type {string} */
     email;
-    /** @type {number} */
-    userId;
+    userId = Record.attr(undefined, {
+        /** @this {import("models").Persona} */
+        compute() {
+            return this.partner?.main_user?.id;
+        },
+    });
     /** @type {ImStatus} */
     im_status;
     /** @type {boolean} */
     is_public;
-    /** @type {'email' | 'inbox'} */
-    notification_preference;
     isAdmin = false;
-    isInternalUser = false;
     /** @type {luxon.DateTime} */
     write_date = Record.attr(undefined, { type: "datetime" });
 
