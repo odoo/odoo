@@ -46,8 +46,7 @@
                     </div>
                     <div class="col-lg-4">
                         <t t-set="force_unsubscribe" t-value="'unsubscribe' in request.params"/>
-                        <div t-att-data-id="group.id" t-att-data-is-member="force_unsubscribe or is_member">
-                            <div class="o_mg_subscribe_form" t-att-data-id="group.id" t-att-data-is-member="force_unsubscribe or is_member">
+                        <div class="o_mg_subscribe_form" t-att-data-id="group.id" t-att-data-is-member="force_unsubscribe or is_member">
                                 <div class="d-flex justify-content-end">
                                     <button href="#" t-attf-class="{{ 'd-none' if not (force_unsubscribe or is_member) else '' }} btn btn-outline-primary o_mg_subscribe_btn o_mg_unsubscribe_btn">Unsubscribe</button>
                                 </div>
@@ -56,7 +55,6 @@
                                     <button href="#" class="btn btn-primary o_mg_subscribe_btn">Subscribe</button>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>

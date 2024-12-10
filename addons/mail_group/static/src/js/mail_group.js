@@ -12,8 +12,8 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.mailgroupId = this.$el.data('id');
-        this.isMember = this.$el.data('isMember') || false;
+        this.mailgroupId = this.$el.find('.o_mg_subscribe_form').data('id');
+        this.isMember = this.$el.find('.o_mg_subscribe_form').data('isMember') || false;
         const searchParams = (new URL(document.location.href)).searchParams;
         this.token = searchParams.get('token');
         this.forceUnsubscribe = searchParams.has('unsubscribe');
@@ -37,19 +37,18 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
         this.$el.find('.o_mg_unsubscribe_btn').removeClass('d-none');
     },
 
-    _updateMembersCount: function (response) {
-        membersCountEle = this.find("o_mg_members_count");
-        console.log(membersCount);
-        membersCount = membersCount.text();
+    _updateMembersCount: function (action) {
+        var membersCountEle = this.$el.find(".o_mg_members_count");
+        var membersCount = parseInt(membersCountEle.text());
         if (action === 'added'){
-            membersCount.text(membersCount + 1)
+            membersCountEle.text(membersCount + 1);
         }
         else if (action === 'removed'){
             if (membersCount > 0){
-                membersCount.text(membersCount.text(membersCount - 1));
+                membersCountEle.text(membersCount - 1);
             }
         }
-    }
+    },
 
     _onSubscribeBtnClick: async function (ev) {
         ev.preventDefault();
