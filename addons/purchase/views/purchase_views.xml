@@ -179,7 +179,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
+                            <field name="partner_id" widget="purchase_vendor_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
                                 placeholder="Name, TIN, Email, or Reference"
                              readonly="state in ['cancel', 'done', 'purchase']"/>
                             <field name="partner_ref"/>
@@ -230,6 +230,8 @@
                                     </control>
                                     <field name="tax_calculation_rounding_method" column_invisible="True"/>
                                     <field name="display_type" column_invisible="True"/>
+                                    <field name="old_price_unit" column_invisible="True"/>
+                                    <field name="old_product_uom_id" column_invisible="True"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
