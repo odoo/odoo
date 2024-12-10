@@ -89,7 +89,7 @@ export class ServerDialog extends Component {
             </t>
             <t t-set-slot="footer">
                 <div class="d-flex justify-content-between w-100">
-                    <div style="font-size: 13px;">
+                    <div class="small">
                         <p class="m-0">Your current server is:<br/> <strong t-esc="this.store.base.server_status" /></p>
                     </div>
                     <div class="d-flex gap-2">
