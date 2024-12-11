@@ -3,15 +3,15 @@
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.website_sale_collect.tests.common import OnSiteCommon
+from odoo.addons.website_sale_collect.tests.common import InStoreCommon
 
 
 @tagged('post_install', '-at_install')
-class TestOnSitePayment(HttpCase, OnSiteCommon):
+class TestOnSitePayment(HttpCase, InStoreCommon):
 
     def test_on_site_provider_available_when_in_store_delivery_is_chosen(self):
-        order = self._create_so()
-        order.carrier_id = self.carrier.id
+        order = self._create_so_in_store_dm()
+        order.carrier_id = self.in_store_dm.id
         compatible_providers = self.env['payment.provider'].sudo()._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, sale_order_id=order.id
         )
@@ -20,11 +20,11 @@ class TestOnSitePayment(HttpCase, OnSiteCommon):
         ))
 
     def test_on_site_provider_unavailable_when_no_in_store_delivery(self):
-        order = self._create_so()
+        order = self._create_so_in_store_dm(carrier_id=self.free_delivery.id)
         compatible_providers = self.env['payment.provider'].sudo()._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, sale_order_id=order.id
         )
-        self.assertTrue(not any(
+        self.assertFalse(any(
             p.code == 'custom' and p.custom_mode == 'on_site' for p in compatible_providers
         ))
 
