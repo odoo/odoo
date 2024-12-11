@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Component, onWillStart, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
@@ -14,7 +14,6 @@ export class PosPaymentProviderCards extends Component {
         super.setup();
         this.orm = useService("orm");
         this.action = useService("action");
-        this.container = useRef("cards_container");
         this.state = useState({
             providers: [],
         });
@@ -24,24 +23,16 @@ export class PosPaymentProviderCards extends Component {
                 providers.map((p) => p[1]),
             ]);
 
-            const worldline = res.iot_state.worldline;
-            const ingenico = res.iot_state.ingenico;
-            this.state.providers = providers
-                .filter(
-                    (prov) =>
-                        (prov[0] !== "ingenico" || ingenico) &&
-                        (prov[0] !== "worldline" || worldline)
-                )
-                .map((prov) => {
-                    const status = res.state.find((p) => p.name === prov[1]);
-                    return Object.assign(
-                        {
-                            selection: prov[0],
-                            provider: prov[2],
-                        },
-                        status
-                    );
-                });
+            this.state.providers = providers.map((prov) => {
+                const status = res.state.find((p) => p.name === prov[1]);
+                return Object.assign(
+                    {
+                        selection: prov[0],
+                        provider: prov[2],
+                    },
+                    status
+                );
+            });
         });
     }
 
@@ -73,15 +64,15 @@ export class PosPaymentProviderCards extends Component {
 
 // Selection, module_name, friendly name
 const providers = [
-    ["ingenico", "pos_iot", "Ingenico"],
-    ["six_iot", "pos_iot", "SIX"],
+    ["ingenico", "pos_iot_ingenico", "Ingenico"],
+    ["six_iot", "pos_iot_six", "SIX"],
     ["adyen", "pos_adyen", "Adyen"],
     ["mercado_pago", "pos_mercado_pago", "Mercado Pago"],
     ["paytm", "pos_paytm", "PayTM"],
     ["razorpay", "pos_razorpay", "Razorpay"],
     ["stripe", "pos_stripe", "Stripe"],
     ["viva_wallet", "pos_viva_wallet", "Viva Wallet"],
-    ["worldline", "pos_iot", "Worldline"],
+    ["worldline", "pos_iot_worldline", "Worldline"],
 ];
 
 export const PosPaymentProviderCardsParams = {
