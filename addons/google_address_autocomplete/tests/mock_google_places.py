@@ -3,13 +3,11 @@ from odoo.addons.google_address_autocomplete.controllers.google_address_autocomp
 )
 
 
-def mock_google_route(patch_fn, on_call=None):
-    print("Mocked")
+def make_mock_google_route(on_call=None):
     def _call_google_route(self, route, params):
         res = None
         if on_call:
             res = on_call(route, params)
-        print("Mocked", route, params)
         if res is not None:
             return res
         if route == "/autocomplete/json":
@@ -157,5 +155,4 @@ def mock_google_route(patch_fn, on_call=None):
                 },
                 "status": "OK",
             }
-
-    patch_fn(AutoCompleteController, "_call_google_route", _call_google_route)
+    return _call_google_route
