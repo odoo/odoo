@@ -595,10 +595,18 @@ class HrApplicant(models.Model):
             candidate_defaults['company_id'] = job.company_id.id
 
         partner_name, email_from_normalized = tools.parse_contact_from_email(msg.get('from'))
-        candidate = self.env['hr.candidate'].create({
-            'partner_name': partner_name or email_from_normalized,
-            **candidate_defaults,
-        })
+        candidate = self.env["hr.candidate"].search(
+            [
+                ("email_from", "=", email_from_normalized),
+            ],
+            limit=1,
+        ) or self.env["hr.candidate"].create(
+            {
+                "partner_name": partner_name or email_from_normalized,
+                **candidate_defaults,
+            }
+        )
+
         defaults = {
             'candidate_id': candidate.id,
             'partner_name': partner_name,
