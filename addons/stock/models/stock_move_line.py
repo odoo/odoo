@@ -80,6 +80,7 @@ class StockMoveLine(models.Model):
     state = fields.Selection(related='move_id.state', store=True)
     is_inventory = fields.Boolean(related='move_id.is_inventory')
     is_locked = fields.Boolean(related='move_id.is_locked', readonly=True)
+    is_scrap = fields.Boolean(related='move_id.scrapped')
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id')
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id')
     reference = fields.Char(related='move_id.reference', readonly=False)

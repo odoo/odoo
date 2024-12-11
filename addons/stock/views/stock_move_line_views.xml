@@ -8,17 +8,22 @@
                 <field name="location_usage" column_invisible="True"/>
                 <field name="location_dest_usage" column_invisible="True"/>
                 <field name="date"/>
-                <field name="reference" string="Reference"
-                       column_invisible="context.get('no_reference', False)"/>
+                <field name="reference" string="Reference" class="fw-bolder"
+                       column_invisible="context.get('no_reference', False)"
+                       decoration-muted="1"
+                       decoration-info="picking_code == 'outgoing'"
+                       decoration-success="picking_code == 'incoming'"
+                       decoration-warning="is_inventory"
+                       decoration-danger="is_scrap"/>
                 <field name="product_id"/>
                 <field name="lot_id" optional="show" groups="stock.group_production_lot"/>
                 <field name="package_id" optional="hide" groups="stock.group_tracking_lot"/>
                 <field name="result_package_id" optional="hide" groups="stock.group_tracking_lot"/>
-                <field name="location_id"/>
-                <field name="location_dest_id"/>
+                <field name="location_id" decoration-muted="location_usage not in ('internal', 'transit')"/>
+                <field name="location_dest_id" decoration-muted="location_dest_usage not in ('internal', 'transit')"/>
                 <field name="picking_partner_id" optional="hide"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" force_save="1"/>
-                <field name="quantity" string="Quantity"
+                <field name="quantity" string="Quantity" class="fw-bolder"
                     decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
                     decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
