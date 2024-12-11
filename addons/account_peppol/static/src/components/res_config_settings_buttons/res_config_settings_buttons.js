@@ -54,18 +54,18 @@ class PeppolSettingsButtons extends Component {
 
     get createButtonLabel() {
         const modes = {
-            demo: _t("Register (Demo)"),
-            test: _t("Register (Test)"),
-            prod: _t("Register"),
+            demo: _t("Activate Peppol (Demo)"),
+            test: _t("Activate Peppol (Test)"),
+            prod: _t("Activate Peppol"),
         }
-        return modes[this.ediMode] || _t("Register");
+        return modes[this.ediMode];
     }
 
     get deregisterUserButtonLabel() {
         if (['not_registered', 'in_verification'].includes(this.proxyState)) {
             return _t("Discard");
         }
-        return _t("Deregister");
+        return _t("Remove from Peppol");
     }
 
     async _callConfigMethod(methodName) {

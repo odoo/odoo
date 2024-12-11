@@ -15,7 +15,7 @@ BATCH_SIZE = 50
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
-    peppol_verification_code = fields.Char(string='SMS verification code')
+    peppol_verification_code = fields.Char(string='SMS verification code')  # TODO remove in master
     proxy_type = fields.Selection(selection_add=[('peppol', 'PEPPOL')], ondelete={'peppol': 'cascade'})
 
     # -------------------------------------------------------------------------
@@ -281,6 +281,13 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
+
+    @handle_demo
+    def _peppol_migrate_registration(self):
+        self.ensure_one()
+        response = self._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
+        if migration_key := response.get('migration_key'):
+            self.company_id.account_peppol_migration_key = migration_key
 
     def _peppol_register_sender_as_receiver(self):
         self.ensure_one()
