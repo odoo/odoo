@@ -131,11 +131,11 @@ class Package:
         self.id :int = 0                            # id
         self.state :str = 'uninstalled'             # state
         self.dbdemo :bool = False                   # demo
-        self.installed_version :str | None = None   # latest_version
+        self.installed_version :str | None = None   # latest_version (attention: Incorrect field names !! in ir_module.py)
 
         # info for upgrade
-        self.load_state :str = 'uninstalled'        # the state when loaded to packages
-        self.load_version :str | None = None        # the version when loaded to packages
+        self.load_state :str = 'uninstalled'        # the state when added to package_graph
+        self.load_version :str | None = None        # the version when added to package_graph
 
         # dependency
         self.depends: OrderedSet[Package] = OrderedSet()
