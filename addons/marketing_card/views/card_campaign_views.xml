@@ -90,36 +90,36 @@
                             <div class="d-flex">
                                 <field name="content_header_dyn" title="Dynamic Field?"/>
                                 <field name="content_header" invisible="content_header_dyn" placeholder="e.g. Join Odoo Experience 2024"/>
-                                <field name="content_header_path" invisible="not content_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_header_path" invisible="not content_header_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                                 <field name="content_header_color" widget="color" style="width: 40px"/>
                             </div>
                             <label for="content_sub_header"/>
                             <div class="d-flex">
                                 <field name="content_sub_header_dyn"/>
                                 <field name="content_sub_header" invisible="content_sub_header_dyn" placeholder="e.g. Aug 24, Brussels Expo"/>
-                                <field name="content_sub_header_path" invisible="not content_sub_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_sub_header_path" invisible="not content_sub_header_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                                 <field name="content_sub_header_color" widget="color" style="width: 40px"/>
                             </div>
                             <label for="content_section"/>
                             <div class="d-flex">
                                 <field name="content_section_dyn"/>
                                 <field name="content_section" invisible="content_section_dyn" placeholder="e.g. Sample Talk"/>
-                                <field name="content_section_path" invisible="not content_section_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_section_path" invisible="not content_section_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                             </div>
                             <label for="content_sub_section1"/>
                             <div class="d-flex">
                                 <field name="content_sub_section1_dyn"/>
                                 <field name="content_sub_section1" invisible="content_sub_section1_dyn" placeholder="e.g. By Lionel Messy"/>
-                                <field name="content_sub_section1_path" invisible="not content_sub_section1_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_sub_section1_path" invisible="not content_sub_section1_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                             </div>
                              <label for="content_sub_section2"/>
                             <div class="d-flex">
                                 <field name="content_sub_section2_dyn"/>
                                 <field name="content_sub_section2" invisible="content_sub_section2_dyn" placeholder="e.g. CFO Chief Football Officer"/>
-                                <field name="content_sub_section2_path" invisible="not content_sub_section2_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_sub_section2_path" invisible="not content_sub_section2_dyn" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                             </div>
-                            <field name="content_image1_path" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
-                            <field name="content_image2_path" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                            <field name="content_image1_path" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
+                            <field name="content_image2_path" placeholder="Select a field" widget="field_selector" options="{'model': 'res_model'}"/>
                             <field name="content_button" placeholder="No button"/>
                         </group>
                         <group>

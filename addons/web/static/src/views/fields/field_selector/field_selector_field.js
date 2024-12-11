@@ -1,65 +1,55 @@
+import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
-import { CharField, charField } from "@web/views/fields/char/char_field";
+import { standardFieldProps } from "../standard_field_props";
+import { formatChar } from "../formatters";
 
-import { _t } from "@web/core/l10n/translation";
-import { DynamicModelFieldSelector } from "./dynamic_model_field_selector";
-
-export class DynamicModelFieldSelectorChar extends CharField {
-    static template = "web.DynamicModelFieldSelectorChar";
-    static components = {
-        ...CharField.components,
-        DynamicModelFieldSelector,
-    };
-
+export class FieldSelectorField extends Component {
+    static template = "web.FieldSelectorField";
+    static components = { ModelFieldSelector };
     static props = {
-        ...CharField.props,
+        ...standardFieldProps,
         resModel: { type: String, optional: true },
         onlySearchable: { type: Boolean, optional: true },
         followRelations: { type: Boolean, optional: true },
     };
 
-    /**
-     * Update record
-     *
-     * @param {string} value
-     * @private
-     */
-    async _onRecordUpdate(value) {
+    filter(fieldDef) {
+        return !this.props.onlySearchable || fieldDef.searchable;
+    }
+
+    async update(value) {
         await this.props.record.update({ [this.props.name]: value });
     }
 
     //---- Getters ----
-    get getSelectorProps() {
+    get formattedValue() {
+        return formatChar(this.props.record.data[this.props.name]);
+    }
+
+    get resModel() {
+        return this.props.record.data[this.props.resModel] || this.props.record.resModel;
+    }
+
+    get selectorProps() {
         return {
             path: this.props.record.data[this.props.name],
-            resModel: this.getResModel(),
+            resModel: this.resModel,
             readonly: this.props.readonly,
-            record: this.props.record,
-            recordProps: this.props,
-            update: this._onRecordUpdate.bind(this),
+            update: this.update.bind(this),
             isDebugMode: !!this.env.debug,
             filter: this.filter.bind(this),
             followRelations: this.props.followRelations,
         };
     }
-
-    filter(fieldDef) {
-        return !this.props.onlySearchable || fieldDef.searchable;
-    }
-
-    getResModel(props = this.props) {
-        const resModel = props.record.data[props.resModel];
-        if (!resModel) {
-            return props.record.resModel;
-        }
-        return resModel;
-    }
 }
 
-export const dynamicModelFieldSelectorChar = {
-    ...charField,
-    component: DynamicModelFieldSelectorChar,
+export const fieldSelectorField = {
+    component: FieldSelectorField,
+    displayName: _t("Field Selector"),
+    supportedTypes: ["char"],
     supportedOptions: [
         {
             label: _t("Follow relations"),
@@ -87,4 +77,4 @@ export const dynamicModelFieldSelectorChar = {
     },
 };
 
-registry.category("fields").add("DynamicModelFieldSelectorChar", dynamicModelFieldSelectorChar);
+registry.category("fields").add("field_selector", fieldSelectorField);
