@@ -1346,9 +1346,12 @@ $-transition-duration: 200ms;
             border-top: 1px solid map-get($grays, '200');
         }
         > a.dropdown-toggle {
-            background-color: map-get($grays, '200');
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
+            
+            &:not(.active) {
+                background-color: map-get($grays, '200');
+            }
         }
         > ul, > .o_mega_menu { // remove dropdown-menu default style as it is nested in another one
             position: static;
