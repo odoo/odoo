@@ -97,7 +97,7 @@ export class Navbar extends Component {
 
     async reloadProducts() {
         this.dialog.add(SyncPopup, {
-            title: _t("Reload Products"),
+            title: _t("Reload Data"),
             confirm: (fullReload) => this.pos.reloadData(fullReload),
         });
     }
