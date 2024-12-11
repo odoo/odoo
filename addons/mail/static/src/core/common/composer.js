@@ -1,7 +1,8 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useDropzone } from "@web/core/dropzone/dropzone_hook";
+import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { Picker, usePicker } from "@mail/core/common/picker";
+import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
@@ -133,12 +134,10 @@ export class Composer extends Component {
         });
         useExternalListener(window, "beforeunload", this.saveContent.bind(this));
         if (this.props.dropzoneRef) {
-            useDropzone(
-                this.props.dropzoneRef,
-                this.onDropFile,
-                "o-mail-Composer-dropzone",
-                () => this.allowUpload
-            );
+            useCustomDropzone(this.props.dropzoneRef, MailAttachmentDropzone, {
+                extraClass: "o-mail-Composer-dropzone",
+                onDrop: this.onDropFile,
+            }, () => this.allowUpload);
         }
         if (this.props.messageEdition) {
             this.props.messageEdition.composerOfThread = this;
