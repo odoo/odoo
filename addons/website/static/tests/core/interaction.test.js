@@ -386,6 +386,35 @@ describe("handling crashes", () => {
         expect(error.message).toInclude("this.addListener can only be called after the interaction is started");
     });
 
+    test("cannot update content while updating content", async () => {
+        let update = false;
+        let interaction = null;
+        let error = null;
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                "span:t-att-a": () => {
+                    if (update) {
+                        try {
+                            this.updateContent()
+                        } catch (e) {
+                            error = e;
+                        }
+                    }
+                    return "a"
+                },
+            }
+            setup() {
+                interaction = this;
+            }
+        }
+        await startInteraction(Test, TemplateTest);
+        update = true;
+        interaction.updateContent();
+        expect(error).not.toBe(null);
+        expect(error.message).toInclude("Updatecontent should not be called while interaction is updating");
+    });
+
     test("dom is updated after event is dispatched", async () => {
         class Test extends Interaction {
             static selector = ".test";

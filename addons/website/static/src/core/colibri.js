@@ -13,6 +13,7 @@ export class Colibri {
     constructor(core, I, el) {
         this.el = el;
         this.isReady = false;
+        this.isUpdating = false;
         this.isDestroyed = false;
         this.dynamicAttrs = [];
         this.tOuts = [];
@@ -193,6 +194,10 @@ export class Colibri {
         if (this.isDestroyed || !this.isReady) {
             throw new Error("Cannot update content of an interaction that is not ready or is destroyed");
         }
+        if (this.isUpdating) {
+            throw new Error("Updatecontent should not be called while interaction is updating");
+        }
+        this.isUpdating = true;
         const errors = [];
         const interaction = this.interaction;
         for (const dynamicAttr of this.dynamicAttrs) {
@@ -238,6 +243,7 @@ export class Colibri {
                 this.applyTOut(node, definition.call(interaction, node));
             }
         }
+        this.isUpdating = false;
         if (errors.length) {
             const { attribute, error } = errors[0];
             throw Error(`An error occured while updating dynamic attribute '${attribute}' (in interaction '${this.interaction.constructor.name}')`, { cause: error });
