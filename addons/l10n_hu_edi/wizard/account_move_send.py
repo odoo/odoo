@@ -133,3 +133,13 @@ class AccountMoveSend(models.TransientModel):
         if any(m.state not in final_states for m in invoices_pending):
             # Trigger cron again in 10 minutes.
             self.env.ref('l10n_hu_edi.ir_cron_update_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=10))
+
+    @api.model
+    def _generate_invoice_documents(self, invoices_data, allow_fallback_pdf=False):
+        # EXTENDS 'account'
+        # If we want to re-generate the PDF, we need to unlink the previous one.
+        for invoice, invoice_data in invoices_data.items():
+            if invoice.country_code == 'HU':
+                invoice.invoice_pdf_report_id = False
+                invoice.invoice_pdf_report_file = False
+        return super()._generate_invoice_documents(invoices_data, allow_fallback_pdf)
