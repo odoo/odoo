@@ -7,7 +7,7 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 export const ACTIVE_ELEMENT_CLASS = "focus";
 const throttledFocus = throttleForAnimation((el) => el?.focus());
 
-export class NavigationItem {
+class NavigationItem {
     /**@type {number} */
     index = -1;
 
@@ -80,7 +80,7 @@ export class NavigationItem {
     }
 }
 
-export class Navigator {
+class Navigator {
     /**@type {NavigationItem|undefined}*/
     activeItem = undefined;
 
@@ -104,6 +104,7 @@ export class Navigator {
         this.containerRef = containerRef;
         this._hotkeyService = hotkeyService;
 
+        /**@private*/
         this._options = deepMerge(
             {
                 shouldFocusChildInput: true,
