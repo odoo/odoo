@@ -1,0 +1,132 @@
+<<<<<<< HEAD
+||||||| MERGE BASE
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_plan_view_search" model="ir.ui.view">
+            <field name="name">hr.plan.view.search</field>
+            <field name="model">hr.plan</field>
+            <field name="arch" type="xml">
+                <search string="Plan">
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_plan_view_tree" model="ir.ui.view">
+            <field name="name">hr.plan.view.tree</field>
+            <field name="model">hr.plan</field>
+            <field name="arch" type="xml">
+                <tree string="Planning">
+                    <field name="name"/>
+                    <field name="steps_count"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                    <field name="company_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_plan_view_form" model="ir.ui.view">
+            <field name="name">hr.plan.view.form</field>
+            <field name="model">hr.plan</field>
+            <field name="arch" type="xml">
+                <form string="Planning">
+                    <field name="company_id" invisible="1"/>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title">
+                            <label for="name" string="Plan Name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Onboarding"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Activities To Generate">
+                                <field name="plan_activity_type_ids" nolabel="1">
+                                    <tree>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="activity_type_id"/>
+                                        <field name="summary"/>
+                                        <field name="responsible"/>
+                                        <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}" optional="hide"/>
+                                        <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_plan_activity_type_view_tree" model="ir.ui.view">
+            <field name="name">hr.plan.activity.type.view.tree</field>
+            <field name="model">hr.plan.activity.type</field>
+            <field name="arch" type="xml">
+                <tree string="Activities">
+                    <field name="activity_type_id"/>
+                    <field name="summary"/>
+                    <field name="responsible"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_plan_activity_type_view_form" model="ir.ui.view">
+            <field name="name">hr.plan.activity.type.view.form</field>
+            <field name="model">hr.plan.activity.type</field>
+            <field name="arch" type="xml">
+                <form string="Activity">
+                    <field name="company_id" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <field name="activity_type_id"/>
+                            <field name="summary"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="responsible"/>
+                            <field name="responsible_id" attrs="{'invisible': [('responsible', '!=', 'other')]}"/>
+                            <field name="note"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_plan_action" model="ir.actions.act_window">
+            <field name="name">Plans</field>
+            <field name="res_model">hr.plan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="hr_plan_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new plan
+                </p>
+            </field>
+        </record>
+
+        <record id="hr_plan_activity_type_action" model="ir.actions.act_window">
+            <field name="name">Plan Activities</field>
+            <field name="res_model">hr.plan.activity.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new plan activity
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+
+>>>>>>> FORWARD PORTED
