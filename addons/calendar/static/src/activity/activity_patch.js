@@ -10,6 +10,15 @@ patch(Activity.prototype, {
     async onClickReschedule() {
         await this.props.activity.rescheduleMeeting();
     },
+    getActivityIconAttClass() {
+        return {
+            "text-bg-success": this.props.activity.state === "planned",
+            "text-bg-warning":
+                this.props.activity.state === "today" ||
+                this.props.activity.activityStatus === "ongoing",
+            "text-bg-danger": this.props.activity.activityStatus === "overdue",
+        };
+    },
     /**
      * @override
      */

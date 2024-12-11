@@ -6,5 +6,11 @@
                 <i class="fa fa-calendar"/>
             </button>
         </xpath>
+        <xpath expr="//small[hasclass('o-mail-ActivityListPopoverItem-hyphen')]" position="attributes">
+            <attribute name="t-if">props.activity.state !== 'today' or props.activity.calendar_event_id</attribute>
+        </xpath>
+        <xpath expr="//small[hasclass('o-mail-ActivityListPopoverItem-deadline')]" position="attributes">
+            <attribute name="t-if">['overdue', 'planned'].includes(props.activity.state) or props.activity.calendar_event_id</attribute>
+        </xpath>
     </t>
 </templates>
