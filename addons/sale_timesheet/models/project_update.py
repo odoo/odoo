@@ -10,9 +10,10 @@ class ProjectUpdate(models.Model):
     _inherit = 'project.update'
 
     @api.model
-    def _get_template_values(self, project):
-        template_values = super()._get_template_values(project)
-        profitability_values = self._get_profitability_values(project)
+    def _get_template_values(self, project, start_date, end_date):
+        # TODO VILA
+        template_values = super()._get_template_values(project, start_date, end_date)
+        profitability_values = self._get_profitability_values(project, start_date, end_date)
         show_profitability = bool(profitability_values and profitability_values.get('account_id') and (profitability_values.get('costs') or profitability_values.get('revenues')))
         return {
             **template_values,
@@ -23,11 +24,12 @@ class ProjectUpdate(models.Model):
         }
 
     @api.model
-    def _get_profitability_values(self, project):
+    def _get_profitability_values(self, project, start_date, end_date):
+        # TODO VILA
         costs_revenues = project.account_id and project.allow_billable
         if not (self.env.user.has_group('project.group_project_manager') and costs_revenues):
             return {}
-        profitability_items = project._get_profitability_items(False)
+        profitability_items = project._get_profitability_items(start_date, end_date, with_action=False)
         if project._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
             profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
             profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])

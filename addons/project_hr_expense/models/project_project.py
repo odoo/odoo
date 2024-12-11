@@ -67,16 +67,21 @@ class ProjectProject(models.Model):
         ])
         return move_line_ids + list(query)
 
-    def _get_expenses_profitability_items(self, with_action=True):
+    def _get_expenses_profitability_items(self, start_date, end_date, with_action=True):
         if not self.account_id:
             return {}
         can_see_expense = with_action and self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
 
+        domain = [
+            ('sheet_id.state', 'in', ['post', 'done']),
+            ('analytic_distribution', 'in', self.account_id.ids),
+        ]
+        if start_date:
+            domain = expression.AND([domain, [('date', '>=', start_date)]])
+        if end_date:
+            domain = expression.AND([domain, [('date', '<=', end_date)]])
         expenses_read_group = self.env['hr.expense']._read_group(
-            [
-                ('sheet_id.state', 'in', ['post', 'done']),
-                ('analytic_distribution', 'in', self.account_id.ids),
-            ],
+            domain,
             groupby=['currency_id'],
             aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
         )
@@ -111,9 +116,9 @@ class ProjectProject(models.Model):
             ['|', ('move_line_id', '=', False), ('move_line_id.expense_id', '=', False)],
         ])
 
-    def _get_profitability_items(self, with_action=True):
-        profitability_data = super()._get_profitability_items(with_action)
-        expenses_data = self._get_expenses_profitability_items(with_action)
+    def _get_profitability_items(self, start_date, end_date, with_action=True):
+        profitability_data = super()._get_profitability_items(start_date, end_date, with_action)
+        expenses_data = self._get_expenses_profitability_items(start_date, end_date, with_action)
         if expenses_data:
             if 'revenues' in expenses_data:
                 revenues = profitability_data['revenues']

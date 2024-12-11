@@ -794,7 +794,7 @@ class ProjectProject(models.Model):
             'color': self.last_update_color,
         }
 
-    def get_panel_data(self):
+    def get_panel_data(self, start_date, end_date):
         self.ensure_one()
         if not self.env.user.has_group('project.group_project_user'):
             return {}
@@ -809,7 +809,7 @@ class ProjectProject(models.Model):
         if self.allow_milestones:
             panel_data['milestones'] = self._get_milestones()
         if show_profitability:
-            profitability_items = self.with_context(active_test=False)._get_profitability_items()
+            profitability_items = self.with_context(active_test=False)._get_profitability_items(start_date, end_date)
             if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
                 profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
                 profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])
@@ -848,10 +848,10 @@ class ProjectProject(models.Model):
     def _get_profitability_aal_domain(self):
         return [('account_id', 'in', self.account_id.ids)]
 
-    def _get_profitability_items(self, with_action=True):
-        return self._get_items_from_aal(with_action)
+    def _get_profitability_items(self, start_date, end_date, with_action=True):
+        return self._get_items_from_aal(start_date, end_date, with_action)
 
-    def _get_items_from_aal(self, with_action=True):
+    def _get_items_from_aal(self, start_date, end_date, with_action=True):
         return {
             'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
             'costs': {'data': [], 'total': {'billed': 0.0, 'to_bill': 0.0}},

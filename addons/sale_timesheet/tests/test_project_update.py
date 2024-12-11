@@ -11,7 +11,7 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
 
     def test_project_update_description_profitability(self):
         self.project_pigs.allow_billable = True
-        template_values = self.env['project.update']._get_template_values(self.project_pigs)
+        template_values = self.env['project.update']._get_template_values(self.project_pigs, None, None)
 
         # Store the formatted amount in the same currency as the project to guarantee the same unit
         comparison_amount = format_amount(self.env, 0.0, self.project_pigs.currency_id)

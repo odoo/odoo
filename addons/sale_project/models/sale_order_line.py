@@ -11,6 +11,7 @@ from odoo.tools.sql import column_exists, create_column
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    order_date = fields.Datetime(related='order_id.date_order')
     qty_delivered_method = fields.Selection(selection_add=[('milestones', 'Milestones')])
     project_id = fields.Many2one(
         'project.project', 'Generated Project',

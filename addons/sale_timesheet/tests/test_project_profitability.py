@@ -57,7 +57,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         sale_order.action_confirm()
         self.task.write({'sale_line_id': delivery_service_order_line.id})
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             self.project_profitability_items_empty,
             'No timesheets has been recorded in the task and no product has been deelivered in the SO linked so the project profitability has no data found.'
         )
@@ -133,7 +133,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'amount': -100,
         }])
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {
                     'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
@@ -174,7 +174,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertEqual(delivery_service_order_line.qty_delivered, 0.0, 'The service type is not timesheet but manual so the quantity delivered is not increased by the timesheets linked.')
 
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {
                     'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
@@ -212,7 +212,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         })
         self.assertFalse(foreign_timesheet3.so_line, 'This timesheet should be non billable since the user manually empty the SOL.')
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {
                     'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
@@ -257,7 +257,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         self.assertFalse(timesheet3.so_line, 'This timesheet should be non billable since the user manually empty the SOL.')
 
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {
                     'data': [{'id': 'other_revenues_aal', 'sequence': sequence_per_invoice_type['other_revenues_aal'], 'invoiced': 100.0, 'to_invoice': 0.0}],
@@ -302,7 +302,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                          'Since the product type of the SOL is "delivered on TS", the qty_delivered of the SOL should be the total of unit amount of the TS.')
 
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {
                     'data': [
@@ -360,7 +360,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         })
         self.assertNotEqual(delivery_timesheet_order_line.untaxed_amount_to_invoice, 0.0)
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             {
                 'revenues': {
                     'data': [
@@ -419,14 +419,14 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'unit_amount': 1,
         })
         self.assertEqual(task2_foreign_timesheet.so_line, milestone_foreign_order_line)
-        profitability_items = self.project_task_rate._get_profitability_items(False)
+        profitability_items = self.project_task_rate._get_profitability_items(None, None, with_action=False)
         self.assertFalse([data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'])
         self.assertDictEqual(
             [data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'][0],
             {'id': 'billable_milestones', 'sequence': sequence_per_invoice_type['billable_milestones'], 'to_bill': 0.0, 'billed': task2_foreign_timesheet.amount * 0.2},
         )
         milestone_foreign_order_line.qty_delivered = 1
-        profitability_items = self.project_task_rate._get_profitability_items(False)
+        profitability_items = self.project_task_rate._get_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             [data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'][0],
             {'id': 'billable_milestones', 'sequence': sequence_per_invoice_type['billable_milestones'],
@@ -439,14 +439,14 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
             'unit_amount': 1,
         })
-        profitability_items = self.project_task_rate._get_profitability_items(False)
+        profitability_items = self.project_task_rate._get_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             [data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'][0],
             {'id': 'billable_milestones', 'sequence': sequence_per_invoice_type['billable_milestones'], 'to_bill': 0.0,
              'billed': task2_timesheet.amount + task2_foreign_timesheet.amount * 0.2},
         )
         milestone_foreign_order_line.qty_delivered = 2
-        profitability_items = self.project_task_rate._get_profitability_items(False)
+        profitability_items = self.project_task_rate._get_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             [data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'][0],
             {'id': 'billable_milestones', 'sequence': sequence_per_invoice_type['billable_milestones'],
@@ -468,14 +468,14 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
             'employee_id': self.employee_user.id,
             'unit_amount': 1,
         })
-        profitability_items = self.project_task_rate._get_profitability_items(False)
+        profitability_items = self.project_task_rate._get_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             [data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'][0],
             {'id': 'billable_milestones', 'sequence': sequence_per_invoice_type['billable_milestones'], 'to_bill': 0.0,
              'billed': task2_timesheet.amount + task2_foreign_timesheet.amount * 0.2 + task3_timesheet.amount},
         )
         milestone_order_line.qty_delivered = 1
-        profitability_items = self.project_task_rate._get_profitability_items(False)
+        profitability_items = self.project_task_rate._get_profitability_items(None, None, with_action=False)
         self.assertDictEqual(
             [data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'][0],
             {'id': 'billable_milestones', 'sequence': sequence_per_invoice_type['billable_milestones'],
@@ -486,7 +486,7 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         task2_timesheet.unlink()
         task2_foreign_timesheet.unlink()
         task3_timesheet.unlink()
-        profitability_items = self.project_task_rate._get_profitability_items(False)
+        profitability_items = self.project_task_rate._get_profitability_items(None, None, with_action=False)
         self.assertFalse([data for data in profitability_items['revenues']['data'] if data['id'] == 'billable_milestones'])
         self.assertFalse([data for data in profitability_items['costs']['data'] if data['id'] == 'billable_milestones'])
 
@@ -541,11 +541,11 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
         sale_order_revenue.action_confirm()
         project_profitability_items = sale_order_line_revenue.project_id
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             profitability_item_data
         )
         project_profitability_items.active = False
         self.assertDictEqual(
-            self.project_task_rate._get_profitability_items(False),
+            self.project_task_rate._get_profitability_items(None, None, with_action=False),
             profitability_item_data
         )

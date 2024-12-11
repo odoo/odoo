@@ -87,7 +87,7 @@ class TestProjectUpdate(TestProjectCommon):
             milestone_form.name = "Test 3"
             milestone_form.deadline = fields.Date.today() + relativedelta(years=2)
 
-        panel_data = self.project_pigs.get_panel_data()
+        panel_data = self.project_pigs.get_panel_data(None, None)
 
         self.assertEqual(len(panel_data['milestones']['data']), 3, "Panel data should contain 'milestone' entry")
         self.assertFalse(panel_data['milestones']['data'][0]['is_deadline_exceeded'], "Milestone is achieved")
@@ -101,7 +101,7 @@ class TestProjectUpdate(TestProjectCommon):
 
         # Disable the "Milestones" feature in the project and check the "Milestones" section is not loaded for this project.
         self.project_pigs.write({'allow_milestones': False})
-        panel_data = self.project_pigs.get_panel_data()
+        panel_data = self.project_pigs.get_panel_data(None, None)
         self.assertNotIn('milestones', panel_data, 'Since the "Milestones" feature is disabled in this project, the "Milestones" section is not loaded.')
 
         # Disable globally the Milestones feature and check the Milestones section is not loaded.
@@ -109,5 +109,5 @@ class TestProjectUpdate(TestProjectCommon):
         self.env['res.config.settings'] \
             .create({'group_project_milestone': False}) \
             .execute()
-        panel_data = self.project_pigs.get_panel_data()
+        panel_data = self.project_pigs.get_panel_data(None, None)
         self.assertNotIn('milestones', panel_data, 'Since the "Milestones" feature is globally disabled, the "Milestones" section is not loaded.')
