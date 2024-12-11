@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import _, api, models
+from odoo.exceptions import ValidationError
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -45,6 +46,19 @@ class StockMoveLine(models.Model):
                 if float_is_zero(diff, precision_rounding=product_uom.rounding):
                     continue
                 self._create_correction_svl(move_line.move_id, diff)
+        if 'location_id' in vals or 'location_dest_id' in vals:
+            for move_line in self:
+                if move_line.state != 'done':
+                    continue
+                new_loc_id = vals.get('location_id', move_line.location_id.id)
+                new_loc = self.env['stock.location'].browse(new_loc_id)
+                new_dest_loc_id = vals.get('location_dest_id', move_line.location_dest_id.id)
+                new_dest_loc = self.env['stock.location'].browse(new_dest_loc_id)
+                if move_line.location_id._should_be_valued() != new_loc._should_be_valued() \
+                        or move_line.location_dest_id._should_be_valued() != new_dest_loc._should_be_valued():
+                    raise ValidationError(_("The stock valuation of a move is based on the type of the source and destination locations. "
+                                            "As the move is already processed, you cannot modify the locations in a way that changes the "
+                                            "valuation logic defined during the initial processing."))
         res = super(StockMoveLine, self).write(vals)
         if analytic_move_to_recompute:
             self.env['stock.move'].browse(analytic_move_to_recompute)._account_analytic_entry_move()
