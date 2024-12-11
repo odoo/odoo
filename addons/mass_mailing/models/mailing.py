@@ -176,6 +176,9 @@ class MailingMailing(models.Model):
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mailing.list', 'mail_mass_mailing_list_rel', string='Mailing Lists')
+    use_exclusion_list = fields.Boolean(
+        'Use Exclusion List', default=True, copy=False,
+        help='Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.')
     # Mailing Filter
     mailing_filter_id = fields.Many2one(
         'mailing.filter', string='Favorite Filter',
@@ -1075,7 +1078,12 @@ class MailingMailing(models.Model):
         return self._action_send_mail(res_ids)
 
     def _action_send_mail(self, res_ids=None):
-        author_id = self.env.user.partner_id.id
+        partner_id = self.env.user.partner_id
+        if partner_id == self.env.ref('base.partner_root'):
+            # If current user is odoobot, take mailing responsible as author
+            author_id = self.user_id.partner_id.id
+        else:
+            author_id = partner_id.id
 
         for mailing in self:
             context_user = mailing.user_id or mailing.write_uid or self.env.user
@@ -1103,6 +1111,7 @@ class MailingMailing(models.Model):
                 'reply_to_force_new': mailing.reply_to_mode == 'new',
                 'subject': mailing.subject,
                 'template_id': False,
+                'use_exclusion_list': mailing.use_exclusion_list,
             }
             if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to
@@ -1454,10 +1463,6 @@ class MailingMailing(models.Model):
         mailing_domain = []
         if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
             mailing_domain = self.env[self.mailing_model_name]._mailing_get_default_domain(self)
-
-        if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
-
         return mailing_domain
 
     def _get_image_by_url(self, url, session):
