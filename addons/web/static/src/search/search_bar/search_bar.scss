@@ -25,3 +25,26 @@
         }
     }
 }
+
+.o_searchview_autocomplete {
+    .o-dropdown-item {
+        align-items: center;
+        display: flex;
+        padding-left: 25px;
+
+        &.o_indent {
+            padding-left: 50px;
+        }
+
+        a {
+            color: inherit;
+
+            &.o_expand {
+                display: flex;
+                justify-content: center;
+                width: 25px;
+                @include o-position-absolute($left: 0);
+            }
+        }
+    }
+}

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 import {
@@ -1233,6 +1233,8 @@ test("many2many with a domain", async () => {
     await contains(".o_field_x2many_list_row_add a").click();
     expect(".modal .o_data_row").toHaveCount(1);
     await contains(`.modal .o_searchview input`).edit("s");
+    await press("enter");
+    await animationFrame();
 
     expect(".modal .o_data_row").toHaveCount(0);
 });
