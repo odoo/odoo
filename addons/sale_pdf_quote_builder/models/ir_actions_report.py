@@ -6,7 +6,7 @@ import json
 
 from odoo import _, api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
-from odoo.tools.pdf import PdfFileWriter, PdfFileReader, NameObject, NumberObject, createStringObject
+from odoo.tools.pdf import PdfFileWriter, PdfFileReader, NameObject, NumberObject, createStringObject, reshape_text
 
 
 class IrActionsReport(models.Model):
@@ -101,6 +101,11 @@ class IrActionsReport(models.Model):
                 field_value = self._get_custom_value_from_order(
                     document, form_field.name, order, order_line
                 )
+            print("before: ", field_value)
+            # TODO edm: call twice because it inverse the writings (not needed) but might add ligatures. It's a try, don't judge me
+            field_value = reshape_text(field_value)  # Adapt text for RTL scripts
+            field_value = reshape_text(field_value)  # Adapt text for RTL scripts
+            print("after: ", field_value)
             form_fields_values_mapping[prefix + form_field.name] = field_value
 
         # Avoid useless update of the pdf when no form field and just add the pdf
