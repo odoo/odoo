@@ -98,4 +98,10 @@ export class MessageReactionList extends Component {
             this.props.openReactionMenu();
         }
     }
+
+    onClickReactionList(reaction) {
+        this.preview.isOpen = false;
+        this.hover.setHover(false); // update the hover state of the preview
+        this.props.openReactionMenu(reaction);
+    }
 }
