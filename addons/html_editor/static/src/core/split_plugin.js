@@ -1,4 +1,3 @@
-import { BaseContainer } from "@html_editor/utils/base_container";
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
@@ -34,6 +33,8 @@ export class SplitPlugin extends Plugin {
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
 
+        assign_base_container_overrides: (el) => this.isUnsplittable(el),
+
         unsplittable_node_predicates: [
             // An unremovable element is also unmergeable (as merging two
             // elements results in removing one of them).
@@ -50,7 +51,6 @@ export class SplitPlugin extends Plugin {
             (node) => node.getAttribute?.("contenteditable") === "false", // TODO ABD check `isContentEditable` ?
             (node) => isUnprotecting(node),
             (node) => node.nodeName === "SECTION",
-            (node) => node.nodeName === "DIV" && !node.matches(BaseContainer.selector),
         ],
     };
 
