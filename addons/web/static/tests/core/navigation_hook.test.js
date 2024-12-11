@@ -86,13 +86,15 @@ test("hotkey override options", async () => {
     class Parent extends BasicHookParent {
         navOptions = {
             hotkeys: {
-                arrowleft: (index, items) => {
-                    expect.step(index);
-                    items[(index + 2) % items.length].setActive();
+                arrowleft: (navigator) => {
+                    expect.step(navigator.activeItemIndex);
+                    navigator.items[
+                        (navigator.activeItemIndex + 2) % navigator.items.length
+                    ].setActive();
                 },
-                escape: (index, items) => {
+                escape: (navigator) => {
                     expect.step("escape");
-                    items[0].setActive();
+                    navigator.items[0].setActive();
                 },
             },
         };
