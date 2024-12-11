@@ -25,14 +25,13 @@
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
                         <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
-                        <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
-                        <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
+                        <button t-if="threads.length >= 20" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
                     </t>
                 </t>
             </div>
         </xpath>
         <xpath expr="//*[@name='threads']" position="before">
-            <div t-if="store.channels.status !== 'fetching' and !hasPreviews" class="d-flex justify-content-center py-4 px-2 text-muted">
+            <div t-if="!hasPreviews" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No conversation yet...
             </div>
             <div t-if="store.discuss.searchTerm and !threads.length" class="d-flex justify-content-center py-4 px-2 text-muted">

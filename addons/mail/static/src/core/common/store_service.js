@@ -1,6 +1,5 @@
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
-import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 
 import { reactive } from "@odoo/owl";
 
@@ -156,21 +155,6 @@ export class Store extends BaseStore {
                 );
             }
             return threads;
-        },
-        /**
-         * @this {import("models").Store}
-         * @param {import("models").Thread} thread1
-         * @param {import("models").Thread} thread2
-         */
-        sort(thread1, thread2) {
-            const compareFunctions = threadCompareRegistry.getAll();
-            for (const fn of compareFunctions) {
-                const result = fn(thread1, thread2);
-                if (result !== undefined) {
-                    return result;
-                }
-            }
-            return thread2.localId > thread1.localId ? 1 : -1;
         },
     });
 

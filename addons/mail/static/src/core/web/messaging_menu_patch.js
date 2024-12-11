@@ -1,11 +1,12 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
-import { onExternalClick } from "@mail/utils/common/hooks";
+import { onExternalClick, useLoadMore } from "@mail/utils/common/hooks";
 import { useEffect, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
+import { rpc } from "@web/core/network/rpc";
 
 Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
 
@@ -17,6 +18,12 @@ patch(MessagingMenu.prototype, {
         this.notification = useState(useService("mail.notification.permission"));
         Object.assign(this.state, {
             searchOpen: false,
+            allLoaded: false,
+        });
+        this.lastLoad = { offset: undefined, from_important: undefined, all_loaded: false };
+        this.loadMore = useLoadMore("load-more", {
+            fn: () => this.load(),
+            ready: false,
         });
 
         onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
@@ -57,6 +64,18 @@ patch(MessagingMenu.prototype, {
                 this.store.inbox.fetchNewMessages();
             }
         });
+        this.load().then(() => (this.loadMore.ready = true));
+    },
+    async load() {
+        const { storeData, ...otherData } = await rpc("/discuss/pinned_channels/load", {
+            offset: this.lastLoad.offset,
+            from_important: this.lastLoad.from_important,
+        });
+        this.lastLoad = { ...otherData };
+        if (this.lastLoad.all_loaded) {
+            this.state.allLoaded = true;
+        }
+        this.store.insert(storeData, { html: true });
     },
     get canPromptToInstall() {
         return this.pwa.canPromptToInstall;
