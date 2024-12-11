@@ -3472,8 +3472,6 @@ class MailThread(models.AbstractModel):
             author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
             if author_user:
                 signature = author_user.signature
-            elif author.name:
-                signature = Markup("<p>-- <br/>%s</p>") % author.name
 
         if force_email_company:
             company = force_email_company
