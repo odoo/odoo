@@ -261,6 +261,41 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_cancelled_with_portal_attendee(self):
+        """Cancel an event with a portal attendee.
+
+        This test exercises a bug that only happened under these circumstances:
+        - One portal user was invited to more than one event.
+        - At least one of them was going to be notified in the future.
+        - Google cancelled the first of those.
+        """
+        portal_user = new_test_user(self.env, login='portal-user', groups='base.group_portal')
+        notif30min = self.ref("calendar.alarm_notif_2")
+        # Cannot use freezegun because there are direct calls to now() from SQL
+        now = datetime.now()
+        one = self.env['calendar.event'].create({
+            'name': 'test',
+            'start': now + timedelta(hours=1),
+            'stop': now + timedelta(hours=2),
+            'google_id': 'one',
+            'user_id': self.env.user.id,
+            'need_sync': False,
+            'alarm_ids': [(6, 0, [notif30min])],
+            'partner_ids': [(6, 0, (self.env.user | portal_user).partner_id.ids)]
+        })
+        two = one.copy({
+            'google_id': 'two',
+            'start': now + timedelta(hours=2),
+            'stop': now + timedelta(hours=3),
+        })
+        gevent = GoogleEvent([
+            {'id': 'one', 'status': 'cancelled'},
+        ])
+        self.sync(gevent)
+        self.assertFalse(one.exists())
+        self.assertTrue(two.exists())
+
+    @patch_api
     def test_private_extended_properties(self):
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].create({
