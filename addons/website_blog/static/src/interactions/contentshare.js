@@ -8,8 +8,8 @@ export class BlogContentShare extends Interaction {
     static selector = ".js_comment, .js_tweet";
 
     dynamicContent = {
-        "_root:t-on-mouseup": this.showPopover,
-        "_window:t-on-mousedown": this.hidePopover,
+        "_root": { "t-on-mouseup": this.showPopover },
+        "_window": { "t-on-mousedown": this.hidePopover },
     };
 
     setup() {
@@ -25,6 +25,7 @@ export class BlogContentShare extends Interaction {
         this.shareTweetEl = null;
         this.removeCommentListener = null;
         this.removeTweetListener = null;
+        this.popoverContentEl = null;
     }
 
     showPopover() {

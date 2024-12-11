@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 class Share extends Interaction {
     static selector = ".s_share, .oe_share";
     dynamicContent = {
-        "a:t-on-click": this.onClick,
+        "a": { "t-on-click": this.onClick },
     }
 
     /**

@@ -9,10 +9,12 @@ import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting
 class Countdown extends Interaction {
     static selector = ".s_countdown";
     dynamicContent = {
-        ".s_countdown_canvas_wrapper:t-att-class": () => ({
-            "d-flex": true,
-            "justify-content-center": true,
-        }),
+        ".s_countdown_canvas_wrapper": { 
+            "t-att-class": () => ({
+                "d-flex": true,
+                "justify-content-center": true,
+            })
+        },
     }
 
     setup() {

@@ -163,31 +163,34 @@ export class Colibri {
             return nodes[sel];
         };
 
-        for (const [sel, directive, value] of generateEntries(content)) {
-            const nodes = getNodes(sel);
-            if (directive.startsWith("t-on-")) {
-                const ev = directive.slice(5);
-                this.addListener(nodes, ev, value);
-            } else if (directive.startsWith("t-att-")) {
-                const attr = directive.slice(6);
-                this.dynamicAttrs.push({ nodes, attr, definition: value, initialValues: null });
-            } else if (directive === "t-out") {
-                this.tOuts.push([nodes, value]);
-            } else if (directive === "t-component") {
-                const { Component } = odoo.loader.modules.get("@odoo/owl");
-                if (Component.isPrototypeOf(value)) {
-                    this.mountComponent(nodes, value);
+        for (const sel in content) {
+            const descr = content[sel];
+            for (const directive in descr) {
+                const value = descr[directive]
+                const nodes = getNodes(sel);
+                if (directive.startsWith("t-on-")) {
+                    const ev = directive.slice(5);
+                    this.addListener(nodes, ev, value);
+                } else if (directive.startsWith("t-att-")) {
+                    const attr = directive.slice(6);
+                    this.dynamicAttrs.push({ nodes, attr, definition: value, initialValues: null });
+                } else if (directive === "t-out") {
+                    this.tOuts.push([nodes, value]);
+                } else if (directive === "t-component") {
+                    const { Component } = odoo.loader.modules.get("@odoo/owl");
+                    if (Component.isPrototypeOf(value)) {
+                        this.mountComponent(nodes, value);
+                    } else {
+                        this.mountComponent(nodes, ...value());
+                    }
                 } else {
-                    this.mountComponent(nodes, ...value());
+                    const suffix = directive.startsWith("t-")
+                        ? ""
+                        : " (should start with t-)";
+                    throw new Error(`Invalid directive: '${directive}'${suffix}`);
                 }
-            } else {
-                const suffix = directive.startsWith("t-")
-                    ? ""
-                    : " (should start with t-)";
-                throw new Error(`Invalid directive: '${directive}'${suffix}`);
             }
         }
-
     }
 
     updateContent() {
@@ -275,18 +278,3 @@ export class Colibri {
     }
 }
 
-function* generateEntries(content) {
-    for (const key in content) {
-        const value = content[key];
-        if (typeof value === "object") {
-            for (const directive in value) {
-                yield [key, directive, value[directive]];
-            }
-        } else {
-            const lastColon = key.lastIndexOf(":");
-            const selector = key.slice(0, lastColon);
-            const directive = key.slice(lastColon + 1);
-            yield [selector, directive, value];
-        }
-    }
-}

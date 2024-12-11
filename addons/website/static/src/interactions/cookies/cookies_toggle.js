@@ -7,7 +7,7 @@ export class CookiesToggle extends Interaction {
     static selector = ".o_cookies_bar_toggle";
 
     dynamicContent = {
-        "_root:t-on-click": this.onClick,
+        "_root": { "t-on-click": this.onClick },
         ".fa:t-att-class": () => ({
                 "fa-eye": !this.modalShown,
                 "fa-eye-slash": this.modalShown,

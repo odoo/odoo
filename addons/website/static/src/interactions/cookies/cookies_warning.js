@@ -9,8 +9,8 @@ export class CookiesWarning extends Interaction {
         "_iframe": () => this.iframeEl,
     };
     dynamicContent = {
-        "_root:t-on-click": this.showCookiesBar,
-        "_iframe:t-att-class": () => ({ "d-none": !!this.el.parentElement }),
+        "_root": { "t-on-click": this.showCookiesBar },
+        "_iframe": { "t-att-class": () => ({ "d-none": !!this.el.parentElement }) },
     };
 
     setup() {

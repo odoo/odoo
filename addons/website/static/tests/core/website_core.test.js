@@ -168,7 +168,7 @@ test("can start interaction in specific el", async () => {
     class Test extends Interaction {
         static selector = ".test";
         dynamicContent = {
-            "_root:t-att-a": () => "b",
+            "_root": { "t-att-a": () => "b" },
         }
 
         setup() {

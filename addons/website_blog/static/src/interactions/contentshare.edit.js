@@ -4,7 +4,7 @@ import { BlogContentShare } from "./contentshare";
 const BlogContentShareEdit = I => class extends I {
     dynamicContent = {
         ...this.dynamicContent,
-        "_root:t-on-mouseup": () => {},
+        "_root": {},
     };
 };
 

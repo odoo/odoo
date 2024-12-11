@@ -7,8 +7,12 @@ import { Interaction } from "@website/core/interaction";
 export class WebsiteBlog extends Interaction {
     static selector = ".website_blog";
     dynamicContent = {
-        "#o_wblog_next_container:t-on-click": this.onNextBlogClick,
-        "#o_wblog_post_content_jump:t-on-click": this.onContentAnchorClick,
+        "#o_wblog_next_container": {
+            "t-on-click": this.onNextBlogClick,
+        },
+        "#o_wblog_post_content_jump": {
+            "t-on-click": this.onContentAnchorClick,
+        },
         ".o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete": {
             "t-on-click": this.onShareArticle,
         },

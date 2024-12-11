@@ -11,7 +11,7 @@ import { Interaction } from "@website/core/interaction";
 class ShowPassword extends Interaction {
     static selector = "#showPass";
     dynamicContent = {
-        "_root:t-on-pointerdown": this.showText,
+        "_root": { "t-on-pointerdown": this.showText },
     };
 
     showText() {
