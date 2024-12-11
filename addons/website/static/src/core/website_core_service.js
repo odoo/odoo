@@ -96,6 +96,9 @@ class WebsiteCore {
     startInteractions(el = this.el) {
         const proms = [];
         for (const I of this.Interactions) {
+            if (I.selector === "") {
+                throw new Error(`The selector should be defined as a static property on the class ${I.name}, not on the instance`);
+            }
             if (el.matches(I.selector)) {
                 this._startInteraction(el, I, proms);
             } else {

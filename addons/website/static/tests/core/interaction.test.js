@@ -528,6 +528,20 @@ describe("handling crashes", () => {
         expect(error).not.toBe(null);
         expect(error.message).toBe("The dynamic content object should be defined on the instance, not on the class (Test)");
     });
+
+    test("crash if selector is defined on instance, not on class", async () => {
+        let error = null;
+        class Test extends Interaction {
+            selector = ".test";
+        }
+        try {
+            await startInteraction(Test, TemplateTest);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).not.toBe(null);
+        expect(error.message).toBe("The selector should be defined as a static property on the class Test, not on the instance");
+    });
 });
 
 describe("using qualifiers", () => {
