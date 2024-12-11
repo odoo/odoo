@@ -5061,7 +5061,7 @@ class AccountMove(models.Model):
 
     def action_send_and_print(self):
         return {
-            'name': _("Print & Send"),
+            'name': _("Send"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'account.move.send.wizard' if len(self) == 1 else 'account.move.send.batch.wizard',

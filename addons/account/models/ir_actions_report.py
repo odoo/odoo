@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import ast
 from collections import OrderedDict
 from zlib import error as zlib_error
 
@@ -14,6 +15,35 @@ class IrActionsReport(models.Model):
         string="Invoice report",
         copy=True,
     )
+
+    def get_available(self, moves, is_invoice_report=True):
+        """
+        Return all the available `ir.actions.reports` for all `moves`.
+        """
+        domain = [('model', '=', 'account.move')]
+
+        if is_invoice_report:
+            domain += [('is_invoice_report', '=', 'True')]
+
+        model_reports = self.env['ir.actions.report'].search(domain)
+        available_reports = model_reports.filtered(
+            lambda model_template: len(moves.filtered_domain(ast.literal_eval(model_template.domain))) == len(moves)
+        )
+
+        return available_reports
+
+    def is_available(self, move, is_invoice_report=True):
+        """
+        Check if `ir.action.report` (self) is available for `move`.
+        """
+        assert len(move) == 1
+
+        self.ensure_one()
+
+        if available_report := self.filtered(lambda available_report: not (is_invoice_report^available_report.is_invoice_report)):
+            return bool(available_report.filtered(lambda _: move.filtered_domain(ast.literal_eval(available_report.domain))))
+
+        return False
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # Custom behavior for 'account.report_original_vendor_bill'.

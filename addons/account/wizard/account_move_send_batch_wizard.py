@@ -30,18 +30,30 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     @api.depends('move_ids')
     def _compute_summary_data(self):
         sending_methods = dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
+
         for wizard in self:
-            wizard.summary_data = {
-                sending_method: {'count': len(moves), 'label': sending_methods[sending_method]}
-                for sending_method, moves in wizard.move_ids.grouped(self._get_default_sending_method).items()
-            }
+            summary_data = {}
+
+            for move in wizard.move_ids:
+                default_sending_methods = self._get_default_sending_method(move)
+
+                for default_sending_method in default_sending_methods:
+                    if default_sending_method not in summary_data:
+                        summary_data[default_sending_method] = {
+                            'count': 0,
+                            'label': sending_methods[default_sending_method],
+                        }
+
+                    summary_data[default_sending_method]['count'] += 1
+
+            wizard.summary_data = summary_data
 
     @api.depends('summary_data')
     def _compute_alerts(self):
         for wizard in self:
             moves_data = {
                 move: {
-                    'sending_methods': {self._get_default_sending_method(move)},
+                    'sending_methods': self._get_default_sending_method(move),
                     'invoice_edi_format': self._get_default_invoice_edi_format(move),
                     'extra_edis': self._get_default_extra_edis(move),
                 }
