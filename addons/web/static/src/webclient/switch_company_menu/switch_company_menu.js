@@ -164,25 +164,27 @@ export class SwitchCompanyMenu extends Component {
         this.containerRef = useChildRef();
         this.navigationOptions = {
             hotkeys: {
-                space: (index, items) => {
-                    if (!items[index]) {
+                space: (navigator) => {
+                    const navItem = navigator.activeItem;
+                    if (!navItem) {
                         return;
                     }
-                    if (items[index].el.classList.contains("o_switch_company_item")) {
-                        const companyId = parseInt(items[index].el.dataset.companyId);
+                    if (navItem.el.classList.contains("o_switch_company_item")) {
+                        const companyId = parseInt(navItem.el.dataset.companyId);
                         this.companySelector.switchCompany("toggle", companyId);
                     }
                 },
-                enter: (index, items) => {
-                    if (!items[index]) {
+                enter: (navigator) => {
+                    const navItem = navigator.activeItem;
+                    if (!navItem) {
                         return;
                     }
-                    if (items[index].el.classList.contains("o_switch_company_item")) {
-                        const companyId = parseInt(items[index].el.dataset.companyId);
+                    if (navItem.el.classList.contains("o_switch_company_item")) {
+                        const companyId = parseInt(navItem.el.dataset.companyId);
                         this.companySelector.switchCompany("loginto", companyId);
                         this.dropdown.close();
                     } else {
-                        items[index].select();
+                        navItem.select();
                     }
                 },
             },
