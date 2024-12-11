@@ -3,6 +3,7 @@ import argparse
 import logging.config
 import os
 import sys
+import threading
 import time
 
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
@@ -176,6 +177,7 @@ def test_uninstall(args):
 def test_standalone(args):
     """ Tries to launch standalone scripts tagged with @post_testing """
     # load the registry once for script discovery
+    threading.current_thread().dbname = args.database
     registry = odoo.registry(args.database)
     for module_name in registry._init_modules:
         # import tests for loaded modules
