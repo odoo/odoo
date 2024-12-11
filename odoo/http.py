@@ -1483,7 +1483,7 @@ class Request:
     def _open_registry(self):
         try:
             registry = Registry(self.db)
-            cr_readonly = registry.cursor(readonly=True)
+            cr_readonly = registry.cursor(readonly=False)
             registry = registry.check_signaling(cr_readonly)
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
             raise RegistryError(f"Cannot get registry {self.db}") from e
