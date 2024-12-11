@@ -31,6 +31,7 @@ export class Homepage extends Component {
         this.store = useStore();
         this.state = useState({ data: {}, loading: true, waitRestart: false });
         this.store.advanced = localStorage.getItem("showAdvanced") === "true";
+        this.store.dev = new URLSearchParams(window.location.search).has("debug");
 
         onWillStart(async () => {
             await this.loadInitialData();
