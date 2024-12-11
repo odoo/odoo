@@ -5,6 +5,7 @@ import logging
 import netifaces
 import os
 import platform
+import requests
 import subprocess
 import threading
 import time
@@ -189,24 +190,33 @@ class IotBoxOwlHomePage(http.Controller):
             'password': helpers.generate_password(),
         })
 
-    @http.route('/hw_posbox_homepage/upgrade', auth="none", type="http", cors='*')
-    def upgrade_iotbox(self):
-        commit = subprocess.check_output(
-            ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git", "log", "-1"]).decode('utf-8').replace("\n", "<br/>")
-        flashToVersion = helpers.check_image()
-        actualVersion = helpers.get_version()
+    @http.route('/hw_posbox_homepage/version_info', auth="none", type="http", cors='*')
+    def get_version_info(self):
+        git = ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git"]
+        # Check branch name and last commit hash on IoT Box
+        current_commit = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, check=False, text=True)
+        current_branch = subprocess.run(
+            [*git, "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, check=False, text=True
+        )
+        if current_commit.returncode != 0 or current_branch.returncode != 0:
+            return
+        current_commit = current_commit.stdout.strip()
+        current_branch = current_branch.stdout.strip()
 
-        if flashToVersion:
-            flashToVersion = '%s.%s' % (flashToVersion.get(
-                'major', ''), flashToVersion.get('minor', ''))
+        last_available_commit = subprocess.run(
+            [*git, "ls-remote", "origin", current_branch], capture_output=True, check=False, text=True
+        )
+        if last_available_commit.returncode != 0:
+            _logger.error("Failed to retrieve last commit available for branch origin/%s", current_branch)
+            return
+        last_available_commit = last_available_commit.stdout.split()[0].strip()
 
         return json.dumps({
-            'title': "Odoo's IoTBox - Software Upgrade",
-            'breadcrumb': 'IoT Box Software Upgrade',
-            'loading_message': 'Updating IoT box',
-            'commit': commit,
-            'flashToVersion': flashToVersion,
-            'actualVersion': actualVersion,
+            'status': 'success',
+            # Checkout requires db to align with its version (=branch)
+            'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
+            'imageIsUpToDate': not bool(helpers.check_image()),
+            'currentCommitHash': current_commit,
         })
 
     @http.route('/hw_posbox_homepage/log_levels', auth="none", type="http", cors='*')
@@ -231,24 +241,12 @@ class IotBoxOwlHomePage(http.Controller):
         })
 
     @http.route('/hw_posbox_homepage/load_iot_handlers', auth="none", type="http", cors='*')
-    def load_iot_log_level(self):
+    def load_iot_handlers(self):
         helpers.download_iot_handlers(False)
         helpers.odoo_restart(0)
         return json.dumps({
             'status': 'success',
             'message': 'IoT Handlers loaded successfully',
-        })
-
-    @http.route('/hw_posbox_homepage/clear_iot_handlers', auth="none", type="http", cors='*')
-    def clear_iot_handlers(self):
-        for directory in ['drivers', 'interfaces']:
-            for file in list(Path(file_path(f'hw_drivers/iot_handlers/{directory}')).glob('*')):
-                if file.name != '__pycache__':
-                    helpers.unlink_file(str(file.relative_to(*file.parts[:3])))
-
-        return json.dumps({
-            'status': 'success',
-            'message': 'IoT Handlers cleared successfully',
         })
 
     # ---------------------------------------------------------- #
@@ -372,6 +370,14 @@ class IotBoxOwlHomePage(http.Controller):
         return {
             'status': 'success',
             'message': 'Logger level updated',
+        }
+
+    @http.route('/hw_posbox_homepage/update_git_tree', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    def update_git_tree(self):
+        helpers.check_git_branch()
+        return {
+            'status': 'success',
+            'message': 'Successfully updated the IoT Box',
         }
 
     # ---------------------------------------------------------- #
