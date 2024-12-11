@@ -181,3 +181,7 @@ class AutoCompleteController(http.Controller):
         api_key = request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.google_places_api_key')
         return self._perform_complete_place_search(address, google_place_id=google_place_id,
                                                    session_id=session_id, api_key=api_key, **kwargs)
+
+
+from odoo.addons.google_address_autocomplete.tests.mock_google_places import make_mock_google_route
+setattr(AutoCompleteController, "_call_google_route", make_mock_google_route())
