@@ -8,7 +8,7 @@
 This module Auto complete the address data.
     """,
     'category': 'Hidden/Tools',
-    'depends': ['base_setup'],
+    'depends': ['web'],
     'data': [
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
