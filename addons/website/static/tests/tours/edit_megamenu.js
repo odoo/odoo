@@ -118,6 +118,95 @@ registerWebsitePreviewTour('edit_megamenu', {
         trigger: ':iframe .o_mega_menu h4:contains("New Menu Item")',
     },
 ]);
+registerWebsitePreviewTour("megamenu_active_nav_link", {
+    url: "/",
+    edition: true,
+}, () => [
+       // Add a megamenu item to the top menu.
+    {
+        content: "Click on a menu item",
+        trigger: ":iframe .top_menu .nav-item a",
+        run: "click",
+    },
+    {
+        content: "Click on 'Link' to open Link Dialog",
+        trigger: ":iframe .o_edit_menu_popover a.js_edit_menu",
+        run: "click",
+    },
+    {
+        trigger: ".o_website_dialog",
+    },
+    {
+        content: "Trigger the link dialog (click 'Add Mega Menu Item')",
+        trigger: ".modal-body a:eq(1)",
+        run: "click",
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: ".modal-dialog .o_website_dialog input",
+        run: "edit MegaTron",
+    },
+    {
+        content: "Confirm the mega menu label",
+        trigger: ".modal .modal-footer .btn-primary:contains(ok)",
+        run: "click",
+    },
+    {
+        trigger: `.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("MegaTron")`,
+    },
+    {
+        content: "Save the website menu with a new mega menu",
+        trigger: ".modal-footer .btn-primary",
+        run: "click",
+    },
+    {
+        trigger: "#oe_snippets.o_loaded",
+    },
+    {
+        content: "Check for the new mega menu",
+        trigger: `:iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megatron"))`,
+    },
+    {
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"
+    },
+    clickOnExtraMenuItem({}, true),
+    toggleMegaMenu({}),
+    {
+        content: "Select the first menu link of the first column",
+        trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav a",
+        async run(actions) {
+            await actions.click();
+            const iframeDocument = document.querySelector('.o_iframe').contentDocument;
+            const range = iframeDocument.createRange();
+            range.selectNodeContents(this.anchor);
+            const sel = iframeDocument.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        },
+    },
+    {
+        content: "Edit link",
+        trigger: "#create-link",
+        run: "click",
+    },
+    {
+        content: "Change the link",
+        trigger: "#o_link_dialog_url_input",
+        run: "edit /new_page"
+    },
+    ...clickOnSave(),
+    clickOnExtraMenuItem({}, true),
+    toggleMegaMenu(),
+    {
+        content: "Click on the first menu link of the first column",
+        trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(1)",
+        run: "click",
+    },
+    {
+        content: "Check if the new mega menu is active",
+        trigger: `:iframe .top_menu:has(.nav-item a.o_mega_menu_toggle.active:contains("MegaTron"))`,
+    },
+])
 registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     url: '/',
     edition: true,

@@ -783,6 +783,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
             }
         }
 
+        this._updateActiveMenuLinks();
         return this._super(...arguments);
     },
 
@@ -817,6 +818,41 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
         Dropdown.getOrCreateInstance(previousMegaMenuToggleEl).hide();
         megaMenuToggleEl.insertAdjacentElement("afterend", megaMenuEl);
         this.options.wysiwyg?.odooEditor.observerActive("moveMegaMenu");
+    },
+
+    /**
+     * @private
+     */
+    _updateActiveMenuLinks() {
+        // Prevent having several active links in the menu.
+        if (this.el.querySelector(".navbar #top_menu a.nav-link.active")) {
+            return;
+        }
+        const currentHrefWithoutHash = `${window.location.origin}${window.location.pathname}`;
+        // Check and update the active state of menu items based on the current
+        // page
+        const megaMenuEls = this.el.querySelectorAll(".o_mega_menu");
+        let matchingLink = null;
+        megaMenuEls.forEach((megaMenuEl, position) => {
+            const linkEls = Array.from(megaMenuEl.querySelectorAll(`a:not([href="#"])`));
+            matchingLink = linkEls.find((linkEl) => {
+                const url = new URL(linkEl.href);
+                return `${url.origin}${url.pathname}` === currentHrefWithoutHash;
+            });
+            if (matchingLink) {
+                const megaMenuToggleEl = megaMenuEl
+                    .closest(".nav-item")
+                    .querySelector(".o_mega_menu_toggle");
+                // Target the corresponding link in the mobile navigation. Since the
+                // mega-menu for mobile is dynamically rendered, it is not
+                // accessible at this moment.
+                const mobileMegaMenuToggleEl = this.el.querySelectorAll(
+                    "#top_menu_collapse_mobile .top_menu .o_mega_menu_toggle"
+                )[position];
+                megaMenuToggleEl.classList.add("active");
+                mobileMegaMenuToggleEl.classList.add("active");
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
