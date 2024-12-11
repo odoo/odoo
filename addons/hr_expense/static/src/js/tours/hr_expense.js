@@ -59,8 +59,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     tooltipPosition: 'bottom',
     run: "click",
 }, ...stepUtils.statusbarButtonsSteps(_t("Attach Receipt"), _t("Attach a receipt - usually an image or a PDF file.")),
-...stepUtils.statusbarButtonsSteps(_t("Create Report"), _t("Create a report to submit one or more expenses to your manager.")),
-...stepUtils.statusbarButtonsSteps(_t("Submit to Manager"), markup(_t('Once your <b>Expense Report</b> is ready, you can submit it to your manager and wait for approval.'))),
+...stepUtils.statusbarButtonsSteps(_t("Submit to Manager"), markup(_t('Once your <b>Expense</b> is ready, you can submit it to your manager and wait for approval.'))),
 {
     isActive: ["mobile"],
     trigger: ".o_hr_expense_form_view_view",
@@ -97,7 +96,7 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     trigger: ".o_main_navbar",
 },
 {
-    trigger: "[data-menu-xmlid='hr_expense.menu_hr_expense_report']",
+    trigger: "[data-menu-xmlid='hr_expense.menu_hr_expense_all_expenses']",
     content: _t("Let's check out where you can manage all your employees expenses"),
     tooltipPosition: "bottom",
     run: "click",
@@ -114,5 +113,5 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     tooltipPosition: 'bottom',
     run: "click",
 },
-...stepUtils.statusbarButtonsSteps(_t("Approve"), _t("Managers can approve the report here, then an accountant can post the accounting entries.")),
+...stepUtils.statusbarButtonsSteps(_t("Approve"), _t("Managers can approve the expense here, then an accountant can post the accounting entries.")),
 ]});
