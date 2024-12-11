@@ -7,22 +7,26 @@
 # Claudia Baisan, 2024
 # Fenyedi Levente, 2024
 # Emanuel Bruda, 2024
-# Lyall Kindmurr, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
-# Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
+# Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
+# Corina Calin, 2024
 # Larisa_nexterp, 2024
+# Flavia0320, 2024
+# Wil Odoo, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Alin Miclea, 2024
+# Lyall Kindmurr, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larisa_nexterp, 2024\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -229,24 +233,24 @@ msgstr "(copie de) %s"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(document barcode)"
-msgstr ""
+msgstr "(cod de bare document)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(package barcode)"
-msgstr ""
+msgstr "(cod de bare pachet)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(product barcode)"
-msgstr ""
+msgstr "(cod de bare produs)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "(serial barcode)"
-msgstr ""
+msgstr "(cod de bare serie)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -1065,6 +1069,14 @@ msgid "All at once"
 msgstr "Toate deodată"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"All our contractual relations will be governed exclusively by United States "
+"law."
+msgstr ""
+"Toate relațiile contractuale vor fi reglementate exclusiv de legea SUA."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Toate mișcările returnate"
@@ -1208,7 +1220,7 @@ msgstr "Arhivat"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
-msgstr ""
+msgstr "Sunteți sigur că doriți să anulați acest transfer?"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1461,6 +1473,15 @@ msgid "Before scheduled date"
 msgstr "Înainte de data planificată"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+"Textul de mai jos servește drept sugestie și nu implică responsabilitatea "
+"Odoo S.A."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "Mesaj de blocare"
@@ -1600,6 +1621,24 @@ msgstr "Categorie"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "Rute Categorii"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can My "
+"Company (Chicago) become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to My Company "
+"(Chicago) in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+"Anumite țări aplică rețineri la sursă pe suma facturilor, în conformitate cu"
+" legislația internă. Orice reținere la sursă va fi plătită de client "
+"autorităților fiscale. Sub nicio formă My Company (Chicago) nu poate fi "
+"implicat în costuri legate de legislația unei țări. Suma facturii va fi, "
+"prin urmare, datorată My Company (Chicago) în întregime și nu include niciun"
+" cost legat de legislația țării în care clientul se află."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -2025,7 +2064,7 @@ msgstr "Creați noi loturi / numere de serie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Create Stock"
-msgstr ""
+msgstr "Crează stoc"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2165,7 +2204,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: stock
 #. odoo-python
@@ -2271,37 +2310,37 @@ msgstr "Numărare ciclică"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_DATE"
-msgstr ""
+msgstr "DATA_DEMO"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_ORIGIN_DISPLAY_NAME"
-msgstr ""
+msgstr "NUME_ORIGINE_DEMO_AFIȘAT"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_PARTNER_NAME"
-msgstr ""
+msgstr "NUME_PARTENER_DEMONSTRATIV"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_PRODUCT_DISPLAY_NAME"
-msgstr ""
+msgstr "NUME_PRODUS_DEMO_AFIȘAT"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_QUANTITY"
-msgstr ""
+msgstr "CANTITATE_DEMONSTRATIVA"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_SOURCE_DISPLAY_NAME"
-msgstr ""
+msgstr "NUME_AFIȘAT_SURSĂ_DEMO"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_UOM"
-msgstr ""
+msgstr "DEMO_UOM"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -2431,7 +2470,7 @@ msgstr "Decembrie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default Barcode Name"
-msgstr ""
+msgstr "Nume Cod de Bare Implicit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
@@ -2441,17 +2480,17 @@ msgstr "Locația destinație implicită"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default Name"
-msgstr ""
+msgstr "Nume implicit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default O-BTN.return Barcode"
-msgstr ""
+msgstr "O-BTN Implicit.returnează Cod de Bare"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default Return Name"
-msgstr ""
+msgstr "Returnează Nume Implicit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
@@ -2471,7 +2510,7 @@ msgstr "Ruta de ieșire implicită de urmat"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_return_id
 msgid "Default returns location"
-msgstr ""
+msgstr "Returnează locația implicită"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__forecast_uom_id
@@ -2598,6 +2637,7 @@ msgstr "Livrări"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_outgoing
 msgid "Deliveries allow you to send products from your stock to a partner."
 msgstr ""
+"Livrările vă permit să trimiteți produse din stocul dvs. către un partener."
 
 #. module: stock
 #. odoo-javascript
@@ -2675,22 +2715,22 @@ msgstr "Necesar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Demo Address and Name"
-msgstr ""
+msgstr "Nume și Adresă Demonstrative"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "Demo Display Name"
-msgstr ""
+msgstr "Nume Afișat Demonstrativ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "Demo Name"
-msgstr ""
+msgstr "Nume Demonstrativ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "Demo Product"
-msgstr ""
+msgstr "Produs Demonstrativ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_packaging__route_ids
@@ -2764,7 +2804,7 @@ msgstr "Descriere pentru recepții"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
-msgstr ""
+msgstr "Descriere pentru transfer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
@@ -2774,17 +2814,17 @@ msgstr "Descriere ridicări"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
 msgid "Dest Location"
-msgstr ""
+msgstr "Locația Destinație"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id
 msgid "Dest Package"
-msgstr ""
+msgstr "Pachet destinație"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_package_id_domain
 msgid "Dest Package Id Domain"
-msgstr ""
+msgstr "Domeniu ID pachet Dest"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -2830,7 +2870,7 @@ msgstr "Pachet destinație"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package:"
-msgstr ""
+msgstr "Pachet destinație:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
@@ -2903,7 +2943,7 @@ msgstr "Afișare completă"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_import_lot
 msgid "Display Import Lot"
-msgstr ""
+msgstr "Afișare lot de import"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
@@ -3006,7 +3046,7 @@ msgstr "Efectuat de"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
 msgid "Done Packaging Quantity"
-msgstr ""
+msgstr "Cantitate de ambalaje finalizate"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3033,6 +3073,8 @@ msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
+"Datorită recepțiilor programate în viitor, este posibil să aveți un "
+"stoc excesiv. Verificați Raportul Estimat  înainte de a comandare"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -3164,7 +3206,7 @@ msgstr ""
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
-msgstr ""
+msgstr "Estimat"
 
 #. module: stock
 #. odoo-python
@@ -3425,7 +3467,7 @@ msgstr "Stoc liber"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock in Transit"
-msgstr ""
+msgstr "Stoc liber în tranzit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -3510,14 +3552,14 @@ msgstr "Generați"
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
 msgid "Generate Serials numbers"
-msgstr ""
+msgstr "Generați numere de Serie"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "Generați Serii/Loturi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3548,7 +3590,7 @@ msgstr "Oferă secvența acestei linii la afișarea depozitelor."
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr ""
+msgstr "Zile de vizibilitate globală"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3583,7 +3625,7 @@ msgstr ""
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr ""
+msgstr "Raporturile HTML nu pot fi printate automat, raport omis: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -3739,6 +3781,19 @@ msgid "Icon to indicate an exception activity."
 msgstr "Pictograma pentru a indica o activitate de excepție."
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, My Company (Chicago) reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+"Dacă o plată este încă în așteptare mai mult de șaizeci (60) de zile după "
+"dată, My Company (Chicago) își rezervă dreptul de a apela la serviciile unei"
+" companii de recuperare a datoriilor. Toate cheltuielile legale vor fi "
+"suportate de client."
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "Dacă toate produsele sunt la fel"
@@ -3818,6 +3873,10 @@ msgid ""
 "numbers. For moves that are returns, the detailed operations will always be "
 "prefilled, regardless of this option."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va inițializa automat detaliile "
+"operațiunilor cu corespunzătoarele produse, locații și lot/numere de serie. "
+"Pentru mutări care sunt returnări, detaliile operațiunilor vor fi mereu "
+"inițializate, indiferent de această opțiune."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -3825,6 +3884,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va tipări automat borderoul de livrare"
+" al unei ridicări când aceasta este validată."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -3832,6 +3893,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN labels "
 "of a picking when it is validated."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va tipări automat etichetele "
+"lotului/SN ale uneri ridicări când aceasta este validată."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
@@ -3839,6 +3902,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the package label "
 "when \"Put in Pack\" button is used."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va tipări automat etichetele "
+"pachetului când butonul \"Puneți în Pachet\" este apăsat."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_packages
@@ -3846,6 +3911,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the packages and "
 "their contents of a picking when it is validated."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va tipări automat pachetele și "
+"conţinutul acestora ale unei ridicări când aceasta este validată."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
@@ -3853,6 +3920,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels"
 " of a picking when it is validated."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va tipări automat etichetele "
+"produsului ale unei ridicări când aceasta este validată."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report_labels
@@ -3860,6 +3929,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report labels of a picking when it is validated."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va tipări automat etichetele "
+"raportului de recepție ale unei ridicări atunci când aceasta este validată."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_reception_report
@@ -3867,6 +3938,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the reception "
 "report of a picking when it is validated and has assigned moves."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va tipări automat raportul de primire "
+"al unei ridicări când aceasta este validată și are mișcări atribuite."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_return_slip
@@ -3874,6 +3947,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the return slip of"
 " a picking when it is validated."
 msgstr ""
+"Dacă această casetă este bifată, Odoo va tipări automat borderoul de retur "
+"al unei ridicări când aceasta este validată."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_show_reception_report
@@ -3935,6 +4010,8 @@ msgid ""
 "If this picking was created as a return of another picking, this field links"
 " to the original picking."
 msgstr ""
+"Dacă această ridicare a fost creată ca retur al altei ridicări, acest câmp "
+"se referă la ridicarea inițială."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__backorder_id
@@ -3975,14 +4052,14 @@ msgstr "Importă"
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
 msgid "Import Lots"
-msgstr ""
+msgstr "Importă Loturi"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Import Serials/Lots"
-msgstr ""
+msgstr "Importați Seriile/Loturile"
 
 #. module: stock
 #. odoo-python
@@ -3994,12 +4071,25 @@ msgstr "Importă șablon pentru ajustarea inventarului"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "In Stock"
-msgstr ""
+msgstr "În Stoc"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Tip intrare"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"In order for it to be admissible, My Company (Chicago) must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+"Pentru a fi admisibilă, My Company (Chicago) trebuie să fie notificată de "
+"orice reclamație prin intermediul unei scrisori trimise prin poștă "
+"înregistrată la sediul său în termen de 8 zile de la livrarea bunurilor sau "
+"prestarea serviciilor."
 
 #. module: stock
 #. odoo-javascript
@@ -4039,7 +4129,7 @@ msgstr "Recepții"
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "Incorrect type of action submitted as a report, skipping action"
-msgstr ""
+msgstr "Tip incorect de acțiune trimisă ca raport, acțiune omisă"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
@@ -4141,6 +4231,7 @@ msgstr ""
 msgid ""
 "Internal transfers allow you to move products from one location to another."
 msgstr ""
+"Transferurile interne vă permit să mutați produsele dintr-o locație în alta."
 
 #. module: stock
 #. odoo-python
@@ -4164,6 +4255,7 @@ msgstr "Operator de domeniu nevalid%s"
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
+"Operand drept de domeniu invalid '%s'. Trebuie să fie de tipul Întreg/Real"
 
 #. module: stock
 #. odoo-python
@@ -4172,6 +4264,8 @@ msgstr ""
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"Configurația regulii este invalidă, următoare  regulă determină o buclă "
+"nesfârșită: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -4269,7 +4363,7 @@ msgstr "Cantitate inventar setată"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__inventory_adjustment_name
 msgid "Inventory Reason"
-msgstr ""
+msgstr "Motiv inventar"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
@@ -4311,12 +4405,12 @@ msgstr "Este Blocat"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_multi_location
 msgid "Is Multi Location"
-msgstr ""
+msgstr "Este Multi Locație"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
-msgstr ""
+msgstr "Pachetul este parțial"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -4394,12 +4488,12 @@ msgstr "Zile de livrare JSON"
 #: code:addons/stock/static/src/widgets/json_widget.js:0
 #, python-format
 msgid "Json Popup"
-msgstr ""
+msgstr "Json Popup"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
 msgid "Json Replenishment History"
-msgstr ""
+msgstr "Istoric Reaprovizionare Json"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__7
@@ -4427,7 +4521,7 @@ msgstr "Păstrați diferența"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Keep current lines"
-msgstr ""
+msgstr "Păstrați liniile curente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4450,7 +4544,7 @@ msgstr ""
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "LOT-PR-00012"
-msgstr ""
+msgstr "LOT-PR-00012"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
@@ -4495,7 +4589,7 @@ msgstr "Ultimul inventar eficient"
 #. module: stock
 #: model:product.removal,name:stock.removal_lifo
 msgid "Last In First Out (LIFO)"
-msgstr ""
+msgstr "Ultimul Intrat Primul Ieșit (LIFO [Last In, First Out])"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -4643,7 +4737,7 @@ msgstr "Timp livrare"
 #. module: stock
 #: model:product.removal,name:stock.removal_least_packages
 msgid "Least Packages"
-msgstr ""
+msgstr "Cele mai puține pachete"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -4696,7 +4790,7 @@ msgstr "Mișcări asociate"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of detailed operations"
-msgstr ""
+msgstr "Prezentare listă detaliată a operațiunilor"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4792,7 +4886,7 @@ msgstr "Locații de actualizat"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
-msgstr ""
+msgstr "Blochează/Deblochează"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -4809,17 +4903,17 @@ msgstr "Lot"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
-msgstr ""
+msgstr "Format etichetă lot pentru tipărire automată"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
 msgid "Lot Label Report"
-msgstr ""
+msgstr "Raport Etichete Lot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
 msgid "Lot Properties"
-msgstr ""
+msgstr "Proprietăți Lot"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -4880,12 +4974,12 @@ msgstr "Lot/Serie Nr. Nume"
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Lot/Serial Number Relocated"
-msgstr ""
+msgstr "Lot/Număr Serial Relocat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial:"
-msgstr ""
+msgstr "Lot/Serie:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
@@ -4895,7 +4989,7 @@ msgstr "Loturi & Numere seriale"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the delivery slip"
-msgstr ""
+msgstr "Loturile & numerele de serie vor apărea pe borderoul de livrare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -4923,7 +5017,7 @@ msgstr "Lot/Număr serial"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Lots/Serial numbers"
-msgstr ""
+msgstr "Loturi/Numere seriale"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -4938,7 +5032,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_product_replenish
 msgid "Low on stock? Let's replenish."
-msgstr ""
+msgstr "Stoc redus? Să reaprovizionăm."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
@@ -5220,6 +5314,24 @@ msgid "My Activity Deadline"
 msgstr "Data limită a activității mele"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"My Company (Chicago) undertakes to do its best to supply performant services"
+" in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. My "
+"Company (Chicago) cannot under any circumstances, be required by the client "
+"to appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+"Compania Mea (Chicago) se angajează să facă tot posibilul pentru a furniza "
+"servicii performante în timp util, în conformitate cu termenele convenite. "
+"Cu toate acestea, niciuna dintre obligațiile sale nu poate fi considerată o "
+"obligație de a obține rezultate. Compania Mea (Chicago) nu poate, în nici un"
+" moment, fi solicitată de către client să apară ca o parte a treia în "
+"contextul oricărei reclamații pentru daune depuse de către client în fața "
+"unui consumator final."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "Contorizările mele"
@@ -5240,19 +5352,19 @@ msgstr "Nume"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Name Demo"
-msgstr ""
+msgstr "Nume Demo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,field_description:stock.field_product_template__nbr_moves_in
 msgid "Nbr Moves In"
-msgstr ""
+msgstr "Nr. Mutări Primite"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,field_description:stock.field_product_template__nbr_moves_out
 msgid "Nbr Moves Out"
-msgstr ""
+msgstr "Nr. Mutări Ieșite"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -5302,6 +5414,12 @@ msgstr "Noua Cantitate din stoc"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "Transfer nou"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Următoarea activitate din calendar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5401,6 +5519,14 @@ msgstr "Nicio operație facută la acest lot."
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a transfer!"
 msgstr "Nu s-au găsit operații. Să creăm un transfer!"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "No product found to generate Serials/Lots for."
+msgstr ""
+"Nu s-a găsit niciun produs pentru a i se genera Numere seriale/Loturi."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -5832,6 +5958,24 @@ msgid "Other Information"
 msgstr "Alte informații"
 
 #. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, My Company (Chicago) reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"My Company (Chicago) will be authorized to suspend any provision of services"
+" without prior warning in the event of late payment."
+msgstr ""
+"Facturile noastre sunt plătibile în termen de 21 de zile lucrătoare, cu "
+"excepția cazului în care pe factura sau pe comandă este indicat alt termen "
+"de plată. În cazul în care plata nu este efectuată la data scadentă, "
+"Compania noastră (Chicago) își rezervă dreptul de a solicita o plată de "
+"dobândă fixă în valoare de 10% din suma restantă. Compania noastră (Chicago)"
+" va fi autorizată să suspende orice furnizare de servicii fără avertizare în"
+" cazul platii întârziate."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
 msgstr "Tip ieșire"
@@ -5857,7 +6001,7 @@ msgstr "Transfer de ieșire ciornă "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__outgoing_move_line_ids
 msgid "Outgoing Move Line"
-msgstr ""
+msgstr "Linie de mișcare de ieșire"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
@@ -5964,6 +6108,11 @@ msgstr "Pachet"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
+msgstr "Pachet A"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_picking
+msgid "Package B"
 msgstr ""
 
 #. module: stock
@@ -6047,7 +6196,7 @@ msgstr "Tip pachet"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type Demo"
-msgstr ""
+msgstr "Tip Pachet Demonstrativ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -6164,7 +6313,7 @@ msgstr "Parțial"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__partial_package_names
 msgid "Partial Package Names"
-msgstr ""
+msgstr "Nume Pachete Parțiale"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__partially_available
@@ -6198,7 +6347,7 @@ msgstr "Ridică"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quant_id
 msgid "Pick From"
-msgstr ""
+msgstr "Ridică de la"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -6209,7 +6358,7 @@ msgstr "Tip ridicare"
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picked
 msgid "Picked"
-msgstr ""
+msgstr "Pregătit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__picking_ids
@@ -6234,7 +6383,7 @@ msgstr "Operații ridicare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
 msgid "Picking Properties"
-msgstr ""
+msgstr "Proprietăți Ridicare"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
@@ -6269,6 +6418,8 @@ msgid ""
 "Please put this document inside your return parcel.<br/>\n"
 "                                Your parcel must be sent to this address:"
 msgstr ""
+"Puneți acest document în coletul de retur.<br/>\n"
+"Coletul trebuie trimis la această adresă:"
 
 #. module: stock
 #. odoo-python
@@ -6303,7 +6454,7 @@ msgstr "Fișă tehnologică preferată"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr ""
+msgstr "Prezenta depinde de tipul operațiunii."
 
 #. module: stock
 #. odoo-python
@@ -6357,17 +6508,17 @@ msgstr "Tipărire Etichete"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print label as:"
-msgstr ""
+msgstr "Tipăriți eticheta ca:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on \"Put in Pack\""
-msgstr ""
+msgstr "Tipăriți pe „Puneți în Pachet”"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on Validation"
-msgstr ""
+msgstr "Printare la validare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
@@ -6506,7 +6657,7 @@ msgstr "Categorie produs"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
 msgid "Product Display Name"
-msgstr ""
+msgstr "Nume afișat, Produs"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
@@ -6516,7 +6667,7 @@ msgstr "Etichetă produs (ZPL)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__product_label_format
 msgid "Product Label Format to auto-print"
-msgstr ""
+msgstr "Format etichetă produs pentru tipărire automată"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_product_product_view
@@ -6572,7 +6723,7 @@ msgstr "Cantitate produs actualizat"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "Product Relocated"
-msgstr ""
+msgstr "Produs Relocat"
 
 #. module: stock
 #. odoo-javascript
@@ -6756,7 +6907,7 @@ msgstr "Trage din"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Pull Rule"
-msgstr ""
+msgstr "Regulă de tragere"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -6886,7 +7037,7 @@ msgstr "Cantități de resetat"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities unpacked"
-msgstr ""
+msgstr "Cantități despachetate"
 
 #. module: stock
 #. odoo-javascript
@@ -6934,7 +7085,7 @@ msgstr "Cantitate în stoc"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantity Relocated"
-msgstr ""
+msgstr "Cantitate Relocată"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -6963,7 +7114,7 @@ msgstr "Cantitatea a fost mutată de la ultima verificare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
 msgid "Quantity in Product UoM"
-msgstr ""
+msgstr "Cantitate UoM produs"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__availability
@@ -7026,12 +7177,12 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantity or Reserved Quantity should be set."
-msgstr ""
+msgstr "Cantitatea sau Cantitatea Rezervată trebuie să fie setată."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
 msgid "Quantity should be a positive number."
-msgstr ""
+msgstr "Cantitatea ar trebui să fie un număr pozitiv."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__label_quantity
@@ -7061,18 +7212,28 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"Pozițiile de stoc sunt șterse automat atunci când este cazul. Dacă trebuie "
+"să le ștergeți manual, vă rugăm să cereți unui administrator de stoc să o "
+"facă."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quants cannot be created for consumables or services."
-msgstr "Cotele nu pot fi create pentru consumabile sau servicii."
+msgstr "Pozițiile de stoc nu pot fi create pentru consumabile sau servicii."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "RETURN OF"
-msgstr ""
+msgstr "RETURNAREA"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
+#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
+msgid "Ratings"
+msgstr "Evaluări"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
@@ -7095,7 +7256,7 @@ msgstr "Motiv"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
 msgid "Reason for relocation"
-msgstr ""
+msgstr "Motivul relocării"
 
 #. module: stock
 #. odoo-javascript
@@ -7125,7 +7286,7 @@ msgstr "Recepții"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr ""
+msgstr "Recepțiile vă permit să primiți produse de la un partener."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7193,7 +7354,7 @@ msgstr "Etichetă raport de recepție"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reception Report Labels"
-msgstr ""
+msgstr "Etichete raport de recepție"
 
 #. module: stock
 #. odoo-javascript
@@ -7243,12 +7404,12 @@ msgstr "Mișcări stoc relatate"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Relocate"
-msgstr ""
+msgstr "Relochează"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "Relocate your stock"
-msgstr ""
+msgstr "Relocați stocul"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -7325,7 +7486,7 @@ msgstr "Locație reaprovizionare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
 msgid "Replenish Quantities"
-msgstr ""
+msgstr "Reaprovizionați Cantitățile"
 
 #. module: stock
 #. odoo-python
@@ -7394,7 +7555,7 @@ msgstr "Acțiune raport"
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 #, python-format
 msgid "Report Printing Error"
-msgstr ""
+msgstr "Raportați eroare de tipărire"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -7473,7 +7634,7 @@ msgstr "Rezervat"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
 msgid "Reserved Packaging Quantity"
-msgstr ""
+msgstr "Cantitate ambalaje rezervate"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
@@ -7540,12 +7701,12 @@ msgstr "Linie Ridicare Retur"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Return Slip"
-msgstr ""
+msgstr "Borderou de returnare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_id
 msgid "Return of"
-msgstr ""
+msgstr "Retur al"
 
 #. module: stock
 #. odoo-python
@@ -7557,7 +7718,7 @@ msgstr "Retur al %s"
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
 msgid "Return slip"
-msgstr ""
+msgstr "Borderou de returnare"
 
 #. module: stock
 #. odoo-python
@@ -7670,7 +7831,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "Regula %s îi aparține %s în timp ce ruta îi aparține %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -7723,7 +7884,7 @@ msgstr "Rulează planificarea"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "S0001"
-msgstr ""
+msgstr "S0001"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -7740,12 +7901,17 @@ msgstr "Eroare livrare SMS"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC Demo"
-msgstr ""
+msgstr "SSCC demonstrativ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
 msgstr "SSCC:"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "TERMENI ȘI CONDIȚII STANDARD DE VÂNZARE"
 
 #. module: stock
 #. odoo-javascript
@@ -7817,7 +7983,7 @@ msgstr "Rebuturi produse"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
 msgid "Scrap operation"
-msgstr ""
+msgstr "Operațiune de rebut"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_scrap
@@ -7910,7 +8076,7 @@ msgstr "Transfer bunuri către ieșire și apoi livrare (2 pași)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "Conector pentru Sendcloud"
 
 #. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
@@ -8061,7 +8227,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots & serial numbers"
-msgstr ""
+msgstr "Setați date de expirare pe loturi & numere de serie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8078,12 +8244,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
 msgid "Set to 0"
-msgstr ""
+msgstr "Setați la 0"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr ""
+msgstr "Setați la cantitatea disponibilă"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -8101,14 +8267,9 @@ msgid "Settings"
 msgstr "Setări"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "Shelf 1"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Shelf A"
-msgstr ""
+msgstr "Raft A"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posy
@@ -8155,7 +8316,7 @@ msgstr "Livrare: Trimite prin e-mail"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr ""
+msgstr "Conector Shiprocket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -8215,12 +8376,12 @@ msgstr "Afișare buton starea cantității disponibile"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
 msgid "Show Picking Type"
-msgstr ""
+msgstr "Arată tipul ridicării"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
 msgid "Show Quant"
-msgstr ""
+msgstr "Afișează Cantitate"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
@@ -8230,7 +8391,7 @@ msgstr "Afișare raport de primire la validare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_reserved
 msgid "Show Reserved"
-msgstr ""
+msgstr "Afișare Rezervat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_set_qty_button
@@ -8251,12 +8412,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
 msgid "Show lot_id"
-msgstr ""
+msgstr "Afișați id_lot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_text
 msgid "Show lot_name"
-msgstr ""
+msgstr "Afișați nume_lot"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
@@ -8378,7 +8539,7 @@ msgstr "Pachet sursă"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package:"
-msgstr ""
+msgstr "Pachet sursă:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8440,7 +8601,7 @@ msgstr "Numere de serie alocate stocului"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Stock In Transit"
-msgstr ""
+msgstr "Stoc în Tranzit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -8511,7 +8672,7 @@ msgstr "Istoricul cantităților de stoc"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_relocate
 msgid "Stock Quantity Relocation"
-msgstr ""
+msgstr "Relocare cantități de stoc"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_quantity
@@ -8563,7 +8724,7 @@ msgstr "Linie Urmărire Stoc"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
 msgid "Stock move"
-msgstr ""
+msgstr "Mișcare stoc"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -8660,7 +8821,7 @@ msgstr "Locații de stocare"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Store To"
-msgstr ""
+msgstr "Stocați la"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -8777,6 +8938,20 @@ msgstr "În urma comenzii %s a fost creată o comandă nouă."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr ""
+"Codul de bare pentru o locație trebuie să fie unic pentru fiecare companie!"
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"Clientul renunță expres la termenii și condițiile sale standard, chiar dacă "
+"acestea au fost elaborate după aceste termeni și condiții standard de "
+"vânzare. Pentru a fi valabilă, orice derogare trebuie să fie convenită "
+"expres în avans scris."
 
 #. module: stock
 #. odoo-python
@@ -8821,12 +8996,12 @@ msgstr "Primul din secvență este cel implicit."
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "The following replenishment order have been generated"
-msgstr ""
+msgstr "A fost generată următoarea comandă de completare"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "The forecasted quantity of"
-msgstr ""
+msgstr "Cantitate prognozată de:"
 
 #. module: stock
 #. odoo-javascript
@@ -8918,6 +9093,8 @@ msgid ""
 "The quantities selected do not all belong to the same location.\n"
 "                    You may not assign them a package without moving them to a common location."
 msgstr ""
+"Cantitățile selectate nu aparțin toate la aceași locație.\n"
+"Nu le puteți atribui într-un pachet fără a le muta într-o locație comună."
 
 #. module: stock
 #. odoo-python
@@ -9034,6 +9211,9 @@ msgid ""
 "There is nothing eligible to put in a pack. Either there are no quantities "
 "to put in a pack or all products are already in a pack."
 msgstr ""
+"Nu există nimic eligibil pentru a pune într-un pachet. Fie nu există "
+"cantități de pus într-un pachet, fie toate produsele sunt deja într-un "
+"pachet."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -9077,6 +9257,8 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
+"Această casetă este doar indicativă, aceasta nu validează sau generează "
+"nicio mutare de produs."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9103,6 +9285,8 @@ msgid ""
 "This is the default location for returns created from a picking with this "
 "operation type."
 msgstr ""
+"Aceasta este locația implicită pentru returnări create de la o ridicare cu "
+"acest tip de operațiune."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -9129,6 +9313,10 @@ msgid ""
 "quantity does not generate a backorder.Changing this quantity on assigned "
 "moves affects the product reservation, and should be done with care."
 msgstr ""
+"Aceasta este cantitatea de produs care este planificată să fie mutată. "
+"Scăzând cantitatea acestuia nu generează o restanță. Schimbarea acestei "
+"cantități pentru mutări atribuite afectează rezervarea produsului, și ar "
+"trebuie făcută cu grijă."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9136,6 +9324,8 @@ msgid ""
 "This location (if it's internal) and all its descendants filtered by "
 "type=Internal."
 msgstr ""
+"Această locație (dacă este internă) și toți descendenții săi sunt filtrați "
+"după tip=Intern"
 
 #. module: stock
 #. odoo-python
@@ -9240,6 +9430,8 @@ msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr ""
+"Compania acestui produs nu poate fi schimbată atâta timp cât există "
+"cantități din acesta aparținând altei companii."
 
 #. module: stock
 #. odoo-python
@@ -9249,6 +9441,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"Compania acestui produs nu poate fi schimbată atâta timp cât există mutări "
+"de stoc ale acestuia aparținând altei companii."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9284,6 +9478,10 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"Acest prefix al secvenței este deja folosit de un alt tip de operațiune. "
+"Este recomandat să selectați un prefix unic pentru a evita problemele și/sau"
+" valorile de referință repetate sau să atribuiți secvența de referință "
+"existentă acestui tip de operațiune."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9376,7 +9574,7 @@ msgstr "De făcut"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "To Location"
-msgstr ""
+msgstr "Către Locație"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
@@ -9388,7 +9586,7 @@ msgstr "A comanda"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "To Package"
-msgstr ""
+msgstr "Către Pachet"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -9415,7 +9613,7 @@ msgstr "Activitățile de astăzi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 msgid "Total Demand"
-msgstr ""
+msgstr "Cerere Totală"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -9620,7 +9818,7 @@ msgstr "Declanșează o altă regulă dacă nu există stoc"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Trigger Manual"
-msgstr ""
+msgstr "Declanșează manual"
 
 #. module: stock
 #. odoo-javascript
@@ -9672,7 +9870,7 @@ msgstr "Conector USPS"
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Unassign"
-msgstr ""
+msgstr "Dezatribuie"
 
 #. module: stock
 #. odoo-javascript
@@ -9784,7 +9982,7 @@ msgstr "Unitate de măsură incorectă"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
-msgstr ""
+msgstr "Reaprovizionare nedorită"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -9808,7 +10006,7 @@ msgstr "Actualizați Cantitatea de Produse"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid "Update Quantities"
-msgstr ""
+msgstr "Actualizați Cantitățile"
 
 #. module: stock
 #. odoo-javascript
@@ -9879,6 +10077,7 @@ msgid "Used to order the 'All Operations' kanban view"
 msgstr "Utilizat pentru a ordona ”Toate operațiile” în vizualizarea kanban."
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_users
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__user_id
 #: model:res.groups,name:stock.group_stock_user
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -9935,7 +10134,7 @@ msgstr "Afișare"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "View Availability"
-msgstr ""
+msgstr "Vizualizează disponibilitatea"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -9960,23 +10159,23 @@ msgstr "Zile vizibilitate"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/OUT/00001"
-msgstr ""
+msgstr "WH/OUT/00001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "WH/OUT/0001"
-msgstr ""
+msgstr "WH/OUT/0001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Outgoing"
-msgstr ""
+msgstr "WH/Ieșire"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "WH/Stock"
-msgstr ""
+msgstr "WH/Stoc"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
@@ -10187,7 +10386,7 @@ msgstr "Greutatea tipului de pachet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Unitatea de greutate"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -10364,7 +10563,7 @@ msgstr "Asistent"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Write one lot/serial name per line, followed by the quantity."
-msgstr ""
+msgstr "Scrieți un lot/nume serial per linie, urmat de cantitate."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10372,6 +10571,8 @@ msgid ""
 "You are about to move quantities in a package without moving the full package.\n"
 "                    Those quantities will be removed from the following package(s):"
 msgstr ""
+"Sunteți pe cale să mutați cantități într-un pachet fără a muta pachetul complet.\n"
+"Aceste cantități vor fi scoase din următorul/următoarele pachet(e):"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -10379,6 +10580,8 @@ msgid ""
 "You are going to pick products that are not referenced\n"
 "in this location. That leads to a negative stock."
 msgstr ""
+"Veți alege produse care nu sunt menționate\n"
+"în această locație. Asta duce la un stoc negativ."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -10477,10 +10680,19 @@ msgstr "Nu puteți schimba tipul unui produs care a fost deja utilizat."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+"Nu puteți crea un punct de comandă amânat care nu este declanșat manual."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can not delete moves linked to another operation"
-msgstr ""
+msgstr "Nu puteți șterge mutările legate de altă operațiune."
 
 #. module: stock
 #. odoo-python
@@ -10515,6 +10727,8 @@ msgid ""
 "You can only move a lot/serial to a new location if it exists in a single "
 "location."
 msgstr ""
+"Puteți muta un lot/serie într-o locație nouă doar dacă există într-o singură"
+" locație."
 
 #. module: stock
 #. odoo-python
@@ -10524,6 +10738,8 @@ msgid ""
 "You can only move positive quantities stored in locations used by a single "
 "company per relocation."
 msgstr ""
+"Puteți muta doar cantitățile pozitive stocate în locațiile folosite de o "
+"singură companie per relocare."
 
 #. module: stock
 #. odoo-python
@@ -10531,6 +10747,18 @@ msgstr ""
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "Puteți prelucra doar 1.0%s din produse cu număr de serie unic."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"Puteți amâna doar punctele de comandă manuale. Ar trebui să arhivați "
+"punctele de comandă „declanșate automat” dacă nu doriți ca acestea să fie "
+"declanșate."
 
 #. module: stock
 #. odoo-python
@@ -10549,6 +10777,7 @@ msgstr ""
 #, python-format
 msgid "You can't disable locations %s because they still contain products."
 msgstr ""
+"Nu puteți dezactiva locațiile %s deoarece acestea încă conțin produse."
 
 #. module: stock
 #. odoo-python
@@ -10575,6 +10804,7 @@ msgstr ""
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
+"Nu puteți modifica o mutare de stoc anulată, în schimb creați o linie nouă."
 
 #. module: stock
 #. odoo-python
@@ -10639,6 +10869,19 @@ msgstr "Nu puteți șterge un rebut finalizat."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"You cannot directly pack quantities from different transfers into the same "
+"package through this view. Try adding them to a batch picking and pack it "
+"there."
+msgstr ""
+"Nu puteți împacheta direct cantități din transferuri diferite în același "
+"pachet prin această vizualizare. Încercați să le adăugați la un lot de "
+"preluare și să le împachetați acolo."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
@@ -10663,6 +10906,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Nu puteți împacheta produse în același pachet când acestea sunt din "
+"transferuri diferite cu diferite tipuri de operațiuni."
 
 #. module: stock
 #. odoo-python
@@ -10710,6 +10955,8 @@ msgstr "Nu puteți împărți o mutare ciornă. Trebuie confirmată mai întâi.
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
+"Nu puteți împărți o mutare a stocului care a fost setată ca „Efectuat\" sau "
+"„Anulat\"."
 
 #. module: stock
 #. odoo-python
@@ -10749,6 +10996,8 @@ msgid ""
 "You cannot validate a transfer if no quantities are reserved. To force the "
 "transfer, encode quantities."
 msgstr ""
+"Nu puteți valida un transfer dacă nu sunt cantități rezervate. Pentru a "
+"forța transferul, codificați cantitățile."
 
 #. module: stock
 #. odoo-python
@@ -10758,6 +11007,8 @@ msgid ""
 "You can’t validate an empty transfer. Please add some products to move "
 "before proceeding."
 msgstr ""
+"Nu puteți valida un transfer gol. Adăugați câteva produse pentru a le muta "
+"înainte de a continua."
 
 #. module: stock
 #. odoo-python
@@ -10782,6 +11033,8 @@ msgid ""
 "You have product(s) in stock that have lot/serial number tracking enabled. \n"
 "Switch off tracking on all the products before switching off this setting."
 msgstr ""
+"Aveți produs(e) în stoc care au activată urmărirea numărului de lot/număr de serie.\n"
+"Dezactivați urmărirea tuturor produselor înainte de a dezactiva această setare."
 
 #. module: stock
 #. odoo-python
@@ -10844,14 +11097,7 @@ msgstr ""
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "You need to select a route to replenish your products"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-#, python-format
-msgid "You need to set a Serial Number before generating more."
-msgstr "Trebuie să setați un număr de serie înainte de a genera mai mult."
+msgstr "Trebuie să selectați o rută pentru a reaproviziona produse."
 
 #. module: stock
 #. odoo-python
@@ -10871,6 +11117,11 @@ msgstr ""
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr ""
 "Este necesar să specificați un nr de Lot/Număr serial pentru produse %s."
+
+#. module: stock
+#: model_terms:res.company,invoice_terms_html:stock.res_company_1
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "Trebuie să actualizați acest document pentru a reflecta T&amp;C."
 
 #. module: stock
 #. odoo-python
@@ -10914,6 +11165,15 @@ msgstr ""
 "            Pentru a economisi timp în viitor, setați regulile ca \"automated\"."
 
 #. module: stock
+#: model_terms:res.company,lunch_notify_message:stock.res_company_1
+msgid ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+msgstr ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
@@ -10935,12 +11195,12 @@ msgstr "Etichete ZPL"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_lots
 msgid "ZPL Labels - One per lot/SN"
-msgstr ""
+msgstr "Etichete ZPL - Unul per lot/SN"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__lot_label_format__zpl_units
 msgid "ZPL Labels - One per unit"
-msgstr ""
+msgstr "Etichete ZPL - Unul per unitate"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zplxprice
@@ -10968,7 +11228,7 @@ msgstr "Conector bPost"
 #. module: stock
 #: model:product.removal,method:stock.removal_closest
 msgid "closest"
-msgstr ""
+msgstr "cel mai apropiat, cea mai apropiată"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -11025,7 +11285,7 @@ msgstr "de exemplu. Primiri"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "e.g. SN000001"
-msgstr ""
+msgstr "ex. SN000001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -11040,7 +11300,7 @@ msgstr "de exemplu. Recepție în doi pași"
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
 msgid "fifo"
-msgstr ""
+msgstr "fifo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -11063,12 +11323,12 @@ msgstr "este"
 #. module: stock
 #: model:product.removal,method:stock.removal_least_packages
 msgid "least_packages"
-msgstr ""
+msgstr "minim_pachet"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_lifo
 msgid "lifo"
-msgstr ""
+msgstr "lifo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -11109,7 +11369,7 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "reserved"
-msgstr ""
+msgstr "rezervat"
 
 #. module: stock
 #. odoo-javascript
@@ -11121,7 +11381,7 @@ msgstr "ar trebui completate"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
 msgid "stock.putaway.rule"
-msgstr ""
+msgstr "regulă.depozitare.stoc"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id

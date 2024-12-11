@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,12 +259,12 @@ msgstr "Modifier"
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
-msgstr "Campagne d'email - Produits"
+msgstr "Campagne d'e-mail - Produits"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "Campagne d'email - Services"
+msgstr "Campagne d'e-mail - Services"
 
 #. module: utm
 #. odoo-javascript
@@ -618,7 +619,7 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
-"Le mode de livraison, par ex. carte postale, email ou bannière publicitaire"
+"Le mode de livraison, par ex. carte postale, e-mail ou bannière publicitaire"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
@@ -627,7 +628,7 @@ msgid ""
 "of email list"
 msgstr ""
 "La source du lien, par ex. moteur de recherche, domaine externe ou nom de la"
-" liste d'adresses email"
+" liste d'adresses e-mail"
 
 #. module: utm
 #. odoo-javascript
@@ -720,6 +721,17 @@ msgid "Use This For My Campaigns"
 msgstr "Utiliser ceci pour mes campagnes"
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr ""
+"Vous ne pouvez pas mettre à jour plusieurs enregistrements avec le même nom."
+" Chaque nom doit être unique !"
+
+#. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 msgid "e.g. \"Brainstorming\""
 msgstr "par ex. \"Brainstorming\""
@@ -732,7 +744,7 @@ msgstr "par ex. \"Mailing de Noël\""
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "e.g. \"Email\""
-msgstr "par ex. \"Email\""
+msgstr "par ex. \"E-mail\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form

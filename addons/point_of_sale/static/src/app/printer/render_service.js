@@ -1,8 +1,8 @@
 /** @odoo-module **/
-/* global html2canvas */
 
 import { registry } from "@web/core/registry";
 import { Component, onRendered, reactive, useRef, xml } from "@odoo/owl";
+import { toCanvas } from "@point_of_sale/app/utils/html-to-image";
 
 export class RenderContainer extends Component {
     static props = ["comp", "onRendered"];
@@ -76,13 +76,13 @@ registry.category("services").add("renderer", renderService);
  * This function is meant to be used for the cases where an
  * action needs to be performed based on some html code, but
  * that html code has to be in the dom for the action to be
- * performed. ( for example calling html2canvas )
+ * performed. ( for example calling html-to-image )
  */
 const applyWhenMounted = async ({ el, container, callback }) => {
     const elClone = el.cloneNode(true);
     const sameClassElements = container.querySelectorAll(`.${[...el.classList].join(".")}`);
     // Remove all elements with the same class as the one we are about to add
-    sameClassElements.forEach(element => {
+    sameClassElements.forEach((element) => {
         element.remove();
     });
     container.appendChild(elClone);
@@ -95,15 +95,20 @@ const applyWhenMounted = async ({ el, container, callback }) => {
  */
 export const htmlToCanvas = async (el, options) => {
     el.classList.add(options.addClass || "");
-    // html2canvas expects the given element to be in the DOM
+    if (options.addEmailMargins === true)
+    {
+        $('.pos-receipt-print').css({ 'padding': '15px', 'padding-bottom': '30px'})
+    }
     return await applyWhenMounted({
         el,
         container: document.querySelector(".render-container"),
-        callback: async (el) =>
-            await html2canvas(el, {
+        callback: async (el) => {
+            return toCanvas(el, {
+                backgroundColor: "#ffffff",
                 height: Math.ceil(el.clientHeight),
                 width: Math.ceil(el.clientWidth),
-                scale: 1,
-            }),
+                pixelRatio: 1,
+            });
+        },
     });
 };

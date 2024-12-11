@@ -6,6 +6,7 @@ import re
 from operator import itemgetter
 
 from odoo import api, Command, fields, models, modules, _
+from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
 class ImLivechatChannel(models.Model):
@@ -317,6 +318,7 @@ class ImLivechatChannel(models.Model):
         info['server_url'] = self.get_base_url()
         if info['available']:
             info['options'] = self._get_channel_infos()
+            info["options"]["websocket_worker_version"] = WebsocketConnectionHandler._VERSION
             info['options']['current_partner_id'] = (
                 self.env.user.partner_id.id if not self.env.user._is_public() else None
             )

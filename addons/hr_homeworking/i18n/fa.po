@@ -9,14 +9,15 @@
 # Martin Trigaux, 2023
 # Hanna Kheradroosta, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,19 +33,22 @@ msgid ""
 "default work location for each day of the week. This schedule will repeat "
 "itself each week.</span>"
 msgstr ""
-
-#. module: hr_homeworking
-#. odoo-javascript
-#: code:addons/hr_homeworking/static/src/calendar/common/calender_common_renderer.xml:0
-#, python-format
-msgid "Add Location"
-msgstr ""
+"```html\n"
+"<span class=\"text-muted fst-italic oe_inline\" colspan=\"2\">موقعیت کاری پیش‌فرض خود را برای هر روز هفته مشخص کنید. این برنامه هر هفته تکرار خواهد شد.</span>\n"
+"```"
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this exception?"
+msgstr "آیا مطمئن هستید که می‌خواهید این استثنا را حذف کنید؟"
+
+#. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
+#, python-format
+msgid "Are you sure you want to delete this location?"
 msgstr ""
 
 #. module: hr_homeworking
@@ -52,21 +56,21 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_base__hr_icon_display__presence_home
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_public__hr_icon_display__presence_home
 msgid "At Home"
-msgstr ""
+msgstr "در خانه"
 
 #. module: hr_homeworking
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee__hr_icon_display__presence_office
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_base__hr_icon_display__presence_office
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_public__hr_icon_display__presence_office
 msgid "At Office"
-msgstr ""
+msgstr "در دفتر"
 
 #. module: hr_homeworking
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee__hr_icon_display__presence_other
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_base__hr_icon_display__presence_other
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_public__hr_icon_display__presence_other
 msgid "At Other"
-msgstr ""
+msgstr "در سایر موارد"
 
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_hr_employee_base
@@ -75,6 +79,7 @@ msgstr "کارمند پایه"
 
 #. module: hr_homeworking
 #. odoo-javascript
+#: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
 msgid "Confirmation"
@@ -96,7 +101,7 @@ msgstr "تصویر رویی"
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
 msgid "Create Record"
-msgstr ""
+msgstr "ایجاد رکورد"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__create_uid
@@ -127,7 +132,7 @@ msgstr "تاریخ"
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__day_week_string
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__day_week_string
 msgid "Day Week String"
-msgstr ""
+msgstr "رشته هفته روز"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__display_name
@@ -140,7 +145,7 @@ msgstr "نام نمایش داده شده"
 #: code:addons/hr_homeworking/static/src/calendar/hr_homeworking_calendar_controller.js:0
 #, python-format
 msgid "Edit Record"
-msgstr ""
+msgstr "ویرایش رکورد"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__employee_id
@@ -151,7 +156,7 @@ msgstr "کارمند"
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_hr_employee_location
 msgid "Employee Location"
-msgstr ""
+msgstr "موقعیت کارمند"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__employee_name
@@ -203,7 +208,7 @@ msgstr "مکان"
 #: model:ir.model.fields,field_description:hr_homeworking.field_homework_location_wizard__work_location_name
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__work_location_name
 msgid "Location name"
-msgstr ""
+msgstr "نام مکان"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__monday_location_id
@@ -218,7 +223,7 @@ msgstr "دوشنبه"
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__name_work_location_display
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_public__name_work_location_display
 msgid "Name Work Location Display"
-msgstr ""
+msgstr "نام نمایش مکان کار"
 
 #. module: hr_homeworking
 #. odoo-python
@@ -229,12 +234,13 @@ msgid ""
 "Only one default work location and one exceptional work location per day per"
 " employee."
 msgstr ""
+"فقط یک مکان کار پیش‌فرض و یک مکان کار استثنایی در هر روز برای هر کارمند."
 
 #. module: hr_homeworking
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.res_useurs_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.view_employee_form
 msgid "Remote Work"
-msgstr ""
+msgstr "کار از راه دور"
 
 #. module: hr_homeworking
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.homework_location_wizard_view_form
@@ -252,13 +258,16 @@ msgstr "شنبه"
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_homework_location_wizard
 msgid "Set Homework Location Wizard"
-msgstr ""
+msgstr "تنظیم جادوگر مکان انجام کار در خانه"
 
 #. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/calendar/common/calender_common_renderer.xml:0
 #: model:ir.actions.act_window,name:hr_homeworking.set_location_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.homework_location_wizard_view_form
+#, python-format
 msgid "Set Location"
-msgstr ""
+msgstr "تنظیم مکان"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__sunday_location_id
@@ -273,7 +282,7 @@ msgstr "1‌شنبه"
 #: model:ir.model.fields,help:hr_homeworking.field_hr_employee_base__exceptional_location_id
 #: model:ir.model.fields,help:hr_homeworking.field_hr_employee_public__exceptional_location_id
 msgid "This is the exceptional, non-weekly, location set for today."
-msgstr ""
+msgstr "این مکان استثنایی، غیر هفتگی، که برای امروز تنظیم شده است."
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__thursday_location_id
@@ -288,7 +297,7 @@ msgstr "5شنبه"
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__today_location_name
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_public__today_location_name
 msgid "Today Location Name"
-msgstr ""
+msgstr "نام موقعیت امروز"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__tuesday_location_id
@@ -305,12 +314,20 @@ msgstr "3‌شنبه"
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.view_employee_form
 #, python-format
 msgid "Unspecified"
-msgstr ""
+msgstr "نامشخص"
 
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_res_users
 msgid "User"
 msgstr "کاربر"
+
+#. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#, python-format
+msgid "User work at {{location}} and is {{status}}"
+msgstr ""
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__wednesday_location_id
@@ -334,11 +351,20 @@ msgstr "مکان کاری"
 #. module: hr_homeworking
 #: model_terms:ir.ui.view,arch_db:hr_homeworking.view_employee_filter
 msgid "Work location"
-msgstr ""
+msgstr "محل کار"
 
 #. module: hr_homeworking
 #. odoo-python
 #: code:addons/hr_homeworking/models/hr_work_location.py:0
 #, python-format
 msgid "You cannot delete locations that are being used by your employees"
+msgstr ""
+"شما نمی‌توانید مکان‌هایی که توسط کارکنانتان استفاده می‌شوند را حذف کنید"
+
+#. module: hr_homeworking
+#. odoo-javascript
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
+#, python-format
+msgid "{{status}}"
 msgstr ""

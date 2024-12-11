@@ -56,6 +56,8 @@ class ResCurrency(models.Model):
         if companies == user_company:
             currency_rates = {user_company.currency_id.id: 1.0}
         else:
+            if user_company not in companies:
+                companies |= user_company
             currency_rates = companies.mapped('currency_id')._get_rates(user_company, conversion_date)
 
         conversion_rates = []

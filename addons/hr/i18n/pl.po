@@ -5,14 +5,16 @@
 # Translators:
 # Wil Odoo, 2023
 # Damian Ratus, 2024
+# Interactive AV-IT, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Damian Ratus, 2024\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +81,7 @@ msgstr "12 dni w roku, w tym <br>6 dni do wyboru."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "12345678901"
-msgstr ""
+msgstr "12345678901"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -994,6 +996,8 @@ msgstr ""
 "Utrzymywanie regularnych kontaktów z kluczowymi klientami w celu lepszej ekstrakcji i ekspansji."
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1006,6 +1010,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Dział"
 
@@ -1934,7 +1939,7 @@ msgstr "Manager pracownika %s nie jest ustawiony."
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -2232,7 +2237,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_work_location__location_type__office
 msgid "Office"
-msgstr ""
+msgstr "Biuro"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -2844,6 +2849,13 @@ msgstr "PESEL"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
+msgstr "Deweloper oprogramowania"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
 msgstr ""
 
 #. module: hr

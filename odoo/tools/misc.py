@@ -13,6 +13,7 @@ import hmac as hmac_lib
 import hashlib
 import io
 import itertools
+import logging
 import os
 import pickle as pickle_
 import re
@@ -30,7 +31,7 @@ from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
-from functools import wraps
+from functools import reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
@@ -943,7 +944,7 @@ class ConstantMapping(Mapping):
         return self._value
 
 
-def dumpstacks(sig=None, frame=None, thread_idents=None):
+def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO):
     """ Signal handler: dump a stack trace for each existing thread or given
     thread(s) specified through the ``thread_idents`` sequence.
     """
@@ -971,7 +972,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None):
             query_time = thread_info.get('query_time')
             perf_t0 = thread_info.get('perf_t0')
             remaining_time = None
-            if query_time and perf_t0:
+            if query_time is not None and perf_t0:
                 remaining_time = '%.3f' % (time.time() - perf_t0 - query_time)
                 query_time = '%.3f' % query_time
             # qc:query_count qt:query_time pt:python_time (aka remaining time)
@@ -997,7 +998,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None):
             for line in extract_stack(ob.gr_frame):
                 code.append(line)
 
-    _logger.info("\n".join(code))
+    _logger.log(log_level, "\n".join(code))
 
 def freehash(arg):
     try:
@@ -1146,6 +1147,9 @@ class OrderedSet(MutableSet):
 
     def __repr__(self):
         return f'{type(self).__name__}({list(self)!r})'
+
+    def intersection(self, *others):
+        return reduce(OrderedSet.__and__, others, self)
 
 
 class LastOrderedSet(OrderedSet):

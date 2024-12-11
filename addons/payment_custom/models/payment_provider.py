@@ -3,6 +3,8 @@
 from odoo import _, api, fields, models
 from odoo.osv.expression import OR
 
+from odoo.addons.payment_custom import const
+
 
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
@@ -83,3 +85,10 @@ class PaymentProvider(models.Model):
         )
         if transfer_providers_without_msg:
             transfer_providers_without_msg.action_recompute_pending_msg()
+
+    def _get_default_payment_method_codes(self):
+        """ Override of `payment` to return the default payment method codes. """
+        default_codes = super()._get_default_payment_method_codes()
+        if self.custom_mode != 'wire_transfer':
+            return default_codes
+        return const.DEFAULT_PAYMENT_METHOD_CODES

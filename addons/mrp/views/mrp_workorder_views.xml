@@ -81,7 +81,8 @@
                 <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                 <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
-                <field name="qty_remaining" optional="show" string="Quantity"/>
+                <field name="qty_remaining" optional="show" string="Quantity Remaining"/>
+                <field name="qty_produced" optional="hide" string="Quantity Produced"/>
                 <field name="finished_lot_id" optional="hide" string="Lot/Serial"/>
                 <field name="date_start" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
                 <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>

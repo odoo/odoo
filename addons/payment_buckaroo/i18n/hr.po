@@ -1,59 +1,61 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_buckaroo
-#
+# 
 # Translators:
-# Bole <bole@dajmi5.com>, 2019
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Tina Milas, 2019
-#
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
+# Martin Trigaux, 2024
+# Bole <bole@dajmi5.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
-"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
-msgid "An error occurred during processing of your payment (code %s). Please try again."
+msgid ""
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:account.payment.method,name:payment_buckaroo.payment_method_buckaroo
-#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_provider__code__buckaroo
 msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_secret_key
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_secret_key
 msgid "Buckaroo Secret Key"
 msgstr ""
 
 #. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__code
+msgid "Code"
+msgstr "Šifra"
+
+#. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model,name:payment_buckaroo.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Stjecatelj plaćanja"
-
-#. module: payment_buckaroo
-#: model:ir.model,name:payment_buckaroo.model_account_payment_method
-msgid "Payment Methods"
-msgstr ""
+#: model:ir.model,name:payment_buckaroo.model_payment_provider
+msgid "Payment Provider"
+msgstr "Pružatelj usluge naplate"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
@@ -61,43 +63,41 @@ msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "Davatelj "
-
-#. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing transaction keys"
 msgstr ""
 
 #. module: payment_buckaroo
-#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_provider_form
 msgid "Secret Key"
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.model.fields,help:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__buckaroo_website_key
 msgid "The key solely used to identify the website with Buckaroo"
 msgstr ""
 
 #. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown status code: %s"
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__buckaroo_website_key
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_website_key
 msgid "Website Key"
 msgstr ""
 
 #. module: payment_buckaroo
+#. odoo-python
 #: code:addons/payment_buckaroo/models/payment_transaction.py:0
 #, python-format
 msgid "Your payment was refused (code %s). Please try again."

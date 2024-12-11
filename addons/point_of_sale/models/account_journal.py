@@ -9,6 +9,11 @@ class AccountJournal(models.Model):
 
     pos_payment_method_ids = fields.One2many('pos.payment.method', 'journal_id', string='Point of Sale Payment Methods')
 
+    def action_archive(self):
+        if self.pos_payment_method_ids:
+            raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
+        return super().action_archive()
+
     @api.constrains('type')
     def _check_type(self):
         methods = self.env['pos.payment.method'].sudo().search([("journal_id", "in", self.ids)])

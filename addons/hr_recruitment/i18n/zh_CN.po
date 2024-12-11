@@ -4,18 +4,18 @@
 # 
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# Wil Odoo, 2024
 # Chloe Wang, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1387,6 +1387,11 @@ msgstr "当前职位的EMail别名。新邮件将自动为这个职位创造新�
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Email cc"
 msgstr "邮件抄送"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "电子邮件域名，例如 'odoo@example.com' 中的 'example.com'"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3159,6 +3164,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."

@@ -69,11 +69,7 @@ class AccountMove(models.Model):
         other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
         real_invoices = set(other_so_lines.invoice_lines.move_id)
         for so_dpl in downpayment_lines:
-            so_dpl.price_unit = sum(
-                l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
-                for l in so_dpl.invoice_lines
-                if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
-            )
+            so_dpl.price_unit = so_dpl._get_downpayment_line_price_unit(real_invoices)
             so_dpl.tax_id = so_dpl.invoice_lines.tax_ids
 
         return res

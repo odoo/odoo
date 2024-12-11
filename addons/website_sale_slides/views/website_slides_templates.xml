@@ -110,7 +110,7 @@
         <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
             <div class="css_editable_mode_hidden">
                 <!-- real price -->
-                <div class="oe_price fw-bold text-nowrap h2 my-2"
+                <div t-attf-class="oe_price fw-bold text-nowrap my-2 #{'h4' if len(str(product_info['price'])) > 10 else 'h2'}"
                      t-esc="product_info['price']"
                      t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
                 <span itemprop="price" style="display:none;" t-esc="product_info['price']"/>

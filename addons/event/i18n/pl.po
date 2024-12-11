@@ -8,14 +8,15 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Wil Odoo, 2023
 # Piotr Strębski <strebski@gmail.com>, 2023
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2023\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -858,7 +859,7 @@ msgid ""
 "                    </div>\n"
 "                    <t t-if=\"object.barcode\"> \n"
 "                        <div style=\"margin-bottom: 5px;\">\n"
-"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" alt=\"QR Code\">\n"
+"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" height=\"100\" alt=\"QR Code\">\n"
 "                        </div>\n"
 "                    </t>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -2697,7 +2698,7 @@ msgstr "Zarządzanie i publikowanie harmonogramu z wystąpieniami"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -3156,8 +3157,8 @@ msgid "Registered"
 msgstr "Zarejestrowany"
 
 #. module: event
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #: code:addons/event/models/event_ticket.py:0
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
@@ -3794,8 +3795,8 @@ msgid "This ticket is not for an ongoing event"
 msgstr "Ten bilet nie jest przeznaczony na trwające wydarzenie"
 
 #. module: event
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/event/controllers/main.py:0
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event

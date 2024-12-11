@@ -162,7 +162,7 @@ class HrExpense(models.Model):
         string="Is currency_id different from the company_currency_id",
         compute='_compute_is_multiple_currency',
     )
-    currency_rate = fields.Float(compute='_compute_currency_rate', digits=(12, 6), readonly=True, tracking=True)
+    currency_rate = fields.Float(compute='_compute_currency_rate', digits=(16, 9), readonly=True, tracking=True)
     label_currency_rate = fields.Char(compute='_compute_currency_rate', readonly=True)
 
     # Account fields
@@ -179,7 +179,8 @@ class HrExpense(models.Model):
         comodel_name='account.account',
         string="Account",
         compute='_compute_account_id', precompute=True, store=True, readonly=False,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card')), ('company_id', '=', company_id)]",
+        check_company=True,
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
         help="An expense account is expected",
     )
     tax_ids = fields.Many2many(
@@ -560,6 +561,13 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
+        if (
+                'state' in vals
+                and vals['state'] != 'submitted'
+                and not self.user_has_groups('hr_expense.group_hr_expense_manager')
+                and any(state == 'draft' for state in self.mapped('state'))
+        ):
+            raise UserError(_("You don't have the rights to bypass the validation process of this expense."))
         expense_to_previous_sheet = {}
         if 'sheet_id' in vals:
             self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
@@ -706,8 +714,7 @@ class HrExpense(models.Model):
                 ('state', '=', 'draft'),
                 ('sheet_id', '=', False),
                 ('employee_id', '=', self.env.user.employee_id.id),
-                ('is_editable', '=', True),
-            ])
+            ]).filtered(lambda expense: expense.is_editable)
 
         if not expenses:
             raise UserError(_('You have no expense to report'))
@@ -793,9 +800,10 @@ class HrExpense(models.Model):
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
         move_lines = []
-        tax_data = self.env['account.tax']._compute_taxes([
-            self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id)
-        ])
+        tax_data = self.env['account.tax']._compute_taxes(
+            [self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id)],
+            include_caba_tags=(self.payment_mode == 'company_account')
+        )
         rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 1.0
         base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base line
         amount_currency = to_update['price_subtotal']

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="event_crm.event_lead_rule_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lead_creation_basis']" position="attributes">
-                <attribute name="invisible">0</attribute>
+                <attribute name="column_invisible">False</attribute>
             </xpath>
         </field>
     </record>

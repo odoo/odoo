@@ -18,6 +18,8 @@ class TestSafeEval(BaseCase):
         expected = (1, {"a": {2.5}}, [None, u"foo"])
         actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
         self.assertEqual(actual, expected)
+        # Test RETURN_CONST
+        self.assertEqual(const_eval('10'), 10)
 
     def test_expr(self):
         # NB: True and False are names in Python 2 not consts

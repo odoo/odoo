@@ -4,10 +4,10 @@
 # 
 # Translators:
 # F Hariri <fhari1234@gmail.com>, 2023
+# Martin Trigaux, 2023
 # Ali Reza Feizi Derakhshi, 2023
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
 # Hanna Kheradroosta, 2023
-# Martin Trigaux, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -440,8 +440,8 @@ msgstr "9951 - کد مالیات بر ارزش افزوده‌ی سن مارین
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
-msgid "9952 - Turkey VAT number"
-msgstr "9952 - کد مالیات بر ارزش افزوده‌ی ترکیه"
+msgid "9952 - Türkiye VAT number"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
@@ -563,6 +563,11 @@ msgid "Companies"
 msgstr "شرکت‌ها"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__show_ubl_company_warning
+msgid "Company warning"
+msgstr "هشدار شرکت"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
@@ -656,7 +661,7 @@ msgstr "فعال کردن Ubl Cii Xml"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr "خطاهای رخ داده هنگام ایجاد سند EDI (قالب: %s):"
@@ -752,6 +757,11 @@ msgid "Odoo"
 msgstr "اودو"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__ubl_partner_warning
+msgid "Partner warning"
+msgstr "هشدار شریک"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
@@ -775,10 +785,11 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
-"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
 msgstr ""
-"کدهای 0212 و 0213 Peppol EAS منسوخ شده‌اند. لطفاً به جای آن از 0216 استفاده "
-"کنید."
+"کدهای Peppol EAS 0037، 0212، 0213 و 0215 منسوخ شده‌اند. لطفاً از 0216 به جای"
+" آن‌ها استفاده کنید."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -798,6 +809,15 @@ msgid "Peppol format"
 msgstr "قالب Peppol"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_move_send_form
+msgid ""
+"Please fill in Peppol EAS and Peppol Endpoint in your company form to "
+"generate a complete file."
+msgstr ""
+"لطفاً Peppol EAS و Peppol Endpoint را در فرم شرکت خود پر کنید تا یک فایل "
+"کامل تولید شود."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
 msgstr "SG BIS Billing 3.0"
@@ -813,6 +833,17 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #, python-format
 msgid "Tax '%s' is invalid: %s"
 msgstr "مالیات %s نامعتبر است: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
+"پورتال Peppol معتبر نیست. این شماره باید دقیقاً 10 رقم (شماره ثبت شرکت) "
+"داشته باشد. فرمت مورد انتظار به این شکل است: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -887,7 +918,7 @@ msgstr "فیلد «شماره حساب پاکسازی شده» برای بانک
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
 "The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
@@ -897,17 +928,6 @@ msgstr ""
 "همکاران زیر دارای Peppol EAS یا مقصد Peppol نیستند: %s. لطفاً آنها را در "
 "زبانه‌ی حسابداری بررسی کنید. در غیر این صورت، فایل‌های ایجاد شده ناقص خواهند"
 " بود."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid ""
-"The invoice contains line(s) with a negative unit price, which is not "
-"allowed. You might need to set a negative quantity instead."
-msgstr ""
-"فاکتور حاوی سطر(هایی) با یک قسمت واحد منفی است، که مجاز شمرده نمی‌شود. ممکن "
-"است لازم باشد به جای آن یک مقدار منفی را مشخص کنید."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -921,7 +941,7 @@ msgstr "فاکتور به سند بستانکار تبدیل شده و مقاد�
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
 "This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
@@ -929,14 +949,6 @@ msgid ""
 msgstr ""
 "این همکار فاقد فیلد Peppol EAS یا مقصد Peppol است. لطفاً آنها را در زبانه‌ی "
 "حسابداری بررسی کنید، در غیر این صورت فایل ایجاد شده ناقص خواهد بود."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr "عرضه‌کننده‌ی %s باید دارای ثبت شرکت Bronnoysund باشد."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -1003,11 +1015,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "false"
-msgstr "نادرست‌"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

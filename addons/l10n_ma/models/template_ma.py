@@ -35,5 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_loss_account_id': 'pcg_63862',
                 'account_sale_tax_id': 'vat_out_20_80',
                 'account_purchase_tax_id': 'vat_in_20_146',
+                'tax_exigibility': 'True',
             },
         }

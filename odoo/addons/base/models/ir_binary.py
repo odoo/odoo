@@ -73,21 +73,18 @@ class IrBinary(models.AbstractModel):
             return Stream.from_attachment(record)
 
         record.check_field_access_rights('read', [field_name])
-        field_def = record._fields[field_name]
 
-        # fields.Binary(attachment=False) or compute/related
-        if not field_def.attachment or field_def.compute or field_def.related:
-            return Stream.from_binary_field(record, field_name)
+        if record._fields[field_name].attachment:
+            field_attachment = self.env['ir.attachment'].sudo().search(
+                domain=[('res_model', '=', record._name),
+                        ('res_id', '=', record.id),
+                        ('res_field', '=', field_name)],
+                limit=1)
+            if not field_attachment:
+                raise MissingError("The related attachment does not exist.")
+            return Stream.from_attachment(field_attachment)
 
-        # fields.Binary(attachment=True)
-        field_attachment = self.env['ir.attachment'].sudo().search(
-            domain=[('res_model', '=', record._name),
-                    ('res_id', '=', record.id),
-                    ('res_field', '=', field_name)],
-            limit=1)
-        if not field_attachment:
-            raise MissingError("The related attachment does not exist.")
-        return Stream.from_attachment(field_attachment)
+        return Stream.from_binary_field(record, field_name)
 
     def _get_stream_from(
         self, record, field_name='raw', filename=None, filename_field='name',
@@ -217,6 +214,8 @@ class IrBinary(models.AbstractModel):
 
         if stream.type == 'url':
             return stream  # Rezising an external URL is not supported
+        if not stream.mimetype.startswith('image/'):
+            stream.mimetype = 'application/octet-stream'
 
         if (width, height) == (0, 0):
             width, height = image_guess_size_from_field_name(field_name)

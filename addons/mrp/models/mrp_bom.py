@@ -248,7 +248,7 @@ class MrpBom(models.Model):
         relevant_fields = ['bom_line_ids', 'byproduct_ids', 'product_tmpl_id', 'product_id', 'product_qty']
         if any(field_name in vals for field_name in relevant_fields):
             self._set_outdated_bom_in_productions()
-        if 'sequence' in vals and self and self[-1].id == self._prefetch_ids[-1]:
+        if 'sequence' in vals and self and self[-1].id == list(self._prefetch_ids)[-1]:
             self.browse(self._prefetch_ids)._check_bom_cycle()
         return res
 
@@ -298,6 +298,15 @@ class MrpBom(models.Model):
         for bom in self:
             bom_data = self.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True)
             bom.days_to_prepare_mo = self.env['report.mrp.report_bom_structure']._get_max_component_delay(bom_data['components'])
+            if bom_data.get('availability_state') == 'unavailable' and not bom_data.get('components_available', True):
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Cannot compute days to prepare due to missing route info for at least 1 component or for the final product.'),
+                        'sticky': False,
+                    }
+                }
 
     @api.constrains('product_tmpl_id', 'product_id', 'type')
     def check_kit_has_not_orderpoint(self):

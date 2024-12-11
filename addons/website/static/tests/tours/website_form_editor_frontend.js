@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                        ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "input[name=subject]",
         run:      "text Jane Smith"
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Your Message')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                        ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "textarea[name=body_html]",
         run:      "text A useless message"
@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Your Message')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Products')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
-                        ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
+                        ":has(.s_website_form_field:has(label:contains('State')).o_has_error)" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "input[name=Products][value='Wiko Stairway']"
     },
@@ -103,6 +103,11 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     {
         content:  "Check a service",
         trigger:  "input[name='Service'][value='Development Service']"
+    },
+    {
+        content:  "Select a State",
+        trigger:  "select[name='State']",
+        run:      "text Canada",
     },
     {
         content:  "Complete Your Name field",

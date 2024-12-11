@@ -692,9 +692,29 @@ class AccountJournal(models.Model):
             ), False
         )
         if company != self.env.ref('base.main_company'):
-            company_identifier = company.name if self.env['mail.alias']._is_encodable(company.name) else company.id
+            company_identifier = self.env['mail.alias']._sanitize_alias_name(company.name) if self.env['mail.alias']._is_encodable(company.name) else company.id
             if f'-{company_identifier}' not in alias_name:
                 alias_name = f"{alias_name}-{company_identifier}"
+        return self.env['mail.alias']._sanitize_alias_name(alias_name)
+
+    @api.model
+    def _ensure_unique_alias(self, vals, company):
+        """ Check uniqueness of the alias name within the given alias domain.
+        :param vals: the values of the journal.
+        :return: a unique alias name.
+        """
+        alias_name = vals['alias_name']
+        alias_domain_name = company.alias_domain_id.name
+
+        domain = [('alias_name', '=', alias_name)]
+        if alias_domain_name:
+            domain.append(('alias_domain', '=', alias_domain_name))
+
+        existing_alias = self.env['mail.alias'].search_count(domain, limit=1)
+
+        if existing_alias:
+            alias_name = f"{alias_name}-{vals.get('code')}"
+
         return self.env['mail.alias']._sanitize_alias_name(alias_name)
 
     @api.model
@@ -786,10 +806,12 @@ class AccountJournal(models.Model):
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
 
         # === Fill missing alias name for sale / purchase, to force alias creation ===
-        if journal_type in {'sale', 'purchase'} and 'alias_name' not in vals:
-            vals['alias_name'] = self._alias_prepare_alias_name(
+        if journal_type in {'sale', 'purchase'}:
+            if 'alias_name' not in vals:
+                vals['alias_name'] = self._alias_prepare_alias_name(
                 False, vals.get('name'), vals.get('code'), journal_type, company
             )
+            vals['alias_name'] = self._ensure_unique_alias(vals, company)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -836,6 +858,11 @@ class AccountJournal(models.Model):
             if journal.currency_id and journal.currency_id != journal.company_id.currency_id:
                 name = f"{name} ({journal.currency_id.name})"
             journal.display_name = name
+
+    def action_archive(self):
+        if self.env['account.payment.method.line'].search_count([('journal_id', 'in', self.ids)], limit=1):
+            raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
+        return super().action_archive()
 
     def action_configure_bank_journal(self):
         """ This function is called by the "configure" button of bank journals,

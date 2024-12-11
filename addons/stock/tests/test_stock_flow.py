@@ -2135,6 +2135,7 @@ class TestStockFlow(TestStockCommon):
             picking.action_confirm()
             return picking
 
+        self.env['stock.picking.type'].browse(self.picking_type_out).reservation_method = 'at_confirm'
         out01 = create_picking(self.picking_type_out, self.stock_location, self.customer_location)
         out02 = create_picking(self.picking_type_out, self.stock_location, self.customer_location, sequence=2, delay=1)
         in01 = create_picking(self.picking_type_in, self.supplier_location, self.stock_location, delay=2)
@@ -2375,8 +2376,8 @@ class TestStockFlow(TestStockCommon):
         steps), the out-move should be automatically assigned.
         """
         self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
-
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.out_type_id.reservation_method = 'by_date'
         warehouse.reception_steps = 'two_steps'
 
         out_move = self.env['stock.move'].create({

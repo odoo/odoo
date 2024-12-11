@@ -65,7 +65,11 @@ class ProductProduct(models.Model):
         for bom_line, moves_list in groupby(stock_moves.filtered(lambda sm: sm.state != 'cancel'), lambda sm: sm.bom_line_id):
             if bom_line not in bom_lines:
                 for move in moves_list:
-                    value += move.product_qty * move.product_id._compute_average_price(qty_invoiced * move.product_qty, qty_to_invoice * move.product_qty, move, is_returned=is_returned)
+                    component_quantity = next(
+                        (bml.product_qty for bml in move.product_id.bom_line_ids if bml in bom_lines),
+                        1
+                    )
+                    value += component_quantity * move.product_id._compute_average_price(qty_invoiced * move.product_qty, qty_to_invoice * move.product_qty, move, is_returned=is_returned)
                 continue
             line_qty = bom_line.product_uom_id._compute_quantity(bom_lines[bom_line]['qty'], bom_line.product_id.uom_id)
             moves = self.env['stock.move'].concat(*moves_list)
@@ -122,5 +126,9 @@ class ProductCategory(models.Model):
         help="""This account will be used as a valuation counterpart for both components and final products for manufacturing orders.
                 If there are any workcenter/employee costs, this value will remain on the account once the production is completed.""")
 
+    def write(self, vals):
+        return super(ProductCategory, self.with_context(product_category_mrp_account_write=True)).write(vals)
+
     def _get_stock_account_property_field_names(self):
-        return super()._get_stock_account_property_field_names() + ['property_stock_account_production_cost_id']
+        mrp_value = ['property_stock_account_production_cost_id'] if self.property_stock_account_production_cost_id or not self.env.context.get('product_category_mrp_account_write') else []
+        return super()._get_stock_account_property_field_names() + mrp_value

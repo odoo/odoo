@@ -213,9 +213,9 @@ class StockWarehouse(models.Model):
     def _get_sequence_values(self, name=False, code=False):
         values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
         values.update({
-            'pbm_type_id': {'name': self.name + ' ' + _('Sequence picking before manufacturing'), 'prefix': self.code + '/PC/', 'padding': 5, 'company_id': self.company_id.id},
-            'sam_type_id': {'name': self.name + ' ' + _('Sequence stock after manufacturing'), 'prefix': self.code + '/SFP/', 'padding': 5, 'company_id': self.company_id.id},
-            'manu_type_id': {'name': self.name + ' ' + _('Sequence production'), 'prefix': self.code + '/MO/', 'padding': 5, 'company_id': self.company_id.id},
+            'pbm_type_id': {'name': self.name + ' ' + _('Sequence picking before manufacturing'), 'prefix': self.code + '/' + (self.pbm_type_id.sequence_code or 'PC') + '/', 'padding': 5, 'company_id': self.company_id.id},
+            'sam_type_id': {'name': self.name + ' ' + _('Sequence stock after manufacturing'), 'prefix': self.code + '/' + (self.sam_type_id.sequence_code or 'SFP') + '/', 'padding': 5, 'company_id': self.company_id.id},
+            'manu_type_id': {'name': self.name + ' ' + _('Sequence production'), 'prefix': self.code + '/' + (self.manu_type_id.sequence_code or 'MO') + '/', 'padding': 5, 'company_id': self.company_id.id},
         })
         return values
 

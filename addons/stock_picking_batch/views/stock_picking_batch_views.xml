@@ -171,6 +171,7 @@
                                 </div>
                                 <div class="oe_kanban_bottom_right">
                                     <field name="scheduled_date" widget="date" readonly="state in ['cancel', 'done']"/>
+                                    <field name="company_id" invisible="1"/>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
                                 </div>
                             </div>

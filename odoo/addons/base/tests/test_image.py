@@ -202,6 +202,10 @@ class TestImage(TransactionCase):
         fill = 0
         bg = 1
 
+        # Images with small dimensions
+        small_width = tools.image_apply_opt(Image.new('RGBA', (1, 16)), 'PNG')
+        small_height = tools.image_apply_opt(Image.new('RGBA', (16, 1)), 'PNG')
+
         # Format of `tests`: (original base64 image, size parameter, crop parameter, res size, res color (top, bottom, left, right), text)
         tests = [
             (self.img_1920x1080_png, None, None, (1920, 1080), (fill, fill, bg, bg), "horizontal, verify initial"),
@@ -213,6 +217,7 @@ class TestImage(TransactionCase):
             (self.img_1920x1080_png, (512, 512), 'bottom', (512, 512), (fill, fill, fill, fill), "horizontal, type bottom"),
             (self.img_1920x1080_png, (512, 512), 'wrong', (512, 512), (fill, fill, fill, fill), "horizontal, wrong crop value, use center"),
             (self.img_1920x1080_png, (192, 0), None, (192, 108), (fill, fill, bg, bg), "horizontal, not cropped, just do resize"),
+            (small_height, (25, 50), 'center', (1, 1), (fill, fill, fill, fill), "horizontal, small height, size vertical"),
 
             (self.img_1080x1920_png, None, None, (1080, 1920), (bg, bg, fill, fill), "vertical, verify initial"),
             (self.img_1080x1920_png, (2000, 2000), 'center', (1080, 1080), (fill, fill, fill, fill), "vertical, crop biggest possible"),
@@ -223,6 +228,7 @@ class TestImage(TransactionCase):
             (self.img_1080x1920_png, (512, 512), 'bottom', (512, 512), (fill, bg, fill, fill), "vertical, type bottom"),
             (self.img_1080x1920_png, (512, 512), 'wrong', (512, 512), (fill, fill, fill, fill), "vertical, wrong crop value, use center"),
             (self.img_1080x1920_png, (108, 0), None, (108, 192), (bg, bg, fill, fill), "vertical, not cropped, just do resize"),
+            (small_width, (50, 25), 'center', (1, 1), (fill, fill, fill, fill), "vertical, small width, size horizontal"),
         ]
 
         count = 0
@@ -248,7 +254,7 @@ class TestImage(TransactionCase):
             px = (right, half_height)
             self.assertEqual(image.getpixel(px), test[4][3], "%s - color right (%s, %s)" % (test[5], px[0], px[1]))
 
-        self.assertEqual(count, 2 * 9, "ensure the loop is ran")
+        self.assertEqual(count, 2 * 10, "ensure the loop is ran")
 
     def test_15_image_process_colorize(self):
         """Test the colorize parameter of image_process."""

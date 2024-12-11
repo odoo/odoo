@@ -5,7 +5,7 @@
 # Translators:
 # Kovács Tibor <kovika@gmail.com>, 2023
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2023
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2023
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2023
 # Zsolt Godó <zsolttokio@gmail.com>, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2023
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
@@ -988,6 +988,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1000,6 +1002,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Részleg"
 
@@ -2168,7 +2171,7 @@ msgstr "A toborzás fázisában ebbe a munkakörbe felvett munkavállalók szám
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
@@ -2810,6 +2813,13 @@ msgstr "Társadalombiztosítási azonosító jel"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
 msgid "Software Developer"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
 msgstr ""
 
 #. module: hr

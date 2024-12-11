@@ -7,7 +7,7 @@
     'countries': ['hu'],
     'author': 'DO Tech (OdooTech Zrt.), BDSC Business Consulting Kft. & Odoo S.A.',
     'description': """
-* Submit e-invoices to the NAV (Hungarian Tax Agency) as part of the invoicing process.
+* Electronically report invoices to the NAV (Hungarian Tax Agency) when issuing physical (paper) invoices.
 * Perform the Tax Audit Export (Adóhatósági Ellenőrzési Adatszolgáltatás) in NAV 3.0 format.
     """,
     'website': 'https://www.odootech.hu',

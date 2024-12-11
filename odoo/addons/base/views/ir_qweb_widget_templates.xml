@@ -42,6 +42,8 @@
             <div class="d-flex align-items-center gap-1" t-if="mobile and 'mobile' in fields">
                 <i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-esc="mobile"/>
             </div>
+            <!-- Prevent issue with iOS Safari parsing of schema data without telephone itemprops -->
+            <div t-elif="not (phone and 'phone' in fields)" itemprop="telephone"/>
             <div class="d-flex align-items-center gap-1" t-if="website and 'website' in fields">
                 <i t-if="not options.get('no_marker')" class='fa fa-globe fa-fw' role="img" aria-label="Website" title="Website"/>
                 <a t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-esc="website"/></a>

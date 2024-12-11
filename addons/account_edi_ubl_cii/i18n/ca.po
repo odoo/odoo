@@ -11,16 +11,16 @@
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Ivan Espinola, 2023
 # Iván Infantes Castarnado, 2024
-# Josep Anton Belchi, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
+# Josep Anton Belchi, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2024\n"
+"Last-Translator: Josep Anton Belchi, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -438,7 +438,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
-msgid "9952 - Turkey VAT number"
+msgid "9952 - Türkiye VAT number"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -561,12 +561,17 @@ msgid "Companies"
 msgstr "Empreses"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__show_ubl_company_warning
+msgid "Company warning"
+msgstr "Advertencia de la companyia"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "Conditional cash/payment discount"
-msgstr ""
+msgstr "Descompte condicional per pagament anticipat"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_config_settings
@@ -656,7 +661,7 @@ msgstr "Habilitar Ubl Cii Xml"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr "S'han produït errors mentre es creava el document EDI (format: %s):"
@@ -754,6 +759,11 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__ubl_partner_warning
+msgid "Partner warning"
+msgstr "Advertència del contacte"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
@@ -774,7 +784,8 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
-"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -795,6 +806,13 @@ msgid "Peppol format"
 msgstr "Format Peppol"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_move_send_form
+msgid ""
+"Please fill in Peppol EAS and Peppol Endpoint in your company form to "
+"generate a complete file."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
 msgstr "Facturació SG BIS 3.0"
@@ -810,6 +828,15 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #, python-format
 msgid "Tax '%s' is invalid: %s"
 msgstr "L'impost %s no és vàlid: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -852,7 +879,7 @@ msgstr "El NIF de %s ha de ser precedit del seu codi de país."
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The country is required for the %s."
-msgstr ""
+msgstr "El país és necessari per a %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -888,24 +915,13 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
 "The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
 "Please check those in their Accounting tab. Otherwise, the generated files "
 "will be incomplete."
 msgstr ""
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid ""
-"The invoice contains line(s) with a negative unit price, which is not "
-"allowed. You might need to set a negative quantity instead."
-msgstr ""
-"La factura conté línia(es) amb un preu negatiu, la qual cosa és permesa. "
-"Caldria que establíssiu, en el seu lloc, una quantitat negativa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -919,20 +935,12 @@ msgstr "La factura s'ha convertit a rectificativa revertint les quantitats."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
 "This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
 "those in its Accounting tab or the generated file will be incomplete."
 msgstr ""
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr "El proveïdor %s ha de tenir un registre d'empresa Bronnoysund."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -997,11 +1005,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "false"
-msgstr "Fals"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

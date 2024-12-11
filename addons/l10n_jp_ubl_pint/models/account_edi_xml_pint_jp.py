@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import fields, models
 
 
 class AccountEdiXmlUBLPINTJP(models.AbstractModel):
@@ -75,11 +75,6 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
             vals_list.append(tax_totals_vals)
         return vals_list
 
-    def _get_customization_ids(self):
-        vals = super()._get_customization_ids()
-        vals['pint_jp'] = 'urn:peppol:pint:billing-1@jp-1'
-        return vals
-
     def _export_invoice_vals(self, invoice):
         # EXTENDS account_edi_ubl_cii
         vals = super()._export_invoice_vals(invoice)
@@ -91,4 +86,13 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
         if invoice.currency_id != invoice.company_id.currency_id:
             # see https://docs.peppol.eu/poac/jp/pint-jp/bis/#_tax_in_accounting_currency
             vals['vals']['tax_currency_code'] = invoice.company_id.currency_id.name  # accounting currency
+
+        # aligned-ibr-jp-01 If the invoice is dated after 2023-10-01,
+        # the tax ID must be the new "Registration Number for Qualified Invoice purpose in Japan" which shouldn't have JP added at the start.
+        # Checked here as the partner methods don't have reference to the invoice.
+        if invoice.invoice_date > fields.Date.from_string('2023-10-01'):
+            for party_vals in [vals['vals']['accounting_supplier_party_vals'], vals['vals']['accounting_customer_party_vals']]:
+                partner = party_vals['party_vals']['partner']
+                if partner.country_id.code == "JP" and partner.vat:
+                    party_vals['party_vals']['party_tax_scheme_vals'][0]['company_id'] = partner.vat
         return vals

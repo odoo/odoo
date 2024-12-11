@@ -65,7 +65,7 @@ class Event(models.Model):
         readonly=False, store=True)
     location_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Location Menus",
-        domain=[("menu_type", "=", "location_menu")])
+        domain=[("menu_type", "=", "location")])
     address_name = fields.Char(related='address_id.name')
     register_menu = fields.Boolean(
         "Register Menu", compute="_compute_website_menu_data",
@@ -420,8 +420,9 @@ class Event(models.Model):
             page_result = self.env['website'].sudo().new_page(
                 name=f'{name} {self.name}', template=xml_id,
                 add_menu=False, ispage=False)
-            url = f"/event/{slug(self)}/page{page_result['url']}"  # url contains starting "/"
             view_id = page_result['view_id']
+            view = self.env["ir.ui.view"].browse(view_id)
+            url = f"/event/{slug(self)}/page/{view.key.split('.')[-1]}"  # url contains starting "/"
 
         website_menu = self.env['website.menu'].sudo().create({
             'name': name,

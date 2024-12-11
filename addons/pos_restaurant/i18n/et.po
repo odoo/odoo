@@ -17,16 +17,17 @@
 # Patrick-Jordan Kiudorv, 2023
 # Rivo Zängov <eraser@eraser.ee>, 2023
 # Algo Kärp <algokarp@gmail.com>, 2023
-# Anna, 2024
 # Martin Trigaux, 2024
+# Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:30+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgstr "<strong>Korruse nimi:</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales: </strong>"
-msgstr ""
+msgstr "<strong>Kassa: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -74,14 +75,14 @@ msgstr "Lisa"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Add Floor"
-msgstr ""
+msgstr "Lisa korrus"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Add a new floor to get started."
-msgstr ""
+msgstr "Alustamiseks lisa uus korrus."
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -93,7 +94,7 @@ msgstr "Lisa uus Restorani Korrus"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Add a new table to get started."
-msgstr ""
+msgstr "Alustamiseks lisa uus laud."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -107,7 +108,7 @@ msgstr "Lisa jootraha"
 #: code:addons/pos_restaurant/static/src/app/control_buttons/orderline_note_button/orderline_note_button.js:0
 #, python-format
 msgid "Add internal Note"
-msgstr ""
+msgstr "Lisa sisemine märkus"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -117,7 +118,7 @@ msgstr "Lisa köögi jaoks tellimuse ridadele ettevõttesiseseid märkusi."
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add tip after payment"
-msgstr ""
+msgstr "Lisa jootraha pärast makset"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -143,8 +144,9 @@ msgstr "Luba Arve Poolitamine"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Allow custom Internal notes on Orderlines."
-msgstr ""
+msgstr "Luba tellimustel märkmeid."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -177,7 +179,7 @@ msgstr "Arhiveeritud"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Are you sure?"
-msgstr ""
+msgstr "Kas oled kindel?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -262,23 +264,30 @@ msgid "Blue"
 msgstr "Sinine"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/product_screen/product_screen.xml:0
+#, python-format
+msgid "Book table"
+msgstr "Broneeri laud"
+
+#. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
 msgid "Burger Menu Combo"
-msgstr ""
+msgstr "Burger menüü kombo"
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Restaurant"
-msgstr ""
+msgstr "Sularaha restoran"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/back_button/back_button.xml:0
 #, python-format
 msgid "Change table"
-msgstr ""
+msgstr "Vaheta lauda"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -361,7 +370,7 @@ msgstr "Kustuta"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Delete Error"
-msgstr ""
+msgstr "Kustuta veateade"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -373,7 +382,7 @@ msgstr "Disaini korrused ning määra tellimused laudadele."
 #: code:addons/pos_restaurant/static/src/app/control_buttons/table_guests_button/table_guests_button.xml:0
 #, python-format
 msgid "Dine-in Guests"
-msgstr ""
+msgstr "Kohapeal söövad külalised"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -396,7 +405,7 @@ msgstr "Varajase Kviitungi Printimine"
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 #, python-format
 msgid "Edit Plan"
-msgstr ""
+msgstr "Muuda plaani"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -406,7 +415,7 @@ msgstr "Luba Arve poolitamine kassas."
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
 msgid "Espresso"
-msgstr ""
+msgstr "Espresso"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
@@ -436,7 +445,7 @@ msgstr "Korruse nimi"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Floor Name ?"
-msgstr ""
+msgstr "Korruse nimi?"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
@@ -449,7 +458,7 @@ msgstr "Korruse plaanid"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Floor name"
-msgstr ""
+msgstr "Korruse nimi"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -498,7 +507,7 @@ msgstr "Roheline"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.green_tea_product_template
 msgid "Green Tea"
-msgstr ""
+msgstr "Roheline tee"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -527,7 +536,7 @@ msgstr "Külalised:"
 #: code:addons/pos_restaurant/static/src/app/control_buttons/table_guests_button/table_guests_button.js:0
 #, python-format
 msgid "Guests?"
-msgstr ""
+msgstr "Külalised?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
@@ -548,7 +557,7 @@ msgstr "ID"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.ice_tea_product_template
 msgid "Ice Tea"
-msgstr ""
+msgstr "Jää tee"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
@@ -571,6 +580,7 @@ msgstr "Sisemine Märkus lisatud ettekandja poolt."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Internal Notes"
 msgstr "Sisesed märkmed"
@@ -632,7 +642,7 @@ msgstr "Margherita"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
 msgid "Milkshake Banana"
-msgstr ""
+msgstr "Banaani jäätisekokteil"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.minute_maid_product_template
@@ -649,7 +659,7 @@ msgstr "Mozzarella Võileib"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "New Floor"
-msgstr ""
+msgstr "Uus korrus"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -663,7 +673,21 @@ msgstr "Jootraha puudub"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Number of Seats?"
-msgstr ""
+msgstr "Istekohtade arv?"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Point of Sale"
+msgstr "Odoo kassa"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Restaurant"
+msgstr "Odoo restoran"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -675,21 +699,21 @@ msgstr "Ok"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Online reservation for restaurant"
-msgstr ""
+msgstr "Veebireservatsioon restoranidele"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Oops! No floors available."
-msgstr ""
+msgstr "Korruseid pole saadaval"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 #, python-format
 msgid "Oops! No tables available."
-msgstr ""
+msgstr "Ups! Lauad pole saadaval."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -782,11 +806,6 @@ msgid "Point of Sales"
 msgstr "Kassad"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
-msgid "Pos Iface Orderline Notes"
-msgstr "Pos Iface Tellimuserea Märkmed"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
 msgstr "Pos Iface Printkviitung"
@@ -830,17 +849,10 @@ msgstr "Punane"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/product_screen/product_screen.xml:0
-#, python-format
-msgid "Release table"
-msgstr ""
-
-#. module: pos_restaurant
-#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Removing a floor cannot be undone. Do you still want to remove %s?"
-msgstr ""
+msgstr "Korruse eemaldamist ei saa tagasi võtta. Kas soovid eemaldada %s?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -924,7 +936,7 @@ msgstr "Salvesta see leht ja tulge tagasi, et funktsiooni seadistada."
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.schweppes_product_template
 msgid "Schweppes"
-msgstr ""
+msgstr "Schweppes"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1012,7 +1024,7 @@ msgstr "Vahesumma"
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 #, python-format
 msgid "Switch Floor View"
-msgstr ""
+msgstr "Vaheta korruste vaadet"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1030,7 +1042,7 @@ msgstr "Tabel"
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_module_pos_restaurant_appointment
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Table Booking"
-msgstr ""
+msgstr "Laua broneering"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__name
@@ -1042,14 +1054,14 @@ msgstr "Laua nimi"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Table Name?"
-msgstr ""
+msgstr "Laua nimi ?"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Table is not empty"
-msgstr ""
+msgstr "Laud ei ole tühi"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
@@ -1086,6 +1098,8 @@ msgid ""
 "The table already contains an order. Do you want to proceed and transfer the"
 " order here?"
 msgstr ""
+"Laual on juba tellimus. Kas soovid jätkata ja tõsta tellimuse sellele "
+"lauale?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
@@ -1263,13 +1277,14 @@ msgstr "Jah"
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
 msgstr ""
+"EI saa kustutada korruset kui on veel mustandtellimusi sellele korrusele."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "You cannot delete a table with orders still in draft for this table."
-msgstr ""
+msgstr "Ei saa kustutada lauda kui on veel mustandtellimusi sellele lauale."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1327,7 +1342,7 @@ msgstr "lauas"
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "changes"
-msgstr ""
+msgstr "muudatused"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1335,3 +1350,10 @@ msgstr ""
 #, python-format
 msgid "items"
 msgstr "esemed"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/order_widget/order_widget.js:0
+#, python-format
+msgid "or book the table for later"
+msgstr "või broneeri laud hilisemaks ajaks"

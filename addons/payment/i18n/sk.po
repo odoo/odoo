@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Tereza Mokrá, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-14 13:53+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Tereza Mokrá, 2024\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +82,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
-msgstr ""
+msgstr "<small class=\"text-600\">Uložiť moje platobné údaje</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -118,18 +119,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr ""
+msgstr "<span><i class=\"fa fa-lock\"/>  Zajištěno</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid ""
 "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal "
 "account</span>"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
 msgstr ""
 
 #. module: payment
@@ -1593,6 +1589,11 @@ msgid "Test Mode"
 msgstr "Testovací režim"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "Ďakujeme Vám!"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -2057,6 +2058,20 @@ msgid "Wire Transfer"
 msgstr "Drôtový prenos"
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_xendit
+msgid "Xendit"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot change the company of a payment provider with existing "
+"transactions."
+msgstr ""
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
@@ -2106,6 +2121,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been authorized."
 msgstr "Vaša platba bola autorizovaná."
@@ -2128,6 +2144,7 @@ msgstr "Vaša platba bola autorizovaná."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been cancelled."
 msgstr ""
@@ -2149,6 +2166,7 @@ msgstr ""
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
@@ -2172,6 +2190,7 @@ msgstr "Vaša platba bola úspešne spracovaná, ale čaká na schválenie."
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been successfully processed."
 msgstr ""
@@ -2179,6 +2198,11 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
 msgstr ""
 
 #. module: payment
@@ -2190,16 +2214,6 @@ msgstr "PSČ"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "PSČ"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2218,18 +2232,8 @@ msgid "provider"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
 "                    payment."
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
 msgstr ""

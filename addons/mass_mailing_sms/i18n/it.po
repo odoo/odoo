@@ -4,21 +4,42 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Marianna Ciofani, 2023
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers and opt-out link) "
+msgstr " (compresi tracker di link e link di disattivazione) "
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers) "
+msgstr " (compresi tracker di link) "
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including opt-out link) "
+msgstr " (compreso link di disattivazione) "
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -858,8 +879,8 @@ msgstr "Selezione del vincitore SMS"
 #. odoo-python
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
-msgid "STOP SMS: %s"
-msgstr "BLOCCA SMS: %s"
+msgid "STOP SMS: %(unsubscribe_url)s"
+msgstr "STOP SMS: %(unsubscribe_url)s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized

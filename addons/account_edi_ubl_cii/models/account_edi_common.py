@@ -3,7 +3,7 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_repr, find_xml_value
 from odoo.tools.float_utils import float_round
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.zeep import Client
 
 from markupsafe import Markup
@@ -82,7 +82,7 @@ EAS_MAPPING = {
     'PT': {'9946': 'vat'},
     'RO': {'9947': 'vat'},
     'RS': {'9948': 'vat'},
-    'SE': {'0007': 'vat'},
+    'SE': {'0007': 'company_registry'},
     'SI': {'9949': 'vat'},
     'SK': {'9950': 'vat'},
     'SM': {'9951': 'vat'},
@@ -260,7 +260,7 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _invoice_constraints_common(self, invoice):
         # check that there is a tax on each line
-        for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
+        for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section') and x._check_edi_line_tax_required()):
             if not line.tax_ids:
                 return {'tax_on_line': _("Each invoice line should have at least one tax.")}
         return {}
@@ -297,7 +297,8 @@ class AccountEdiCommon(models.AbstractModel):
 
         # Update the invoice.
         invoice.move_type = move_type
-        logs = self._import_fill_invoice_form(invoice, tree, qty_factor)
+        with invoice._get_edi_creation() as invoice:
+            logs = self._import_fill_invoice_form(invoice, tree, qty_factor)
         if invoice:
             body = Markup("<strong>%s</strong>") % \
                 _("Format used to import the invoice: %s",
@@ -312,7 +313,8 @@ class AccountEdiCommon(models.AbstractModel):
         # For UBL, we should override the computed tax amount if it is less than 0.05 different of the one in the xml.
         # In order to support use case where the tax total is adapted for rounding purpose.
         # This has to be done after the first import in order to let Odoo compute the taxes before overriding if needed.
-        self._correct_invoice_tax_amount(tree, invoice)
+        with invoice._get_edi_creation() as invoice:
+            self._correct_invoice_tax_amount(tree, invoice)
 
         # === Import the embedded PDF in the xml if some are found ===
 
@@ -373,7 +375,9 @@ class AccountEdiCommon(models.AbstractModel):
         """ Retrieve the bank account, if no matching bank account is found, create it
         """
 
-        bank_details = map(sanitize_account_number, bank_details)
+        # clear the context, because creation of partner when importing should not depend on the context default values
+        ResPartnerBank = self.env['res.partner.bank'].with_env(self.env(context=clean_context(self.env.context)))
+        bank_details = list(map(sanitize_account_number, bank_details))
 
         if invoice.move_type in ('out_refund', 'in_invoice'):
             partner = invoice.partner_id
@@ -385,13 +389,13 @@ class AccountEdiCommon(models.AbstractModel):
         banks_to_create = []
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in self.env['res.partner.bank'].search(
+            for bank in ResPartnerBank.search(
                 [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
             )
         }
 
         for account_number in bank_details:
-            partner_bank = acc_number_partner_bank_dict.get(account_number, self.env['res.partner.bank'])
+            partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
 
             if partner_bank.partner_id == partner:
                 invoice.partner_bank_id = partner_bank
@@ -403,7 +407,7 @@ class AccountEdiCommon(models.AbstractModel):
                 })
 
         if banks_to_create:
-            invoice.partner_bank_id = self.env['res.partner.bank'].create(banks_to_create)[0]
+            invoice.partner_bank_id = ResPartnerBank.create(banks_to_create)[0]
 
     def _import_fill_invoice_allowance_charge(self, tree, invoice, qty_factor):
         logs = []

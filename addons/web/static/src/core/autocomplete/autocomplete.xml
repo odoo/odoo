@@ -9,9 +9,14 @@
                 class="o-autocomplete--input o_input"
                 autocomplete="off"
                 t-att-placeholder="props.placeholder"
+                role="combobox"
+                t-att-aria-activedescendant="activeSourceOptionId"
+                t-att-aria-expanded="displayOptions ? 'true' : 'false'"
+                aria-autocomplete="list"
+                aria-haspopup="listbox"
                 t-model="state.value"
                 t-on-blur="onInputBlur"
-                t-on-click.stop="onInputClick"
+                t-on-click="onInputClick"
                 t-on-change="onInputChange"
                 t-on-input="onInput"
                 t-on-keydown="onInputKeydown"
@@ -19,7 +24,9 @@
                 t-ref="input"
             />
             <t t-if="displayOptions">
-                <ul class="o-autocomplete--dropdown-menu ui-widget show"
+                <ul
+                    role="menu"
+                    class="o-autocomplete--dropdown-menu ui-widget show"
                     t-att-class="ulDropdownClass"
                     t-ref="sourcesList">
                     <t t-foreach="sources" t-as="source" t-key="source.id">
@@ -29,7 +36,13 @@
                                     'o-autocomplete--dropdown-item': props.dropdown,
                                     'd-block': !props.dropdown
                                 }">
-                                <a href="#" class="dropdown-item ui-menu-item-wrapper">
+                                <a
+                                    t-attf-id="{{props.id or 'autocomplete'}}_{{source_index}}_loading"
+                                    role="option"
+                                    href="#"
+                                    class="dropdown-item ui-menu-item-wrapper"
+                                    aria-selected="true"
+                                >
                                     <i class="fa fa-spin fa-circle-o-notch" /> <t t-esc="source.placeholder" />
                                 </a>
                             </li>
@@ -45,9 +58,12 @@
                                     t-on-pointerdown="() => this.ignoreBlur = true"
                                 >
                                     <a
+                                        t-attf-id="{{props.id or 'autocomplete'}}_{{source_index}}_{{option_index}}"
+                                        role="option"
                                         href="#"
                                         class="dropdown-item ui-menu-item-wrapper text-truncate"
                                         t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
+                                        t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                                     >
                                         <t t-if="source.optionTemplate">
                                             <t t-call="{{ source.optionTemplate }}" />

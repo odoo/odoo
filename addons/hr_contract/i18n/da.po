@@ -5,15 +5,15 @@
 # Translators:
 # Ejner Sønniksen <ejner@vkdata.dk>, 2023
 # Mads Søndergaard, 2023
-# Martin Trigaux, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
+# Martin Trigaux, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -828,6 +828,11 @@ msgid "Reference Working Time"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Resource fritid detaljer"
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
 msgstr "ressource arbejdstid"
@@ -1007,7 +1012,7 @@ msgstr "Beskeder fra hjemmesiden"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
 msgid "Website communication history"
-msgstr "Website kommunikations historik"
+msgstr "Hjemmesidens kommunikations historik"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
@@ -1031,3 +1036,10 @@ msgstr "Nr. på arbejdstilladelse"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "Arbejdsplan"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete an employee with a running contract."
+msgstr ""

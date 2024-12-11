@@ -761,9 +761,11 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         const [firstTimePicker, secondTimePicker] = getTimePickers();
         assert.deepEqual(getTexts(firstTimePicker[0], "option"), range(24, String));
+        const expectedMinutes = range(12, (i) => pad2(i * 5));
+        expectedMinutes.unshift("");
         assert.deepEqual(
             getTexts(firstTimePicker[1], "option"),
-            range(12, (i) => pad2(i * 5))
+            expectedMinutes
         );
         assert.deepEqual(getTexts(secondTimePicker[0], "option"), range(24, String));
         assert.deepEqual(
@@ -813,9 +815,11 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         const [firstTimePicker, secondTimePicker] = getTimePickers();
         assert.deepEqual(getTexts(firstTimePicker[0], "option"), range(24, String));
+        const expectedMinutes = range(12, (i) => pad2(i * 5));
+        expectedMinutes.unshift("");
         assert.deepEqual(
             getTexts(firstTimePicker[1], "option"),
-            range(12, (i) => pad2(i * 5))
+            expectedMinutes
         );
         assert.deepEqual(getTexts(secondTimePicker[0], "option"), range(24, String));
         assert.deepEqual(

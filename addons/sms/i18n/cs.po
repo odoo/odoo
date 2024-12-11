@@ -3,21 +3,22 @@
 # 	* sms
 # 
 # Translators:
-# Jiří Podhorecký, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Ivana Bartonkova, 2023
 # Jakub Smolka, 2023
 # Wil Odoo, 2023
 # Tomáš Píšek, 2023
 # Katerina Horylova, 2024
+# Jiří Podhorecký <jirka.p@volny.cz>, 2024
+# Tereza Mokrá, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Tereza Mokrá, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +59,13 @@ msgid ""
 msgstr ""
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid ", fits in"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
@@ -67,7 +75,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Náhled</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -140,7 +148,7 @@ msgstr ""
 #: code:addons/sms/static/src/core/failure_model_patch.js:0
 #, python-format
 msgid "An error occurred when sending an SMS"
-msgstr ""
+msgstr "Při odesílání SMS došlo k chybě"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -192,7 +200,7 @@ msgstr "Koupit kredity"
 #: code:addons/sms/tools/sms_api.py:0
 #, python-format
 msgid "Buy credits."
-msgstr ""
+msgstr "Koupit kredity."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
@@ -202,7 +210,7 @@ msgstr "Může se zrušit"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "Lze znovu odeslat"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -224,7 +232,7 @@ msgstr "Vyberte jazyk:"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Choose a template..."
-msgstr ""
+msgstr "Vyberte šablonu ..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -697,7 +705,7 @@ msgstr "Není povoleno"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_delivered
 msgid "Not Delivered"
-msgstr ""
+msgstr "Nedoručeno"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
@@ -914,12 +922,12 @@ msgstr "Opětovné poslání notifikace"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
 msgid "Reset SMS Template"
-msgstr ""
+msgstr "Obnovit šablonu SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Reset Template"
-msgstr ""
+msgstr "Obnovit šablonu"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1064,7 +1072,7 @@ msgstr "Šablony SMS"
 #: code:addons/sms/wizard/sms_template_reset.py:0
 #, python-format
 msgid "SMS Templates have been reset"
-msgstr ""
+msgstr "Šablony SMS byly obnoveny"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
@@ -1108,12 +1116,12 @@ msgstr "Skontrolované číslo"
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 msgid "Search SMS Templates"
-msgstr ""
+msgstr " Vyhledávání šablon SMS"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Send & Close"
-msgstr ""
+msgstr "Odeslat a zavřít"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1133,7 +1141,7 @@ msgstr "Odeslat SMS"
 #: code:addons/sms/models/sms_template.py:0
 #, python-format
 msgid "Send SMS (%s)"
-msgstr ""
+msgstr "Odeslat SMS (%s)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
@@ -1393,7 +1401,7 @@ msgstr "Neregistrovaný účet"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
 msgid "Use Template"
-msgstr ""
+msgstr "Použít šablonu"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist
@@ -1488,7 +1496,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
-msgid "characters, fits in"
+msgid "characters"
 msgstr ""
 
 #. module: sms
@@ -1504,7 +1512,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "např. Kontakt"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form

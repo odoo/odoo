@@ -21,13 +21,15 @@
 # Katrin Kampura, 2023
 # Mihkel avalah, 2023
 # Leaanika Randmets, 2023
+# Siim Raasuke, 2024
+# Stevin Lilla, 2024
 # Anna, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -45,6 +47,10 @@ msgid ""
 "        Use a code: Customers will be eligible for a reward if they enter a code.\n"
 "        "
 msgstr ""
+"\n"
+"        Automaatne: Kliendid saavad automaatselt preemia oma ostukorvis.\n"
+"        Koodi kasutamine: Kliendid saavad preemia, kui nad sisestavad koodi.\n"
+"        "
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__available_on
@@ -53,6 +59,9 @@ msgid ""
 "        Manage where your program should be available for use.\n"
 "        "
 msgstr ""
+"\n"
+"        Hallake, kus teie programm peaks olema kasutamiseks saadaval.\n"
+"        "
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__portal_visible
@@ -61,6 +70,9 @@ msgid ""
 "        Show in web portal, PoS customer ticket, eCommerce checkout, the number of points available and used by reward.\n"
 "        "
 msgstr ""
+"\n"
+"        Kuva veebipoes, PoS kliendipiletis ja e-kaubanduse kassas saadaval ja preemia jaoks kasutatud punktide arv.\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -79,7 +91,7 @@ msgstr "$100"
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "%g%% on "
-msgstr ""
+msgstr "%g%% on "
 
 #. module: loyalty
 #. odoo-python
@@ -122,7 +134,7 @@ msgstr "(kui vähemalt"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "(tax excluded)"
-msgstr ""
+msgstr "(ilma maksuta)"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
@@ -201,6 +213,33 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"background: #ffffff\">\n"
+"                <div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
+"                    Siin on teie kinkekaart!\n"
+"                </div>\n"
+"                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                    <img src=\"/loyalty/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\">\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                        <strong t-out=\"format_amount(object.points, object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                    <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                        <strong>Kinkekaardi kood</strong>\n"
+"                    </p>\n"
+"                    <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"                </div>\n"
+"                <div t-if=\"object.expiration_date\" style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">Kaart aegub <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
+"                    <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Kasutage seda kohe!</a>\n"
+"                    </span>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -251,6 +290,8 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">Grant</span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">Määrake</span>\n"
+"                                    <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -259,6 +300,9 @@ msgid ""
 "                                    <br/>\n"
 "                                    the value of the coupon"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">Määrake</span>\n"
+"                                    <br/>\n"
+"                                    kupongi väärtus"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -279,6 +323,12 @@ msgid ""
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Gift Cards</span>\n"
 "                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eWallets</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', 'next_order_coupons')\">Kupongid</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'loyalty'\">Kliendilojaalsus kaardid</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">Kampaaniad</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'promo_code'\">Allahindlus</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'gift_card'\">Kinkekaardid</span>\n"
+"                                <span class=\"o_stat_text\" invisible=\"program_type != 'ewallet'\">eRahakotid</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -295,6 +345,8 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount"
 " of coupon points defined as the coupon value</span>"
 msgstr ""
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Kinnitage "
+"kupondi väärtuse määratud kogus punkte.</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -311,6 +363,12 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"not will_send_mail\">\n"
+"                            Genereeri ja saada \n"
+"                        </span>\n"
+"                        <span invisible=\"will_send_mail\">\n"
+"                            Genereeri \n"
+"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -330,7 +388,7 @@ msgstr "<span>Kehtib ülaltoodud ostu puhul</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span>on</span>"
-msgstr ""
+msgstr "<span>on</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -340,7 +398,7 @@ msgstr "<span>tooted</span>"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "<span>tax</span>"
-msgstr ""
+msgstr "<span>maks</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -399,6 +457,54 @@ msgid ""
 "</tbody></table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
+"<tr>\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object._get_mail_partner().name\">\n"
+"            Palju õnne <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br>\n"
+"        </t>\n"
+"\n"
+"        Siin on teie preemia ettevõttelt <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br>\n"
+"\n"
+"        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
+"            <t t-if=\"reward.required_points &lt;= object.points\">\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">Preemia selgitus</span>\n"
+"                <br>\n"
+"            </t>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"<tr style=\"margin-top: 16px\">\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        Kasutage seda kampaania koodi\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"            enne <t t-out=\"object.expiration_date or ''\">2021-06-16</t>\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\" t-out=\"object.code or ''\">15637502648479132902</strong>\n"
+"        </p>\n"
+"        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
+"            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    Miinimum kogus on <t t-out=\"rule.minimum_qty or ''\">10</t> toodet\n"
+"                </span><br>\n"
+"            </t>\n"
+"            <t t-if=\"rule.minimum_amount != 0.00\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    Kehtiv ostude puhul, mis on üle <t t-out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t>\n"
+"                </span><br>\n"
+"            </t>\n"
+"        </t>\n"
+"        <br>\n"
+"        Aitäh,\n"
+"        <t t-if=\"object._get_signature()\">\n"
+"            <br>\n"
+"            <t t-out=\"object._get_signature() or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -417,14 +523,14 @@ msgstr "Kupongil/lojaalsuskaardil peab olema unikaalne kood."
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "A program must have at least one reward."
-msgstr ""
+msgstr "Programmil peab olema vähemalt üks preemia."
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 #, python-format
 msgid "A trigger with the same code as one of your coupon already exists."
-msgstr ""
+msgstr "Sama koodiga käivitus on juba olemas ühe teie kupongi seas."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -450,7 +556,7 @@ msgstr "Aktiivne"
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr ""
+msgstr "Aktiivsed kliendilojaalsus kaardid"
 
 #. module: loyalty
 #. odoo-javascript
@@ -478,7 +584,7 @@ msgstr "Kõik allahindlusega tooted"
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Among"
-msgstr ""
+msgstr "hulgas"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
@@ -504,7 +610,7 @@ msgstr "Arhiveeritud"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__create
 msgid "At Creation"
-msgstr ""
+msgstr "Loomisel"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_attachment_count
@@ -523,6 +629,7 @@ msgstr "Automaatne"
 #, python-format
 msgid "Automatic promo: 10% off on orders higher than $50"
 msgstr ""
+"Automaatne soodustus: 10% allahindlus tellimustele, mis ületavad 50 dollarit"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
@@ -546,7 +653,7 @@ msgstr "Triipkood"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Buy 10 products to get 10$ off on the 11th one"
-msgstr ""
+msgstr "Osta 10 toodet, et saada 10$ maha 11. tootelt."
 
 #. module: loyalty
 #. odoo-python
@@ -573,7 +680,7 @@ msgstr "Ostes X saad Y"
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 #, python-format
 msgid "Can not generate coupon, no program is set."
-msgstr ""
+msgstr "Kupongi genereerimine ebaõnnestus, programm puudub."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -618,7 +725,7 @@ msgstr "Sooduskood 10% tellimustele"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
 msgid "Communication Plan"
-msgstr ""
+msgstr "Kommunikatsiooniplaan"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -728,7 +835,7 @@ msgstr "Loo uus algusest peale või kasuta mõnda allpool olevat malli."
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "Create one from scratch, or use a templates below:"
-msgstr ""
+msgstr "Looge üks algusest või kasutage allolevaid malle:"
 
 #. module: loyalty
 #. odoo-javascript
@@ -763,7 +870,7 @@ msgstr "Loodud"
 #: model:loyalty.program,portal_point_name:loyalty.3_cabinets_plus_1_free
 #, python-format
 msgid "Credit(s)"
-msgstr ""
+msgstr "kreedit"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__currency_id
@@ -843,7 +950,7 @@ msgstr "Allahindlus ja lojaalsusprogramm"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
 msgid "Discount Applicability"
-msgstr ""
+msgstr "Allahindluse kohaldatavus"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
@@ -853,12 +960,12 @@ msgstr "Allahindluskood"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
 msgid "Discount Line Product"
-msgstr ""
+msgstr "Allahindlus ridade toode"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_mode
 msgid "Discount Mode"
-msgstr ""
+msgstr "Allahindlusrežiim"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__payment_program_discount_product_id
@@ -868,7 +975,7 @@ msgstr "Allahinnatud toode"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
-msgstr ""
+msgstr "Allahindlustoote domeen"
 
 #. module: loyalty
 #. odoo-python
@@ -890,7 +997,7 @@ msgstr "Allahindluspunkt(id)"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Discount product"
-msgstr ""
+msgstr "Allahindlustoode"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -944,6 +1051,8 @@ msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
 msgstr ""
+"Iga reegel võib anda kliendile punkte, mida ta saab vahetada preemiate "
+"vastu."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -975,7 +1084,7 @@ msgstr "Aegumiskuupäev"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fidelity Card"
-msgstr ""
+msgstr "Truuduskaart"
 
 #. module: loyalty
 #. odoo-python
@@ -989,7 +1098,7 @@ msgstr "Sooduskaardid"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, to pay future orders"
-msgstr ""
+msgstr "Täida oma eRahakott, et maksta tulevaste tellimuste eest"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1078,7 +1187,7 @@ msgstr "Loo kinkekaardid"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Generate and share unique coupons with your customers"
-msgstr ""
+msgstr "Loo ja jaga oma klientidega unikaalseid kuponge"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1086,11 +1195,18 @@ msgid "Generate eWallet"
 msgstr "Loo eWallet"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Genereeri {{props.context.program_item_name}}"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Get 10% off on some products, with a code"
-msgstr ""
+msgstr "Saa 10% allahindlust teatud toodetelt koodi abil"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1162,6 +1278,8 @@ msgid ""
 "Grant 1 credit for each item bought then reward the customer with Y items in"
 " exchange of X credits."
 msgstr ""
+"Andke iga ostetud toote eest 1 krediiti ja premeerige seejärel klienti Y "
+"toodetega X krediidi vastu."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
@@ -1201,7 +1319,7 @@ msgstr "Kui valitud, on mõningate sõnumitel saatmiserror."
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "If minimum"
-msgstr ""
+msgstr "Kui miinimum"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -1238,7 +1356,7 @@ msgstr "Globaalne allahindlus"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_nominative
 msgid "Is Nominative"
-msgstr ""
+msgstr "On nominatiivne"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_payment_program
@@ -1296,7 +1414,7 @@ msgstr "Logo"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty Card"
-msgstr ""
+msgstr "Kliendilojaalsus kaart"
 
 #. module: loyalty
 #. odoo-python
@@ -1370,7 +1488,7 @@ msgstr "Sõnum"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount_tax_mode
 msgid "Minimum Amount Tax Mode"
-msgstr ""
+msgstr "Miinimumsummaga maksurežiim"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
@@ -1392,7 +1510,7 @@ msgstr "Multi Product"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Next Order Coupon"
-msgstr ""
+msgstr "Järgmise tellimuse kupong"
 
 #. module: loyalty
 #. odoo-python
@@ -1467,12 +1585,12 @@ msgstr "Punkti"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points_display
 msgid "Points Display"
-msgstr ""
+msgstr "Punktide kuvamine"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Points Unit"
-msgstr ""
+msgstr "Punktide ühik"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__required_points
@@ -1491,7 +1609,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__portal_visible
 msgid "Portal Visible"
-msgstr ""
+msgstr "Nähtav portaal"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__pricelist_ids
@@ -1612,12 +1730,12 @@ msgstr "Kogus"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Quantity rewarded"
-msgstr ""
+msgstr "Premeeritud kogus"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Quantity to generate"
-msgstr ""
+msgstr "Kogus genereerida"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__rating_ids
@@ -1633,22 +1751,22 @@ msgstr "Preemia"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_mode
 msgid "Reward Point Mode"
-msgstr ""
+msgstr "Preemiapunktide režiim"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_domain
 msgid "Reward Product Domain"
-msgstr ""
+msgstr "Preemiatoote domeen"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr ""
+msgstr "Preemiatoote kogus"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
 msgid "Reward Product Uom"
-msgstr ""
+msgstr "Preemiatoote mõõtühik"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
@@ -1662,13 +1780,14 @@ msgstr "Preemia tüüp"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Tasud"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_rule_reward_point_amount_positive
 msgid "Rule points reward must be strictly positive."
-msgstr ""
+msgstr "Reegli punktide preemia peab olema rangelt positiivne."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1685,7 +1804,7 @@ msgstr "Valitud kliendid"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr ""
+msgstr "Müü kinkekaarte, mis lubab osta tooteid"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -1697,7 +1816,7 @@ msgstr "Saada"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send a coupon after an order, valid for next purchase"
-msgstr ""
+msgstr "Saada kupong peale tellimust, mis on kehtiv järgmise ostu korral"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
@@ -1707,7 +1826,7 @@ msgstr "Saadetud kliendile, kes on ostnud kinkekaardi"
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_loyalty_card
 msgid "Sent to customer with coupon information"
-msgstr ""
+msgstr "Saadetud kliendile kupongi informatsiooniga"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__sequence
@@ -1726,7 +1845,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Show points Unit"
-msgstr ""
+msgstr "Kuva punktide ühik"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__specific
@@ -1736,7 +1855,7 @@ msgstr "Kindlad tooted"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_split
 msgid "Split per unit"
-msgstr ""
+msgstr "Jaota ühiku kaupa"
 
 #. module: loyalty
 #. odoo-python
@@ -1744,6 +1863,8 @@ msgstr ""
 #, python-format
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
 msgstr ""
+"Kliendilojaalsuse ja eRahakoti programmide puhul ei ole lubatud jaotamine "
+"ühiku kaupa."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_from
@@ -1768,7 +1889,7 @@ msgstr "Allahindlus peab olema positiivne."
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_to
 msgid "The end date is included in the validity period of this program"
-msgstr ""
+msgstr "Lõppkuupäev on kaasatud selle programmi kehtivusperioodi."
 
 #. module: loyalty
 #. odoo-python
@@ -1777,6 +1898,8 @@ msgstr ""
 msgid ""
 "The loyalty program's currency must be the same as all it's pricelists ones."
 msgstr ""
+"Kliendilojaalsuse programmi valuuta peab olema sama, mis kõigis selle "
+"hinnakirjades."
 
 #. module: loyalty
 #. odoo-python
@@ -1788,17 +1911,24 @@ msgstr "Sooduskood peab olema unikaalne. "
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
-msgstr ""
+msgstr "Preemia saamiseks vajalikud punktid peavad olema rangelt positiivsed."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "Preemia kirjelduse väli ei tohi olla tühi."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
 msgid "The reward product quantity must be strictly positive."
-msgstr ""
+msgstr "Preemiatoote kogus peab olema rangelt positiivne."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_from
 msgid "The start date is included in the validity period of this program"
-msgstr ""
+msgstr "Alguskuupäev on kaasatud selle programmi kehtivusperioodi."
 
 #. module: loyalty
 #. odoo-python
@@ -1807,6 +1937,7 @@ msgstr ""
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
 msgstr ""
+"Kehtivusperioodi alguskuupäev peab olema eelnev või võrdne lõppkuupäevaga."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -1823,6 +1954,8 @@ msgstr "Need on tooted, mille saate selle reegliga."
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
 msgstr ""
+"See on maksimaalne summa, mille see preemia võib allahindlust anda; jätke "
+"väärtuseks 0, kui piirangut pole."
 
 #. module: loyalty
 #. odoo-python
@@ -1832,16 +1965,18 @@ msgid ""
 "This product may not be archived. It is being used for an active promotion "
 "program."
 msgstr ""
+"Seda toodet ei saa arhiveerida. Seda kasutatakse aktiivses kampaania "
+"programmis."
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
 msgid "Top-up eWallet"
-msgstr ""
+msgstr "Täienda eRahakotti"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
 msgid "Total Order Count"
-msgstr ""
+msgstr "Kokku tellimuse arv"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
@@ -1851,7 +1986,7 @@ msgstr "Käivitaja"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
 msgid "Use Count"
-msgstr ""
+msgstr "Kasutuse arv"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__trigger__with_code
@@ -1866,13 +2001,13 @@ msgstr "Kasuta punkte"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Use this promo code before"
-msgstr ""
+msgstr "Kasutage seda sooduskoodi enne"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__user_has_debug
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__user_has_debug
 msgid "User Has Debug"
-msgstr ""
+msgstr "Kasutajal on Debug"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
@@ -1887,7 +2022,7 @@ msgstr "Millal"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__points_reach
 msgid "When Reaching"
-msgstr ""
+msgstr "Kui saavutatakse"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1895,6 +2030,8 @@ msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
 msgstr ""
+"Kui kliendid esitavad tellimuse, koguvad nad punkte, mida saavad vahetada "
+"preemiate vastu kas praeguse tellimuse või tulevase tellimuse eest."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1911,23 +2048,26 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid.."
 msgstr ""
+"Olenemata sellest, kas eraldada preemia kupongid vastavalt vastavatele "
+"üksustele, kehtib see ainult „tuleviku” programmide jaoks ja aktiveerimise "
+"režiim sõltub kulutatud rahast või makstud ühikust."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
 msgid "Will Send Mail"
-msgstr ""
+msgstr "Saadab kirja"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Win points with each purchase, and claim gifts"
-msgstr ""
+msgstr "Võida punkte iga ostuga ning saa kingitusi"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code
 msgid "With a promotion code"
-msgstr ""
+msgstr "Kampaania koodiga"
 
 #. module: loyalty
 #. odoo-python
@@ -1945,6 +2085,8 @@ msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
 msgstr ""
+"Te ei saa %(name)s kustutada, kuna seda kasutatakse 'Kupongid ja lojaalsus' "
+"osas. Palun arhiveerige see hoopis."
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
@@ -1954,7 +2096,7 @@ msgstr "Sinu kinkekaart {{ object.company_id.name }}"
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
+msgstr "Teie preemiakupongid {{ object.program_id.company_id.name }} "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2006,16 +2148,19 @@ msgid ""
 "                                    <br/>\n"
 "                                    Then, eWallets are proposed during the checkout, to pay orders."
 msgstr ""
+"eRahakotid luuakse käsitsi või automaatselt, kui klient tellib eRahakoti toote.\n"
+"                                    <br/>\n"
+"                                    Seejärel pakutakse eRahakotte kassas, et maksta tellimuste eest."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "item(s) bought"
-msgstr ""
+msgstr "ostetud toode/tooted"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "loyalty Reward"
-msgstr ""
+msgstr "Kliendilojaalsuse preemia"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2023,6 +2168,8 @@ msgid ""
 "on the cheapest product\n"
 "                                        <br/>"
 msgstr ""
+"odavaimast tootest\n"
+"                                        <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2043,7 +2190,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per %s spent"
-msgstr ""
+msgstr "kulutatud %s kohta"
 
 #. module: loyalty
 #. odoo-python
@@ -2057,7 +2204,7 @@ msgstr "tellimuse kohta"
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per unit paid"
-msgstr ""
+msgstr "makstud ühiku kohta"
 
 #. module: loyalty
 #. odoo-python
@@ -2094,3 +2241,10 @@ msgstr "kasutamist"
 #, python-format
 msgid "your order"
 msgstr "teie tellimus"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

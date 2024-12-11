@@ -3,15 +3,16 @@
 # 	* delivery
 # 
 # Translators:
-# Wil Odoo, 2023
+# Krystian Harkot <kharkot@trilab.pl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,13 @@ msgstr ""
 #, python-format
 msgid "%(carrier)s Error"
 msgstr "%(carrier)sBłąd"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "%(old_name)s (copy)"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -158,7 +166,7 @@ msgstr "Może Wygenerować Zwrot"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr "Nośnik"
+msgstr "Przewoźnik"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -355,6 +363,13 @@ msgstr "Środowisko"
 #, python-format
 msgid "Error: this delivery method is not available for this address."
 msgstr "Błąd: ta metoda wysyłki nie jest dostępna dla wybranego adresu."
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Error: this delivery method is not available."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -607,6 +622,11 @@ msgid "Pricing Rules"
 msgstr "Reguły cen"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Kategoria produktu"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
 msgid "Product Qty"
 msgstr "Ilość produktu"
@@ -832,6 +852,15 @@ msgstr ""
 "\n"
 "Następujące pozycje wysyłki (produkt, zafakturowana ilość i cena) zostały już przetworzone:\n"
 "\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

@@ -1,4 +1,5 @@
 import base64
+import bisect
 import functools
 import hashlib
 import json
@@ -223,14 +224,42 @@ class Websocket:
     # or received within CONNECTION_TIMEOUT - 15 seconds.
     CONNECTION_TIMEOUT = 60
     INACTIVITY_TIMEOUT = CONNECTION_TIMEOUT - 15
+    # How much time (in second) the history of last dispatched notifications is
+    # kept in memory for each websocket.
+    # To avoid duplicate notifications, we fetch them based on their ids.
+    # However during parallel transactions, ids are assigned immediately (when
+    # they are requested), but the notifications are dispatched at the time of
+    # the commit. This means lower id notifications might be dispatched after
+    # higher id notifications.
+    # Simply incrementing the last id is sufficient to guarantee no duplicates,
+    # but it is not sufficient to guarantee all notifications are dispatched,
+    # and in particular not sufficient for those with a lower id coming after a
+    # higher id was dispatched.
+    # To solve the issue of missed notifications, the lowest id, stored in
+    # ``_last_notif_sent_id``, is held back by a few seconds to give time for
+    # concurrent transactions to finish. To avoid dispatching duplicate
+    # notifications, the history of already dispatched notifications during this
+    # period is kept in memory in ``_notif_history`` and the corresponding
+    # notifications are discarded from subsequent dispatching even if their id
+    # is higher than ``_last_notif_sent_id``.
+    # In practice, what is important functionally is the time between the create
+    # of the notification and the commit of the transaction in business code.
+    # If this time exceeds this threshold, the notification will never be
+    # dispatched if the target user receive any other notification in the
+    # meantime.
+    # Transactions known to be long should therefore create their notifications
+    # at the end, as close as possible to their commit.
+    MAX_NOTIFICATION_HISTORY_SEC = 10
     # How many requests can be made in excess of the given rate.
     RL_BURST = int(config['websocket_rate_limit_burst'])
     # How many seconds between each request.
     RL_DELAY = float(config['websocket_rate_limit_delay'])
 
-    def __init__(self, sock, session):
+    def __init__(self, sock, session, cookies):
         # Session linked to the current websocket connection.
         self._session = session
+        # Cookies linked to the current websocket connection.
+        self._cookies = cookies
         self._db = session.db
         self.__socket = sock
         self._close_sent = False
@@ -242,7 +271,13 @@ class Websocket:
         # available.
         self.__notif_sock_w, self.__notif_sock_r = socket.socketpair()
         self._channels = set()
+        # For ``_last_notif_sent_id and ``_notif_history``, see
+        # ``MAX_NOTIFICATION_HISTORY_SEC`` for more details.
+        # id of the last sent notification that is no longer in _notif_history
         self._last_notif_sent_id = 0
+        # history of last sent notifications in the format (notif_id, send_time)
+        # always sorted by notif_id ASC
+        self._notif_history = []
         # Websocket start up
         self.__selector = (
             selectors.PollSelector()
@@ -312,7 +347,9 @@ class Websocket:
     def subscribe(self, channels, last):
         """ Subscribe to bus channels. """
         self._channels = channels
-        if self._last_notif_sent_id < last:
+        # Only assign the last id according to the client once: the server is
+        # more reliable later on, see ``MAX_NOTIFICATION_HISTORY_SEC``.
+        if self._last_notif_sent_id == 0:
             self._last_notif_sent_id = last
         # Dispatch past notifications if there are any.
         self.trigger_notification_dispatching()
@@ -542,6 +579,9 @@ class Websocket:
         self.state = ConnectionState.CLOSED
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
+        with acquire_cursor(self._db) as cr:
+            env = api.Environment(cr, self._session.uid, self._session.context)
+            env["ir.websocket"]._on_websocket_closed(self._cookies)
 
     def _handle_control_frame(self, frame):
         if frame.opcode is Opcode.PING:
@@ -641,10 +681,33 @@ class Websocket:
                 raise SessionExpiredException()
             # Mark the notification request as processed.
             self.__notif_sock_r.recv(1)
-            notifications = env['bus.bus']._poll(self._channels, self._last_notif_sent_id)
+            notifications = env["bus.bus"]._poll(
+                self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
+            )
         if not notifications:
             return
-        self._last_notif_sent_id = notifications[-1]['id']
+        for notif in notifications:
+            bisect.insort(self._notif_history, (notif["id"], time.time()), key=lambda x: x[0])
+        # Discard all the smallest notification ids that have expired and
+        # increment the last id accordingly. History can only be trimmed of ids
+        # that are below the new last id otherwise some notifications might be
+        # dispatched again.
+        # For example, if the theshold is 10s, and the state is:
+        # last id 2, history [(3, 8s), (6, 10s), (7, 7s)]
+        # If 6 is removed because it is above the threshold, the next query will
+        # be (id > 2 AND id NOT IN (3, 7)) which will fetch 6 again.
+        # 6 can only be removed after 3 reaches the threshold and is removed as
+        # well, and if 4 appears in the meantime, 3 can be removed but 6 will
+        # have to wait for 4 to reach the threshold as well.
+        last_index = -1
+        for i, notif in enumerate(self._notif_history):
+            if time.time() - notif[1] > self.MAX_NOTIFICATION_HISTORY_SEC:
+                last_index = i
+            else:
+                break
+        if last_index != -1:
+            self._last_notif_sent_id = self._notif_history[last_index][0]
+            self._notif_history = self._notif_history[last_index + 1 :]
         self._send(notifications)
 
 
@@ -756,6 +819,7 @@ class WebsocketRequest:
 
         try:
             self.registry = Registry(self.db)
+            threading.current_thread().dbname = self.registry.db_name
             self.registry.check_signaling()
         except (
             AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
@@ -813,13 +877,17 @@ class WebsocketConnectionHandler:
         'connection', 'host', 'sec-websocket-key',
         'sec-websocket-version', 'upgrade', 'origin',
     }
+    # Latest version of the websocket worker. This version should be incremented
+    # every time `websocket_worker.js` is modified to force the browser to fetch
+    # the new worker bundle.
+    _VERSION = "17.0-1"
 
     @classmethod
     def websocket_allowed(cls, request):
         return not request.registry.in_test_mode()
 
     @classmethod
-    def open_connection(cls, request):
+    def open_connection(cls, request, version):
         """
         Open a websocket connection if the handshake is successfull.
         :return: Response indicating the server performed a connection
@@ -836,9 +904,10 @@ class WebsocketConnectionHandler:
             socket = request.httprequest._HTTPRequest__environ['socket']
             session, db, httprequest = (public_session or request.session), request.db, request.httprequest
             response.call_on_close(lambda: cls._serve_forever(
-                Websocket(socket, session),
+                Websocket(socket, session, httprequest.cookies),
                 db,
                 httprequest,
+                version
             ))
             # Force save the session. Session must be persisted to handle
             # WebSocket authentication.
@@ -923,12 +992,23 @@ class WebsocketConnectionHandler:
             )
 
     @classmethod
-    def _serve_forever(cls, websocket, db, httprequest):
+    def _serve_forever(cls, websocket, db, httprequest, version):
         """
         Process incoming messages and dispatch them to the application.
         """
         current_thread = threading.current_thread()
         current_thread.type = 'websocket'
+        if httprequest.user_agent and version != cls._VERSION:
+            # Close the connection from an outdated worker. We can't use a
+            # custom close code because the connection is considered successful,
+            # preventing exponential reconnect backoff. This would cause old
+            # workers to reconnect frequently, putting pressure on the server.
+            # Clean closes don't trigger reconnections, assuming they are
+            # intentional. The reason indicates to the origin worker not to
+            # reconnect, preventing old workers from lingering after updates.
+            # Non browsers are ignored since IOT devices do not provide the
+            # worker version.
+            websocket.disconnect(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:

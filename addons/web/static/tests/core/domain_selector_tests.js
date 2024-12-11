@@ -2239,4 +2239,78 @@ QUnit.module("Components", (hooks) => {
             `Dateis between03|11|2023 and 13|11|2023`
         );
     });
+
+    QUnit.test("shorten descriptions of long lists", async (assert) => {
+        const values = new Array(500).fill(42525245);
+        await makeDomainSelector({
+            domain: `[("id", "in", [${values}])]`,
+            readonly: true,
+        });
+        assert.strictEqual(
+            target.querySelector(".o_tree_editor_condition").textContent,
+            `IDis in( ${values.slice(0, 20).join(" , ")} , ... )`
+        );
+    });
+
+    QUnit.test("many2one: no domain in autocompletion", async (assert) => {
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        serverData.models.partner.fields.product_id.domain = `[("display_name", "ilike", "xpa")]`;
+        await makeDomainSelector({
+            domain: `[("product_id", "=", False)]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.verifySteps([]);
+        assert.containsNone(target, ".dropdown-menu");
+
+        await editValue(target, "x");
+
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".dropdown-menu li")), [
+            "xphone",
+            "xpad",
+        ]);
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "x");
+
+        await click(target.querySelector(".dropdown-menu li"));
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "xphone");
+        assert.verifySteps([`[("product_id", "=", 37)]`]);
+        assert.containsNone(target, ".dropdown-menu");
+    });
+
+    QUnit.test("many2many: domain in autocompletion", async (assert) => {
+        addProductIds();
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+        serverData.models.partner.fields.product_ids.domain = `[("display_name", "ilike", "xpa")]`;
+        await makeDomainSelector({
+            domain: `[("product_ids", "=", [])]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "");
+        assert.verifySteps([]);
+        assert.containsNone(target, ".dropdown-menu");
+
+        await editValue(target, "x");
+
+        assert.containsOnce(target, ".dropdown-menu");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".dropdown-menu li")), [
+            "xpad",
+        ]);
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "x");
+
+        await click(target, ".dropdown-menu li");
+        assert.strictEqual(getCurrentOperator(target), "=");
+        assert.strictEqual(getCurrentValue(target), "xpad");
+        assert.verifySteps([`[("product_ids", "=", [41])]`]);
+        assert.containsNone(target, ".dropdown-menu");
+    });
 });

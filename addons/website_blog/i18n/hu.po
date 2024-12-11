@@ -3,23 +3,23 @@
 # 	* website_blog
 # 
 # Translators:
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2023
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # sixsix six, 2023
 # Istvan <leki69@gmail.com>, 2023
 # 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # Martin Trigaux, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # krnkris, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
 # Tamás Dombos, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tamás Dombos, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
@@ -28,6 +28,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "#{year}"
+msgstr ""
 
 #. module: website_blog
 #. odoo-python
@@ -316,6 +321,7 @@ msgid "All"
 msgstr "Összes"
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.post_breadcrumbs
 msgid "All Blogs"
 msgstr ""
@@ -594,6 +600,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_list
 msgid "Blogs"
 msgstr "Blogok"
@@ -684,6 +691,7 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Close"
 msgstr "Bezárás"
@@ -931,7 +939,7 @@ msgstr "Kezdje el"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Grid"
-msgstr "Tarifatáblázat"
+msgstr "Rács"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -1392,7 +1400,7 @@ msgstr "Hibák száma"
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
 #: model:ir.model.fields,help:website_blog.field_blog_post__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_has_error_counter

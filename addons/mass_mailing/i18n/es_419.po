@@ -5,16 +5,16 @@
 # Translators:
 # Iran Villalobos López, 2024
 # Lucia Pacheco, 2024
+# Martin Trigaux, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
-# Martin Trigaux, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -537,8 +537,8 @@ msgstr "<span name=\"sent\">correos enviados.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
-msgid "<span style=\"color: #8f8f8f;\">Turn off Mailing Reports</span>"
-msgstr "<span style=\"color: #8f8f8f;\">Desactivar reportes de correo</span>"
+msgid "<span style=\"color: #878d97;\">Turn off Mailing Reports</span>"
+msgstr "<span style=\"color: #878d97;\">Desactivar reportes de correo</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert
@@ -2394,6 +2394,11 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "Enrutamiento HTTP"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__has_message
 msgid "Has Message"
@@ -2503,8 +2508,7 @@ msgstr "Icono que indica una actividad de excepción."
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren de su "
-"atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_enabled
@@ -2542,8 +2546,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si la dirección de correo electrónico está en la lista de exclusión, el "
-"contacto ya no recibirá correos masivos de ninguna lista. "
+"El contacto ya no recibirá correos masivos de ninguna lista si la dirección "
+"de correo electrónico está en la lista de exclusión."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
@@ -2877,7 +2881,7 @@ msgstr "Marketing por correo: prueba A/B"
 #. module: mass_mailing
 #: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
 msgid "Mail Marketing: Process queue"
-msgstr "Marketing por correo: fila del proceso"
+msgstr "Marketing por correo: procesar la cola"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_render_mixin
@@ -3393,7 +3397,7 @@ msgstr "Se importaron nuevos contactos"
 #. module: mass_mailing
 #: model:utm.campaign,title:mass_mailing.mass_mail_campaign_1
 msgid "Newsletter"
-msgstr "Boletín de noticias"
+msgstr "Boletín informativo"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_calendar_event_id
@@ -3749,13 +3753,13 @@ msgstr "Excluirse"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 msgid "Optout Reason"
-msgstr "Motivo de la exlcusión"
+msgstr "Motivo de la exclusión"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
 #: model:ir.ui.menu,name:mass_mailing.mailing_subscription_optout_menu
 msgid "Optout Reasons"
-msgstr "Motivos de la exlcusión"
+msgstr "Motivos de la exclusión"
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_4
@@ -4130,7 +4134,7 @@ msgstr "Restaurar"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Retry"
-msgstr "Reintentar"
+msgstr "Volver a intentar"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -4190,7 +4194,7 @@ msgstr "Planeado"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__scheduled_date
 msgid "Scheduled Date"
-msgstr "Fecha prevista"
+msgstr "Fecha programada"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_tree
@@ -4205,7 +4209,7 @@ msgstr "Periodo programado"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__next_departure
 msgid "Scheduled date"
-msgstr "Hora prevista"
+msgstr "Fecha programada"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
@@ -4818,8 +4822,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Este correo electrónico está en la lista negra para envíos masivos. Haga "
-"clic para eliminarlo de la lista negra."
+"Este correo está en la lista de exclusión para envíos masivos. Haga clic "
+"para eliminarlo de esa lista."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized

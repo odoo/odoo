@@ -112,11 +112,7 @@ class StockForecasted(models.AbstractModel):
         assert product_template_ids or product_ids
         res = {}
 
-        if self.env.context.get('warehouse') and isinstance(self.env.context['warehouse'], int):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
-        else:
-            warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
-
+        warehouse = self.env['stock.warehouse'].browse(self.env['stock.warehouse']._get_warehouse_id_from_context()) or self.env['stock.warehouse'].search([['active', '=', True]])[0]
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
             ['id'],
@@ -158,7 +154,7 @@ class StockForecasted(models.AbstractModel):
         if move_in:
             document_in = move_in._get_source_document()
             line.update({
-                'move_in' : move_in.read()[0] if read else move_in,
+                'move_in': move_in.read(fields=self._get_report_moves_fields())[0] if read else move_in,
                 'document_in' : {
                     '_name' : document_in._name,
                     'id' : document_in.id,
@@ -170,7 +166,7 @@ class StockForecasted(models.AbstractModel):
         if move_out:
             document_out = move_out._get_source_document()
             line.update({
-                'move_out' : move_out.read()[0] if read else move_out,
+                'move_out': move_out.read(fields=self._get_report_moves_fields())[0] if read else move_out,
                 'document_out' : {
                     '_name' : document_out._name,
                     'id' : document_out.id,
@@ -183,6 +179,9 @@ class StockForecasted(models.AbstractModel):
                     'picking_id': move_out.picking_id.read(fields=['id', 'priority'])[0],
                 })
         return line
+
+    def _get_report_moves_fields(self):
+        return ['id', 'date']
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
@@ -341,13 +340,16 @@ class StockForecasted(models.AbstractModel):
             for out in out_moves:
                 data = _get_out_move_taken_from_stock_data(out, currents, moves_data[out])
                 moves_data[out].update(data)
+        product_sum = defaultdict(float)
+        for product_loc, quantity in currents.items():
+            product_sum[product_loc[0]] += quantity
         lines = []
         for product in (ins | outs).product_id:
             product_rounding = product.uom_id.rounding
             unreconciled_outs = []
             # remaining stock
             free_stock = currents[product.id, wh_stock_location.id]
-            transit_stock = sum([v if k[0] == product.id else 0 for k, v in currents.items()]) - free_stock
+            transit_stock = product_sum[product.id] - free_stock
             # add report lines and see if remaining demand can be reconciled by unreservable stock or ins
             for out in outs_per_product[product.id]:
                 reserved_out = moves_data[out].get('reserved')

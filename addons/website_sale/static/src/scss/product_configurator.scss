@@ -250,6 +250,12 @@ label.css_attribute_color.css_not_available {
     padding: 0.075rem 0.75rem;
 }
 
+@include media-breakpoint-down(md) {
+    .oe_advanced_configurator_modal th.td-img + th {
+        display: none;
+    }
+}
+
 .js_product {
 
     .td-product_name {

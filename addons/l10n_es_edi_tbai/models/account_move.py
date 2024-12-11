@@ -128,7 +128,13 @@ class AccountMove(models.Model):
     def _get_l10n_es_tbai_sequence_and_number(self):
         """Get the TicketBAI sequence a number values for this invoice."""
         self.ensure_one()
-        sequence, number = self.name.rsplit('/', 1)  # NOTE non-decimal characters should not appear in the number
+
+        sequence = self.sequence_prefix.rstrip('/')
+
+        # NOTE non-decimal characters should not appear in the number
+        seq_length = self._get_sequence_format_param(self.name)[1]['seq_length']
+        number = f"{self.sequence_number:0{seq_length}d}"
+
         sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
         sequence = regex_sub(r"\s+", " ", sequence)  # no more than one consecutive whitespace allowed
         # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
@@ -252,3 +258,8 @@ class AccountMove(models.Model):
                                'rec': tax})
         return {'iva_values': iva_values,
                 'amount_total': amount_total}
+
+    def _refunds_origin_required(self):
+        if self.l10n_es_tbai_is_required:
+            return True
+        return super()._refunds_origin_required()

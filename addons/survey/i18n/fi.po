@@ -21,21 +21,22 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Miika Nissi <miika.nissi@tawasta.fi>, 2023
 # Iipponen <erno@web-veistamo.fi>, 2023
-# Martin Trigaux, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Jussi Lehto <jussi@gulfeo.com>, 2023
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2023
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Martin Trigaux, 2024
+# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -475,33 +476,6 @@ msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>vastaa"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Average "
-"</span>"
-msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 "
-"pt-1\">Keskimääräinen </span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
-msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Maximum "
-"</span>"
-msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 "
-"pt-1\">Enimmäismäärä </span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
-msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
-"</span>"
-msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Vähintään"
-" </span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
-msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
 "</span>"
 msgstr ""
@@ -525,26 +499,6 @@ msgid ""
 msgstr ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Vähintään"
 " </span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-muted\">Responded</span>"
-msgstr "<span class=\"d-block text-muted\">Vastasi</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-muted\">Skipped</span>"
-msgstr "<span class=\"d-block text-muted\">Ohitettu</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-success\">Correct</span>"
-msgstr "<span class=\"d-block text-success\">Oikein</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-warning\">Partial</span>"
-msgstr "<span class=\"d-block text-warning\">Osittain</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -651,18 +605,23 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Completed</span>"
-msgstr "<span class=\"text-muted\">Valmistunut</span>"
+msgid "<span class=\"text-break text-muted\">Completed</span>"
+msgstr "<span class=\"text-break text-muted\">Valmis</span> "
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-break text-muted\">Registered</span>"
+msgstr "<span class=\"text-break text-muted\">Rekisteröity</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-break text-muted\">Success</span>"
+msgstr "<span class=\"text-break text-muted\">Valmis</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-muted\">Questions</span>"
 msgstr "<span class=\"text-muted\">Kysymykset</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Registered</span>"
-msgstr "<span class=\"text-muted\">Rekisteröity</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -673,11 +632,6 @@ msgstr "<span class=\"text-muted\">Vastasi</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-muted\">Skipped</span>"
 msgstr "<span class=\"text-muted\">Ohitettu</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Success</span>"
-msgstr "<span class=\"text-muted\">Onnistuminen</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -5227,6 +5181,11 @@ msgstr "Käytä hauskaa visuaalista tukea, kuten live-esitystä"
 #, python-format
 msgid "Use humor and make jokes"
 msgstr "Käytä huumoria ja vitsaile"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Käytä mallia"
 
 #. module: survey
 #. odoo-javascript

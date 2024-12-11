@@ -16,10 +16,3 @@ class MrpWorkcenter(models.Model):
             record.costs_hour_account_ids = bool(record.analytic_distribution) and self.env['account.analytic.account'].browse(
                 list({int(account_id) for ids in record.analytic_distribution for account_id in ids.split(",")})
             ).exists()
-
-    @api.constrains('analytic_distribution')
-    def _check_analytic(self):
-        for record in self:
-            record.with_context({'validate_analytic': True})._validate_distribution(**{
-                'company_id': record.company_id.id,
-            })

@@ -1,7 +1,9 @@
 /** @odoo-module */
 
+import {_t} from '@web/core/l10n/translation';
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { jsonrpc } from '@web/core/network/rpc_service';
 import { debounce } from '@web/core/utils/timing';
 
 import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
@@ -20,6 +22,7 @@ paymentExpressCheckoutForm.include({
     start: async function () {
         await this._super(...arguments);
         document.querySelector('[name="o_payment_submit_button"]')?.removeAttribute('disabled');
+        this.rpc = this.bindService('rpc');
         this._initiateExpressPayment = debounce(this._initiateExpressPayment, 500, true);
     },
 
@@ -50,10 +53,25 @@ paymentExpressCheckoutForm.include({
                 'email': shippingInfo.querySelector('#o_payment_demo_shipping_email').value,
                 'street': shippingInfo.querySelector('#o_payment_demo_shipping_address').value,
                 'street2': shippingInfo.querySelector('#o_payment_demo_shipping_address2').value,
-                'country': shippingInfo.querySelector('#o_payment_demo_shipping_zip').value,
+                'zip': shippingInfo.querySelector('#o_payment_demo_shipping_zip').value,
                 'city': shippingInfo.querySelector('#o_payment_demo_shipping_city').value,
-                'zip':shippingInfo.querySelector('#o_payment_demo_shipping_country').value
+                'country': shippingInfo.querySelector('#o_payment_demo_shipping_country').value,
             };
+            // Call the shipping address update route to fetch the shipping options.
+            const availableCarriers = await this.rpc(
+                this.paymentContext['shippingAddressUpdateRoute'],
+                {partial_shipping_address: expressShippingAddress},
+            );
+            if (availableCarriers.length > 0) {
+                const id = parseInt(availableCarriers[0].id);
+                await this.rpc('/shop/update_carrier', {carrier_id: id});
+            } else {
+                this.call('dialog', 'add', ConfirmationDialog, {
+                    title: _t("Validation Error"),
+                    body: _t("No delivery method is available."),
+                });
+                return;
+            }
         }
         await jsonrpc(
             document.querySelector(

@@ -19,21 +19,22 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
             return el.xpath('//*[@data-oe-model="test.model"]')
 
         self.user_demo.groups_id += self.env.ref('website.group_website_restricted_editor')
+        self.user_demo.groups_id += self.env.ref('test_website.group_test_website_admin')
         self.user_demo.groups_id -= self.env.ref('website.group_website_designer')
 
         # Create session for demo user.
         public_session = self.authenticate(None, None)
         demo_session = self.authenticate('demo', 'demo')
         record = self.env['test.model'].search([])
-        result = self.url_open(f'/test_website/model_item/{record.id}')
+        result = self.url_open(f'/test_website/model_item_sudo/{record.id}')
         self.assertTrue(has_branding(result.text), "Should have branding for user demo")
 
         # Public user.
         self.opener.cookies['session_id'] = public_session.sid
-        result = self.url_open(f'/test_website/model_item/{record.id}')
+        result = self.url_open(f'/test_website/model_item_sudo/{record.id}')
         self.assertFalse(has_branding(result.text), "Should have no branding for public user")
 
         # Back to demo user.
         self.opener.cookies['session_id'] = demo_session.sid
-        result = self.url_open(f'/test_website/model_item/{record.id}')
+        result = self.url_open(f'/test_website/model_item_sudo/{record.id}')
         self.assertTrue(has_branding(result.text), "Should have branding for user demo")

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 
 import { useService } from "@web/core/utils/hooks";
@@ -52,16 +52,30 @@ export class LivechatButton extends Component {
             animateNotification: !(
                 this.livechatService.thread || this.livechatService.shouldRestoreSession
             ),
+            hasAlreadyMovedOnce: false,
         });
         useMovable({
             cursor: "grabbing",
             ref: this.ref,
             elements: ".o-livechat-LivechatButton",
             onDrop: ({ top, left }) => {
+                this.state.hasAlreadyMovedOnce = true;
                 this.position.left = `${left}px`;
                 this.position.top = `${top}px`;
             },
         });
+        useExternalListener(document.body, "scroll", this._onScroll, { capture: true });
+    }
+
+    _onScroll(ev) {
+        if (!this.ref.el || this.state.hasAlreadyMovedOnce) {
+            return;
+        }
+        const container = ev.target;
+        this.position.top =
+            container.scrollHeight - container.scrollTop === container.clientHeight
+                ? `calc(93% - ${LIVECHAT_BUTTON_SIZE}px)`
+                : `calc(97% - ${LIVECHAT_BUTTON_SIZE}px)`;
     }
 
     onClick() {

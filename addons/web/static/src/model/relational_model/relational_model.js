@@ -290,8 +290,8 @@ export class RelationalModel extends Model {
                 delete config.groups;
             }
         }
-        if (!config.isMonoRecord && this.root) {
-            // always reset the offset to 0 when reloading from above
+        if (!config.isMonoRecord && this.root && params.domain) {
+            // always reset the offset to 0 when reloading from above with a domain
             const resetOffset = (config) => {
                 config.offset = 0;
                 for (const group of Object.values(config.groups || {})) {
@@ -344,13 +344,18 @@ export class RelationalModel extends Model {
         if (config.countLimit !== Number.MAX_SAFE_INTEGER) {
             config.countLimit = Math.max(config.countLimit, config.offset + config.limit);
         }
-        return this._loadUngroupedList({
+        const { records, length } = await this._loadUngroupedList({
             ...config,
             context: {
                 ...config.context,
                 current_company_id: config.currentCompanyId,
             },
         });
+        if (config.offset && !records.length) {
+            config.offset = 0;
+            return this._loadData(config);
+        }
+        return { records, length };
     }
 
     /**
@@ -469,6 +474,7 @@ export class RelationalModel extends Model {
                 const prom = this._loadData(groupConfig.list).then((response) => {
                     if (groupBy.length) {
                         group.groups = response ? response.groups : [];
+                        group.length = response ? response.length : 0;
                     } else {
                         group.records = response ? response.records : [];
                     }
@@ -496,11 +502,14 @@ export class RelationalModel extends Model {
 
         // if a group becomes empty at some point (e.g. we dragged its last record out of it), and the view is reloaded
         // with the same domain and groupbys, we want to keep the empty group in the UI
-        if (
-            config.currentGroups &&
-            config.currentGroups.params ===
-                JSON.stringify([config.domain, config.groupBy, config.offset, config.limit])
-        ) {
+        const params = JSON.stringify([
+            config.domain,
+            config.groupBy,
+            config.offset,
+            config.limit,
+            config.orderBy,
+        ]);
+        if (config.currentGroups && config.currentGroups.params === params) {
             const currentGroups = config.currentGroups.groups;
             currentGroups.forEach((group, index) => {
                 if (
@@ -519,10 +528,7 @@ export class RelationalModel extends Model {
                 }
             });
         }
-        config.currentGroups = {
-            params: JSON.stringify([config.domain, config.groupBy, config.offset, config.limit]),
-            groups,
-        };
+        config.currentGroups = { params, groups };
 
         return { groups, length };
     }

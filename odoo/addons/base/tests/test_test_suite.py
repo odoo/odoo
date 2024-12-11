@@ -134,6 +134,7 @@ class TestRunnerLoggingCommon(TransactionCase):
         message = re.sub(r'line \d+', 'line $line', message)
         message = re.sub(r'py:\d+', 'py:$line', message)
         message = re.sub(r'decorator-gen-\d+', 'decorator-gen-xxx', message)
+        message = re.sub(r'^\s*\^+\s*\n', '', message, flags=re.MULTILINE)
         message = message.replace(f'"{root_path}', '"/root_path/odoo')
         message = message.replace(f'"{python_path}', '"/usr/lib/python')
         message = message.replace('\\', '/')

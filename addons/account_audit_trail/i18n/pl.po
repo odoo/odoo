@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Karol Rybak <karolrybak85@gmail.com>, 2023
-# Wil Odoo, 2023
+# Interactive AV-IT, 2024
+# Wil Odoo, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-15 06:37+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-12-23 23:00+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,9 +23,22 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_account_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_account_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Account"
+msgstr "Konto"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_display_name
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_display_name
+msgid "Account Audit Log Display Name"
+msgstr "Wyświetlana nazwa dziennika audytu w koncie"
+
+#. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Activate Audit Trail"
-msgstr ""
+msgstr "Aktywuj ścieżkę audytu"
 
 #. module: account_audit_trail
 #: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
@@ -32,14 +47,19 @@ msgstr ""
 #: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Audit Trail"
-msgstr ""
+msgstr "Okres próbny audytu"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Pozycja wyciągu bankowego"
 
 #. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/res_config_settings.py:0
 #, python-format
 msgid "Can't disable audit trail when there are existing records."
-msgstr ""
+msgstr "Nie można wyłączyć ścieżki audytu, gdy zapisy już istnieją."
 
 #. module: account_audit_trail
 #. odoo-python
@@ -54,9 +74,25 @@ msgid "Companies"
 msgstr "Firmy"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Company"
+msgstr "Firma"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
+msgid "Company "
+msgstr "Firma"
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ustawienia konfiguracji"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Create Only"
+msgstr "Utwórz tylko"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -72,7 +108,7 @@ msgstr "Opis"
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Go to Audit Trail"
-msgstr ""
+msgstr "Idź do ścieżki audytu"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -88,6 +124,16 @@ msgid "Journal Entry"
 msgstr "Zapis dziennika"
 
 #. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_tracking_value
+msgid "Mail Tracking Value"
+msgstr "Wartość śledzenia poczty"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Kreator łączenia partnerów"
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_mail_message
 msgid "Message"
 msgstr "Wiadomość"
@@ -98,6 +144,11 @@ msgid "Messages Search"
 msgstr "Przeszukiwanie wiadomości"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log
+msgid "Name"
+msgstr "Nazwa"
+
+#. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #: code:addons/account_audit_trail/models/mail_message.py:0
@@ -106,10 +157,37 @@ msgid "Operation not supported"
 msgstr "Operacja nie jest wspierana"
 
 #. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_partner_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_partner_id
+msgid "Partner"
+msgstr "Kontrahent"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Partners"
+msgstr "Kontrahenci"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Record"
+msgstr "Rekord"
+
+#. module: account_audit_trail
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
 msgid "Show Audit Log"
-msgstr ""
+msgstr "Pokaż dziennik audytu"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_tax_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_tax_id
+msgid "Tax"
+msgstr "Podatek"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Taxes"
+msgstr "Podatki"
 
 #. module: account_audit_trail
 #. odoo-python
@@ -119,26 +197,33 @@ msgid ""
 "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"Aby zachować ścieżkę audytu, nie możesz usuwać wpisów dziennika po tym, jak były opublikowane.\n"
+"Zamiast tego, możesz anulować wpis dziennika."
 
 #. module: account_audit_trail
 #: model_terms:ir.actions.act_window,help:account_audit_trail.action_account_audit_trail_report
 msgid ""
 "To see the audit log you have to enable the audit trail option from settings"
 msgstr ""
+"Aby zobaczyć dziennik audytu musisz włączyć ścieżkę audytu w menu ustawień"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
 msgid "Update Only"
-msgstr ""
+msgstr "Tylko aktualizacja"
 
 #. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #, python-format
 msgid "Updated"
-msgstr ""
+msgstr "Zaktualizowano"
 
 #. module: account_audit_trail
-#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
-msgid "date"
-msgstr "data"
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid ""
+"You cannot remove parts of the audit trail. Archive the record instead."
+msgstr ""
+"Nie możesz usunąć części ścieżki audytu. Zamiast tego zarchiwizuj rekord."

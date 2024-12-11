@@ -3,7 +3,7 @@
 from unittest.mock import ANY, patch
 
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, JsonRpcException
+from odoo.tests import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
@@ -122,6 +122,9 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(tx_sudo.sale_order_ids.transaction_ids, tx_sudo)
 
         tx_sudo._set_done()
+
+        self.sale_order.require_payment = True
+        self.assertTrue(self.sale_order._has_to_be_paid())
         with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx_sudo._finalize_post_processing()
         self.assertEqual(self.sale_order.state, 'draft') # Only a partial amount was paid
@@ -441,3 +444,45 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         }
         with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(url, route_kwargs)
+
+    def test_partial_payment_confirm_order(self):
+        """
+        Test that a sale order can be confirmed through partial payments and that
+        correct mails are sent each time.
+        """
+
+        self.amount = self.sale_order.amount_total / 2
+
+        with patch(
+            'odoo.addons.sale.models.sale_order.SaleOrder._send_order_notification_mail',
+        ) as notification_mail_mock:
+            tx_pending = self._create_transaction(
+                flow='direct',
+                sale_order_ids=[self.sale_order.id],
+                state='pending',
+                reference='Test Transaction Draft 1',
+            )
+
+            self.assertEqual(self.sale_order.state, 'draft')
+
+            tx_pending._set_done()
+            tx_pending._reconcile_after_done()
+
+            self.assertEqual(notification_mail_mock.call_count, 1)
+            notification_mail_mock.assert_called_once_with(
+                self.env.ref('sale.mail_template_sale_payment_executed'))
+            self.assertEqual(self.sale_order.state, 'draft')
+            self.assertEqual(self.sale_order.amount_paid, self.amount)
+
+            tx_done = self._create_transaction(
+                flow='direct',
+                sale_order_ids=[self.sale_order.id],
+                state='done',
+                reference='Test Transaction Draft 2',
+            )
+            tx_done._reconcile_after_done()
+
+            self.assertEqual(notification_mail_mock.call_count, 2)
+            notification_mail_mock.assert_called_with(
+                self.env.ref('sale.mail_template_sale_confirmation'))
+            self.assertEqual(self.sale_order.state, 'sale')

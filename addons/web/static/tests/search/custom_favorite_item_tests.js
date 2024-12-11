@@ -393,6 +393,47 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
+    QUnit.test("add favorite with enter which already exists", async function (assert) {
+        serviceRegistry.add(
+            "notification",
+            {
+                start() {
+                    return {
+                        add(message, options) {
+                            assert.strictEqual(message, "A filter with same name already exists.");
+                            assert.deepEqual(options, { type: "danger" });
+                            assert.step("warning dialog");
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+        await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: SearchBarMenu,
+            searchViewId: false,
+            irFilters: [
+                {
+                    context: "{}",
+                    domain: "[]",
+                    id: 1,
+                    is_default: false,
+                    name: "My favorite",
+                    sort: "[]",
+                    user_id: [2, "Mitchell Admin"],
+                },
+            ],
+        });
+
+        await toggleSearchBarMenu(target);
+        await toggleSaveFavorite(target);
+        await editFavoriteName(target, "My favorite");
+        triggerEvent(target, `.o_favorite_menu input[type="text"]`, "keydown", { key: "Enter" });
+        assert.verifySteps(["warning dialog"]);
+    });
+
     QUnit.skip("save search filter in modal", async function (assert) {
         /** @todo I don't know yet how to convert this test */
         // assert.expect(5);

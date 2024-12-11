@@ -41,7 +41,7 @@ class MailTemplate(models.Model):
          ('hidden_template', 'Hidden Template'),
          ('custom_template', 'Custom Template')],
          compute="_compute_template_category", search="_search_template_category")
-    model_id = fields.Many2one('ir.model', 'Applies to')
+    model_id = fields.Many2one('ir.model', 'Applies to', ondelete='cascade')
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',
@@ -592,91 +592,137 @@ class MailTemplate(models.Model):
 
         # Grant access to send_mail only if access to related document
         self.ensure_one()
-        self._send_check_access([res_id])
-
-        Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
-
-        # create a mail_mail based on values, without attachments
-        values = self._generate_template(
+        return self.send_mail_batch(
             [res_id],
-            ('attachment_ids',
-             'auto_delete',
-             'body_html',
-             'email_cc',
-             'email_from',
-             'email_to',
-             'mail_server_id',
-             'model',
-             'partner_to',
-             'reply_to',
-             'report_template_ids',
-             'res_id',
-             'scheduled_date',
-             'subject',
-            )
-        )[res_id]
-        values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
-        values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]
-        values.update(email_values or {})
-        attachment_ids = values.pop('attachment_ids', [])
-        attachments = values.pop('attachments', [])
-        # add a protection against void email_from
-        if 'email_from' in values and not values.get('email_from'):
-            values.pop('email_from')
-        # encapsulate body
-        email_layout_xmlid = email_layout_xmlid or self.email_layout_xmlid
-        if email_layout_xmlid and values['body_html']:
-            record = self.env[self.model].browse(res_id)
-            model = self.env['ir.model']._get(record._name)
+            force_send=force_send,
+            raise_exception=raise_exception,
+            email_values=email_values,
+            email_layout_xmlid=email_layout_xmlid
+        )[0].id  # TDE CLEANME: return mail + api.returns ?
 
-            if self.lang:
-                lang = self._render_lang([res_id])[res_id]
-                model = model.with_context(lang=lang)
+    @api.returns('self', lambda value: value.ids)
+    def send_mail_batch(self, res_ids, force_send=False, raise_exception=False, email_values=None,
+                  email_layout_xmlid=False):
+        """ Generates new mail.mails. Batch version of 'send_mail'.'
 
-            template_ctx = {
-                # message
-                'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
-                'subtype': self.env['mail.message.subtype'].sudo(),
-                # record
-                'model_description': model.display_name,
-                'record': record,
-                'record_name': False,
-                'subtitles': False,
-                # user / environment
-                'company': 'company_id' in record and record['company_id'] or self.env.company,
-                'email_add_signature': False,
-                'signature': '',
-                'website_url': '',
-                # tools
-                'is_html_empty': is_html_empty,
-            }
-            body = model.env['ir.qweb']._render(email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
-            if not body:
-                _logger.warning(
-                    'QWeb template %s not found when sending template %s. Sending without layout.',
-                    email_layout_xmlid,
-                    self.name
+        :param list res_ids: IDs of modelrecords on which template will be rendered
+
+        :returns: newly created mail.mail
+        """
+        # Grant access to send_mail only if access to related document
+        self.ensure_one()
+        self._send_check_access(res_ids)
+        sending_email_layout_xmlid = email_layout_xmlid or self.email_layout_xmlid
+
+        mails_sudo = self.env['mail.mail'].sudo()
+        batch_size = int(
+            self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
+        ) or 50  # be sure to not have 0, as otherwise no iteration is done
+        RecordModel = self.env[self.model].with_prefetch(res_ids)
+        record_ir_model = self.env['ir.model']._get(self.model)
+
+        for res_ids_chunk in tools.split_every(batch_size, res_ids):
+            res_ids_values = self._generate_template(
+                res_ids_chunk,
+                ('attachment_ids',
+                 'auto_delete',
+                 'body_html',
+                 'email_cc',
+                 'email_from',
+                 'email_to',
+                 'mail_server_id',
+                 'model',
+                 'partner_to',
+                 'reply_to',
+                 'report_template_ids',
+                 'res_id',
+                 'scheduled_date',
+                 'subject',
                 )
+            )
+            values_list = [res_ids_values[res_id] for res_id in res_ids_chunk]
 
-            values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
-        if 'body_html' in values:
-            values['body'] = values['body_html']
+            # get record in batch to use the prefetch
+            records = RecordModel.browse(res_ids_chunk)
+            attachments_list = []
 
-        mail = self.env['mail.mail'].sudo().create(values)
+            # lang and company is used for rendering layout
+            res_ids_langs, res_ids_companies = {}, {}
+            if sending_email_layout_xmlid:
+                if self.lang:
+                    res_ids_langs = self._render_lang(res_ids_chunk)
+                res_ids_companies = records._mail_get_companies(default=self.env.company)
 
-        # manage attachments
-        for attachment in attachments:
-            attachment_data = {
-                'name': attachment[0],
-                'datas': attachment[1],
-                'type': 'binary',
-                'res_model': 'mail.message',
-                'res_id': mail.mail_message_id.id,
-            }
-            attachment_ids.append((4, Attachment.create(attachment_data).id))
-        if attachment_ids:
-            mail.write({'attachment_ids': attachment_ids})
+            for record in records:
+                values = res_ids_values[record.id]
+                values['recipient_ids'] = [(4, pid) for pid in (values.get('partner_ids') or [])]
+                values['attachment_ids'] = [(4, aid) for aid in (values.get('attachment_ids') or [])]
+                values.update(email_values or {})
+
+                # delegate attachments after creation due to ACL check
+                attachments_list.append(values.pop('attachments', []))
+
+                # add a protection against void email_from
+                if 'email_from' in values and not values.get('email_from'):
+                    values.pop('email_from')
+
+                # encapsulate body
+                if not sending_email_layout_xmlid:
+                    values['body'] = values['body_html']
+                    continue
+
+                lang = res_ids_langs.get(record.id) or False
+                company = res_ids_companies.get(record.id) or self.env.company
+                model_lang = record_ir_model.with_context(lang=lang) if lang else record_ir_model
+
+                template_ctx = {
+                    # message
+                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                    'subtype': self.env['mail.message.subtype'].sudo(),
+                    # record
+                    'model_description': model_lang.display_name,
+                    'record': record,
+                    'record_name': False,
+                    'subtitles': False,
+                    # user / environment
+                    'company': company,
+                    'email_add_signature': False,
+                    'signature': '',
+                    'website_url': '',
+                    # tools
+                    'is_html_empty': is_html_empty,
+                }
+                body = model_lang.env['ir.qweb']._render(sending_email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
+                if not body:
+                    _logger.warning(
+                        'QWeb template %s not found when sending template %s. Sending without layout.',
+                        sending_email_layout_xmlid,
+                        self.name,
+                    )
+                    body = values['body_html']
+
+                values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
+                values['body'] = values['body_html']
+
+            mails = self.env['mail.mail'].sudo().create(values_list)
+
+            # manage attachments
+            for mail, attachments in zip(mails, attachments_list):
+                if attachments:
+                    attachments_values = [
+                        (0, 0, {
+                            'name': name,
+                            'datas': datas,
+                            'type': 'binary',
+                            'res_model': 'mail.message',
+                            'res_id': mail.mail_message_id.id,
+                        })
+                        for (name, datas) in attachments
+                    ]
+                    mail.with_context(default_type=None).write({'attachment_ids': attachments_values})
+
+            mails_sudo += mails
 
         if force_send:
-            mail.send(raise_exception=raise_exception)
-        return mail.id  # TDE CLEANME: return mail + api.returns ?
+            mails_sudo.send(raise_exception=raise_exception)
+        return mails_sudo

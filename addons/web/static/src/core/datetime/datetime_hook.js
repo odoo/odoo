@@ -18,13 +18,14 @@ export function useDateTimePicker(hookParams) {
         });
     }
     const inputRefs = [useRef("start-date"), useRef("end-date")];
+    const getInputs = () => inputRefs.map((ref) => ref?.el);
     const { computeBasePickerProps, state, open, focusIfNeeded, enable } = datetimePicker.create(
         hookParams,
-        () => inputRefs.map((ref) => ref?.el),
+        getInputs,
         usePopover
     );
     onWillRender(computeBasePickerProps);
-    useEffect(enable);
+    useEffect(enable, getInputs);
 
     // Note: this `onPatched` callback must be called after the `useEffect` since
     // the effect may change input values that will be selected by the patch callback.

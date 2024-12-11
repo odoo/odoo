@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import test_bus_presence
 from . import test_discuss_channel
 from . import test_discuss_channel_access
 from . import test_discuss_channel_as_guest

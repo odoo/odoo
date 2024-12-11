@@ -16,18 +16,18 @@
 # Marko Happonen <marko.happonen@sprintit.fi>, 2023
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2023
 # Martin Trigaux, 2023
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Janne Räty, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-15 10:37+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -490,6 +490,11 @@ msgid "Product"
 msgstr "Tuote"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Tuotteiden siirrot (Stock Move Line)"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
 msgstr "Saatavilla oleva määrä tänään"
@@ -637,6 +642,11 @@ msgstr "Lähetä tuotteet heti kun saatavilla, käyttäen jälkitilauksia"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "Lähetyssäännöt"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
+msgid "Started"
+msgstr "Aloitettu"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move

@@ -17,9 +17,11 @@ export class CountedQuantityWidgetField extends FloatField {
                 if (inputEl) {
                     inputEl.addEventListener("input", this.onInput.bind(this));
                     inputEl.addEventListener("keydown", this.onKeydown.bind(this));
+                    inputEl.addEventListener("blur", this.onBlur.bind(this));
                     return () => {
                         inputEl.removeEventListener("input", this.onInput.bind(this));
                         inputEl.removeEventListener("keydown", this.onKeydown.bind(this));
+                        inputEl.removeEventListener("blur", this.onBlur.bind(this));
                     };
                 }
             },
@@ -31,13 +33,24 @@ export class CountedQuantityWidgetField extends FloatField {
         return this.props.record.update({ inventory_quantity_set: true });
     }
 
+    updateValue(ev){
+        try {
+           const val = this.parse(ev.target.value);
+            this.props.record.update({ [this.props.name]: val });
+        } catch {} // ignore since it will be handled later
+    }
+
+    onBlur(ev) {
+         if (!this.props.record.data.inventory_quantity_set) {
+           return;
+        }
+        this.updateValue(ev);
+    }
+
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
         if (["enter", "tab", "shift+tab"].includes(hotkey)) {
-            try {
-                const val = this.parse(ev.target.value);
-                this.props.record.update({ [this.props.name]: val });
-            } catch {} // ignore since it will be handled later
+            this.updateValue(ev);
             this.onInput(ev);
         }
     }

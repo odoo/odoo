@@ -15,14 +15,15 @@
 # Grega Vavtar <grega@hbs.si>, 2024
 # Katja Deržič, 2024
 # Gregor Flajs, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Gregor Flajs, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +63,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Logout"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary\"/> Odjava"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -282,18 +283,8 @@ msgid "Add extra content to display in the email"
 msgstr ""
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
 msgstr ""
 
 #. module: portal
@@ -731,6 +722,13 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -836,11 +834,6 @@ msgid "Next"
 msgstr "Naprej"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr ""
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
 msgstr "Opomba"
@@ -902,7 +895,7 @@ msgstr "Vnesite svoje geslo in potrdite, da ste lastnik tega računa."
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Upravljanje dostopov portala"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -1027,6 +1020,7 @@ msgstr "Varnost"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr ""
@@ -1489,6 +1483,13 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
 msgstr ""
 
 #. module: portal

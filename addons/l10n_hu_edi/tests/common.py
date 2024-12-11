@@ -4,7 +4,6 @@ from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 import datetime
-from unittest import mock
 
 
 class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
@@ -124,14 +123,13 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
     @classmethod
     def write_edi_credentials(cls):
         # Set up test EDI user
-        with mock.patch.object(type(cls.env['res.company']), '_l10n_hu_edi_test_credentials', autospec=True):
-            return cls.company_data['company'].write({
-                'l10n_hu_edi_server_mode': 'test',
-                'l10n_hu_edi_username': 'this',
-                'l10n_hu_edi_password': 'that',
-                'l10n_hu_edi_signature_key': 'some_key',
-                'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
-            })
+        return cls.company_data['company'].write({
+            'l10n_hu_edi_server_mode': 'test',
+            'l10n_hu_edi_username': 'this',
+            'l10n_hu_edi_password': 'that',
+            'l10n_hu_edi_signature_key': 'some_key',
+            'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
+        })
 
     def create_invoice_simple(self):
         """ Create a really basic invoice - just one line. """
@@ -153,7 +151,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         })
 
     def create_advance_invoice(self):
-        """ Create a sale order, an advance invoice and a final invoice. """
+        """ Create a sale order and an advance invoice. """
         self.product_a.invoice_policy = 'order'
         pricelist_huf = self.env['product.pricelist'].create({
             'name': 'HUF pricelist',
@@ -174,28 +172,34 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         })
         sale_order.action_confirm()
 
-        context = {
+        downpayment = self.env['sale.advance.payment.inv'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order.id],
             'active_id': sale_order.id,
             'default_journal_id': self.company_data['default_journal_sale'].id,
-        }
-
-        downpayment_1 = self.env['sale.advance.payment.inv'].with_context(context).create({
+        }).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 6350.0,
             'deposit_account_id': self.company_data['default_account_revenue'].id,
         })
-        downpayment_1.create_invoices()
-        advance_invoice = sale_order.invoice_ids
+        downpayment.create_invoices()
+        return sale_order, sale_order.invoice_ids
 
-        downpayment_2 = self.env['sale.advance.payment.inv'].with_context(context).create({
+    def create_final_invoice(self, sale_order):
+        """ Create a final invoice for a sale order """
+        advance_invoice = sale_order.invoice_ids
+        final_payment = self.env['sale.advance.payment.inv'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }).create({
             'advance_payment_method': 'delivered',
         })
-        downpayment_2.create_invoices()
+        final_payment.create_invoices()
         final_invoice = sale_order.invoice_ids - advance_invoice
 
-        return advance_invoice, final_invoice
+        return final_invoice
 
     def create_invoice_complex_huf(self):
         """ Create a complex invoice in HUF, with cash rounding. """
@@ -288,6 +292,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         invoice = self.create_invoice_simple()
         invoice.action_post()
         send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+        self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
         send_and_print.action_send_and_print()
         cancel_wizard = self.env['l10n_hu_edi.cancellation'].with_context({"default_invoice_id": invoice.id}).create({
             'code': 'ERRATIC_DATA',

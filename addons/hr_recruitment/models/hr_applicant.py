@@ -33,7 +33,7 @@ class Applicant(models.Model):
     _primary_email = 'email_from'
 
     name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
-    active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
+    active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
     description = fields.Html("Description")
     email_from = fields.Char("Email", size=128, compute='_compute_partner_phone_email',
         inverse='_inverse_partner_email', store=True, index='trigram')
@@ -53,7 +53,7 @@ class Applicant(models.Model):
     user_id = fields.Many2one(
         'res.users', "Recruiter", compute='_compute_user', domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         tracking=True, store=True, readonly=False)
-    date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True)
+    date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True, copy=False)
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
@@ -114,6 +114,7 @@ class Applicant(models.Model):
     applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
 
     def init(self):
+        super().init()
         self.env.cr.execute("""
             CREATE INDEX IF NOT EXISTS hr_applicant_job_id_stage_id_idx
             ON hr_applicant(job_id, stage_id)
@@ -320,7 +321,7 @@ class Applicant(models.Model):
             if not applicant.partner_id:
                 if not applicant.partner_name:
                     raise UserError(_('You must define a Contact Name for this applicant.'))
-                applicant.partner_id = self.env['res.partner'].find_or_create(applicant.email_from)
+                applicant.partner_id = self.env['res.partner'].with_context(default_lang=self.env.lang).find_or_create(applicant.email_from)
             if applicant.partner_name and not applicant.partner_id.name:
                 applicant.partner_id.name = applicant.partner_name
             if tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):

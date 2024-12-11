@@ -119,6 +119,7 @@ class HttpCaseWithUserDemo(HttpCase):
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
+                'tz': 'UTC'
             })
             cls.user_demo = cls.env['res.users'].create({
                 'login': 'demo',
@@ -325,6 +326,7 @@ class MockSmtplibCase:
                     'smtp_from': smtp_from,
                     'smtp_to_list': smtp_to_list,
                     'message': message.as_string(),
+                    'msg_from': message['From'],
                     'from_filter': self.from_filter,
                 })
 
@@ -333,6 +335,7 @@ class MockSmtplibCase:
                     'smtp_from': smtp_from,
                     'smtp_to_list': smtp_to_list,
                     'message': message_str,
+                    'msg_from': None,  # to fix if necessary
                     'from_filter': self.from_filter,
                 })
 
@@ -398,7 +401,7 @@ class MockSmtplibCase:
         :param smtp_from: FROM used for the authentication to the mail server
         :param smtp_to_list: List of destination email address
         :param message_from: FROM used in the SMTP headers
-        :arap mail_server: used to compare the 'from_filter' as an alternative
+        :param mail_server: used to compare the 'from_filter' as an alternative
           to using the from_filter parameter
         :param from_filter: from_filter of the <ir.mail_server> used to send the
           email. False means 'match everything';'

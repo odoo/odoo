@@ -96,6 +96,10 @@ export function areSimilarElements(node, node2) {
 * @returns {String|null}
 */
 export function deduceURLfromText(text, link) {
+    // Skip modifying the href for Bootstrap tabs.
+    if (link && link.getAttribute("role") === "tab") {
+        return;
+    }
    const label = text.replace(ZERO_WIDTH_CHARS_REGEX, '').trim();
    // Check first for e-mail.
    let match = label.match(EMAIL_REGEX);
@@ -118,7 +122,7 @@ export function deduceURLfromText(text, link) {
    // Check for telephone url.
    match = label.match(PHONE_REGEX);
    if (match) {
-       return match[1] ? match[0] : 'tel://' + match[0];
+        return (match[1] ? match[0] : "tel://" + match[0]).replace(/\s+/g, "");
    }
    return null;
 }
@@ -156,6 +160,7 @@ function sanitizeNode(node, root) {
         && !node.hasAttributes()
         && !hasPseudoElementContent(node, "::before")
         && !hasPseudoElementContent(node, "::after")
+        && !node.querySelector(".oe_currency_value")
     ) {
         // Unwrap the contents of SPAN and FONT elements without attributes.
         getDeepRange(root, { select: true });
@@ -187,7 +192,7 @@ function sanitizeNode(node, root) {
         node = parent; // The node has been removed, update the reference.
     } else if (
         node.nodeName === 'P' && // Note: not sure we should limit to <p>.
-        node.parentElement.nodeName === 'LI' &&
+        ['LI', 'A'].includes(node.parentElement.nodeName) &&
         !node.parentElement.classList.contains('nav-item')
     ) {
         // Remove empty paragraphs in <li>.
@@ -225,6 +230,17 @@ function sanitizeNode(node, root) {
         paragraph.replaceChildren(...node.childNodes);
         node.replaceWith(paragraph);
         node = paragraph; // The node has been removed, update the reference.
+    } else if (
+        ['UL', 'OL'].includes(node.nodeName) &&
+        ['UL', 'OL'].includes(node.parentNode.nodeName)
+    ) {
+        const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+        const li = document.createElement('li');
+        node.parentNode.insertBefore(li, node);
+        li.appendChild(node);
+        li.classList.add('oe-nested');
+        node = li;
+        restoreCursor && restoreCursor();
     } else if (isFontAwesome(node) && node.textContent !== '\u200B') {
         // Ensure a zero width space is present inside the FA element.
         node.textContent = '\u200B';

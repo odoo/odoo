@@ -27,6 +27,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
+import { pyToJsLocale } from "@web/core/l10n/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
@@ -243,7 +244,8 @@ export class Chatter extends Component {
                 )}">${escape(text)}</span>`;
             });
         const formatter = new Intl.ListFormat(
-            this.store.env.services["user"].lang?.replace("_", "-"),
+            this.store.env.services["user"].lang &&
+                pyToJsLocale(this.store.env.services["user"].lang),
             { type: "unit" }
         );
         if (this.state.thread && this.state.thread.recipients.length > 5) {

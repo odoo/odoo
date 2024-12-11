@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2023
 # Ali Reza Feizi Derakhshi, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-02-08 07:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ali Reza Feizi Derakhshi, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: code:addons/spreadsheet_account/static/src/accounting_datasource.js:0
 #, python-format
 msgid "%s is not a valid year."
-msgstr ""
+msgstr "%s سال معتبر نیست."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -35,18 +36,13 @@ msgid ""
 "'%s' is not a valid period. Supported formats are \"21/12/2022\", "
 "\"Q1/2022\", \"12/2022\", and \"2022\"."
 msgstr ""
+"'%s' یک دوره معتبر نیست. فرمت‌های پشتیبانی شده عبارتند از \"21/12/2022\"، "
+"\"Q1/2022\"، \"12/2022\"، و \"2022\"."
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_account_account
 msgid "Account"
 msgstr "حساب"
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "Account type."
-msgstr ""
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -58,43 +54,35 @@ msgstr "شرکت‌ها"
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Get the total balance for the specified account(s) and period."
-msgstr ""
+msgstr "حاصل جمع تراز برای حساب(های) مشخص شده و دوره را دریافت کنید."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Get the total credit for the specified account(s) and period."
-msgstr ""
+msgstr "دریافت اعتبار کل برای حساب(های) مشخص‌شده و دوره زمانی مشخص‌شده."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Get the total debit for the specified account(s) and period."
-msgstr ""
+msgstr "مجموع بدهی برای حساب (حساب‌های) مشخص و دوره زمانی مشخص را بدست آورید."
 
 #. module: spreadsheet_account
 #. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 #, python-format
 msgid "Journal items for account prefix %s"
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "Reference date."
-msgstr ""
+msgstr "موارد ژورنال برای پیشوند حساب %s"
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Returns the account ids of a given group."
-msgstr ""
+msgstr "شناسه‌های حساب یک گروه خاص را برمی‌گرداند."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -103,6 +91,9 @@ msgstr ""
 msgid ""
 "Returns the ending date of the fiscal year encompassing the provided date."
 msgstr ""
+"```html\n"
+"تاریخ پایان سال مالی که تاریخ ارائه شده را در بر می گیرد، باز می گرداند.\n"
+"```"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -110,20 +101,27 @@ msgstr ""
 #, python-format
 msgid ""
 "Returns the starting date of the fiscal year encompassing the provided date."
-msgstr ""
+msgstr "تاریخ شروع سال مالی که تاریخ ارائه شده را شامل می‌شود برمی‌گرداند."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/index.js:0
 #, python-format
 msgid "See records"
-msgstr ""
+msgstr "مشاهده سوابق"
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Set to TRUE to include unposted entries."
+msgstr "ورودی‌های منتشر نشده را با TRUE تنظیم کنید."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The account type (income, expense, asset_current,...)."
 msgstr ""
 
 #. module: spreadsheet_account
@@ -131,14 +129,14 @@ msgstr ""
 #: code:addons/spreadsheet_account/static/src/accounting_datasource.js:0
 #, python-format
 msgid "The company fiscal year could not be found."
-msgstr ""
+msgstr "<br>سال مالی شرکت یافت نشد.</br>"
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The company to target (Advanced)."
-msgstr ""
+msgstr "شرکت مورد نظر (پیشرفته)."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -146,7 +144,7 @@ msgstr ""
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The company."
-msgstr ""
+msgstr "شرکت."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -156,17 +154,33 @@ msgid ""
 "The date range. Supported formats are \"21/12/2022\", \"Q1/2022\", "
 "\"12/2022\", and \"2022\"."
 msgstr ""
+"محدوده تاریخ. قالب‌های پشتیبانی شده عبارتند از: \"۲۱/۱۲/۲۰۲۲\"، \"Q1/2022\"،"
+" \"۱۲/۲۰۲۲\" و \"۲۰۲۲\"."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The day from which to extract the fiscal year end."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The day from which to extract the fiscal year start."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The prefix of the accounts."
-msgstr ""
+msgstr "پیشوند حساب‌ها."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Year offset applied to date_range."
-msgstr ""
+msgstr "اعمال تغییر سال بر روی محدوده تاریخ."

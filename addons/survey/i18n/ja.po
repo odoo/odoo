@@ -3,15 +3,16 @@
 # 	* survey
 # 
 # Translators:
-# Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Wil Odoo, 2024
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -451,33 +452,6 @@ msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>回答"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Average "
-"</span>"
-msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">平均 "
-"</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
-msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Maximum "
-"</span>"
-msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">最大 "
-"</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
-msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
-"</span>"
-msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">最小 "
-"</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
-msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
 "</span>"
 msgstr ""
@@ -499,28 +473,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Min "
 "</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">最少 "
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">最小 "
 "</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-muted\">Responded</span>"
-msgstr "<span class=\"d-block text-muted\">回答済</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-muted\">Skipped</span>"
-msgstr "<span class=\"d-block text-muted\">スキップ済</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-success\">Correct</span>"
-msgstr "<span class=\"d-block text-success\">正解</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-warning\">Partial</span>"
-msgstr "<span class=\"d-block text-warning\">部分的</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -627,18 +581,23 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Completed</span>"
-msgstr "<span class=\"text-muted\">完了</span>"
+msgid "<span class=\"text-break text-muted\">Completed</span>"
+msgstr "<span class=\"text-break text-muted\">完了済</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-break text-muted\">Registered</span>"
+msgstr "<span class=\"text-break text-muted\">登録済</span>"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-break text-muted\">Success</span>"
+msgstr "<span class=\"text-break text-muted\">成功</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "<span class=\"text-muted\">Questions</span>"
 msgstr "<span class=\"text-muted\">質問</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Registered</span>"
-msgstr "<span class=\"text-muted\">登録</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -649,11 +608,6 @@ msgstr "<span class=\"text-muted\">回答済</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span class=\"text-muted\">Skipped</span>"
 msgstr "<span class=\"text-muted\">スキップ済</span>"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Success</span>"
-msgstr "<span class=\"text-muted\">成功</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -2575,7 +2529,7 @@ msgstr "検定"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_page
 msgid "Is a page?"
-msgstr "ページのですか？"
+msgstr "ページですか？"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__is_session_answer
@@ -2987,7 +2941,7 @@ msgstr "最小日時"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_min
 msgid "Minimum Text Length"
-msgstr "最少文字数"
+msgstr "最小文字数"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_float_value
@@ -5119,6 +5073,11 @@ msgstr "ライブプレゼンテーションのような楽しい画像サポー
 #, python-format
 msgid "Use humor and make jokes"
 msgstr "ユーモアや冗談を使う"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "テンプレートを使用"
 
 #. module: survey
 #. odoo-javascript

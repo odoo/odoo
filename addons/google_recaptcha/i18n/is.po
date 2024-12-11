@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # 	* google_recaptcha
 # 
+# Translators:
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
 "Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,14 +25,21 @@ msgid "<i class=\"oi oi-arrow-right\"/> Generate reCAPTCHA v3 keys"
 msgstr ""
 
 #. module: google_recaptcha
+#: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
+msgid ""
+"By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
+"1.0 is very likely a good interaction, 0.0 is very likely a bot"
+msgstr ""
+
+#. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Stillingarvalkostir"
 
 #. module: google_recaptcha
 #: model:ir.model,name:google_recaptcha.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Routing"
 
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_min_score
@@ -59,13 +70,6 @@ msgstr ""
 #. module: google_recaptcha
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_private_key
 msgid "Secret Key"
-msgstr ""
-
-#. module: google_recaptcha
-#: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
-msgid ""
-"By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
-"1.0 is very likely a good interaction, 0.0 is very likely a bot"
 msgstr ""
 
 #. module: google_recaptcha

@@ -5,7 +5,7 @@ import collections
 from datetime import timedelta
 from itertools import groupby
 import operator as py_operator
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.tools import groupby
 from odoo.tools.float_utils import float_round, float_is_zero
 
@@ -36,8 +36,9 @@ class ProductTemplate(models.Model):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_tmpl_id', '=', product.id), ('byproduct_ids.product_id.product_tmpl_id', '=', product.id)])
 
+    @api.depends_context('company')
     def _compute_is_kits(self):
-        domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom')]
+        domain = [('product_tmpl_id', 'in', self.ids), ('type', '=', 'phantom'), '|', ('company_id', '=', False), ('company_id', '=', self.env.company.id)]
         bom_mapping = self.env['mrp.bom'].sudo().search_read(domain, ['product_tmpl_id'])
         kits_ids = set(b['product_tmpl_id'][0] for b in bom_mapping)
         for template in self:
@@ -124,8 +125,11 @@ class ProductProduct(models.Model):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count(['|', '|', ('byproduct_ids.product_id', '=', product.id), ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
 
+    @api.depends_context('company')
     def _compute_is_kits(self):
-        domain = ['&', ('type', '=', 'phantom'),
+        domain = ['&', '&', ('type', '=', 'phantom'),
+                       '|', ('company_id', '=', False),
+                            ('company_id', '=', self.env.company.id),
                        '|', ('product_id', 'in', self.ids),
                             '&', ('product_id', '=', False),
                                  ('product_tmpl_id', 'in', self.product_tmpl_id.ids)]
@@ -272,18 +276,18 @@ class ProductProduct(models.Model):
                         "free_qty": float_round(component.free_qty, precision_rounding=rounding),
                     }
                 )
-                ratios_virtual_available.append(component_res["virtual_available"] / qty_per_kit)
-                ratios_qty_available.append(component_res["qty_available"] / qty_per_kit)
-                ratios_incoming_qty.append(component_res["incoming_qty"] / qty_per_kit)
-                ratios_outgoing_qty.append(component_res["outgoing_qty"] / qty_per_kit)
-                ratios_free_qty.append(component_res["free_qty"] / qty_per_kit)
+                ratios_virtual_available.append(float_round(component_res["virtual_available"] / qty_per_kit, precision_rounding=rounding))
+                ratios_qty_available.append(float_round(component_res["qty_available"] / qty_per_kit, precision_rounding=rounding))
+                ratios_incoming_qty.append(float_round(component_res["incoming_qty"] / qty_per_kit, precision_rounding=rounding))
+                ratios_outgoing_qty.append(float_round(component_res["outgoing_qty"] / qty_per_kit, precision_rounding=rounding))
+                ratios_free_qty.append(float_round(component_res["free_qty"] / qty_per_kit, precision_rounding=rounding))
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                 res[product.id] = {
-                    'virtual_available': min(ratios_virtual_available) * bom_kits[product].product_qty // 1,
-                    'qty_available': min(ratios_qty_available) * bom_kits[product].product_qty // 1,
-                    'incoming_qty': min(ratios_incoming_qty) * bom_kits[product].product_qty // 1,
-                    'outgoing_qty': min(ratios_outgoing_qty) * bom_kits[product].product_qty // 1,
-                    'free_qty': min(ratios_free_qty) * bom_kits[product].product_qty // 1,
+                    'virtual_available': float_round(min(ratios_virtual_available) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'qty_available': float_round(min(ratios_qty_available) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'incoming_qty': float_round(min(ratios_incoming_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'outgoing_qty': float_round(min(ratios_outgoing_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
+                    'free_qty': float_round(min(ratios_free_qty) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
                 }
             else:
                 res[product.id] = {

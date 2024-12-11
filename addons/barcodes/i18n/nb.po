@@ -6,6 +6,7 @@
 # Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2024
 # Marius Stedjan <marius@stedjan.com>, 2024
 # Martin Trigaux, 2024
+# Rune Restad, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Rune Restad, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -216,7 +217,7 @@ msgstr ""
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Vennligst scan igjen!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -248,6 +249,13 @@ msgstr "Trykk for å skanne"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
 msgstr ""
 
 #. module: barcodes

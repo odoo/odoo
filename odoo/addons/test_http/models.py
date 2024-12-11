@@ -18,6 +18,8 @@ class Stargate(models.Model):
     has_galaxy_crystal = fields.Boolean(store=True, compute='_compute_has_galaxy_crystal', readonly=False)
     glyph_attach = fields.Image(attachment=True)
     glyph_inline = fields.Image(attachment=False)
+    glyph_related = fields.Image('Glyph 128', related='glyph_attach', max_width=128, max_height=128, store=True)
+    glyph_compute = fields.Image(compute='_compute_glyph_compute')
     galaxy_picture = fields.Image(related='galaxy_id.picture', attachment=True, store=False)
 
 
@@ -52,6 +54,11 @@ class Stargate(models.Model):
             )
             local_part = str(int.from_bytes(gate.address.encode(), 'big'))[:3]
             gate.sgc_designation = f'{region_part}-{local_part}'
+
+    @api.depends('glyph_attach')
+    def _compute_glyph_compute(self):
+        for gate in self:
+            gate.glyph_compute = gate.glyph_attach
 
 
 class Galaxy(models.Model):

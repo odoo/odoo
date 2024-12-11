@@ -147,7 +147,7 @@
                         <field name="label">tax</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=2</field>
+                        <field name="subformula">editable</field>
                     </record>
                 </field>
             </record>
@@ -202,7 +202,7 @@
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -214,7 +214,7 @@
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -226,6 +226,11 @@
                 <field name="expression_ids">
                     <record id="account_tax_report_line_ml_purchases_credit_reported_tax" model="account.report.expression">
                         <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_CREDIT_REPORTED._applied_carryover_tax</field>
+                    </record>
+                    <record id="account_tax_report_line_ml_purchases_credit_reported_tax_carryover" model="account.report.expression">
+                        <field name="label">_applied_carryover_tax</field>
                         <field name="engine">external</field>
                         <field name="formula">most_recent</field>
                         <field name="date_scope">previous_tax_period</field>
@@ -251,7 +256,7 @@
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">ML_SALES.tax - ML_DEDUCTIONS.tax</field>
-                        <field name="subformula">if_above(EUR(0))</field>
+                        <field name="subformula">if_above(XOF(0))</field>
                     </record>
                 </field>
             </record>
@@ -263,7 +268,7 @@
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">ML_DEDUCTIONS.tax - ML_SALES.tax</field>
-                        <field name="subformula">if_above(EUR(0))</field>
+                        <field name="subformula">if_above(XOF(0))</field>
                     </record>
                 </field>
             </record>
@@ -275,7 +280,7 @@
                         <field name="label">tax</field>
                         <field name="engine">external</field>
                         <field name="formula">sum</field>
-                        <field name="subformula">editable;rounding=2</field>
+                        <field name="subformula">editable</field>
                     </record>
                 </field>
             </record>
@@ -287,8 +292,14 @@
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">ML_CREDIT_REPORT.tax - ML_REIMBURSEMENT.tax</field>
-                        <field name="subformula">if_above(EUR(0))</field>
-                        <field name="carryover_target">ML_CREDIT_REPORTED.tax</field>
+                        <field name="subformula">if_above(XOF(0))</field>
+                        <field name="carryover_target" eval="False"/>
+                    </record>
+                    <record id="account_tax_report_line_ml_credit_report_deductions_carryover" model="account.report.expression">
+                        <field name="label">_carryover_tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_CREDIT_REPROT_DEDU.tax</field>
+                        <field name="carryover_target">ML_CREDIT_REPORTED._applied_carryover_tax</field>
                     </record>
                 </field>
             </record>

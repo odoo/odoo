@@ -14,7 +14,9 @@ import { busParametersService } from "@bus/bus_parameters_service";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { assertSteps, click, contains, step } from "@web/../tests/utils";
+import { createWebClient } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
@@ -24,8 +26,10 @@ QUnit.test("notifications received from the channel", async () => {
     addBusServicesToRegistry();
     const pyEnv = await startServer();
     const env = await makeTestEnv({ activateMockServer: true });
-    env.services["bus_service"].addChannel("lambda");
-    await waitUntilSubscribe("lambda");
+    await Promise.all([
+        env.services["bus_service"].addChannel("lambda"),
+        waitUntilSubscribe("lambda"),
+    ]);
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "epsilon");
     await waitNotifications([env, "notifType", "beta"], [env, "notifType", "epsilon"]);
@@ -60,7 +64,7 @@ QUnit.test("notifications still received after disconnect/reconnect", async () =
     const pyEnv = await startServer();
     const env = await makeTestEnv({ activateMockServer: true });
     env.services["bus_service"].addChannel("lambda");
-    await Promise.all([waitForBusEvent(env, "connect"), waitForChannels(["lambda"])]);
+    await Promise.all([waitForBusEvent(env, "connect"), waitUntilSubscribe("lambda")]);
     pyEnv["bus.bus"]._sendone("lambda", "notifType", "beta");
     await waitNotifications([env, "notifType", "beta"]);
     pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
@@ -142,7 +146,7 @@ QUnit.test("channel management from multiple tabs", async (assert) => {
     const firstTabEnv = await makeTestEnv({ activateMockServer: true });
     const secTabEnv = await makeTestEnv({ activateMockServer: true });
     firstTabEnv.services["bus_service"].addChannel("channel1");
-    await waitForChannels(["channel1"]);
+    await waitUntilSubscribe("channel1");
     // this should not trigger a subscription since the channel1 was
     // aleady known.
     secTabEnv.services["bus_service"].addChannel("channel1");
@@ -199,7 +203,7 @@ QUnit.test("Last notification id is passed to the worker on service start", asyn
         ["lambda", "notifType", "beta"],
         ["lambda", "notifType", "beta"],
     ]);
-    await waitForBusEvent(env1, "notification");
+    await waitNotifications([env1, "notifType", "beta"], [env1, "notifType", "beta"]);
     updateLastNotificationDeferred = makeDeferred();
     const env2 = await makeTestEnv();
     await env2.services["bus_service"].start();
@@ -266,7 +270,7 @@ QUnit.test("WebSocket connects with URL corresponding to given serverURL", async
     const env = await makeTestEnv();
     env.services["bus_service"].start();
     await websocketCreatedDeferred;
-    assert.verifySteps([`${serverURL.replace("http", "ws")}/websocket`]);
+    assert.verifySteps([`${serverURL.replace("http", "ws")}/websocket?version=undefined`]);
 });
 
 QUnit.test("Disconnect on offline, re-connect on online", async () => {
@@ -293,15 +297,8 @@ QUnit.test("No disconnect on change offline/online when bus inactive", async () 
 
 QUnit.test("Can reconnect after late close event", async (assert) => {
     addBusServicesToRegistry();
-    let subscribeSent = 0;
     const closeDeferred = makeDeferred();
-    const worker = patchWebsocketWorkerWithCleanup({
-        _sendToServer({ event_name }) {
-            if (event_name === "subscribe") {
-                subscribeSent++;
-            }
-        },
-    });
+    const worker = patchWebsocketWorkerWithCleanup();
     const pyEnv = await startServer();
     const env = await makeTestEnv();
     env.services["bus_service"].start();
@@ -335,8 +332,6 @@ QUnit.test("Can reconnect after late close event", async (assert) => {
     pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
     await waitForBusEvent(env, "reconnecting");
     await waitForBusEvent(env, "reconnect");
-    // 3 connections were opened, so 3 subscriptions are expected.
-    assert.strictEqual(subscribeSent, 3);
 });
 
 QUnit.test("Fallback on simple worker when shared worker failed to initialize", async (assert) => {
@@ -390,4 +385,112 @@ QUnit.test("subscribe to single notification", async (assert) => {
     });
     await messageReceivedDeferred;
     assert.verifySteps(["message"]);
+});
+
+QUnit.test("do not reconnect when worker version is outdated", async () => {
+    await startServer();
+    addBusServicesToRegistry();
+    const worker = patchWebsocketWorkerWithCleanup();
+    const env = await makeTestEnv({ activateMockServer: true });
+    env.services["bus_service"].addEventListener("connect", () => step("connect"));
+    env.services["bus_service"].addEventListener("reconnect", () => step("reconnect"));
+    env.services["bus_service"].addEventListener("disconnect", () => step("disconnect"));
+    env.services["bus_service"].start();
+    await assertSteps(["connect"]);
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
+    await assertSteps(["disconnect", "reconnect"]);
+    patchWithCleanup(console, { warn: (message) => step(message) });
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN, "OUTDATED_VERSION");
+    await assertSteps(["Worker deactivated due to an outdated version.", "disconnect"]);
+    env.services["bus_service"].start();
+    env.services["bus_service"].send("hello", "world");
+    await nextTick();
+    await assertSteps([]);
+});
+
+QUnit.test("reconnect on demande after clean close code", async () => {
+    await startServer();
+    addBusServicesToRegistry();
+    const worker = patchWebsocketWorkerWithCleanup();
+    const env = await makeTestEnv({ activateMockServer: true });
+    env.services["bus_service"].addEventListener("connect", () => step("connect"));
+    env.services["bus_service"].addEventListener("reconnect", () => step("reconnect"));
+    env.services["bus_service"].addEventListener("disconnect", () => step("disconnect"));
+    env.services["bus_service"].start();
+    await assertSteps(["connect"]);
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
+    await assertSteps(["disconnect", "reconnect"]);
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
+    await assertSteps(["disconnect"]);
+    env.services["bus_service"].start();
+    await assertSteps(["connect"]);
+});
+
+QUnit.test("remove from main tab candidates when version is outdated", async (assert) => {
+    await startServer();
+    addBusServicesToRegistry();
+    const worker = patchWebsocketWorkerWithCleanup();
+    const env = await makeTestEnv({ activateMockServer: true });
+    patchWithCleanup(console, { warn: (message) => step(message) });
+    env.services["bus_service"].addEventListener("connect", () => step("connect"));
+    env.services["bus_service"].addEventListener("disconnect", () => step("disconnect"));
+    env.services["bus_service"].start();
+    await assertSteps(["connect"]);
+    patchWithCleanup(env.services.multi_tab, { isOnMainTab: () => true });
+    assert.ok(env.services["multi_tab"].isOnMainTab());
+    env.services.multi_tab.bus.addEventListener("no_longer_main_tab", () =>
+        step("no_longer_main_tab")
+    );
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN, "OUTDATED_VERSION");
+    await assertSteps([
+        "Worker deactivated due to an outdated version.",
+        "disconnect",
+        "no_longer_main_tab",
+    ]);
+});
+
+QUnit.test("show notification when version is outdated", async () => {
+    await startServer();
+    addBusServicesToRegistry();
+    const worker = patchWebsocketWorkerWithCleanup();
+    const { env } = await createWebClient({});
+    patchWithCleanup(console, { warn: (message) => step(message) });
+    patchWithCleanup(browser.location, { reload: () => step("reload") });
+    env.services["bus_service"].addEventListener("connect", () => step("connect"));
+    env.services["bus_service"].addEventListener("disconnect", () => step("disconnect"));
+    env.services["bus_service"].start();
+    await assertSteps(["connect"]);
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN, "OUTDATED_VERSION");
+    await assertSteps(["Worker deactivated due to an outdated version.", "disconnect"]);
+    await contains(".o_notification", {
+        text: "Save your work and refresh to get the latest updates and avoid potential issues.",
+    });
+    await click(".o_notification_buttons .btn-primary", { text: "Refresh" });
+    await assertSteps(["reload"]);
+});
+
+QUnit.test("subscribe message is sent first", async () => {
+    await startServer();
+    addBusServicesToRegistry();
+    const worker = patchWebsocketWorkerWithCleanup();
+    const ogSocket = window.WebSocket;
+    patchWithCleanup(window, {
+        WebSocket: function () {
+            const ws = new ogSocket(...arguments);
+            ws.send = (message) => step(JSON.parse(message).event_name);
+            return ws;
+        },
+    });
+    const env = await makeTestEnv({ activateMockServer: true });
+    env.services.bus_service.start();
+    await assertSteps(["subscribe"]);
+    env.services.bus_service.send("some_event");
+    await assertSteps(["some_event"]);
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
+    env.services.bus_service.send("some_event");
+    env.services.bus_service.send("some_other_event");
+    env.services.bus_service.addChannel("channel_1");
+    await assertSteps([]);
+    env.services.bus_service.start();
+    await assertSteps(["subscribe", "some_event", "some_other_event"]);
 });

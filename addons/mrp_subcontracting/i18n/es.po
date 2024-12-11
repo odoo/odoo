@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -129,6 +129,7 @@ msgid "Detail Component"
 msgstr "Detalles de componente"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Details"
 msgstr "Detalles"
@@ -179,8 +180,9 @@ msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
 msgstr ""
-"Para gestionar el stock de forma precisa, las ubicaciones de subcontratación"
-" deben ser internas, estar vinculadas a la compañía correspondiente."
+"Las ubicaciones de subcontratación deben ser de tipo interno y estar "
+"vinculadas a la compañía adecuada, esto ayudará a gestionar el stock de "
+"forma precisa."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
@@ -232,8 +234,8 @@ msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
-"Asegúrese de validar o adaptar la recolección de reabastecimiento "
-"relacionada a su subcontratista para evitar inconsistencias en su stock."
+"Asegúrese de validar o adaptar el albarán de reabastecimiento relacionado a "
+"su subcontratista para evitar inconsistencias en su stock."
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
@@ -334,7 +336,7 @@ msgstr "Producciones"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
 msgid "Quants"
-msgstr "Quants"
+msgstr "Cuantos"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -385,6 +387,7 @@ msgstr "Reabastecer al subcontratista"
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting/wizard/product_replenish.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 #, python-format
 msgid "Resupply Subcontractor on Order"
@@ -398,7 +401,7 @@ msgstr "Reabastecer a los subcontratistas"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Recolección de devolución"
+msgstr "Albarán de devolución"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -443,7 +446,7 @@ msgstr "Movimiento de stock"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
 msgid "Stock Pickings for which the Partner is the subcontractor"
-msgstr "Recolecciones de stock para las que el contacto es subcontratista"
+msgstr "Albaranes de stock para las que el contacto es subcontratista"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
@@ -499,9 +502,7 @@ msgstr "Ubicaciones de subcontratación"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
-msgstr ""
-"Regla de subcontratación para fabricación sobre pedido (fabricación sobre "
-"pedido)"
+msgstr "Regla de subcontratación para fabricación sobre pedido"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id

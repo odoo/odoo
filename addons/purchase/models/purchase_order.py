@@ -8,7 +8,7 @@ from pytz import timezone
 from markupsafe import escape, Markup
 from werkzeug.urls import url_encode
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.osv import expression
 from odoo.tools import format_amount, format_date, formatLang, groupby
 from odoo.tools.float_utils import float_is_zero
@@ -88,8 +88,8 @@ class PurchaseOrder(models.Model):
     date_order = fields.Datetime('Order Deadline', required=True, index=True, copy=False, default=fields.Datetime.now,
         help="Depicts the date within which the Quotation should be confirmed and converted into a purchase order.")
     date_approve = fields.Datetime('Confirmation Date', readonly=True, index=True, copy=False)
-    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, change_default=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
-    dest_address_id = fields.Many2one('res.partner', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Dropship Address',
+    partner_id = fields.Many2one('res.partner', string='Vendor', required=True, change_default=True, tracking=True, check_company=True, help="You can find a vendor by its Name, TIN, Email or Internal Reference.")
+    dest_address_id = fields.Many2one('res.partner', check_company=True, string='Dropship Address',
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
@@ -281,6 +281,18 @@ class PurchaseOrder(models.Model):
     def _must_delete_date_planned(self, field_name):
         # To be overridden
         return field_name == 'order_line'
+
+    def onchange(self, values, field_names, fields_spec):
+        """
+        Override onchange to NOT update all date_planned on PO lines when
+        date_planned on PO is updated by the change of date_planned on PO lines.
+        """
+        result = super().onchange(values, field_names, fields_spec)
+        if any(self._must_delete_date_planned(field) for field in field_names) and 'value' in result:
+            for line in result['value'].get('order_line', []):
+                if line[0] == Command.UPDATE and 'date_planned' in line[2]:
+                    del line[2]['date_planned']
+        return result
 
     def _get_report_base_filename(self):
         self.ensure_one()
@@ -962,6 +974,8 @@ class PurchaseOrder(models.Model):
         date_planned = date_planned or self.date_planned
         if not date_planned:
             return False
+        if isinstance(date_planned, str):
+            date_planned = fields.Datetime.from_string(date_planned)
         tz = self.get_order_timezone()
         return date_planned.astimezone(tz)
 

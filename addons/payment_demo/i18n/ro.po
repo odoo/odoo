@@ -7,14 +7,17 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Martin Trigaux, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Maria Muntean, 2024
+# Wil Odoo, 2024
+# Lyall Kindmurr, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,6 +163,13 @@ msgid "Error"
 msgstr "Eroare"
 
 #. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "No delivery method is available."
+msgstr ""
+
+#. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
@@ -196,7 +206,7 @@ msgstr "Tranzacție plată"
 #: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Procesarea plății a eșuat"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -250,7 +260,7 @@ msgstr ""
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Cod tehnic al acestui procesator de plată"
 
 #. module: payment_demo
 #. odoo-python
@@ -263,6 +273,13 @@ msgstr "Tranzacția nu este legată de un token."
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Unpublished"
 msgstr "Nepublicat"
+
+#. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Validation Error"
+msgstr "Eroare de validare"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details

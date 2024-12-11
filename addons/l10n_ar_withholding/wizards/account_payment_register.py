@@ -78,10 +78,10 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _get_conversion_rate(self):
         self.ensure_one()
-        if self.currency_id != self.source_currency_id:
+        if self.currency_id != self.company_id.currency_id:
             return self.env['res.currency']._get_conversion_rate(
                 self.currency_id,
-                self.source_currency_id,
+                self.company_id.currency_id,
                 self.company_id,
                 self.payment_date,
             )

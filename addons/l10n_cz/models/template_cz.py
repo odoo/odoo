@@ -34,7 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_income_account_id': 'chart_cz_668000',
                 'default_cash_difference_expense_account_id': 'chart_cz_568000',
                 'account_default_pos_receivable_account_id': 'chart_cz_311001',
-                'account_sale_tax_id': 'vyc_tuz_21',
-                'account_purchase_tax_id': 'vsc_tuz_21',
+                'account_sale_tax_id': 'l10n_cz_21_domestic_supplies',
+                'account_purchase_tax_id': 'l10n_cz_21_receipt_domestic_supplies',
             },
         }

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -129,6 +129,7 @@ msgstr "Cho phép tách hóa đơn "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Allow custom Internal notes on Orderlines."
 msgstr "Cho phép ghi chú nội bộ tùy chỉnh trong chi tiết đơn hàng. "
 
@@ -205,7 +206,7 @@ msgstr "Ngân hàng"
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Bar"
-msgstr "Cột"
+msgstr "Quán bar"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -235,7 +236,7 @@ msgstr "Tách hóa đơn "
 #: code:addons/pos_restaurant/static/src/app/control_buttons/table_guests_button/table_guests_button.js:0
 #, python-format
 msgid "Blocked action"
-msgstr "Hành động bị chặn"
+msgstr "Tác vụ bị chặn"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -389,7 +390,7 @@ msgstr "In biên lai sớm"
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 #, python-format
 msgid "Edit Plan"
-msgstr "Chỉnh sửa kế hoạch"
+msgstr "Chỉnh sửa sơ đồ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -566,6 +567,7 @@ msgstr "Ghi chú nội bộ từ nhân viên phục vụ bàn. "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Internal Notes"
 msgstr "Ghi chú nội bộ"
@@ -789,11 +791,6 @@ msgstr "Phiên POS"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_ids
 msgid "Point of Sales"
 msgstr "Điểm bán hàng"
-
-#. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
-msgid "Pos Iface Orderline Notes"
-msgstr "Pos Iface Ghi chú chi tiết đơn hàng "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
@@ -1192,7 +1189,7 @@ msgstr "Tổng:"
 #: code:addons/pos_restaurant/static/src/app/control_buttons/transfer_order_button/transfer_order_button.xml:0
 #, python-format
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: pos_restaurant
 #. odoo-javascript

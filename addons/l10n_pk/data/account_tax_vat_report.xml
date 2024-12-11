@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pk_vat_form" model="account.report">
+        <field name="name">Tax Report Pakistan (PK)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.pk"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_pk_vat_column_net" model="account.report.column">
+                <field name="name">base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="l10n_pk_vat_column_tax" model="account.report.column">
+                <field name="name">Tax Amount</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_pk_vat_title_purchases_vat" model="account.report.line">
+                <field name="name">Purchases Taxes</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_pk_vat_line_SP_17" model="account.report.line">
+                        <field name="name">Standard Purchases Tax 17%</field>
+                        <field name="code">PUR_ST_17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_SP_0_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Tax 17% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_SP_0_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Tax 17% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_195" model="account.report.line">
+                        <field name="name">Purchases Telecommunication Services Tax 19.5%</field>
+                        <field name="code">PUR_TL</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_195_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Telecommunication Services Tax 19.5% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_195_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Telecommunication Services Tax 19.5% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_17" model="account.report.line">
+                        <field name="name">Purchases Services Tax 17%</field>
+                        <field name="code">PUR_SR_17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_17_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 17% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_17_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 17% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_16" model="account.report.line">
+                        <field name="name">Purchases Services Tax 16%</field>
+                        <field name="code">PUR_SR_16</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 16% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 16% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_15" model="account.report.line">
+                        <field name="name">Purchases Services Tax 15%</field>
+                        <field name="code">PUR_SR_15</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_15_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 15% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_15_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 15% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_13" model="account.report.line">
+                        <field name="name">Purchases Services Tax 13%</field>
+                        <field name="code">PUR_SR_13</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 13% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_13_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 13% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_10" model="account.report.line">
+                        <field name="name">Purchases Services Tax 10%</field>
+                        <field name="code">PUR_SR_10</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 10% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 10% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_8" model="account.report.line">
+                        <field name="name">Purchases Services Tax 8%</field>
+                        <field name="code">PUR_SR_8</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_8_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 8% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_8_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 8% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_5" model="account.report.line">
+                        <field name="name">Purchases Services Tax 5%</field>
+                        <field name="code">PUR_SR_5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 5% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 5% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_3" model="account.report.line">
+                        <field name="name">Purchases Services Tax 3%</field>
+                        <field name="code">PUR_SR_3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 3% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 3% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_2" model="account.report.line">
+                        <field name="name">Purchases Services Tax 2%</field>
+                        <field name="code">PUR_SR_2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 2% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_2_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 2% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_1" model="account.report.line">
+                        <field name="name">Purchases Services Tax 1%</field>
+                        <field name="code">PUR_SR_1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 1% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_1_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 1% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_P_0" model="account.report.line">
+                        <field name="name">Purchases Services Tax 0%</field>
+                        <field name="code">PUR_SR_0</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_P_0_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 0% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_P_0_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchases Services Tax 0% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_PP_16" model="account.report.line">
+                        <field name="name">Standard Purchases Service Tax Punjab 16%</field>
+                        <field name="code">PUR_PUN</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_PP_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax Punjab 16% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_PP_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax Punjab 16% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_ICP_16" model="account.report.line">
+                        <field name="name">Standard Purchases Service Tax ICT 16%</field>
+                        <field name="code">PUR_ICT</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_ICP_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax ICT 16% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_ICP_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax ICT 16% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_AJP_16" model="account.report.line">
+                        <field name="name">Standard Purchases Service Tax AJK 16%</field>
+                        <field name="code">PUR_AJK</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_AJP_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax AJK 16% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_AJP_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax AJK 16% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_KP_16" model="account.report.line">
+                        <field name="name">Standard Purchases Service Tax KP 15%</field>
+                        <field name="code">PUR_KP</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_KP_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax KP 15% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_KP_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax KP 15% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_STP_16" model="account.report.line">
+                        <field name="name">Standard Purchases Service Tax Balochistan 15%</field>
+                        <field name="code">PUR_BAL</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_STP_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax Balochistan 15% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_STP_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax Balochistan 15% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_SP_13" model="account.report.line">
+                        <field name="name">Standard Purchases Service Tax Sindh 13%</field>
+                        <field name="code">PUR_SIN</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_SP_13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax Sindh 13% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_SP_13_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Purchases Service Tax Sindh 13% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pk_vat_title_sales_vat" model="account.report.line">
+                <field name="name">Sales Taxes</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_pk_vat_line_SS_17" model="account.report.line">
+                        <field name="name">Standard Sales Tax 17%</field>
+                        <field name="code">SAL_ST_17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_SS_17_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Tax 17% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_SS_17_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Tax 17% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_195" model="account.report.line">
+                        <field name="name">Sales Tax Telecommunication Services 19.5%</field>
+                        <field name="code">SAL_TL</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_195_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Tax Telecommunication Services 19.5% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_195_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Tax Telecommunication Services 19.5% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_17" model="account.report.line">
+                        <field name="name">Sales Services Tax 17%</field>
+                        <field name="code">SAL_SR_17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_17_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 17% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_17_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 17% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_16" model="account.report.line">
+                        <field name="name">Sales Services Tax 16%</field>
+                        <field name="code">SAL_SR_16</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 16% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 16% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_15" model="account.report.line">
+                        <field name="name">Sales Services Tax 15%</field>
+                        <field name="code">SAL_SR_15</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_15_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 15% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_15_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 15% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_13" model="account.report.line">
+                        <field name="name">Sales Services Tax 13%</field>
+                        <field name="code">SAL_SR_13</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 13% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_13_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 13% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_10" model="account.report.line">
+                        <field name="name">Sales Services Tax 10%</field>
+                        <field name="code">SAL_SR_10</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 10% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 10% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_8" model="account.report.line">
+                        <field name="name">Sales Services Tax 8%</field>
+                        <field name="code">SAL_SR_8</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_8_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 8% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_8_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 8% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_5" model="account.report.line">
+                        <field name="name">Sales Services Tax 5%</field>
+                        <field name="code">SAL_SR_5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 5% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 5% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_3" model="account.report.line">
+                        <field name="name">Sales Services Tax 3%</field>
+                        <field name="code">SAL_SR_3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 3% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 3% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_2" model="account.report.line">
+                        <field name="name">Sales Services Tax 2%</field>
+                        <field name="code">SAL_SR_2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 2% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_2_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 2% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_1" model="account.report.line">
+                        <field name="name">Sales Services Tax 1%</field>
+                        <field name="code">SAL_SR_1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 1% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_1_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 1% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_S_0" model="account.report.line">
+                        <field name="name">Sales Services Tax 0%</field>
+                        <field name="code">SAL_SR_0</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_S_0_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 0% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_S_0_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales Services Tax 0% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_SP_16" model="account.report.line">
+                        <field name="name">Standard Sales Service Tax Punjab 16%</field>
+                        <field name="code">SAL_PUN</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_SP_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax Punjab 16% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_SP_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax Punjab 16% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_ICS_16" model="account.report.line">
+                        <field name="name">Standard Sales Service Tax ICT 16%</field>
+                        <field name="code">SAL_ICT</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_ICS_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax ICT 16% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_ICS_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax ICT 16% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_AJS_16" model="account.report.line">
+                        <field name="name">Standard Sales Service Tax AJK 16%</field>
+                        <field name="code">SAL_AJK</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_AJS_16_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax AJK 16% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_AJS_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax AJK 16% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_KPS_15" model="account.report.line">
+                        <field name="name">Standard Sales Service Tax KP 15%</field>
+                        <field name="code">SAL_KP</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_KPS_15_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax KP 15% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_KPS_15_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax KP 15% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_BAS_15" model="account.report.line">
+                        <field name="name">Standard Sales Service Tax Balochistan 15%</field>
+                        <field name="code">SAL_BAL</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_BAS_15_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax Balochistan 15% (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_BAS_15_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Service Tax Balochistan 15% (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_SIS_13" model="account.report.line">
+                        <field name="name">Standard Sales Tax Services 13% Sindh</field>
+                        <field name="code">SAL_SIN</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_SIS_13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Tax Services 13% Sindh (Base)</field>
+                            </record>
+                            <record id="l10n_pk_vat_expression_SIS_13_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Standard Sales Tax Services 13% Sindh (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pk_vat_title_NS_vat" model="account.report.line">
+                <field name="name">Net Standard Tax</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">NET_STANDARD_TAX</field>
+                <field name="expression_ids">
+                    <record id="l10n_pk_vat_expression_NS_1" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">(SAL_NS_TAX.tax) - (PUR_NS_TAX.tax)</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pk_vat_line_NS_S" model="account.report.line">
+                        <field name="name">Net Standard Tax Sales (Payable)</field>
+                        <field name="code">SAL_NS_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NS_S1" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_ST_17.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_NS_P" model="account.report.line">
+                        <field name="name">Net Standard Tax Purchases (Recoverable)</field>
+                        <field name="code">PUR_NS_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NS_P1" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PUR_ST_17.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pk_vat_title_NST_vat" model="account.report.line">
+                <field name="name">Net Service Tax</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">NET_SERVICE_TAX</field>
+                <field name="expression_ids">
+                    <record id="l10n_pk_vat_expression_NST_1" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">(SAL_NST_TAX.tax) - (PUR_NST_TAX.tax)</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pk_vat_line_NST_S" model="account.report.line">
+                        <field name="name">Net Service Tax Sales (Payable)</field>
+                        <field name="code">SAL_NST_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NST_S1" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_TL.tax + SAL_SR_17.tax + SAL_SR_16.tax + SAL_SR_15.tax + SAL_SR_13.tax 
+                                                    + SAL_SR_10.tax + SAL_SR_8.tax + SAL_SR_5.tax + SAL_SR_3.tax + SAL_SR_2.tax 
+                                                    + SAL_SR_1.tax + SAL_SR_0.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_NST_P" model="account.report.line">
+                        <field name="name">Net Service Tax Purchases (Recoverable)</field>
+                        <field name="code">PUR_NST_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NST_P1" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PUR_TL.tax + PUR_SR_17.tax + PUR_SR_16.tax + PUR_SR_15.tax + PUR_SR_13.tax 
+                                                    + PUR_SR_10.tax + PUR_SR_8.tax + PUR_SR_5.tax + PUR_SR_3.tax + PUR_SR_2.tax 
+                                                    + PUR_SR_1.tax + PUR_SR_0.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pk_vat_title_NSTP_vat" model="account.report.line">
+                <field name="name">Net Standard Service Tax Per Province</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_pk_vat_line_NSTP_PUN" model="account.report.line">
+                        <field name="name">Net Due Punjab Tax</field>
+                        <field name="code">SAL_NSTP_PUN_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NSTP_PUN" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(SAL_PUN.tax) - (PUR_PUN.tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_NSTP_ICT" model="account.report.line">
+                        <field name="name">Net Due ICT</field>
+                        <field name="code">SAL_NSTP_ICT_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NSTP_ICT" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_ICT.tax - PUR_ICT.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_NSTP_AJK" model="account.report.line">
+                        <field name="name">Net Due AJK</field>
+                        <field name="code">SAL_NSTP_AJK_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NSTP_AJK" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_AJK.tax - PUR_AJK.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_NSTP_KP" model="account.report.line">
+                        <field name="name">Net Due KP</field>
+                        <field name="code">SAL_NSTP_KP_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NSTP_KP" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_KP.tax - PUR_KP.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_NSTP_BAL" model="account.report.line">
+                        <field name="name">Net Due Balochistan</field>
+                        <field name="code">SAL_NSTP_BAL_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NSTP_BAL" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_BAL.tax - PUR_BAL.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_vat_line_NSTP_SIN" model="account.report.line">
+                        <field name="name">Net Due Sindh</field>
+                        <field name="code">SAL_NSTP_SIN_TAX</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_vat_expression_NSTP_SIN" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_SIN.tax - PUR_SIN.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

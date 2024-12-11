@@ -19,13 +19,15 @@
 # Martin Trigaux, 2023
 # Mihkel avalah, 2023
 # Leaanika Randmets, 2023
+# Tairi Tiimann, 2024
+# Siim Raasuke, 2024
 # Anna, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -119,6 +121,8 @@ msgid ""
 "<i role=\"img\" class=\"text-700 fa fa-clock-o fa-3x\" title=\"Goal in "
 "Progress\" aria-label=\"Goal in Progress\"/>"
 msgstr ""
+"<i role=\"img\" class=\"text-700 fa fa-clock-o fa-3x\" title=\"Goal in "
+"Progress\" aria-label=\"Goal in Progress\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -525,6 +529,198 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"background-color: #EEE; border-collapse: collapse;\">\n"
+"<tr>\n"
+"    <td valign=\"top\" align=\"center\">\n"
+"        <t t-set=\"object_ctx\" t-value=\"ctx.get('object')\"></t>\n"
+"        <t t-set=\"company\" t-value=\"object_ctx and object_ctx.company_id or user.company_id\"></t>\n"
+"        <t t-set=\"challenge_lines\" t-value=\"ctx.get('challenge_lines', [])\"></t>\n"
+"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style=\"margin: 0 auto; width: 570px;\">\n"
+"            <tr><td>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+"                    <tr>\n"
+"                        <div>\n"
+"                            <t t-if=\"object.visibility_mode == 'ranking'\">\n"
+"                                <td style=\"padding:15px;\">\n"
+"                                    <p style=\"font-size:20px;color:#666666;\" align=\"center\">Edetabel</p>\n"
+"                                </td>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
+"                    <tr><td style=\"padding: 15px;\">\n"
+"                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
+"                            <span style=\"color:#666666;font-size:13px;\">Siin on teie praegused edusammud väljakutses <strong t-out=\"object.name or ''\"></strong>.</span>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"center\">\n"
+"                                        <div>Isiklikud tulemused</div>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
+"                                <thead>\n"
+"                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Eesmärgid</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Sihid</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Praegune</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Täidetavus</th>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody t-foreach=\"challenge_lines\" t-as=\"line\">\n"
+"                                    <tr style=\"font-weight:bold;\">\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"left\">\n"
+"                                            <t t-out=\"line['name'] or ''\"></t>\n"
+"                                            <t t-if=\"line['suffix'] or line['monetary']\">\n"
+"                                                (<t t-out=\"line['full_suffix'] or ''\"></t>)\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"right\"><t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"></t>\n"
+"                                            <t t-if=\"line['suffix']\" t-out=\"line['suffix'] or ''\"></t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"right\"><t t-out=\"&quot;%.2f&quot; % line['current'] or ''\"></t>\n"
+"                                            <t t-if=\"line['suffix']\" t-out=\"line['suffix'] or ''\"></t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"><strong><t t-out=\"int(line['completeness']) or ''\"></t>%</strong></td>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#e3e3e3;\"></td>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>                   \n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
+"                                Väljakutse: <strong t-out=\"object.name or ''\"></strong>.\n"
+"                            </span> \n"
+"                            <t t-foreach=\"challenge_lines\" t-as=\"line\">\n"
+"                                <!-- Päis + Nupu tabel -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:35px;\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"50%\">\n"
+"                                            <div>Parimad eesmärgi saavutajad <strong t-out=\"line['name'] or ''\"></strong></div>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                                <!-- Poodium -->\n"
+"                                <t t-if=\"len(line['goals']) == 2\">\n"
+"                                    <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
+"                                        <tr><td style=\"padding:0 30px;\">\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
+"                                                <tr>\n"
+"                                                    <t t-set=\"top_goals\" t-value=\"line['goals'][:3]\"></t>\n"
+"                                                    <t t-foreach=\"top_goals\" t-as=\"goal\">\n"
+"                                                        <td align=\"center\" style=\"width:32%;\">\n"
+"                                                            <t t-if=\"loop.index == 1\">\n"
+"                                                                <t t-set=\"extra_div\" t-value=\"'&lt;div style=&quot;height:40px;&quot;&gt;&lt;/div&gt;'\"></t>\n"
+"                                                                <t t-set=\"heightA\" t-value=\"95\"></t>\n"
+"                                                                <t t-set=\"heightB\" t-value=\"75\"></t>\n"
+"                                                                <t t-set=\"bgColor\" t-value=\"'#b898b0'\"></t>\n"
+"                                                                <t t-set=\"fontSize\" t-value=\"50\"></t>\n"
+"                                                                <t t-set=\"podiumPosition\" t-value=\"'2'\"></t>\n"
+"                                                            </t>\n"
+"                                                            <t t-elif=\"loop.index == 2\">\n"
+"                                                                <t t-set=\"extra_div\" t-value=\"''\"></t>\n"
+"                                                                <t t-set=\"heightA\" t-value=\"55\"></t>\n"
+"                                                                <t t-set=\"heightB\" t-value=\"115\"></t>\n"
+"                                                                <t t-set=\"bgColor\" t-value=\"'#9A6C8E'\"></t>\n"
+"                                                                <t t-set=\"fontSize\" t-value=\"85\"></t>\n"
+"                                                                <t t-set=\"podiumPosition\" t-value=\"'1'\"></t>\n"
+"                                                            </t>\n"
+"                                                            <t t-elif=\"loop.index == 3\">\n"
+"                                                                <t t-set=\"extra_div\" t-value=\"'&lt;div style=&quot;height:60px;&quot;&gt;&lt;/div&gt;'\"></t>\n"
+"                                                                <t t-set=\"heightA\" t-value=\"115\"></t>\n"
+"                                                                <t t-set=\"heightB\" t-value=\"55\"></t>\n"
+"                                                                <t t-set=\"bgColor\" t-value=\"'#c8afc1'\"></t>\n"
+"                                                                <t t-set=\"fontSize\" t-value=\"35\"></t>\n"
+"                                                                <t t-set=\"podiumPosition\" t-value=\"'3'\"></t>\n"
+"                                                            </t>\n"
+"                                                            <div style=\"margin:0 3px 0 3px;height:220px;\">\n"
+"                                                                <div t-attf-style=\"height:{{ heightA }}px;\">\n"
+"                                                                    <t t-out=\"extra_div or ''\"></t>\n"
+"                                                                    <div style=\"height:55px;\">\n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-fit:cover;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_128)\" t-att-alt=\"goal['name']\">\n"
+"                                                                    </div>\n"
+"                                                                    <div align=\"center\" t-attf-style=\"color:{{ bgColor }};height:20px\">\n"
+"                                                                        <t t-out=\"goal['name'] or ''\"></t>\n"
+"                                                                    </div>\n"
+"                                                                </div>\n"
+"                                                                <div t-attf-style=\"background-color:{{ bgColor }};height:{{ heightB }}px;\">\n"
+"                                                                    <strong><span t-attf-style=\"color:#fff;font-size:{{ fontSize }}px;\" t-out=\"podiumPosition or ''\"></span></strong>\n"
+"                                                                </div>\n"
+"                                                                <div style=\"height:30px;\">\n"
+"                                                                    <t t-out=\"&quot;%.2f&quot; % goal['current'] or ''\"></t>\n"
+"                                                                    <t t-if=\"line['suffix'] or line['monetary']\">\n"
+"                                                                        <t t-out=\"line['full_suffix'] or ''\"></t>\n"
+"                                                                    </t>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </td>\n"
+"                                                    </t>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                </t>\n"
+"                                <!-- andmete tabel -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-bottom:5px\">\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-bottom:5px;color:#666666;\">\n"
+"                                                <thead>\n"
+"                                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                                        <th style=\"width:15%;text-align:center;\">Koht</th>\n"
+"                                                        <th style=\"width:25%;text-align:left;\">Nimi</th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\">Sooritus \n"
+"                                                            <t t-if=\"line['suffix']\">\n"
+"                                                                (<t t-out=\"line['suffix'] or ''\"></t>)\n"
+"                                                            </t>\n"
+"                                                            <t t-elif=\"line['monetary']\">\n"
+"                                                                (<t t-out=\"company.currency_id.symbol or ''\"></t>)\n"
+"                                                            </t>\n"
+"                                                        </th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\">Täidetavus</th>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                                    </tr>\n"
+"                                                </thead>\n"
+"                                                <tbody t-foreach=\"line['goals']\" t-as=\"goal\">\n"
+"                                                    <tr>\n"
+"                                                        <t t-set=\"tdBgColor\" t-value=\"'#fff'\"></t>\n"
+"                                                        <t t-set=\"tdColor\" t-value=\"'gray'\"></t>\n"
+"                                                        <t t-set=\"mutedColor\" t-value=\"'#AAAAAA'\"></t>\n"
+"                                                        <t t-set=\"tdPercentageColor\" t-value=\"'#9A6C8E'\"></t>\n"
+"                                                        <td width=\"15%\" align=\"center\" valign=\"middle\" t-attf-style=\"background-color:{{ tdBgColor }};padding :5px 0;font-size:20px;\"><t t-out=\"goal['rank']+1 or ''\"></t>\n"
+"                                                        </td>\n"
+"                                                        <td width=\"25%\" align=\"left\" valign=\"middle\" t-attf-style=\"background-color:{{ tdBgColor }};padding :5px 0;font-size:13px;\"><t t-out=\"goal['name'] or ''\"></t></td>\n"
+"                                                        <td width=\"30%\" align=\"right\" t-attf-style=\"background-color:{{ tdBgColor }};padding:5px 0;line-height:1;\"><t t-out=\"&quot;%.2f&quot; % goal['current'] or ''\"></t><br><span t-attf-style=\"font-size:13px;color:{{ mutedColor }};\">on <t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"></t></span>\n"
+"                                                        </td>\n"
+"                                                        <td width=\"30%\" t-attf-style=\"color:{{ tdPercentageColor }};background-color:{{ tdBgColor }};padding-right:15px;font-size:22px;\" align=\"right\"><strong><t t-out=\"int(goal['completeness']) or ''\"></t>%</strong></td>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"></td>\n"
+"                                                    </tr>\n"
+"                                                </tbody>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table> \n"
+"                            </t>\n"
+"                        </t>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"        </table>\n"
+"    </td>\n"
+"</tr>\n"
+"</table>\n"
+"            "
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
@@ -533,6 +729,9 @@ msgid ""
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
+"Märk on sümboolne token, mis antakse kasutajale auhinnana.\n"
+"                See võib olla saadud automaatselt, kui täidetakse teatud tingimused, või käsitsi kasutajate poolt.\n"
+"                Mõned märgid on raskemini saadavad ja nõuavad spetsiifilisi tingimusi."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -540,6 +739,8 @@ msgid ""
 "A goal definition is a technical specification of a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"Eesmärgi määratlemine on tehniline spetsifikatsioon tingimusele, mida tuleb saavutada.\n"
+"                Kuupäevad, saavutamiseks vajalikud väärtused või kasutajad on määratletud eesmärgi instantsis."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
@@ -549,6 +750,8 @@ msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
+"Eesmärk loetakse täidetuks, kui praegune väärtus on võrreldud saavutamise "
+"väärtusega."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
@@ -556,6 +759,8 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
+"Eesmärk on määratletud kasutaja ja eesmärgi määratlemise alusel.\n"
+"                Eesmärke saab luua automaatselt väljakutsete abil."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
@@ -563,6 +768,8 @@ msgid ""
 "A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
 "                    This is used to quickly know which user is new or old or highly or not active."
 msgstr ""
+"Aste vastab kindlale karma tasemele. Mida rohkem teil on karmat, seda kõrgem on teie aste.\n"
+"                    Seda kasutatakse kiireks teadmiseks, milline kasutaja on uus või vana, aktiivne või mitteaktiivne."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
@@ -627,6 +834,9 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
+"Määrake valitud kasutajatele eesmärkide nimekiri nende hindamiseks.\n"
+"               Väljakutse saab kasutada perioodi (näiteks iganädalane, igakuine...) eesmärkide automaatseks loomiseks.\n"
+"                Eesmärgid luuakse määratud kasutajatele või grupi liikmetele."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
@@ -710,7 +920,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
 msgid "Batch Mode"
-msgstr ""
+msgstr "Partii režiim"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
@@ -784,6 +994,8 @@ msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr ""
+"Väljakutse, mis genereeris eesmärgi; määrake väljakutse kasutajatele, et "
+"luua eesmärke, mille väärtus on selles väljas."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -824,14 +1036,14 @@ msgstr "Vaata üle profiilil olevad andmed"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__completeness
 msgid "Completeness"
-msgstr ""
+msgstr "Täituvus"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__computation_mode
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Computation Mode"
-msgstr ""
+msgstr " Arvutusrežiim"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__condition
@@ -849,7 +1061,7 @@ msgstr "Konsolideeritud"
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
 #, python-format
 msgid "Consolidation from %s to %s"
-msgstr ""
+msgstr "Konsolideerimine ajavahemikul alates %s kuni %s"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
@@ -959,6 +1171,8 @@ msgid ""
 "Define how the goals will be computed. The result of the operation will be "
 "stored in the field 'Current'."
 msgstr ""
+"Määrake, kuidas eesmärke arvutatakse. Tegevuse tulemus salvestatakse väljale"
+" 'Praegune'."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
@@ -979,12 +1193,15 @@ msgstr "Määratluse kirjeldus"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
 msgstr ""
+"Kuva režiimist sõltuvalt võivad aruanded olla individuaalsed või jagatud."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr ""
+"Kirjeldage väljakutset: mida see teeb, kellele see on suunatud, miks see on "
+"oluline..."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -1028,7 +1245,7 @@ msgstr "Kuvatakse kui"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid "Distinctive field for batch user"
-msgstr ""
+msgstr "Erinev väli hulgikasutaja jaoks"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_doctor
@@ -1042,6 +1259,9 @@ msgid ""
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
 msgstr ""
+"Domeeni kirje filtreerimiseks. Üldine reegel, mitte kasutajast sõltuv, nt "
+"[('state', '=', 'done')]. Väljend võib sisaldada viidet 'user', mis on "
+"praeguse kasutaja sirvimisrekord, kui ei ole hulgirežiimis."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
@@ -1059,7 +1279,7 @@ msgstr "Mustand"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
 msgid "Earn your first points and join the adventure!"
-msgstr ""
+msgstr "Teeni oma esimesed punktid ja liitu seiklusega!"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
@@ -1071,7 +1291,7 @@ msgstr "Lõppkuupäev"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
-msgstr ""
+msgstr "Hinda väljendit hulgirežiimis, mitte iga kasutaja jaoks eraldi."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_user_expression
@@ -1086,7 +1306,7 @@ msgstr "Kõik kasutajad"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__boolean
 msgid "Exclusive (done or not-done)"
-msgstr ""
+msgstr "Eksklusiivne (tehtud või tegemata)"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__failed
@@ -1153,7 +1373,7 @@ msgstr "Kellelt?"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__full_suffix
 msgid "Full Suffix"
-msgstr ""
+msgstr "Täielik järelliide"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__gain
@@ -1334,7 +1554,7 @@ msgstr "Anna see tunnustusmärk"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Granted By"
-msgstr ""
+msgstr "Väljastatud (kelle poolt?)"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
@@ -1357,7 +1577,7 @@ msgstr "Rühmitamine"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__report_message_group_id
 msgid "Group that will receive a copy of the report in addition to the user"
-msgstr ""
+msgstr "Grupp, kes saab aruande koopia kasutajale lisaks"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1383,7 +1603,7 @@ msgstr "Kuidas eesmärki arvutatakse?"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "Inimressursid / Kaasamine"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__id
@@ -1462,6 +1682,8 @@ msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
 msgstr ""
+"Hulgirežiimis hinnatakse domeeni globaalselt. Kui see on lubatud, ärge "
+"kasutage ülaltoodud filtridomeenis märksõna 'user'."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
@@ -1469,6 +1691,8 @@ msgid ""
 "In batch mode, this indicates which field distinguishes one user from the "
 "other, e.g. user_id, partner_id..."
 msgstr ""
+"Hulgirežiimis näitab see väli, mis eristab ühte kasutajat teisest, nt. "
+"user_id, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
@@ -1477,6 +1701,9 @@ msgid ""
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
 "goal not linked to a challenge."
 msgstr ""
+"Käsitsi määratud eesmärkide puhul saadetakse meeldetuletusi, kui eesmärki ei"
+" ole mõnda aega uuendatud (määratud väljakutses). Seda ei arvestata mitte-"
+"manuaalsete eesmärkide või väljakutsega mitteseotud eesmärkide puhul."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
@@ -1513,27 +1740,27 @@ msgstr "Punktid"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
 msgid "Karma Changes"
-msgstr ""
+msgstr "Karma muudatused"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Karma Owner"
-msgstr ""
+msgstr "Karma omanik"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
 msgid "Karma Tracking"
-msgstr ""
+msgstr "Karma jälgimine"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
 #, python-format
 msgid "Karma Updates"
-msgstr ""
+msgstr "Karma uuendused"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
@@ -1586,7 +1813,7 @@ msgstr "Limiit"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Line List"
-msgstr ""
+msgstr "Realoend"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__line_ids
@@ -1661,7 +1888,7 @@ msgstr "Motiveeri"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__description_motivational
 msgid "Motivational phrase to reach this rank on your profile page"
-msgstr ""
+msgstr "Motivatsiooniline lause selle auastme saavutamiseks teie profiilehel"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
@@ -1671,7 +1898,7 @@ msgstr "Minu eesmärgid"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "My Karma"
-msgstr ""
+msgstr "Minu karma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
@@ -1701,17 +1928,17 @@ msgstr "Mitte kunagi"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__remind_update_delay
 msgid "Never reminded if no value or zero is specified."
-msgstr ""
+msgstr "Kunagi ei meenutata, kui väärtust või nulli ei ole määratud."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__new_value
 msgid "New Karma Value"
-msgstr ""
+msgstr "Uus karma väärtus"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
 msgid "New badge {{ object.badge_id.name }} granted"
-msgstr ""
+msgstr "Uus märk {{ object.badge_id.name }} antud"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.mail_template_data_new_rank_reached
@@ -1726,7 +1953,7 @@ msgstr "Algaja"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__next_rank_id
 msgid "Next Rank"
-msgstr ""
+msgstr "Järgmine tase"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__next_report_date
@@ -1736,7 +1963,7 @@ msgstr "Järgmine aruande kuupäev"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
 msgid "No Karma Tracking"
-msgstr ""
+msgstr "Pole karma jälgimist"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -1766,13 +1993,15 @@ msgid ""
 "Nobody has succeeded to reach every goal, no badge is rewarded for this "
 "challenge."
 msgstr ""
+"Keegi ei ole suutnud igat eesmärki täita, seega ei jagata selle väljakutse "
+"eest märke."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr ""
+msgstr "Keegi ei saavutanud vajalikke tingimusi erimärkide saamiseks."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
@@ -1782,7 +2011,7 @@ msgstr "Pole korduv"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__remind_update_delay
 msgid "Non-updated manual goals will be reminded after"
-msgstr ""
+msgstr "Uuendamata käsitsi määratud eesmärke meenutatakse pärast"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1821,7 +2050,7 @@ msgstr "Kasutajate arv"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__old_value
 msgid "Old Karma Value"
-msgstr ""
+msgstr "Vana karma väärtus"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
@@ -1831,12 +2060,12 @@ msgstr "Muutmisel"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr ""
+msgstr "Ainult need inimesed, kes omavad seda märki, saavad seda märki anda"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr ""
+msgstr "Ainult need inimesed saavad anda seda märki"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1876,6 +2105,8 @@ msgid ""
 "Period of automatic goal assignment. If none is selected, should be launched"
 " manually."
 msgstr ""
+"Automaatse eesmärgi määramise periood. Kui ühtegi perioodi ei ole valitud, "
+"tuleb see käivitada käsitsi."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
@@ -1885,7 +2116,7 @@ msgstr "Perioodilisus"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Previous Total"
-msgstr ""
+msgstr "Eelmine kokku"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
@@ -1895,7 +2126,7 @@ msgstr "Probleemi lahendaja"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__progress
 msgid "Progressive (using numerical values)"
-msgstr ""
+msgstr "Progressiivne (kasutades arvväärtusi)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__compute_code
@@ -1939,42 +2170,43 @@ msgstr "Tasemete nimekiri"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
 msgid "Reach the next rank and become a Master!"
-msgstr ""
+msgstr "Saavuta järgmine aste ja saa Meistriks!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and become a powerful user!"
-msgstr ""
+msgstr "Saavuta järgmine aste ja saa võimekaks kasutajaks!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank and gain a very magic wand!"
-msgstr ""
+msgstr "Saavuta järgmine aste ja saa endale väga maagiline võlukepike!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
 msgid "Reach the next rank and gain a very nice hat!"
-msgstr ""
+msgstr "Saavuta järgmine aste ja saa endale väga kena müts!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank and gain a very nice mug!"
-msgstr ""
+msgstr "Saavuta järgmine aste ja saa endale väga kena kruus!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn!"
-msgstr ""
+msgstr "Saavuta järgmine aste ja saa endale väga kena ükssarvik!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank to improve your status!"
-msgstr ""
+msgstr "Saavuta järgmine aste, et parandada oma staatust!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank to show the rest of the world you exist."
 msgstr ""
+"Saavuta järgmine aste, et näidata ülejäänud maailmale, et sa eksisteerid."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -1984,7 +2216,7 @@ msgstr "Jõudis"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
-msgstr ""
+msgstr "Saavutatud, kui praegune väärtus on"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
@@ -2007,11 +2239,6 @@ msgid "Related Goals"
 msgstr "Seotud eesmärgid"
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Seotud kasutajanimi ressursi juurdepääsu haldamiseks."
-
-#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
 msgid "Remaining Sending Allowed"
 msgstr ""
@@ -2019,12 +2246,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__remind_update_delay
 msgid "Remind delay"
-msgstr ""
+msgstr "Meeldetuletuse viivitus"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
-msgstr ""
+msgstr "Käsitsi määratud eesmärkide meeldetuletused"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_frequency
@@ -2039,7 +2266,7 @@ msgstr "Aruande mall"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Required Badges"
-msgstr ""
+msgstr "Nõutavad märgid"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
@@ -2061,7 +2288,7 @@ msgstr "Vastutaja"
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
-msgstr ""
+msgstr "Isikliku väljakutse edenemise hankimine ilma kasutaja teabeta"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2076,6 +2303,8 @@ msgid ""
 "Reward (badge %(badge_name)s) for every succeeding user was sent to "
 "%(users)s."
 msgstr ""
+"Auhind (märk %(badge_name)s) saadeti igale järgnevale kasuajale aadressile "
+"%(users)s."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
@@ -2120,7 +2349,7 @@ msgstr "Planeeri"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Search Badge"
-msgstr ""
+msgstr "Otsi märki"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -2177,17 +2406,17 @@ msgstr "Saatja"
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_goal_reminder
 msgid "Sent automatically to participant who haven't updated their goal"
-msgstr ""
+msgstr "Saadetakse automaatselt osalejale, kes ei ole oma eesmärki uuendanud"
 
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_badge_received
 msgid "Sent automatically to the user who received a badge"
-msgstr ""
+msgstr "Saadetakse automaatselt kasutajale, kes on saanud märgi"
 
 #. module: gamification
 #: model:mail.template,description:gamification.mail_template_data_new_rank_reached
 msgid "Sent automatically when user reaches a new rank"
-msgstr ""
+msgstr "Saadetakse automaatselt, kui kasutaja jõuab uuele astmele"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
@@ -2198,6 +2427,8 @@ msgstr "Jada"
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
 msgstr ""
+"Määrake praegune väärtus, mille olete selle eesmärgi saavutamiseks "
+"saavutanud"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
@@ -2237,7 +2468,7 @@ msgstr "Hõbedaste märkide arv"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref
 msgid "Source"
-msgstr "Kandideerimise allikad"
+msgstr "Allikas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref_model_name
@@ -2253,6 +2484,8 @@ msgid ""
 "Special rewards were sent to the top competing users. The ranking for this "
 "challenge is:"
 msgstr ""
+"Erilised auhinnad saadeti kõige parematele võistlejatele. Selle väljakutse "
+"reiting on:"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2268,7 +2501,7 @@ msgstr "Alguskuupäev"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
-msgstr ""
+msgstr "Algeesmärk"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__state
@@ -2314,7 +2547,7 @@ msgstr "Eesmärk"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__target_goal
 msgid "Target Value to Reach"
-msgstr ""
+msgstr "Sihtväärtus, mida saavutada"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -2327,12 +2560,12 @@ msgstr "Eesmärk: vähem kui"
 #: code:addons/gamification/tests/test_karma_tracking.py:0
 #, python-format
 msgid "Test Reason"
-msgstr ""
+msgstr "Test põhjus"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
 msgid "The action that will be called to update the goal value."
-msgstr ""
+msgstr "Tegevus, mida kutsutakse eesmärgi väärtuse värskendamiseks."
 
 #. module: gamification
 #. odoo-python
@@ -2351,7 +2584,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_date_id
 msgid "The date to use for the time period evaluated"
-msgstr ""
+msgstr "Kuupäev, mida kasutatakse hinnatud ajavahemiku jaoks"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__end_date
@@ -2359,6 +2592,8 @@ msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
 msgstr ""
+"Päev, millal uus väljakutse automaatselt suletakse. Kui perioodilisust ei "
+"ole määratud, kasutatakse seda kuupäeva eesmärgi lõppkuupäevana."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
@@ -2366,6 +2601,8 @@ msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr ""
+"Päev, millal uus väljakutse automaatselt algab. Kui perioodilisust ei ole "
+"määratud, kasutatakse seda kuupäeva eesmärgi alguskuupäevana."
 
 #. module: gamification
 #. odoo-python
@@ -2383,6 +2620,8 @@ msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
 msgstr ""
+"Välja nimi kasutaja profiilis (res.users), mis sisaldab res_id väärtust "
+"tegevuse jaoks."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
@@ -2392,7 +2631,7 @@ msgstr "Mida kõrgem, seda parem"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr ""
+msgstr "Käesoleva märgi kasutajatele antud instantside nimekiri"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_inherited_ids
@@ -2493,7 +2732,7 @@ msgstr "Praegune ja soovitud väärtus on defineeritud ettevõtte valuutaga. "
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__suffix
 msgid "The unit of the target and current values"
-msgstr ""
+msgstr "Siht- ja praeguste väärtuste mõõtühik"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
@@ -2568,7 +2807,7 @@ msgstr "Jälgimine"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__tracking_date
 msgid "Tracking Date"
-msgstr ""
+msgstr "Jälgimise kuupäev"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
@@ -2801,7 +3040,7 @@ msgstr "nt. user.partner_id.id"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "granted,"
-msgstr ""
+msgstr "tunnustatud,"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view

@@ -6,20 +6,20 @@
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2023
 # JanisJanis <jbojars@gmail.com>, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Martin Trigaux, 2023
 # Anzelika Adejanova, 2023
 # Will Sensors, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,7 +158,7 @@ msgstr "16,2 kg"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "2023-08-18"
-msgstr ""
+msgstr "2023-08-18"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q1_sug2
@@ -392,49 +392,29 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Average "
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg "
 "</span>"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Maximum "
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Max "
 "</span>"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Minimum "
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Min "
 "</span>"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-muted\">Responded</span>"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-muted\">Skipped</span>"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-success\">Correct</span>"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
-msgid "<span class=\"d-block text-warning\">Partial</span>"
 msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
-"tooltip\"> or press Enter</span>"
+"tooltip\"> or press CTRL+Enter</span>"
 msgstr ""
 
 #. module: survey
@@ -449,8 +429,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                        <span id=\"enter-tooltip\">or press Enter</span>\n"
-"                    </span>"
+"                    <span id=\"enter-tooltip\">or press CTRL+Enter</span>\n"
+"                </span>"
 msgstr ""
 
 #. module: survey
@@ -513,7 +493,17 @@ msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Completed</span>"
+msgid "<span class=\"text-break text-muted\">Completed</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-break text-muted\">Registered</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
+msgid "<span class=\"text-break text-muted\">Success</span>"
 msgstr ""
 
 #. module: survey
@@ -522,14 +512,24 @@ msgid "<span class=\"text-muted\">Questions</span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Registered</span>"
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"text-muted\">Responded</span>"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
-msgid "<span class=\"text-muted\">Success</span>"
-msgstr "<span class=\"text-muted\">Panākumi</span>"
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"text-muted\">Skipped</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"text-success\">Correct</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
+msgid "<span class=\"text-warning\">Partial</span>"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1486,7 +1486,7 @@ msgstr "Sīkfaili"
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 #, python-format
 msgid "Copied!"
-msgstr ""
+msgstr "Kopēts!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug3
@@ -3429,7 +3429,7 @@ msgstr "Dalībnieks"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Participants"
-msgstr ""
+msgstr "Dalībnieki"
 
 #. module: survey
 #. odoo-python
@@ -5022,6 +5022,11 @@ msgstr ""
 #, python-format
 msgid "Use humor and make jokes"
 msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Izmantot ziņojuma veidni"
 
 #. module: survey
 #. odoo-javascript

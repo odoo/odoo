@@ -457,31 +457,6 @@ class TestRepair(common.TransactionCase):
             else:
                 self.assertTrue(float_is_zero(sol.qty_delivered, 2))
 
-    def test_repair_return(self):
-        """Tests functionality of creating a repair directly from a return picking,
-        i.e. repair can be made and defaults to appropriate return values. """
-        # test return
-        # Required for `location_dest_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
-        picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.stock_warehouse.in_type_id
-        picking_form.partner_id = self.res_partner_1
-        picking_form.location_dest_id = self.stock_location_14
-        return_picking = picking_form.save()
-
-        # create repair
-        res_dict = return_picking.action_repair_return()
-        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
-        repair_form.product_id = self.product_product_3
-        repair = repair_form.save()
-
-        # test that the resulting repairs are correctly created
-        self.assertEqual(len(return_picking.repair_ids), 1, "A repair order should have been created and linked to original return.")
-        for repair in return_picking.repair_ids:
-            self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
-            self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")
-            self.assertEqual(repair.picking_type_id, return_picking.picking_type_id.warehouse_id.repair_type_id)
-
     def test_repair_compute_product_uom(self):
         repair = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
@@ -577,6 +552,9 @@ class TestRepair(common.TransactionCase):
         res_dict = return_picking.action_repair_return()
         repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']), view=res_dict['view_id'])
         repair_form.product_id = product
+        # The repair needs to be saved to ensure the context is correctly set.
+        repair = repair_form.save()
+        repair_form = Form(repair)
         with repair_form.move_ids.new() as move:
             move.product_id = self.product_product_5
             move.product_uom_qty = 1.0
@@ -587,6 +565,9 @@ class TestRepair(common.TransactionCase):
         repair.action_repair_end()
         self.assertEqual(repair.state, 'done')
         self.assertEqual(len(return_picking.move_ids), 1, "Parts added to the repair order shoudln't be added to the return picking")
+        self.assertEqual(repair.location_id, return_picking.location_dest_id, "Repair location should have defaulted to return destination location")
+        self.assertEqual(repair.partner_id, return_picking.partner_id, "Repair customer should have defaulted to return customer")
+        self.assertEqual(repair.picking_type_id, return_picking.picking_type_id.warehouse_id.repair_type_id)
 
     def test_repair_with_product_in_package(self):
         """
@@ -631,6 +612,23 @@ class TestRepair(common.TransactionCase):
         repair_order.move_ids.quantity = 1
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
+
+    def test_sn_with_no_tracked_product(self):
+        """
+        Check that the lot_id field is cleared after updating the product in the repair order.
+        """
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('stock.group_production_lot')
+        )
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_storable_serial.id})
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = self.product_storable_serial
+        ro_form.lot_id = sn_1
+        repair_order = ro_form.save()
+        ro_form = Form(repair_order)
+        ro_form.product_id = self.product_storable_no
+        repair_order = ro_form.save()
+        self.assertFalse(repair_order.lot_id)
 
     def test_repair_multi_unit_order_with_serial_tracking(self):
         """
@@ -696,7 +694,6 @@ class TestRepair(common.TransactionCase):
         repair_order = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
             'product_uom': self.product_product_3.uom_id.id,
-            'picking_type_id': self.stock_warehouse.repair_type_id.id,
             'partner_id': self.res_partner_12.id,
             'move_ids': [
                 Command.create({

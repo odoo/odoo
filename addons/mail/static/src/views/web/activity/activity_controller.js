@@ -38,6 +38,9 @@ export class ActivityController extends Component {
                 limit: limit,
                 total: count,
                 onUpdate: async (params) => {
+                    // Ensure that only (active) records with at least one activity, "done" (archived) or not, are fetched.
+                    // We don't use active_test=false in the context because otherwise we would also get archived records.
+                    params.domain = [...(this.model.originalDomain || []), ["activity_ids.active", "in", [true, false]]];
                     await Promise.all([this.model.root.load(params), this.model.fetchActivityData(params)]);
                 },
                 updateTotal: hasLimitedCount ? () => this.model.root.fetchCount() : undefined,
@@ -72,8 +75,9 @@ export class ActivityController extends Component {
             context: this.props.context,
             onSelected: async (resIds) => {
                 await this.activity.schedule(this.props.resModel, resIds);
-                this.model.load(this.getSearchProps());
             },
+        }, {
+            onClose: () => this.model.load(this.getSearchProps())
         });
     }
 

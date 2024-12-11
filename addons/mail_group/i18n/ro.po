@@ -11,14 +11,16 @@
 # Martin Trigaux, 2024
 # Larisa_nexterp, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Wil Odoo, 2024
+# Lyall Kindmurr, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -432,7 +434,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
@@ -500,6 +502,11 @@ msgid ""
 msgstr ""
 "Adresa de e-mail a expeditorului. Acest câmp este setat când nu se găsește "
 "partener și înlocuiește câmpul autor_id în chat."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Domeniu de e-mail de ex. „example.com” în „odoo@example.com”"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -991,6 +998,13 @@ msgstr ""
 #, python-format
 msgid "Only members can send email to the mailing list."
 msgstr "Numai membrii pot trimite e-mailuri la lista de distribuție."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id

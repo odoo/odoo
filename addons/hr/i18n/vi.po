@@ -3,14 +3,14 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -297,7 +297,7 @@ msgstr "Đạt được mục tiêu kinh doanh hằng tháng"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -455,7 +455,7 @@ msgstr "Cài đặt ứng dụng"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Apply"
-msgstr "Ứng tuyển"
+msgstr "Áp dụng"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -996,6 +996,8 @@ msgstr ""
 "Duy trì tương tác thường xuyên với các khách hàng chủ chốt để khai thác và mở rộng tốt hơn."
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -1008,6 +1010,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Bộ phận"
 
@@ -1048,7 +1051,7 @@ msgstr "Ngày khỏi hành"
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
 msgid "Departure Reason"
-msgstr "Lý do kỷ luật"
+msgstr "Lý do nghỉ việc"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_departure_reason_action
@@ -1153,7 +1156,7 @@ msgstr ""
 "Mỗi nhân viên có cơ hội nhìn thấy tầm ảnh hưởng của công việc của mình.\n"
 "                        Bạn có thể thực sự đóng góp cho thành công của công ty.\n"
 "                        <br>\n"
-"                        Khá nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như buổi tập\n"
+"                        Nhiều hoạt động được thường xuyên tổ chức trong năm, ví dụ như buổi tập\n"
 "                        thể thao hàng tuần, sự kiện kết nối đội ngũ, đồ uống hàng tháng, và hơn thế nữa"
 
 #. module: hr
@@ -2165,7 +2168,7 @@ msgstr "Ghi chú"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
@@ -2858,6 +2861,13 @@ msgid "Software Developer"
 msgstr "Nhà phát triển phần mềm"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr "Một số nhân viên đã có liên hệ công việc."
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3202,7 +3212,7 @@ msgstr "Đào tạo"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
@@ -3573,7 +3583,7 @@ msgstr "vd: John Doe"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr "vd Quản lý bán hàng"
+msgstr "VD: Quản lý Sales"
 
 #. module: hr
 #. odoo-python

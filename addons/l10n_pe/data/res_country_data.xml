@@ -42,6 +42,6 @@
     <record id="base.pe" model="res.country">
         <field name="enforce_cities" eval="1" />
         <field name="address_view_id" ref="pe_partner_address_form" />
-        <field name="address_format" eval="'%(street)s\n%(zip)s%(city)s\n%(state_name)s\n%(country_name)s'"/>
+        <field name="address_format" eval="'%(street)s\n%(l10n_pe_district_name)s\n%(zip)s%(city)s\n%(state_name)s\n%(country_name)s'"/>
     </record>
 </odoo>

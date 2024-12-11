@@ -4,7 +4,7 @@
         <field name="name">stock.move.line.tree</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
-            <tree string="Move Lines" create="0" default_order="id desc" action="action_open_reference" type="object">
+            <tree string="Move Lines" create="0" default_order="id desc" action="action_open_reference" type="object" duplicate="0">
                 <field name="location_usage" column_invisible="True"/>
                 <field name="location_dest_usage" column_invisible="True"/>
                 <field name="date"/>

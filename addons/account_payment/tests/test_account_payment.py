@@ -191,22 +191,28 @@ class TestAccountPayment(AccountPaymentCommon):
         def get_payment_method_line(provider):
             return self.env['account.payment.method.line'].search([('payment_provider_id', '=', provider.id)])
 
-        with self.mocked_get_payment_method_information(), self.mocked_get_default_payment_method_id():
+        with self.mocked_get_payment_method_information():
             journal = self.company_data['default_journal_bank']
             provider = self.provider
             self.assertRecordValues(provider, [{'journal_id': journal.id}])
 
             # Test changing the journal.
             copy_journal = journal.copy()
+            payment_method_line = get_payment_method_line(provider)
             provider.journal_id = copy_journal
             self.assertRecordValues(provider, [{'journal_id': copy_journal.id}])
-            self.assertRecordValues(get_payment_method_line(provider), [{'journal_id': copy_journal.id}])
+            self.assertRecordValues(payment_method_line, [{'journal_id': copy_journal.id}])
 
             # Test duplication of the provider.
+            payment_method_line.payment_account_id = self.env.company.account_journal_payment_debit_account_id
             copy_provider = self.provider.copy()
             self.assertRecordValues(copy_provider, [{'journal_id': False}])
             copy_provider.state = 'test'
             self.assertRecordValues(copy_provider, [{'journal_id': journal.id}])
+            self.assertRecordValues(get_payment_method_line(copy_provider), [{
+                'journal_id': journal.id,
+                'payment_account_id': payment_method_line.payment_account_id.id,
+            }])
 
             # We are able to have both on the same journal...
             with self.assertRaises(ValidationError):

@@ -52,7 +52,9 @@ class PaymentPostProcessing(http.Controller):
         if monitored_tx.state == 'done' and not monitored_tx.is_post_processed:
             try:
                 monitored_tx._finalize_post_processing()
-            except psycopg2.OperationalError:  # The database cursor could not be committed.
+            except (
+                psycopg2.OperationalError, psycopg2.IntegrityError
+            ):  # The database cursor could not be committed.
                 request.env.cr.rollback()  # Rollback and try later.
                 raise Exception('retry')
             except Exception as e:

@@ -309,7 +309,9 @@
                     <cbc:ID t-out="item_vals.get('sellers_item_identification_vals', {}).get('id')"/>
                 </cac:SellersItemIdentification>
                 <cac:CommodityClassification t-foreach="item_vals.get('commodity_classification_vals', [])" t-as="foreach_vals">
-                    <cbc:ItemClassificationCode t-out="foreach_vals.get('item_classification_code')"/>
+                    <cbc:ItemClassificationCode
+                            t-att="foreach_vals.get('item_classification_attrs', {})"
+                            t-out="foreach_vals.get('item_classification_code')"/>
                 </cac:CommodityClassification>
                 <cac:ClassifiedTaxCategory t-foreach="item_vals.get('classified_tax_category_vals', [])" t-as="foreach_vals">
                     <t t-call="{{TaxCategoryType_template}}">
@@ -378,6 +380,7 @@
                 t-att="vals.get('profile_id_attrs', {})"
                 t-out="vals.get('profile_id')"/>
             <cbc:ID t-out="vals.get('id')"/>
+            <cbc:UUID t-out="vals.get('uuid')"/>
             <cbc:IssueDate t-out="vals.get('issue_date')"/>
             <cbc:Note t-foreach="vals.get('note_vals', [])" t-as="note_vals"
                 t-att="note_vals.get('note_attrs', {})"
@@ -404,6 +407,13 @@
                     <cbc:DocumentTypeCode t-out="billing_reference_vals.get('document_type_code')"/>
                 </cac:InvoiceDocumentReference>
             </cac:BillingReference>
+            <t t-foreach="vals.get('additional_document_reference_list', [])" t-as="foreach_vals">
+                <cac:AdditionalDocumentReference>
+                    <cbc:ID t-out="foreach_vals.get('id')"/>
+                    <cbc:DocumentTypeCode t-out="foreach_vals.get('document_type_code')"/>
+                    <cbc:DocumentDescription t-out="foreach_vals.get('document_description')"/>
+                </cac:AdditionalDocumentReference>
+            </t>
             <cac:Signature t-foreach="vals.get('signature_vals', [])" t-as="foreach_vals">
                 <t t-call="{{SignatureType_template}}">
                     <t t-set="vals" t-value="foreach_vals"/>

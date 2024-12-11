@@ -3,7 +3,7 @@
 
 <t t-name="mail.Activity">
     <t t-set="activity" t-value="props.data"/>
-    <div class="o-mail-Activity d-flex px-3 py-1 mb-2">
+    <div class="o-mail-Activity d-flex px-3 py-1 mb-2" t-on-click="onClick">
         <div class="o-mail-Activity-sidebar flex-shrink-0 position-relative">
             <img class="w-100 h-100 rounded cursor-pointer" t-attf-src="/web/image/res.users/{{activity.user_id[0]}}/avatar_128" t-on-click.stop.prevent="onClickAvatar"/>
                 <div
@@ -34,7 +34,7 @@
                         <tr><td class="text-end fw-bolder">Activity type</td><td><t t-esc="activity.activity_type_id[1]"/></td></tr>
                         <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="displayCreateDate"/> by <t t-esc="activity.create_uid[1]"/></td></tr>
                         <tr><td class="text-end fw-bolder">Assigned to</td><td><t t-esc="activity.user_id[1]"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Due on</td><td><t t-esc="activity.date_deadline"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Due on</td><td><t t-esc="displayDeadlineDate"/></td></tr>
                     </tbody>
                 </table>
             </div>

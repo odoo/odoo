@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
+import logging
 import requests
 from lxml import etree
 from hashlib import md5
@@ -9,8 +10,11 @@ from urllib import parse
 
 from odoo import api, fields, models
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.tools.sql import column_exists, create_column
 
 TIMEOUT = 10
+_logger = logging.getLogger(__name__)
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -39,6 +43,16 @@ class ResPartner(models.Model):
         copy=False,
     )  # field to compute the label to show for partner endpoint
     is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
+
+    def _auto_init(self):
+        """Create columns `account_peppol_is_endpoint_valid` and `account_peppol_validity_last_check`
+        to avoid having them computed by the ORM on installation.
+        """
+        if not column_exists(self.env.cr, 'res_partner', 'account_peppol_is_endpoint_valid'):
+            create_column(self.env.cr, 'res_partner', 'account_peppol_is_endpoint_valid', 'boolean')
+        if not column_exists(self.env.cr, 'res_partner', 'account_peppol_validity_last_check'):
+            create_column(self.env.cr, 'res_partner', 'account_peppol_validity_last_check', 'timestamp')
+        return super()._auto_init()
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -72,16 +86,15 @@ class ResPartner(models.Model):
     def _get_participant_info(self, edi_identification):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
-        peppol_user = self.env.company.sudo().account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
-        edi_mode = peppol_user and peppol_user.edi_mode or self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+        edi_mode = self.env.company._get_peppol_edi_mode()
         sml_zone = 'acc.edelivery' if edi_mode == 'test' else 'edelivery'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
 
         try:
             response = requests.get(smp_url, timeout=TIMEOUT)
-        except requests.exceptions.ConnectionError:
-            return None
-        if response.status_code != 200:
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            _logger.debug(e)
             return None
         return etree.fromstring(response.content)
 

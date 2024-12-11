@@ -86,7 +86,7 @@
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
                 <input type="hidden" name="url_param" t-att-value="request.params.get('url_param')"/>
-                <div class="col-3">
+                <div class="col-12 col-sm-3">
                     <div class="card o_card_people">
                         <div class="card-body">
                             <img class="o_wforum_avatar_img w-100 mb-3" t-att-src="website.image_url(user, 'avatar_128')"/>
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-9 mb-3">
+                <div class="col-12 col-sm-9 mb-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
@@ -567,24 +567,26 @@
                     <t t-call="website_profile.top3_user_card"></t>
                 </div>
             </div>
-            <table class="table table-sm" t-if='users'>
-                <t t-foreach="users" t-as="user">
-                    <tr t-attf-onclick="location.href='/profile/user/#{user['id']}';" t-attf-class="o_wprofile_pointer bg-white #{user['id'] == user_id.id and 'o_wprofile_border_focus'}">
-                        <t t-call="website_profile.all_user_card"/>
-                    </tr>
-                </t>
-                <t t-if="my_user">
-                    <!-- keep same table to avoid missaligment -->
-                    <tr>
-                        <td colspan="7"></td>
-                    </tr>
-                    <t t-set='user' t-value='my_user'/>
-                    <tr t-attf-onclick="location.href='/profile/user/#{user['id']}';" t-attf-class="o_wprofile_pointer bg-white o_wprofile_border_focus">
-                        <t t-call="website_profile.all_user_card">
-                        </t>
-                    </tr>
-                </t>
-            </table>
+            <div class="table-responsive" t-if="users">
+                <table class="table table-sm" t-if="users">
+                    <t t-foreach="users" t-as="user">
+                        <tr t-attf-onclick="location.href='/profile/user/#{user['id']}';" t-attf-class="o_wprofile_pointer bg-white #{user['id'] == user_id.id and 'o_wprofile_border_focus'}">
+                            <t t-call="website_profile.all_user_card"/>
+                        </tr>
+                    </t>
+                    <t t-if="my_user">
+                        <!-- keep same table to avoid missaligment -->
+                        <tr>
+                            <td colspan="7"></td>
+                        </tr>
+                        <t t-set='user' t-value='my_user'/>
+                        <tr t-attf-onclick="location.href='/profile/user/#{user['id']}';" t-attf-class="o_wprofile_pointer bg-white o_wprofile_border_focus">
+                            <t t-call="website_profile.all_user_card">
+                            </t>
+                        </tr>
+                    </t>
+                </table>
+            </div>
             <t t-if='search and not users'>
                 <div class='alert alert-warning'>No user found for <strong><t t-esc="search"/></strong>. Try another search.</div>
             </t>

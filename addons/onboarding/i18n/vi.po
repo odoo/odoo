@@ -3,14 +3,14 @@
 # 	* onboarding
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -28,7 +28,7 @@ msgstr "#{alt}"
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__progress_ids
 msgid "All Onboarding Progress Records (across companies)."
-msgstr "Tất cả tập dữ liệu tiến độ hướng dẫn (trên các công ty)."
+msgstr "Tất cả bản ghi tiến độ hướng dẫn (trên các công ty)."
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_step
@@ -38,7 +38,7 @@ msgstr "Tất cả đã hoàn thành!"
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__progress_ids
 msgid "All related Onboarding Progress Step Records (across companies)"
-msgstr "Tất cả tập dữ liệu tiến độ hướng dẫn liên quan (trên các công ty)"
+msgstr "Tất cả bản ghi tiến độ hướng dẫn liên quan (trên các công ty)"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image_alt
@@ -53,7 +53,7 @@ msgid ""
 "An \"Opening Action\" is required for the following steps to be linked to an"
 " onboarding panel: %(step_titles)s"
 msgstr ""
-"Cần có \"Hành động mở\" để các bước sau được liên kết với bảng hướng dẫn: "
+"Cần có \"Tác vụ mở\" để các bước sau được liên kết với bảng hướng dẫn: "
 "%(step_titles)s"
 
 #. module: onboarding
@@ -89,7 +89,12 @@ msgstr "Đóng bảng hướng dẫn"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__panel_close_action_name
 msgid "Closing action"
-msgstr "Hành động đóng"
+msgstr "Tác vụ đóng"
+
+#. module: onboarding
+#: model:ir.model,name:onboarding.model_res_company
+msgid "Companies"
+msgstr "Công ty"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__company_id
@@ -214,7 +219,7 @@ msgstr "Tên của quá trình hướng dẫn"
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__panel_close_action_name
 msgid "Name of the onboarding model action to execute when closing the panel."
 msgstr ""
-"Tên của hành động mô hình hướng dẫn cần thực hiện khi đóng bảng điều khiển."
+"Tên của tác vụ mô hình hướng dẫn cần thực hiện khi đóng bảng điều khiển."
 
 #. module: onboarding
 #: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__panel_step_open_action_name
@@ -222,8 +227,8 @@ msgid ""
 "Name of the onboarding step model action to execute when opening the step, "
 "e.g. action_open_onboarding_1_step_1"
 msgstr ""
-"Tên của hành động mô hình hướng dẫn cần thực hiện khi đóng bảng điều khiển, "
-"VD: action_open_onboarding_1_step_1"
+"Tên của tác vụ mô hình hướng dẫn cần thực hiện khi đóng bảng điều khiển, VD:"
+" action_open_onboarding_1_step_1"
 
 #. module: onboarding
 #. odoo-python
@@ -253,12 +258,12 @@ msgstr "Quá trình hướng dẫn"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__progress_ids
 msgid "Onboarding Progress Records"
-msgstr "Quá trình hướng dẫn Tập dữ liệu"
+msgstr "Quá trình hướng dẫn Bản ghi"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__progress_ids
 msgid "Onboarding Progress Step Records"
-msgstr "Tập dữ liệu bước thao tác Quá trình hướng dẫn"
+msgstr "Bản ghi bước thao tác Quá trình hướng dẫn"
 
 #. module: onboarding
 #: model:ir.model,name:onboarding.model_onboarding_progress_step
@@ -334,7 +339,7 @@ msgstr "Tên một chữ"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__panel_step_open_action_name
 msgid "Opening action"
-msgstr "Hành động mở"
+msgstr "Tác vụ mở"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__progress_step_ids

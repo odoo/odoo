@@ -5,16 +5,16 @@
 # Translators:
 # Lucia Pacheco, 2024
 # Wil Odoo, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -429,7 +429,7 @@ msgstr ""
 "        Hola,\n"
 "        <br><br>\n"
 "        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
-"        Su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> con un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        Su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
 "            ha sido confirmada.<br>\n"
 "            Agradecemos su confianza.\n"
@@ -437,7 +437,7 @@ msgstr ""
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
 "            está pendiente. Se confirmará cuando recibamos su pago.\n"
 "            <t t-if=\"object.reference\">\n"
-"                La referencia de su pago es <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
+"                La referencia de pago es <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <br><br>\n"
@@ -1573,42 +1573,42 @@ msgstr "Complete los datos de su empresa"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Calcular costos de envío y enviar con DHL"
+msgstr "Calcule los costos de envío y haga sus envíos con DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Calcular costos de envío y enviar con Easypost"
+msgstr "Calcule los costos de envío y haga sus envíos con Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calcular costos de envío y enviar con FedEx"
+msgstr "Calcule los costos de envío y haga sus envíos con FedEx"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "Calcular costos de envío y enviar con Sendcloud"
+msgstr "Calcule los costos de envío y haga sus envíos con Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "Calcular los gastos de envío y enviar con Shiprocket"
+msgstr "Calcule los costos de envío y haga sus envíos con Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Calcular costos de envío y enviar con UPS"
+msgstr "Calcule los costos de envío y haga sus envíos con UPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Calcular costos de envío y enviar con USPS"
+msgstr "Calcule los costos de envío y haga sus envíos con USPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Calcular costos de envío y enviar con bpost"
+msgstr "Calcule los costos de envío y haga sus envíos con bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1929,7 +1929,7 @@ msgstr "Deducir anticipos"
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr "Validez de cotización predeterminada"
+msgstr "Validez predeterminada de la cotización"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
@@ -3709,7 +3709,7 @@ msgstr "Unidad de medida del producto solo lectura"
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Variant"
-msgstr "Variante de producto"
+msgstr "Variante del producto"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_products
@@ -4150,14 +4150,14 @@ msgid "Sales Analysis"
 msgstr "Análisis de ventas"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Análisis de ventas por cliente"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Análisis de ventas por vendedores"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Análisis de ventas por cliente"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4397,10 +4397,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Si selecciona la opción \"advertencia\" se enviará una notificación a los "
-"usuarios. En cambio, si selecciona \"mensaje de bloqueo\" se enviará una "
-"excepción con el mensaje y se bloqueará el flujo. Debe escribir el mensaje "
-"en el siguiente campo."
+"La opción \"Advertencia\" enviará una notificación a los usuarios y la "
+"opción \"Mensaje de bloqueo\" enviará una excepción con el mensaje y "
+"bloqueará el flujo. Debe escribir el mensaje en el siguiente campo."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4988,7 +4987,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5035,11 +5033,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "El importe del anticipo debe ser un valor positivo."
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Actualmente no existen órdenes para su cuenta."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "No tiene cotizaciones en su cuenta."
@@ -5060,8 +5053,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
-"Este valor predeterminado se aplica a cualquier producto nuevo creado, se "
-"puede cambiar en el formulario de detalles del producto."
+"Este valor predeterminado se aplica a los productos nuevos que cree, pero "
+"puede cambiarlo en el formulario de detalles correspondiente."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -5357,7 +5350,7 @@ msgstr "Desbloquear"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Importe sin impuestos"
+msgstr "Subtotal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
@@ -5492,6 +5485,7 @@ msgstr "Advertencia"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format

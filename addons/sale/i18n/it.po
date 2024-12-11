@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -1151,12 +1151,12 @@ msgstr "Riga ordine consentita"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Consente di inviare una fattura pro-forma ai clienti."
+msgstr "Consente di inviare una fattura proforma ai clienti."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Consente di inviare una fattura pro forma."
+msgstr "Consente di inviare una fattura proforma."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on
@@ -3453,7 +3453,7 @@ msgstr "Token di identità PDT"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Fattura PRO FORMA"
+msgstr "Fattura PROFORMA"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -3617,7 +3617,7 @@ msgstr "Tariffazione"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Fattura pro forma"
+msgstr "Fattura proforma"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -3627,7 +3627,7 @@ msgstr "Fattura proforma"
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Fatture pro forma"
+msgstr "Fatture proforma"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -4144,14 +4144,14 @@ msgid "Sales Analysis"
 msgstr "Analisi vendite"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Analisi vendite in base ai clienti"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Analisi vendite in base ad addetti vendite"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "Analisi vendite per cliente"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4414,7 +4414,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Invia fattura PRO FORMA"
+msgstr "Invia fattura PROFORMA"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4979,7 +4979,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5024,11 +5023,6 @@ msgstr "I parametri forniti non sono validi."
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "Il valore dell'importo di anticipo deve essere positivo."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Al momento nell'account non sono presenti ordini."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5481,6 +5475,7 @@ msgstr "Avviso"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format

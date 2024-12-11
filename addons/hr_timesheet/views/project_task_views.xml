@@ -161,12 +161,12 @@
                 <field name="date_deadline" position="before">
                     <field name="progress" column_invisible="True"/>
                     <field name="effective_hours" column_invisible="True"/>
-                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" invisible="allocated_hours == 0" optional="hide"/>
-                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" invisible="effective_hours == 0"/>
-                    <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-Tasks Total Effective Hours" optional="hide"/>
-                    <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" invisible="allocated_hours == 0"/>
-                    <field name="progress" widget="project_task_progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" invisible="allocated_hours == 0" options="{'overflow_class': 'bg-danger'}" />
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" invisible="allocated_hours == 0" optional="hide" column_invisible="not context.get('allow_timesheets', True)"/>
+                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" invisible="effective_hours == 0" column_invisible="not context.get('allow_timesheets', True)"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-Tasks Total Effective Hours" optional="hide" column_invisible="not context.get('allow_timesheets', True)"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide" column_invisible="not context.get('allow_timesheets', True)"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" invisible="allocated_hours == 0" column_invisible="not context.get('allow_timesheets', True)"/>
+                    <field name="progress" widget="project_task_progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" invisible="allocated_hours == 0" options="{'overflow_class': 'bg-danger'}" column_invisible="not context.get('allow_timesheets', True)"/>
                 </field>
             </field>
         </record>
@@ -205,8 +205,10 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='blocking']/following-sibling::separator[1]" position="after">
-                    <filter string="Timesheets 80%" name="timesheet_80" domain="[('remaining_hours_percentage', '&gt;', 0.0), ('remaining_hours_percentage', '&lt;=', 0.2)]"/>
-                    <filter string="Timesheets &gt;100%" name="timesheet_exceeded" domain="[('overtime', '&gt;', 0)]"/>
+                    <filter string="Timesheets 80%" name="timesheet_80" invisible="not context.get('allow_timesheets')"
+                        domain="[('remaining_hours_percentage', '&gt;', 0.0), ('remaining_hours_percentage', '&lt;=', 0.2)]"/>
+                    <filter string="Timesheets &gt;100%" name="timesheet_exceeded" domain="[('overtime', '&gt;', 0)]"
+                        invisible="not context.get('allow_timesheets')"/>
                     <separator/>
                 </xpath>
             </field>

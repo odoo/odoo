@@ -43,7 +43,8 @@
         <field name="arch" type="xml">
             <tree default_order="id desc" create="0"
                   import="0" js_class="inventory_report_list"
-                  action="action_open_reference" type="object">
+                  action="action_open_reference" type="object"
+                  duplicate="0">
                 <header>
                     <button name="action_valuation_at_date" string="Valuation at Date" type="object"
                             invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"

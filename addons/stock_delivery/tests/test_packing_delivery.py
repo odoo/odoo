@@ -51,13 +51,14 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
             'carrier_id': self.test_carrier.id
         })
-        self.env['stock.move.line'].create({
+        move_line = self.env['stock.move.line'].create({
             'product_id': self.product_aw.id,
             'product_uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id
+            'location_dest_id': self.customer_location.id,
+            'picked': True,
         })
         self.env['stock.move.line'].create({
             'product_id': self.product_bw.id,
@@ -65,7 +66,8 @@ class TestPacking(TestPackingCommon):
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id
+            'location_dest_id': self.customer_location.id,
+            'picked': True,
         })
         pack_action = picking_ship.action_put_in_pack()
         pack_action_ctx = pack_action['context']
@@ -78,6 +80,17 @@ class TestPacking(TestPackingCommon):
         # default weight was set.
         pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
         self.assertEqual(pack_wiz.shipping_weight, 13.5)
+
+        # unpick the move lines and check that the weight is correctly updated
+        move_line.write({'picked': False})
+
+        pack_action = picking_ship.action_put_in_pack()
+        pack_action_ctx = pack_action['context']
+        pack_action_model = pack_action['res_model']
+        self.assertEqual(pack_action_model, 'choose.delivery.package')
+
+        pack_wiz = self.env['choose.delivery.package'].with_context(pack_action_ctx).create({})
+        self.assertEqual(pack_wiz.shipping_weight, 1.5)
 
     def test_send_to_shipper_without_sale_order(self):
         """

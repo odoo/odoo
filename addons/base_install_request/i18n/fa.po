@@ -7,6 +7,7 @@
 # Hanna Kheradroosta, 2023
 # Hamid Darabi, 2023
 # Martin Trigaux, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,13 +48,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        سلام,\n"
+"        <br><br>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></span> او درخواست فعال کردن ماژول را <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"></span>داد . این ماژول در اشتراک شما گنجانده شده است.. هیچ <span style=\"color: #875A7B; font-weight: bold;\">هزینه اضافی ندارد</span>,اما برای فعال‌سازی آن به نقش مدیر نیاز است.\n"
+"        <br><br>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"></t>\n"
+"        </blockquote>\n"
+"        <br><br>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">درخواست بازبینی</a>\n"
+"        <br><br>\n"
+"        با تشکر,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>مدیر میچل</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/models/ir_module_module.py:0
 #, python-format
 msgid "Activation Request of \"%s\""
-msgstr ""
+msgstr "درخواست فعال‌سازی از \"%s\""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -81,7 +103,7 @@ msgstr "ایجادشده در"
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
 msgid "Depending Apps"
-msgstr ""
+msgstr "برنامه‌های وابسته"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
@@ -98,7 +120,7 @@ msgstr "شناسه"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "Install App"
-msgstr ""
+msgstr "نصب برنامه"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
@@ -115,7 +137,7 @@ msgstr "آخرین بروز رسانی در"
 #. module: base_install_request
 #: model:mail.template,name:base_install_request.mail_template_base_install_request
 msgid "Mail: Install Request"
-msgstr ""
+msgstr "ایمیل: درخواست نصب"
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
@@ -127,62 +149,62 @@ msgstr "ماژول"
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr ""
+msgstr "درخواست فعال سازی ماژول"
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
 msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr ""
+msgstr "درخواست فعال سازی ماژول برای \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr ""
+msgstr "بازدید فعال سازی ماژول"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
 msgid "Modules Description"
-msgstr ""
+msgstr "توضیحات ماژول"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "No extra cost, this application is free."
-msgstr ""
+msgstr "هیچ هزینه اضافی وجود ندارد، این برنامه رایگان است."
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "No module selected."
-msgstr ""
+msgstr "هیچ ماژولی انتخاب نشده است."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr ""
+msgstr "درخواست دسترسی"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr ""
+msgstr "درخواست فعال سازی"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Send to:"
-msgstr ""
+msgstr "ارسال به:"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
 msgid "The following apps will be installed:"
-msgstr ""
+msgstr "برنامه‌های زیر نصب خواهند شد."
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "The module is already installed."
-msgstr ""
+msgstr "ماژول قبلاً نصب شده است."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -190,6 +212,9 @@ msgid ""
 "This app is included in your subscription. It's free to activate, but only "
 "an administrator can do it. Fill this form to send an activation request."
 msgstr ""
+"این برنامه در اشتراک شما گنجانده شده است. فعال‌سازی آن رایگان است، اما فقط "
+"یک مدیر می‌تواند این کار را انجام دهد. لطفاً این فرم را پر کنید تا درخواست "
+"فعال‌سازی ارسال شود."
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -199,19 +224,19 @@ msgstr "کاربر"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Why do you need this module?"
-msgstr ""
+msgstr "چرا به این ماژول نیاز دارید؟"
 
 #. module: base_install_request
 #: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
 msgid "You are about to install an extra application"
-msgstr ""
+msgstr "شما در حال نصب یک برنامه اضافی هستید."
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "Your request has been successfully sent"
-msgstr ""
+msgstr "درخواست شما با موفقیت ارسال شد."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -219,3 +244,6 @@ msgid ""
 "e.g. I'd like to use the SMS Marketing module to organize the promotion of "
 "our internal events, and exhibitions. I need access for 3 people of my team."
 msgstr ""
+"به عنوان مثال، می‌خواهم از ماژول بازاریابی SMS برای سازماندهی تبلیغات "
+"رویدادها و نمایشگاه‌های داخلی خود استفاده کنم. به دسترسی برای ۳ نفر از تیمم "
+"نیاز دارم."

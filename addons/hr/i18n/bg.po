@@ -15,14 +15,18 @@
 # Martin Trigaux, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Rumena Georgieva <rumena.georgieva@gmail.com>, 2024
+# Elena Varbanova, 2024
+# Petko Karamotchev, 2024
+# Milena Georgieva, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"Last-Translator: Milena Georgieva, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -208,7 +212,7 @@ msgstr "<span class=\"o_stat_text\">Свързано от</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Служител</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -251,7 +255,7 @@ msgstr "<span>Км</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span>new Employees</span>"
-msgstr ""
+msgstr "<span>нови служители</span>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -342,7 +346,7 @@ msgstr "Икона за Вид Дейност"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Activity by"
-msgstr ""
+msgstr "Активност от"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan_template
@@ -364,7 +368,7 @@ msgstr "Добавяне на нов служител"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
 msgid "Add a new plan"
-msgstr ""
+msgstr "Добавяне на нов план"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -557,25 +561,25 @@ msgstr "Аватар"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Аватар 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Аватар 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Аватар 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Аватар 512"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -758,7 +762,7 @@ msgstr "Фирма"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "Държава на компанията"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -980,6 +984,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -992,6 +998,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Отдел"
 
@@ -1523,7 +1530,7 @@ msgstr "ЧР настройки"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Има съобщение"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1992,7 +1999,7 @@ msgstr "Трябва да има"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Краен срок за моята дейност"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -2054,7 +2061,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Следващото събитие от календара на дейностите"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
@@ -2167,7 +2174,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Брой съобщения, изискващи действие"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
@@ -2231,7 +2238,7 @@ msgstr ""
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Операцията не се поддържа"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
@@ -2818,6 +2825,13 @@ msgid "Software Developer"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2906,7 +2920,7 @@ msgstr "Име на маркер"
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Тагът вече съществува"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids

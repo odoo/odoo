@@ -5,19 +5,19 @@
 # Translators:
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
-# Manuela Silva <mmsrs@sky.com>, 2023
-# Wil Odoo, 2023
 # Rita Bastos, 2024
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # Maitê Dietze, 2024
+# Manuela Silva <mmsrs@sky.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,11 +128,6 @@ msgstr ""
 msgid ""
 "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal "
 "account</span>"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
 msgstr ""
 
 #. module: payment
@@ -1596,6 +1591,11 @@ msgid "Test Mode"
 msgstr "Modo de Teste"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "Obrigado!"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -2147,7 +2147,7 @@ msgstr "O seu pagamento foi autorizado."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "O seu pagamento foi cancelado."
 
 #. module: payment
 #. odoo-python
@@ -2193,11 +2193,16 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been successfully processed."
-msgstr ""
+msgstr "O seu pagamento foi processado com sucesso."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
 msgstr ""
 
 #. module: payment
@@ -2209,16 +2214,6 @@ msgstr "Código Postal"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "Código Postal"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2237,18 +2232,8 @@ msgid "provider"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
 "                    payment."
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
 msgstr ""

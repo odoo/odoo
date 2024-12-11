@@ -5,14 +5,14 @@
 # Translators:
 # Thang Nguyen, 2023
 # Dung Nguyen Thi <dungnt@trobz.com>, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -150,11 +150,6 @@ msgid ""
 msgstr ""
 "<span><i class=\"oi oi-arrow-right\"/> Cách cấu hình tài khoản PayPal của "
 "bạn</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>Phương thức thanh toán của bạn</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -353,7 +348,7 @@ msgstr "Đã xuất hiện lỗi trong quá trình xử lý thanh toán của b�
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Apply"
-msgstr "Ứng tuyển"
+msgstr "Áp dụng"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -405,7 +400,7 @@ msgstr "Số tiền được ủy quyền"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Availability"
-msgstr "Tình trạng còn hàng"
+msgstr "Trạng thái khả dụng"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
@@ -1655,6 +1650,11 @@ msgid "Test Mode"
 msgstr "Chế độ kiểm thử"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "Cảm ơn bạn!"
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -1972,8 +1972,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider. Archiving tokens is irreversible."
 msgstr ""
-"Hành động này cũng sẽ lưu trữ %s token đã được đăng ký với nhà cung cấp này."
-" Bạn sẽ không thể đảo ngược thao tác lưu trữ token."
+"Tác vụ này cũng sẽ lưu trữ %s token đã được đăng ký với nhà cung cấp này. "
+"Bạn sẽ không thể đảo ngược thao tác lưu trữ token."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2318,6 +2318,11 @@ msgid "Your payment has not been processed yet."
 msgstr "Thanh toán của bạn chưa được xử lý."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr "Phương thức thanh toán của bạn"
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr "Mã bưu chính"
@@ -2326,16 +2331,6 @@ msgstr "Mã bưu chính"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "Mã bưu chính"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "nguy hiểm"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "thông tin"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2354,11 +2349,6 @@ msgid "provider"
 msgstr "nhà cung cấp"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "thành công"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2366,8 +2356,3 @@ msgid ""
 msgstr ""
 "để tiến hành\n"
 "                    thanh toán."
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "cảnh báo"

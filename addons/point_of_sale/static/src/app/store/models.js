@@ -180,6 +180,7 @@ export class Product extends PosModel {
         let quantity = 1;
         let comboLines = [];
         let attribute_custom_values = {};
+        let extras = {};
 
         if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
             quantity = this.pos.db.product_packaging_by_barcode[code.code].qty;
@@ -205,6 +206,7 @@ export class Product extends PosModel {
                 return;
             }
             comboLines = payload;
+            extras.price_type = "manual";
         }
         // Gather lot information if required.
         if (this.isTracked()) {
@@ -265,14 +267,15 @@ export class Product extends PosModel {
             price_extra,
             comboLines,
             attribute_value_ids,
+            extras,
         };
     }
     isPricelistItemUsable(item, date) {
         const categories = this.parent_category_ids.concat(this.categ.id);
         return (
             (!item.categ_id || categories.includes(item.categ_id[0])) &&
-            (!item.date_start || deserializeDate(item.date_start) <= date) &&
-            (!item.date_end || deserializeDate(item.date_end) >= date)
+            (!item.date_start || deserializeDate(item.date_start, {zone: "utc"}) <= date) &&
+            (!item.date_end || deserializeDate(item.date_end, {zone: "utc"}) >= date)
         );
     }
     // Port of _get_product_price on product.pricelist.
@@ -1123,6 +1126,14 @@ export class Orderline extends PosModel {
     isPartOfCombo() {
         return Boolean(this.comboParent || this.comboLines?.length);
     }
+    getComboTotalPrice() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithTax, 0);
+    }
+    getComboTotalPriceWithoutTax() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithoutTax, 0);
+    }
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];
         const addedPtal_id = [];
@@ -1159,13 +1170,19 @@ export class Orderline extends PosModel {
         }
         return listOfAttributes;
     }
+    getPriceString() {
+        return this.get_discount_str() === "100"
+            ? // free if the discount is 100
+            _t("Free")
+            : (this.comboLines && this.comboLines.length > 0)
+            ? // empty string if it is a combo parent line
+            ""
+            : this.env.utils.formatCurrency(this.get_display_price(), this.currency);
+    }
     getDisplayData() {
         return {
             productName: this.get_full_product_name(),
-            price:
-                this.get_discount_str() === "100"
-                    ? "free"
-                    : this.env.utils.formatCurrency(this.get_display_price()),
+            price: this.getPriceString(),
             qty: this.get_quantity_str(),
             unit: this.get_unit().name,
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
@@ -1412,7 +1429,9 @@ export class Order extends PosModel {
             this.init_from_JSON(options.json);
             const linesById = Object.fromEntries(this.orderlines.map((l) => [l.id || l.cid, l]));
             for (const line of this.orderlines) {
-                line.comboLines = line.combo_line_ids?.map((id) => linesById[id]);
+                line.comboLines = line.combo_line_ids
+                    ?.filter((id) => linesById[id])
+                    .map((id) => linesById[id]); 
                 const combo_parent_id = line.combo_parent_id?.[0] || line.combo_parent_id;
                 if (combo_parent_id) {
                     line.comboParent = linesById[combo_parent_id];
@@ -1465,10 +1484,7 @@ export class Order extends PosModel {
             this.sequence_number = this.pos.pos_session.sequence_number++;
         } else {
             this.sequence_number = json.sequence_number;
-            this.pos.pos_session.sequence_number = Math.max(
-                this.sequence_number + 1,
-                this.pos.pos_session.sequence_number
-            );
+            this.updateSequenceNumber(json);
         }
         this.session_id = this.pos.pos_session.id;
         this.uid = json.uid;
@@ -1557,6 +1573,12 @@ export class Order extends PosModel {
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
     }
+    updateSequenceNumber(json) {
+        this.pos.pos_session.sequence_number = Math.max(
+            this.sequence_number + 1,
+            this.pos.pos_session.sequence_number
+        );
+    }
     export_as_JSON() {
         var orderLines, paymentLines;
         orderLines = [];
@@ -1636,7 +1658,7 @@ export class Order extends PosModel {
             footer: this.pos.config.receipt_footer,
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
-                this.shippingDate && formatDate(DateTime.fromJSDate(new Date(this.shippingDate))),
+                this.shippingDate && formatDate(DateTime.fromSQL(this.shippingDate)),
             headerData: {
                 ...this.pos.getReceiptHeaderData(this),
                 trackingNumber: this.trackingNumber,
@@ -1974,15 +1996,16 @@ export class Order extends PosModel {
      */
     calculate_base_amount(tax_ids_array, lines) {
         // Consider price_include taxes use case
-        const has_taxes_included_in_price = tax_ids_array.filter(
-            (tax_id) => this.pos.taxes_by_id[tax_id].price_include
+        const has_taxes_included_in_price = tax_ids_array.filter( (tax_id) =>
+            this.pos.taxes_by_id[tax_id].price_include ||
+            this.pos.taxes_by_id[tax_id].children_tax_ids.length > 0 &&
+            this.pos.taxes_by_id[tax_id].children_tax_ids.every(child_tax => child_tax.price_include)
         ).length;
 
         const base_amount = lines.reduce(
             (sum, line) =>
                 sum +
-                line.get_price_without_tax() +
-                (has_taxes_included_in_price ? line.get_total_taxes_included_in_price() : 0),
+                (has_taxes_included_in_price ? line.get_price_with_tax() : line.get_price_without_tax()),
             0
         );
         return base_amount;
@@ -2232,6 +2255,7 @@ export class Order extends PosModel {
                     comboParent,
                     comboLine: line.comboLine,
                     attribute_value_ids: line.attribute_value_ids,
+                    extras: {price_type: "manual"},
                 }
             );
         }
@@ -2709,7 +2733,7 @@ export class Order extends PosModel {
         return false;
     }
     is_paid() {
-        return this.get_due() <= 0 && this.check_paymentlines_rounding();
+        return this.get_due() <= 0;
     }
     is_paid_with_cash() {
         return !!this.paymentlines.find(function (pl) {

@@ -316,6 +316,11 @@
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_credit_reported_balance" model="account.report.expression">
                                 <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BF_CREDIT_REPORTED._applied_carryover_balance</field>
+                            </record>
+                            <record id="account_tax_report_line_bf_credit_reported_balance_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
                                 <field name="date_scope">previous_tax_period</field>
@@ -330,7 +335,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -342,7 +347,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -380,7 +385,7 @@
                         </field>
                     </record>
                     <record id="account_tax_report_line_bf_unpaid_credit_carried" model="account.report.line">
-                        <field name="name">26 Unpaid VAT credit carried forward</field>
+                        <field name="name">27 Unpaid VAT credit carried forward</field>
                         <field name="code">BF_UNPAID_CREDIT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_unpaid_credit_carried_balance" model="account.report.expression">
@@ -400,8 +405,8 @@
                     <record id="account_tax_report_line_bf_net_vat_to_pay_balance" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">BF_GROSS_TOTAL.balance - BF_DEDUCTIBLE.balance - BF_CREDIT_REPORTED.balance + BF_CREDIT_ASKED.balance - BF_CANCELLED.balance - BF_OTHER_DEDUCTION.balance - BF_OTHER_DEDUCTION.balance - BF_UNPAID_CREDIT.balance</field>
-                        <field name="subformula">if_above(EUR(0))</field>
+                        <field name="formula">BF_GROSS_TOTAL.balance - (BF_DEDUCTIBLE.balance + BF_CREDIT_REPORTED.balance - BF_CREDIT_ASKED.balance + BF_CANCELLED.balance + BF_OTHER_DEDUCTION.balance + BF_UNPAID_CREDIT.balance)</field>
+                        <field name="subformula">if_above(XOF(0))</field>
                     </record>
                 </field>
             </record>
@@ -413,9 +418,15 @@
                     <record id="account_tax_report_line_bf_credit_to_report_balance" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">BF_DEDUCTIBLE.balance + BF_CREDIT_REPORTED.balance - BF_CREDIT_ASKED.balance + BF_OTHER_DEDUCTION.balance + BF_UNPAID_CREDIT.balance + BF_OTHER_DEDUCTION.balance - BF_GROSS_TOTAL.balance</field>
-                        <field name="subformula">if_above(EUR(0))</field>
-                        <field name="carryover_target">BF_REPORTED.balance</field>
+                        <field name="formula">BF_DEDUCTIBLE.balance + BF_CREDIT_REPORTED.balance - BF_CREDIT_ASKED.balance + BF_CANCELLED.balance + BF_UNPAID_CREDIT.balance + BF_OTHER_DEDUCTION.balance - BF_GROSS_TOTAL.balance</field>
+                        <field name="subformula">if_above(XOF(0))</field>
+                        <field name="carryover_target" eval="False"/>
+                    </record>
+                    <record id="account_tax_report_line_bf_credit_to_report_carryover" model="account.report.expression">
+                        <field name="label">_carryover_balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">BF_CREDIT_TO_REPORT.balance</field>
+                        <field name="carryover_target">BF_CREDIT_REPORTED._applied_carryover_balance</field>
                     </record>
                 </field>
             </record>

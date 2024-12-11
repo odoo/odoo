@@ -24,15 +24,15 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Wil Odoo, 2024
 # Collex100, 2024
-# nadia martynova, 2024
+# Nadia Martynova, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: nadia martynova, 2024\n"
+"Last-Translator: Nadia Martynova, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1551,7 +1551,7 @@ msgstr ""
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 #, python-format
 msgid "Click to define an invoicing target"
-msgstr "Нажмите, чтобы определить цель выставления счетов"
+msgstr "Нажмите, чтобы определить цель по выставлению счетов"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2681,12 +2681,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr "Доставленные счета-фактуры"
+msgstr "Выставление счёта на основании доставки"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr "Заказанные счета-фактуры"
+msgstr "Выставление счёта на основании заказа"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2970,7 +2970,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
 msgid "Margins"
-msgstr "Отступы"
+msgstr "Маржа"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
@@ -4166,14 +4166,14 @@ msgid "Sales Analysis"
 msgstr "Анализ продаж"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Анализ продаж по клиентам"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Анализ продаж с помощью продавцов"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -5003,7 +5003,6 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5050,11 +5049,6 @@ msgstr "Указанные параметры недопустимы."
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "Значение суммы первоначального взноса должно быть положительным."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Там в настоящее время нет заказов для вашей учетной записи."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5506,6 +5500,7 @@ msgstr "Предупреждение"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
@@ -5696,7 +5691,7 @@ msgstr "автоматическое выставление счетов: отп
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr "коннектор bpost"
+msgstr "Коннектор bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

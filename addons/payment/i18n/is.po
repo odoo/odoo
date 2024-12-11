@@ -5,14 +5,15 @@
 # Translators:
 # Heiðar Sigurðsson, 2024
 # jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: jonasyngvi, 2024\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
 "Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,11 +127,6 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid ""
@@ -138,6 +134,9 @@ msgid ""
 "                                If you believe that it is an error, please contact the website\n"
 "                                administrator."
 msgstr ""
+"<strong>Enginn hentugur greiðslumáti fannst.</strong><br/>\n"
+"Ef þú telur að um villu sé að ræða, vinsamlegast hafðu samband\n"
+"við vefstjóra."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -235,19 +234,19 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Activate"
-msgstr ""
+msgstr "Virkja"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
 msgid "Active"
-msgstr ""
+msgstr "Virk"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Address"
-msgstr ""
+msgstr "Heimilisfang"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_adyen
@@ -308,13 +307,13 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Apply"
-msgstr ""
+msgstr "Virkja"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Archived"
-msgstr ""
+msgstr "Vistuð"
 
 #. module: payment
 #. odoo-javascript
@@ -329,6 +328,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Ertu viss um að þú viljir ógilda heimildarfærsluna? Ekki er hægt að "
+"afturkalla þessa aðgerð."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -421,7 +422,7 @@ msgstr "Eyða"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
 msgid "Canceled"
-msgstr ""
+msgstr "Hætt við"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
@@ -459,7 +460,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Grípa greiðslu"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
@@ -494,29 +495,29 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "City"
-msgstr ""
+msgstr "Borg"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Close"
-msgstr ""
+msgstr "Loka"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__code
 #: model:ir.model.fields,field_description:payment.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Kóði"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
-msgstr ""
+msgstr "Litur"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Fyrirtæki"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__company_id
@@ -545,12 +546,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
 msgid "Confirmed"
-msgstr ""
+msgstr "Staðfest"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Hafa samband"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
@@ -566,7 +567,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -587,7 +588,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_date
@@ -598,7 +599,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Búið til þann"
 
 #. module: payment
 #. odoo-python
@@ -629,7 +630,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_provider__main_currency_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Gjaldmiðill"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
@@ -650,7 +651,7 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_demo
 msgid "Demo"
-msgstr ""
+msgstr "Prufa"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
@@ -667,7 +668,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
@@ -685,7 +686,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Email"
-msgstr ""
+msgstr "Netfang"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__enabled
@@ -700,7 +701,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
 msgid "Error"
-msgstr ""
+msgstr "Villa"
 
 #. module: payment
 #. odoo-python
@@ -738,7 +739,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Aðeins fullt"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -748,7 +749,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Búðu til sölugreiðslutengil"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -765,12 +766,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Group By"
-msgstr ""
+msgstr "Hópað eftir"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Routing"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
@@ -801,7 +802,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: payment
 #. odoo-javascript
@@ -814,7 +815,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
 #: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
 msgid "Image"
-msgstr ""
+msgstr "Mynd"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__state
@@ -822,6 +823,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"Í prófunarham er falsgreiðsla unnin í gegnum prófunarviðmót.\n"
+"Mælt er með þessari stillingu þegar þú setur upp þjónustuveituna."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -897,7 +900,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__write_date
@@ -908,7 +911,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: payment
 #: model:onboarding.onboarding.step,button_text:payment.onboarding_onboarding_step_payment_provider
@@ -958,12 +961,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Message"
-msgstr ""
+msgstr "Skilaboð"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Messages"
-msgstr ""
+msgstr "Skilaboð"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_name
@@ -982,7 +985,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
@@ -1023,7 +1026,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr ""
+msgstr "Inngönguskref"
 
 #. module: payment
 #: model:onboarding.onboarding.step,step_image_alt:payment.onboarding_onboarding_step_payment_provider
@@ -1033,7 +1036,7 @@ msgstr ""
 #. module: payment
 #: model:onboarding.onboarding.step,title:payment.onboarding_onboarding_step_payment_provider
 msgid "Online Payments"
-msgstr ""
+msgstr "Netgreiðslur"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
@@ -1103,7 +1106,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
 msgid "Partial"
-msgstr ""
+msgstr "Hluti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
@@ -1111,7 +1114,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Partner"
-msgstr ""
+msgstr "Félagi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
@@ -1169,7 +1172,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Payment Method"
-msgstr ""
+msgstr "Greiðsluaðferð"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_code
@@ -1184,18 +1187,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 #, python-format
 msgid "Payment Methods"
-msgstr ""
+msgstr "Greiðsluaðferðir"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Greiðsluveita"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_provider
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
-msgstr ""
+msgstr "Greiðsluveitendur"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1217,12 +1220,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Greiðslumerki"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Greiðsluviðskipti"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -1230,7 +1233,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Greiðsluviðskipti"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
@@ -1269,12 +1272,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 msgid "Payments"
-msgstr ""
+msgstr "Greiðslur"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
 msgid "Pending"
-msgstr ""
+msgstr "Í bið"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pending_msg
@@ -1284,7 +1287,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
 msgid "Phone"
-msgstr ""
+msgstr "Símanúmer"
 
 #. module: payment
 #. odoo-python
@@ -1329,7 +1332,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Provider"
-msgstr ""
+msgstr "Reikningar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
@@ -1347,13 +1350,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_method__provider_ids
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Providers"
-msgstr ""
+msgstr "Vefþjónar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_published
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Published"
-msgstr ""
+msgstr "Birt"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_razorpay
@@ -1380,7 +1383,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.pay
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "Tilvísun"
 
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
@@ -1393,7 +1396,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
 #, python-format
 msgid "Refund"
-msgstr ""
+msgstr "Endurgreiða"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_refund
@@ -1405,12 +1408,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Refunds"
-msgstr ""
+msgstr "Endurgreiðslur"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Magn endurgreiðsla"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -1466,7 +1469,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_method__sequence
 #: model:ir.model.fields,field_description:payment.field_payment_provider__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Röð"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_express_checkout
@@ -1540,18 +1543,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "State"
-msgstr ""
+msgstr "Fylki"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Status"
-msgstr ""
+msgstr "Staða"
 
 #. module: payment
 #: model:onboarding.onboarding.step,done_text:payment.onboarding_onboarding_step_payment_provider
 msgid "Step Completed!"
-msgstr ""
+msgstr "Skrefi lokið!"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
@@ -1591,11 +1594,16 @@ msgid "Test Mode"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr ""
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Aðgangslykillinn er ógildur."
 
 #. module: payment
 #. odoo-python
@@ -1954,7 +1962,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Gerð endurgreiðslu studd"
 
 #. module: payment
 #. odoo-javascript
@@ -1966,7 +1974,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Unpublished"
-msgstr ""
+msgstr "Óbirt"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1987,7 +1995,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Ógild viðskipti"
 
 #. module: payment
 #. odoo-python
@@ -1996,7 +2004,7 @@ msgstr ""
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Aðvörun"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__warning_message
@@ -2119,7 +2127,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Greiðsla þín hefur verið heimiluð."
 
 #. module: payment
 #. odoo-python
@@ -2196,6 +2204,11 @@ msgid "Your payment has not been processed yet."
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "ZIP"
 msgstr ""
@@ -2203,16 +2216,6 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
 msgstr ""
 
 #. module: payment
@@ -2232,18 +2235,8 @@ msgid "provider"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
 "                    payment."
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
 msgstr ""

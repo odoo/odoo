@@ -10,6 +10,7 @@
 # Hamid Darabi, 2023
 # Hanna Kheradroosta, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,34 +29,36 @@ msgstr ""
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_info_id
 msgid "Account Info"
-msgstr ""
+msgstr "اطلاعات حساب"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Account Information"
-msgstr ""
+msgstr "اطلاعات حساب"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__account_token
 msgid "Account Token"
-msgstr ""
+msgstr "توکن حساب"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__account_uuid_hashed
 msgid "Account UUID"
-msgstr ""
+msgstr "شناسه حساب"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__account_token
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
+"مجوز حساب شما کلید احراز هویت شما برای این سرویس است. آن را به اشتراک "
+"نگذارید."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_info_ids
 msgid "Accounts from IAP"
-msgstr ""
+msgstr "حساب‌ها از IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -66,7 +69,7 @@ msgstr "تراز"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Buy Credit"
-msgstr ""
+msgstr "خرید اعتبار"
 
 #. module: iap
 #. odoo-javascript
@@ -115,12 +118,12 @@ msgstr "نام نمایش داده شده"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Hide Token"
-msgstr ""
+msgstr "مخفی کردن توکن"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
 msgid "IAP"
-msgstr ""
+msgstr "IAP"
 
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
@@ -133,7 +136,7 @@ msgstr "حساب IAP"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_account_info
 msgid "IAP Account Info"
-msgstr ""
+msgstr "اطلاعات حساب IAP"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
@@ -144,7 +147,7 @@ msgstr "حساب‌های IAP"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_enrich_api
 msgid "IAP Lead Enrichment API"
-msgstr ""
+msgstr "API غنی‌سازی سرنخ IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -157,7 +160,7 @@ msgstr "شناسه"
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Insufficient credit to perform this service."
-msgstr ""
+msgstr "اعتبار کافی برای انجام این سرویس موجود نیست."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -184,7 +187,7 @@ msgstr "خرید درون‌برنامه‌ای اودوو"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__service_name
 msgid "Related Service"
-msgstr ""
+msgstr "سرویس مرتبط"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
@@ -195,14 +198,14 @@ msgstr "نام سرویس"
 #: model:ir.model.fields,field_description:iap.field_iap_account__show_token
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Show Token"
-msgstr ""
+msgstr "نمایش توکن"
 
 #. module: iap
 #. odoo-javascript
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
-msgstr ""
+msgstr "شروع یک دوره آزمایشی در اودو"
 
 #. module: iap
 #. odoo-python
@@ -212,17 +215,19 @@ msgid ""
 "The url that this service requested returned an error. Please contact the "
 "author of the app. The url it tried to contact was %s"
 msgstr ""
+"خدمتی که این آدرس درخواست کرده، با خطا مواجه شده است. لطفاً با نویسنده "
+"برنامه تماس بگیرید. آدرسی که تلاش کرد با آن تماس بگیرد: %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_threshold
 msgid "Threshold"
-msgstr ""
+msgstr "آستانه"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__unit_name
 msgid "Unit Name"
-msgstr ""
+msgstr "نام واحد"
 
 #. module: iap
 #. odoo-javascript
@@ -243,15 +248,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_account__warn_me
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warn_me
 msgid "Warn me"
-msgstr ""
+msgstr "هشدارم بده"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_email
 #: model:ir.model.fields,field_description:iap.field_iap_account_info__warning_email
 msgid "Warning Email"
-msgstr ""
+msgstr "هشدار ایمیل"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warn_me
 msgid "We will send you an email when your balance gets below that threshold"
 msgstr ""
+"ما به شما ایمیلی ارسال خواهیم کرد هنگامی که موجودی شما به کمتر از آن حد "
+"برسد."

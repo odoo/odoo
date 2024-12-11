@@ -44,7 +44,7 @@ html {
         @include media-breakpoint-down(md) {
           // Made the o_action scroll instead of its o_content.
           // Except when the view wants to handle the scroll itself.
-          &:not(.o_action_delegate_scroll) {
+          &:not(.o_action_delegate_scroll), .o_form_view_container {
             overflow: auto;
 
             .o_content {

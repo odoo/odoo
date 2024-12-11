@@ -17,13 +17,13 @@
                             <i t-elif="!user.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
                         </span>
                     </span>
-                    <div class="d-flex flex-column o_card_user_infos">
+                    <div class="d-flex flex-column o_card_user_infos overflow-hidden">
                         <span class="fw-bold" t-esc="user.name"/>
                         <t t-if="userInfoTemplate" t-call="{{userInfoTemplate}}"/>
-                        <a t-if="email" t-att-href="'mailto:'+email">
+                        <a t-if="email" t-att-href="'mailto:'+email" t-att-title="email" class="text-truncate">
                             <i class="fa fa-fw fa-envelope me-1"/><t t-esc="email"/>
                         </a>
-                        <a t-if="phone" t-att-href="'tel:'+phone">
+                        <a t-if="phone" t-att-href="'tel:'+phone" t-att-title="phone" class="text-truncate">
                             <i class="fa fa-fw fa-phone me-1"/><t t-esc="phone"/>
                         </a>
                     </div>

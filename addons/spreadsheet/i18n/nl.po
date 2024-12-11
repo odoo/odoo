@@ -3,17 +3,19 @@
 # 	* spreadsheet
 # 
 # Translators:
-# Wil Odoo, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2024
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -500,7 +502,7 @@ msgstr "Op de vervaldag te betalen opgelopen rente van effecten."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "Actieve filters"
@@ -1584,6 +1586,13 @@ msgstr "Celwaarden"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "CellIsRule"
+msgstr "CelIsRegel"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Center"
@@ -1767,6 +1776,13 @@ msgstr "Kleur bij waardestijging"
 #, python-format
 msgid "Color scale"
 msgstr "Kleurschaal"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "ColorScaleRule"
+msgstr "ColorScaleRule"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2078,7 +2094,7 @@ msgstr "Cotangens van een hoek in radialen."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
 msgstr "Aantal"
@@ -2803,6 +2819,7 @@ msgstr "Bewerken"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2947,6 +2964,7 @@ msgstr "Februari"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -2993,7 +3011,6 @@ msgstr "Opvulkleur"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3358,6 +3375,17 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
+msgstr ""
+"Functie [[FUNCTION_NAME]] verwacht dat de parameter '%s' een enkele waarde "
+"of een enkele celverwijzing is, geen bereik."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] parameter 2 value (%s) is out of range."
@@ -3674,6 +3702,13 @@ msgstr "ISO-weeknummer van het jaar."
 #, python-format
 msgid "Icon set"
 msgstr "Pictogrammenset"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "IconSetRule"
+msgstr "IconSetRule"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4280,7 +4315,7 @@ msgstr "Juni"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Key value"
-msgstr "Sleutel waarde"
+msgstr "Sleutelwaarde"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5050,6 +5085,7 @@ msgstr "Geen unieke waarden gevonden"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
 msgstr "Geen"
@@ -5314,7 +5350,7 @@ msgstr "Percentage"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Percentage change from key value"
-msgstr "Percentage verandering van sleutelwaarde"
+msgstr "Percentagewijziging van sleutelwaarde"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5881,6 +5917,17 @@ msgstr "Rondt een getal af volgens de standaardregels."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr ""
+"Rondt een getal af naar het dichtstbijzijnde gehele getal dat kleiner of "
+"gelijk is aan het getal."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Rounds a number up to the nearest odd integer."
 msgstr ""
 "Rondt een getal naar boven af op het dichtstbijzijnde oneven gehele getal."
@@ -5995,7 +6042,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Search in formulas"
-msgstr "Zoeken in formules"
+msgstr "Zoek in formules"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8754,6 +8801,15 @@ msgstr "Het te retourneren aantal."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
+msgstr ""
+"De waarde die omlaag afgerond moet worden op het dichtstbijzijnde geheel "
+"getal."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
@@ -10917,7 +10973,7 @@ msgstr "Boven"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "Totaal"
@@ -11125,7 +11181,6 @@ msgstr "Gebruik rij"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -11757,7 +11812,7 @@ msgstr "Jaar gespecificeerd door een bepaalde datum."
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Year to Date"
-msgstr "Year to Date"
+msgstr "Jaar tot nu toe"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11896,10 +11951,27 @@ msgstr "en waarde of formule"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "arrow"
+msgstr "pijl"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "as headers"
 msgstr "als kopteksten"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "bottom"
+msgstr "onder"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11910,10 +11982,54 @@ msgstr "standaard:"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "difference"
+msgstr "verschil"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_date_value/filter_date_value.xml:0
+#, python-format
+msgid "empty"
+msgstr "leeg"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "exact date"
 msgstr "exacte datum"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "false"
+msgstr "onwaar"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "formula"
+msgstr "formule"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "ge"
+msgstr "ge"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "gt"
+msgstr "gt"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11941,6 +12057,17 @@ msgstr "in het afgelopen jaar"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "left"
+msgstr "links"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "lookup_range should be either a single row or single column."
@@ -11959,6 +12086,26 @@ msgstr "matchMode moet een waarde zijn in [-1, 0, 1]."
 #, python-format
 msgid "more rows at the bottom"
 msgstr "meer rijen onderaan"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "none"
+msgstr "geen"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "number"
+msgstr "nummer"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11991,6 +12138,34 @@ msgstr "een jaar gelede"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "percentage"
+msgstr "percentage"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "percentile"
+msgstr "percentiel"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "plainText"
+msgstr "plainText"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "repeatable"
 msgstr "herhaalbaar"
@@ -12001,6 +12176,17 @@ msgstr "herhaalbaar"
 #, python-format
 msgid "return_range should have the same dimensions as lookup_range."
 msgstr "return_rangs moet dezelfde afmetingen hebben als lookup_range."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "right"
+msgstr "rechts"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12015,6 +12201,13 @@ msgstr "searchMode moet een waarde zijn in [-1, 1, -2, 2]."
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
 msgstr "start_date (%s) moet op of voor end_date (%s) liggen."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "text"
+msgstr "tekst"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12033,6 +12226,29 @@ msgstr "vandaag"
 #, python-format
 msgid "tomorrow"
 msgstr "morgen"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "top"
+msgstr "top"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "true"
+msgstr "waar"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "value"
+msgstr "waarde"
 
 #. module: spreadsheet
 #. odoo-javascript

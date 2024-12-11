@@ -120,6 +120,10 @@ class AccountMove(models.Model):
         if any(m.country_code == 'IN' and m.posted_before for m in self) and not self._context.get('force_delete'):
             raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted.\nInstead, you can cancel the journal entry."))
 
+    def _can_be_unlinked(self):
+        self.ensure_one()
+        return (self.country_code != 'IN' or not self.posted_before) and super()._can_be_unlinked()
+
     def unlink(self):
         # Add logger here becouse in api ondelete account.move.line is deleted and we can't get total amount
         logger_msg = False

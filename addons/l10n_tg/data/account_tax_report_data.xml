@@ -182,6 +182,11 @@
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_deductible_reported_tax_tag" model="account.report.expression">
                                 <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TG_VAT_REPORTED._applied_carryover_tax</field>
+                            </record>
+                            <record id="account_tax_report_line_tg_deductible_reported_tax_tag_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
                                 <field name="date_scope">previous_tax_period</field>
@@ -228,7 +233,7 @@
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -240,7 +245,7 @@
                                 <field name="label">tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -266,7 +271,7 @@
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TG_SALES.tax - TG_VAT_DEDUCT.tax</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="subformula">if_above(XOF(0))</field>
                             </record>
                         </field>
                     </record>
@@ -278,8 +283,14 @@
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">TG_VAT_DEDUCT.tax - TG_SALES.tax</field>
-                                <field name="subformula">if_above(EUR(0))</field>
-                                <field name="carryover_target">TG_VAT_REPORTED.tax</field>
+                                <field name="subformula">if_above(XOF(0))</field>
+                                <field name="carryover_target" eval="False"/>
+                            </record>
+                            <record id="account_tax_report_line_tg_to_report_tax_carryover" model="account.report.expression">
+                                <field name="label">_carryover_tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TG_REPORT.tax</field>
+                                <field name="carryover_target">TG_VAT_REPORTED._applied_carryover_tax</field>
                             </record>
                         </field>
                     </record>

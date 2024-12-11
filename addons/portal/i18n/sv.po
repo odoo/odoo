@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
@@ -373,19 +373,9 @@ msgid "Add extra content to display in the email"
 msgstr "Lägg till extra innehåll i e-posten"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr "Lägg till, ta bort eller ändra dina adresser"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
 msgstr "Tillagt den"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
-msgstr "Adresser"
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
@@ -833,6 +823,13 @@ msgstr ""
 "                och fullständig,"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr "Nyckelbeskrivning"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -938,11 +935,6 @@ msgstr "Nytt lösenord:"
 #, python-format
 msgid "Next"
 msgstr "Nästa"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr "Inga dokument att visa"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -1134,6 +1126,7 @@ msgstr "Säkerhet"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "Säkerhetskontroll"
@@ -1616,6 +1609,13 @@ msgstr "odoo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
 msgstr "lösenord"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
+msgstr "återkalla"
 
 #. module: portal
 #. odoo-javascript

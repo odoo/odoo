@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,6 +243,8 @@ msgstr "Крапка"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Download"
@@ -436,6 +439,18 @@ msgstr ""
 "                    простішим, особливо коли у файлі багато колонок."
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
+msgstr ""
+"Якщо модель використовує openchatter, відстеження історії налаштовує "
+"підписки та надсилає сповіщення під час імпорту, але призводить до "
+"повільнішого імпорту."
+
+#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -503,6 +518,7 @@ msgstr "Імпортування"
 
 #. module: base_import
 #. odoo-python
+#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
@@ -900,6 +916,17 @@ msgstr "Використовувати перший рядок як заголо
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "Користувач"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, python-format
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+"Попередження: ігнорує рядок мітки, порожні рядки та рядки, що складаються "
+"лише з порожніх клітинок"
 
 #. module: base_import
 #. odoo-javascript

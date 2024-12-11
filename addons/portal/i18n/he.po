@@ -6,7 +6,6 @@
 # Ofir Blum <ofir.blum@gmail.com>, 2023
 # ExcaliberX <excaliberx@gmail.com>, 2023
 # Amit Spilman <amit@laylinetech.com>, 2023
-# hed shefer <hed@laylinetech.com>, 2023
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
 # yoav sc <yoav19991@gmail.com>, 2023
@@ -17,14 +16,16 @@
 # Martin Trigaux, 2023
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# yael terner, 2024
+# hed shefer <hed@laylinetech.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
+"Last-Translator: hed shefer <hed@laylinetech.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary\"/> החשבון שלי"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -74,7 +75,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
 msgid "<i class=\"fa fa-pencil\"/> Edit information"
-msgstr ""
+msgstr "ערוך את הפרטים"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -101,7 +102,7 @@ msgstr "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">מדינה...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -132,17 +133,17 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">סינון לפי:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">קיבוץ לפי:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">מיון לפי:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -284,18 +285,8 @@ msgid "Add extra content to display in the email"
 msgstr "הוסף תוכן נוסף שיוצג בדוא\"ל"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Add, remove or modify your addresses"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Added On"
-msgstr ""
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "Addresses"
 msgstr ""
 
 #. module: portal
@@ -729,6 +720,13 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -798,7 +796,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "My account"
-msgstr ""
+msgstr "החשבון שלי"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -832,11 +830,6 @@ msgstr "סיסמא חדשה:"
 #, python-format
 msgid "Next"
 msgstr "הבא"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_home
-msgid "No Documents to display"
-msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -1025,6 +1018,7 @@ msgstr "אבטחה"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "בקרת אבטחה"
@@ -1490,6 +1484,13 @@ msgstr "odoo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
 msgstr "סיסמא"
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "revoke"
+msgstr ""
 
 #. module: portal
 #. odoo-javascript

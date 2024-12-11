@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,9 +39,8 @@ msgid ""
 "0002 - System Information et Repertoire des Entreprise et des "
 "Etablissements: SIRENE"
 msgstr ""
-"0002 - System Information et Repertoire des Entreprise et des "
-"Etablissements: SIRENE (Sistema de información y directorio de empresas y "
-"establecimientos)"
+"0002 - Sistema de información y directorio de empresas y establecimientos: "
+"SIRENE (por sus siglas en francés)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0007
@@ -452,7 +452,7 @@ msgstr "9951 - Número de identificación fiscal de San Marino"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
-msgid "9952 - Turkey VAT number"
+msgid "9952 - Türkiye VAT number"
 msgstr "9952 - Número de identificación fiscal de Turquía"
 
 #. module: account_edi_ubl_cii
@@ -578,6 +578,11 @@ msgid "Companies"
 msgstr "Empresas"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__show_ubl_company_warning
+msgid "Company warning"
+msgstr "Advertencia de la empresa"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
@@ -673,7 +678,7 @@ msgstr "Habilitar Ubl Cii Xml"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr "Ocurrieron algunos errores al crear el documento EDI (formato: %s):"
@@ -771,6 +776,11 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__ubl_partner_warning
+msgid "Partner warning"
+msgstr "Advertencia del contacto"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
@@ -792,8 +802,10 @@ msgstr "El código EAS 9955 es obsoleto, use 0007."
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid ""
-"Peppol EAS codes 0212 and 0213 are deprecated. Please use 0216 instead."
-msgstr "Los códigos EAS 0212 y 0213 son obsoletos, use 0216."
+"Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
+"instead."
+msgstr ""
+"Los códigos EAS Peppol 0037, 0212, 0213 y 0215 son obsoletos, use 0216."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -813,6 +825,15 @@ msgid "Peppol format"
 msgstr "Formato Peppol"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_move_send_form
+msgid ""
+"Please fill in Peppol EAS and Peppol Endpoint in your company form to "
+"generate a complete file."
+msgstr ""
+"Llene los datos de Peppol EAS y Peppol Endpoint en el formulario de su "
+"empresa para generar un archivo completo."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
 msgstr "Facturación SG BIS 3.0"
@@ -828,6 +849,17 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #, python-format
 msgid "Tax '%s' is invalid: %s"
 msgstr "El impuesto \"%s\" no es válido: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/res_partner.py:0
+#, python-format
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
+"El punto de conexión de Peppol no es válido, debe contener 10 dígitos (el "
+"número de registro de la empresa). El formato esperado es: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -909,7 +941,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
 "The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
@@ -919,17 +951,6 @@ msgstr ""
 "Los siguientes contactos no tienen información en el campo Peppol EAS o "
 "Punto de conexión de Peppol: %s. Verifique los datos en la pestaña "
 "Contabilidad o los archivos generados estarán incompletos."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid ""
-"The invoice contains line(s) with a negative unit price, which is not "
-"allowed. You might need to set a negative quantity instead."
-msgstr ""
-"La factura contiene una o varias líneas con precio unitario negativo, lo "
-"cual no está permitido. Le recomendamos que configure una cantidad negativa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -945,7 +966,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid ""
 "This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
@@ -954,14 +975,6 @@ msgstr ""
 "Este contacto no tiene información en el campo Peppol EAS o Punto de "
 "conexión de Peppol. Verifique los datos en la pestaña Contabilidad o el "
 "archivo generado estará incompleto."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr "El proveedor %s debe tener un registro en la empresa Bronnoysund."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -992,7 +1005,7 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
-"El identificador único que utiliza la facturación BIS 3.0 y sus derivadas, "
+"El identificador único que utiliza la facturación BIS 3.0 y sus derivados, "
 "también conocido como \"ID del punto extremo\"."
 
 #. module: account_edi_ubl_cii
@@ -1028,11 +1041,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "false"
-msgstr "falso"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

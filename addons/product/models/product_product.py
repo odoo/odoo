@@ -465,7 +465,7 @@ class ProductProduct(models.Model):
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
-    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'use_partner_name')
     def _compute_display_name(self):
 
         def get_display_name(name, code):
@@ -473,7 +473,7 @@ class ProductProduct(models.Model):
                 return f'[{code}] {name}'
             return name
 
-        partner_id = self._context.get('partner_id')
+        partner_id = self._context.get('partner_id') if self.env.context.get('use_partner_name', True) else self.env['res.partner']
         if partner_id:
             partner_ids = [partner_id, self.env['res.partner'].browse(partner_id).commercial_partner_id.id]
         else:
@@ -596,7 +596,7 @@ class ProductProduct(models.Model):
         return {
             'name': _('Price Rules'),
             'view_mode': 'tree,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree'), (False, 'form')],
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree')],
             'res_model': 'product.pricelist.item',
             'type': 'ir.actions.act_window',
             'target': 'current',
@@ -631,7 +631,8 @@ class ProductProduct(models.Model):
     #=== BUSINESS METHODS ===#
 
     def _prepare_sellers(self, params=False):
-        return self.seller_ids.filtered(lambda s: s.partner_id.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
+        sellers = self.seller_ids.filtered(lambda s: s.partner_id.active and (not s.product_id or s.product_id == self))
+        return sellers.sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
     def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
@@ -798,6 +799,7 @@ class ProductProduct(models.Model):
             pricelist.currency_id,
             self.env.company,
             fields.Datetime.now(),
+            round=False
         )
         if lst_price:
             return (lst_price - self._get_contextual_price()) / lst_price

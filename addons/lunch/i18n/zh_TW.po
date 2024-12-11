@@ -3,16 +3,16 @@
 # 	* lunch
 # 
 # Translators:
-# Wil Odoo, 2023
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,17 +33,17 @@ msgstr "2 天婦羅、捲心菜、洋蔥、芝麻醬"
 #. module: lunch
 #: model:lunch.product,name:lunch.product_4formaggi
 msgid "4 Formaggi"
-msgstr "4 福馬吉"
+msgstr "四重芝士"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_salmon
 msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
-msgstr "4 鮭魚壽司 - 6 Maki 鮭魚 - 4 鮭魚生魚片"
+msgstr "4 件三文魚壽司、6 件三文魚壽司卷、4 件三文魚刺身"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_maki
 msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
-msgstr "6 Maki 鮭魚 - 6 Maki 金槍魚 - 6 Maki 蝦/鱷梨"
+msgstr "6 件三文魚壽司卷、6 件吞拿魚壽司卷、6 件牛油果蝦壽司卷"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -491,7 +491,7 @@ msgstr "該產品是否有額外的功能"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
@@ -580,6 +580,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: lunch
+#. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "Cannot send an email to this supplier!"
@@ -867,7 +868,7 @@ msgstr "上個月訂購的員工"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_week
 msgid "Employee who ordered last week"
-msgstr "上周訂購的員工"
+msgstr "上週訂餐的員工"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_year
@@ -1224,7 +1225,7 @@ msgstr "午餐地點"
 #. module: lunch
 #: model:lunch.product,name:lunch.product_maki
 msgid "Lunch Maki 18pc"
-msgstr "午餐 Maki 18pc"
+msgstr "午餐壽司卷 18 件"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
@@ -1269,7 +1270,7 @@ msgstr "午餐供應商"
 #. module: lunch
 #: model:lunch.product,name:lunch.product_temaki
 msgid "Lunch Temaki mix 3pc"
-msgstr "午餐 Temaki mix 3pc"
+msgstr "午餐手卷組合 3 件"
 
 #. module: lunch
 #. odoo-python
@@ -1304,32 +1305,32 @@ msgid "Lunch: Supplier Order"
 msgstr "午餐：供應商訂單"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_218
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_217
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "午餐：提醒聊天通知（提醒辦公室 3）。"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_219
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_218
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "午餐：發送自動電子郵件給coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_214
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_213
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "午餐：發送自動電子郵件給午餐供應商"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_220
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_219
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "午餐：發送自動電子郵件給Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_222
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "午餐：發送自動電子郵件給壽司店"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_221
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_220
 msgid "Lunch: send automatic email to The Corner"
 msgstr "午餐：發送自動電子郵件給The Corner"
 
@@ -1916,7 +1917,7 @@ msgstr "顯示訂單按鈕"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
 msgid "Show Until"
-msgstr "顯示直到"
+msgstr "顯示直至"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_spicy_tuna
@@ -1996,7 +1997,7 @@ msgstr "壽司"
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_temaki
 msgid "Temaki"
-msgstr "手捲"
+msgstr "手卷"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_country
@@ -2235,7 +2236,7 @@ msgstr "記錄的異常活動的類型。"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_end_date
 msgid "Until"
-msgstr "直到"
+msgstr "直至"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_users

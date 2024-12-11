@@ -10,3 +10,4 @@ from . import test_product_attribute_value_config
 from . import test_product_pricelist
 from . import test_seller
 from . import test_variants
+from . import test_product_rounding

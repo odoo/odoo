@@ -3,19 +3,21 @@
 # 	* account_audit_trail
 # 
 # Translators:
-# aleksandar ivanov, 2023
-# Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Albena Mincheva <albena_vicheva@abv.bg>, 2023
-# KeyVillage, 2023
+# aleksandar ivanov, 2024
+# Maria Boyadjieva <marabo2000@gmail.com>, 2024
+# KeyVillage, 2024
+# Venelin Stoykov, 2024
+# Milena Georgieva, 2024
+# Petko Karamotchev, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-15 06:37+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-12-23 23:00+0000\n"
-"Last-Translator: KeyVillage, 2023\n"
+"Last-Translator: Petko Karamotchev, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,9 +26,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_account_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_account_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Account"
+msgstr "Сметка"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_display_name
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_display_name
+msgid "Account Audit Log Display Name"
+msgstr ""
+
+#. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Activate Audit Trail"
-msgstr ""
+msgstr "Активиране на одитна пътека"
 
 #. module: account_audit_trail
 #: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
@@ -35,7 +50,12 @@ msgstr ""
 #: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
 msgid "Audit Trail"
-msgstr ""
+msgstr "Одитна следа"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Ред на Банково Извлечение"
 
 #. module: account_audit_trail
 #. odoo-python
@@ -43,6 +63,7 @@ msgstr ""
 #, python-format
 msgid "Can't disable audit trail when there are existing records."
 msgstr ""
+"Не може да се деактивира одитният запис, когато съществуват налични записи."
 
 #. module: account_audit_trail
 #. odoo-python
@@ -57,9 +78,25 @@ msgid "Companies"
 msgstr "Фирми"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Company"
+msgstr "Фирма"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_company_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_company_id
+msgid "Company "
+msgstr "Фирма"
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_res_config_settings
 msgid "Config Settings"
 msgstr "Настройки"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Create Only"
+msgstr "Само създаване"
 
 #. module: account_audit_trail
 #: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
@@ -91,6 +128,16 @@ msgid "Journal Entry"
 msgstr "Записи в Дневника"
 
 #. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_tracking_value
+msgid "Mail Tracking Value"
+msgstr "Стойност проследяване на поща"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr ""
+
+#. module: account_audit_trail
 #: model:ir.model,name:account_audit_trail.model_mail_message
 msgid "Message"
 msgstr "Съобщение"
@@ -101,18 +148,50 @@ msgid "Messages Search"
 msgstr "Търсене на съобщения"
 
 #. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log
+msgid "Name"
+msgstr "Име"
+
+#. module: account_audit_trail
 #. odoo-python
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Операцията не се поддържа"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_partner_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_partner_id
+msgid "Partner"
+msgstr "Партньор"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Partners"
+msgstr "Контрагенти"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Record"
+msgstr "Запис"
 
 #. module: account_audit_trail
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
 #: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
 msgid "Show Audit Log"
 msgstr ""
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_tax_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_tax_id
+msgid "Tax"
+msgstr "Данък"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Taxes"
+msgstr "Данъци"
 
 #. module: account_audit_trail
 #. odoo-python
@@ -139,9 +218,12 @@ msgstr ""
 #: code:addons/account_audit_trail/models/mail_message.py:0
 #, python-format
 msgid "Updated"
-msgstr ""
+msgstr "Актуализирано"
 
 #. module: account_audit_trail
-#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
-msgid "date"
-msgstr "дата"
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid ""
+"You cannot remove parts of the audit trail. Archive the record instead."
+msgstr ""

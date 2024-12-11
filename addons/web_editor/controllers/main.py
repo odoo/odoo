@@ -89,6 +89,12 @@ class Web_Editor(http.Controller):
         if icon.isdigit():
             if int(icon) == 57467:
                 font = "/web/static/fonts/tiktok_only.woff"
+            elif int(icon) == 61593:  # F099
+                icon = "59392"  # E800
+                font = "/web/static/fonts/twitter_x_only.woff"
+            elif int(icon) == 61569:  # F081
+                icon = "59395"  # E803
+                font = "/web/static/fonts/twitter_x_only.woff"
 
         size = max(width, height, 1) if width else size
         width = width or size
@@ -234,11 +240,12 @@ class Web_Editor(http.Controller):
     def video_url_data(self, video_url, autoplay=False, loop=False,
                        hide_controls=False, hide_fullscreen=False, hide_yt_logo=False,
                        hide_dm_logo=False, hide_dm_share=False):
+        # TODO: In Master, remove the parameter "hide_yt_logo" (the parameter is
+        # no longer supported in the YouTube API.)
         return get_video_url_data(
             video_url, autoplay=autoplay, loop=loop,
             hide_controls=hide_controls, hide_fullscreen=hide_fullscreen,
-            hide_yt_logo=hide_yt_logo, hide_dm_logo=hide_dm_logo,
-            hide_dm_share=hide_dm_share
+            hide_dm_logo=hide_dm_logo, hide_dm_share=hide_dm_share
         )
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
@@ -311,6 +318,7 @@ class Web_Editor(http.Controller):
         """This route is used to determine the original of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
         """
+        self._clean_context()
         attachment = None
         if src.startswith('/web/image'):
             with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
@@ -550,6 +558,8 @@ class Web_Editor(http.Controller):
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
         """
+        self._clean_context()
+        attachment = request.env['ir.attachment'].browse(attachment.id)
         fields = {
             'original_id': attachment.id,
             'datas': data,
@@ -609,6 +619,17 @@ class Web_Editor(http.Controller):
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
     def _get_shape_svg(self, module, *segments):
+        Module = request.env['ir.module.module'].sudo()
+        # Avoid creating a bridge module just for this check.
+        if 'imported' in Module._fields and Module.search([('name', '=', module)]).imported:
+            attachment = request.env['ir.attachment'].sudo().search([
+                ('url', '=', f"/{module.replace('.', '_')}/static/{'/'.join(segments)}"),
+                ('public', '=', True),
+                ('type', '=', 'binary'),
+            ], limit=1)
+            if attachment:
+                return b64decode(attachment.datas)
+            raise werkzeug.exceptions.NotFound()
         shape_path = opj(module, 'static', *segments)
         try:
             with file_open(shape_path, 'r', filter_ext=('.svg',)) as file:
@@ -711,6 +732,15 @@ class Web_Editor(http.Controller):
         img = binary_to_image(image)
         width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)
+
+        if root.attrib.get("data-forced-size"):
+            # Adjusts the SVG height to ensure the image fits properly within
+            # the SVG (e.g. for "devices" shapes).
+            svgHeight = float(root.attrib.get("height"))
+            svgWidth = float(root.attrib.get("width"))
+            svgAspectRatio = svgWidth / svgHeight
+            height = str(float(width) / svgAspectRatio)
+
         root.attrib.update({'width': width, 'height': height})
         # Update default color palette on shape SVG.
         svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))

@@ -1,34 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_hr
-#
+# 
 # Translators:
-# Milan Tribuson <one.mile.code@gmail.com>, 2022
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
-# Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
-# Tina Milas, 2022
-# Martin Trigaux, 2022
-# Bole <bole@dajmi5.com>, 2023
-#
+# Vladimir Vrgoč, 2024
+# Carlo Štefanac, 2024
+# Milan Tribuson <one.mile.code@gmail.com>, 2024
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
+# hrvoje sić <hrvoje.sic@gmail.com>, 2024
+# Tina Milas, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "Allowed Employees"
-msgstr "Dozvoljeni djelatnici"
+msgid "Advanced rights"
+msgstr ""
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "All employees"
+msgstr "Svi zaposlenici"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Basic rights"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -39,7 +52,7 @@ msgstr "Blagajnik"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 #, python-format
 msgid "Change Cashier"
 msgstr "Promijeni blagajnika"
@@ -47,7 +60,7 @@ msgstr "Promijeni blagajnika"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
 msgid "Config Settings"
-msgstr "Postavke"
+msgstr "Konfiguracija postavki"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -65,49 +78,82 @@ msgid "Employee: %s - PoS Config(s): %s \n"
 msgstr "Djelatnik: %s - PoS Config(a): %s \n"
 
 #. module: pos_hr
-#: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
-#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
-msgid "Employees with access"
-msgstr "Djelatnici sa pristupom"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "Employees with basic access"
+msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
-msgid "If left empty, all employees can log in to the PoS session"
-msgstr "Ako je ostavljeno prazno, svi djelatnici se mogu prijaviti u PoS sesiju"
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid "Employees with manager access"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "If left empty, all employees can log in to PoS"
+msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid "If left empty, only Odoo users have extended rights in PoS"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr "Netočna lozinka"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/HeaderLockButton.xml:0
+#: code:addons/pos_hr/static/src/overrides/components/navbar/navbar.xml:0
 #, python-format
 msgid "Lock"
 msgstr "Zaključaj"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 #, python-format
 msgid "Log in to"
 msgstr "Prijava u"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#, python-format
+msgid "No Cashiers"
+msgstr ""
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "No employee"
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 #, python-format
 msgid "Password?"
 msgstr ""
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
-msgid "Person who uses the cash register. It can be a reliever, a student or an interim employee."
+msgid ""
+"Person who uses the cash register. It can be a reliever, a student or an "
+"interim employee."
 msgstr "Osoba koja koristi blagajnu. To može biti student ili djelatnik."
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#, python-format
+msgid "Please try again."
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
@@ -131,28 +177,39 @@ msgstr "Smjena POS-a"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 #, python-format
 msgid "Scan your badge"
 msgstr "Skenirajte svoju značku"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 #, python-format
 msgid "Select Cashier"
 msgstr "Odaberi blagajnika"
 
 #. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
+#, python-format
+msgid "There are no employees to select as cashier. Please create one."
+msgstr ""
+
+#. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
-msgid "You cannot delete an employee that may be used in an active PoS session, close the session(s) first: \n"
-msgstr "Nije moguće brisati djelatnika koji koristi otvorenu PoS sessiju, prvo zatvorite sesiju(e):\n"
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr ""
+"Nije moguće brisati djelatnika koji koristi otvorenu PoS sessiju, prvo "
+"zatvorite sesiju(e):\n"
 
 #. module: pos_hr
 #. odoo-javascript
-#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#: code:addons/pos_hr/static/src/app/login_screen/login_screen.xml:0
 #, python-format
 msgid "or"
 msgstr "ili"

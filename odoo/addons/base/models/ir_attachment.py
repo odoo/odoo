@@ -83,6 +83,11 @@ class IrAttachment(models.Model):
     def _migrate(self):
         record_count = len(self)
         storage = self._storage().upper()
+        # When migrating to filestore verifying if the directory has write permission
+        if storage == 'FILE':
+            filestore = self._filestore()
+            if not os.access(filestore, os.W_OK):
+                raise PermissionError("Write permission denied for filestore directory.")
         for index, attach in enumerate(self):
             _logger.debug("Migrate attachment %s/%s to %s", index + 1, record_count, storage)
             # pass mimetype, to avoid recomputation
@@ -524,7 +529,7 @@ class IrAttachment(models.Model):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
         disable_binary_fields_attachments = False
-        if not any(arg[0] in ('id', 'res_field') for arg in domain):
+        if not self.env.context.get('skip_res_field_check') and not any(arg[0] in ('id', 'res_field') for arg in domain):
             disable_binary_fields_attachments = True
             domain = [('res_field', '=', False)] + domain
 
@@ -661,7 +666,8 @@ class IrAttachment(models.Model):
             Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
         return super().create(vals_list)
 
-    def _post_add_create(self):
+    def _post_add_create(self, **kwargs):
+        # TODO master: rename to _post_upload, better indicating its usage
         pass
 
     def generate_access_token(self):

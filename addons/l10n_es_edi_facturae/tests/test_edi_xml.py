@@ -57,6 +57,17 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'zip': "5000",
         })
 
+        cls.partner_us = cls.env['res.partner'].create({
+            'name': 'Indigo Exterior',
+            'city': 'Fremont',
+            'zip': '94538',
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env['res.country.state'].search([('name', '=', 'California')]).id,
+            'email': 'indigo-exterior@example.com',
+            'company_type': 'company',
+            'is_company': True,
+        })
+
         cls.password = "test"
 
         cls.certificate_module = "odoo.addons.l10n_es_edi_facturae.models.l10n_es_edi_facturae_certificate"
@@ -239,6 +250,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             })
             reversal_wizard.modify_moves()
             refund = invoice.reversal_move_id
+            refund.ref = 'ABCD-2023-001'
             generated_file, errors = refund._l10n_es_edi_facturae_render_facturae()
             self.assertFalse(errors)
             self.assertTrue(generated_file)
@@ -273,15 +285,11 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         moves += self.env['account.move'].search([('ref', '=', 'INV/2023/00006'), ('company_id', '=', self.company_data['company'].id)], limit=1)
 
-        partner = self.env['res.partner'].search([
-            ('name', '=', 'Azure Interior'),
-            ('email', '=', 'azure.Interior24@example.com'),
-        ])
         currency = self.env['res.currency'].search([('name', '=', 'EUR')])
 
         self.assertRecordValues(moves, [
             {
-                'partner_id': partner.id,
+                'partner_id': self.partner_us.id,
                 'amount_total': 2186.20,
                 'amount_untaxed': 2119.0,
                 'amount_tax': 67.2,
@@ -293,7 +301,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 'narration': '<p>Terms and conditions.</p>',
             },
             {
-                'partner_id': partner.id,
+                'partner_id': self.partner_us.id,
                 'amount_total': 1161.60,
                 'amount_untaxed': 960.0,
                 'amount_tax': 201.60,

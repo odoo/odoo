@@ -8,6 +8,8 @@ import PaymentForm from '@payment/js/payment_form';
 PaymentForm.include({
     events: Object.assign({}, PaymentForm.prototype.events || {}, {
         'change input[name="o_donation_amount"]': '_updateAmount',
+        'focus input[name="amount"]': '_updateAmount',
+        'focus input[name="o_donation_amount"]': '_updateAmount',
     }),
 
     // #=== WIDGET LIFECYCLE ===#
@@ -30,8 +32,19 @@ PaymentForm.include({
      * @return {void}
      */
     _updateAmount(ev) {
-        if (ev.target.value > 0) {
+        if (ev.target.value >= 0) {
             this.paymentContext.amount = ev.target.value;
+            const otherAmountEl = this.el.querySelector("#other_amount");
+            if (ev.target.name === "o_donation_amount" && ev.target.type === "number" && otherAmountEl) {
+                otherAmountEl.value = ev.target.value;
+            }
+            if (ev.target.id === "other_amount" || (ev.target.name === "o_donation_amount" && ev.target.type === "number")) {
+                this.el.querySelectorAll('input[name="o_donation_amount"][type="radio"]').forEach((radioEl) => {
+                    radioEl.checked = false;
+                });
+            } else if (ev.target.name === "o_donation_amount" && otherAmountEl) {
+                otherAmountEl.checked = false;
+            }
         }
     },
 

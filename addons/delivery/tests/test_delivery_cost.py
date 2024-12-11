@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
 from odoo import Command
 from odoo.tests import common, Form
 from odoo.tools import float_compare
@@ -525,3 +527,75 @@ class TestDeliveryCost(common.TransactionCase):
         })
         updated_del_form = sale_order.action_open_delivery_wizard()
         self.assertEqual(updated_del_form['context']['default_total_weight'], 100)
+
+    def test_base_on_rule_currency_is_converted(self):
+        """
+        For based on rules delivery method without a company, check that the price
+        is converted from the main's company's currency to the current company's on SOs
+        """
+
+        # Create a company that uses a different currency
+        currency_bells = self.env['res.currency'].create({
+            'name': 'Bell',
+            'symbol': 'C',
+        })
+
+        nook_inc = self.env['res.company'].create({
+            'name': 'Nook inc.',
+            'currency_id': currency_bells.id,
+        })
+
+        with freeze_time('2000-01-01'):  # Make sure the rate is in the past
+            self.env['res.currency.rate'].with_company(nook_inc).create({
+                'currency_id': currency_bells.id,
+                'company_rate': 0.5,
+                'inverse_company_rate': 2,
+            })
+
+        # Company less shipping method
+        product_delivery_rule = self.env['product.product'].with_company(nook_inc).create({
+            'name': 'rule delivery charges',
+            'type': 'service',
+            'list_price': 10.0,
+            'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+        })
+
+        delivery = self.env['delivery.carrier'].with_company(nook_inc).create({
+            'name': 'Rule Delivery',
+            'delivery_type': 'base_on_rule',
+            'product_id': product_delivery_rule.id,
+            'price_rule_ids': [(0, 0, {
+                'variable': 'price',
+                'operator': '>=',
+                'max_value': 0,
+                'variable_factor': 'weight',
+                'list_base_price': 15,
+            })],
+            'fixed_margin': 10,
+        })
+
+        # Create sale using the shipping method
+        so = self.SaleOrder.with_company(nook_inc).create({
+            'partner_id': self.partner_18.id,
+            'partner_invoice_id': self.partner_18.id,
+            'partner_shipping_id': self.partner_18.id,
+            'order_line': [(0, 0, {
+                'name': 'PC Assamble + 2GB RAM',
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_company(nook_inc).with_context({
+            'default_order_id': so.id,
+            'default_carrier_id': delivery.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        # check delivery price was properly converted
+        delivery_sol = so.order_line[-1]
+        self.assertEqual(delivery_sol.product_id, delivery.product_id)
+        self.assertEqual(delivery_sol.price_subtotal, 12.5)

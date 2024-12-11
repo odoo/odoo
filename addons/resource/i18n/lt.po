@@ -5,12 +5,12 @@
 # Translators:
 # Arunas V. <arunas@devoro.com>, 2023
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2023
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2023
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2023
 # Donatas <donatasvaliulis16@gmail.com>, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgstr "%s (kopija)"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Poilsio laikas</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -99,7 +99,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
 msgid "Break"
-msgstr "Stabdžiai"
+msgstr "Pertrauka"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -210,7 +210,7 @@ msgstr "Pabaigos data"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
 msgid "Explanation"
-msgstr ""
+msgstr "Paaiškinimas"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
@@ -222,7 +222,7 @@ msgstr "Pirmas"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "First week"
-msgstr ""
+msgstr "Pirma savaitė"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -234,14 +234,14 @@ msgstr "Penktadienis"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Afternoon"
-msgstr ""
+msgstr "Penktadienio popietė"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Lunch"
-msgstr ""
+msgstr "Penktadienio pietų pertrauka"
 
 #. module: resource
 #. odoo-python
@@ -348,14 +348,14 @@ msgstr "Pirmadienis"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Afternoon"
-msgstr ""
+msgstr "Pirmadienio popietė"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Lunch"
-msgstr ""
+msgstr "Pirmadienio pietų pertrauka"
 
 #. module: resource
 #. odoo-python
@@ -449,7 +449,7 @@ msgstr "Ištekliai"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr ""
+msgstr "Išteklių poilsio laikas"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -493,7 +493,7 @@ msgstr "Sekundė"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "Second week"
-msgstr ""
+msgstr "Antra savaitė"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -534,7 +534,7 @@ msgstr "Pradžios data"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Time Off"
-msgstr ""
+msgstr "Poilsio laiko pradžios data"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -568,7 +568,7 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "Poilsio laiko pradžios data turi būti ankstesnė nei pabaigos data."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -598,14 +598,14 @@ msgstr "Ketvirtadienis"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Afternoon"
-msgstr ""
+msgstr "Ketvirtadienio popietė"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Lunch"
-msgstr ""
+msgstr "Ketvirtadienio pietų pertrauka"
 
 #. module: resource
 #. odoo-python
@@ -624,7 +624,7 @@ msgstr "Neatvykimai"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr ""
+msgstr "Neatvykimo detalės"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -658,14 +658,14 @@ msgstr "Antradienis"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Afternoon"
-msgstr ""
+msgstr "Antradienio popietė"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Lunch"
-msgstr ""
+msgstr "Antradienio pietų pertrauka"
 
 #. module: resource
 #. odoo-python
@@ -697,14 +697,14 @@ msgstr "Trečiadienis"
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Afternoon"
-msgstr ""
+msgstr "Trečiadienio popietė"
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Lunch"
-msgstr ""
+msgstr "Trečiadienio pietų pertrauka"
 
 #. module: resource
 #. odoo-python
@@ -759,7 +759,7 @@ msgstr "%s darbo valandos"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: model:ir.ui.menu,name:resource.menu_resource_calendar
 msgid "Working Schedules"
-msgstr ""
+msgstr "Darbo grafikai"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
@@ -792,7 +792,7 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "other week"
-msgstr ""
+msgstr "kita savaitė"
 
 #. module: resource
 #. odoo-python
@@ -806,4 +806,4 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "this week"
-msgstr ""
+msgstr "ši savaitė"

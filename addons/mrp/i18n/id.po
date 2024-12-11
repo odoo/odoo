@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Bayu Indra Kusuma, 2023
-# Abe Manyo, 2024
 # Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -663,6 +663,16 @@ msgid "All"
 msgstr "Semua"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_ids
+msgid "All Move"
+msgstr "Semua Pergerakkan"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
+msgid "All Move Raw"
+msgstr "Semua Pergerakkan Raw"
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/controller/main.py:0
 #, python-format
@@ -1290,6 +1300,17 @@ msgstr "Batal"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "Dibatalkan"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"Tidak dapat menghitung hari untuk persiapan oleh karena info rute yang "
+"kurang untuk setidaknya 1 komponen atau untuk produk final."
 
 #. module: mrp
 #. odoo-python
@@ -2844,6 +2865,7 @@ msgstr "Sudah dibuka blokirnya."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -4650,6 +4672,11 @@ msgid "Quantity that can be produced with the current stock of components"
 msgstr "Kuantitas yang dapat diproduksi dengan stok komponen saat ini"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "Kuant"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "RAM"
 msgstr "RAM"
@@ -4857,6 +4884,13 @@ msgid "Resupply lead time."
 msgstr "Lead time resupply."
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Kembali ke Inventaris"
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4868,12 +4902,6 @@ msgstr "Rute"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Routing"
 msgstr "Routing"
-
-#. module: mrp
-#: code:addons/mrp/models/stock_quant.py:0
-#, python-format
-msgid "Return to Inventory"
-msgstr "Kembali ke Inventaris"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
@@ -6932,6 +6960,14 @@ msgstr "Anda tidak dapat memproduksi yang nomor serinya sama dua kali."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr ""
+"Anda tidak dapat memulai pesanan kerja yang sudah selesai atau dibatalkan"
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
@@ -7193,3 +7229,31 @@ msgstr "pisah"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "SPK"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#, python-format
+msgid "{{ foldButtonTitle }}"
+msgstr "{{ foldButtonTitle }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#, python-format
+msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#, python-format
+msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ state.isFolded ? 'Unfold' : 'Fold' }}"

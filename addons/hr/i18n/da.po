@@ -8,16 +8,16 @@
 # Mads Søndergaard, 2023
 # Martin Trigaux, 2023
 # lhmflexerp <lhm@flexerp.dk>, 2024
-# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Sammi Iversen <sammi@vkdata.dk>, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sammi Iversen <sammi@vkdata.dk>, 2024\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -978,6 +978,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
@@ -990,6 +992,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+#, python-format
 msgid "Department"
 msgstr "Afdeling"
 
@@ -2815,6 +2818,13 @@ msgid "Software Developer"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Some employee already have a work contact"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3403,7 +3413,7 @@ msgstr "Arbejdstimer"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_resource_calendar_view
 msgid "Working Schedules"
-msgstr ""
+msgstr "Arbejdsplan"
 
 #. module: hr
 #. odoo-python

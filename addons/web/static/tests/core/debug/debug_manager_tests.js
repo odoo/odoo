@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { DebugMenu } from "@web/core/debug/debug_menu";
-import { regenerateAssets } from "@web/core/debug/debug_menu_items";
+import { regenerateAssets, becomeSuperuser } from "@web/core/debug/debug_menu_items";
 import { registry } from "@web/core/registry";
 import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ormService } from "@web/core/orm_service";
@@ -290,6 +290,23 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.strictEqual(item.textContent, "Regenerate Assets Bundles");
         await click(item);
         assert.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
+    });
+
+    QUnit.test("cannot acess the Become superuser menu if not admin", async (assert) => {
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        debugRegistry.category("default").add("becomeSuperuser", becomeSuperuser);
+
+        testConfig = { mockRPC };
+        const env = await makeTestEnv(testConfig);
+        env.services.user.isAdmin = false;
+        await mount(DebugMenuParent, target, { env });
+
+        await click(target.querySelector("button.dropdown-toggle"));
+        assert.containsNone(target, ".dropdown-menu .dropdown-item");
     });
 
     QUnit.test("can open a view", async (assert) => {

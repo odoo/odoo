@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -1180,6 +1180,13 @@ msgid "Generate eWallet"
 msgstr "Створити електронний гаманець"
 
 #. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Створити {{props.context.program_item_name}}"
+
+#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -1759,6 +1766,7 @@ msgstr "Тип винагороди"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Нагороди"
 
@@ -1890,6 +1898,13 @@ msgid "The required points for a reward must be strictly positive."
 msgstr "Необхідні бали для винагороди мають бути виключно позитивними."
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "Поле опису винагороди не може бути порожнім."
+
+#. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
 msgid "The reward product quantity must be strictly positive."
 msgstr "Кількість товару винагороди має бути суто більше нуля."
@@ -1965,7 +1980,7 @@ msgstr "Використовуйте код"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Use points on"
-msgstr "Викоистати бали на"
+msgstr "Використати бали на"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2091,7 +2106,7 @@ msgstr "напр. 10% знижки на ноутбук"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__ewallet
 #, python-format
 msgid "eWallet"
-msgstr "Електронний гаманецт"
+msgstr "Електронний гаманець"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2210,3 +2225,10 @@ msgstr "використання"
 #, python-format
 msgid "your order"
 msgstr "ваше замовлення"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

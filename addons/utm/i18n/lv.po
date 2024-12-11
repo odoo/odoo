@@ -4,20 +4,20 @@
 # 
 # Translators:
 # Anzelika Adejanova, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Will Sensors, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -553,7 +553,7 @@ msgstr ""
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Iezīmes nosaukums jau pastāv!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
@@ -698,6 +698,15 @@ msgstr ""
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Campaigns"
+msgstr ""
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
 msgstr ""
 
 #. module: utm

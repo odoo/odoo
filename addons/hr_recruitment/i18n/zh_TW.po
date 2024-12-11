@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -912,7 +912,7 @@ msgstr "已分派"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
@@ -1390,6 +1390,11 @@ msgstr "這個職位的電子信件別名。新信件會自動為此職位建立
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Email cc"
 msgstr "電郵副本抄送"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "電子郵件網域，例如 odoo@example.com 之內的「example.com」"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2254,7 +2259,9 @@ msgstr "有發送錯誤的郵件數量"
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
-msgstr "Odoo幫助您在招募過程追蹤申請人及跟進所有操作：會議、面試等。"
+msgstr ""
+"Odoo 協助你在招聘過程中追蹤申請人，\n"
+"                以及跟進所有操作：會議、面試等。"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -2398,7 +2405,7 @@ msgstr "在網站上發佈空缺職位"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
 msgid "Ratings"
-msgstr "點評"
+msgstr "評分"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2731,7 +2738,7 @@ msgstr "向申請人發送郵件"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr "向連絡人發送連結"
+msgstr "向你的聯絡人發送文字訊息"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3162,9 +3169,10 @@ msgstr ""
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
-msgstr "您必須為此申請人定義連絡人姓名。"
+msgstr "你必須為此申請人定義一個聯絡人姓名。"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations

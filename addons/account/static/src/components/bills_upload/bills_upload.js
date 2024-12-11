@@ -42,10 +42,18 @@ export class AccountFileUploader extends Component {
     }
 
     async onUploadComplete() {
-        const action = await this.orm.call("account.journal", "create_document_from_attachment", ["", this.attachmentIdsToProcess], {
-            context: { ...this.extraContext, ...this.env.searchModel.context },
-        });
-        this.attachmentIdsToProcess = [];
+        let action;
+        try {
+            action = await this.orm.call(
+                "account.journal",
+                "create_document_from_attachment",
+                ["", this.attachmentIdsToProcess],
+                { context: { ...this.extraContext, ...this.env.searchModel.context } },
+            );
+        } finally {
+            // ensures attachments are cleared on success as well as on error
+            this.attachmentIdsToProcess = [];
+        }
         if (action.context && action.context.notifications) {
             for (let [file, msg] of Object.entries(action.context.notifications)) {
                 this.notification.add(
@@ -139,6 +147,7 @@ export class AccountMoveListController extends ListController {
     setup() {
         super.setup();
         this.account_move_service = useService("account_move");
+        this.showUploadButton = this.props.context.default_move_type !== 'entry' || 'active_id' in this.props.context;
     }
 
     async onDeleteSelectedRecords() {
@@ -174,7 +183,12 @@ AccountMoveUploadKanbanRenderer.components = {
     AccountDropZone,
 };
 
-export class AccountMoveUploadKanbanController extends KanbanController {}
+export class AccountMoveUploadKanbanController extends KanbanController {
+    setup() {
+        super.setup();
+        this.showUploadButton = this.props.context.default_move_type !== 'entry' || 'active_id' in this.props.context;
+    }
+}
 AccountMoveUploadKanbanController.components = {
     ...KanbanController.components,
     AccountFileUploader,

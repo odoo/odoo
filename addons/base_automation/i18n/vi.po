@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,8 +74,8 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
 msgstr ""
-"<code>model</code>: mô hình của tập dữ liệu mà hành động được kích hoạt; là "
-"một tập tập dữ liệu không còn hiệu lực"
+"<code>model</code>: mô hình của bản ghi mà hành động được kích hoạt; là một "
+"tập bản ghi không còn hiệu lực"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -106,8 +106,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
-"<i class=\"fa fa-info-circle\"/> Trình lấy tập dữ liệu mục tiêu mặc định sẽ "
-"hoạt động ngay lập tức đối với mọi webhook đến từ một phiên bản Odoo khác."
+"<i class=\"fa fa-info-circle\"/> Trình lấy bản ghi mục tiêu mặc định sẽ hoạt"
+" động ngay lập tức đối với mọi webhook đến từ một phiên bản Odoo khác."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -175,12 +175,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__name
 #: model:ir.model.fields,field_description:base_automation.field_ir_cron__name
 msgid "Action Name"
-msgstr "Tên hành động"
+msgstr "Tên tác vụ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_ids
 msgid "Actions"
-msgstr "Hành động"
+msgstr "Tác vụ"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -312,7 +312,7 @@ msgstr "Tạo %(model_name)s với tên %(value)s"
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Create a new Record"
-msgstr "Tạo một tập dữ liệu mới"
+msgstr "Tạo một bản ghi mới"
 
 #. module: base_automation
 #. odoo-python
@@ -458,8 +458,7 @@ msgid ""
 "records, as there are no more records to apply these changes to!"
 msgstr ""
 "Không thể sử dụng các loại hành động email, người theo dõi hoặc hoạt động "
-"khi xóa tập dữ liệu vì không còn tập dữ liệu nào để áp dụng những thay đổi "
-"này!"
+"khi xóa bản ghi vì không còn bản ghi nào để áp dụng những thay đổi này!"
 
 #. module: base_automation
 #. odoo-javascript
@@ -475,7 +474,7 @@ msgstr "Thực thi Mã Python"
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Execute several actions"
-msgstr "Thực thi hành động máy chủ"
+msgstr "Thực thi tác vụ máy chủ"
 
 #. module: base_automation
 #. odoo-javascript
@@ -529,8 +528,10 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
 "If present, this condition must be satisfied before the update of the "
-"record."
-msgstr "Nếu có, điều kiện này phải được thỏa mãn trước khi cập nhật hồ sơ."
+"record. Not checked on record creation."
+msgstr ""
+"Nếu có, điều kiện này phải được thỏa mãn trước khi cập nhật bản ghi. Không "
+"chọn khi tạo bản ghi."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -623,7 +624,7 @@ msgstr "Tháng"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "No record to run the automation on was found."
-msgstr "Không tìm thấy tập dữ liệu nào để chạy tính năng tự động hóa."
+msgstr "Không tìm thấy bản ghi nào để chạy tính năng tự động hóa."
 
 #. module: base_automation
 #. odoo-python
@@ -718,7 +719,7 @@ msgstr "Mức độ ưu tiên được đặt thành"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
 msgid "Record Getter"
-msgstr "Trình thu nhận tập dữ liệu"
+msgstr "Trình thu nhận bản ghi"
 
 #. module: base_automation
 #. odoo-javascript
@@ -784,7 +785,7 @@ msgid ""
 "                after a month of inactivity or remind yourself to follow-up on\n"
 "                tasks when a specific tag is added."
 msgstr ""
-"Gửi email khi một đối tượng thay đổi trạng thái, lưu trữ tập dữ liệu\n"
+"Gửi email khi một đối tượng thay đổi trạng thái, lưu trữ bản ghi\n"
 "                sau một tháng không hoạt động hoặc nhắc nhở bản thân theo dõi\n"
 "                các nhiệm vụ khi một thẻ cụ thể được thêm vào."
 
@@ -806,7 +807,7 @@ msgstr "Gửi email: %(template_name)s"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "Hành động phía máy chủ"
+msgstr "Tác vụ phía máy chủ"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
@@ -858,7 +859,7 @@ msgstr "Đã thêm thẻ"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr "Tập dữ liệu mục tiêu"
+msgstr "Bản ghi mục tiêu"
 
 #. module: base_automation
 #. odoo-python
@@ -907,8 +908,7 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
-"Mã này sẽ được chạy để tìm xem quy tắc tự động hoá sẽ chạy trên tập dữ liệu "
-"nào."
+"Mã này sẽ được chạy để tìm xem quy tắc tự động hoá sẽ chạy trên bản ghi nào."
 
 #. module: base_automation
 #. odoo-javascript

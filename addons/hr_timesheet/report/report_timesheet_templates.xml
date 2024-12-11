@@ -5,7 +5,7 @@
         <div class="row mt8">
             <div class="col-12">
                 <table class="table table-sm">
-                    <thead>
+                    <thead style="display: table-row-group">
                         <tr>
                             <t t-set="timesheet_record_label" t-value="False"/>
                             <t t-if="show_task">
@@ -39,8 +39,8 @@
                                 <t t-if="show_task and line.task_id" t-set="timesheet_record_info" t-value="'%s / %s' % (timesheet_record_info, line.task_id.sudo().name)"/>
                             </t>
                             <t t-elif="show_task" t-set="timesheet_record_info" t-value="line.task_id.sudo().name"/>
-                            <td t-if="timesheet_record_info" class="align-middle">
-                                <span t-out="timesheet_record_info">Research and Development/New Portal System</span>
+                            <td t-if="show_task or show_project" class="align-middle">
+                                <span t-if="timesheet_record_info" t-out="timesheet_record_info">Research and Development/New Portal System</span>
                             </td>
                             <td class="align-middle">
                                 <span t-field="line.name" t-options="{'widget': 'text'}">Call client and discuss project</span>

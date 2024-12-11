@@ -2231,3 +2231,28 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         order_payment.with_context(payment_context).check()
         self.pos_config.current_session_id.action_pos_session_closing_control()
         self.assertEqual(order.picking_ids.move_line_ids_without_package.lot_id.name, '1001')
+
+    def test_product_combo_creation(self):
+        """We check that combo products are created without taxes."""
+        # Test product combo creation
+        product_form = Form(self.env['product.product'])
+        product_form.name = "Test Combo Product"
+        product_form.detailed_type = "product"
+        product_form.lst_price = 100
+        product_form.taxes_id = self.tax_sale_a
+        product_form.detailed_type = "combo"
+        product = product_form.save()
+
+        self.assertFalse(product.taxes_id)
+
+        # Test product write
+        product_form = Form(product)
+        product_form.detailed_type = "product"
+        product_form.taxes_id = self.tax_sale_a
+        product = product_form.save()
+        self.assertTrue(product.taxes_id)
+
+        product_form = Form(product)
+        product_form.detailed_type = "combo"
+        product = product_form.save()
+        self.assertFalse(product.taxes_id)

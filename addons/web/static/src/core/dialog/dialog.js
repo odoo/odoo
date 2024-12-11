@@ -111,7 +111,7 @@ Dialog.props = {
     size: {
         type: String,
         optional: true,
-        validate: (s) => ["sm", "md", "lg", "xl", "fs"].includes(s),
+        validate: (s) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(s),
     },
     technical: { type: Boolean, optional: true },
     title: { type: String, optional: true },

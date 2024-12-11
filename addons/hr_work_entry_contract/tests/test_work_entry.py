@@ -259,3 +259,68 @@ class TestWorkEntry(TestWorkEntryBase):
             work_entry.save()
         self.assertEqual(work_entry.employee_id.id, new_employee.id)
         self.assertEqual(work_entry.duration, 0.0)
+
+    def test_separate_overlapping_work_entries_by_type(self):
+        employee = self.env['hr.employee'].create({'name': 'Test'})
+        calendar = self.env['resource.calendar'].create({'name': 'Calendar', 'tz': 'Europe/Brussels'})
+        calendar.attendance_ids -= calendar.attendance_ids.filtered(lambda attendance: attendance.dayofweek == '0')
+
+        self.env['hr.contract'].create({
+            'employee_id': employee.id,
+            'resource_calendar_id': calendar.id,
+            'date_start': datetime(2024, 9, 1),
+            'date_end': datetime(2024, 9, 30),
+            'name': 'Contract',
+            'wage': 5000.0,
+            'state': 'open',
+        })
+
+        entry_type_1, entry_type_2 = self.env['hr.work.entry.type'].create([
+            {'name': 'Work type 1', 'is_leave': False, 'code': 'ENTRY_TYPE1'},
+            {'name': 'Work type 2', 'is_leave': False, 'code': 'ENTRY_TYPE2'},
+        ])
+
+        self.env['resource.calendar.attendance'].create([
+            {
+                'calendar_id': calendar.id,
+                'dayofweek': '0',
+                'name': 'Same type 1',
+                'hour_from': 8,
+                'hour_to': 11,
+                'day_period': 'morning',
+                'work_entry_type_id': entry_type_1.id,
+            },
+            {
+                'calendar_id': calendar.id,
+                'dayofweek': '0',
+                'name': 'Same type 2',
+                'hour_from': 11,
+                'hour_to': 12,
+                'day_period': 'morning',
+                'work_entry_type_id': entry_type_1.id,
+            },
+            {
+                'calendar_id': calendar.id,
+                'dayofweek': '0',
+                'name': 'Different types 1',
+                'hour_from': 13,
+                'hour_to': 16,
+                'day_period': 'afternoon',
+                'work_entry_type_id': entry_type_1.id,
+            },
+            {
+                'calendar_id': calendar.id,
+                'dayofweek': '0',
+                'name': 'Different types 2',
+                'hour_from': 16,
+                'hour_to': 17,
+                'day_period': 'afternoon',
+                'work_entry_type_id': entry_type_2.id,
+            },
+        ])
+
+        employee.generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 2))
+        result_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        work_entry_types = [entry.work_entry_type_id for entry in result_entries]
+        self.assertEqual(len(result_entries), 4, 'A shift should be created for each attendance')
+        self.assertEqual(work_entry_types, [entry_type_1, entry_type_1, entry_type_1, entry_type_2])

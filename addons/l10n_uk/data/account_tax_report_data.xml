@@ -15,7 +15,7 @@
         <field name="line_ids">
             <record id="account_tax_report_line_vat_cal" model="account.report.line">
                 <field name="name">VAT Calculations</field>
-                <field name="aggregation_formula">UKTAX_1.balance + UKTAX_2.balance + UKTAX_4.balance</field>
+                <field name="aggregation_formula">UKTAX_1.balance + UKTAX_2.balance - UKTAX_4.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_vat_box1" model="account.report.line">

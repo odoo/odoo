@@ -30,10 +30,10 @@ Demo data for testing:
 * Partners example for the different responsibility types:
 
   * ADHOC (IVA Responsable Inscripto)
-  * Consejo Municipal Rosario (IVA Sujeto Exento)
+  * Servicios Globales (IVA Sujeto Exento)
   * Gritti (Monotributo)
-  * Cerro Castor. IVA Liberado in Zona Franca
-  * Expresso (Cliente del Exterior)
+  * Montana Sur. IVA Liberado in Zona Franca
+  * Barcelona food (Cliente del Exterior)
   * Odoo (Proveedor del Exterior)
 
 Highlights:

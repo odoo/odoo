@@ -33,7 +33,10 @@ export class AttendeeCalendarController extends CalendarController {
             views: [[false, 'form']],
             res_id: resId || false,
         }, {
-            additionalContext
+            additionalContext: {
+                ...this.props.context,
+                ...additionalContext
+            }
         });
     }
 

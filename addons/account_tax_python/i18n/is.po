@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # 	* account_tax_python
 # 
+# Translators:
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
 "Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,11 +33,21 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Skattahópur: Skatturinn er sett af undirsköttum.\n"
+"    - Fast: Skattupphæðin helst óbreytt hvað sem verðið er.\n"
+"    - Hlutfall af verði: Skattupphæðin er % of verðinu:\n"
+"        td 100 * (1 + 10%) = 110 (ekki innifalið verð)\n"
+"        td 110 / (1 + 10%) = 100 (verð innifalið)\n"
+"    - Hlutfall af verðskatti innifalinn: Skattupphæðin er skipting á verði:\n"
+"        td 180 / (1 - 10%) = 200 (ekki verð innifalið)\n"
+"        td 200 * (1 - 10%) = 180 (verð innifalið)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "Gildandi kóði"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -47,6 +61,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Reiknaðu upphæð skattsins með því að stilla breytuna 'niðurstaða'.\n"
+"\n"
+":param base_amount: flot, raunveruleg upphæð sem skatturinn er lagður á\n"
+":param verðeining: fljóta\n"
+":param magn: fljóta\n"
+":param fyrirtæki: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton eða None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -59,22 +81,29 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Ákvarðaðu hvort skattinum verði beitt með því að stilla breytuna 'niðurstaða' á True eða False.\n"
+"\n"
+":param verðeining: fljóta\n"
+":param magn: fljóta\n"
+":param fyrirtæki: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton eða None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Python Code"
-msgstr ""
+msgstr "Python kóði"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "Skattur"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "Skatt útreikningur"
 
 #. module: account_tax_python
 #. odoo-python
@@ -86,3 +115,6 @@ msgid ""
 "\n"
 "Error : %s"
 msgstr ""
+"Þú slóst inn ógildan kóða %r í %r skatt\n"
+"\n"
+"Villa: %s"

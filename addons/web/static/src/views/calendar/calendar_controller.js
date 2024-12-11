@@ -57,6 +57,7 @@ export class CalendarController extends Component {
                 domain: this.props.domain,
                 fields: this.props.fields,
                 allFilter: this.props.state?.allFilter ?? {},
+                date: this.props.state?.date,
             },
             {
                 onWillStart: this.onWillStartModel.bind(this),

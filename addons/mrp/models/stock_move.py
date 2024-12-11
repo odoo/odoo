@@ -156,6 +156,28 @@ class StockMoveLine(models.Model):
 
         return aggregated_move_lines
 
+    def _prepare_stock_move_vals(self):
+        move_vals = super()._prepare_stock_move_vals()
+        if self.env['product.product'].browse(move_vals['product_id']).is_kits:
+            move_vals['location_id'] = self.location_id.id
+            move_vals['location_dest_id'] = self.location_dest_id.id
+        return move_vals
+
+    def _get_linkable_moves(self):
+        """ Don't linke move lines with kit products to moves with dissimilar locations so that
+        post `action_explode()` move lines will have accurate location data.
+        """
+        self.ensure_one()
+        if self.product_id and self.product_id.is_kits:
+            moves = self.picking_id.move_ids.filtered(lambda move:
+                move.product_id == self.product_id and
+                move.location_id == self.location_id and
+                move.location_dest_id == self.location_dest_id
+            )
+            return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+        else:
+            return super()._get_linkable_moves()
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -285,7 +307,7 @@ class StockMove(models.Model):
         super()._compute_show_info()
         byproduct_moves = self.filtered(lambda m: m.byproduct_id or m in self.production_id.move_finished_ids)
         byproduct_moves.show_quant = False
-        byproduct_moves.show_lots_text = True
+        byproduct_moves.show_lots_m2o = True
 
     @api.depends('picking_type_id.use_create_components_lots')
     def _compute_display_assign_serial(self):
@@ -303,6 +325,12 @@ class StockMove(models.Model):
             mo = self.raw_material_production_id
             new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
             self.quantity = new_qty
+
+    @api.onchange('quantity', 'product_uom', 'picked')
+    def _onchange_quantity(self):
+        if self.raw_material_production_id and not self.manual_consumption and self.picked and self.product_uom and \
+           float_compare(self.product_uom_qty, self.quantity, precision_rounding=self.product_uom.rounding) != 0:
+            self.manual_consumption = True
 
     @api.model
     def default_get(self, fields_list):
@@ -568,6 +596,12 @@ class StockMove(models.Model):
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
             return True
         return False
+
+    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
+        vals = super()._prepare_move_line_vals(quantity, reserved_quant)
+        if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id:
+            vals['lot_id'] = self.production_id.lot_producing_id.id
+        return vals
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()

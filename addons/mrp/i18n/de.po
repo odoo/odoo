@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -664,6 +664,16 @@ msgid "All"
 msgstr "Alle"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_ids
+msgid "All Move"
+msgstr "Alle Bewegungen"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
+msgid "All Move Raw"
+msgstr "Alle Bewegungen roh"
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/controller/main.py:0
 #, python-format
@@ -1303,6 +1313,17 @@ msgstr "Abgebrochen"
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"Kann keine Tage für die Vorbereitung berechnen, da Routeninformationen für "
+"mindestens 1 Komponente oder für das Endprodukt fehlen."
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
@@ -1916,7 +1937,7 @@ msgstr "Tage bis zur Lieferung von Komponenten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__days_to_prepare_mo
 msgid "Days to prepare Manufacturing Order"
-msgstr "Tage bis Vorbereitung des Fertigungsauftrags"
+msgstr "Tage zur Vorbereitung des Fertigungsauftrags"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -2878,6 +2899,7 @@ msgstr "Er wurde bereits entblockiert."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -4702,6 +4724,11 @@ msgstr ""
 "Menge, die mit dem aktuellen Bestand an Komponenten produziert werden kann"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "Quanten"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "RAM"
 msgstr "RAM"
@@ -4909,6 +4936,13 @@ msgid "Resupply lead time."
 msgstr "Vorlaufzeit für Beschaffung."
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Zurück zum Bestand"
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4920,12 +4954,6 @@ msgstr "Arbeitsplan"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Routing"
 msgstr "Arbeitsplan"
-
-#. module: mrp
-#: code:addons/mrp/models/stock_quant.py:0
-#, python-format
-msgid "Return to Inventory"
-msgstr "Zurück zum Bestand"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
@@ -7011,6 +7039,15 @@ msgstr "Es ist nicht möglich, dieselbe Seriennummer zweimal zu produzieren."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
+#, python-format
+msgid "You cannot start a work order that is already done or cancelled"
+msgstr ""
+"Sie können keinen Arbeitsauftrag starten, der bereits erledigt und "
+"abgebrochen wurde"
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
@@ -7208,7 +7245,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "last"
-msgstr "letztes"
+msgstr "letzten"
 
 #. module: mrp
 #. odoo-python
@@ -7274,4 +7311,32 @@ msgstr "aufgeteilt"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr "Arbeitsaufträge"
+msgstr "Arbeitsaufträgen"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
+#, python-format
+msgid "{{ foldButtonTitle }}"
+msgstr "{{ foldButtonTitle }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#, python-format
+msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ props.isFolded ? 'Aufklappen' : 'Einklappen' }}"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
+#, python-format
+msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ state.isFolded ? 'Aufklappen' : 'Einklappen' }}"

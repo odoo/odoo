@@ -8,6 +8,7 @@ import { usePosition } from "@web/core/position_hook";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { roundDecimals } from "@web/core/utils/numbers";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
@@ -605,14 +606,23 @@ export class AnalyticDistribution extends Component {
     }
 
     onWindowClick(ev) {
-        //TODO: dragging the search more dialog should not close the popup either
-        const modal = document.querySelector('.modal:not(.o_inactive_modal)');
-        const clickedInSearchMoreDialog = modal && modal.querySelector('.o_list_view') && modal.contains(ev.target);
-        const clickedInKanbanSelectorDialog = modal && modal.querySelector('.o_kanban_view') && modal.contains(ev.target);
+        /*
+        Dropdown should be closed only if all these condition are true:
+            - dropdown is open
+            - click is outside widget element (widgetRef)
+            - there is no active modal containing a list/kanban view (search more modal)
+            - there is no popover (click is not in search modal's search bar menu)
+            - click is not targeting document dom element (drag and drop search more modal)
+        */
+
+        const selectors = [
+            ".o_popover",
+            ".modal:not(.o_inactive_modal):not(:has(.o_act_window))",
+        ];
         if (this.isDropdownOpen
             && !this.widgetRef.el.contains(ev.target)
-            && !clickedInSearchMoreDialog
-            && !clickedInKanbanSelectorDialog
+            && !ev.target.closest(selectors.join(","))
+            && !ev.target.isSameNode(document.documentElement)
            ) {
             this.forceCloseEditor();
         }
@@ -620,7 +630,7 @@ export class AnalyticDistribution extends Component {
 
     onWindowResized() {
         // popup ui is ugly when window is resized, so close it
-        if (this.isDropdownOpen) {
+        if (this.isDropdownOpen && !isMobileOS()) {
             this.forceCloseEditor();
         }
     }

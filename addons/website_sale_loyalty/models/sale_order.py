@@ -202,8 +202,7 @@ class SaleOrder(models.Model):
         res = self._get_claimable_rewards()
         loyality_cards = self.env['loyalty.card'].search([
             ('partner_id', '=', self.partner_id.id),
-            ('program_id.website_id', 'in', [False, self.website_id.id]),
-            ('program_id.company_id', 'in', [False, self.company_id.id]),
+            ('program_id', 'any', self._get_program_domain()),
             '|',
                 ('program_id.trigger', '=', 'with_code'),
                 '&', ('program_id.trigger', '=', 'auto'), ('program_id.applies_on', '=', 'future'),

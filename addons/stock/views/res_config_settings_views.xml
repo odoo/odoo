@@ -10,7 +10,7 @@
                 <xpath expr="//form" position="inside" >
                     <app data-string="Inventory" string="Inventory" name="stock" groups="stock.group_stock_manager">
                         <block title="Operations" name="operations_setting_container">
-                            <setting id="product_packs_tracking" documentation="/applications/inventory_and_mrp/inventory/management/products/usage.html#packages" title="Put your products in packs (e.g. parcels, boxes) and track them" help="Put your products in packs (e.g. parcels, boxes) and track them">
+                            <setting id="product_packs_tracking" documentation="/applications/inventory_and_mrp/inventory/product_management/product_tracking/package.html" title="Put your products in packs (e.g. parcels, boxes) and track them" help="Put your products in packs (e.g. parcels, boxes) and track them">
                                 <field name="group_stock_tracking_lot"/>
                             </setting>
                             <setting id="process_transfers" help="Process transfers in batch per worker"
@@ -113,7 +113,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="manage_product_packaging" title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" help="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" documentation="/applications/inventory_and_mrp/inventory/management/products/usage.html#packaging">
+                            <setting id="manage_product_packaging" title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" help="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)" documentation="/applications/inventory_and_mrp/inventory/product_management/product_tracking/packaging.html">
                                 <field name="group_stock_packaging"/>
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_stock_packaging">
@@ -145,7 +145,7 @@
                             </setting>
                         </block>
                         <block title="Warehouse" name="warehouse_setting_container">
-                            <setting id="track_product_location" help="Track product location in your warehouse" documentation="/applications/inventory_and_mrp/inventory/management/warehouses/warehouses_locations.html" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
+                            <setting id="track_product_location" help="Track product location in your warehouse" documentation="/applications/inventory_and_mrp/inventory/warehouses_storage/inventory_management/use_locations.html" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
                                 <field name="group_stock_multi_locations"/>
                                 <div class="content-group">
                                     <div class="mt8" invisible="not group_stock_multi_locations">

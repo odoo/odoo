@@ -5,16 +5,16 @@
 # Translators:
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2024
-# Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-30 14:15+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -110,6 +110,20 @@ msgstr "%(leave_type)s: %(duration).2f horas en %(date)s"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "%(name)s (%(duration)s day(s))"
+msgstr "%(name)s (%(duration)s día(s))"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "%(name)s (%(duration)s hour(s))"
+msgstr "%(name)s (%(duration)s hora(s))"
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)"
@@ -163,13 +177,6 @@ msgstr "%s (de %s a %s)"
 #, python-format
 msgid "%s (from %s to No Limit)"
 msgstr "%s (de %s a Sin límite)"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-#, python-format
-msgid "%s allocation request (%s %s)"
-msgstr "%s solicitud de asignación (%s %s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1162,6 +1169,8 @@ msgid "Approve Allocations"
 msgstr "Aprobar asignaciones"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate
@@ -1175,6 +1184,7 @@ msgstr "Aprobar asignaciones"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard_new_time_off
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+#, python-format
 msgid "Approved"
 msgstr "Aprobado"
 
@@ -1483,7 +1493,7 @@ msgstr "Fecha de traspaso"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_date
 msgid "Carry-Over Time"
-msgstr "Tiempo de traspaso"
+msgstr "Tiempo traspasado"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__carryover_day
@@ -1602,9 +1612,19 @@ msgid "Confirmation"
 msgstr "Confirmación"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__confirmed
+#, python-format
 msgid "Confirmed"
 msgstr "Confirmado"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
+#, python-format
+msgid "Confirmed and Approved"
+msgstr "Confirmado y aprobado"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2337,8 +2357,7 @@ msgstr "Inactivo"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren de su "
-"atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
@@ -2373,7 +2392,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Si el campo activo se desmarca, permite ocultar el registro del recurso sin "
+"Si desmarca el campo activo podrá ocultar el registro del recurso sin "
 "eliminarlo."
 
 #. module: hr_holidays
@@ -2915,7 +2934,7 @@ msgstr "Ninguno"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
 msgid "None. Accrued time reset to 0"
-msgstr "Ninguno. El tiempo acumulado se reestableció a 0"
+msgstr "Ninguno, el tiempo acumulado se restablece a 0"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__no
@@ -3556,6 +3575,17 @@ msgstr ""
 "No es posible vincular algunos a alguna asignación. Para consultarlos "
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+#, python-format
+msgid ""
+"Some of the accrual plans you're trying to delete are linked to an existing "
+"allocation. Delete or cancel them first."
+msgstr ""
+"Algunos de los planes de acumulación que intenta eliminar están vinculados a"
+" una asignación existente, elimínelos o cancélelos."
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
 msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
@@ -3854,6 +3884,7 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "There is no valid allocation to cover that request."
 msgstr "No tiene una asignación válida para cubrir esa solicitud."
@@ -4095,7 +4126,6 @@ msgstr "Tiempo personal tomado:"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__holiday_status_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__name
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_search
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -4674,6 +4704,17 @@ msgid ""
 msgstr ""
 "No puede tener un límite en el tiempo acumulado sin configurar una cantidad "
 "máxima."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot reduce the duration below the duration of leaves already taken by"
+" the employee."
+msgstr ""
+"No puede reducir la duración por debajo de los permisos que ya tomó el "
+"empleado."
 
 #. module: hr_holidays
 #. odoo-python

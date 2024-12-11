@@ -32,10 +32,11 @@ class TestAnalyticAccount(TransactionCase):
         cls.company_data = cls.env['res.company'].create({
             'name': 'company_data',
         })
-        cls.env.user.company_ids |= cls.company_data
+        cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company_data.id})
+        cls.env.user.company_ids |= cls.company_data + cls.company_b_branch
 
         user.write({
-            'company_ids': [(6, 0, cls.company_data.ids)],
+            'company_ids': [(6, 0, [cls.company_data.id, cls.company_b_branch.id])],
             'company_id': cls.company_data.id,
         })
         cls.analytic_plan_offset = len(cls.env['account.analytic.plan'].get_relevant_plans())
@@ -211,3 +212,21 @@ class TestAnalyticAccount(TransactionCase):
             with self.subTest(plan=plan.name, expected_count=expected_value):
                 with Form(plan) as plan_form:
                     self.assertEqual(plan_form.record.all_account_count, expected_value)
+
+    def test_analytic_account_branches(self):
+        """
+        Test that an analytic account defined in a parent company is accessible in its branches (children)
+        """
+        # timesheet adds a rule to forcer a project_id; account overrides it
+        timesheet_user = self.env.ref('hr_timesheet.group_hr_timesheet_user', raise_if_not_found=False)
+        account_user = self.env.ref('account.analytic.model_account_analytic_line', raise_if_not_found=False)
+        if timesheet_user and not account_user:
+            self.skipTest("`hr_timesheet` overrides analytic rights. Without `account` the test would crash")
+
+        self.analytic_account_1.company_id = self.company_data
+        self.env['account.analytic.line'].create({
+            'name': 'company specific account',
+            'account_id': self.analytic_account_1.id,
+            'amount': 100,
+            'company_id': self.company_b_branch.id,
+        })

@@ -15,16 +15,22 @@ class StockRule(models.Model):
         """
         return procurement.values.get('sale_line_id'), super(StockRule, self)._get_procurements_to_merge_groupby(procurement)
 
+    def _get_partner_id(self, values, rule):
+        route = self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False)
+        if route and rule.route_id == route:
+            return False
+        return super()._get_partner_id(values, rule)
+
 
 class ProcurementGroup(models.Model):
     _inherit = "procurement.group"
 
     @api.model
-    def _get_rule_domain(self, location, values):
+    def _get_rule_domain(self, locations, values):
         if 'sale_line_id' in values and values.get('company_id'):
-            return [('location_dest_id', '=', location.id), ('action', '!=', 'push'), ('company_id', '=', values['company_id'].id)]
+            return [('location_dest_id', 'in', locations.ids), ('action', '!=', 'push'), ('company_id', '=', values['company_id'].id)]
         else:
-            return super(ProcurementGroup, self)._get_rule_domain(location, values)
+            return super()._get_rule_domain(locations, values)
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'

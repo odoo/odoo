@@ -120,6 +120,14 @@ class AccountMoveSend(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
+    @api.model
+    def _get_mail_layout(self):
+        # EXTENDS 'account'
+        # TODO remove the fallback in master
+        if self.env.ref('account_peppol.mail_notification_layout_with_responsible_signature_and_peppol', raise_if_not_found=False):
+            return 'account_peppol.mail_notification_layout_with_responsible_signature_and_peppol'
+        return super()._get_mail_layout()
+
     def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False, **kwargs):
         # Extends 'account' to force ubl xml checkbox if sending via peppol
         self.ensure_one()
@@ -132,6 +140,19 @@ class AccountMoveSend(models.TransientModel):
                     move.peppol_move_state = 'to_send'
 
         return super().action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, **kwargs)
+
+    def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
+        # Extends account
+        # to update `peppol_move_state` as `skipped` to show users that something went wrong
+        # because those moves that failed XML/PDF files generation are not sent via Peppol
+        moves_failed_file_generation = self.env['account.move']
+        for move, move_data in moves_data.items():
+            if move_data.get('send_peppol') and move_data.get('blocking_error'):
+                moves_failed_file_generation |= move
+
+        moves_failed_file_generation.peppol_move_state = 'skipped'
+
+        return super()._hook_if_errors(moves_data, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
     @api.model
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):

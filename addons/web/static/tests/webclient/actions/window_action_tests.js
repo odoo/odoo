@@ -169,6 +169,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
         // quick create record
         await clickKanbanNew(target);
+        await nextTick();
         await editInput(target, ".o_field_widget[name=display_name] input", "New name");
 
         // edit quick-created record

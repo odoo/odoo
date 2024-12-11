@@ -81,7 +81,9 @@
             </t>
         </xpath>
         <xpath expr="//Orderline">
-            <div t-if="props.data.is_gcc_country" style="display: inline-flex;" t-translation="off">Taxes / الضرائب</div>:<span t-esc="line.tax " style="margin-left: 5px"/>
+            <t t-if="props.data.is_gcc_country">
+                <div style="display: inline-flex;" t-translation="off">Taxes / الضرائب</div>:<span t-esc="line.tax " style="margin-left: 5px"/>
+            </t>
         </xpath>
     </t>
 </templates>

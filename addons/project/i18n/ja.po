@@ -3,17 +3,17 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2024
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -847,6 +847,7 @@ msgid "Allocated Time"
 msgstr "割当時間"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "割当時間:"
@@ -1004,8 +1005,6 @@ msgid "Assigned to"
 msgstr "担当者"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1013,7 +1012,6 @@ msgstr "担当者"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "割り当て先"
 
@@ -2015,6 +2013,11 @@ msgstr "このタスクからの受信メールのCCにあり、現在既存顧�
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
 msgstr "メールCC"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Eメールドメイン例 'example.com' in 'odoo@example.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -3251,6 +3254,13 @@ msgid "Once a Month"
 msgstr "毎月1回"
 
 #. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr " 添付できるのはjpeg, png, bmp および tiff画像のみです。"
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
@@ -3821,7 +3831,7 @@ msgstr "出版"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr "四半期毎に"
+msgstr "四半期毎"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -4072,6 +4082,20 @@ msgstr "SMS配信エラー"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
 msgstr "サッドフェイス"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in description"
+msgstr "タスクを保存して、説明で画像をドラッグできるようにします。"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr "タスクを保存して、説明文に画像を貼り付けられるようにします。"
 
 #. module: project
 #. odoo-javascript
@@ -4677,6 +4701,7 @@ msgstr "タスク：評価依頼"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4763,6 +4788,14 @@ msgstr "現ユーザの個人ページ"
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr "現ユーザの個人タスクステージ"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "ドキュメントが存在しないか、ドキュメントにアクセスする権限がありません。"
 
 #. module: project
 #. odoo-python
@@ -5787,6 +5820,13 @@ msgstr "タスクを完了済とマークするステータス"
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr "state.message"
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
@@ -5846,8 +5886,11 @@ msgstr "タスクを作成します:"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: 満足度アンケート"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: 満足度調査"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

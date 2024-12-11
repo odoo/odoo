@@ -326,11 +326,15 @@ class MaintenanceRequest(models.Model):
         # the stage (stage_id) of the Maintenance Request changes.
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
             vals['kanban_state'] = 'normal'
-        if 'stage_id' in vals and self.maintenance_type == 'preventive' and self.recurring_maintenance and self.env['maintenance.stage'].browse(vals['stage_id']).done:
-            schedule_date = self.schedule_date or fields.Datetime.now()
-            schedule_date += relativedelta(**{f"{self.repeat_unit}s": self.repeat_interval})
-            if self.repeat_type == 'forever' or schedule_date.date() <= self.repeat_until:
-                self.copy({'schedule_date': schedule_date})
+        now = fields.Datetime.now()
+        if 'stage_id' in vals and self.env['maintenance.stage'].browse(vals['stage_id']).done:
+            for request in self:
+                if request.maintenance_type != 'preventive' or not request.recurring_maintenance:
+                    continue
+                schedule_date = request.schedule_date or now
+                schedule_date += relativedelta(**{f"{request.repeat_unit}s": request.repeat_interval})
+                if request.repeat_type == 'forever' or schedule_date.date() <= request.repeat_until:
+                    request.copy({'schedule_date': schedule_date, 'stage_id': request._default_stage().id})
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
@@ -367,7 +371,7 @@ class MaintenanceRequest(models.Model):
                 date_deadline=date_dl,
                 new_user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
             if not updated:
-                note = self._get_activity_note()
+                note = request._get_activity_note()
                 request.activity_schedule(
                     'maintenance.mail_act_maintenance_request',
                     fields.Datetime.from_string(request.schedule_date).date(),

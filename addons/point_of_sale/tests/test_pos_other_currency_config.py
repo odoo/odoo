@@ -316,3 +316,50 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
                 'bank_payments': [],
             },
         })
+
+    def test_bank_journal_balance(self):
+        """Verify that debit and credit are balanced when adding a difference to the bank."""
+
+        # Make a sale paid by bank
+        self.other_currency_config.open_ui()
+        session_id = self.other_currency_config.current_session_id
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session_id.id,
+            'partner_id': False,
+            'lines': [(0, 0, {
+                'name': 'OL/0001',
+                'product_id': self.product1.id,
+                'price_unit': 10.00,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': False,
+                'price_subtotal': 10.00,
+                'price_subtotal_incl': 10.00,
+            })],
+            'pricelist_id': self.other_currency_config.pricelist_id.id,
+            'amount_paid': 10.00,
+            'amount_total': 10.00,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+        })
+
+        # Make payment
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.bank_pm2.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        # Close session with counted +10 for bank compared with expected
+        session_id.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_pm2.id: 10.00})  # Real 20, expected 10, diff 10
+
+        # Check debit/credit session's balance
+        for move in session_id._get_related_account_moves():
+            debit = credit = 0.0
+            for line in move.line_ids:
+                debit += line.debit
+                credit += line.credit
+            self.assertEqual(tools.float_compare(debit, credit, precision_rounding=self.other_currency_config.currency_id.rounding), 0)  # debit and credit should be equal

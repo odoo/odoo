@@ -6,6 +6,7 @@ from . import crm_team
 from . import delivery_carrier
 from . import digest
 from . import ir_http
+from . import payment_token
 from . import product_attribute
 from . import product_document
 from . import product_image

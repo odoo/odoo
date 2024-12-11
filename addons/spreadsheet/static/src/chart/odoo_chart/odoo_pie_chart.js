@@ -39,13 +39,13 @@ function createOdooChartRuntime(chart, getters) {
 }
 
 function getPieConfiguration(chart, labels, locale) {
-    const fontColor = chartFontColor(chart.background);
-    const config = getDefaultChartJsRuntime(chart, labels, fontColor, { locale });
+    const color = chartFontColor(chart.background);
+    const config = getDefaultChartJsRuntime(chart, labels, color, { locale });
     config.type = chart.type.replace("odoo_", "");
     const legend = {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
-        labels: { fontColor },
+        labels: { color },
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};

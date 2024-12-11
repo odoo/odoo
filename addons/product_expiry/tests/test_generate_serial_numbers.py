@@ -10,6 +10,12 @@ from odoo.tools.misc import get_lang
 
 class TestStockLot(StockGenerateCommon):
 
+    def _import_lots(self, lots, move):
+        location_id = move.location_id
+        move_lines_vals = move.split_lots(lots)
+        move_lines_commands = move._generate_serial_move_line_commands(move_lines_vals, location_dest_id=location_id)
+        move.update({'move_line_ids': move_lines_commands})
+
     def test_set_multiple_lot_name_with_expiration_date_01(self):
         """ In a move line's `lot_name` field, pastes a list of lots and expiration dates.
         Checks the values are correctly interpreted and the expiration dates are correctly created

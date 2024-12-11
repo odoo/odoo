@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -29,6 +29,8 @@ msgid ""
 "&amp;#128075; <br/>\n"
 "    Welcome to the To-do app!"
 msgstr ""
+"&amp;#128075; <br/>\n"
+"    Velkommen til To-do-appen!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -122,6 +124,9 @@ msgid ""
 "        During the conversion of a to-do to a task, you will be able to add or remove assignees to control who has access to the created task. Note that its visibility will also depend on the visibility settings of the project you are assigning it to.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Under konverteringen af ​​en to-do til en opgave, vil du være i stand til at tilføje eller fjerne tildelte for at kontrollere, hvem der har adgang til den oprettede opgave. Bemærk, at dets synlighed også vil afhænge af synlighedsindstillingerne for det projekt, du tildeler det til.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -138,6 +143,17 @@ msgid ""
 "        Similarly, private tasks created in the Project app will also appear in your to-dos.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        To-dos er nu som \n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">private opgaver</font>\n"
+"        </span>\n"
+"        og vises i Projekt-appen under \n"
+"        <span>\n"
+"            <font style=\"font-weight: bolder;\" class=\"text-o-color-2\">Mine opgaver</font>.\n"
+"        </span>\n"
+"        På samme måde vil private opgaver, der er oprettet i Projekt-appen, også vises i dine gøremål.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -150,6 +166,13 @@ msgid ""
 "        field above to share this to-do with other users.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        To-dos, ligesom private opgaver, er kun tilgængelige for de brugere, der er angivet som tildelte. Du kan bruge\n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">tildelte</font>\n"
+"        </span>\n"
+"        feltet ovenfor for at dele denne to-do med andre brugere.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -170,6 +193,13 @@ msgid ""
 "        pop-up from the action menu of the to-do.\n"
 "    </span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        Du kan konvertere dine gøremål til to-dos og tildele dem til et projekt. For at gøre dette skal du have adgang til\n"
+"        <span style=\"font-weight: bolder;\">\n"
+"            <font class=\"text-o-color-2\">Konverter til opgave</font>\n"
+"        </span>\n"
+"        pop op fra handlingsmenuen for to-do.\n"
+"    </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -202,6 +232,9 @@ msgid ""
 "    <br/>\n"
 "    <span style=\"font-size: 14px;\">Ready to give it a spin?</span>"
 msgstr ""
+"<span style=\"font-size: 14px;\">Denne private to-do er for dig at lege med.</span>\n"
+"    <br/>\n"
+"    <span style=\"font-size: 14px;\">Klar til at give det en tur?</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -243,7 +276,7 @@ msgstr "Tilføj en To-Do"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
 msgid "Add details about your to-do..."
-msgstr ""
+msgstr "Tilføj detaljer om din to-do..."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
@@ -363,6 +396,8 @@ msgid ""
 "Keep your work organized by using memos and to-do lists.\n"
 "                Your to-do items are private by default, but you can choose to share them with others by adding them as assignees."
 msgstr ""
+"Hold dit arbejde organiseret ved at bruge notater og to-do lister.\n"
+"                Dine to-do punkter er som standard private, men du kan vælge at dele dem med andre ved at tilføje dem som tildelte."
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__write_uid
@@ -390,7 +425,7 @@ msgstr "Markér som udført"
 #. module: project_todo
 #: model_terms:ir.actions.act_window,help:project_todo.project_task_action_todo
 msgid "No to-do found. Let's create one!"
-msgstr ""
+msgstr "Ingen to-do fundet. Lad os oprette en!"
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__note
@@ -479,8 +514,8 @@ msgid "Todos"
 msgstr "Todos"
 
 #. module: project_todo
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project_todo/models/project_task.py:0
 #: code:addons/project_todo/static/src/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name.js:0
 #, python-format
@@ -509,14 +544,14 @@ msgstr ""
 #: code:addons/project_todo/wizard/mail_activity_todo_create.py:0
 #, python-format
 msgid "Your to-do has been successfully added to your pipeline."
-msgstr ""
+msgstr "Din to-do er blevet føjet til din pipeline."
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "f.eks. Send invitationer"
 
 #. module: project_todo
 #: model:ir.actions.server,name:project_todo.project_task_preload_action_todo
 msgid "menu load To-dos"
-msgstr ""
+msgstr "menu indlæs to-dos"

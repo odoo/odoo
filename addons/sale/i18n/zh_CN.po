@@ -3,20 +3,20 @@
 # 	* sale
 # 
 # Translators:
-# 何彬 <vnsoft.he@gmail.com>, 2024
+# Odoo哥 <vnsoft.he@gmail.com>, 2024
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
 # Wil Odoo, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Chloe Wang, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1522,7 +1522,7 @@ msgstr "通信"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Communication history"
-msgstr "传播历史"
+msgstr "通信历史"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -1940,7 +1940,7 @@ msgstr "已交付数量：%s"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
 msgid "Delivered quantities"
-msgstr "已交付数量"
+msgstr "已交货数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
@@ -1956,7 +1956,7 @@ msgstr "交付日期"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
-msgstr "交付方式"
+msgstr "交货方式"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
@@ -2599,7 +2599,7 @@ msgstr "当月发票收入，是销售渠道本月开具的发票金额，用于
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr "为已交付的项目开具发票"
+msgstr "为已交货的项目开具发票"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
@@ -4056,14 +4056,14 @@ msgid "Sales Analysis"
 msgstr "销售分析"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "客户销售分析"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "销售人员的销售分析"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr "按客戶销售分析"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4852,7 +4852,6 @@ msgstr "确认报价所需支付金额的百分比。"
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -4892,11 +4891,6 @@ msgstr "提供的参数无效。"
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "预付款金额的值须为正数。"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "您的账户当前没有订单。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -5310,6 +5304,7 @@ msgstr "警告消息"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format

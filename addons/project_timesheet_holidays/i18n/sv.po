@@ -8,14 +8,15 @@
 # Martin Trigaux, 2023
 # Simon S, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +44,9 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
+"Både det interna projektet och uppgiften krävs för att generera en "
+"tidrapport för ledigheten %s. Om du inte vill ha en tidrapport bör du lämna "
+"det interna projektet och uppgiften tomma."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -62,12 +66,13 @@ msgstr "Anställd"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheets"
-msgstr ""
+msgstr "Skapa tidrapporter"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Generate timesheets when validating time off requests of this type"
 msgstr ""
+"Generera tidrapporter när du validerar ledighetsförfrågningar av denna typ"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
@@ -80,11 +85,13 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Om det är markerat kommer tidrapporten att genereras i företagets "
+"semesterprojekt vid validering av en ledighet."
 
 #. module: project_timesheet_holidays
 #. odoo-python
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: code:addons/project_timesheet_holidays/__init__.py:0
+#: code:addons/project_timesheet_holidays/__init__.py:0
 #, python-format
 msgid "Internal"
 msgstr "Intern"
@@ -132,6 +139,9 @@ msgid ""
 "off requests. You can specify another project on each time off type "
 "individually."
 msgstr ""
+"Standardprojektet som används när man automatiskt genererar tidrapporter via"
+" ledighetsförfrågningar. Du kan ange ett annat projekt för varje "
+"ledighetstyp individuellt."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
@@ -139,11 +149,14 @@ msgid ""
 "The default task used when automatically generating timesheets via time off "
 "requests. You can specify another task on each time off type individually."
 msgstr ""
+"Standarduppgiften som används när man automatiskt genererar tidrapporter via"
+" ledighetsförfrågningar. Du kan specificera en annan uppgift för varje "
+"ledighetstyp individuellt."
 
 #. module: project_timesheet_holidays
 #. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
@@ -167,7 +180,7 @@ msgstr "Ansökning om frånvaro"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "Fritidsuppgift"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
@@ -177,7 +190,7 @@ msgstr "Frånvarotyp"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "Antalet frånvarotyper"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -189,7 +202,7 @@ msgstr "Tidrapporter"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "View Time Off"
-msgstr ""
+msgstr "Visa ledighet"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -199,6 +212,8 @@ msgid ""
 "You cannot create timesheets for a task that is linked to a time off type. "
 "Please use the Time Off application to request new time off instead."
 msgstr ""
+"Du kan inte skapa tidrapporter för en uppgift som är kopplad till en "
+"ledighetstyp. Använd appen Time Off för att begära ny ledighet istället."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -217,6 +232,9 @@ msgid ""
 "You cannot delete timesheets that are linked to time off requests. Please "
 "cancel your time off request from the Time Off application instead."
 msgstr ""
+"Du kan inte ta bort tidrapporter som är kopplade till "
+"ledighetsförfrågningar. Vänligen avbryt din ledighetsförfrågan från "
+"Applikationen för Ledighet istället."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -226,3 +244,6 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
+"Du kan inte ändra tidrapporter som är kopplade till ledighetsförfrågningar. "
+"Använd appen Time Off (Ledighet) för att ändra dina ledighetsförfrågningar "
+"istället."

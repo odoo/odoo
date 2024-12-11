@@ -48,7 +48,7 @@ class SaleOrder(models.Model):
     def _compute_l10n_it_edi_doi_use(self):
         for order in self:
             order.l10n_it_edi_doi_use = order.l10n_it_edi_doi_id \
-                or "IT" in order.country_code
+                or order.country_code == "IT"
 
     @api.depends('company_id', 'partner_id.commercial_partner_id', 'l10n_it_edi_doi_date', 'currency_id')
     def _compute_l10n_it_edi_doi_id(self):

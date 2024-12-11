@@ -34,6 +34,7 @@ export class PosDB {
         this.product_by_barcode = {};
         this.product_by_category_id = {};
         this.product_packaging_by_barcode = {};
+        this.product_by_tmpl_id = {};
 
         this.attribute_by_id = {};
         this.attribute_value_by_id = {};
@@ -287,6 +288,11 @@ export class PosDB {
             this.product_by_id[product.id] = product;
             if (product.barcode && product.active) {
                 this.product_by_barcode[product.barcode] = product;
+            }
+            if (this.product_by_tmpl_id[product.product_tmpl_id]) {
+                this.product_by_tmpl_id[product.product_tmpl_id].push(product);
+            } else {
+                this.product_by_tmpl_id[product.product_tmpl_id] = [product];
             }
         }
     }
@@ -559,11 +565,29 @@ export class PosDB {
      * - a name, package or barcode containing the query (case insensitive)
      */
     search_product_in_category(category_id, query) {
+        let filteredProducts = [];
+        let re;
         try {
-            // eslint-disable-next-line no-useless-escape
+            // Attempting to filter products based on template ID extracted from query
+            let reg = new RegExp(";product_tmpl_id:(\\d+)");
+            let match = reg.exec(query);
+            if (match) {
+                filteredProducts = this.product_by_tmpl_id[parseInt(match[1], 10)];
+                query = query.replace(reg, '');
+            }
+        } catch (e) {
+            console.error("Search on product template ID fails", e)
+        }
+        try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g, ".");
             query = query.replace(/ /g, ".+");
-            var re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
+            if (filteredProducts.length > 0) {
+                const filteredProductIds = filteredProducts.map(p => p.id);
+                const idsPattern = filteredProductIds.join('|');
+                re = new RegExp(`(${idsPattern}):.*?` + unaccent(query), "gi");
+            } else {
+                re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
+            }
         } catch {
             return [];
         }

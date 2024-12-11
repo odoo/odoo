@@ -118,13 +118,13 @@ msgstr "Ordenar ahora"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Out of Stock"
-msgstr " Sin existencias"
+msgstr "Agotado"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
-msgstr " Sin existencias"
+msgstr "Agotado"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
@@ -284,8 +284,18 @@ msgstr "Ya cuenta con %s unidades en su carrito."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"Solicitó %(desired_qty)s %(product_name)s pero solo hay %(new_qty)s "
+"disponibles. "
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""

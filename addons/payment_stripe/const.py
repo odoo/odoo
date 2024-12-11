@@ -29,6 +29,7 @@ PAYMENT_METHODS_MAPPING = {
     'sepa_direct_debit': 'sepa_debit',
     'afterpay': 'afterpay_clearpay',
     'clearpay': 'afterpay_clearpay',
+    'cash_app_pay': 'cashapp',
     'mobile_pay': 'mobilepay',
     'unknown': 'card',  # For express checkout.
 }
@@ -68,6 +69,7 @@ HANDLED_WEBHOOK_EVENTS = [
     'payment_intent.amount_capturable_updated',
     'payment_intent.succeeded',
     'payment_intent.payment_failed',
+    'payment_intent.canceled',
     'setup_intent.succeeded',
     'charge.refunded',  # A refund has been issued.
     'charge.refund.updated',  # The refund status has changed, possibly from succeeded to failed.

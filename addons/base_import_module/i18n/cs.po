@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Ivana Bartonkova, 2023
-# Wil Odoo, 2023
 # Tomáš Píšek, 2024
 # Jakub Smolka, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-11-18 09:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakub Smolka, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,7 @@ msgid ""
 msgstr ""
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Activate"
 msgstr "aktivovat"
@@ -87,16 +88,20 @@ msgid "Created on"
 msgstr "Vytvořeno dne"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be entirely removed!"
-msgstr ""
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "Zobrazovací název"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Error while importing module '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python
@@ -135,11 +140,6 @@ msgstr "Zpráva importu"
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 msgid "Import Module"
 msgstr "Import modulu"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import demo data"
-msgstr "Importovat demo data"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
@@ -184,6 +184,20 @@ msgid "Last Updated on"
 msgstr "Naposledy upraveno dne"
 
 #. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "nahrát demo data"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
 msgstr "Modul"
@@ -197,6 +211,11 @@ msgstr ".ZIP soubor modulu"
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
 msgstr "Typ modulu"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Odinstalace modulu"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -257,22 +276,8 @@ msgstr "Stav"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Studio customizations require Studio"
-msgstr "Přizpůsobení Studio vyžaduje studio"
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
 msgid "Studio customizations require the Odoo Studio app."
 msgstr "Přizpůsobení aplikace Studio vyžadují aplikaci Odoo Studio."
-
-#. module: base_import_module
-#. odoo-python
-#: code:addons/base_import_module/models/ir_module.py:0
-#, python-format
-msgid "The following modules will also be installed:\n"
-msgstr ""
 
 #. module: base_import_module
 #. odoo-python
@@ -299,6 +304,14 @@ msgid "The module %s cannot be downloaded"
 msgstr "Modul %s nelze stáhnout"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Unknown module dependencies:"
+msgstr ""
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
 msgid "Upgrade"
 msgstr "Upgrade"

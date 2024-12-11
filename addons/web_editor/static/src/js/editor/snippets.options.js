@@ -1794,7 +1794,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
         }
         if (this.options.dataAttributes.opacity) {
-            options.opacity = this.options.dataAttributes.opacity;
+            options.opacity = parseFloat(this.options.dataAttributes.opacity);
         }
         if (this.options.dataAttributes.withCombinations) {
             options.withCombinations = !!this.options.dataAttributes.withCombinations;
@@ -2378,19 +2378,20 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     _notifyCurrentState(preview = false) {
         const isIdModeName = this.el.dataset.idMode === "name" || !this.isCustom;
+        const trimmed = (str) => str.trim().replace(/\s+/g, " ");
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            const id = isIdModeName ? el.name : el.value;
+            const id = trimmed(isIdModeName ? el.name : el.value);
             return Object.assign({
                 id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
-                name: el.value,
-                display_name: el.value,
+                name: trimmed(el.value),
+                display_name: trimmed(el.value),
             }, el.dataset);
         });
         if (this.hasDefault) {
             const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
             this.selected = checkboxes.map(el => {
                 const input = el.parentElement.previousSibling.firstChild;
-                const id = isIdModeName ? input.name : input.value;
+                const id = trimmed(isIdModeName ? input.name : input.value);
                 return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
             });
             values.forEach(v => {
@@ -6014,7 +6015,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setLink(previewMode, widgetValue, params) {
-        const parentEl = this.$target[0].parentNode;
+        const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName !== 'A') {
             const wrapperEl = document.createElement('a');
             this.$target[0].after(wrapperEl);
@@ -6039,7 +6040,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setNewWindow(previewMode, widgetValue, params) {
-        const linkEl = this.$target[0].parentElement;
+        const linkEl = this._searchSupportedParentLinkEl();
         if (widgetValue) {
             linkEl.setAttribute('target', '_blank');
         } else {
@@ -6052,7 +6053,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setUrl(previewMode, widgetValue, params) {
-        const linkEl = this.$target[0].parentElement;
+        const linkEl = this._searchSupportedParentLinkEl();
         let url = widgetValue;
         if (!url) {
             // As long as there is no URL, the image is not considered a link.
@@ -6090,7 +6091,8 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @private
      */
     _activateLinkTool() {
-        if (this.$target[0].parentElement.tagName === 'A') {
+        const parentEl = this._searchSupportedParentLinkEl();
+        if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_url_opt')[0].focus();
         } else {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
@@ -6100,7 +6102,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @private
      */
     _deactivateLinkTool() {
-        const parentEl = this.$target[0].parentNode;
+        const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
@@ -6109,7 +6111,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState(methodName, params) {
-        const parentEl = this.$target[0].parentElement;
+        const parentEl = this._searchSupportedParentLinkEl();
         const linkEl = parentEl.tagName === 'A' ? parentEl : null;
         switch (methodName) {
             case 'setLink': {
@@ -6132,11 +6134,20 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'media_link_opt') {
             if (this.$target[0].matches('img')) {
-                return isImageSupportedForStyle(this.$target[0]);
+                return isImageSupportedForStyle(this.$target[0])
+                    && !this._searchSupportedParentLinkEl().matches("a[data-oe-xpath]");
             }
             return !this.$target[0].classList.contains('media_iframe_video');
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @returns {Element} The "closest" element that can be supported as a <a>.
+     */
+    _searchSupportedParentLinkEl() {
+        const parentEl = this.$target[0].parentElement;
+        return parentEl.matches("figure") ? parentEl.parentElement : parentEl;
     },
 });
 
@@ -6391,6 +6402,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             img.classList.add('o_modified_image_to_save');
             const loadedImg = await loadImage(dataURL, img);
             this._applyImage(loadedImg);
+            // Also apply to carousel thumbnail if applicable.
+            weUtils.forwardToThumbnail(img);
             return loadedImg;
         }
         return img;
@@ -6730,6 +6743,8 @@ registry.ImageTools = ImageHandlerOption.extend({
                 img.dataset.mimetype = img.dataset.originalMimetype;
                 delete img.dataset.originalMimetype;
             }
+            // Also apply to carousel thumbnail if applicable.
+            weUtils.forwardToThumbnail(img);
         }
         img.classList.add('o_modified_image_to_save');
     },
@@ -6991,6 +7006,8 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (save) {
             img.dataset.shapeColors = newColors.join(';');
         }
+        // Also apply to carousel thumbnail if applicable.
+        weUtils.forwardToThumbnail(img);
     },
     /**
      * Sets the image in the supplied SVG and replace the src with a dataURL
@@ -8079,6 +8096,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         }
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);
+        this.options.wysiwyg.odooEditor.editable.focus();
     },
 });
 
@@ -9607,16 +9625,17 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
             : this.$target[0].querySelector(".carousel");
         carouselEl.classList.remove("slide");
         $(carouselEl).carousel(position);
-        for (const indicatorEl of this.$target[0].querySelectorAll(".carousel-indicators li")) {
-            indicatorEl.classList.remove("active");
-        }
-        this.$target[0].querySelector(`.carousel-indicators li[data-bs-slide-to="${position}"]`)
-                    .classList.add("active");
+        const indicatorEls = this.$target[0].querySelectorAll(".carousel-indicators li");
+        indicatorEls.forEach((indicatorEl, i) => {
+            indicatorEl.classList.toggle("active", i === position);
+        });
         this.trigger_up("activate_snippet", {
             $snippet: $(this.$target[0].querySelector(".carousel-item.active img")),
             ifInactiveOptions: true,
         });
         carouselEl.classList.add("slide");
+        // Prevent the carousel from automatically sliding afterwards.
+        $(carouselEl).carousel("pause");
     },
 });
 

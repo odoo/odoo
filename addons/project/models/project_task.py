@@ -651,6 +651,9 @@ class Task(models.Model):
                         extract_data(task)
                 task.name = task.display_name.strip()
 
+    def _portal_get_parent_hash_token(self, pid):
+        return self.project_id._sign_token(pid)
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
@@ -770,6 +773,8 @@ class Task(models.Model):
             project = self.env['project.project'].browse(project_id)
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
+            if 'company_id' in default_fields and 'default_project_id' not in self.env.context:
+                vals['company_id'] = project.sudo().company_id
         elif 'default_user_ids' not in self.env.context and 'user_ids' in default_fields:
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
@@ -1169,7 +1174,12 @@ class Task(models.Model):
         return {'date_end': False}
 
     def _search_on_comodel(self, domain, field, comodel, order=None, additional_domain=None):
-
+        """ This method is called by `group_expand` methods, whose purpose is to add empty groups to the `read_group`
+            (which otherwise returns groups containing records that match the domain).
+            When specifically filtering on a comodel's field, the result of the `read_group` should contain all matching groups.
+            However, if the search isn't filtered on any comodel's field, the result shouldn't be affected,
+            which explains why we return `False` if `filtered_domain` is empty.
+        """
         def _change_operator(domain):
             new_domain = []
             for dom in domain:
@@ -1200,9 +1210,11 @@ class Task(models.Model):
             f"{field}.name": "name",
         })
         filtered_domain = _change_operator(filtered_domain)
+        if not filtered_domain:
+            return self.env[comodel]
         if additional_domain:
             filtered_domain = expression.AND([filtered_domain, additional_domain])
-        return self.env[comodel].search(filtered_domain, order=order) if filtered_domain else False
+        return self.env[comodel].search(filtered_domain, order=order)
 
     # ---------------------------------------------------
     # Subtasks
@@ -1484,7 +1496,12 @@ class Task(models.Model):
                 self.displayed_image_id = image_attachments[0]
 
         # use the sanitized body of the email from the message thread to populate the task's description
-        if not self.description and message.subtype_id == self._creation_subtype() and self.partner_id == message.author_id:
+        if (
+           not self.description
+           and message.subtype_id == self._creation_subtype()
+           and self.partner_id == message.author_id
+           and msg_vals['message_type'] == 'email'
+        ):
             self.description = message.body
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 

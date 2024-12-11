@@ -13,7 +13,16 @@ registry.category("web_tour.tours").add('shop_sale_ewallet', {
         ...tourUtils.addToCart({productName: "TEST - Small Drawer"}),
         tourUtils.goToCart(),
         {
-            trigger: 'a:contains("Pay with eWallet")'
+            trigger: 'a:contains("Pay with eWallet")',
+            extra_trigger: 'form[name="claim_reward"]',
+            run() {
+                const rewards = document.querySelectorAll('form[name="claim_reward"]');
+                if (rewards.length === 1) {
+                    this.$anchor.click();
+                } else {
+                    throw new TourError(`Expected 1 claimable reward, got: ${rewards.length}`);
+                }
+            },
         },
         tourUtils.goToCheckout(),
         tourUtils.pay(),

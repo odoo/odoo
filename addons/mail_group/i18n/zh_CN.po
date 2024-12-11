@@ -3,18 +3,18 @@
 # 	* mail_group
 # 
 # Translators:
-# Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
-# Chloe Wang, 2023
 # 湘子 南 <1360857908@qq.com>, 2024
+# Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -525,6 +525,11 @@ msgid ""
 msgstr "发送人的电子邮箱地址。找不到匹配的合作伙伴时，设置该字段，并替换聊天窗口中的author_id字段。"
 
 #. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "电子邮件域名，例如 'odoo@example.com' 中的 'example.com'"
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails"
 msgstr "EMail"
@@ -1004,6 +1009,13 @@ msgstr "只有管理员或版主可以向小组成员发送指南。"
 #, python-format
 msgid "Only members can send email to the mailing list."
 msgstr "只有会员可以向邮件列表发送电子邮件。"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr "只有选定的用户组，才能向邮件列表发送电子邮件。"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id

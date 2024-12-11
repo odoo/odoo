@@ -10,8 +10,8 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_fi_template_data(self):
         return {
             'code_digits': '4',
-            'property_account_receivable_id': 'account_1700',
-            'property_account_payable_id': 'account_2870',
+            'property_account_receivable_id': 'account_1701',
+            'property_account_payable_id': 'account_2871',
             'property_account_expense_categ_id': 'account_4000',
             'property_account_income_categ_id': 'account_3000',
             }
@@ -29,7 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'account_4380',
                 'account_journal_early_pay_discount_loss_account_id': 'account_4230',
                 'account_journal_early_pay_discount_gain_account_id': 'account_3500',
-                'account_sale_tax_id': 'tax_dom_sales_goods_24',
-                'account_purchase_tax_id': 'tax_dom_purchase_goods_24',
+                'account_sale_tax_id': 'tax_dom_sales_goods_25_5',
+                'account_purchase_tax_id': 'tax_dom_purchase_goods_25_5',
             },
         }

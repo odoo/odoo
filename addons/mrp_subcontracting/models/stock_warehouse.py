@@ -159,13 +159,13 @@ class StockWarehouse(models.Model):
         values.update({
             'subcontracting_type_id': {
                 'name': self.name + ' ' + _('Sequence subcontracting'),
-                'prefix': self.code + (('/SBC' + str(count) + '/') if count else '/SBC/'),
+                'prefix': self.code + '/' + (self.subcontracting_type_id.sequence_code or (('SBC' + str(count)) if count else 'SBC')) + '/',
                 'padding': 5,
                 'company_id': self.company_id.id
             },
             'subcontracting_resupply_type_id': {
                 'name': self.name + ' ' + _('Sequence Resupply Subcontractor'),
-                'prefix': self.code + (('/RES' + str(count) + '/') if count else '/RES/'),
+                'prefix': self.code + '/' + (self.subcontracting_resupply_type_id.sequence_code or (('RES' + str(count)) if count else 'RES')) + '/',
                 'padding': 5,
                 'company_id': self.company_id.id
             },

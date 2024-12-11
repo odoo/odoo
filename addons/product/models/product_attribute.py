@@ -44,7 +44,7 @@ class ProductAttribute(models.Model):
         default='radio',
         required=True,
         help="The display type used in the Product Configurator.")
-    sequence = fields.Integer(string="Sequence", help="Determine the display order", index=True)
+    sequence = fields.Integer(string="Sequence", help="Determine the display order", index=True, default=20)
 
     value_ids = fields.One2many(
         comodel_name='product.attribute.value',

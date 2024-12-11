@@ -13,6 +13,7 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # abc Def <hdogan1974@gmail.com>, 2023
+# Ayhan Kızıltan, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2023\n"
+"Last-Translator: Ayhan Kızıltan, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +44,12 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
+"                                        Etkin Kullanıcı\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
+"                                        Etkin Kullanıcılar\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -55,6 +62,13 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"                                        Şirket\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
+"                                        Şirketler\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -66,6 +80,12 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
+"                                            Dil\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
+"                                            Diller\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -82,6 +102,8 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Cloudflare "
 "turnstile."
 msgstr ""
+"Bu sayfayı<strong>kaydedin</strong>ve Cloudflare turnikesini ayarlamak için "
+"buraya geri dönün."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -110,6 +132,8 @@ msgid ""
 "API Keys allow your users to access Odoo with external tools when multi-"
 "factor authentication is enabled."
 msgstr ""
+"API Anahtarları, çok faktörlü kimlik doğrulama etkinleştirildiğinde "
+"kullanıcılarınızın harici araçlarla Odoo'ya erişmesine olanak tanır."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -197,7 +221,7 @@ msgstr "Belgelerinizin düzenini seçin"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnike"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -212,7 +236,7 @@ msgstr "Şirket"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "Şirket Ülke Kodu"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -270,7 +294,7 @@ msgstr "Varsayılan Kullanıcı Şablonu bulunamadı."
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "Belge Düzeni"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -360,7 +384,7 @@ msgstr "Şirketler Arası Hareketler"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
 msgid "Is Root Company"
-msgstr ""
+msgstr "Kök Şirket mi"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -476,7 +500,7 @@ msgstr "Profil oluşturma etkinleştirilene kadar"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Progressive Web App"
-msgstr ""
+msgstr "Aşamalı Web Uygulaması"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -486,7 +510,7 @@ msgstr "Formlarınızı spam ve kötüye kullanımdan koruyun."
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "Formlarınızı CF Turnike ile koruyun."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -528,6 +552,7 @@ msgid ""
 "This name will be used for the application when Odoo is installed through "
 "the browser."
 msgstr ""
+"Odoo tarayıcı üzerinden yüklendiğinde uygulama için bu ad kullanılacaktır."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash

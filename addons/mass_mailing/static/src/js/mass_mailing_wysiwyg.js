@@ -134,5 +134,14 @@ export class MassMailingWysiwyg extends Wysiwyg {
             this.toolbarEl.querySelector('#create-link').classList.toggle('d-none', true);
         }
     }
+
+    /**
+     * @override
+     */
+    _getEditorOptions() {
+        const options = super._getEditorOptions(...arguments);
+        const finalOptions = { autoActivateContentEditable: false, ...options };
+        return finalOptions;
+    }
 }
 

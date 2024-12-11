@@ -380,6 +380,11 @@
                         <field name="expression_ids">
                             <record id="account_tax_report_line_cd_deductible_report_balance" model="account.report.expression">
                                 <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CD_REPORT_CREDIT._applied_carryover_balance</field>
+                            </record>
+                            <record id="account_tax_report_line_cd_deductible_report_balance_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
                                 <field name="date_scope">previous_tax_period</field>
@@ -419,7 +424,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -431,7 +436,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -443,7 +448,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -455,7 +460,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -473,7 +478,7 @@
                             <record id="account_tax_report_line_cd_tax_calculation_to_pay_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="subformula">if_above(CDF(0))</field>
                                 <field name="formula">CD_TAX.balance + CD_IMP_SERVICE_TAX.balance + CD_REPAYMENTS.balance + CD_RECOVERY.balance - CD_DEDUCTIBLE_AMOUNT.balance - CD_ADD_DEDUCTION.balance - CD_MINING.balance - CD_PM_TAX.balance</field>
                             </record>
                         </field>
@@ -485,7 +490,7 @@
                             <record id="account_tax_report_line_cd_calculation_credit_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="subformula">if_above(CDF(0))</field>
                                 <field name="formula">CD_DEDUCTIBLE_AMOUNT.balance + CD_ADD_DEDUCTION.balance + CD_MINING.balance + CD_PM_TAX.balance - CD_TAX.balance - CD_IMP_SERVICE_TAX.balance - CD_REPAYMENTS.balance - CD_RECOVERY.balance</field>
                             </record>
                         </field>
@@ -498,7 +503,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -510,8 +515,14 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CD_CREDIT.balance - CD_REPAYMENT_ASKED.balance</field>
-                                <field name="subformula">if_above(EUR(0))</field>
-                                <field name="carryover_target">CD_REPORT_CREDIT.balance</field>
+                                <field name="subformula">if_above(CDF(0))</field>
+                                <field name="carryover_target" eval="False"/>
+                            </record>
+                            <record id="account_tax_report_line_cd_calculation_credit_reportable_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CD_CREDIT_REPORTABLE.balance</field>
+                                <field name="carryover_target">CD_REPORT_CREDIT._applied_carryover_balance</field>
                             </record>
                         </field>
                     </record>
@@ -534,7 +545,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>

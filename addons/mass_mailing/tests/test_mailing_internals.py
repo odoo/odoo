@@ -15,7 +15,7 @@ from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.exceptions import ValidationError
 from odoo.sql_db import Cursor
-from odoo.tests.common import users, Form, tagged
+from odoo.tests.common import users, Form, HttpCase, tagged
 from odoo.tools import mute_logger
 
 BASE_64_STRING = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
@@ -123,10 +123,12 @@ class TestMassMailValues(MassMailCommon):
                                 <div style="color: red; background-image:url(data:image/jpg;base64,{BASE_64_STRING}15); display: block;"/>
                                 <div style="color: red; background-image: url(data:image/jpg;base64,{BASE_64_STRING}16); background: url('data:image/jpg;base64,{BASE_64_STRING}17'); display: block;"/>
                             <![endif]-->
+                            <img src="data:image/png;base64,{BASE_64_STRING}0">
                         </body></html>
                     """,
                 })
-        self.assertEqual(len(attachments), 18)
+        self.assertEqual(len(attachments), 19)
+        self.assertEqual(attachments[0]['id'], attachments[18]['id'])
         self.assertEqual(str(mailing.body_html), f"""
                         <html><body>
                             <img src="/web/image/{attachments[0]['id']}?access_token={attachments[0]['token']}">
@@ -149,6 +151,7 @@ class TestMassMailValues(MassMailCommon):
                                 <div style="color: red; background-image:url(/web/image/{attachments[15]['id']}?access_token={attachments[15]['token']}); display: block;"/>
                                 <div style="color: red; background-image: url(/web/image/{attachments[16]['id']}?access_token={attachments[16]['token']}); background: url('/web/image/{attachments[17]['id']}?access_token={attachments[17]['token']}'); display: block;"/>
                             <![endif]-->
+                            <img src="/web/image/{attachments[18]['id']}?access_token={attachments[18]['token']}">
                         </body></html>
         """.strip())
 
@@ -421,6 +424,61 @@ class TestMassMailValues(MassMailCommon):
             activity.write({'res_id': 0})
             self.env.flush_all()
 
+    def test_mailing_editor_created_attachments(self):
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestMailing',
+            'subject': 'Test',
+            'mailing_type': 'mail',
+            'body_html': '<p>Hello</p>',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        blob_b64 = base64.b64encode(b'blob1')
+
+        # Created when uploading an image
+        original_svg_attachment = self.env['ir.attachment'].create({
+            "name": "test SVG",
+            "mimetype": "image/svg+xml",
+            "datas": blob_b64,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing.id,
+        })
+
+        # Created when saving the mass_mailing
+        png_duplicate_of_svg_attachment = self.env['ir.attachment'].create({
+            "name": "test SVG duplicate",
+            "mimetype": "image/png",
+            "datas": blob_b64,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing.id,
+            "original_id": original_svg_attachment.id
+        })
+
+        # Created by uploading new image
+        original_png_attachment = self.env['ir.attachment'].create({
+            "name": "test PNG",
+            "mimetype": "image/png",
+            "datas": blob_b64,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing.id,
+        })
+
+        # Created by modify_image in editor controller
+        self.env['ir.attachment'].create({
+            "name": "test PNG duplicate",
+            "mimetype": "image/png",
+            "datas": blob_b64,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing.id,
+            "original_id": original_png_attachment.id
+        })
+
+        mail_thread_attachments = mailing._get_mail_thread_data_attachments()
+        self.assertSetEqual(set(mail_thread_attachments.ids), {png_duplicate_of_svg_attachment.id, original_png_attachment.id})
+
 
 @tagged("mass_mailing", "utm")
 class TestMassMailUTM(MassMailCommon):
@@ -678,6 +736,65 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
                     link_info,
                     link_params=link_params,
                 )
+
+
+@tagged("mail_mail")
+class TestMailingHeaders(MassMailCommon, HttpCase):
+    """ Test headers + linked controllers """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._create_mailing_list()
+        cls.test_mailing = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
+            "body_html": """
+<p>Hello <t t-out="object.name"/>
+    <a href="/unsubscribe_from_list">UNSUBSCRIBE</a>
+    <a href="/view">VIEW</a>
+</p>""",
+            "contact_list_ids": [(4, cls.mailing_list_1.id)],
+            "mailing_model_id": cls.env["ir.model"]._get("mailing.list").id,
+            "mailing_type": "mail",
+            "name": "TestMailing",
+            "subject": "Test for {{ object.name }}",
+        })
+
+    @users('user_marketing')
+    def test_mailing_unsubscribe_headers(self):
+        """ Check unsubscribe headers are present in outgoing emails and work
+        as one-click """
+        test_mailing = self.test_mailing.with_env(self.env)
+        test_mailing.action_put_in_queue()
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            test_mailing.action_send_mail()
+
+        for contact in self.mailing_list_1.contact_ids:
+            new_mail = self._find_mail_mail_wrecord(contact)
+            # check mail.mail still have default links
+            self.assertIn("/unsubscribe_from_list", new_mail.body)
+            self.assertIn("/view", new_mail.body)
+
+            # check outgoing email headers (those are put into outgoing email
+            # not in the mail.mail record)
+            email = self._find_sent_mail_wemail(contact.email)
+            headers = email.get("headers")
+            unsubscribe_oneclick_url = test_mailing._get_unsubscribe_oneclick_url(contact.email, contact.id)
+            self.assertTrue(headers, "Mass mailing emails should have headers for unsubscribe")
+            self.assertEqual(headers.get("List-Unsubscribe"), f"<{unsubscribe_oneclick_url}>")
+            self.assertEqual(headers.get("List-Unsubscribe-Post"), "List-Unsubscribe=One-Click")
+            self.assertEqual(headers.get("Precedence"), "list")
+
+            # check outgoing email has real links
+            self.assertNotIn("/unsubscribe_from_list", email["body"])
+
+            # unsubscribe in one-click
+            unsubscribe_oneclick_url = headers["List-Unsubscribe"].strip("<>")
+            self.opener.post(unsubscribe_oneclick_url)
+
+            # should be unsubscribed
+            self.assertTrue(contact.subscription_ids.opt_out)
+
 
 class TestMailingScheduleDateWizard(MassMailCommon):
 

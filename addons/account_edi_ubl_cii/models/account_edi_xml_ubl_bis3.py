@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
 
 from stdnum.no import mva
 
@@ -90,12 +91,17 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'company_id': partner.peppol_endpoint,
                     'company_id_attrs': {'schemeID': partner.peppol_eas},
                 })
-            if partner.country_id.code == "LU" and 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
-                vals['company_id'] = partner.l10n_lu_peppol_identifier
+            if partner.country_id.code == "LU":
+                if 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
+                    vals['company_id'] = partner.l10n_lu_peppol_identifier
+                elif partner.company_registry:
+                    vals['company_id'] = partner.company_registry
             if partner.country_id.code == 'DK':
                 # DK-R-014: For Danish Suppliers it is mandatory to specify schemeID as "0184" (DK CVR-number) when
                 # PartyLegalEntity/CompanyID is used for AccountingSupplierParty
                 vals['company_id_attrs'] = {'schemeID': '0184'}
+            if partner.country_code == 'SE' and partner.company_registry:
+                vals['company_id'] = ''.join(char for char in partner.company_registry if char.isdigit())
             if not vals['company_id']:
                 vals['company_id'] = partner.peppol_endpoint
 
@@ -195,7 +201,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals_list = super()._get_tax_category_list(invoice, taxes)
 
         for vals in vals_list:
-            vals.pop('name')
+            vals.pop('name', None)
 
         return vals_list
 
@@ -216,9 +222,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         line_item_vals = super()._get_invoice_line_item_vals(line, taxes_vals)
 
         for val in line_item_vals['classified_tax_category_vals']:
+            # [UBL-CR-600] A UBL invoice should not include the InvoiceLine Item ClassifiedTaxCategory TaxExemptionReasonCode
+            val.pop('tax_exemption_reason_code', None)
             # [UBL-CR-601] TaxExemptionReason must not appear in InvoiceLine Item ClassifiedTaxCategory
             # [BR-E-10] TaxExemptionReason must only appear in TaxTotal TaxSubtotal TaxCategory
-            val.pop('tax_exemption_reason')
+            val.pop('tax_exemption_reason', None)
 
         return line_item_vals
 
@@ -353,6 +361,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 constraints.update({f'cen_en16931_{role}_vat_country_code': _(
                     "The VAT of the %s should be prefixed with its country code.", role)})
 
+        if invoice.partner_shipping_id:
+            # [BR-57]-Each Deliver to address (BG-15) shall contain a Deliver to country code (BT-80).
+            constraints['cen_en16931_delivery_address'] = self._check_required_fields(invoice.partner_shipping_id, 'country_id')
         return constraints
 
     def _invoice_constraints_peppol_en16931_ubl(self, invoice, vals):
@@ -428,8 +439,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _import_retrieve_partner_vals(self, tree, role):
         # EXTENDS account.edi.xml.ubl_20
         partner_vals = super()._import_retrieve_partner_vals(tree, role)
-        nsmap = {k: v for k, v in tree.nsmap.items() if k is not None}
-        endpoint_node = tree.find(f'.//cac:Accounting{role}Party/cac:Party/cbc:EndpointID', nsmap)
+        endpoint_node = tree.find(f'.//cac:Accounting{role}Party/cac:Party/cbc:EndpointID', UBL_NAMESPACES)
         if endpoint_node is not None:
             peppol_eas = endpoint_node.attrib.get('schemeID')
             peppol_endpoint = endpoint_node.text

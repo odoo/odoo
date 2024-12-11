@@ -144,9 +144,10 @@ class AccruedExpenseRevenue(models.TransientModel):
         fnames = []
         total_balance = 0.0
         for order in orders:
-            if len(orders) == 1 and self.amount and order.order_line:
+            product_lines = order.order_line.filtered(lambda x: x.product_id)
+            if len(orders) == 1 and product_lines and self.amount and order.order_line:
                 total_balance = self.amount
-                order_line = order.order_line[0]
+                order_line = product_lines[0]
                 account = self._get_computed_account(order, order_line.product_id, is_purchase)
                 distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                 if not is_purchase and order.analytic_account_id:
@@ -172,12 +173,22 @@ class AccruedExpenseRevenue(models.TransientModel):
                         l.qty_to_invoice,
                         0,
                         precision_rounding=l.product_uom.rounding,
-                    ) == 1
+                    ) != 0
                 )
                 for order_line in lines:
                     if is_purchase:
                         account = self._get_computed_account(order, order_line.product_id, is_purchase)
-                        amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
+                        if any(tax.price_include for tax in order_line.taxes_id):
+                            # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
+                            price_subtotal = order_line.taxes_id.compute_all(
+                                order_line.price_unit,
+                                currency=order_line.order_id.currency_id,
+                                quantity=order_line.qty_to_invoice,
+                                product=order_line.product_id,
+                                partner=order_line.order_id.partner_id)['total_excluded']
+                        else:
+                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit
+                        amount_currency = order_line.currency_id.round(price_subtotal)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
                         label = _('%s - %s; %s Billed, %s Received at %s each', order.name, _ellipsis(order_line.name, 20), order_line.qty_invoiced, order_line.qty_received, formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id))
@@ -216,6 +227,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         move_type = _('Expense') if is_purchase else _('Revenue')
         move_vals = {
             'ref': _('Accrued %s entry as of %s', move_type, format_date(self.env, self.date)),
+            'name': '/',
             'journal_id': self.journal_id.id,
             'date': self.date,
             'line_ids': move_lines,
@@ -233,6 +245,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         move._post()
         reverse_move = move._reverse_moves(default_values_list=[{
             'ref': _('Reversal of: %s', move.ref),
+            'name': '/',
             'date': self.reversal_date,
         }])
         reverse_move._post()

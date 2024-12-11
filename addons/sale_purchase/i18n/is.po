@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # 	* sale_purchase
 # 
+# Translators:
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
 "Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +46,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
 msgid ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\">\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
 "                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
 "                </span>\n"
 "            </span>"
@@ -124,7 +128,7 @@ msgstr ""
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Vara"
 
 #. module: sale_purchase
 #. odoo-python
@@ -175,7 +179,7 @@ msgstr ""
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Sölupöntun"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_cancel
@@ -185,7 +189,7 @@ msgstr ""
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Sölupöntunarlína"
 
 #. module: sale_purchase
 #. odoo-python

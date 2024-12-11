@@ -194,6 +194,12 @@ class AccountEdiFormat(models.Model):
             res[invoices] = inv_res
         return res
 
+    def _l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(self, invoice, response):
+        if invoice.l10n_in_distance == 0 and (alert := response.get("data", {}).get('alert')):
+            pattern = r", Distance between these two pincodes is \d+, "
+            if re.fullmatch(pattern, alert) and (distance := int(re.search(r'\d+', alert).group())) > 0:
+                invoice.l10n_in_distance = distance
+
     def _l10n_in_edi_ewaybill_irn_post_invoice_edi(self, invoices):
         response = {}
         res = {}
@@ -260,12 +266,13 @@ class AccountEdiFormat(models.Model):
             """).format(
                 _('E-wayBill Sent'),
                 _('Number'),
-                str(response.get("data", {}).get('ewayBillNo', 0)) or str(response.get("data", {}).get('EwbNo', 0)),
+                str(response.get("data", {}).get('EwbNo')),
                 _('Validity'),
                 str(response.get("data", {}).get('EwbValidTill'))
             )
 
             invoices.message_post(body=body)
+            self._l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(invoices, response)
         return res
 
     def _l10n_in_edi_irn_ewaybill_generate_json(self, invoice):
@@ -359,11 +366,12 @@ class AccountEdiFormat(models.Model):
             """).format(
                 _('E-wayBill Sent'),
                 _('Number'),
-                str(response.get("data", {}).get('ewayBillNo', 0)) or str(response.get("data", {}).get('EwbNo', 0)),
+                str(response.get("data", {}).get('ewayBillNo')),
                 _('Validity'),
-                str(response.get("data", {}).get('EwbValidTill'))
+                str(response.get("data", {}).get('validUpto'))
             )
             invoices.message_post(body=body)
+            self._l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(invoices, response)
         return res
 
     def _l10n_in_edi_ewaybill_get_error_message(self, code):

@@ -23,7 +23,6 @@ from odoo.tools.misc import get_lang
 from . import crm_stage
 
 _logger = logging.getLogger(__name__)
-_schema = logging.getLogger('odoo.schema')
 
 
 CRM_LEAD_FIELDS_TO_MERGE = [
@@ -741,17 +740,6 @@ class Lead(models.Model):
                            self._table, ['user_id', 'team_id', 'type'])
         tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',
                            self._table, ['create_date', 'team_id'])
-        phone_pattern = r'[\s\\./\(\)\-]'
-        for field_name in ('phone', 'mobile'):
-            index_name = f'crm_lead_{field_name}_partial_tgm'
-            if tools.index_exists(self._cr, index_name):
-                continue
-            regex_expression = f"regexp_replace(({field_name}::text), %s::text, ''::text, 'g'::text)"
-            self._cr.execute(
-                f'CREATE INDEX "{index_name}" ON "{self._table}" ({regex_expression}) WHERE {field_name} IS NOT NULL',
-                (phone_pattern,)
-            )
-            _schema.debug("Table %r: created index %r (%s)", self._table, index_name, regex_expression)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1520,13 +1508,15 @@ class Lead(models.Model):
         :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
-        for opportunity in opportunities:
-            for message in opportunity.message_ids:
-                if message.subject:
-                    subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
+        # sudo usage: because we want to go through all messages, whatever the real ACLs
+        # current user has on them
+        for opportunity_su in opportunities.sudo():
+            for message_su in opportunity_su.message_ids:
+                if message_su.subject:
+                    subject = _("From %(source_name)s: %(source_subject)s", source_name=opportunity_su.name, source_subject=message_su.subject)
                 else:
-                    subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.write({
+                    subject = _("From %(source_name)s", source_name=opportunity_su.name)
+                message_su.write({
                     'res_id': self.id,
                     'subject': subject,
                 })
@@ -1887,7 +1877,7 @@ class Lead(models.Model):
 
         for record in self.filtered('email_normalized'):
             values = email_normalized_to_values.setdefault(record.email_normalized, {})
-            contact_name = record.contact_name or record.partner_name or parse_contact_from_email(record.email_from)[0]
+            contact_name = record.contact_name or record.partner_name or parse_contact_from_email(record.email_from)[0] or record.email_from
             # Note that we don't attempt to create the parent company even if partner name is set
             values.update(record._prepare_customer_values(contact_name, is_company=False))
             values['company_name'] = record.partner_name

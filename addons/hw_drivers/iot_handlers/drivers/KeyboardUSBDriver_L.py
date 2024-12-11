@@ -16,7 +16,7 @@ import time
 import urllib3
 from usb import util
 
-from odoo import http, _
+from odoo import http
 from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
@@ -91,9 +91,8 @@ class KeyboardUSBDriver(Driver):
             server = server + '/iot/keyboard_layouts'
             try:
                 pm.request('POST', server, fields={'available_layouts': json.dumps(cls.available_layouts)})
-            except Exception as e:
-                _logger.error('Could not reach configured server')
-                _logger.error('A error encountered : %s ' % e)
+            except Exception:
+                _logger.exception('Could not reach configured server to send available layouts')
 
     @classmethod
     def load_layouts_list(cls):
@@ -122,7 +121,7 @@ class KeyboardUSBDriver(Driver):
             return re.sub(r"[^\w \-+/*&]", '', "%s - %s" % (manufacturer, product))
         except ValueError as e:
             _logger.warning(e)
-            return _('Unknown input device')
+            return 'Unknown input device'
 
     def run(self):
         try:

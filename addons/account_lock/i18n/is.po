@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # 	* account_lock
 # 
+# Translators:
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
 "Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,11 +27,13 @@ msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
 msgstr ""
+"Sérhver ný dagsetning fyrir læsingu allra notenda verður að vera seinni (eða"
+" jöfn) þeirri fyrri."
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Fyrirtæki"
 
 #. module: account_lock
 #. odoo-python
@@ -35,13 +41,15 @@ msgstr ""
 #, python-format
 msgid "The lock date for accountants is irreversible and can't be removed."
 msgstr ""
+"Læsingardagsetning endurskoðenda er óafturkræf og ekki er hægt að fjarlægja "
+"hana."
 
 #. module: account_lock
 #. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
-msgstr ""
+msgstr "Nýja dagsetning skattalás verður að vera eftir fyrri dagsetningu lás."
 
 #. module: account_lock
 #. odoo-python
@@ -49,6 +57,7 @@ msgstr ""
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
 msgstr ""
+"Skattlásardagsetningin er óafturkræf og ekki er hægt að fjarlægja hana."
 
 #. module: account_lock
 #. odoo-python
@@ -58,6 +67,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Þú getur ekki læst tímabili sem er ekki enn búið. Þess vegna verður "
+"læsindardagsetning allra notenda að vera fyrr (eða jöfn) síðasta degi "
+"síðasta mánaðar."
 
 #. module: account_lock
 #. odoo-python
@@ -67,6 +79,8 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Þú getur ekki læst tímabili sem er ekki enn búið. Þess vegna verður "
+"dagsetning skattalás að vera fyrr (eða jöfn) síðasta degi síðasta mánaðar."
 
 #. module: account_lock
 #. odoo-python
@@ -77,3 +91,6 @@ msgid ""
 "Therefore, the All Users Lock Date must be anterior (or equal) to the "
 "Invoice/Bills Lock Date."
 msgstr ""
+"Ekki er hægt að setja strangari hömlur á endurskoðendur en notendur. Þess "
+"vegna verður læsingardagsetning allra notenda að vera fyrr (eða jöfn) við "
+"læsingu reiknings/reikninga."

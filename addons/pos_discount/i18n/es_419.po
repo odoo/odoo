@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +93,11 @@ msgid "Point of Sale Configuration"
 msgstr "Configuración del punto de venta"
 
 #. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesión de punto de venta"
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
 msgstr "Producto de descuento de PdV"
@@ -109,7 +114,8 @@ msgstr "Impuesto: %s"
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount percentage when clicking on the Discount button"
 msgstr ""
-"El porcentaje automático de descuento al hacer clic en el botón de descuento"
+"El porcentaje predeterminado de descuento al hacer clic en el botón de "
+"descuento"
 
 #. module: pos_discount
 #. odoo-javascript
@@ -119,8 +125,9 @@ msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be"
 " Sold' and 'Available in Point of Sale'."
 msgstr ""
-"El producto de descuento parece estar mal configurado. Asegúrese de que está"
-" marcado como 'Se puede vender' y 'Disponible en el punto de venta'."
+"El producto de descuento parece estar mal configurado. Asegúrese de que las "
+"opciones \"Se puede vender\" y \"Disponible en el punto de venta\" están "
+"seleccionadas."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id

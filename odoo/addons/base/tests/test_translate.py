@@ -315,6 +315,12 @@ class TranslationToolsTestCase(BaseCase):
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
 
+    def test_translate_html_nbsp(self):
+        """ Test html_translate(). """
+        source = """<blockquote>A&nbsp;<h2>B&#160</h2>\xa0C</blockquote>"""
+        result = html_translate(lambda term: term, source)
+        self.assertEqual(result, '<blockquote>A&nbsp;<h2>B&nbsp;</h2>&nbsp;C</blockquote>')
+
     def test_translate_html_i(self):
         """ Test xml_translate() and html_translate() with <i> elements. """
         source = """<p>A <i class="fa-check"></i> B</p>"""

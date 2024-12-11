@@ -9,8 +9,9 @@
 # Triine Aavik <triine@avalah.ee>, 2023
 # Martin Talts <martin.t@avalah.ee>, 2023
 # Arma Gedonsky <armagedonsky@hot.ee>, 2023
-# Anna, 2024
 # Birgit Vijar, 2024
+# Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Birgit Vijar, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +75,39 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Lugupeetud <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"<p>Keegi üritab logida sisse teie kasutajasse uuest seadest.</p>\n"
+"<ul>\n"
+"<t t-set=\"not_available\">N/A</t>\n"
+"<li>Asukoht: <t t-out=\"ctx.get('location') or not_available\"></t></li>\n"
+"<li>Seade: <t t-out=\"ctx.get('device') or not_available\"></t></li>\n"
+"<li>Brauser: <t t-out=\"ctx.get('browser') or not_available\"></t></li>\n"
+"<li>IP aadress: <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
+"</ul>\n"
+"<p>Kui see olete Teie, palun sisestage järgnev kood et logida sisse:</p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"></t>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"></t>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"></t>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"<span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"></span>\n"
+"</div>\n"
+"<small>Kood aegub <t t-out=\"expiration\"></t>.</small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"Kui te ei üritanud sisse logida,\n"
+"Peaksite koheselt muutma oma parooli, et veenduda konto turvalisuses.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"Me soovitame ülesseada kaheastmelise autentimise kasutates autentimise rakendust.\n"
+"</p>\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"<a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"Aktiveeri minu kahe-astmeline autentimine\n"
+"</a>\n"
+"</p>\n"
+"</div>"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -99,7 +133,7 @@ msgstr "Ei saa saata e-kirja: kasutajal %s ei ole seatud e-posti aadressi."
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__code_check
 msgid "Code Checking"
-msgstr ""
+msgstr "Koodi kontrollimine"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
@@ -133,11 +167,14 @@ msgid ""
 "users (including portal users) if they didn't enable any other two-factor "
 "authentication method."
 msgstr ""
+"Kõigilt kasutajatelt (nii töötajad kui ka portaali kasutajad), kes pole "
+"sisselülitanud kaheastmelist autentimist, nõutakse kaheastemilist "
+"autentimist email kaudu."
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr ""
+msgstr "Nõua kaheastmelist autentimist"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__id
@@ -167,7 +204,7 @@ msgstr "Lisateave"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__limit_type
 msgid "Limit Type"
-msgstr ""
+msgstr "Liimidi tüüp"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -187,7 +224,7 @@ msgstr "Saada e-kiri"
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr ""
+msgstr "Seaded: 2FA uus sisselogimine"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
@@ -197,7 +234,7 @@ msgstr ""
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr ""
+msgstr "Kaheastmelise autentimise nõue"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_users
@@ -218,20 +255,22 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
+"Tugevalt soovitame sisse lülitada kaheastmeline autentimine kasutades autentimise rakendust.\n"
+"<br/>"
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
-msgstr ""
+msgstr "Teie kasutaja jaoks autentimise kirju hetkel rohkem ei saadeta"
 
 #. module: auth_totp_mail_enforce
 #. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr ""
+msgstr "Saavutasite limiidi koodiga kasutaja verifitseerimiseks"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code

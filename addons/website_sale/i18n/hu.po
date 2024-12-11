@@ -5,28 +5,27 @@
 # Translators:
 # Zsofia Biro <zsbiro1205@gmail.com>, 2023
 # sixsix six, 2023
-# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2023
-# Kovács Tibor <kovika@gmail.com>, 2023
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2023
 # A . <tiboreu@protonmail.com>, 2023
+# Kovács Tibor <kovika@gmail.com>, 2023
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
-# Zsolt Godó <zsolttokio@gmail.com>, 2023
-# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Istvan <leki69@gmail.com>, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
-# Martin Trigaux, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
-# Tamás Dombos, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # krnkris, 2024
+# Martin Trigaux, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Larissa Manderfeld, 2024
+# Tamás Dombos, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: krnkris, 2024\n"
+"Last-Translator: Tamás Dombos, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +57,6 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; szállítás"
 
@@ -135,7 +133,6 @@ msgstr "<b>Árlista</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr "<b>Szállítás: </b>"
 
@@ -157,6 +154,8 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"30 napos pénzvisszafizetési garancia\n"
+"Szállítás: 2-3 munkanapon belül"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -252,14 +251,14 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\"> Itt megtalálja az összes "
-"elhagyott kocsit, azaz azokat a kocsikat, amelyeket a webhely látogatói több"
-" mint egy órával ezelőtt generáltak, és amelyeket még nem erősítettek meg. "
-"</p><p> Ösztönözze e-mailt az ügyfeleknek! </p>"
+"elhagyott kosarat, például azokat a kosarakat, amelyeket a webhely látogatói"
+" több mint egy órával ezelőtt generáltak, és amelyeket még nem erősítettek "
+"meg. </p><p> Ösztönözze az ügyfeleket email küldéssel! </p>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
-msgstr ""
+msgstr "<small class=\"d-none d-lg-inline text-muted\">Rendezés:</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -459,14 +458,9 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
-msgstr ""
+msgstr "Vásárlási feltételek"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -589,13 +583,13 @@ msgstr "Hozzáadás"
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Add To Cart"
-msgstr "Kosárba tesz"
+msgstr "Kosárba"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
 #: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
 msgid "Add To Cart Action"
-msgstr ""
+msgstr "Kosárba rakás akció"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
@@ -648,7 +642,7 @@ msgstr "Kosárba"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Add to Cart Button"
-msgstr "Kosárhoz ad gomb"
+msgstr "Kosárba gomb"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -726,7 +720,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Apply"
-msgstr "Alkalmaz"
+msgstr "Alkalmazás"
 
 #. module: website_sale
 #. odoo-javascript
@@ -837,7 +831,6 @@ msgstr "Nagy"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr "Számlázás"
 
@@ -940,20 +933,6 @@ msgid "Can Publish"
 msgstr "Publikálhat"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Cards"
 msgstr "Kártyák"
@@ -962,7 +941,7 @@ msgstr "Kártyák"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__carousel
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Carousel"
-msgstr ""
+msgstr "Körhinta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -978,12 +957,12 @@ msgstr "Kosár mennyiség"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
 #: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
 msgid "Cart Recovery Email"
-msgstr "Kosár visszaállítási e-mail"
+msgstr "Kosár visszaállítás email"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_recovery_email_sent
 msgid "Cart recovery email already sent"
-msgstr "Kosár visszaállítási e-mail elküldve"
+msgstr "Kosár visszaállítás email elküldve"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1091,7 +1070,7 @@ msgstr "Alkategóriák"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_delivery
 msgid "Choose a delivery method"
-msgstr "Válassz szállítási módot"
+msgstr "Válasszon szállítási módot"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1205,32 +1184,37 @@ msgstr "Komponensek"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
-msgstr "Easypost szállítási költség számítás és kiszállítás"
+msgstr "Easypost kiszállítás és szállítási költség számítás"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Szállítási költség számítása és szállítás DHL-lel"
+msgstr "DHL kiszállítás és szállítási költség számítás"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Szállítási költség számítása és szállítás FedEx-szel"
+msgstr "FedEx kiszállítás és szállítási költség számítás"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Szállítási költség számítása és szállítás UPS-sel"
+msgstr "UPS kiszállítás és szállítási költség számítás"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Szállítási költség számítása és szállítás USPS-sel"
+msgstr "USPS kiszállítás és szállítási költség számítás"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Szállítási költség számítása és szállítás bposttal"
+msgstr "bpost kiszállítás és szállítási költség számítás"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1240,7 +1224,7 @@ msgstr "Szállítási költségek számítása a rendeléseken"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr "Beállítások módosítása"
+msgstr "Beállítások"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1282,7 +1266,7 @@ msgstr "Kapcsolat"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Contact Us"
-msgstr "Vegye fel a kapcsolatot velünk"
+msgstr "Kapcsolatfelvétel"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__contact_us_button_url
@@ -1379,7 +1363,7 @@ msgstr "Vevő"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__auth_signup_uninvited
 msgid "Customer Account"
-msgstr "Ügyfélfiók"
+msgstr "Vevő fiók"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__account_on_checkout
@@ -1390,7 +1374,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Customer Country"
-msgstr "Ügyfél országa"
+msgstr "Vevő ország"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_comment
@@ -1419,7 +1403,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Customers"
-msgstr "Ügyfelek"
+msgstr "Vevők"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1521,12 +1505,13 @@ msgstr "Leírás"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr "Leírás az eÉrtékesítésen és az Online árajánlaton megjelenítve."
+msgstr ""
+"Az e-kereskedelmi felületen és az Online ajánlaton megjelenített leírás."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr "Leírás az online árajánlatokhoz"
+msgstr "Leírás az online ajánlatokhoz"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
@@ -1630,6 +1615,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Dokumentumok"
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_document.py:0
 #, python-format
@@ -1724,7 +1714,7 @@ msgstr "Szerkessze ezen termék árát az összegre kattintva."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Edit this address"
-msgstr "Ezen cím szerkesztése"
+msgstr "Cím szerkesztése"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1824,7 +1814,7 @@ msgstr "Mező"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__label
 msgid "Field Label"
-msgstr "Felirat mező"
+msgstr "Mező felirat"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__name
@@ -1904,7 +1894,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Grid"
-msgstr "Tarifatáblázat"
+msgstr "Rács"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1955,7 +1945,7 @@ msgstr "Egyet értek a(z)"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_tag_form_view_inherit_website_sale
@@ -2218,7 +2208,7 @@ msgstr "Előző hét"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Year"
-msgstr "Utolsó év"
+msgstr "Előző év"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2318,7 +2308,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
 msgid "Medium"
-msgstr "Közepes"
+msgstr "Médium"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error
@@ -2487,6 +2477,13 @@ msgstr ""
 "szállítási címre. Kérem lépjen velünk kapcsolatba további információért."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2527,7 +2524,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_error_counter
@@ -2699,11 +2696,6 @@ msgid "Pay now"
 msgstr "Fizetés most"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Fizetési mód"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
@@ -2724,6 +2716,11 @@ msgstr "Fizetési módok"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
 msgstr "Fizetési szolgáltatók"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -2816,7 +2813,7 @@ msgstr ""
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Price - Low to High"
-msgstr ""
+msgstr "Ár - növekvő"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2898,7 +2895,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Product Category"
-msgstr "Termékkategória"
+msgstr "Termék kategória"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
@@ -2920,7 +2917,7 @@ msgstr "Termék képe"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Product Images"
-msgstr "Termék képek"
+msgstr "Termék képei"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -3095,7 +3092,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Promo Code"
-msgstr ""
+msgstr "Promóciós kód"
 
 #. module: website_sale
 #. odoo-python
@@ -3356,12 +3353,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Sales"
-msgstr "Értékesítések"
+msgstr "Értékesítés"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Analysis"
-msgstr "Értékesítési elemzés"
+msgstr "Értékesítés elemzés"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_report
@@ -3371,12 +3368,12 @@ msgstr "Értékesítési elemzés riport"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Megrendelések"
+msgstr "Vevői rendelés"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Vevői megrendelés sor"
+msgstr "Vevői rendelés sor"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -3543,6 +3540,16 @@ msgstr "Szállítási módok"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Shipping address"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
 msgstr ""
 
 #. module: website_sale
@@ -4238,7 +4245,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Website"
-msgstr "Honlap"
+msgstr "Weboldal"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
@@ -4250,12 +4257,12 @@ msgstr "Weboldal üzenetek"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
-msgstr "Weboldal termék kategória"
+msgstr "Weboldal termékkategória"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Website Public Categories"
-msgstr "Nyilvános weboldal kategóriák"
+msgstr "Weboldal nyilvános kategóriák"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_sequence
@@ -4278,12 +4285,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
 msgid "Website URL"
-msgstr "Honlap címe"
+msgstr "Weboldal címe"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_visitor
 msgid "Website Visitor"
-msgstr "Látogató"
+msgstr "Weboldal látogató"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
@@ -4388,6 +4395,13 @@ msgstr ""
 "                                            Ha szeretne szállítási címet hozzáadni vagy módosítani, kattintson az"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4432,6 +4446,15 @@ msgstr "Az Ön e-mail címe"
 #, python-format
 msgid "Your Name"
 msgstr "Az Ön neve"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -4521,6 +4544,11 @@ msgstr "E-kereskedelem értékesítés"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
 msgstr ""
 
 #. module: website_sale

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:10+0000\n"
 "Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -476,11 +476,9 @@ msgstr "<i class=\"fa fa-comments\"/> Kommentarer ("
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
+"<i class=\"fa fa-desktop me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Fullscreen</span>"
 msgstr ""
-"<i class=\"fa fa-desktop me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Fuldskærm</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -654,11 +652,9 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Share</span>"
+"<i class=\"fa fa-share-alt me-xl-2 my-1\"/>\n"
+"                <span class=\"d-none d-xl-inline-block\">Share</span>"
 msgstr ""
-"<i class=\"fa fa-share-alt me-2\"/>\n"
-"                <span class=\"d-none d-sm-inline-block\">Del</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -1075,11 +1071,8 @@ msgstr "En frugt"
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
 msgid ""
-"A good course has a structure. Pick a name for your first section and click "
-"<b>Save</b> to create it."
+"A good course has a structure. Pick a name for your first <b>Section</b>."
 msgstr ""
-"Et godt kursus har en struktur. Giv din første sektion et navn, og klik på "
-"<b>Gem</b> for at oprette den."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
@@ -1281,7 +1274,6 @@ msgstr "Tilføj kommentar"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
 msgid "Add Content"
@@ -1435,7 +1427,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_downloadable
 msgid "Allow Download"
-msgstr "Tillad Nedhentning"
+msgstr "Aktiver download"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_preview
@@ -1929,6 +1921,13 @@ msgid "Clear filters"
 msgstr "Ryd filtre"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid "Click <b>Save</b> to create it."
+msgstr "Klik <b>Gem</b> for at oprette det."
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Click here to get started"
 msgstr "Klik her for at komme i gang"
@@ -1957,8 +1956,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
-msgid "Click on the <b>Create</b> button to create your first course."
-msgstr "Klik på <b>Opret</b> knappen for at oprette dit første kursus."
+msgid "Click on the <b>Save</b> button to create your first course."
+msgstr "Klik på <b>Gem</b> knappen for at oprette dit første kursus."
 
 #. module: website_slides
 #. odoo-javascript
@@ -3316,6 +3315,7 @@ msgstr "Google Doc Nøgle"
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/models/slide_slide.py:0
+#: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__google_drive
 #, python-format
 msgid "Google Drive"
@@ -4668,6 +4668,13 @@ msgid "Ongoing Courses"
 msgstr "Igangværende kurser"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "Der kan kun indsendes en enkelt anmeldelse pr. kursus."
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
 msgid "Open"
 msgstr "Åben"
@@ -4679,12 +4686,6 @@ msgstr "Åben"
 #, python-format
 msgid "Operation not supported"
 msgstr "Operation ikke understøttet"
-
-#. module: website_slides
-#: code:addons/website_slides/controllers/mail.py:0
-#, python-format
-msgid "Only a single review can be posted per course."
-msgstr "Der kan kun indsendes en enkelt anmeldelse pr. kursus."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -6454,6 +6455,11 @@ msgid "Use Course Groups to classify and organize your Courses."
 msgstr "Brug kursusgrupper til at klassificere og organisere dine kurser."
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Brug skabelon"
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr "Brugt til at kategoriserer og filtrere viste kanaler/kurser"
@@ -6545,6 +6551,7 @@ msgstr "Visninger •"
 
 #. module: website_slides
 #. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
 #: code:addons/website_slides/models/slide_slide.py:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__video_source_type__vimeo
 #, python-format
@@ -6644,7 +6651,7 @@ msgstr "Hjemmeside URL"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_message_ids
 msgid "Website communication history"
-msgstr "Website kommunikations historik"
+msgstr "Hjemmesidens kommunikations historik"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_description
@@ -7226,6 +7233,13 @@ msgstr "f.eks. \"Introduktion\""
 #, python-format
 msgid "e.g. \"Which animal cannot fly?\""
 msgstr "f.eks. \"Hvilket dyr kan ikke flyve?\""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add

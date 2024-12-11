@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -923,7 +923,7 @@ msgstr "値引"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr "値引 & ロイヤルティ"
+msgstr "値引 & ロイヤリティ"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -1166,6 +1166,13 @@ msgstr "ユニークなクーポンを生成し、顧客と共有しましょう
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
 msgstr "eウォレットを生成"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "生成 {{props.context.program_item_name}}"
 
 #. module: loyalty
 #. odoo-python
@@ -1740,6 +1747,7 @@ msgstr "リワードタイプ"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "リワード"
 
@@ -1751,7 +1759,7 @@ msgstr "規則ポイントリワードは必ず正の値にして下さい。"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rules & Rewards"
-msgstr "ルール & リワード"
+msgstr "規則 & リワード"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__selected
@@ -1865,6 +1873,13 @@ msgstr "プロモコードは一意にして下さい。"
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
 msgstr "リワードに必要なポイントは必ず正の値にして下さい。"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "報酬の説明フィールドを空にすることはできません。"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -2173,3 +2188,10 @@ msgstr "使用"
 #, python-format
 msgid "your order"
 msgstr "自分のオーダ"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

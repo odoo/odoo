@@ -47,7 +47,7 @@ class EventController(Controller):
         # We sudo the event in case of invitations sent before publishing it.
         event_sudo = request.env['event.event'].browse(event_id).exists().sudo()
         hash_truth = event_sudo and event_sudo._get_tickets_access_hash(registration_ids)
-        if not consteq(tickets_hash, hash_truth):
+        if not hash_truth or not consteq(tickets_hash, hash_truth):
             raise NotFound()
 
         event_registrations_sudo = event_sudo.registration_ids.filtered(lambda reg: reg.id in registration_ids)

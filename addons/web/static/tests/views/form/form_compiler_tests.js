@@ -535,4 +535,34 @@ QUnit.module("Form Renderer", (hooks) => {
         const expected = `<t t-translation="off"><div class="myNode" t-if="( myCondition or myOtherCondition ) and !__comp__.evaluateBooleanExpr(&quot;field == 'value'&quot;,__comp__.props.record.evalContextWithVirtualIds)" t-ref="compiled_view_root"/></t>`;
         assert.areEquivalent(compileTemplate(arch), expected);
     });
+
+    QUnit.test("keep nosheet style if a sheet is part of a nested form", (assert) => {
+        const arch = `
+            <form>
+                <field name="move_line_ids" field_id="move_line_ids">
+                    <form>
+                        <sheet/>
+                    </form>
+                </field>
+            </form>`;
+
+        const expected = `<t t-translation="off">
+            <div
+                class="o_form_renderer o_form_nosheet"
+                t-att-class="__comp__.props.class"
+                t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
+                t-ref="compiled_view_root"
+            >
+                <Field
+                    id="'move_line_ids'"
+                    name="'move_line_ids'"
+                    record="__comp__.props.record"
+                    fieldInfo="__comp__.props.archInfo.fieldNodes['move_line_ids']"
+                    readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"
+                />
+            </div>
+        </t>`;
+
+        assert.areEquivalent(compileTemplate(arch), expected);
+    });
 });

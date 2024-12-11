@@ -220,7 +220,7 @@
                 <field name="personal_stage_type_ids" string="Stage"/>
                 <filter name="open_tasks" string="Open" domain="[('state', 'in', ['01_in_progress', '02_changes_requested', '03_approved', '04_waiting_normal'])]"/>
                 <filter name="closed_tasks" string="Closed" domain="[('state', 'in', ['1_done','1_canceled'])]"/>
-                <filter string="Closed On" name="closed_on" domain="[('state', 'in', ['1_done','1_canceled'])]" date="date_last_stage_update"/>
+                <filter string="Closed On" name="closed_on" domain="[('state', 'in', ['1_done','1_canceled'])]" date="date_last_stage_update" invisible="1"/>
                 <separator/>
                 <filter name="active_false" string="Archived" domain="[('active', '=', False)]"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"

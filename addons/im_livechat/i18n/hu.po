@@ -4,23 +4,23 @@
 # 
 # Translators:
 # Bognár István <f-b-i@freemail.hu>, 2023
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2023
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # Kovács Tibor <kovika@gmail.com>, 2023
 # Tamás Dombos, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
 # krnkris, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: krnkris, 2023\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,6 +70,15 @@ msgstr "% Boldog"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
 msgid "% of Happiness"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/discuss_channel.py:0
+#, python-format
+msgid ""
+"%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned "
+"response in your message."
 msgstr ""
 
 #. module: im_livechat
@@ -1257,7 +1266,7 @@ msgstr "Üzenetek száma a párbeszédben"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_has_error_counter
@@ -1827,13 +1836,6 @@ msgid "Treated sessions"
 msgstr "Feldolgozott folyamatok"
 
 #. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/discuss_channel.py:0
-#, python-format
-msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
 msgstr "URL Regex"
@@ -1894,8 +1896,8 @@ msgid "User's raw answer"
 msgstr ""
 
 #. module: im_livechat
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/controllers/main.py:0
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
@@ -1965,6 +1967,11 @@ msgstr ""
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
 msgstr ""
 
 #. module: im_livechat

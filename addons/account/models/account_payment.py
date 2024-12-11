@@ -98,6 +98,7 @@ class AccountPayment(models.Model):
         comodel_name='account.account',
         string="Outstanding Account",
         store=True,
+        index='btree_not_null',
         compute='_compute_outstanding_account_id',
         check_company=True)
     destination_account_id = fields.Many2one(
@@ -437,6 +438,9 @@ class AccountPayment(models.Model):
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
+            # Avoid overwriting existing value
+            if pay.partner_bank_id and pay.partner_bank_id in pay.available_partner_bank_ids:
+                continue
             pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
 
     @api.depends('partner_id', 'journal_id', 'destination_journal_id')

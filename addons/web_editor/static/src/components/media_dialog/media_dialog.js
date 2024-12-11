@@ -15,22 +15,22 @@ import { Component, useState, useRef, useEffect } from "@odoo/owl";
 export const TABS = {
     IMAGES: {
         id: 'IMAGES',
-        title: "Images",
+        title: _t("Images"),
         Component: ImageSelector,
     },
     DOCUMENTS: {
         id: 'DOCUMENTS',
-        title: "Documents",
+        title: _t("Documents"),
         Component: DocumentSelector,
     },
     ICONS: {
         id: 'ICONS',
-        title: "Icons",
+        title: _t("Icons"),
         Component: IconSelector,
     },
     VIDEOS: {
         id: 'VIDEOS',
-        title: "Videos",
+        title: _t("Videos"),
         Component: VideoSelector,
     },
 };
@@ -193,6 +193,17 @@ export class MediaDialog extends Component {
                     }
                     if (this.props.media.dataset.hoverEffectIntensity) {
                         element.dataset.hoverEffectIntensity = this.props.media.dataset.hoverEffectIntensity;
+                    }
+                } else if ([TABS.VIDEOS.id, TABS.DOCUMENTS.id].includes(this.state.activeTab)) {
+                    const parentEl = this.props.media.parentElement;
+                    if (
+                        parentEl &&
+                        parentEl.tagName === "A" &&
+                        parentEl.children.length === 1 &&
+                        this.props.media.tagName === "IMG"
+                    ) {
+                        // If an image is wrapped in an <a> tag, we remove the link when replacing it with a video or document
+                        parentEl.replaceWith(parentEl.firstElementChild);
                     }
                 }
             }

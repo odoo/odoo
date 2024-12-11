@@ -167,6 +167,10 @@ class StockPicking(models.Model):
         #`package_carrier_type` will be the same in these cases.
         if context['current_package_carrier_type'] in ['fixed', 'base_on_rule']:
             context['current_package_carrier_type'] = 'none'
+        # Update the context 'default_package_type_id' passed from JS
+        # to populate the scanned package type in the package wizard opened from the barcode.
+        if self.env.context.get('default_package_type_id'):
+            context['default_delivery_package_type_id'] = self.env.context.get('default_package_type_id')
         return {
             'name': _('Package Details'),
             'type': 'ir.actions.act_window',
@@ -185,7 +189,7 @@ class StockPicking(models.Model):
             amount_without_delivery = self.sale_id._compute_amount_total_without_delivery()
             if self.carrier_id._compute_currency(self.sale_id, amount_without_delivery, 'pricelist_to_company') >= self.carrier_id.amount:
                 res['exact_price'] = 0.0
-        self.carrier_price = self.carrier_id._apply_margins(res['exact_price'])
+        self.carrier_price = self.carrier_id.with_context(order=self.sale_id)._apply_margins(res['exact_price'])
         if res['tracking_number']:
             related_pickings = self.env['stock.picking'] if self.carrier_tracking_ref and res['tracking_number'] in self.carrier_tracking_ref else self
             accessed_moves = previous_moves = self.move_ids.move_orig_ids

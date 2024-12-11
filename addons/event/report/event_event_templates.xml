@@ -20,7 +20,7 @@
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                         <t t-elif="not attendee">
-                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                     </t>
                     <div class="o_event_foldable_badge_barcode_container_top">
@@ -42,7 +42,7 @@
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                         <t t-elif="not attendee">
-                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                     </t>
                     <div class="o_event_foldable_badge_barcode_container_bottom">
@@ -271,7 +271,7 @@
                             <span t-field="attendee.barcode" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                         <t t-elif="not attendee">
-                            <span t-out="12345678901234567890" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
+                            <span t-out="'12345678901234567890'" class="barcode ms-2" t-options="{'widget': 'barcode', 'width': 200, 'height': 84, 'quiet': 0, 'humanreadable': 1}"/>
                         </t>
                     </t>
                 </span>

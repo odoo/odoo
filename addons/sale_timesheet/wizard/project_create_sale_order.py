@@ -124,7 +124,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
         self._make_billable(sale_order)
 
         # confirm SO
-        sale_order.action_confirm()
+        if sale_order.state != 'sale':
+            sale_order.action_confirm()
         return sale_order
 
     def _make_billable(self, sale_order):

@@ -21,7 +21,7 @@ import babel.core
 import pytz
 from lxml import etree
 from lxml.builder import E
-from passlib.context import CryptContext
+from passlib.context import CryptContext as _CryptContext
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
@@ -33,6 +33,57 @@ from odoo.service.db import check_super
 from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
 
 _logger = logging.getLogger(__name__)
+
+class CryptContext:
+    def __init__(self, *args, **kwargs):
+        self.__obj__ = _CryptContext(*args, **kwargs)
+
+    @property
+    def encrypt(self):
+        # deprecated alias
+        return self.hash
+
+    def copy(self):
+        """
+            The copy method must create a new instance of the
+            ``CryptContext`` wrapper with the same configuration
+            as the original (``__obj__``).
+
+            There are no need to manage the case where kwargs are
+            passed to the ``copy`` method.
+
+            It is necessary to load the original ``CryptContext`` in
+            the new instance of the original ``CryptContext`` with ``load``
+            to get the same configuration.
+        """
+        other_wrapper = CryptContext(_autoload=False)
+        other_wrapper.__obj__.load(self.__obj__)
+        return other_wrapper
+
+    @property
+    def hash(self):
+        return self.__obj__.hash
+
+    @property
+    def identify(self):
+        return self.__obj__.identify
+
+    @property
+    def verify(self):
+        return self.__obj__.verify
+
+    @property
+    def verify_and_update(self):
+        return self.__obj__.verify_and_update
+
+    def schemes(self):
+        return self.__obj__.schemes()
+
+    def update(self, **kwargs):
+        if kwargs.get("schemes"):
+            assert isinstance(kwargs["schemes"], str) or all(isinstance(s, str) for s in kwargs["schemes"])
+        return self.__obj__.update(**kwargs)
+
 
 # Only users who can modify the user (incl. the user herself) see the real contents of these fields
 USER_PRIVATE_FIELDS = []
@@ -515,13 +566,23 @@ class Users(models.Model):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
-        # Prevent using reload actions.
         # We use sudo() because  "Access rights" admins can't read action models
         for user in self.sudo():
             if user.action_id.type == "ir.actions.client":
+                # Prevent using reload actions.
                 action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
                 if action.tag == "reload":
                     raise ValidationError(_('The "%s" action cannot be selected as home action.', action.name))
+
+            elif user.action_id.type == "ir.actions.act_window":
+                # Restrict actions that include 'active_id' in their context.
+                action = self.env["ir.actions.act_window"].browse(user.action_id.id)  # magic
+                if not action.context:
+                    continue
+                if "active_id" in action.context:
+                    raise ValidationError(
+                        _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
+                    )
 
 
     @api.constrains('groups_id')
@@ -759,7 +820,7 @@ class Users(models.Model):
         if lang not in langs:
             lang = request.best_lang if request else None
             if lang not in langs:
-                lang = self.env.user.company_id.partner_id.lang
+                lang = self.env.user.with_context(prefetch_fields=False).company_id.partner_id.lang
                 if lang not in langs:
                     lang = DEFAULT_LANG
                     if lang not in langs:
@@ -1933,11 +1994,12 @@ class CheckIdentity(models.TransientModel):
             self.create_uid._check_credentials(self.password, {'interactive': True})
         except AccessDenied:
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
+        finally:
+            self.password = False
 
     def run_check(self):
         assert request, "This method can only be accessed over HTTP"
         self._check_identity()
-        self.password = False
 
         request.session['identity-check-last'] = time.time()
         ctx, model, ids, method = json.loads(self.sudo().request)
@@ -1946,8 +2008,9 @@ class CheckIdentity(models.TransientModel):
         return method()
 
     def revoke_all_devices(self):
+        current_password = self.password
         self._check_identity()
-        self.env.user._change_password(self.password)
+        self.env.user._change_password(current_password)
         self.sudo().unlink()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 

@@ -17,7 +17,7 @@ Overwrite ``_computeSelectorFunctions`` to enable or disable other snippets. By 
 the builder check if the node or his parent have the attribute data-oe-model
 
 Trigger:
-- ``snippet-dropped`` is triggered on ``#oe_snippets`` whith $target as attribute when a snippet is dropped
+- ``snippet-dropped`` is triggered on ``#oe_snippets`` with $target as attribute when a snippet is dropped
 - ``snippet-activated`` is triggered on ``#oe_snippets`` (and on snippet) when a snippet is activated
 
 
@@ -83,7 +83,7 @@ Methods:
  - ``onClone``:
    called when the snippet is duplicate
  - ``onRemove``:
-   called when the snippet is removed (dom is removing after this tigger)
+   called when the snippet is removed (dom is removing after this trigger)
  - ``onBuilt:
    called just after that a thumbnail is drag and dropped into a drop zone.
    The content is already inserted in the page.
@@ -92,7 +92,7 @@ Methods:
    some datas (contentEditable, added classes to a running animation...)
 
 Customize Methods:
-All javascript option can defiend method call from the template on mouse over, on
+All javascript option can defined method call from the template on mouse over, on
 click or to reset the default value (<li data-your_js_method="your_value"><a>...</a></li>).
 The method receive the variable type (``over``, ``click`` or ``reset``), the method
 value and the jQuery object of the HTML li item. (can be use for multi methods)

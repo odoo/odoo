@@ -487,6 +487,11 @@ class AccountTax(models.Model):
                 for child in tax.children_tax_ids
             ):
                 raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
+            if any(
+                child.amount_type == 'group'
+                for child in tax.children_tax_ids
+            ):
+                raise ValidationError(_('Nested group of taxes are not allowed.'))
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
@@ -708,7 +713,7 @@ class AccountTax(models.Model):
         if not self:
             company = self.env.company
         else:
-            company = self[0].company_id._accessible_branches()[:1]
+            company = self[0].company_id._accessible_branches()[:1] or self[0].company_id
 
         # 1) Flatten the taxes.
         taxes, groups_map = self.flatten_taxes_hierarchy(create_map=True)
@@ -751,19 +756,20 @@ class AccountTax(models.Model):
             """ Recompute the new base amount based on included fixed/percent amounts and the current base amount. """
             fixed_amount = incl_tax_amounts['fixed_amount']
             division_amount = sum(tax_factor for _i, tax_factor in incl_tax_amounts['division_taxes'])
-            percent_amount = sum(tax_factor for _i, tax_factor in incl_tax_amounts['percent_taxes'])
+            percent_amount = sum(tax_amount * sum_repartition_factor for _i, tax_amount, sum_repartition_factor in incl_tax_amounts['percent_taxes'])
 
             if company.country_code == 'IN':
                 # For the indian case, when facing two percent price-included taxes having the same percentage,
                 # both need to produce the same tax amounts. To do that, the tax amount of those taxes are computed
                 # directly during the first traveling in reversed order.
                 total_tax_amount = 0.0
-                for i, tax_factor in incl_tax_amounts['percent_taxes']:
-                    tax_amount = float_round(base * tax_factor / (100 + percent_amount), precision_rounding=prec)
-                    total_tax_amount += tax_amount
-                    cached_tax_amounts[i] = tax_amount
-                    fixed_amount += tax_amount
-                for i, tax_factor in incl_tax_amounts['percent_taxes']:
+                for i, tax_amount, sum_repartition_factor in incl_tax_amounts['percent_taxes']:
+                    gross_tax_amount = float_round(base * tax_amount / (100 + percent_amount), precision_rounding=prec)
+                    factored_tax_amount = float_round(gross_tax_amount * sum_repartition_factor, precision_rounding=prec)
+                    total_tax_amount += factored_tax_amount
+                    cached_tax_amounts[i] = gross_tax_amount
+                    fixed_amount += factored_tax_amount
+                for i, _tax_amount, _sum_repartition_factor in incl_tax_amounts['percent_taxes']:
                     cached_base_amounts[i] = base - total_tax_amount
                 percent_amount = 0.0
 
@@ -842,7 +848,7 @@ class AccountTax(models.Model):
                     store_included_tax_total = True
                 if self._context.get('force_price_include', tax.price_include):
                     if tax.amount_type == 'percent':
-                        incl_tax_amounts['percent_taxes'].append((i, tax.amount * sum_repartition_factor))
+                        incl_tax_amounts['percent_taxes'].append((i, tax.amount, sum_repartition_factor))
                     elif tax.amount_type == 'division':
                         incl_tax_amounts['division_taxes'].append((i, tax.amount * sum_repartition_factor))
                     elif tax.amount_type == 'fixed':
@@ -1400,7 +1406,7 @@ class AccountTax(models.Model):
         for grouping_key, tax_values in global_tax_details['tax_details'].items():
             if tax_values['currency_id']:
                 currency = self.env['res.currency'].browse(tax_values['currency_id'])
-                tax_amount = currency.round(tax_values['tax_amount'])
+                tax_amount = currency.round(tax_values['tax_amount_currency'])
                 res['totals'][currency]['amount_tax'] += tax_amount
 
             if grouping_key in existing_tax_line_map:
@@ -1492,6 +1498,7 @@ class AccountTax(models.Model):
                 'tax_group': tax_detail['tax_group'],
                 'base_amount': tax_detail['base_amount_currency'],
                 'tax_amount': tax_detail['tax_amount_currency'],
+                'hide_base_amount': all(x['tax_repartition_line'].tax_id.amount_type == 'fixed' for x in tax_detail['group_tax_details']),
             }
             if is_company_currency_requested:
                 tax_group_vals['base_amount_company_currency'] = tax_detail['base_amount']
@@ -1536,6 +1543,7 @@ class AccountTax(models.Model):
                 'tax_group_base_amount': tax_group_vals['base_amount'],
                 'formatted_tax_group_amount': formatLang(self.env, tax_group_vals['tax_amount'], currency_obj=currency),
                 'formatted_tax_group_base_amount': formatLang(self.env, tax_group_vals['base_amount'], currency_obj=currency),
+                'hide_base_amount': tax_group_vals['hide_base_amount'],
             })
             if is_company_currency_requested:
                 groups_by_subtotal[subtotal_title][-1]['tax_group_amount_company_currency'] = tax_group_vals['tax_amount_company_currency']
@@ -1597,6 +1605,103 @@ class AccountTax(models.Model):
             prod_taxes = prod_taxes.filtered(lambda tax: tax.company_id == company_id)
             line_taxes = line_taxes.filtered(lambda tax: tax.company_id == company_id)
         return self._fix_tax_included_price(price, prod_taxes, line_taxes)
+
+    @api.model
+    def _dispatch_negative_lines(self, base_lines, sorting_criteria=None, additional_dispatching_method=None):
+        """
+        This method tries to dispatch the amount of negative lines on positive ones with the same tax, resulting in
+        a discount for these positive lines.
+
+        :param base_lines: A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
+        :param sorting_criteria: Optional list of criteria to sort the candidate for a negative line
+        :param additional_dispatching_method: Optional method to transfer additional information (like tax amounts).
+                                              It takes as arguments:
+                                                  - neg_base_line: the negative line being dispatched
+                                                  - candidate: the positive line that will get discounted by neg_base_line
+                                                  - discount_to_distribute: the amount being transferred
+                                                  - is_zero: if the neg_base_line is nulled by the candidate
+
+        :return: A dictionary in the following form:
+            {
+                'result_lines': Remaining list of positive lines, with their potential increased discount
+                'orphan_negative_lines': A list of remaining negative lines that failed to be distributed
+                'nulled_candidate_lines': list of previously positive lines that have been nulled (with the discount)
+            }
+        """
+        results = {
+            'result_lines': [],
+            'orphan_negative_lines': [],
+            'nulled_candidate_lines': [],
+        }
+        for line in base_lines:
+            line['discount_amount'] = line['discount_amount_before_dispatching']
+
+            if line['currency'].compare_amounts(line['gross_price_subtotal'], 0) < 0.0:
+                results['orphan_negative_lines'].append(line)
+            else:
+                results['result_lines'].append(line)
+
+        for neg_base_line in list(results['orphan_negative_lines']):
+            candidates = [
+                candidate
+                for candidate in results['result_lines']
+                if (
+                    neg_base_line['currency'] == candidate['currency']
+                    and neg_base_line['partner'] == candidate['partner']
+                    and neg_base_line['taxes'] == candidate['taxes']
+                )
+            ]
+
+            sorting_criteria = sorting_criteria or self._get_negative_lines_sorting_candidate_criteria()
+            sorted_candidates = sorted(candidates, key=lambda candidate: tuple(method(candidate, neg_base_line) for method in sorting_criteria))
+
+            # Dispatch.
+            for candidate in sorted_candidates:
+                net_price_subtotal = neg_base_line['gross_price_subtotal'] - neg_base_line['discount_amount']
+                other_net_price_subtotal = candidate['gross_price_subtotal'] - candidate['discount_amount']
+                discount_to_distribute = min(other_net_price_subtotal, -net_price_subtotal)
+
+                candidate['discount_amount'] += discount_to_distribute
+                neg_base_line['discount_amount'] -= discount_to_distribute
+
+                remaining_to_distribute = neg_base_line['gross_price_subtotal'] - neg_base_line['discount_amount']
+                is_zero = neg_base_line['currency'].is_zero(remaining_to_distribute)
+
+                if additional_dispatching_method:
+                    additional_dispatching_method(neg_base_line=neg_base_line, candidate=candidate, discount_to_distribute=discount_to_distribute, is_zero=is_zero)
+
+                # Check if there is something left on the other line.
+                remaining_amount = candidate['discount_amount'] - candidate['gross_price_subtotal']
+                if candidate['currency'].is_zero(remaining_amount):
+                    results['result_lines'].remove(candidate)
+                    results['nulled_candidate_lines'].append(candidate)
+
+                if is_zero:
+                    results['orphan_negative_lines'].remove(neg_base_line)
+                    break
+
+        return results
+
+    @api.model
+    def _get_negative_lines_sorting_candidate_criteria(self):
+        # Ordering by priority:
+        # - same product
+        # - same amount
+        # - biggest amount
+        def same_product(candidate, negative_line):
+            return (
+                not candidate['product']
+                or not negative_line['product']
+                or candidate['product'] != negative_line['product']
+            )
+
+        def same_price_subtotal(candidate, negative_line):
+            return candidate['currency'].compare_amounts(candidate['price_subtotal'], -negative_line['price_subtotal']) != 0
+
+        def biggest_amount(candidate, negative_line):
+            return -candidate['price_subtotal']
+
+        return [same_product, same_price_subtotal, biggest_amount]
 
 
 class AccountTaxRepartitionLine(models.Model):

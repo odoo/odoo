@@ -18,14 +18,15 @@
 # Anatolij, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # Martin Trigaux, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:30+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.lt>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,6 +141,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Allow custom Internal notes on Orderlines."
 msgstr ""
 
@@ -204,7 +206,7 @@ msgstr "Fono paveikslėlis"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Kiaulienos burgeris"
 
 #. module: pos_restaurant
 #: model:pos.payment.method,name:pos_restaurant.payment_method
@@ -259,6 +261,13 @@ msgid "Blue"
 msgstr "Mėlyna"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/product_screen/product_screen.xml:0
+#, python-format
+msgid "Book table"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
 msgid "Burger Menu Combo"
 msgstr ""
@@ -268,7 +277,7 @@ msgstr ""
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Restaurant"
-msgstr ""
+msgstr "Restorano kasos operacijos"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -568,6 +577,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Internal Notes"
 msgstr "Vidinės pastabos"
@@ -660,6 +670,20 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Number of Seats?"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Point of Sale"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
+#, python-format
+msgid "Odoo Restaurant"
 msgstr ""
 
 #. module: pos_restaurant
@@ -779,11 +803,6 @@ msgid "Point of Sales"
 msgstr "Pardavimo taškas"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
-msgid "Pos Iface Orderline Notes"
-msgstr ""
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
 msgstr ""
@@ -824,13 +843,6 @@ msgstr "Violetinis"
 #, python-format
 msgid "Red"
 msgstr "Raudona"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/product_screen/product_screen.xml:0
-#, python-format
-msgid "Release table"
-msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1325,4 +1337,11 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "items"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/components/order_widget/order_widget.js:0
+#, python-format
+msgid "or book the table for later"
 msgstr ""

@@ -13,14 +13,16 @@
 # Damian Ratus, 2024
 # Paweł Wodyński <pw@myodoo.pl>, 2024
 # Janusz Harkot <jh@trilab.pl>, 2024
+# Andrzej Gerasimuk, 2024
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Janusz Harkot <jh@trilab.pl>, 2024\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -746,7 +748,7 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> Autoryzowany"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr "<i class=\"fa fa-fw fa-check\"/> Płatne"
+msgstr "<i class=\"fa fa-fw fa-check\"/> Zapłacono"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4141,14 +4143,14 @@ msgid "Sales Analysis"
 msgstr "Analiza Sprzedaży"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_customers
-msgid "Sales Analysis By Customers"
-msgstr "Analiza sprzedaży według klientów"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
 msgstr "Analiza sprzedaży przez sprzedawców"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_customers
+msgid "Sales Analysis Per Customers"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4973,7 +4975,6 @@ msgstr "Procent kwoty wymaganej do zapłaty w celu potwierdzenia oferty."
 
 #. module: sale
 #. odoo-python
-#. odoo-python
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
@@ -5020,11 +5021,6 @@ msgid "The value of the down payment amount must be positive."
 msgstr "Wartość zaliczki musi być dodatnia"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
-msgid "There are currently no orders for your account."
-msgstr "Obecnie nie ma zamówień na Twoim koncie."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "Obecnie nie ma ofert dla Twojego konta."
@@ -5068,7 +5064,7 @@ msgid ""
 msgstr ""
 "Jest to data dostawy obiecana klientowi. Jeśli zostanie ustawiona, "
 "zamówienie dostawy zostanie zaplanowane na podstawie tej daty, a nie czasu "
-"realizacji sygnału produktu."
+"realizacji leadu produktu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5468,6 +5464,7 @@ msgstr "Ostrzeżenie"
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/product_template.py:0
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format

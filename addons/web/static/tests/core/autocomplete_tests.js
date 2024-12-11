@@ -59,6 +59,22 @@ QUnit.module("Components", (hooks) => {
             options.map((el) => el.textContent),
             ["World", "Hello"]
         );
+
+        const optionItems = [...target.querySelectorAll(".dropdown-item")];
+        assert.deepEqual(
+            optionItems.map((el) => ({
+                id: el.id,
+                role: el.getAttribute("role"),
+                "aria-selected": el.getAttribute("aria-selected"),
+            })),
+            [
+                { id: "autocomplete_0_0", role: "option", "aria-selected": "true" },
+                { id: "autocomplete_0_1", role: "option", "aria-selected": "false" },
+            ]
+        );
+
+        const input = target.querySelector(".o-autocomplete--input");
+        assert.strictEqual(input.getAttribute("aria-activedescendant"), optionItems[0].id);
     });
 
     QUnit.test("select option", async (assert) => {
@@ -558,6 +574,34 @@ QUnit.module("Components", (hooks) => {
         await click(input);
         input.focus();
 
+        // Navigate suggestions using arrow keys
+        const optionItems = [...target.querySelectorAll(".dropdown-item")];
+        assert.deepEqual(
+            optionItems.map((el) => ({
+                id: el.id,
+                role: el.getAttribute("role"),
+                "aria-selected": el.getAttribute("aria-selected"),
+            })),
+            [
+                { id: "autocomplete_0_0", role: "option", "aria-selected": "true" },
+                { id: "autocomplete_0_1", role: "option", "aria-selected": "false" },
+            ]
+        );
+        assert.strictEqual(input.getAttribute("aria-activedescendant"), optionItems[0].id);
+        await triggerEvent(target, ".o-autocomplete--input", "keydown", { key: "arrowdown" });
+        assert.deepEqual(
+            optionItems.map((el) => ({
+                id: el.id,
+                role: el.getAttribute("role"),
+                "aria-selected": el.getAttribute("aria-selected"),
+            })),
+            [
+                { id: "autocomplete_0_0", role: "option", "aria-selected": "false" },
+                { id: "autocomplete_0_1", role: "option", "aria-selected": "true" },
+            ]
+        );
+        assert.strictEqual(input.getAttribute("aria-activedescendant"), optionItems[1].id);
+
         // Start typing hello and click on the result
         await triggerEvent(target, ".o-autocomplete--input", "keydown", { key: "h" });
         input.value = "h";
@@ -646,5 +690,39 @@ QUnit.module("Components", (hooks) => {
         assert.containsN(target, ".o-autocomplete--dropdown-item", 2);
         await triggerEvent(target, "", "pointerdown");
         assert.containsNone(target, ".o-autocomplete--dropdown-item");
+    });
+
+    QUnit.test("autocomplete trim spaces for search", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.state = useState({
+                    value: " World",
+                });
+            }
+            get sources() {
+                return [
+                    {
+                        options(search) {
+                            return [{ label: "World" }, { label: "Hello" }].filter(({ label }) =>
+                                label.startsWith(search)
+                            );
+                        },
+                    },
+                ];
+            }
+        }
+        Parent.template = xml`
+            <AutoComplete value="state.value" sources="sources" onSelect="() => {}"/>
+        `;
+        Parent.props = ["*"];
+        Parent.components = { AutoComplete };
+        await mount(Parent, target, { env });
+        await click(target, `.o-autocomplete input`);
+        assert.deepEqual(
+            [...target.querySelectorAll(`.o-autocomplete--dropdown-item`)].map(
+                (el) => el.textContent
+            ),
+            ["World", "Hello"]
+        );
     });
 });

@@ -5,10 +5,11 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 
 from odoo.addons.mail.tests.common import MockEmail
-from odoo.addons.sms.tests.common import MockSMS
+from odoo.addons.sms.tests.common import SMSCase
 from odoo.addons.test_event_full.tests.common import TestWEventCommon, TestEventFullCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
+from odoo.tools import formataddr
 
 
 @tagged('event_mail')
@@ -88,12 +89,13 @@ class TestTemplateRefModel(TestWEventCommon):
                     else:
                         self.assertEqual(str(cm.exception), 'The template which is referenced should be coming from sms.template model.')
 
-class TestEventSmsMailSchedule(TestWEventCommon, MockEmail, MockSMS):
+
+class TestEventSmsMailSchedule(TestWEventCommon, MockEmail, SMSCase):
 
     @freeze_time('2020-07-06 12:00:00')
     def test_event_mail_before_trigger_sent_count(self):
-        """ Emails are sent to both confirmed and unconfirmed attendees.
-        This test checks that the count of sent emails includes the emails sent to unconfirmed ones
+        """ Emails are only sent to confirmed attendees.
+        This test checks that the count of sent emails does not include the emails sent to unconfirmed ones.
 
         Time in the test is frozen to simulate the following state:
 
@@ -135,30 +137,51 @@ class TestEventSmsMailSchedule(TestWEventCommon, MockEmail, MockSMS):
         self.assertEqual(len(mail_scheduler), 2, 'There should be two mail schedulers. One for mail one for sms. Cannot perform test')
 
         # Add registrations
-        self.env['event.registration'].create([{
+        _dummy, _dummy, open_reg, done_reg = self.env['event.registration'].create([{
             'event_id': test_event.id,
             'name': 'RegistrationUnconfirmed',
             'email': 'Registration@Unconfirmed.com',
+            'phone': '1',
             'state': 'draft',
         }, {
             'event_id': test_event.id,
             'name': 'RegistrationCanceled',
             'email': 'Registration@Canceled.com',
+            'phone': '2',
             'state': 'cancel',
         }, {
             'event_id': test_event.id,
             'name': 'RegistrationConfirmed',
             'email': 'Registration@Confirmed.com',
+            'phone': '3',
             'state': 'open',
+        }, {
+            'event_id': test_event.id,
+            'name': 'RegistrationDone',
+            'email': 'Registration@Done.com',
+            'phone': '4',
+            'state': 'done',
         }])
 
         with self.mock_mail_gateway(), self.mockSMSGateway():
             mail_scheduler.execute()
 
-        self.assertEqual(len(self._new_mails), 2, 'Mails were not created')
-        self.assertEqual(len(self._new_sms), 2, 'SMS were not created')
+        for registration in open_reg, done_reg:
+            with self.subTest(registration_state=registration.state, medium='mail'):
+                self.assertMailMailWEmails(
+                    [formataddr((registration.name, registration.email))],
+                    'outgoing',
+                )
+            with self.subTest(registration_state=registration.state, medium='mail'):
+                self.assertSMS(
+                    self.env['res.partner'],
+                    registration.phone,
+                    None,
+                )
+        self.assertEqual(len(self._new_mails), 2, 'Mails should not be sent to draft or cancel registrations')
+        self.assertEqual(len(self._new_sms), 2, 'SMS should not be sent to draft or cancel registrations')
 
-        self.assertEqual(test_event.seats_taken, 1, 'Wrong number of seats_taken')
+        self.assertEqual(test_event.seats_taken, 2, 'Wrong number of seats_taken')
 
         self.assertEqual(mail_scheduler.filtered(lambda r: r.notification_type == 'mail').mail_count_done, 2,
             'Wrong Emails Sent Count! Probably emails sent to unconfirmed attendees were not included into the Sent Count')

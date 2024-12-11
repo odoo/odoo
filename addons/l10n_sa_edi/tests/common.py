@@ -49,7 +49,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'country_id': cls.env.ref('base.us').id,
             'state_id': cls.env['res.country.state'].search([('name', '=', 'California')]).id,
             'email': 'azure.Interior24@example.com',
-            'phone': '(870)-931-0505',
+            'phone': '+1 870-931-0505',
             'company_type': 'company',
             'lang': 'en_US',
         })

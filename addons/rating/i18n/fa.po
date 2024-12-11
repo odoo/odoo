@@ -35,22 +35,25 @@ msgstr "رتبه دهی"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "<i class=\"fa fa-arrow-left me-1\"/> Back to the Homepage"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-left me-1\"/> بازگشت به صفحه اصلی"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o me-2\" aria-label=\"تاریخ ایجاد\"/>"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
 msgstr ""
+"```html\n"
+"<i class=\"fa fa-folder me-2\" aria-label=\"باز کردن پوشه\"/>\n"
+"```"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "A star"
-msgstr ""
+msgstr "یک ستاره"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_needaction
@@ -71,7 +74,7 @@ msgstr "رتبه‌ی متوسط"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "امتیاز متوسط (%)"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
@@ -94,7 +97,7 @@ msgstr "مشتری"
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "Customer rated %r."
-msgstr ""
+msgstr "مشتری به %r امتیاز داد."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -118,7 +121,7 @@ msgstr "نام نمایش داده شده"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Dissatisfied"
-msgstr ""
+msgstr "ناراضی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
@@ -139,12 +142,12 @@ msgstr "موضوع ایمیل"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Feel free to share feedback on your experience:"
-msgstr ""
+msgstr "آزادانه نظرات خود را در مورد تجربه‌تان به اشتراک بگذارید:"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
-msgstr ""
+msgstr "امتیاز پر شده"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_follower_ids
@@ -164,7 +167,7 @@ msgstr "گروه‌بندی برمبنای"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "Half a star"
-msgstr ""
+msgstr "نیم ستاره"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__has_message
@@ -176,6 +179,8 @@ msgstr "آیا دارای پیام است"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
+"نمایش به کاربران عمومی/پورتال را پنهان کنید، به طور مستقل از پیکربندی "
+"زیرگروه."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
@@ -201,7 +206,7 @@ msgstr "تصویر"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image_url
 msgid "Image URL"
-msgstr ""
+msgstr "تصویر آدرس اینترنتی"
 
 #. module: rating
 #. odoo-python
@@ -209,14 +214,14 @@ msgstr ""
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "Incorrect rating: should be 1, 3 or 5 (received %d)"
-msgstr ""
+msgstr "امتیاز نادرست: باید 1، 3 یا 5 باشد (دریافت‌شده %d)"
 
 #. module: rating
 #. odoo-python
 #: code:addons/rating/models/mail_thread.py:0
 #, python-format
 msgid "Invalid token or rating."
-msgstr ""
+msgstr "توکن یا امتیاز نامعتبر است."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__message_is_follower
@@ -262,7 +267,7 @@ msgstr "پیام ها"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
-msgstr ""
+msgstr "رتبه‌های من"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_name
@@ -277,7 +282,7 @@ msgstr "نام"
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
 #: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__none
 msgid "No Rating yet"
-msgstr ""
+msgstr "هنوز امتیازی وجود ندارد"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.rating_rating_action
@@ -316,37 +321,37 @@ msgstr "تعداد پیامهای با خطای تحویل"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Okay"
-msgstr ""
+msgstr "باشه"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "سند اصلی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "مدل سند والد"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "نام سند والد"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Parent Holder"
-msgstr ""
+msgstr "نگهدارنده والدین"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
 msgid "Parent Ref"
-msgstr ""
+msgstr "ارجاع والد"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr ""
+msgstr "مدل سند مرتبط والدین"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
@@ -358,13 +363,13 @@ msgstr "درصد رتبه‌های راضی"
 #: code:addons/rating/models/mail_thread.py:0
 #, python-format
 msgid "Posting a rating should be done using message post API."
-msgstr ""
+msgstr "ارسال امتیاز باید با استفاده از API ارسال پیام انجام شود."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated Operator"
-msgstr ""
+msgstr "اپراتور امتیازدهی شده"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_rating
@@ -397,12 +402,12 @@ msgstr "رتبه‌بندی آخرین مقدار"
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
 msgid "Rating Mixin"
-msgstr ""
+msgstr "مخلوط رتبه‌بندی"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_parent_mixin
 msgid "Rating Parent Mixin"
-msgstr ""
+msgstr "مخلوط والد رتبه‌ بندی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
@@ -420,13 +425,13 @@ msgstr "متن رتبه‌بندی"
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Value"
-msgstr ""
+msgstr "ارزش امتیاز"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Value (/5)"
-msgstr ""
+msgstr "ارزش‌گذاری (از ۵)"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
@@ -436,14 +441,14 @@ msgstr "تعداد رتبه بندی"
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
 msgid "Rating should be between 0 and 5"
-msgstr ""
+msgstr "بازه امتیاز باید بین 0 و 5 باشد"
 
 #. module: rating
 #. odoo-javascript
 #: code:addons/rating/static/src/notification_item_patch.xml:0
 #, python-format
 msgid "Rating:"
-msgstr ""
+msgstr "رتبه‌بندی:"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.rating_rating_action
@@ -492,7 +497,7 @@ msgstr "مدل مدرک مربوطه"
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "رتبه‌بندی‌های مرتبط"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -502,7 +507,7 @@ msgstr "منبع"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
 msgid "Resource Ref"
-msgstr ""
+msgstr "منابع مرجع"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
@@ -521,7 +526,7 @@ msgstr "نام منابع"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Satisfied"
-msgstr ""
+msgstr "راضی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
@@ -531,27 +536,27 @@ msgstr "توکن امنیتی"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
-msgstr ""
+msgstr "ارسال بازخورد"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 msgid "Submitted on"
-msgstr ""
+msgstr "ارسال شده در"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thank you for rating our services!"
-msgstr ""
+msgstr "با تشکر از شما که خدمات ما را ارزیابی کردید!"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Thank you for your feedback!"
-msgstr ""
+msgstr "از بازخورد شما متشکریم!"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.rating_rating_action
 msgid "There is no rating for this object at the moment."
-msgstr ""
+msgstr "در حال حاضر هیچ امتیازی برای این شیء وجود ندارد."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -561,7 +566,7 @@ msgstr "امروز"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
 msgid "Visible Internally Only"
-msgstr ""
+msgstr "فقط درونی قابل مشاهده"
 
 #. module: rating
 #. odoo-python
@@ -569,6 +574,7 @@ msgstr ""
 #, python-format
 msgid "Wrong rating value. A rate should be between 0 and 5 (received %d)."
 msgstr ""
+"مقدار امتیاز اشتباه است. یک امتیاز باید بین 0 و 5 باشد (دریافت شده %d)."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban

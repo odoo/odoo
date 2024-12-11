@@ -15,16 +15,16 @@
 # ILMIR <karamov@it-projects.info>, 2023
 # Martin Trigaux, 2023
 # Vasiliy Korobatov <korobatov@gmail.com>, 2023
+# Nadia Martynova, 2024
 # Wil Odoo, 2024
-# nadia martynova, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: nadia martynova, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1449,6 +1449,11 @@ msgid "Email cc:"
 msgstr "Email cc:"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Домен электронной почты, например, 'example.com' в 'odoo@example.com'"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email:"
 msgstr "Email:"
@@ -1678,7 +1683,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
 msgid "Get Lost Reason"
-msgstr "Получить причину проигрыша"
+msgstr "Узнать причину потери лида"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
@@ -1915,12 +1920,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
 msgid "Job Position"
-msgstr "Место работы"
+msgstr "Должность"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Job Position:"
-msgstr "Отрасль вакансии:"
+msgstr "Должность:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
@@ -2339,13 +2344,13 @@ msgstr "Причина проигрыша"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Lost Reason:"
-msgstr "Потерянная причина:"
+msgstr "Причина потери:"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr "Причины проигрыша"
+msgstr "Причины потери лида"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__0
@@ -2384,7 +2389,7 @@ msgstr "Вручную"
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
 #, python-format
 msgid "Mark Lost"
-msgstr "Отметить Проиграна"
+msgstr "Отметить как Упущено"
 
 #. module: crm
 #. odoo-python
@@ -2401,7 +2406,7 @@ msgstr "Отметить как \"проиграно\""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mark as lost"
-msgstr "Отметить как потерянное"
+msgstr "Отметить как упущенный "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2425,7 +2430,7 @@ msgstr "Маркетинг:"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Средний"
+msgstr "Канал"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -4021,8 +4026,8 @@ msgid ""
 "Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by "
 "competitors\")."
 msgstr ""
-"Используйте функцию Утраченные Причины, чтобы сообщать о причинах упущенных "
-"возможностей (например, \"Уступают конкуренты\")."
+"Используйте функцию Причины потери лида, чтобы сообщать о причинах упущенных"
+" возможностей (например, \"Уход к конкурентам\")."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create

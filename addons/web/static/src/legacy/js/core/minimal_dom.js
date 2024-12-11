@@ -104,7 +104,7 @@ export function makeButtonHandler(fct) {
             .then(function () {
                 buttonEl.classList.remove('pe-none');
                 const restore = addButtonLoadingEffect(buttonEl);
-                return Promise.resolve(result).finally(restore);
+                return Promise.resolve(result).then(restore, restore);
             });
 
         return result;

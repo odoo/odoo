@@ -7,14 +7,15 @@
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Corina Calin, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Corina Calin, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,12 +31,12 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"            S-ar putea să fie necesare acțiuni manuale."
+"            Ar putea fi necesare acțiuni manuale."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
@@ -51,7 +52,7 @@ msgstr "<span class=\"o_stat_text\">Vânzare</span>"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
 msgid ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\">\n"
+"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
 "                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
 "                </span>\n"
 "            </span>"
@@ -88,9 +89,9 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
-"Dacă este bifat, de fiecare dată când vindeți acest produs printr-un SO, se "
-"creează automat un CdO pentru a cumpăra produsul. Sfat: nu uitați să setați "
-"un furnizor pe produs."
+"Dacă este bifat, de fiecare dată când vindeți acest produs printr-o Comandă "
+"de Vânzare, se creează automat o Cerere de Ofertă pentru a cumpăra produsul."
+" Sfat: nu uitați să setați un furnizor pe produs."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -122,7 +123,7 @@ msgstr "Cantitate comandată micșorată!"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
-msgstr "Origine Linie Vânzare "
+msgstr "Origine articol de vânzare"
 
 #. module: sale_purchase
 #. odoo-python

@@ -132,6 +132,15 @@ msgid "Account Move Send"
 msgstr ""
 
 #. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"All advance invoices must be paid and sent to NAV before the final invoice "
+"is issued."
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__code
 msgid "Annulment Code"
 msgstr ""
@@ -139,6 +148,11 @@ msgstr ""
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__reason
 msgid "Annulment Reason"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.res_config_settings_form_inherit_l10n_hu_edi
+msgid "Authentication with NAV 3.0 successful."
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -296,6 +310,15 @@ msgstr ""
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
 #, python-format
 msgid "Could not parse time of previous transaction"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/__init__.py:0
+#, python-format
+msgid ""
+"Could not set NAV tax types on taxes because some taxes from l10n_hu are missing.\n"
+"You should set the type manually or reload the CoA before sending invoices to NAV."
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -643,6 +666,15 @@ msgid "Invoice upload time"
 msgstr ""
 
 #. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"Invoices issued in Hungary must, with few exceptions, be reported to the "
+"NAV's Online-Invoice system!"
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model,name:l10n_hu_edi.model_account_move
 msgid "Journal Entry"
 msgstr ""
@@ -709,6 +741,11 @@ msgstr ""
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_enable_nav_30
 msgid "L10N Hu Edi Enable Nav 30"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_is_active
+msgid "L10N Hu Edi Is Active"
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -966,7 +1003,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
 #, python-format
-msgid "Please create an ATK (outside the scope of the VAT Act) type of tax!"
+msgid "Please create a sales tax with type ATK (outside the scope of the VAT Act)."
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -1395,6 +1432,13 @@ msgstr ""
 #: code:addons/l10n_hu_edi/models/account_move.py:0
 #, python-format
 msgid "View Company/ies"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+#, python-format
+msgid "View advance invoice(s)"
 msgstr ""
 
 #. module: l10n_hu_edi

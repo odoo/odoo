@@ -79,6 +79,12 @@ class TestBarcodeNomenclature(common.TransactionCase):
             # Must fail because '*' isn't accepted (should be '.*' instead).
             barcode_rule.pattern = '*'
 
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            # Must fail because '**' isn't even a valid regular expression.
+            barcode_rule.pattern = '**>>>{ND}'
+        # Allowed since it leads to a valid regular expression.
+        barcode_rule.pattern = '..>>>{ND}'
+
     def test_barcode_nomenclature_parse_barcode_ean8_03_value(self):
         """ Parses some barcodes with a EAN-8 barcode rule who convert the
         barcode into value and checks the result.

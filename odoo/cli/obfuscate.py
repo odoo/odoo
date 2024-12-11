@@ -163,7 +163,7 @@ class Obfuscate(Command):
                             ('mail_tracking_value', 'new_value_char'),
                             ('mail_tracking_value', 'new_value_text'),
                             ('res_partner', 'name'),
-                            ('res_partner', 'display_name'),
+                            ('res_partner', 'complete_name'),
                             ('res_partner', 'email'),
                             ('res_partner', 'phone'),
                             ('res_partner', 'mobile'),

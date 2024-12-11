@@ -22,15 +22,15 @@
 # NoaFarkash, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
-# Ha Ketem <haketem@gmail.com>, 2023
 # Martin Trigaux, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
 # yael terner, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: yael terner, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -1187,6 +1187,11 @@ msgid "Email cc"
 msgstr "עותק דוא\"ל"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr ""
+
+#. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
@@ -2051,7 +2056,7 @@ msgstr "מספר השגיאות"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "מספר הודעות הדורשות פעולה"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error_counter
@@ -2945,7 +2950,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "כתיבת הודעה כאן..."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2981,6 +2986,7 @@ msgstr ""
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
 msgstr "עליך להגדיר שם איש קשר עבור מועמד זה."
@@ -3012,7 +3018,7 @@ msgstr "למשל: מנהל מכירות"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Sales Manager 2 year experience"
-msgstr "למשל מנהל מכירות עם שנתיים ניסיון"
+msgstr "למשל מנהל מכירות עם 2 שנות ניסיון"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

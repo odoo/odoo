@@ -275,6 +275,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """ Hook to update values used for rendering website_sale.products template """
         return {}
 
+    def _get_additional_extra_shop_values(self, values, **post):
+        """ Hook to update values used for rendering website_sale.products template """
+        return self._get_additional_shop_values(values)
+
     @http.route([
         '/shop',
         '/shop/page/<int:page>',
@@ -318,6 +322,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
+        if attrib_list:
+            post['attrib'] = attrib_list
 
         filter_by_tags_enabled = website.is_view_active('website_sale.filter_products_tags')
         if filter_by_tags_enabled:
@@ -358,8 +364,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         url = '/shop'
         if search:
             post['search'] = search
-        if attrib_list:
-            post['attrib'] = attrib_list
 
         options = self._get_search_options(
             category=category,
@@ -489,7 +493,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
-        values.update(self._get_additional_shop_values(values))
+        values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
@@ -553,7 +557,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_product = product_template._get_variant_for_combination(combination)
             if not product_product:
                 product_product = product_template._create_product_variant(combination)
-        if product_template.has_configurable_attributes and product_product:
+        if product_template.has_configurable_attributes and product_product and not all(pa.create_variant == 'no_variant' for pa in product_template.attribute_line_ids.attribute_id):
             product_product.write({
                 'product_variant_image_ids': image_create_data
             })
@@ -782,15 +786,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
         revive: Revival method when abandoned cart. Can be 'merge' or 'squash'
         """
         order = request.website.sale_get_order()
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.website.sale_get_order()
         if order and order.carrier_id:
             # Express checkout is based on the amout of the sale order. If there is already a
             # delivery line, Express Checkout form will display and compute the price of the
             # delivery two times (One already computed in the total amount of the SO and one added
             # in the form while selecting the delivery carrier)
             order._remove_delivery_line()
-        if order and order.state != 'draft':
-            request.session['sale_order_id'] = None
-            order = request.website.sale_get_order()
 
         request.session['website_sale_cart_quantity'] = order.cart_quantity
 
@@ -971,7 +975,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 { # For the cart_notification
                     'id': line.id,
                     'image_url': order.website_id.image_url(line.product_id, 'image_128'),
-                    'quantity': line.product_uom_qty,
+                    'quantity': line._get_displayed_quantity(),
                     'name': line.name_short,
                     'description': line._get_sale_order_line_multiline_description_variants(),
                     'line_price_total': line.price_total if show_tax else line.price_subtotal,
@@ -1080,6 +1084,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         error = dict()
         error_message = []
 
+        partner_su = request.env['res.partner'].sudo()
         if data.get('partner_id'):
             partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
             if partner_su:
@@ -1112,7 +1117,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Required fields from mandatory field function
         country_id = int(data.get('country_id', False))
 
-        _update_mode, address_mode = mode
+        update_mode, address_mode = mode
         if address_mode == 'shipping':
             required_fields += self._get_mandatory_fields_shipping(country_id)
         else: # 'billing'
@@ -1121,6 +1126,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 # If the billing address is also used as shipping one, the phone is required as well
                 # because it's required for shipping addresses
                 required_fields.append('phone')
+
+            order_sudo = request.website.sale_get_order()
+            if (
+                # New secondary billing address (SO is not an anonymous cart)
+                (update_mode == 'new' and not order_sudo._is_public_order())
+                or
+                # Editing secondary billing address
+                (partner_su and order_sudo.partner_id != partner_su)
+            ):
+                # Commercial fields managed by the parent partner should not be set or edited
+                # through a child billing address.  They should therefore be removed from the
+                # required fields.
+                for fname in partner_su._commercial_fields():
+                    if fname not in data and fname in required_fields:
+                        required_fields.remove(fname)
 
         # error message for empty required fields
         for field_name in required_fields:
@@ -1564,7 +1584,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
         order_sudo = request.website.sale_get_order()
-
+        request.session['sale_last_order_id'] = order_sudo.id
         redirection = self.checkout_redirection(order_sudo)
         if redirection:
             return redirection
@@ -1638,7 +1658,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return redirection
 
         order.order_line._compute_tax_id()
-        request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.website.viewref('website_sale.extra_info')
         if extra_step.active:
@@ -1692,14 +1711,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'express_checkout_route': self._express_checkout_route,
             'landing_route': '/shop/payment/validate',
             'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
+            'shipping_info_required': not order.only_services,
+            'shipping_address_update_route': self._express_checkout_shipping_route,
         })
         if request.website.is_public_user():
             payment_form_values['partner_id'] = -1
-        if request.website.enabled_delivery:
-            payment_form_values.update({
-                'shipping_info_required': not order.only_services,
-                'shipping_address_update_route': self._express_checkout_shipping_route,
-            })
         return payment_form_values
 
     def _get_shop_payment_values(self, order, **kwargs):

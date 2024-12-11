@@ -14,17 +14,18 @@
 # Jasmina Macur <jasmina@hbs.si>, 2023
 # Martin Trigaux, 2023
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
-# Grega Vavtar <grega@hbs.si>, 2024
 # Katja Deržič, 2024
 # Gregor Flajs, 2024
+# Grega Vavtar <grega@hbs.si>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Gregor Flajs, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -395,7 +396,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> Opravila</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -414,6 +415,9 @@ msgid ""
 "                                    Collaborators\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Sodelavci\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -738,6 +742,7 @@ msgid "Allocated Time"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr ""
@@ -888,8 +893,6 @@ msgid "Assigned to"
 msgstr "Zadolžen"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -897,7 +900,6 @@ msgstr "Zadolžen"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "Udeleženci"
 
@@ -1883,6 +1885,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
 msgstr "Email cc"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr ""
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -3110,6 +3117,13 @@ msgid "Once a Month"
 msgstr ""
 
 #. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
@@ -3924,6 +3938,20 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in description"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
@@ -4527,6 +4555,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4613,6 +4642,14 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "Dokument ne obstaja ali pa nimate pravic za dostop do njega."
 
 #. module: project
 #. odoo-python
@@ -5617,6 +5654,13 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#, python-format
+msgid "state.message"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
@@ -5676,7 +5720,9 @@ msgstr ""
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
 msgstr ""
 
 #. module: project
