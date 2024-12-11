@@ -111,6 +111,8 @@ export class PosData extends Reactive {
             return { ...serializedData, JSONuiState: JSON.stringify(uiState), id: record.id };
         };
 
+        const dataToDelete = {};
+
         for (const [model, params] of Object.entries(this.opts.databaseTable)) {
             const nbrRecords = records[model].size;
 
@@ -120,7 +122,7 @@ export class PosData extends Reactive {
 
             const data = dataSorter(this.models[model].getAll(), params.condition, params.key);
             this.indexedDB.create(model, data.put);
-            this.indexedDB.delete(model, data.remove);
+            dataToDelete[model] = data.remove;
         }
 
         this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
@@ -130,12 +132,21 @@ export class PosData extends Reactive {
 
             for (const [model, records] of Object.entries(data)) {
                 const key = this.opts.databaseTable[model].key;
+                let keysToDelete = [];
+
+                if (dataToDelete[model]) {
+                    const keysInIndexedDB = new Set(records.map((record) => record[key]));
+                    keysToDelete = dataToDelete[model].filter((key) => keysInIndexedDB.has(key));
+                }
                 for (const record of records) {
                     const localRecord = this.models[model].get(record.id);
-
                     if (!localRecord) {
-                        this.indexedDB.delete(model, [record[key]]);
+                        keysToDelete.push(record[key]);
                     }
+                }
+
+                if (keysToDelete.length) {
+                    this.indexedDB.delete(model, keysToDelete);
                 }
             }
         });
