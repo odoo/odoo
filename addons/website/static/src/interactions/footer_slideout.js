@@ -10,8 +10,6 @@ export class FooterSlideout extends Interaction {
             }),
         },
     };
-    // TODO Support edit mode.
-    static disabledInEditableMode = false;
 
     setup() {
         const mainEl = this.el.querySelector(":scope > main");
@@ -40,3 +38,9 @@ export class FooterSlideout extends Interaction {
 registry
     .category("website.active_elements")
     .add("website.footer_slideout", FooterSlideout);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.footer_slideout", {
+        Interaction: FooterSlideout,
+    });

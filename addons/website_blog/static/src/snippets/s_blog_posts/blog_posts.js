@@ -3,8 +3,6 @@ import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snip
 
 export class DynamicSnippetBlogPosts extends DynamicSnippet {
     static selector = ".s_dynamic_snippet_blog_posts";
-    // TODO Support edit mode.
-    static disabledInEditableMode = false;
 
     /**
      * Method to be overridden in child components in order to provide a search

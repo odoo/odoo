@@ -5,8 +5,6 @@ import { isVisible } from "@html_editor/utils/dom_info";
 
 export class GallerySlider extends Interaction {
     static selector = ".o_slideshow";
-    // TODO Support edit-mode enabled.
-    static disabledInEditableMode = false;
 
     setup() {
         this.carouselEl = this.el.classList.contains("carousel") ? this.el : this.el.querySelector(".carousel");
@@ -114,3 +112,9 @@ export class GallerySlider extends Interaction {
 }
 
 registry.category("website.active_elements").add("website.gallery_slider", GallerySlider);
+
+registry
+    .category("website.editable_active_elements_builders")
+    .add("website.gallery_slider", {
+        Interaction: GallerySlider,
+    });

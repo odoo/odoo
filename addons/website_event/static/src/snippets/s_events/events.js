@@ -6,8 +6,6 @@ export class Events extends DynamicSnippet {
     // While the selector has 'upcoming_snippet' in its name, it now has a filter
     // option to include ongoing events. The name is kept for backward compatibility.
     static selector = ".s_event_upcoming_snippet";
-    // TODO Support edit mode.
-    static disabledInEditableMode = false;
 
     /**
      * @override
