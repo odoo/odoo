@@ -129,15 +129,24 @@ export class BuilderOverlay {
     //--------------------------------------------------------------------------
 
     isResizableY() {
-        return this.overlayTarget.matches(`${sizingY.selector}:not(${sizingY.exclude})`);
+        return (
+            this.overlayTarget.matches(sizingY.selector) &&
+            !this.overlayTarget.matches(sizingY.exclude)
+        );
     }
 
     isResizableX() {
-        return this.overlayTarget.matches(`${sizingX.selector}:not(${sizingX.exclude})`);
+        return (
+            this.overlayTarget.matches(sizingX.selector) &&
+            !this.overlayTarget.matches(sizingX.exclude)
+        );
     }
 
     isResizableGrid() {
-        return this.overlayTarget.matches(`${sizingGrid.selector}:not(${sizingGrid.exclude})`);
+        return (
+            this.overlayTarget.matches(sizingGrid.selector) &&
+            !this.overlayTarget.matches(sizingGrid.exclude)
+        );
     }
 
     initHandles() {
