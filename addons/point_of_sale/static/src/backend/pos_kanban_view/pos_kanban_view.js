@@ -58,9 +58,6 @@ export class PosKanbanRenderer extends KanbanRenderer {
         });
 
         onWillRender(() => this.checkDisplayedResult());
-        onWillStart(async () => {
-            this.isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
-        });
     }
 
     checkDisplayedResult() {
@@ -69,7 +66,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
 
     async callWithViewUpdate(func) {
         try {
-            if (!this.isPosManager) {
+            if (!user.hasGroup("point_of_sale.group_pos_manager")) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Access Denied"),
                     body: _t(
