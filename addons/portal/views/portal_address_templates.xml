@@ -31,7 +31,10 @@
             t-att-class="'all_%s row row-cols-md-2 row-cols-lg-4 g-3 flex-nowrap flex-md-wrap' % address_type"
             style="min-height: 200px"
         >
-            <t t-set="new_address_ref" t-value="'/portal/address?address_type=' + address_type"/>
+            <t
+                t-set="new_address_ref"
+                t-value="'/portal/address?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+            />
             <div t-foreach="addresses" t-as="address" class="col-md">
                 <t t-call="portal.address_kanban">
                     <t t-set="contact" t-value="address"/>
@@ -307,6 +310,21 @@
                 </t>
             </select>
         </div>
+         <div class="w-100"/>
+        <t name="use_same_address" t-if="address_type == 'delivery' and not partner_id">
+            <div class="col-lg-12">
+                <div class="form-check form-switch mt-2 mb-3">
+                   <label id="use_delivery_as_billing_label">
+                    <input
+                        type="checkbox"
+                        id="use_delivery_as_billing"
+                        class="form-check-input"
+                        t-att-checked="use_delivery_as_billing"
+                    /> Same as delivery address
+                </label>
+                </div>
+            </div>
+        </t>
     </template>
 
     <template id="portal.address_example">
@@ -356,6 +374,20 @@
                                         <h3 class="mb-3">Your Address</h3>
                                     </t>
                                 </t>
+                                <div
+                                    t-if="use_delivery_as_billing and not only_services"
+                                    class="alert alert-warning"
+                                    role="alert"
+                                    groups="account.group_delivery_invoice_address"
+                                >
+                                    <h4 class="alert-heading">Be aware!</h4>
+                                    <p>
+                                        You are editing your <b>delivery and billing</b> addresses
+                                        at the same time!<br/>
+                                        If you want to modify your billing address, create a
+                                        <a href="/shop/address?address_type=billing">new address</a>.
+                                    </p>
+                                </div>
                                 <div id="errors"/> <!-- for js -->
                                 <form
                                     t-att-action="'/portal/address/submit'"
@@ -401,6 +433,7 @@
                                         t-nocache="The csrf token must always be up to date."
                                     />
                                     <input type="hidden" name="address_type" t-att-value="address_type"/>
+                                    <input type="hidden" name="use_delivery_as_billing" t-att-value="use_delivery_as_billing"/>
                                     <input type="hidden" name="parent_id" t-att-value="parent_id"/>
                                     <t t-if="partner_id">
                                         <input type="hidden" name="partner_id" t-att-value="partner_id"/>

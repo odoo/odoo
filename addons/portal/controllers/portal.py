@@ -225,7 +225,7 @@ class CustomerPortal(Controller):
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
-    
+
     def on_account_update(self, values, partner):
         pass
 
@@ -339,7 +339,7 @@ class CustomerPortal(Controller):
         return field_names
 
     @route('/portal/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False)
-    def portal_address(self, partner_id=None, address_type='other', **query_params):
+    def portal_address(self, partner_id=None, address_type='billing', **query_params):
         """ Display the address form.
 
         A partner and/or an address type can be given through the query string params to specify
@@ -352,7 +352,14 @@ class CustomerPortal(Controller):
         :return: The rendered address form.
         :rtype: str
         """
-        address_form_values = self._get_address_values(partner_id, address_type, **query_params)
+        partner_id = partner_id and int(partner_id)
+        PartnerSudo = request.env['res.partner'].with_context(show_address=1).sudo()
+        partner_sudo = PartnerSudo.browse(partner_id)
+
+        if partner_sudo and not partner_sudo._can_edited_by_current_customer():
+            raise Forbidden()
+
+        address_form_values = self._prepare_address_form_values(partner_sudo, address_type, **query_params)
         return request.render('portal.address', address_form_values)
 
     def _get_address_form_values(self, partner_id, address_type, **kwargs):

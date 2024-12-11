@@ -2302,12 +2302,9 @@
                 address_type == 'billing' or not order.website_id.is_public_user()
             </attribute>
         </div>
-        <t t-set="new_address_ref" position="after">
-            <t
-                t-set="new_address_href"
-                t-valuef="/shop/address?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
-            />
-        </t>
+        <input name="address_type" position="after">
+            <input type="hidden" name="is_shop_page" t-att-value="True"/>
+        </input>
     </template>
 
     <!-- /shop/address route -->
@@ -2315,6 +2312,8 @@
         <t name="o_b2b_fields" position="attributes">
             <attribute name="t-if">website._display_partner_b2b_fields()</attribute>
         </t>
+        <!-- Remove form use same address for shop address page -->
+        <t name="use_same_address" position="replace"/>
     </template>
 
     <template id="website_sale.address" name="Address Management" inherit_id="portal.address" primary="True">
@@ -2334,32 +2333,9 @@
         <form name="address_form" position="attributes">
             <attribute name="t-att-action">'/shop/address/submit'</attribute>
         </form>
-        <div id="errors" position="before">
-            <div
-                t-if="use_delivery_as_billing and not only_services"
-                class="alert alert-warning"
-                role="alert"
-                groups="account.group_delivery_invoice_address"
-            >
-                <h4 class="alert-heading">Be aware!</h4>
-                <p>
-                    You are editing your <b>delivery and billing</b> addresses
-                    at the same time!<br/>
-                    If you want to modify your billing address, create a
-                    <a href="/shop/address?address_type=billing">new address</a>.
-                </p>
-            </div>
-        </div>
         <t t-call="portal.address_details" position="attributes">
             <attribute name="t-call">website_sale.address_details</attribute>
         </t>
-        <input name="address_type" position="after">
-            <input
-                type="hidden"
-                name="use_delivery_as_billing"
-                t-att-value="use_delivery_as_billing"
-            />
-        </input>
     </template>
 
     <!-- Deactivatable through the website editor. -->

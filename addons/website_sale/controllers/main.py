@@ -1043,7 +1043,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         '/portal/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False
     )
     def shop_address(
-        self, partner_id=None, address_type='billing', use_delivery_as_billing=None, **query_params
+        self,
+        partner_id=None,
+        address_type='billing',
+        use_delivery_as_billing=None,
+        is_shop_page=False,
+        **query_params
     ):
         """ Display the address form.
 
@@ -1054,30 +1059,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :param str address_type: The type of the address: 'billing' or 'delivery'.
         :param str use_delivery_as_billing: Whether the provided address should be used as both the
                                             delivery and the billing address. 'true' or 'false'.
+        :param str is_shop_page: Whether call is coming from shop page or not.
         :param dict query_params: The additional query string parameters forwarded to
                                   `_prepare_address_form_values`.
         :return: The rendered address form.
         :rtype: str
         """
-        address_form_values = self._get_address_form_values(
-            partner_id,
-            address_type,
-            use_delivery_as_billing=use_delivery_as_billing,
-            **query_params
-        )
-        return request.render('website_sale.address', address_form_values)
-
-    def _get_address_form_values(self, partner_id, address_type, use_delivery_as_billing=False, **kwargs):
-        order_sudo = request.website.sale_get_order()
-        if not order_sudo: # If no order found then it's comming from portal/address
-            return super()._get_address_form_values(
+        # Return if not shop page as we don't need to compute other values related to
+        # shop address
+        if not is_shop_page:
+            return super().shop_address(
                 partner_id=partner_id,
                 address_type=address_type,
-                order_sudo=order_sudo,
                 use_delivery_as_billing=use_delivery_as_billing,
-                **kwargs
+                **query_params
             )
 
+        order_sudo = request.website.sale_get_order()
         partner_id = partner_id and int(partner_id)
         use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
 
@@ -1094,13 +1092,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             )
 
-        return super()._get_address_form_values(
-            partner_id=partner_id,
-            address_type=address_type,
+        # Render the address form.
+        address_form_values = self._prepare_address_form_values(
+            partner_sudo,
+            address_type,
             order_sudo=order_sudo,
             use_delivery_as_billing=use_delivery_as_billing,
-            **kwargs
+            is_shop_page=is_shop_page,
+            **query_params
         )
+
+        return request.render('website_sale.address', address_form_values)
 
     def _prepare_address_form_values(self, *args, order_sudo=False, use_delivery_as_billing=False, **kwargs):
         """ Prepare and return the values to use to render the address form.
@@ -1116,7 +1118,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         rendering_values = super()._prepare_address_form_values(
             *args,
-            order_sudo=order_sudo,
             use_delivery_as_billing=use_delivery_as_billing,
             **kwargs
         )
