@@ -7,7 +7,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?:$| )/;
 
 function isUnremovableColumn(node, root) {
-    // TODO ABD: make sure that columns are never set to be a baseContainer
     const isColumnInnerStructure =
         node.nodeName === "DIV" && [...node.classList].some((cls) => /^row$|^col$|^col-/.test(cls));
 
@@ -86,6 +85,8 @@ export class ColumnPlugin extends Plugin {
         unremovable_node_predicates: isUnremovableColumn,
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_text_columns"),
+        // make sure that columns are never set to be a baseContainer
+        assign_base_container_overrides: (el) => isUnremovableColumn(el, this.editable),
     };
 
     columnize({ numberOfColumns, addParagraphAfter = true } = {}) {

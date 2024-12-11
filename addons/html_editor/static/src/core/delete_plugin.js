@@ -84,6 +84,7 @@ export class DeletePlugin extends Plugin {
             this.onBeforeInputDelete.bind(this),
         ],
         /** Overrides */
+        assign_base_container_overrides: (el) => this.isUnremovable(el, this.editable),
         delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_line_overrides: this.deleteBackwardUnmergeable.bind(this),

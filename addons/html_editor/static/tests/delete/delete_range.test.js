@@ -286,9 +286,9 @@ describe("deleteSelection", () => {
     describe("Unmergeables", () => {
         test("should not merge paragraph with unmeargeble block", async () => {
             await testEditor({
-                contentBefore: "<p>ab[c</p><div>d]ef</div>",
+                contentBefore: `<p>ab[c</p><div class="oe_unbreakable">d]ef</div>`,
                 stepFunction: deleteSelection,
-                contentAfter: "<p>ab[]</p><div>ef</div>",
+                contentAfter: `<p>ab[]</p><div class="oe_unbreakable">ef</div>`,
             });
         });
 
@@ -296,9 +296,9 @@ describe("deleteSelection", () => {
             // `includeEndOrStartBlock` fully includes the right block.
             // <p>ab[c</p><div>def]</div> -> <p>ab[c</p><div>def</div>] -> deleteRange
             await testEditor({
-                contentBefore: "<p>ab[c</p><div>def]</div>",
+                contentBefore: `<p>ab[c</p><div class="oe_unbreakable">def]</div>`,
                 stepFunction: deleteSelection,
-                contentAfter: "<p>ab[]</p>",
+                contentAfter: `<p>ab[]</p>`,
             });
         });
     });

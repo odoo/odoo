@@ -29,12 +29,11 @@ export class BaseContainerPlugin extends Plugin {
     }
 
     normalizeDivBaseContainers(element = this.editable) {
+        const isContentEditable = (el) =>
+            el.isContentEditable || (!el.isConnected && !closestElement(el, "[contenteditable]"));
         // TODO ABD: should we handle "P" elements too ? (prevent P inside div, unwrapContents inside P, etc.. )
         // const divBaseContainer = new BaseContainer("DIV", this.document);
         for (const div of element.querySelectorAll(`div:not(.${BASE_CONTAINER_CLASS})`)) {
-            const isContentEditable = (el) =>
-                el.isContentEditable ||
-                (!el.isConnected && !closestElement(el, "[contenteditable]"));
             if (
                 isContentEditable(div) &&
                 !isProtected(div) &&
@@ -42,6 +41,7 @@ export class BaseContainerPlugin extends Plugin {
                 !isMediaElement(div) && // TODO ABD: to discuss, but a div with .o_image should probably
                 // be `contenteditable=false` too, and in that case, this check is unnecessary
                 !this.delegateTo("assign_base_container_overrides", div)
+                // TODO ABD -> WORK HERE -> this is true for empty div at root, why ?
             ) {
                 const analysis = childNodesAnalysis(div);
                 if (analysis.flowContent.length === 0) {

@@ -727,7 +727,7 @@ describe("serialize/unserialize", () => {
         });
         mergePeersSteps(peerInfos);
         validateSameHistory(peerInfos);
-        validateContent(peerInfos, "<p>x</p><div>b<div>a</div></div>");
+        validateContent(peerInfos, `<p>x</p><div>b<div class="o-base-container">a</div></div>`);
     });
 });
 
