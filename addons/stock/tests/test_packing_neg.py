@@ -57,9 +57,9 @@ class TestPackingNeg(TransactionCase):
         # create lot A
         lot_a = self.env['stock.lot'].create({'name': 'Lot neg', 'product_id': product_neg.id})
         # create package
-        package1 = self.env['stock.quant.package'].create({'name': 'Palneg 1'})
-        package2 = self.env['stock.quant.package'].create({'name': 'Palneg 2'})
-        package3 = self.env['stock.quant.package'].create({'name': 'Palneg 3'})
+        package1 = self.env['stock.package'].create({'name': 'Palneg 1'})
+        package2 = self.env['stock.package'].create({'name': 'Palneg 2'})
+        package3 = self.env['stock.package'].create({'name': 'Palneg 3'})
         # Create package for each line and assign it as result_package_id
         # create pack operation
         pick_neg.move_line_ids[0].write({'result_package_id': package1.id, 'quantity': 120})
@@ -167,7 +167,7 @@ class TestPackingNeg(TransactionCase):
         lot = self.env["stock.lot"].search([
             ('product_id', '=', product_neg.id),
             ('name', '=', 'Lot neg')], limit=1)
-        pack = self.env["stock.quant.package"].search([('name', '=', 'Palneg 2')], limit=1)
+        pack = self.env["stock.package"].search([('name', '=', 'Palneg 2')], limit=1)
         delivery_reconcile.move_line_ids[0].write({'lot_id': lot.id, 'quantity': 20.0, 'result_package_id': pack.id})
         delivery_reconcile.move_ids.picked = True
         delivery_reconcile._action_done()

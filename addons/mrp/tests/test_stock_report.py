@@ -317,7 +317,7 @@ class TestMrpStockReports(TestReportsCommon):
 
         picking.move_ids.write({'quantity': 1, 'picked': True})
         move = picking.move_ids.filtered(lambda m: m.description_picking == "Super Kit" and m.product_id == compo03)
-        move.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'name': 'Package0001'})
+        move.move_line_ids.result_package_id = self.env['stock.package'].create({'name': 'Package0001'})
         picking.button_validate()
 
         html_report = self.env['ir.actions.report']._render_qweb_html(

@@ -229,7 +229,7 @@ class TestPacking(TestPackingCommon):
             'company_id': company_b.id,
         })
 
-        reusable_box = self.env['stock.quant.package'].create({
+        reusable_box = self.env['stock.package'].create({
             'name': 'Reusable Box',
             'package_use': 'reusable',
         })

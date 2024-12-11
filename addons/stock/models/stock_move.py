@@ -1712,7 +1712,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not lot_id:
             lot_id = self.env['stock.lot']
         if not package_id:
-            package_id = self.env['stock.quant.package']
+            package_id = self.env['stock.package']
         if not owner_id:
             owner_id = self.env['res.partner']
 

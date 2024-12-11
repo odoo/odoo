@@ -41,7 +41,7 @@ class StockMoveLine(models.Model):
         copy=False, compute='_compute_quantity_product_uom', store=True)
     picked = fields.Boolean('Picked', compute='_compute_picked', store=True, readonly=False, copy=False)
     package_id = fields.Many2one(
-        'stock.quant.package', 'Source Package', ondelete='restrict',
+        'stock.package', 'Source Package', ondelete='restrict',
         check_company=True,
         domain="[('location_id', '=', location_id)]")
     package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, index='btree_not_null')
@@ -50,7 +50,7 @@ class StockMoveLine(models.Model):
         domain="[('product_id', '=', product_id)]", check_company=True)
     lot_name = fields.Char('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
-        'stock.quant.package', 'Destination Package',
+        'stock.package', 'Destination Package',
         ondelete='restrict', required=False, check_company=True,
         domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]",
         help="If set, the operations are packed into this package")
@@ -430,8 +430,8 @@ class StockMoveLine(models.Model):
             ('location_id', 'stock.location'),
             ('location_dest_id', 'stock.location'),
             ('lot_id', 'stock.lot'),
-            ('package_id', 'stock.quant.package'),
-            ('result_package_id', 'stock.quant.package'),
+            ('package_id', 'stock.package'),
+            ('result_package_id', 'stock.package'),
             ('owner_id', 'res.partner'),
             ('product_uom_id', 'uom.uom')
         ]
@@ -758,9 +758,9 @@ class StockMoveLine(models.Model):
         if 'location_dest_id' in vals:
             data['location_dest_name'] = self.env['stock.location'].browse(vals.get('location_dest_id')).name
         if 'package_id' in vals and vals['package_id'] != move.package_id.id:
-            data['package_name'] = self.env['stock.quant.package'].browse(vals.get('package_id')).name
+            data['package_name'] = self.env['stock.package'].browse(vals.get('package_id')).name
         if 'package_result_id' in vals and vals['package_result_id'] != move.package_result_id.id:
-            data['result_package_name'] = self.env['stock.quant.package'].browse(vals.get('result_package_id')).name
+            data['result_package_name'] = self.env['stock.package'].browse(vals.get('result_package_id')).name
         if 'owner_id' in vals and vals['owner_id'] != move.owner_id.id:
             data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
         record.message_post_with_source(
@@ -1010,7 +1010,7 @@ class StockMoveLine(models.Model):
             }
 
     def _put_in_pack(self):
-        package = self.env['stock.quant.package'].create({})
+        package = self.env['stock.package'].create({})
         package_type = self.move_id.packaging_uom_id.package_type_id
         if len(package_type) == 1:
             package.package_type_id = package_type
@@ -1036,7 +1036,7 @@ class StockMoveLine(models.Model):
     def _post_put_in_pack_hook(self, package, **kwargs):
         if package and self.picking_type_id.auto_print_package_label:
             if self.picking_type_id.package_label_to_print == 'pdf':
-                action = self.env.ref("stock.action_report_quant_package_barcode_small").report_action(package.id, config=False)
+                action = self.env.ref("stock.action_report_package_barcode_small").report_action(package.id, config=False)
             elif self.picking_type_id.package_label_to_print == 'zpl':
                 action = self.env.ref("stock.label_package_template").report_action(package.id, config=False)
             if action:

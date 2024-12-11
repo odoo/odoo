@@ -777,7 +777,7 @@ class TestStockQuant(TestStockCommon):
         })
         picking.action_confirm()
 
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'name': 'Super Package',
         })
         picking.move_ids.move_line_ids.write({
@@ -915,7 +915,7 @@ class TestStockQuant(TestStockCommon):
         Test that updating the package from the quant raise an error
         but if the package is unpacked, the quant can be updated.
         """
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'name': 'Package',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0, package_id=package)
@@ -932,10 +932,10 @@ class TestStockQuant(TestStockCommon):
         def _get_relocate_wizard(quant_ids):
             return Form.from_action(self.env, quant_ids.action_stock_quant_relocate())
 
-        self.env['stock.quant.package'].search([]).unlink()
+        self.env['stock.package'].search([]).unlink()
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_tracking_lot').id)]})
-        package_01 = self.env['stock.quant.package'].create({})
-        package_02 = self.env['stock.quant.package'].create({})
+        package_01 = self.env['stock.package'].create({})
+        package_02 = self.env['stock.package'].create({})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10, package_id=package_01)
         quant_a = self.env['stock.quant'].search([('product_id', '=', self.productA.id)])
 
@@ -990,8 +990,8 @@ class TestStockQuant(TestStockCommon):
         # -> product C: stock_location, package_01
 
         ### testing blocks on relocating quants from different companies
-        package_03 = self.env['stock.quant.package'].create({})
-        package_04 = self.env['stock.quant.package'].create({})
+        package_03 = self.env['stock.package'].create({})
+        package_04 = self.env['stock.package'].create({})
         company_B = self.env['res.company'].create({
             'name': 'company B',
             'currency_id': self.env.ref('base.USD').id
@@ -1038,7 +1038,7 @@ class TestStockQuant(TestStockCommon):
         writes the package and destination package for inventory adjustments in _apply_inventory(). """
 
         dummy_product = self.env['product.product'].create({'name': 'dummy product', 'is_storable': True})
-        dummy_package = self.env['stock.quant.package'].create({'name': 'dummy package'})
+        dummy_package = self.env['stock.package'].create({'name': 'dummy package'})
         dummy_quant = self.env['stock.quant'].create({
             'product_id': dummy_product.id,
             'location_id': self.stock_location.id,
@@ -1260,7 +1260,7 @@ class TestStockQuant(TestStockCommon):
             'product_id': product.id,
             'product_qty': 5,
         })
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'name': 'Super Package',
         })
         stock_location = self.stock_location
@@ -1417,7 +1417,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         }
 
-        packages = self.env['stock.quant.package'].create(
+        packages = self.env['stock.package'].create(
             [{}] * sum(p[1] for p in packages_data if p[0]))
         for package_size, number_of_packages in packages_data:
             if not package_size:
@@ -1563,7 +1563,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         A product is at WH/Stock in a package PK. We deliver PK. The user should
         not find any quant at WH/Stock with PK anymore.
         """
-        package = self.env['stock.quant.package'].create({})
+        package = self.env['stock.package'].create({})
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, package_id=package)
 
         move = self.env['stock.move'].create({
@@ -1600,7 +1600,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
             {'name': 'Super product', 'is_storable': True},
         ])
         products.categ_id.removal_strategy_id = self.env['product.removal']
-        packages = self.env['stock.quant.package'].create([
+        packages = self.env['stock.package'].create([
             {'name': 'Pack 001'},
             {'name': 'Pack 002'},
         ])

@@ -58,7 +58,7 @@
 
         <menuitem action="delivery.action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="stock.menu_delivery" sequence="1"/>
         <menuitem action="delivery.action_delivery_zip_prefix_list" id="menu_delivery_zip_prefix" parent="stock.menu_delivery" groups="base.group_no_one" sequence="100"/>
-        
+
         <record id="view_picking_withweight_internal_move_form" model="ir.ui.view">
             <field name="name">stock.picking_withweight.internal.move.form.view</field>
             <field name="model">stock.move</field>
@@ -82,10 +82,10 @@
             </field>
         </record>
 
-        <record id="view_quant_package_weight_form" model="ir.ui.view">
-            <field name="name">stock.quant.package.weight.form</field>
-            <field name="model">stock.quant.package</field>
-            <field name="inherit_id" ref="stock.view_quant_package_form"/>
+        <record id="stock_package_view_form" model="ir.ui.view">
+            <field name="name">stock.package.weight.form</field>
+            <field name="model">stock.package</field>
+            <field name="inherit_id" ref="stock.stock_package_view_form"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <label for="shipping_weight"/>
