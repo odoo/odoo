@@ -83,12 +83,11 @@ class StockPickingType(models.Model):
         help="If this checkbox is ticked, Odoo will automatically print the product labels of a picking when it is validated.")
     product_label_format = fields.Selection([
         ('dymo', 'Dymo'),
-        ('2x7xprice', '2 x 7 with price'),
-        ('4x7xprice', '4 x 7 with price'),
+        ('2x7', '2 x 7'),
+        ('4x7', '4 x 7'),
         ('4x12', '4 x 12'),
-        ('4x12xprice', '4 x 12 with price'),
-        ('zpl', 'ZPL Labels'),
-        ('zplxprice', 'ZPL Labels with price')], string="Product Label Format to auto-print", default='2x7xprice')
+        ('zpl', 'ZPL Labels')],
+        string="Product Label Format to auto-print", default='2x7', required=True, store=True)
     auto_print_lot_labels = fields.Boolean(
         "Auto Print Lot/SN Labels",
         help="If this checkbox is ticked, Odoo will automatically print the lot/SN labels of a picking when it is validated.")

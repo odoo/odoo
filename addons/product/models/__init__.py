@@ -12,6 +12,7 @@ from . import ir_attachment
 from . import product_attribute
 from . import product_attribute_custom_value
 from . import product_attribute_value
+from . import product_base_unit
 from . import product_catalog_mixin
 from . import product_category
 from . import product_combo

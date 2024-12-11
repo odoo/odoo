@@ -4,6 +4,9 @@
         <template id="report_simple_label2x7">
             <t t-set="barcode_size" t-value="'width:33mm;height:14mm'"/>
             <t t-set="table_style" t-value="'width:97mm;height:37.1mm;' + table_style"/>
+            <t t-set="currency" t-value="pricelist.currency_id or product.currency_id"/>
+            <t t-set="base_unit_price" t-value="product.base_unit_price if product.base_unit_count and product.base_unit_name else 0"/>
+            <t t-set="with_price" t-value="env['product.label.layout'].browse(layout_wizard).with_price"/>
             <td t-att-style="make_invisible and 'visibility:hidden;'" >
                 <div class="o_label_full" t-att-style="table_style">
                     <div class="o_label_name">
@@ -17,12 +20,20 @@
                                 <span class="text-center" t-out="barcode"/>
                             </t>
                         </div>
-                        <div class="text-end" style="line-height:normal">
+                        <div class="text-end" style="line-height: normal;">
                             <div class="o_label_extra_data">
                                 <t t-out="extra_html"/>
                             </div>
-                            <strong class="o_label_price" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
-                                    t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
+                            <t t-if="with_price">
+                                <t t-if="base_unit_price">
+                                    <strong class="o_label_unit_medium">
+                                        (<t t-esc="base_unit_price"
+                                            t-options="{'widget': 'monetary', 'display_currency': currency}"/>/<t t-esc="product.base_unit_name"/>)
+                                    </strong>
+                                </t>
+                                <strong class="o_label_price" t-out="pricelist._get_product_price(product, 1, currency)"
+                                        t-options="{'widget': 'monetary', 'display_currency': currency, 'label_price': True}"/>
+                            </t>
                         </div>
                         <div class="o_label_clear"></div>
                     </div>
@@ -33,15 +44,27 @@
         <template id="report_simple_label4x7">
             <t t-set="barcode_size" t-value="'width:33mm;height:8mm'"/>
             <t t-set="table_style" t-value="'width:47mm;height:37.1mm;' + table_style"/>
+            <t t-set="currency" t-value="pricelist.currency_id or product.currency_id"/>
+            <t t-set="base_unit_price" t-value="product.base_unit_price if product.base_unit_count and product.base_unit_name else 0"/>
+            <t t-set="with_price" t-value="env['product.label.layout'].browse(layout_wizard).with_price"/>
             <td t-att-style="make_invisible and 'visibility:hidden;'" >
                 <div class="o_label_full" t-att-style="table_style">
                     <div class="o_label_name">
                         <strong t-field="product.display_name"/>
                     </div>
-                    <div class="text-end" style="padding-top:0;padding-bottom:0">
-                        <strong class="o_label_price_medium" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
-                                t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
-                    </div>
+                    <t t-if="with_price">
+                        <div class="text-end" style="padding-top:0;padding-bottom:0">
+                            <strong class="o_label_price_medium" t-out="pricelist._get_product_price(product, 1, currency)"
+                                    t-options="{'widget': 'monetary', 'display_currency': currency, 'label_price': True}"/>
+                        </div>
+                        <t t-if="base_unit_price">
+                            <div class="text-end" style="padding-top:0;padding-bottom:0">
+                                <strong class="o_label_unit_medium">
+                                    (<t t-esc="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': currency}"/>/<t t-esc="product.base_unit_name"/>)
+                                </strong>
+                            </div>
+                        </t>
+                    </t>
                     <div class= "text-center o_label_small_barcode">
                         <span class="text-nowrap" t-field="product.default_code"/>
                         <t t-if="barcode">
@@ -56,6 +79,9 @@
         <template id="report_simple_label4x12">
             <t t-set="barcode_size" t-value="'width:33mm;height:4mm'"/>
             <t t-set="table_style" t-value="'width:43mm;height:19mm;' + table_style"/>
+            <t t-set="currency" t-value="pricelist.currency_id or product.currency_id"/>
+            <t t-set="base_unit_price" t-value="product.base_unit_price if product.base_unit_count and product.base_unit_name else 0"/>
+            <t t-set="with_price" t-value="env['product.label.layout'].browse(layout_wizard).with_price"/>
             <td t-att-style="make_invisible and 'visibility:hidden;'" >
                 <div class="o_label_full o_label_small_text" t-att-style="table_style">
                     <div class="o_label_name">
@@ -64,31 +90,19 @@
                     <div class="o_label_left_column">
                         <span class="text-nowrap" t-field="product.default_code"/>
                     </div>
-                    <div class="o_label_price_medium text-end">
-                        <strong t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
-                            t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
-                    </div>
-                    <div class= "text-center o_label_small_barcode">
-                        <t t-if="barcode">
-                            <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
-                            <span class="text-center" t-out="barcode"/>
+                    <t t-if="with_price">
+                        <div class="o_label_price_medium text-end">
+                            <strong t-out="pricelist._get_product_price(product, 1, currency)"
+                                    t-options="{'widget': 'monetary', 'display_currency': currency, 'label_price': True}"/>
+                        </div>
+                        <t t-if="base_unit_price">
+                            <div class="text-end" style="padding-top:0;padding-bottom:0">
+                                <strong class="o_label_unit_medium">
+                                    (<t t-esc="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': currency}"/>/<t t-esc="product.base_unit_name"/>)
+                                </strong>
+                            </div>
                         </t>
-                    </div>
-                </div>
-            </td>
-        </template>
-
-        <template id="report_simple_label4x12_no_price">
-            <t t-set="barcode_size" t-value="'width:33mm;height:4mm'"/>
-            <t t-set="table_style" t-value="'width:43mm;height:19mm;' + table_style"/>
-            <td t-att-style="make_invisible and 'visibility:hidden;'" >
-                <div class="o_label_full o_label_small_text" t-att-style="table_style">
-                    <div class="o_label_name">
-                        <strong t-field="product.display_name"/>
-                    </div>
-                    <div class="o_label_left_column o_label_full_with">
-                        <span class="text-nowrap" t-field="product.default_code"/>
-                    </div>
+                    </t>
                     <div class= "text-center o_label_small_barcode">
                         <t t-if="barcode">
                             <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
@@ -100,6 +114,9 @@
         </template>
 
         <template id="report_simple_label_dymo">
+            <t t-set="base_unit_price" t-value="product.base_unit_price if product.base_unit_count and product.base_unit_name else 0"/>
+            <t t-set="with_price" t-value="env['product.label.layout'].browse(layout_wizard).with_price"/>
+            <t t-set="currency" t-value="pricelist.currency_id or product.currency_id"/>
             <div class="o_label_sheet o_label_dymo" t-att-style="padding_page">
                 <div class="o_label_full" t-att-style="table_style">
                     <div class= "text-start o_label_small_barcode">
@@ -118,10 +135,18 @@
                     <div class="o_label_left_column">
                         <small class="text-nowrap" t-field="product.default_code"/>
                     </div>
-                    <div class="text-end" style="padding: 0 4px;">
-                        <strong class="o_label_price_small" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"
-                                t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
-                    </div>
+                    <t t-if="with_price">
+                        <div class="text-end" style="padding: 0 4px; line-height: 80%;">
+                            <strong class="o_label_price_small" t-out="pricelist._get_product_price(product, 1, currency)"
+                                    t-options="{'widget': 'monetary', 'display_currency': currency, 'label_price': True}"/>
+                            <t t-if="base_unit_price">
+                                <br/>
+                                <strong class="o_label_unit_small">
+                                    (<t t-esc="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': currency}"/>/<t t-esc="product.base_unit_name"/>)
+                                </strong>
+                            </t>
+                        </div>
+                    </t>
                 </div>
             </div>
         </template>
@@ -175,12 +200,7 @@
                                                 <t t-call="product.report_simple_label4x7"/>
                                             </t>
                                             <t t-elif="report_to_call == '4x12'">
-                                                <t t-if="price_included">
-                                                    <t t-call="product.report_simple_label4x12"/>
-                                                </t>
-                                                <t t-else="">
-                                                    <t t-call="product.report_simple_label4x12_no_price"/>
-                                                </t>
+                                                <t t-call="product.report_simple_label4x12"/>
                                             </t>
                                         </t>
                                     </tr>
@@ -188,6 +208,41 @@
                             </table>
                         </div>
                     </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_simple_label_zpl">
+            <t t-set="base_unit_price" t-value="product.base_unit_price if product.base_unit_count and product.base_unit_name else 0"/>
+            <t t-set="with_price" t-value="env['product.label.layout'].browse(layout_wizard).with_price"/>
+            <t t-set="currency" t-value="pricelist.currency_id or product.currency_id"/>
+            <t t-set="barcode" t-value="product_info[0]"/>
+            <t t-foreach="range(product_info[1])" t-as="qty">
+                <t t-translation="off">
+^XA^CI28
+^FT100,80^A0N,40,30^FD<t name="display_name" t-out="product.display_name"/>^FS
+<t name="default_code">
+^FT100,150^A0N,30,24^FD<t t-out="product.default_code"/>^FS
+</t>
+<t t-if="with_price">
+<t t-if="base_unit_price">
+^FO430,125,1
+^A0N,33,28^FN^FD(<t t-if="currency.position == 'before'"><t t-esc="currency.symbol"/></t>
+<t t-esc="base_unit_price" t-options="{'widget': 'float', 'precision': 2}"/>
+<t t-if="currency.position == 'after'"><t t-esc="currency.symbol"/></t>
+/<t t-esc="product.base_unit_name"/>)^FS
+</t>
+^FO625,100,1
+^A0N,66,48^FH^FD<t t-if="currency.position == 'before'"><t t-esc="currency.symbol"/></t>
+<t t-esc="pricelist._get_product_price(product, 1, currency)" t-options="{'widget': 'float', 'precision': 2}"/>
+<t t-if="currency.position == 'after'"><t t-esc="currency.symbol"/></t>^FS
+</t>
+<t t-if="barcode">
+^FO100,160^BY3
+^BCN,100,Y,N,N
+^FD<t t-out="barcode"/>^FS
+</t>
+^XZ
                 </t>
             </t>
         </template>
@@ -205,6 +260,15 @@
                             <t t-call="product.report_simple_label_dymo"/>
                         </t>
                     </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_productlabel_zpl">
+	    <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
+                <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
+                <t t-foreach="barcode_and_qty_by_product[1]" t-as="product_info">
+                    <t t-call="product.report_simple_label_zpl"/>
                 </t>
             </t>
         </template>
