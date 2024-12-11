@@ -6,6 +6,7 @@
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 
@@ -366,6 +367,31 @@ class TestStockValuationStandard(TestStockValuationCommon):
             self.assertEqual(product.value_svl, 0.0)
         finally:
             self.env.user.company_id = old_company
+
+    def test_change_qty_and_locations_of_done_sml(self):
+        sub_stock_loc = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+
+        move_in = self._make_in_move(self.product1, 25)
+        self.assertEqual(self.product1.value_svl, 250)
+        self.assertEqual(self.product1.qty_available, 25)
+
+        move_in.move_line_ids.write({
+            'location_dest_id': sub_stock_loc.id,
+            'quantity': 30,
+        })
+        self.assertEqual(self.product1.value_svl, 300)
+        self.assertEqual(self.product1.qty_available, 30)
+
+        sub_loc_quant = self.product1.stock_quant_ids.filtered(lambda q: q.location_id == sub_stock_loc)
+        self.assertEqual(sub_loc_quant.quantity, 30)
+
+        with self.assertRaises(ValidationError):
+            move_in.move_line_ids.location_id = self.stock_location
+
 
 class TestStockValuationAVCO(TestStockValuationCommon):
     @classmethod
