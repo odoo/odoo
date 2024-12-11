@@ -4,4 +4,3 @@ from . import pos_session
 from . import res_partner
 from . import l10n_latam_identification_type
 from . import res_city
-from . import pos_config

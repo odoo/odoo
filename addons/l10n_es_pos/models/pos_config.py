@@ -24,11 +24,3 @@ class PosConfig(models.Model):
     def _compute_simplified_partner_id(self):
         for config in self:
             config.simplified_partner_id = self.env.ref("l10n_es.partner_simplified").id
-
-    def get_limited_partners_loading(self):
-        # this function normally returns 100 partners, but we have to make sure that
-        # the simplified partner is also loaded
-        res = super().get_limited_partners_loading()
-        if (self.simplified_partner_id.id,) not in res:
-            res.append((self.simplified_partner_id.id,))
-        return res

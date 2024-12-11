@@ -20,3 +20,9 @@ class ResPartner(models.Model):
         if self.env.company.country_id.code == 'AR':
             params += ['l10n_ar_afip_responsibility_type_id', 'l10n_latam_identification_type_id']
         return params
+
+    def _get_pos_required_partners(self, config_id):
+        partner_ids = super()._get_pos_required_partners(config_id)
+        if self.env.company.country_id.code == 'AR':
+            partner_ids = partner_ids.union({self.env.ref('l10n_ar.par_cfa').id})
+        return partner_ids

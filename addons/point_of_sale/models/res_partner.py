@@ -23,9 +23,16 @@ class ResPartner(models.Model):
         # Extract partner IDs from the tuples returned by get_limited_partners_loading
         limited_partner_ids = {partner[0] for partner in config_id.get_limited_partners_loading()}
 
-        limited_partner_ids.add(self.env.user.partner_id.id)  # Ensure current user is included
+        limited_partner_ids.union(self._get_pos_required_partners(config_id))
         partner_ids = limited_partner_ids.union(loaded_order_partner_ids)
         return [('id', 'in', list(partner_ids))]
+
+    def _get_pos_required_partners(self, config):
+        """
+        This function returns a set of partner ids that need to be loaded for the POS to work
+        properly
+        """
+        return {self.env.user.partner_id.id}
 
     @api.model
     def _load_pos_data_fields(self, config_id):
