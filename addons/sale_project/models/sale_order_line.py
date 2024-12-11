@@ -22,6 +22,13 @@ class SaleOrderLine(models.Model):
     # used to know if generate a task and/or a project, depending on the product settings
     reached_milestones_ids = fields.One2many('project.milestone', 'sale_line_id', string='Reached Milestones', domain=[('is_reached', '=', True)])
 
+    def _get_product_from_sol_name_domain(self, product_name):
+        return [
+            ('name', 'ilike', product_name),
+            ('type', '=', 'service'),
+            ('company_id', 'in', [False, self.env.company.id]),
+        ]
+
     def default_get(self, fields):
         res = super().default_get(fields)
         if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
@@ -55,11 +62,7 @@ class SaleOrderLine(models.Model):
                     sale_order = self.env['sale.order'].create(so_create_values)
                 default_values['order_id'] = sale_order.id
             if product_name := self.env.context.get('sol_product_name') or self.env.context.get('default_name'):
-                product = self.env['product.product'].search([
-                    ('name', 'ilike', product_name),
-                    ('type', '=', 'service'),
-                    ('company_id', 'in', [False, self.env.company.id]),
-                ], limit=1)
+                product = self.env['product.product'].search(self._get_product_from_sol_name_domain(product_name), limit=1)
                 if product:
                     default_values['product_id'] = product.id
                     # We need to remove the name from the defaults so that the
