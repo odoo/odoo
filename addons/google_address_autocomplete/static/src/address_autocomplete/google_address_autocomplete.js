@@ -1,46 +1,28 @@
 import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { CharField, charField } from "@web/views/fields/char/char_field";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { googlePlacesSession } from "../google_places_session";
 
 export class AddressAutoComplete extends CharField {
     static template = "google_address_autocomplete.AddressAutoCompleteTemplate";
     static components = { AutoComplete, ...CharField };
-
-    setup() {
-        this.sessionId = this._generateUUID();
-    }
-
-    /**
-     * Used to generate a unique session ID for the places API.
-     *
-     * @private
-     */
-    _generateUUID() {
-        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-            const r = (Math.random() * 16) | 0,
-                v = c == "x" ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        });
-    }
 
     get sources() {
         return [
             {
                 options: async (request) => {
                     if (request.length > 5) {
-                        const suggestions = await rpc("/autocomplete/address", {
+                        const suggestions = await googlePlacesSession.getAddressPropositions({
                             partial_address: request,
-                            session_id: this.sessionId || null,
                         });
                         if (suggestions.results.length) {
                             suggestions.results.push({
                                 id: "credits",
                                 classList: "pe-none",
                                 type: "template",
-                                name: "google_address_autocomplete.google_credits", 
-                            })
+                                name: "google_address_autocomplete.google_credits",
+                            });
                         }
                         return suggestions.results;
                     } else {
@@ -53,11 +35,10 @@ export class AddressAutoComplete extends CharField {
         ];
     }
 
-    async onSelect(ev) {
-        const address = await rpc("/autocomplete/address_full", {
-            address: ev.formatted_address,
-            google_place_id: ev.google_place_id,
-            session_id: this.sessionId || null,
+    async onSelect(option) {
+        const address = await googlePlacesSession.getAddressDetails({
+            address: option.formatted_address,
+            google_place_id: option.google_place_id,
         });
 
         const dict = { [this.props.name]: address.formatted_street_number || "" };
