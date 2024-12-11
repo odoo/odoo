@@ -242,7 +242,7 @@ export class Navigator {
 
         const elements = [...this.containerRef.el.querySelectorAll(this.options.itemsSelector)];
         if (this.items.length > elements.length) {
-            this.items.splice(this.items.length - elements.length);
+            this.items.splice(elements.length - this.items.length);
         }
 
         for (let i = 0; i < elements.length; i++) {
