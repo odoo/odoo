@@ -15,6 +15,7 @@
                     <input type="hidden" name="document_id" t-att-value="document_id"/>
                     <input type="hidden" name="email" t-att-value="email"/>
                     <input type="hidden" name="hash_token" t-att-value="hash_token"/>
+                    <input type="hidden" name="unsubscribed_list" t-att-value="unsubscribed_list"/>
 
                     <div id="info_state"  class="alert alert-success">
                         <div class="text-center">
@@ -30,6 +31,29 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="page_unsubscribe_short">
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.unsubscribe_short"/>
+        </t>
+    </template>
+
+    <template id="unsubscribe_short">
+        <div class="container o_unsubscribe_form">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 mt-4">
+                    <div id="info_state"  class="alert alert-success">
+                        <div class="text-center">
+                            <p>Successfully unsubscribed!</p>
+                            <div>
+                                <a t-att-href="settings_url" class="btn btn-primary">Manage Subscriptions</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </template>

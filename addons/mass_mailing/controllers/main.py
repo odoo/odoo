@@ -126,14 +126,33 @@ class MassMailController(http.Controller):
                 })
 
     @http.route(['/mailing/confirm_unsubscribe'], type='http', website=True, auth='public', methods=['POST'])
-    def mailing_confirm_unsubscribe_post(self, mailing_id, document_id=None, email=None, hash_token=None):
-        url = '/mailing/%(mailing_id)s/unsubscribe?document_id=%(document_id)s&email=%(email)s&hash_token=%(hash_token)s' % {
+    def mailing_confirm_unsubscribe_post(self, mailing_id, document_id=None, email=None, hash_token=None, unsubscribed_list=''):
+        # Unsubscribe user
+        email_found, hash_token_found = self._fetch_user_information(email, hash_token)
+        try:
+            mailing_sudo = self._check_mailing_email_token(
+                int(mailing_id), document_id, email_found, hash_token_found,
+                required_mailing_id=True
+            )
+        except NotFound as e:  # avoid leaking ID existence
+            raise Unauthorized() from e
+
+        if mailing_sudo.mailing_on_mailing_list:
+            self._mailing_unsubscribe_from_list(mailing_sudo, document_id, email_found, hash_token_found)
+        else:
+            self._mailing_unsubscribe_from_document(mailing_sudo, document_id, email_found, hash_token_found)
+
+        # Add redirect URL param
+        settings_url = '/mailing/%(mailing_id)s/unsubscribe?document_id=%(document_id)s&email=%(email)s&hash_token=%(hash_token)s' % {
             'mailing_id': mailing_id,
             'document_id': document_id,
             'email': email,
             'hash_token': hash_token,
         }
-        return request.redirect(url)
+        return request.render("mass_mailing.page_unsubscribe_short", {
+            'settings_url': settings_url,
+            'unsubscribed_list': unsubscribed_list,
+        })
 
     @http.route(['/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None):
