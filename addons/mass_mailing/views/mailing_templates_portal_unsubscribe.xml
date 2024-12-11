@@ -1,39 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="page_confirm_unsubscribe" name="Confirm Unsubscribe">
-        <t t-call="mass_mailing.layout">
-            <t t-call="mass_mailing.confirm_unsubscribe"/>
-        </t>
-    </template>
-
-    <template id="confirm_unsubscribe">
-        <div class="container o_unsubscribe_form">
-            <div class="row">
-                <form action="/mailing/confirm_unsubscribe" method="POST" class="col-lg-6 offset-lg-3 mt-4">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                    <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
-                    <input type="hidden" name="document_id" t-att-value="document_id"/>
-                    <input type="hidden" name="email" t-att-value="email"/>
-                    <input type="hidden" name="hash_token" t-att-value="hash_token"/>
-
-                    <div id="info_state"  class="alert alert-success">
-                        <div class="text-center">
-                            <t t-if="len(unsubscribed_list) > 0">
-                                <p>You are about to unsubscribe from the following mailing list: <t t-out="unsubscribed_list"/></p>
-                            </t>
-                            <t t-else="">
-                                <p>You are about to unsubscribe from a mailing list.</p>
-                            </t>
-                            <div>
-                                <button type="submit" class="btn btn-primary">Unsubscribe</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </template>
-
     <template id="page_mailing_unsubscribe" name="Unsubscribe">
         <t t-call="mass_mailing.layout">
             <t t-call="mass_mailing.unsubscribe_form"/>

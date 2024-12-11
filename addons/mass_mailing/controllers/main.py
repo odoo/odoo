@@ -11,6 +11,7 @@ from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 from odoo import _, fields, http, tools
 from odoo.http import request, Response
 from odoo.tools import consteq
+from lxml import etree
 
 
 class MassMailController(http.Controller):
@@ -105,34 +106,100 @@ class MassMailController(http.Controller):
     @http.route(['/mailing/<int:mailing_id>/confirm_unsubscribe'], type='http', website=True, auth='public')
     def mailing_confirm_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None):
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
-
-        unsubscribed_list = ''
+        # check that mailing exists/has access
         email_found, hash_token_found = self._fetch_user_information(email, hash_token)
         try:
-            mailing_sudo = self._check_mailing_email_token(
+            self._check_mailing_email_token(
                 mailing_id, document_id, email_found, hash_token_found,
                 required_mailing_id=True
             )
-            if mailing.mailing_model_real == 'mailing.contact':
-                unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
         except NotFound as e:  # avoid leaking ID existence
             raise Unauthorized() from e
-        template = request.env.ref('mass_mailing.page_confirm_unsubscribe',raise_if_not_found=False)
-        if template:
-            return request.render('mass_mailing.page_confirm_unsubscribe', {
-                    'mailing_id': mailing_id,
-                    'document_id': document_id,
-                    'email': email,
-                    'hash_token': hash_token,
-                    'unsubscribed_list': unsubscribed_list,
-                })
-        else:
-            return self.mailing_confirm_unsubscribe_post(mailing_id, document_id, email, hash_token)
 
+        unsubscribed_str = _("Are you sure you want to unsubscribe from our mailing list?")
+        # Display list name if list is public
+        if mailing.mailing_model_real == 'mailing.contact':
+            unsubscribed_lists = ', '.join(mailing_list.name for mailing_list in mailing.contact_list_ids if mailing_list.is_public)
+            if unsubscribed_lists:
+                unsubscribed_str = _(
+                    'Are you sure you want to unsubscribe from the mailing list "%(unsubscribed_lists)s"?',
+                    unsubscribed_lists=unsubscribed_lists
+                )
+        unsubscribe_btn = _("Unsubscribe")
+
+        template = etree.fromstring("""
+            <t t-call="mass_mailing.layout">
+                <div class="container o_unsubscribe_form">
+                    <div class="row">
+                        <div class="col-lg-6 offset-lg-3 mt-4">
+                            <div id="info_state"  class="alert alert-success">
+                                <div class="text-center">
+                                    <form action="/mailing/confirm_unsubscribe" method="POST">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
+                                        <input type="hidden" name="document_id" t-att-value="document_id"/>
+                                        <input type="hidden" name="email" t-att-value="email"/>
+                                        <input type="hidden" name="hash_token" t-att-value="hash_token"/>
+                                        <p t-out="unsubscribed_str"/>
+                                        <button type="submit" class="btn btn-primary" t-out="unsubscribe_btn"/>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        """)
+        return request.render(template, {
+            'mailing_id': mailing_id,
+            'document_id': document_id,
+            'email': email,
+            'hash_token': hash_token,
+            'unsubscribed_str': unsubscribed_str,
+            'unsubscribe_btn': unsubscribe_btn,
+        })
+
+    # POST method
     @http.route(['/mailing/confirm_unsubscribe'], type='http', website=True, auth='public', methods=['POST'])
     def mailing_confirm_unsubscribe_post(self, mailing_id, document_id=None, email=None, hash_token=None):
-        url = f'/mailing/{mailing_id}/unsubscribe?document_id={document_id}&email={email}&hash_token={hash_token}'
-        return request.redirect(url)
+        # Unsubscribe user
+        email_found, hash_token_found = self._fetch_user_information(email, hash_token)
+        try:
+            mailing_sudo = self._check_mailing_email_token(
+                int(mailing_id), document_id, email_found, hash_token_found,
+                required_mailing_id=True
+            )
+        except NotFound as e:  # fails if mailing doesn't exist or token is wrong
+            raise Unauthorized() from e
+
+        if mailing_sudo.mailing_on_mailing_list:
+            self._mailing_unsubscribe_from_list(mailing_sudo, document_id, email_found, hash_token_found)
+        else:
+            self._mailing_unsubscribe_from_document(mailing_sudo, document_id, email_found, hash_token_found)
+
+        success_str = _("Successfully unsubscribed!")
+        manage_btn = _("Manage Subscriptions")
+        template = etree.fromstring("""
+            <t t-call="mass_mailing.layout">
+                <div class="container o_unsubscribe_form">
+                    <div class="row">
+                        <div class="col-lg-6 offset-lg-3 mt-4">
+                            <div id="info_state"  class="alert alert-success">
+                                <div class="text-center">
+                                    <p t-out="success_str"/>
+                                    <a t-att-href="settings_url" class="btn btn-primary" t-out="manage_btn"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        """)
+        return request.render(template, {
+                'settings_url': f'/mailing/{mailing_id}/unsubscribe?document_id={document_id}&email={email}&hash_token={hash_token}',
+                'success_str': success_str,
+                'manage_btn': manage_btn,
+        })
 
     @http.route(['/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None):
