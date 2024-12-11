@@ -211,8 +211,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         kit_final_prod = self.product_a
         product_c = self.env['product.product'].create({
             'name': 'product_c',
-            'uom_id': self.env.ref('uom.product_uom_dozen').id,
-            'uom_po_id': self.env.ref('uom.product_uom_dozen').id,
+            'uom_id': self.env.ref('uom.product_uom_pack_6').id,
             'lst_price': 120.0,
             'standard_price': 100.0,
             'property_account_income_id': self.copy_account(self.company_data['default_account_revenue']).id,

@@ -208,7 +208,6 @@ def setup_product_combo_items(self):
             "name": "Office Combo",
             "type": "combo",
             "uom_id": self.env.ref("uom.product_uom_unit").id,
-            "uom_po_id": self.env.ref("uom.product_uom_unit").id,
             "combo_ids": [
                 (6, 0, [self.desks_combo.id, self.chairs_combo.id, self.desk_accessories_combo.id])
             ],
