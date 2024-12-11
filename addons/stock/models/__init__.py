@@ -22,4 +22,5 @@ from . import stock_scrap
 from . import product
 from . import stock_package_level
 from . import stock_package_type
+from . import stock_package
 from . import stock_storage_category
