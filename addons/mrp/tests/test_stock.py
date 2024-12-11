@@ -301,7 +301,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
 
-        package = self.env['stock.quant.package'].create({})
+        package = self.env['stock.package'].create({})
 
         picking = mo.picking_ids
         picking.move_line_ids.write({

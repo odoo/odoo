@@ -1125,7 +1125,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.product_a.is_storable = True
         self.env['stock.quant']._update_available_quantity(
             self.product_a, self.company_data['default_warehouse'].lot_stock_id, 10,
-            package_id=self.env['stock.quant.package'].create({'name': 'PacMan'}))
+            package_id=self.env['stock.package'].create({'name': 'PacMan'}))
 
         # Create sale order
         sale_order = self._get_new_sale_order(product=self.product_a)

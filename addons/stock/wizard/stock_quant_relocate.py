@@ -14,7 +14,7 @@ class StockQuantRelocate(models.TransientModel):
     company_id = fields.Many2one(related="quant_ids.company_id")
     dest_location_id = fields.Many2one('stock.location', domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]")
     dest_package_id_domain = fields.Char(compute="_compute_dest_package_id_domain")
-    dest_package_id = fields.Many2one('stock.quant.package', domain="dest_package_id_domain", compute="_compute_dest_package_id", store=True)
+    dest_package_id = fields.Many2one('stock.package', domain="dest_package_id_domain", compute="_compute_dest_package_id", store=True)
     message = fields.Text('Reason for relocation')
     is_partial_package = fields.Boolean(compute='_compute_is_partial_package')
     partial_package_names = fields.Char(compute="_compute_is_partial_package")
