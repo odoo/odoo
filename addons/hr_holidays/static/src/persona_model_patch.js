@@ -7,8 +7,11 @@ const { DateTime } = luxon;
 
 patch(Persona.prototype, {
     get outOfOfficeText() {
-        if (!this.out_of_office_date_end) {
+        if (!this.out_of_office_date_end || this.eq(this.store.odoobot)) {
             return "";
+        }
+        if (this.out_of_office_date_end === "public_holiday") {
+            return _t("Out of office due to public holiday");
         }
         const date = deserializeDateTime(this.out_of_office_date_end);
         const fdate = date.toLocaleString(DateTime.DATE_MED);
