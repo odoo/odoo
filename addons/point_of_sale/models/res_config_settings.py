@@ -33,7 +33,6 @@ class ResConfigSettings(models.TransientModel):
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False, check_company=True)
     module_pos_adyen = fields.Boolean(string="Adyen Payment Terminal", help="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method.")
     module_pos_stripe = fields.Boolean(string="Stripe Payment Terminal", help="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method.")
-    module_pos_six = fields.Boolean(string="Six Payment Terminal", help="The transactions are processed by Six. Set the IP address of the terminal on the related payment method.")
     module_pos_viva_wallet = fields.Boolean(string="Viva Wallet Payment Terminal", help="The transactions are processed by Viva Wallet on terminal or tap on phone.")
     module_pos_razorpay = fields.Boolean(string="Razorpay Payment Terminal", help="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method.")
     module_pos_mercado_pago = fields.Boolean(string="Mercado Pago Payment Terminal", help="The transactions are processed by Mercado Pago. Set your Mercado Pago credentials on the related payment method.")
