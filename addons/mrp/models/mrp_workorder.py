@@ -150,7 +150,7 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'qty_ready')
+    @api.depends('blocked_by_workorder_ids.state', 'qty_ready')
     def _compute_state(self):
         for workorder in self:
             if workorder.state not in ('pending', 'waiting', 'ready'):
@@ -228,6 +228,7 @@ class MrpWorkorder(models.Model):
                 workorder.production_id.qty_producing = workorder.qty_producing
                 workorder.production_id._set_qty_producing()
 
+    @api.depends('qty_produced', 'qty_producing', 'qty_remaining')
     def _compute_qty_ready(self):
         for workorder in self:
             if workorder.production_state not in ('confirmed', 'progress') or workorder.state in ('cancel', 'done'):
