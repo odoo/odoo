@@ -89,9 +89,8 @@ class HrEmployee(models.Model):
     birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
     birthday_public_display = fields.Boolean('Show to all employees', groups="hr.group_hr_user", default=False)
     birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
-    sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
     identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
+    identification_id_label = fields.Char(compute='_compute_identification_id_label', groups="hr.group_hr_user")
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account',
@@ -234,6 +233,17 @@ class HrEmployee(models.Model):
     @api.depends('name', 'user_id.avatar_128', 'image_128')
     def _compute_avatar_128(self):
         super()._compute_avatar_128()
+
+    def _compute_identification_id_label(self):
+        for employee in self:
+            label = _('Identification No')
+            if self.env.company.country_code == 'BE':
+                label += ' (NISS)'
+            elif self.env.company.country_code == 'US':
+                label += ' (SSN)'
+            elif self.env.company.country_code == 'LU':
+                label = _('Matricule')
+            employee.identification_id_label = label
 
     def _compute_avatar(self, avatar_field, image_field):
         employee_wo_user_and_image = self.env['hr.employee']
@@ -458,9 +468,9 @@ class HrEmployee(models.Model):
                 if not (re.match(r'^[A-Za-z0-9]+$', employee.barcode) and len(employee.barcode) <= 18):
                     raise ValidationError(_("The Badge ID must be alphanumeric without any accents and no longer than 18 characters."))
 
-    @api.constrains('ssnid')
-    def _check_ssnid(self):
-        # By default, an Social Security Number is always valid, but each localization
+    @api.constrains('identification_id')
+    def _check_identification_id(self):
+        # By default, it is always valid, but each localization
         # may want to add its own constraints
         pass
 
