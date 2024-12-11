@@ -1,24 +1,38 @@
 import { useEffect, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
-import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
-const ACTIVE_ELEMENT_CLASS = "focus";
-const throttledElementFocus = throttleForAnimation((el) => el?.focus());
+export const ACTIVE_ELEMENT_CLASS = "focus";
+const throttledFocus = throttleForAnimation((el) => el?.focus());
 
-function focusElement(el) {
-    throttledElementFocus.cancel();
-    throttledElementFocus(el);
-}
+export class NavigationItem {
+    /**@type {number} */
+    index = -1;
 
-class NavigationItem {
+    /**
+     * The container element
+     * @type {Element}
+     */
+    el = undefined;
+
+    /**
+     * The actual "clicked" element, it can be the same
+     * as @see el but will be the closest child input if
+     * options.shouldFocusChildInput is true
+     * @type {Element}
+     */
+    target = undefined;
+
     constructor({ index, el, setActiveItem, options }) {
         this.index = index;
         this.options = options;
-        this.setActiveItem = setActiveItem;
+
+        /**@private*/
+        this._setActiveItem = setActiveItem;
 
         this.el = el;
-        if (options.shouldFocusChildInput) {
+        if (this.options.shouldFocusChildInput) {
             const subInput = el.querySelector(":scope input, :scope button, :scope textarea");
             this.target = subInput || el;
         } else {
@@ -26,11 +40,13 @@ class NavigationItem {
         }
 
         const onFocus = () => this.setActive(false);
-        const onMouseEnter = () => this.onMouseEnter();
+        const onMouseEnter = () => this._onMouseEnter();
 
         this.target.addEventListener("focus", onFocus);
         this.target.addEventListener("mouseenter", onMouseEnter);
-        this.removeListeners = () => {
+
+        /**@private*/
+        this._removeListeners = () => {
             this.target.removeEventListener("focus", onFocus);
             this.target.removeEventListener("mouseenter", onMouseEnter);
         };
@@ -43,44 +59,53 @@ class NavigationItem {
 
     setActive(focus = true) {
         scrollTo(this.target);
-        this.setActiveItem(this.index, this);
+        this._setActiveItem(this.index);
         this.target.classList.add(ACTIVE_ELEMENT_CLASS);
 
         if (focus && !this.options.virtualFocus) {
-            focusElement(this.target);
+            throttledFocus.cancel();
+            throttledFocus(this.target);
         }
     }
 
-    defocus() {
-        this.target.classList.remove(ACTIVE_ELEMENT_CLASS);
-    }
-
-    onMouseEnter() {
+    /**
+     * @private
+     */
+    _onMouseEnter() {
         this.setActive(false);
         this.options.onMouseEnter?.(this);
     }
 }
 
-class Navigator {
+export class Navigator {
+    enabled = false;
+
+    /**@type {Array<NavigationItem>} */
+    items = [];
+
+    /**@type {NavigationItem|undefined}*/
+    activeItem = undefined;
+
+    /**@type {number}*/
+    activeItemIndex = -1;
+
+    /**@private */
+    _targetObserver = undefined;
+    /**@private */
+    _initialFocusElement = undefined;
+
+    /**@private */
+    _hotkeyRemoves = [];
+    /**@private */
+    _hotkeyService = undefined;
+
     /**
      * @param {*} containerRef
      * @param {NavigationOptions} options
      */
     constructor(containerRef, options, hotkeyService) {
-        this.enabled = false;
         this.containerRef = containerRef;
-
-        const focusAt = (increment) => {
-            const isFocused = this.activeItem?.el.isConnected;
-            const index = this.currentActiveIndex + increment;
-            if (isFocused && index >= 0) {
-                return this.items[index % this.items.length]?.setActive();
-            } else if (!isFocused && increment >= 0) {
-                return this.items[0]?.setActive();
-            } else {
-                return this.items.at(-1)?.setActive();
-            }
-        };
+        this._hotkeyService = hotkeyService;
 
         this.options = {
             shouldFocusChildInput: true,
@@ -89,39 +114,60 @@ class Navigator {
             focusInitialElementOnDisabled: () => true,
             ...options,
 
+            allowedInEditableHotkeys: [
+                "arrowup",
+                "arrowdown",
+                "enter",
+                "tab",
+                "shift+tab",
+                ...(options?.allowedInEditableHotkeys || []),
+            ],
+
             hotkeys: {
-                home: (index, items) => items[0]?.setActive(),
-                end: (index, items) => items.at(-1)?.setActive(),
-                tab: () => focusAt(+1),
-                "shift+tab": () => focusAt(-1),
-                arrowdown: () => focusAt(+1),
-                arrowup: () => focusAt(-1),
-                enter: (index, items) => {
-                    const item = items[index] || items[0];
+                home: ({ event }) => {
+                    event.preventDefault();
+                    this.items[0]?.setActive();
+                },
+                end: ({ event }) => {
+                    event.preventDefault();
+                    this.items.at(-1)?.setActive();
+                },
+                tab: ({ event }) => {
+                    event.preventDefault();
+                    this.next();
+                },
+                "shift+tab": ({ event }) => {
+                    event.preventDefault();
+                    this.previous();
+                },
+                arrowdown: ({ event }) => {
+                    event.preventDefault();
+                    this.next();
+                },
+                arrowup: ({ event }) => {
+                    event.preventDefault();
+                    this.previous();
+                },
+                enter: ({ event }) => {
+                    event.preventDefault();
+                    const item = this.activeItem || this.items[0];
                     item?.select();
                 },
                 ...(options?.hotkeys || {}),
             },
         };
+    }
 
-        /**@type {Array<NavigationItem>} */
-        this.items = [];
-
-        /**@type {NavigationItem|undefined}*/
-        this.activeItem = undefined;
-        this.currentActiveIndex = -1;
-
-        this.initialFocusElement = undefined;
-        this.debouncedUpdate = debounce(() => this.update(), 100);
-
-        this.hotkeyRemoves = [];
-        this.hotkeyService = hotkeyService;
-
-        this.allowedInEditableHotkeys = ["arrowup", "arrowdown", "enter", "tab", "shift+tab"];
+    /**
+     * Returns true if the focus is on any of the navigable items
+     * @type {boolean}
+     */
+    get isFocused() {
+        return Boolean(this.activeItem?.el.isConnected);
     }
 
     enable() {
-        if (!this.containerRef.el || this.targetObserver) {
+        if (!this.containerRef.el || this._targetObserver) {
             return;
         }
 
@@ -130,26 +176,28 @@ class Navigator {
                 continue;
             }
 
-            this.hotkeyRemoves.push(
-                this.hotkeyService.add(
+            this._hotkeyRemoves.push(
+                this._hotkeyService.add(
                     hotkey,
-                    () => callback(this.currentActiveIndex, this.items),
+                    ({ event }) => callback({ navigator: this, event }),
                     {
                         allowRepeat: true,
-                        bypassEditableProtection: this.allowedInEditableHotkeys.includes(hotkey),
+                        preventDefault: false,
+                        bypassEditableProtection:
+                            this.options.allowedInEditableHotkeys.includes(hotkey),
                     }
                 )
             );
         }
 
-        this.targetObserver = new MutationObserver(() => this.debouncedUpdate());
-        this.targetObserver.observe(this.containerRef.el, {
+        this._targetObserver = new MutationObserver(() => this.update());
+        this._targetObserver.observe(this.containerRef.el, {
             childList: true,
             subtree: true,
         });
 
-        this.initialFocusElement = document.activeElement;
-        this.currentActiveIndex = -1;
+        this._initialFocusElement = document.activeElement;
+        this.activeItemIndex = -1;
         this.update();
 
         if (this.options.onEnabled) {
@@ -166,19 +214,20 @@ class Navigator {
             return;
         }
 
-        if (this.targetObserver) {
-            this.targetObserver.disconnect();
-            this.targetObserver = undefined;
+        if (this._targetObserver) {
+            this._targetObserver.disconnect();
+            this._targetObserver = undefined;
         }
 
-        this.clearItems();
-        for (const removeHotkey of this.hotkeyRemoves) {
+        this._clearItems();
+        for (const removeHotkey of this._hotkeyRemoves) {
             removeHotkey();
         }
-        this.hotkeyRemoves = [];
+        this._hotkeyRemoves = [];
 
         if (this.options.focusInitialElementOnDisabled()) {
-            focusElement(this.initialFocusElement);
+            throttledFocus.cancel();
+            throttledFocus(this._initialFocusElement);
         }
 
         this.enabled = false;
@@ -188,35 +237,73 @@ class Navigator {
         if (!this.containerRef.el) {
             return;
         }
+        const oldActiveItem = this.activeItem;
         const oldItemsLength = this.items.length;
-        this.clearItems();
 
         const elements = [...this.containerRef.el.querySelectorAll(this.options.itemsSelector)];
-        this.items = elements.map((el, index) => {
-            return new NavigationItem({
-                index,
-                el,
-                options: this.options,
-                setActiveItem: (index, el) => this.setActiveItem(index, el),
-            });
-        });
+        if (this.items.length > elements.length) {
+            this.items.splice(this.items.length - elements.length);
+        }
 
-        if (oldItemsLength != this.items.length && this.currentActiveIndex >= this.items.length) {
+        for (let i = 0; i < elements.length; i++) {
+            const navItem = new NavigationItem({
+                index: i,
+                el: elements[i],
+                options: this.options,
+                setActiveItem: (index) => this.setActiveItem(index),
+            });
+
+            if (i >= this.items.length) {
+                this.items.push(navItem);
+            } else {
+                this.items[i] = navItem;
+            }
+        }
+
+        // Focus last item if some where removed
+        if (oldItemsLength != this.items.length && this.activeItemIndex >= this.items.length) {
             this.items.at(-1)?.setActive();
+        }
+        // Focus closest item if the current active item has changed/was removed
+        else if (
+            this.activeItemIndex < this.items.length &&
+            oldActiveItem !== this.items[this.activeItemIndex]
+        ) {
+            this.items[this.activeItemIndex]?.setActive();
         }
     }
 
-    setActiveItem(index, item) {
+    setActiveItem(index) {
         if (this.activeItem) {
             this.activeItem.el.classList.remove(ACTIVE_ELEMENT_CLASS);
         }
-        this.activeItem = item;
-        this.currentActiveIndex = index;
+        this.activeItem = this.items[index];
+        this.activeItemIndex = index;
     }
 
-    clearItems() {
+    next() {
+        if (!this.isFocused) {
+            this.items[0]?.setActive();
+        } else {
+            this.items[(this.activeItemIndex + 1) % this.items.length]?.setActive();
+        }
+    }
+
+    previous() {
+        const index = this.activeItemIndex - 1;
+        if (!this.isFocused || index < 0) {
+            this.items.at(-1)?.setActive();
+        } else {
+            this.items[index % this.items.length]?.setActive();
+        }
+    }
+
+    /**
+     * @private
+     */
+    _clearItems() {
         for (const item of this.items) {
-            item.removeListeners();
+            item._removeListeners();
         }
         this.items = [];
     }
@@ -257,8 +344,13 @@ class Navigator {
  * key input.
  *
  * @callback keyHandlerCallback
- * @param {number} index                Current index.
- * @param {Array<NavigationItem>} items List of all navigation items.
+ * @param {NavigationData} data
+ */
+
+/**
+ * @typedef NavigationData
+ * @property {KeyboardEvent} event
+ * @property {Navigator} navigator
  */
 
 /**
@@ -298,8 +390,5 @@ export function useNavigation(containerRef, options = {}) {
         () => [containerRef.el]
     );
 
-    return {
-        enable: () => navigator.enable(),
-        disable: () => navigator.disable(),
-    };
+    return navigator;
 }
