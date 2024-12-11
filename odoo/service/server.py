@@ -51,7 +51,7 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
-from odoo.modules import get_modules
+from odoo import modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config, osutil
@@ -122,7 +122,7 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
     def setup(self):
         # timeout to avoid chrome headless preconnect during tests
-        if config['test_enable'] or config['test_file']:
+        if config.is_testing:
             self.timeout = 5
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
@@ -523,8 +523,7 @@ class ThreadedServer(CommonServer):
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
-        test_mode = config['test_enable'] or config['test_file']
-        if test_mode or (config['http_enable'] and not stop):
+        if config.is_testing or (config['http_enable'] and not stop):
             # some tests need the http daemon to be available...
             self.http_spawn()
 
@@ -577,7 +576,7 @@ class ThreadedServer(CommonServer):
             rc = preload_registries(preload)
 
         if stop:
-            if config['test_enable']:
+            if config.is_testing:
                 from odoo.tests.result import _logger as logger  # noqa: PLC0415
                 with Registry.registries._lock:
                     for db, registry in Registry.registries.d.items():
@@ -1275,10 +1274,11 @@ def load_test_file_py(registry, test_file):
     # pylint: disable=import-outside-toplevel
     from odoo.tests import loader  # noqa: PLC0415
     from odoo.tests.suite import OdooSuite  # noqa: PLC0415
+    modules.module.current_test = True
     threading.current_thread().testing = True
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
-        for mod in [m for m in get_modules() if '%s%s%s' % (os.path.sep, m, os.path.sep) in test_file]:
+        for mod in [m for m in modules.get_modules() if m in test_file.split(os.path.sep)]:
             for mod_mod in loader.get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
                 if test_path == config._normalize(mod_path):
@@ -1291,6 +1291,7 @@ def load_test_file_py(registry, test_file):
                     return
     finally:
         threading.current_thread().testing = False
+        modules.module.current_test = False
 
 
 def preload_registries(dbnames):
@@ -1316,7 +1317,7 @@ def preload_registries(dbnames):
                     load_test_file_py(registry, test_file)
 
             # run post-install tests
-            if config['test_enable']:
+            if config.is_testing:
                 from odoo.tests import loader  # noqa: PLC0415
                 t0 = time.time()
                 t0_sql = odoo.sql_db.sql_counter
@@ -1354,7 +1355,7 @@ def start(preload=None, stop=False):
     if odoo.evented:
         server = GeventServer(odoo.http.root)
     elif config['workers']:
-        if config['test_enable'] or config['test_file']:
+        if config.is_testing:
             _logger.warning("Unit testing in workers mode could fail; use --workers 0.")
 
         server = PreforkServer(odoo.http.root)

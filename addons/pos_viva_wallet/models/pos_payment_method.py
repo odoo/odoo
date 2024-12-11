@@ -3,7 +3,7 @@
 import logging
 import requests
 
-from odoo import fields, models, api, tools, _
+from odoo import api, fields, models, modules, _
 from odoo.exceptions import UserError, AccessError
 
 _logger = logging.getLogger(__name__)
@@ -74,7 +74,7 @@ class PosPaymentMethod(models.Model):
         # Get a key to configure the webhook.
         # this key need to be the response when we receive a notifiaction
         # do not execute this query in test mode
-        if tools.config['test_enable']:
+        if modules.module.current_test:
             return 'viva_wallet_test'
 
         auth = requests.auth.HTTPBasicAuth(viva_wallet_merchant_id, viva_wallet_api_key)

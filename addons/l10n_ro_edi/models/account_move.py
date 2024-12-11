@@ -255,7 +255,7 @@ class AccountMove(models.Model):
                 else:
                     invoice._l10n_ro_edi_create_document_invoice_validated(final_result)
 
-            if not tools.config['test_enable'] and not modules.module.current_test:
+            if not modules.module.current_test:
                 self._cr.commit()
 
         # Delete outdated documents in batches
