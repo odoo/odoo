@@ -159,7 +159,7 @@ class AccountEdiFormat(models.Model):
                 odoobot = self.env.ref("base.partner_root")
                 invoices.message_post(author_id=odoobot.id, body=
                     Markup("%s<br/>%s:<br/>%s") %(
-                        _("Somehow this E-waybill has been canceled in the government portal before. You can verify by checking the details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"),
+                        _("Somehow this E-waybill has been canceled in the government portal before. You can verify by checking the details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)"),
                         _("Error"),
                         error_message
                     )
@@ -226,7 +226,7 @@ class AccountEdiFormat(models.Model):
                     error = []
                     odoobot = self.env.ref("base.partner_root")
                     invoices.message_post(author_id=odoobot.id, body=
-                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)")
+                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)")
                     )
 
             if "no-credit" in error_codes:
@@ -327,7 +327,7 @@ class AccountEdiFormat(models.Model):
                     error = []
                     odoobot = self.env.ref("base.partner_root")
                     invoices.message_post(author_id=odoobot.id, body=
-                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)")
+                        _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)")
                     )
             if "no-credit" in error_codes:
                 res[invoices] = {
