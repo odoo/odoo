@@ -328,6 +328,10 @@ def populate_model(model: Model, populated: dict[Model, int], factors: dict[Mode
          dest_columns=SQL(', ').join(dest_fields), src_columns=SQL(', ').join(src_fields),
          table_alias=SQL.identifier(table_alias), series_alias=SQL.identifier(series_alias))
     model.env.cr.execute(query)
+
+    if model._parent_store:
+        model._parent_store_compute()
+
     # normally copying the 'id' will set the model entry in the populated dict,
     # but for the case of a table with no 'id' (ex: Many2many), we add manually,
     # by reading the key and having the defaultdict do the insertion, with a default value of 0
@@ -347,6 +351,7 @@ class Many2manyModelWrapper:
         self._name = field.relation  # a m2m doesn't have a _name, so we use the tablename
         self._table = field.relation
         self._inherits = {}
+        self._parent_store = False
         self.env = env
         self._rec_name = None
         self._rec_names_search = []
