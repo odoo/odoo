@@ -372,7 +372,12 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'Logger level updated',
         }
 
+<<<<<<< master
     @http.route('/hw_posbox_homepage/update_git_tree', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+||||||| e3d54695862f73d9be6c35121def57ed641a1a45
+=======
+    @http.route('/hw_posbox_homepage/update_git_tree', auth="none", type="json", methods=['POST'], cors='*')
+>>>>>>> ac4f98a232308cf00c216f057e5537a1dcf2ed24
     def update_git_tree(self):
         helpers.check_git_branch()
         return {
