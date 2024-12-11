@@ -11,7 +11,7 @@ setupInteractionWhiteList("website.website_controller_page_listing_layout");
 
 test("website controller page listing layout toggle to list mode", async () => {
     const deferred = new Deferred();
-    const { core, el } = await startInteractions(`
+    const { el } = await startInteractions(`
     <div class="container o_website_listing_layout">
         <section>
             <div class="listing_layout_switcher btn-group" data-active-classes="border-primary" data-view-id="123">
@@ -55,7 +55,7 @@ test("website controller page listing layout toggle to list mode", async () => {
 
 test("website controller page listing layout toggle to grid mode", async () => {
     const deferred = new Deferred();
-    const { core, el } = await startInteractions(`
+    const { el } = await startInteractions(`
     <div class="container o_website_listing_layout">
         <section>
             <div class="listing_layout_switcher btn-group" data-active-classes="border-primary" data-view-id="123">

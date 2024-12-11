@@ -79,7 +79,7 @@ describe("adding listeners", () => {
                 },
             };
         }
-        const { el } = await startInteraction(Test, TemplateTest);
+        await startInteraction(Test, TemplateTest);
         expect(clicked).toBe(0);
         await dblclick("span");
         expect(clicked).toBe(3); // event dblclick = click + click + dblclick
@@ -282,7 +282,7 @@ describe("using selectors", () => {
                 "_myselector": { "t-att-animal": () => "colibri" },
             };
         }
-        const { el } = await startInteraction(Test, `
+        await startInteraction(Test, `
             <div class="test">
                 <span class="my-selector">coucou</span>
             </div>`);

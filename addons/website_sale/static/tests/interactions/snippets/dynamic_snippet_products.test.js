@@ -86,7 +86,7 @@ test.tags("desktop")("dynamic snippet products loads items and displays them thr
     `);
     expect(core.interactions.length).toBe(6);
     const contentEl = el.querySelector(".dynamic_snippet_template");
-    const carouselEl = el.querySelector(".carousel");
+    const carouselEl = contentEl.querySelector(".carousel");
     // Neutralize carousel automatic sliding.
     carouselEl.dataset.bsRide = "false";
     const itemEls = carouselEl.querySelectorAll(".s_test_item");

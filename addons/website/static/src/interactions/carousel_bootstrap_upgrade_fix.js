@@ -4,19 +4,6 @@ import { Interaction } from "@website/core/interaction";
 const CAROUSEL_SLIDING_CLASS = "o_carousel_sliding";
 
 /**
- * @param {HTMLElement} carouselEl
- * @returns {Promise<void>}
- */
-async function waitForCarouselToFinishSliding(carouselEl) {
-    if (!carouselEl.classList.contains(CAROUSEL_SLIDING_CLASS)) {
-        return;
-    }
-    return new Promise(resolve => {
-        carouselEl.addEventListener("slid.bs.carousel", () => resolve(), {once: true});
-    });
-}
-
-/**
  * This class is used to fix carousel auto-slide behavior in Odoo 17.4 and up.
  * It handles upgrade cases from lower versions.
  * TODO find a way to get rid of this with an upgrade script?

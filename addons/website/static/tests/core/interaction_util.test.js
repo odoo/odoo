@@ -3,6 +3,8 @@ import { Interaction } from "@website/core/interaction";
 import { buildEditableInteractions } from "@website/core/website_edit_service";
 
 test("buildEditableInteractions concrete", async () => {
+    const doStuff = () => {};
+
     class Base extends Interaction {
         stuff() {
             doStuff();
@@ -13,7 +15,7 @@ test("buildEditableInteractions concrete", async () => {
     };
     class Specific extends Base {
         otherStuff() {
-            doOtherStuff();
+            doStuff("other");
         }
     }
     const builders = [
@@ -31,6 +33,8 @@ test("buildEditableInteractions concrete", async () => {
 });
 
 test("buildEditableInteractions abstract", async () => {
+    const doStuff = () => {};
+
     class AbstractBase extends Interaction {
         stuff() {
             doStuff();
@@ -41,12 +45,12 @@ test("buildEditableInteractions abstract", async () => {
     };
     class AbstractIntermediate extends AbstractBase {
         moreStuff() {
-            doMoreStuff();
+            doStuff("more");
         }
     }
     class Specific extends AbstractIntermediate {
         otherStuff() {
-            doOtherStuff();
+            doStuff("other");
         }
     }
     const builders = [

@@ -67,7 +67,7 @@ export class GallerySlider extends Interaction {
         }
         this.page += dispatchedEl.classList.contains("o_indicators_left") ? -1 : 1;
         this.page = Math.max(0, Math.min(this.nbPages - 1, this.page)); // should not be necessary
-        Carousel.getOrCreateInstance(this.carouselEl).to(this.page * this.realNbPerPage);
+        window.Carousel.getOrCreateInstance(this.carouselEl).to(this.page * this.realNbPerPage);
         // We dont use hide() before the slide animation in the editor because there is a traceback
         // TO DO: fix this traceback
         if (!this.editableMode) {

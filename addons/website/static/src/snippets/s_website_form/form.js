@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
-import { debounce } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { post } from "@web/core/network/http_service";

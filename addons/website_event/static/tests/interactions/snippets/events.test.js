@@ -1,6 +1,4 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
 import {
     onRpc,
 } from "@web/../tests/web_test_helpers";

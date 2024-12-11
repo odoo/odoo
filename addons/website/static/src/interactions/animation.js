@@ -129,7 +129,6 @@ export class Animation extends Interaction {
         const windowsHeight = window.innerHeight;
         const elHeight = el.offsetHeight;
         let elOffset = this.isAnimateOnScroll ? 0 : Math.max((elHeight * this.offsetRatio), this.offsetMin);
-        const elStyle = window.getComputedStyle(el);
 
         // We need to offset for the change in position from some animation.
         // So we get the top value by not taking CSS transforms into calculations.

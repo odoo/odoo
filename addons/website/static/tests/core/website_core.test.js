@@ -4,8 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
 import { Interaction } from "@website/core/interaction";
-import { startInteraction, startInteractions } from "./helpers";
-import { registry } from "@web/core/registry";
+import { startInteraction } from "./helpers";
 
 test("properly handles case where we have no match for wrapwrap", async () => {
     const env = await makeMockEnv();
@@ -15,13 +14,10 @@ test("properly handles case where we have no match for wrapwrap", async () => {
 
 
 test("wait for translation before starting interactions", async () => {
-    let flag = false;
-
     class Test extends Interaction {
         static selector = ".test";
 
         setup() {
-            flag = true;
             expect("localization" in this.services).toBe(true);
         }
     }

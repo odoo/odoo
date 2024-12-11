@@ -1,6 +1,4 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, scroll } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@website/core/interaction";

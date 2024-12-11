@@ -1,8 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { AnchorSlide } from "@website/interactions/anchor_slide";
 import {
     isElementInViewport,
     startInteractions,

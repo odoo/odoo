@@ -292,7 +292,7 @@ export class Colibri {
     destroy() {
         // restore t-att to their initial values
         for (const dynAttrs of this.dynamicAttrs) {
-            const { nodes, attr, definition, initialValues } = dynAttrs;
+            const { nodes, attr, initialValues } = dynAttrs;
             if (!initialValues) {
                 continue;
             }

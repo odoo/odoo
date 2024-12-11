@@ -90,7 +90,7 @@ test("searchbar triggers a search when text is entered", async () => {
 
 test("searchbar selects first result on cursor down", async () => {
     supportAutocomplete();
-    const { core, el } = await startInteractions(searchTemplate);
+    const { el } = await startInteractions(searchTemplate);
     const formEl = el.querySelector("form");
     const inputEl = formEl.querySelector("input[type=search]");
     await click(inputEl);
@@ -107,7 +107,7 @@ test("searchbar selects first result on cursor down", async () => {
 
 test("searchbar selects last result on cursor up", async () => {
     supportAutocomplete();
-    const { core, el } = await startInteractions(searchTemplate);
+    const { el } = await startInteractions(searchTemplate);
     const formEl = el.querySelector("form");
     const inputEl = formEl.querySelector("input[type=search]");
     await click(inputEl);
@@ -124,7 +124,7 @@ test("searchbar selects last result on cursor up", async () => {
 
 test("searchbar removes results on escape", async () => {
     supportAutocomplete();
-    const { core, el } = await startInteractions(searchTemplate);
+    const { el } = await startInteractions(searchTemplate);
     const formEl = el.querySelector("form");
     const inputEl = formEl.querySelector("input[type=search]");
     await click(inputEl);

@@ -1,5 +1,4 @@
 import { cookie } from "@web/core/browser/cookie";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { utils as uiUtils, SIZES } from "@web/core/ui/ui_service";
 import { getTabableElements } from "@web/core/utils/ui";

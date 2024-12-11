@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, fill } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
-import { MockServer, onRpc, patchWithCleanup, webModels } from "@web/../tests/web_test_helpers";
+import { MockServer, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     startInteractions,
     setupInteractionWhiteList,
@@ -89,11 +89,11 @@ test("form checks conditions", async () => {
     `);
     expect(core.interactions.length).toBe(1);
     const formEl = el.querySelector("form");
-    const nameEl = el.querySelector("input[name=name]");
-    const mailEl = el.querySelector("input[name=email_from]");
-    const subjectEl = el.querySelector("input[name=subject]");
-    const questionEl = el.querySelector("textarea[name=description]");
-    const submitEl = el.querySelector("a.s_website_form_send");
+    const nameEl = formEl.querySelector("input[name=name]");
+    const mailEl = formEl.querySelector("input[name=email_from]");
+    const subjectEl = formEl.querySelector("input[name=subject]");
+    const questionEl = formEl.querySelector("textarea[name=description]");
+    const submitEl = formEl.querySelector("a.s_website_form_send");
 
     function checkVisibility(
         isNameVisible,
@@ -241,17 +241,9 @@ test("form prefilled conditional", async () => {
     `);
     expect(core.interactions.length).toBe(1);
     const formEl = el.querySelector("form");
-    const nameEl = el.querySelector("input[name=name]");
-    const phoneEl = el.querySelector("input[name=phone]");
+    const nameEl = formEl.querySelector("input[name=name]");
+    const phoneEl = formEl.querySelector("input[name=phone]");
 
-    function checkPhoneVisibility(isVisible) {
-        const fieldEl = field(el);
-        if (isVisible) {
-            expect(fieldEl).not.toHaveClass("d-none");
-        } else {
-            expect(fieldEl).toHaveClass("d-none");
-        }
-    }
     expect(nameEl).not.toBe(undefined);
     expect(nameEl.value).toBe("Mitchell Admin");
     expect(phoneEl).not.toBe(undefined);

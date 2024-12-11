@@ -66,7 +66,7 @@ test("form formats date in edit mode", async () => {
     const { core, el } = await startInteractions(formXml, { waitForStart: true, editMode: true });
     expect(core.interactions.length).toBe(1);
     const formEl = el.querySelector("form");
-    const dateEl = el.querySelector("input[name=When]");
+    const dateEl = formEl.querySelector("input[name=When]");
     expect(dateEl.value).toBe("01/01/2025 10:00:00");
     // Verify that non-edit code did not run.
     const dateField = dateEl.closest(".s_website_form_datetime");
@@ -79,7 +79,7 @@ test("form is NOT prefilled in edit mode", async () => {
     const { core, el } = await startInteractions(formXml, { waitForStart: true, editMode: true });
     expect(core.interactions.length).toBe(1);
     const formEl = el.querySelector("form");
-    const companyEl = el.querySelector("input[name=company]");
+    const companyEl = formEl.querySelector("input[name=company]");
     expect(companyEl.value).toBe("");
 });
 
@@ -89,6 +89,6 @@ test("form is NOT prefilled in translate mode", async () => {
     const { core, el } = await startInteractions(formXml, { waitForStart: true, translateMode: true });
     expect(core.interactions.length).toBe(1);
     const formEl = el.querySelector("form");
-    const companyEl = el.querySelector("input[name=company]");
+    const companyEl = formEl.querySelector("input[name=company]");
     expect(companyEl.value).toBe("");
 });

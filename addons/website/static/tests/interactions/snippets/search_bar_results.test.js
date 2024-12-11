@@ -1,7 +1,5 @@
 import { expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
-import { advanceTime } from "@odoo/hoot-mock";
-import { onRpc } from "@web/../tests/web_test_helpers";
 import { startInteractions, setupInteractionWhiteList } from "../../core/helpers";
 
 setupInteractionWhiteList("website.search_bar_results");
@@ -40,9 +38,8 @@ const searchTemplate = `
 `;
 
 test("searchbar selects next result on cursor down", async () => {
-    const { core, el } = await startInteractions(searchTemplate);
+    const { el } = await startInteractions(searchTemplate);
     const formEl = el.querySelector("form");
-    const inputEl = formEl.querySelector("input[type=search]");
     const resultEls = formEl.querySelectorAll("a:has(.o_search_result_item)");
     resultEls[0].focus();
     await press("down");
@@ -50,7 +47,7 @@ test("searchbar selects next result on cursor down", async () => {
 });
 
 test("searchbar selects input on cursor down on last result", async () => {
-    const { core, el } = await startInteractions(searchTemplate);
+    const { el } = await startInteractions(searchTemplate);
     const formEl = el.querySelector("form");
     const inputEl = formEl.querySelector("input[type=search]");
     const resultEls = formEl.querySelectorAll("a:has(.o_search_result_item)");
@@ -60,9 +57,8 @@ test("searchbar selects input on cursor down on last result", async () => {
 });
 
 test("searchbar selects previous result on cursor up", async () => {
-    const { core, el } = await startInteractions(searchTemplate);
+    const { el } = await startInteractions(searchTemplate);
     const formEl = el.querySelector("form");
-    const inputEl = formEl.querySelector("input[type=search]");
     const resultEls = formEl.querySelectorAll("a:has(.o_search_result_item)");
     resultEls[1].focus();
     await press("up");
@@ -70,7 +66,7 @@ test("searchbar selects previous result on cursor up", async () => {
 });
 
 test("searchbar selects input on cursor up on first result", async () => {
-    const { core, el } = await startInteractions(searchTemplate);
+    const { el } = await startInteractions(searchTemplate);
     const formEl = el.querySelector("form");
     const inputEl = formEl.querySelector("input[type=search]");
     const resultEls = formEl.querySelectorAll("a:has(.o_search_result_item)");
