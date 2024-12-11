@@ -30,7 +30,7 @@ export class MailMessage extends mailModels.MailMessage {
                 author: mailDataHelpers.Store.one(
                     ResPartner.browse(message.author_id),
                     makeKwArgs({
-                        fields: ["is_company", "user_livechat_username", "user", "write_date"],
+                        fields: ["avatar_128", "is_company", "user_livechat_username", "user"],
                     })
                 ),
             });

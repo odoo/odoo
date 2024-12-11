@@ -733,7 +733,7 @@ async function mail_message_update_content(request) {
             pinned_at: message.pinned_at,
             recipients: mailDataHelpers.Store.many(
                 this.env["res.partner"].browse(message.partner_ids),
-                makeKwArgs({ fields: ["name", "write_date"] })
+                makeKwArgs({ fields: ["avatar_128", "name"] })
             ),
         }).get_result()
     );
