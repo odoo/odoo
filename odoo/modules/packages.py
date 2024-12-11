@@ -56,7 +56,8 @@ _logger = logging.getLogger(__name__)
 # 1. base should always be the single drain of the dependency graph
 # 2. we need to use models in the base to upgrade other modules
 #
-# If there is no module to update(init/upgrade)
+# If there PackageGraph is in the 'load' mode
+# all non-base modules are loaded in the same phase
 # the loading order of modules in the same phase are sorted by the (depth, name)
 # where depth is the longest distance from the module to the base module along the dependency graph.
 # For example: the depth of module6 is 4 (path: module6 -> module4 -> module2 -> module1 -> base)
@@ -64,7 +65,7 @@ _logger = logging.getLogger(__name__)
 # phase 0: base
 # phase 1: module1 -> module2 -> module3 -> module4 -> module5 -> module6
 #
-# If there are some modules need update(init/upgrade)
+# If there PackageGraph is in the 'update' mode
 # For example,
 # 'installed' : base, module1, module2, module3
 # 'to upgrade': module4, module6
@@ -161,14 +162,6 @@ class Package:
             for dependency in self.depends
         )
 
-    @property
-    def loading_sort_key(self) -> tuple[int, str]:
-        return self.depth, self.name
-
-    @property
-    def updating_sort_key(self) -> tuple[int, int, str]:
-        return self.phase, self.depth, self.name
-
     def demo_installable(self) -> bool:
         return all(p.dbdemo for p in self.depends)
 
@@ -182,8 +175,6 @@ class PackageGraph:
         self.mode :Literal['load', 'update'] = mode
         self._packages: dict[str, Package] = {}
         self._cr :BaseCursor = cr
-        self._sort_key = (lambda package: package.updating_sort_key) \
-            if mode == 'update' else (lambda package: package.loading_sort_key)
 
     def __contains__(self, name: str) -> bool:
         return name in self._packages
@@ -192,7 +183,7 @@ class PackageGraph:
         return self._packages[name]
 
     def __iter__(self) -> Iterator[Package]:
-        return iter(sorted(self._packages.values(), key=self._sort_key))
+        return iter(sorted(self._packages.values(), key=lambda p: (p.phase, p.depth, p.name)))
 
     def __len__(self) -> int:
         return len(self._packages)
