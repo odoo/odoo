@@ -21,7 +21,7 @@
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <div class="oe_slides_ellipsis">
-                                            <a target="_new" t-att-href="slide.website_url">
+                                            <a target="_new" t-att-href="slide.website_absolute_url">
                                                 <span  t-esc="slide.name" t-att-title="slide.name"/>
                                             </a>
                                         </div>
@@ -55,12 +55,12 @@
                                     <t t-foreach="related_slides" t-as="suggest_slide">
                                         <div class="col-6 col-md-4 col-lg-3 oe_slides_suggestion_media">
                                             <div class="card mb-3">
-                                                <a t-att-href="suggest_slide.website_url" target="_new" class="card-img-top ratio ratio-16x9">
+                                                <a t-att-href="suggest_slide.website_absolute_url" target="_new" class="card-img-top ratio ratio-16x9">
                                                     <img t-att-src="website.image_url(suggest_slide, 'image_1024')" class="card-img-top embed-responsive-item" t-att-alt="suggest_slide.name"/>
                                                 </a>
                                                 <div class="card-body">
                                                     <h6 class="card-title">
-                                                        <a t-att-href="suggest_slide.website_url" target="_new">
+                                                        <a t-att-href="suggest_slide.website_absolute_url" target="_new">
                                                             <t t-esc="suggest_slide.name"/>
                                                         </a>
                                                     </h6>

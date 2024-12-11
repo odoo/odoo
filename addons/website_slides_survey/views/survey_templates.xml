@@ -5,7 +5,7 @@
             <xpath expr="//div[hasclass('o_survey_finished')]//a[hasclass('btn-primary')][1]" position="after">
                 <t t-if="channel_id">
                     <a role="button" class="o_wslides_share me-2 mt-2 mt-md-0 btn btn-secondary btn-lg" href="#"
-                       t-att-data-id="channel_id.id" t-att-data-name="channel_id.name" t-att-data-url="channel_id.website_url"
+                       t-att-data-id="channel_id.id" t-att-data-name="channel_id.name" t-att-data-url="channel_id.website_absolute_url"
                        data-is-channel="True" t-att-data-email-sharing="bool(channel_id.share_channel_template_id)">
                         <i class="fa fa-share-alt" aria-label="Share certification" title="Share certification"/>
                         Share your certification
@@ -16,7 +16,7 @@
                 <div t-if="channel_id" class="mt16">
                     <a role="button"
                         class="btn btn-primary btn-lg"
-                        t-att-href="channel_id.website_url">
+                        t-att-href="channel_id.website_absolute_url">
                         Go back to course
                     </a>
                 </div>

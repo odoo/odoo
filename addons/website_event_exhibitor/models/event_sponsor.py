@@ -191,8 +191,11 @@ class EventSponsor(models.Model):
         super()._compute_website_url()
         for sponsor in self:
             if sponsor.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                base_url = sponsor.event_id.get_base_url()
-                sponsor.website_url = '%s/event/%s/exhibitor/%s' % (base_url, self.env["ir.http"]._slug(sponsor.event_id), self.env["ir.http"]._slug(sponsor))
+                sponsor.website_url = f'/event/{self.env["ir.http"]._slug(sponsor.event_id)}/exhibitor/{self.env["ir.http"]._slug(sponsor)}'
+
+    @api.depends('event_id.website_id.domain')
+    def _compute_website_absolute_url(self):
+        super()._compute_website_absolute_url()
 
     @api.model
     def _search_get_detail(self, website, order, options):
@@ -242,12 +245,6 @@ class EventSponsor(models.Model):
     def get_backend_menu_id(self):
         return self.env.ref('event.event_main_menu').id
 
-    def open_website_url(self):
-        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
-        if self.event_id.website_id:
-            return super().open_website_url()
-        return self.env['website'].get_client_action(f'/event/{self.env["ir.http"]._slug(self.event_id)}/exhibitor/{self.env["ir.http"]._slug(self)}')
-
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
@@ -261,3 +258,10 @@ class EventSponsor(models.Model):
                 reason=_('Sponsor')
             )
         return recipients
+
+    # ------------------------------------------------------------
+    # Misc
+    # ------------------------------------------------------------
+    def get_base_url(self):
+        """ As website_id is not defined on this record, we rely on event website_id for base URL. """
+        return self.event_id.get_base_url()

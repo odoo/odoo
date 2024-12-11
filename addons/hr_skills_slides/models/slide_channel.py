@@ -59,7 +59,7 @@ class SlideChannelPartner(models.Model):
             if self.env.user.employee_ids:
                 msg = _('The employee has completed the course %s',
                     Markup('<a href="%(link)s">%(course)s</a>') % {
-                        'link': scp.channel_id.website_url,
+                        'link': scp.channel_id.website_absolute_url,
                         'course': scp.channel_id.name,
                 })
                 self.env.user.employee_id.message_post(body=msg)
@@ -75,7 +75,7 @@ class SlideChannel(models.Model):
                 channel._message_employee_chatter(
                     _('The employee subscribed to the course %s',
                         Markup('<a href="%(link)s">%(course)s</a>') % {
-                            'link': channel.website_url,
+                            'link': channel.website_absolute_url,
                             'course': channel.name
                     }),
                     target_partners
@@ -91,7 +91,7 @@ class SlideChannel(models.Model):
             channel._message_employee_chatter(
                 _('The employee left the course %s',
                     Markup('<a href="%(link)s">%(course)s</a>') % {
-                        'link': channel.website_url,
+                        'link': channel.website_absolute_url,
                         'course': channel.name,
                 }),
                 partners)
