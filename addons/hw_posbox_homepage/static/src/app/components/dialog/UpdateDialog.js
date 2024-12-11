@@ -4,7 +4,7 @@ import useStore from "../../hooks/useStore.js";
 import { BootstrapDialog } from "./BootstrapDialog.js";
 import { LoadingFullScreen } from "../LoadingFullScreen.js";
 
-const { Component, xml, useState, markup } = owl;
+const { Component, xml, useState } = owl;
 
 export class UpdateDialog extends Component {
     static props = {};
@@ -25,66 +25,95 @@ export class UpdateDialog extends Component {
         this.state.initialization = [];
     }
 
-    async getUpgradeData() {
+    async getVersionInfo() {
         try {
             const data = await this.store.rpc({
-                url: "/hw_posbox_homepage/upgrade",
+                url: "/hw_posbox_homepage/version_info",
             });
 
-            this.state.upgradeData = data;
-            this.state.commitHtml = markup(data.commit);
+            this.state.odooIsUpToDate = data.odooIsUpToDate;
+            this.state.imageIsUpToDate = data.imageIsUpToDate;
             this.state.initialization = false;
         } catch {
-            console.warn("Error while fetching data");
+            console.warn("Error while fetching version info");
         }
     }
 
-    async upgradeIotBox() {
-        console.warn("Not implemented yet");
+    async updateGitTree() {
+        this.state.waitRestart = true;
+        try {
+            const data = await this.store.rpc({
+                url: "/hw_posbox_homepage/update_git_tree",
+                method: "POST",
+            });
+            if (data.status === "success") {
+                this.state.isUpToDate = true;
+            }
+        } catch {
+            console.warn("Error while updating IoT Box.");
+        }
+    }
+
+    async forceUpdateIotHandlers() {
+        this.state.waitRestart = true;
+        try {
+            await this.store.rpc({
+                url: "/hw_posbox_homepage/load_iot_handlers",
+            });
+        } catch {
+            console.warn("Error while downloading handlers from db.");
+        }
     }
 
     static template = xml`
         <LoadingFullScreen t-if="this.state.waitRestart">
             <t t-set-slot="body">
-                Upgrading your device, please wait...
+                Updating your device, please wait...
             </t>
         </LoadingFullScreen>
 
-        <BootstrapDialog identifier="'update-configuration'" btnName="'Update'" onOpen.bind="getUpgradeData" onClose.bind="onClose">
+        <BootstrapDialog identifier="'update-configuration'" btnName="'Update'" onOpen.bind="getVersionInfo" onClose.bind="onClose">
             <t t-set-slot="header">
-                Upgrade IoTBox
+                <div>
+                    Update IoT Box
+                    <a href="https://www.odoo.com/documentation/18.0/applications/general/iot/config/updating_iot.html" class="fa fa-question-circle text-decoration-none text-dark" target="_blank"></a>
+                </div>
             </t>
             <t t-set-slot="body">
                 <div t-if="this.state.initialization" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3" style="z-index: 9999">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <p>Currently fetching upgrade data...</p>
+                    <p>Currently fetching update data...</p>
                 </div>
 
-                <div class="alert alert-warning fs-6" role="alert">
-                    This tool will help you perform an upgrade of the IoTBox's software over the internet.
-                    However the preferred method to upgrade the IoTBox is to flash the sd-card with the latest image.
-                    The upgrade procedure is explained into to the IoTBox manual.<br/><br/>
-                    Usefull links:
-                    <ul>
-                        <li>
-                            <a href="https://nightly.odoo.com/master/iotbox/iotbox-latest.zip">Download the latest image</a>
-                        </li>
-                        <li>
-                            <a href="https://www.odoo.com/documentation/18.0/applications/productivity/iot.html">IoTBox manual</a>
-                        </li>
-                    </ul>
+                <h6>System Image</h6>
+                <div t-if="this.state.imageIsUpToDate" class="alert alert-success">
+                    <h7>System is up to date! (<t t-esc="this.store.base.version"/>)</h7>
+                </div>
+                <div t-else="" class="alert alert-warning">
+                    <h7>A new image is available!</h7>
+                    <div>
+                        See:
+                        <a href="https://www.odoo.com/documentation/18.0/applications/general/iot/config/updating_iot.html#flashing-the-sd-card-on-iot-box" target="_blank" class="alert-link">
+                            Flashing the SD Card on IoT Box
+                        </a>
+                    </div>
                 </div>
 
-                <div class="bg-light rounded p-2 fs-6">
-                    <h6>Commit details:</h6>
-                    <pre t-out="this.state.commitHtml" />
+                <h6>Odoo Service</h6>
+                <div t-if="this.state.odooIsUpToDate" class="alert alert-success">
+                    <h7>Service is up to date!</h7>
+                </div>
+                <div t-else="" class="d-flex justify-content-between align-items-center alert alert-warning">
+                    <h7>An update is available!</h7>
+                    <button class="btn btn-primary btn-sm" t-on-click="updateGitTree">Update</button>
                 </div>
 
-                <div class="w-100 mt-3 d-flex justify-content-center">
-                    <button class="btn btn-primary btn-sm" t-on-click="upgradeIotBox">
-                        Upgrade to <t t-esc="this.state.upgradeData.flashToVersion" />
+                <h6>IoT Handlers</h6>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" t-on-click="forceUpdateIotHandlers">
+                        Force Update Handlers
                     </button>
                 </div>
             </t>
