@@ -1,6 +1,7 @@
 import { isTextNode } from "@html_editor/utils/dom_info";
 import {
     Component,
+    onWillDestroy,
     useComponent,
     useEffect,
     useEnv,
@@ -8,9 +9,7 @@ import {
     useState,
     useSubEnv,
     xml,
-    onWillDestroy,
 } from "@odoo/owl";
-import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 
 export function useDomState(getState) {
@@ -133,11 +132,10 @@ export function useDependencies(dependencies) {
     return isDependenciesVisible;
 }
 
-const actionsRegistry = registry.category("website-builder-actions");
-
 export function useClickableWeWidget() {
     useWeComponent();
     const comp = useComponent();
+    const getAction = comp.env.editor.shared.builderActions.getAction;
     const call = comp.env.editor.shared.history.makePreviewableOperation(callActions);
     if (
         comp.props.preview === false ||
@@ -154,7 +152,7 @@ export function useClickableWeWidget() {
         useBus(comp.env.actionBus, "BEFORE_CALL_ACTIONS", () => {
             for (const [actionId, actionParam, actionValue] of getActions()) {
                 for (const editingElement of comp.env.getEditingElements()) {
-                    actionsRegistry.get(actionId).clean?.({
+                    getAction(actionId).clean?.({
                         editingElement,
                         param: actionParam,
                         value: actionValue,
@@ -168,13 +166,10 @@ export function useClickableWeWidget() {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
         for (const [actionId, actionParam, actionValue] of getActions()) {
             for (const editingElement of comp.env.getEditingElements()) {
-                actionsRegistry.get(actionId).apply({
+                getAction(actionId).apply({
                     editingElement,
                     param: actionParam,
                     value: actionValue,
-                    // todo: should not be necessary if the actions are registred
-                    // through a plugin resource
-                    editor: comp.env.editor,
                 });
             }
         }
@@ -210,7 +205,7 @@ export function useClickableWeWidget() {
         return getActions().every(([actionId, actionParam, actionValue]) => {
             // TODO isActive === first editing el or all ?
             const editingElement = editingElements[0];
-            return actionsRegistry.get(actionId).isActive?.({
+            return getAction(actionId).isActive?.({
                 editingElement,
                 param: actionParam,
                 value: actionValue,
@@ -226,17 +221,15 @@ export function useClickableWeWidget() {
 }
 export function useInputWeWidget() {
     const comp = useComponent();
+    const getAction = comp.env.editor.shared.builderActions.getAction;
     const state = useDomState(getState);
     const applyValue = comp.env.editor.shared.history.makePreviewableOperation((value) => {
         for (const [actionId, actionParam] of getActions()) {
             for (const editingElement of comp.env.getEditingElements()) {
-                actionsRegistry.get(actionId).apply({
+                getAction(actionId).apply({
                     editingElement,
                     param: actionParam,
                     value,
-                    // todo: should not be necessary if the actions are registred
-                    // through a plugin resource
-                    editor: comp.env.editor,
                 });
             }
         }
@@ -248,7 +241,7 @@ export function useInputWeWidget() {
         }
         const [actionId, actionParam] = getActions()[0];
         return {
-            value: actionsRegistry.get(actionId).getValue({
+            value: getAction(actionId).getValue({
                 editingElement,
                 param: actionParam,
             }),

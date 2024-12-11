@@ -17,6 +17,8 @@ import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
 class Website extends models.Model {
     _name = "website";
@@ -131,30 +133,51 @@ export function getEditable(inWrap) {
     return `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${inWrap}</div>`;
 }
 
-const actionsRegistry = registry.category("website-builder-actions");
-
 export function addOption({ selector, exclude, template, Component, sequence }) {
-    const optionId = uniqueId("test-option");
-    registry.category("sidebar-element-option").add(optionId, {
+    const pluginId = uniqueId("test-option");
+    const Class = makeOptionPlugin({
+        pluginId,
         OptionComponent: Component,
         template,
         selector,
         exclude,
         sequence,
     });
+    registry.category("website-plugins").add(pluginId, Class);
     after(() => {
-        registry.category("sidebar-element-option").remove(optionId);
+        registry.category("website-plugins").remove(pluginId);
     });
+}
+function makeOptionPlugin({ id, template, selector, sequence, OptionComponent }) {
+    const option = {
+        OptionComponent,
+        template,
+        selector,
+    };
+
+    const Class = {
+        [id]: class extends Plugin {
+            static id = id;
+            resources = {
+                builder_options: sequence ? withSequence(sequence, option) : option,
+            };
+        },
+    }[id];
+
+    return Class;
 }
 
 export function addActionOption(actions = {}) {
-    for (const [name, action] of Object.entries(actions)) {
-        actionsRegistry.add(name, action);
+    const pluginId = uniqueId("test-action-plugin");
+    class P extends Plugin {
+        static id = pluginId;
+        resources = {
+            builder_actions: actions,
+        };
     }
+    registry.category("website-plugins").add(pluginId, P);
     after(() => {
-        for (const [name] of Object.entries(actions)) {
-            actionsRegistry.remove(name);
-        }
+        registry.category("website-plugins").remove(P);
     });
 }
 

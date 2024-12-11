@@ -28,9 +28,11 @@ import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useSetupAction } from "@web/search/action_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { BuilderActionsPlugin } from "./plugins/builder_actions_plugin";
 
 const BUILDER_PLUGIN = [
     BuilderOptionsPlugin,
+    BuilderActionsPlugin,
     BuilderOverlayPlugin,
     DropZonePlugin,
     MediaWebsitePlugin,
@@ -76,9 +78,10 @@ export class SnippetsMenu extends Component {
         const editorBus = new EventBus();
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
+        const websitePlugins = registry.category("website-plugins").getAll();
         this.editor = new Editor(
             {
-                Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN],
+                Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGIN, ...websitePlugins],
                 onChange: () => {
                     this.state.canUndo = this.editor.shared.history.canUndo();
                     this.state.canRedo = this.editor.shared.history.canRedo();

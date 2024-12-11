@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 
 export class BuilderOptionsPlugin extends Plugin {
@@ -11,12 +10,7 @@ export class BuilderOptionsPlugin extends Plugin {
     };
 
     setup() {
-        // todo: use resources instead of registry
-        this.builderOptions = registry
-            .category("sidebar-element-option")
-            .getEntries()
-            .map(([id, option]) => ({ id, ...option }));
-        this.builderOptions.sort((a, b) => (a.sequence ?? 0) - (b.sequence ?? 0));
+        this.builderOptions = this.getResource("builder_options");
         this.addDomListener(this.editable, "pointerup", (e) => {
             this.updateContainers(e.target);
         });
