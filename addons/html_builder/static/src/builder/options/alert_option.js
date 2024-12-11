@@ -1,10 +1,36 @@
 import { Plugin } from "@html_editor/plugin";
+import { fonts } from "@html_editor/utils/fonts";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 
 class AlertOptionPlugin extends Plugin {
     static id = "AlertOption";
     resources = {
+        builder_actions: {
+            alertIcon: {
+                apply: ({ editingElement, param: className }) => {
+                    const icon = editingElement.querySelector(".s_alert_icon");
+                    if (!icon) {
+                        return;
+                    }
+                    fonts.computeFonts();
+                    const allFaIcons = fonts.fontIcons[0].alias;
+                    icon.classList.remove(...allFaIcons);
+                    icon.classList.add(className);
+                },
+                clean: ({ editingElement, param: className }) => {
+                    const icon = editingElement.querySelector(".s_alert_icon");
+                    if (!icon) {
+                        return;
+                    }
+                    icon.classList.remove(className);
+                },
+
+                isActive: () => {
+                    return true;
+                },
+            },
+        },
         builder_options: [
             withSequence(5, {
                 template: "html_builder.AlertOption",
