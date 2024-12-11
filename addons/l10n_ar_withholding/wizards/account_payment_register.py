@@ -99,14 +99,12 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_l10n_ar_withholding_ids(self):
         """ Compute (AR) withholding on payments. """
         date = fields.Date.from_string(self.payment_date) or datetime.date.today()
-        partner_taxes = self.env['l10n_ar.partner.tax'].search([
-            *self.env['l10n_ar.partner.tax']._check_company_domain(self.company_id),
-            '|', ('from_date', '>=', date), ('from_date', '=', False),
-            '|', ('to_date', '<=', date), ('to_date', '=', False),
-            ('partner_id', '=', self.partner_id.commercial_partner_id.id),
-            ('tax_id.l10n_ar_withholding_payment_type', '=', self.partner_type)
-        ])
-        self.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id}) for x in partner_taxes]
+
+        withholdings = [Command.clear()]
+        if self.company_id.l10n_ar_tax_ids:
+            taxes = self.company_id._l10n_ar_add_taxes(self.partner_id, self.company_id, date)
+            withholdings += [Command.create({'tax_id': x.id}) for x in taxes]
+        self.l10n_ar_withholding_ids = withholdings
 
     def action_create_payments(self):
         if self.l10n_ar_withholding_ids and not self.payment_method_line_id.payment_account_id:
