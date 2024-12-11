@@ -120,6 +120,8 @@ class IrHttp(models.AbstractModel):
                 "translations": self.env['ir.http'].sudo().get_web_translations_hash(
                     mods, request.session.context['lang']
                 ) if session_uid else None,
+                'templates_cache': self.pool.cache_sequences['templates'],
+                'actions_cache': self.pool.cache_sequences['actions'],
             },
             "currencies": self.sudo().get_currencies(),
             'bundle_params': {
