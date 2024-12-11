@@ -40,8 +40,8 @@ export class Colibri {
     }
 
     addListener(nodes, event, fn, options) {
-        if (!fn) {
-            throw new Error(`Invalid listener for event '${event}' (received falsy value)`);
+        if (typeof (fn) !== "function") {
+            throw new Error(`Invalid listener for event '${event}' (not a function)`);
         }
         if (!this.isReady) {
             throw new Error("this.addListener can only be called after the interaction is started. Maybe move the call in the start method.");
@@ -170,7 +170,7 @@ export class Colibri {
                 this.addListener(nodes, ev, value);
             } else if (directive.startsWith("t-att-")) {
                 const attr = directive.slice(6);
-                this.dynamicAttrs.push({nodes, attr, definition: value, initialValues: null});
+                this.dynamicAttrs.push({ nodes, attr, definition: value, initialValues: null });
             } else if (directive === "t-out") {
                 this.tOuts.push([nodes, value]);
             } else if (directive === "t-component") {
@@ -201,7 +201,7 @@ export class Colibri {
         const errors = [];
         const interaction = this.interaction;
         for (const dynamicAttr of this.dynamicAttrs) {
-            const {nodes, attr, definition, initialValues} = dynamicAttr;
+            const { nodes, attr, definition, initialValues } = dynamicAttr;
             let valuePerNode;
             if (!initialValues) {
                 valuePerNode = new Map();
@@ -254,7 +254,7 @@ export class Colibri {
     destroy() {
         // restore t-att to their initial values
         for (const dynAttrs of this.dynamicAttrs) {
-            const {nodes, attr, definition, initialValues} = dynAttrs;
+            const { nodes, attr, definition, initialValues } = dynAttrs;
             if (!initialValues) {
                 continue;
             }
