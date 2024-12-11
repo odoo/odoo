@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     run: `edit Burndown`,
 }, {
     content: 'Validate search',
-    trigger: '.o_searchview_autocomplete .o_menu_item:contains("Project")',
+    trigger: '.o_searchview_autocomplete .o-dropdown-item:contains("Project")',
     run: "click",
 }, {
     content: 'Remove the group by "Date: Month > Stage"',

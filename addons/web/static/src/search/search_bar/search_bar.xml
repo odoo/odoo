@@ -58,71 +58,75 @@
         </t>
     </t>
 
-    <t t-name="web.SearchBar.Input">
-        <input type="text"
-            class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
-            accesskey="Q"
-            placeholder="Search..."
-            role="searchbox"
-            t-ref="autofocus"
-            t-on-keydown="onSearchKeydown"
-            t-on-click="onSearchClick"
-            t-on-input="onSearchInput"
-        />
-    </t>
-
-    <t t-name="web.SearchBar.Items">
-        <ul class="o-dropdown--menu dropdown-menu o_searchview_autocomplete show" role="menu">
-            <t t-foreach="items" t-as="item" t-key="item.id">
-                <li class="o_menu_item dropdown-item"
-                    t-att-class="{ o_indent: item.isChild, focus: item_index === state.focusedIndex}"
-                    t-att-id="item.id"
-                    t-on-click="() => this.selectItem(item)"
-                    t-on-mousemove="() => this.onItemMousemove(item_index)"
-                    >
-                    <t t-if="item.isParent">
-                        <a t-att-class="{ o_expand: true, 'ms-4': item.isFieldProperty}"
-                            href="#"
-                            t-on-click.stop.prevent="() => this.toggleItem(item, !item.isExpanded)"
-                            >
-                            <i t-attf-class="fa fa-caret-{{ item.isExpanded ? 'down' : 'right' }}"/>
-                        </a>
-                    </t>
-                    <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
-                        <t t-if="item.isAddCustomFilterButton"><span class="text-action">Add Custom Filter</span></t>
-                        <t t-elif="item.loadMore"><span class="text-action"><t t-esc="item.label"/></span></t>
-                        <t t-elif="item.isChild">
-                            <t t-esc="item.label"/>
-                        </t>
-                        <t t-elif="!item.isFieldProperty" > Search </t> <b t-esc="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/> </t>
+    <t t-name="web.SearchBar.QuickSearchItems">
+        <t t-foreach="items" t-as="item" t-key="item.id">
+            <DropdownItem
+                class="{ o_indent: item.isChild }"
+                attrs="{ id: item.id }"
+                onSelected="() => this.selectItem(item)"
+                closingMode="'none'"
+            >
+                <t t-if="item.isParent">
+                    <a t-att-class="{ o_expand: true, 'ms-4': item.isFieldProperty}"
+                        href="#"
+                        t-on-click.stop.prevent="() => this.toggleItem(item, !item.isExpanded)"
+                        >
+                        <i t-attf-class="fa fa-caret-{{ item.isExpanded ? 'down' : 'right' }}"/>
                     </a>
-                </li>
-            </t>
-        </ul>
+                </t>
+                <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
+                    <t t-if="item.isAddCustomFilterButton"><span class="text-action">Add Custom Filter</span></t>
+                    <t t-elif="item.loadMore"><span class="text-action"><t t-esc="item.label"/></span></t>
+                    <t t-elif="item.isChild">
+                        <t t-esc="item.label"/>
+                    </t>
+                    <t t-elif="!item.isFieldProperty" > Search </t> <b t-esc="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/> </t>
+                </a>
+            </DropdownItem>
+        </t>
     </t>
 
     <t t-name="web.SearchBar">
         <div t-if="visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group mt-1 mt-md-0" role="search" t-ref="root">
-            <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
-                 role="search" aria-autocomplete="list">
-                <button class="d-print-none btn border-0 p-0"
-                    role="button"
-                    aria-label="Search..."
-                    title="Search..."
-                    t-on-click="this.onClickSearchIcon"
-                >
-                    <i class="o_searchview_icon oi oi-search me-2"
-                        role="img"
-                    />
-                </button>
-                <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100">
-                    <t t-call="web.SearchBar.Facets"/>
-                    <t t-call="web.SearchBar.Input"/>
-                    <t t-if="items.length">
-                        <t t-call="web.SearchBar.Items"/>
-                    </t>
+            <Dropdown
+                state="inputDropdownState"
+                manual="true"
+                noClasses="true"
+                position="'bottom-fit'"
+                menuClass="'o_searchview_autocomplete'"
+                navigationOptions="inputDropdownNavOptions"
+                onStateChanged.bind="onInputDropdownChanged"
+            >
+                <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
+                    role="search" aria-autocomplete="list">
+                    <button class="d-print-none btn border-0 p-0"
+                        role="button"
+                        aria-label="Search..."
+                        title="Search..."
+                        t-on-click="this.onClickSearchIcon"
+                    >
+                        <i class="o_searchview_icon oi oi-search me-2"
+                            role="img"
+                        />
+                    </button>
+                    <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100">
+                        <t t-call="web.SearchBar.Facets"/>
+                        <input type="text"
+                            class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
+                            accesskey="Q"
+                            placeholder="Search..."
+                            role="searchbox"
+                            t-ref="autofocus"
+                            t-on-keydown="onSearchKeydown"
+                            t-on-click="onSearchClick"
+                            t-on-input="onSearchInput"
+                        />
+                    </div>
                 </div>
-            </div>
+                <t t-set-slot="content">
+                    <t t-call="web.SearchBar.QuickSearchItems"/>
+                </t>
+            </Dropdown>
             <SearchBarMenu dropdownState="searchBarDropdownState">
                 <t t-slot="search-bar-additional-menu"/>
             </SearchBarMenu>
