@@ -71,7 +71,8 @@ export function useAutoFocusToLast() {
         const allInputs = root.el.querySelectorAll("input");
         target = allInputs[allInputs.length - 1];
         if (target && target !== prevTarget) {
-            target.focus();
+            // Dispatch 'focus' event to trigger associated 't-on-focus' handlers.
+            target.dispatchEvent(new Event("focus"));
             target.selectionStart = target.selectionEnd = target.value.length;
         }
     }
