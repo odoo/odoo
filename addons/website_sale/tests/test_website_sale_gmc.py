@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
+from datetime import datetime, timedelta
+from itertools import repeat
+from freezegun import freeze_time
+import werkzeug
 from werkzeug.exceptions import NotFound
 import base64
 import io
@@ -77,6 +80,25 @@ class TestWebsiteSaleGMCCommon(HttpCase):
             'barcode': '0195949655968',
             'description_ecommerce': 'An incredibly ergonomic mouse (just unusable when charged).',
         })
+        cls.keyboard = cls.env['product.product'].create({
+            'name': 'Keybaord',
+            'list_price': 129.0,
+        })
+        cls.products |= cls.keyboard
+        combo = cls.env['product.combo'].create({
+            'name': 'Keybaord + Mouse Combo',
+            'combo_item_ids': [
+                Command.create({ 'product_id': cls.keyboard.id }),
+                Command.create({ 'product_id': cls.mouse_white.id }),
+            ]
+        })
+        cls.product_bundle = cls.env['product.product'].create({
+            'name': 'Keyboard + Mouse bundle',
+            'type': 'combo',
+            'combo_ids': [Command.set(combo.ids)],
+            'list_price': 199.0,
+        })
+        cls.products |= cls.product_bundle
         cls.eur_currency = cls.env['res.currency'].search([
             ('name', '=', 'EUR'),
         ])
@@ -84,27 +106,35 @@ class TestWebsiteSaleGMCCommon(HttpCase):
         cls.christmas_pricelist = cls.env['product.pricelist'].create({
             'name': 'Christmas Sales',
             'currency_id': cls.eur_currency.id,
+            'selectable': True,
             'item_ids': [
                 Command.create({
                     'display_applied_on': '1_product',
                     'product_tmpl_id': cls.mouse_template.id,
                     'compute_price': 'percentage',
                     'percent_price': 10.0,
-                    'date_start': datetime.datetime(2024, 12, 1, 0, 0),
-                    'date_end': datetime.datetime(2024, 12, 31, 23, 59),
-                })
+                    'date_start': datetime.now() - timedelta(1),
+                    'date_end': datetime.now() + timedelta(1),
+                }),
+                Command.create({
+                    'display_applied_on': '1_product',
+                    'compute_price': 'percentage',
+                    'percent_price': 0.0,
+                }),
             ]
         })
         cls.public_user = cls.env.ref('base.public_user')
-        cls.delivery_carriers = cls.env['delivery.carrier'].search([('active', '=', True)])
+        delivery_carriers = cls.env['delivery.carrier'].search([('active', '=', True)])
+        delivery_carriers.write({ 'is_published': False, 'active': False })
+
         cls.delivery_countries = cls.env['res.country'].search([('code', 'in', ('BE', 'LU', 'GB'))])
-        cls.delivery_carriers.country_ids = cls.delivery_countries
         cls.default_language = cls.website.language_ids[0]
 
-    def mock_public_request(self):
+    def mock_public_request(self, **kwargs):
         return MockRequest(
             self.mouse_template.with_user(self.public_user).env, 
             website=self.website.with_user(self.public_user),
+            **kwargs
         )
 
 @tagged('post_install', '-at_install')
@@ -144,22 +174,14 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-    def update_values(self):
-        with self.mock_public_request():
+    def update_values(self, **kwargs):
+        with self.mock_public_request(**kwargs):
             self.values = self.products._get_gmc_values()
         self.white_mouse_values = self.values[self.mouse_white]
         self.black_mouse_values = self.values[self.mouse_black]
 
     def test_product_gmc_only_consu_or_combo(self):
         self.products += self.env['product.product'].create([
-            {
-                'name': 'Consu Type Product',
-                'type': 'consu',
-            },
-            {
-                'name': 'Combo Type Product',
-                'type': 'combo',
-            },
             {
                 'name': 'Service Type Product',
                 'type': 'service',
@@ -176,7 +198,6 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
             )
 
     def test_00_gmc_product_id(self):
-        values = self
         self.assertIn('id', self.white_mouse_values, 'An `id` is required.')
         self.assertIn('id', self.black_mouse_values, 'An `id` is required.')
         self.assertEqual(
@@ -213,25 +234,29 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
 
     def test_03_gmc_product_prices(self):
         self.update_values()
-        self.assertIn('price', self.white_mouse_values, 'The `price` field is required.')
-        self.assertIn('price', self.black_mouse_values, 'The `price` field is required.')
-        response = self.url_open(self.white_mouse_values['link'])
-        white_mouse_page = html.fromstring(response.content)
-        white_mouse_price = white_mouse_page.xpath('//span[@itemprop="price"]')[0].text
-        white_mouse_currency = white_mouse_page.xpath('//span[@itemprop="priceCurrency"]')[0].text
-        self.assertEqual(
-            self.white_mouse_values['price'], 
-            f'{float(white_mouse_price)} {white_mouse_currency}', 
-            'Price send to Google should match the price on the website',
+        self.assertEqual('79.0 USD', self.white_mouse_values['price'], 'Public User pricelist')
+        self.assertEqual('99.0 USD', self.black_mouse_values['price'], 'Public User pricelist')
+        white_url = werkzeug.urls.url_parse(self.white_mouse_values['link'])
+        self.start_tour(
+            self.white_mouse_values['link'], 
+            'website_sale_gmc_check_advertised_prices_white_mouse_usd',
         )
-        response = self.url_open(self.black_mouse_values['link'])
-        black_mouse_page = html.fromstring(response.content)
-        black_mouse_price = black_mouse_page.xpath('//span[@itemprop="price"]')[0].text
-        black_mouse_currency = black_mouse_page.xpath('//span[@itemprop="priceCurrency"]')[0].text
-        self.assertEqual(
-            self.black_mouse_values['price'], 
-            f'{float(black_mouse_price)} {black_mouse_currency}', 
-            'Price send to Google should match the price on the website',
+        self.start_tour(
+            self.black_mouse_values['link'], 
+            'website_sale_gmc_check_advertised_prices_black_mouse_usd',
+        )
+        # with freeze_time('2024-12-05'):
+        self.update_values(context={ 'forced_pricelist': self.christmas_pricelist })
+        self.assertEqual('71.1 EUR', self.white_mouse_values['sale_price'], 'Christmas pricelist, on sale.')
+        self.assertEqual('89.1 EUR', self.black_mouse_values['sale_price'], 'Christmas pricelist, on sale.')
+        self.assertEqual('129.0 EUR', self.values[self.keyboard]['price'], 'Christmas pricelist, no reduction.')
+        self.start_tour(
+            self.white_mouse_values['link'], 
+            'website_sale_gmc_check_advertised_prices_white_mouse_christmas',
+        )
+        self.start_tour(
+            self.black_mouse_values['link'],
+            'website_sale_gmc_check_advertised_prices_black_mouse_christmas',
         )
 
     def test_04_gmc_product_images(self):
@@ -366,7 +391,7 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
     def test_06_gmc_product_type(self):
         self.update_values()
         self.assertListEqual(
-            list(self.public_categories.sorted('sequence').mapped('name')),
+            list(name.replace('/', '>') for name in self.public_categories.sorted('sequence').mapped('display_name')),
             self.white_mouse_values['product_type'],
             'Product type should follow the sequence order as the first in the list will have the '
             'most impact in Google algorithms',
@@ -427,27 +452,11 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
         )
 
     def test_08_gmc_product_bundles(self):
-        keyboard = self.env['product.product'].create({
-            'name': 'Keybaord',
-            'list_price': 129.0,
-        })
-        product_bundle = self.env['product.product'].create({
-            'name': 'Keyboard + Mouse',
-            'type': 'combo',
-            'combo_ids': [
-                Command.create({
-                    'name': 'Keyboard + Mouse Combo',
-                    'combo_item_ids': [keyboard.id, self.mouse_white.id],
-                })
-            ],
-            'list_price': 199.0,
-        })
-        self.products |= product_bundle
         self.update_values()
 
         self.assertEqual(
             'yes',
-            self.values[product_bundle]['is_bundle'],
+            self.values[self.product_bundle]['is_bundle'],
             'Combo products should be considered as bundles in Google.',
         )
         self.assertEqual(
@@ -484,8 +493,7 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
             { 'name': 'Cheap Local Shipping', 'list_price': 2.99 }
         )
         belgium = self.delivery_countries.search([('code', '=', 'BE')])
-        self.delivery_carriers.fixed_price = 100000.0
-        self.delivery_carriers += self.env['delivery.carrier'].create([
+        self.env['delivery.carrier'].create([
             {
                 'name': 'Local Shipping',
                 'delivery_type': 'fixed',
@@ -494,27 +502,32 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
                 ],
                 'product_id': local_shipping_product.id,
                 'active': True,
+                'is_published': True,
             },
             {
-                'name': 'Free above $90',
+                'name': 'Free above $95',
                 'delivery_type': 'fixed',
                 'country_ids': [
                     Command.set(self.delivery_countries.ids)
                 ],
-                'free_over': 90.0,
+                'free_over': True,
+                'amount': 95.0,
                 'product_id': shipping_product.id,
                 'active': True,
+                'is_published': True,
             },
             {
-                'name': 'Local Free above $50',
+                'name': 'Local Free above $95',
                 'delivery_type': 'fixed',
                 'country_ids': [
                     Command.set(belgium.ids)
                 ],
-                'free_over': 50.0,
+                'free_over': True,
+                'amount': 95.0,
                 'product_id': shipping_product.id,
                 'max_weight': 20.0,
                 'active': True,
+                'is_published': True,
             },
         ])
         self.products += self.env['product.product'].create({
@@ -524,16 +537,19 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
         heavy_product = self.products[-1]
         self.update_values()
         self.assertEqual(
-            14.99, 
-            float(self.white_mouse_values['shipping'][0]['price']),
-            'The best shipping outside of Belgium should be 14.99 for the white mouse it since '
-            'does not get the free over $90.'
-        )
-        self.assertEqual(
             2.99, 
-            self.white_mouse_values['shipping'][0]['price'],
-            'The best shipping in Belgium should be 2.99 for the white mouse since it '
-            'does not get the free over $90.'
+            float(self.white_mouse_values['shipping'][0]['price'].split(' ')[0]),
+            'The best shipping outside of Belgium should be 2.99, since the Local option is '
+            'available.'
+        )
+        self.assertListEqual(
+            [14.99, 14.99], 
+            [
+                float(rate['price'].split(' ')[0]) 
+                for rate in self.white_mouse_values['shipping'][1:]
+            ],
+            'The best shipping outside of Belgium should be 14.99 for the white mouse since it '
+            'does not get the free over $95.'
         )
         self.assertEqual(
             0.0, 
@@ -571,7 +587,7 @@ class TestWebsiteSaleGMCValues(TestWebsiteSaleGMCCommon):
     def test_11_gmc_product_availability(self):
         self.update_values()
         self.assertEqual(
-            'in£_stock',
+            'in_stock',
             self.white_mouse_values['availability'],
             'The availability should always be `in_stock`. (Could be overiden in `stock` module)',
         )

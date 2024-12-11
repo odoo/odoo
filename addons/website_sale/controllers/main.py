@@ -2229,13 +2229,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 "website in the settings."
             ))
         if pricelist_name_ilike is not None:
-            pricelist = request.env['product.pricelist'].search([
-                    ('active', '=', True),
-                    ('name', 'ilike', pricelist_name_ilike),
-                    '|',
-                    ('website_id', '=', request.website.id),
-                    ('website_id', '=', False),
-                ],
+            pricelist = request.env['product.pricelist'].search(
+                [('name', 'ilike', pricelist_name_ilike)]
+                + request.env['product.pricelist']._get_website_pricelists_domain(request.website),
                 limit=1,
             )
             if not pricelist:
