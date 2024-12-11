@@ -1070,6 +1070,12 @@ class IrActionsServer(models.Model):
             result[action.id] = expr
         return result
 
+    def copy_data(self, default=None):
+        default = default or {}
+        if not default.get('name'):
+            default['name'] = _('%s (copy)', self.name)
+        return super().copy_data(default=default)
+
 
 class IrActionsTodo(models.Model):
     """
