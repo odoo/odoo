@@ -17,6 +17,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.isCashMoveButtonShown(),
             Chrome.clickMenuButton(),
 
+<<<<<<< 17.0
             // Order 1 is at Product Screen
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Desk Pad", "1", "2", "2.0"),
@@ -32,6 +33,23 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.checkStatus("-0002", "Payment"),
+||||||| 51296055790f8c6f01dfbbc82ca340756c54cdb3
+    Chrome.check.isCashMoveButtonShown();
+
+    // Order 1 is at Product Screen
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Desk Pad', '1', '2', '2.0');
+    Chrome.do.clickTicketButton();
+    TicketScreen.check.checkStatus('-0001', 'Ongoing');
+=======
+    // Order 1 is at Product Screen
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Desk Pad', '1', '2', '2.0');
+    Chrome.do.clickTicketButton();
+    TicketScreen.check.checkStatus('-0001', 'Ongoing');
+>>>>>>> c2acc7045d4e27d2ff68e7a61de9a50117f8ac2f
 
             // Order 3 is at Receipt Screen
             TicketScreen.clickNewTicket(),
