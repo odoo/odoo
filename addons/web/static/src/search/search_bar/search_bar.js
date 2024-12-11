@@ -8,9 +8,13 @@ import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
 
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { ACTIVE_ELEMENT_CLASS } from "@web/core/navigation/navigation";
+
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text", "properties"];
@@ -23,6 +27,8 @@ export class SearchBar extends Component {
     static template = "web.SearchBar";
     static components = {
         SearchBarMenu,
+        Dropdown,
+        DropdownItem,
     };
     static props = {
         autofocus: { type: Boolean, optional: true },
@@ -55,7 +61,6 @@ export class SearchBar extends Component {
         // core state
         this.state = useState({
             expanded: [],
-            focusedIndex: 0,
             query: "",
             subItemsLimits: {},
         });
@@ -63,6 +68,9 @@ export class SearchBar extends Component {
         // derived state
         this.items = useState([]);
         this.subItems = {};
+
+        this.inputDropdownState = useDropdownState();
+        this.inputDropdownNavOptions = this.getInputDropdownNavOptions();
 
         this.searchBarDropdownState = useDropdownState();
 
@@ -80,9 +88,6 @@ export class SearchBar extends Component {
         });
 
         useBus(this.env.searchModel, "update", this.render);
-
-        useExternalListener(window, "click", this.onWindowClick);
-        useExternalListener(window, "keydown", this.onWindowKeydown);
     }
 
     /**
@@ -96,7 +101,6 @@ export class SearchBar extends Component {
     /**
      * @param {Object} [options={}]
      * @param {number[]} [options.expanded]
-     * @param {number} [options.focusedIndex]
      * @param {string} [options.query]
      * @param {Object[]} [options.subItems]
      * @returns {Object[]}
@@ -104,8 +108,6 @@ export class SearchBar extends Component {
     async computeState(options = {}) {
         const query = "query" in options ? options.query : this.state.query;
         const expanded = "expanded" in options ? options.expanded : this.state.expanded;
-        const focusedIndex =
-            "focusedIndex" in options ? options.focusedIndex : this.state.focusedIndex;
         const subItems = "subItems" in options ? options.subItems : this.subItems;
 
         const tasks = [];
@@ -132,7 +134,6 @@ export class SearchBar extends Component {
 
         this.state.expanded = expanded;
         this.state.query = query;
-        this.state.focusedIndex = focusedIndex;
         this.subItems = subItems;
 
         this.inputRef.el.value = query;
@@ -397,7 +398,7 @@ export class SearchBar extends Component {
 
     resetState(options = { focus: true }) {
         this.state.subItemsLimits = {};
-        this.computeState({ expanded: [], focusedIndex: 0, query: "", subItems: [] });
+        this.computeState({ expanded: [], query: "", subItems: [] });
         if (options.focus) {
             this.inputRef.el.focus();
         }
@@ -435,6 +436,7 @@ export class SearchBar extends Component {
         if (item.loadMore) {
             item.loadMore();
         } else {
+            this.inputDropdownState.close();
             this.resetState();
         }
     }
@@ -522,14 +524,6 @@ export class SearchBar extends Component {
     }
 
     /**
-     * @param {number} index
-     */
-    onItemMousemove(focusedIndex) {
-        this.state.focusedIndex = focusedIndex;
-        this.inputRef.el.focus();
-    }
-
-    /**
      * @param {KeyboardEvent} ev
      */
     onSearchKeydown(ev) {
@@ -537,72 +531,30 @@ export class SearchBar extends Component {
             // This case happens with an IME for example: we let it handle all key events.
             return;
         }
-        const focusedItem = this.items[this.state.focusedIndex];
-        let focusedIndex;
         switch (ev.key) {
             case "ArrowDown":
-                ev.preventDefault();
-                if (this.items.length) {
-                    if (this.state.focusedIndex >= this.items.length - 1) {
-                        focusedIndex = 0;
-                    } else {
-                        focusedIndex = this.state.focusedIndex + 1;
-                    }
-                } else {
+                if (!this.inputDropdownState.isOpen) {
+                    ev.preventDefault();
                     this.env.searchModel.trigger("focus-view");
                 }
                 break;
-            case "ArrowUp":
-                ev.preventDefault();
-                if (this.items.length) {
-                    if (
-                        this.state.focusedIndex === 0 ||
-                        this.state.focusedIndex > this.items.length - 1
-                    ) {
-                        focusedIndex = this.items.length - 1;
-                    } else {
-                        focusedIndex = this.state.focusedIndex - 1;
-                    }
-                }
-                break;
             case "ArrowLeft":
-                if (focusedItem && focusedItem.isParent && focusedItem.isExpanded) {
-                    ev.preventDefault();
-                    this.toggleItem(focusedItem, false);
-                } else if (focusedItem && focusedItem.isChild) {
-                    ev.preventDefault();
-                    focusedIndex = this.items.findIndex(
-                        (item) => item.isParent && item.searchItemId === focusedItem.searchItemId
-                    );
-                } else if (focusedItem && focusedItem.isFieldProperty) {
-                    ev.preventDefault();
-                    focusedIndex = this.items.findIndex(
-                        (item) => item.isParent && item.searchItemId === focusedItem.propertyItemId
-                    );
-                } else if (ev.target.selectionStart === 0) {
+                if (ev.target.selectionStart === 0) {
                     // focus rightmost facet if any.
                     this.focusFacet();
-                } else {
-                    // do nothing and navigate inside text
                 }
                 break;
             case "ArrowRight":
-                if (ev.target.selectionStart === this.state.query.length) {
-                    if (focusedItem && focusedItem.isParent) {
-                        ev.preventDefault();
-                        if (focusedItem.isExpanded) {
-                            focusedIndex = this.state.focusedIndex + 1;
-                        } else {
-                            this.toggleItem(focusedItem, true);
-                        }
-                    } else if (ev.target.selectionStart === this.state.query.length) {
-                        // Priority 3: focus leftmost facet if any.
-                        this.focusFacet(0);
-                    }
+                if (
+                    !this.inputDropdownState.isOpen &&
+                    ev.target.selectionStart === this.state.query.length
+                ) {
+                    // focus leftmost facet if any.
+                    this.focusFacet(0);
                 }
                 break;
             case "Backspace":
-                if (!this.state.query.length) {
+                if (!this.inputDropdownState.isOpen) {
                     const facets = this.env.searchModel.facets;
                     if (facets.length) {
                         this.removeFacet(facets[facets.length - 1]);
@@ -610,33 +562,24 @@ export class SearchBar extends Component {
                 }
                 break;
             case "Enter":
-                if (!this.state.query.length) {
+                if (!this.inputDropdownState.isOpen) {
                     this.env.searchModel.search(); /** @todo keep this thing ?*/
                     break;
-                } else if (focusedItem) {
-                    ev.preventDefault(); // keep the focus inside the search bar
-                    this.selectItem(focusedItem);
-                }
-                break;
-            case "Tab":
-                if (this.state.query.length && focusedItem) {
-                    ev.preventDefault(); // keep the focus inside the search bar
-                    this.selectItem(focusedItem);
                 }
                 break;
             case "Escape":
                 this.resetState();
                 break;
         }
-
-        if (focusedIndex !== undefined) {
-            this.state.focusedIndex = focusedIndex;
-        }
     }
 
     onSearchClick() {
-        if (!hasTouch() && !this.inputRef.el.value.length) {
-            this.searchBarDropdownState.open();
+        if (!hasTouch()) {
+            if (!this.inputRef.el.value.length) {
+                this.searchBarDropdownState.open();
+            } else {
+                this.inputDropdownState.open();
+            }
         }
     }
 
@@ -649,18 +592,27 @@ export class SearchBar extends Component {
         }
         const query = ev.target.value;
         if (query.trim()) {
-            this.computeState({ query, expanded: [], focusedIndex: 0, subItems: [] });
+            this.inputDropdownState.open();
+            this.computeState({ query, expanded: [], subItems: [] });
         } else if (this.items.length) {
+            this.inputDropdownState.close();
             this.resetState();
         }
     }
 
     onClickSearchIcon() {
-        const focusedItem = this.items[this.state.focusedIndex];
         if (!this.state.query.length) {
             this.env.searchModel.search();
-        } else if (focusedItem) {
-            this.selectItem(focusedItem);
+        } else {
+            const els = [
+                ...this.root.el.ownerDocument.querySelectorAll(
+                    ".o_searchview_autocomplete .o-dropdown-item"
+                ),
+            ];
+            const index = els.findIndex((el) => el.classList.contains(ACTIVE_ELEMENT_CLASS));
+            if (this.items[index]) {
+                this.selectItem(this.items[index]);
+            }
         }
     }
 
@@ -669,20 +621,65 @@ export class SearchBar extends Component {
     }
 
     /**
-     * @param {MouseEvent} ev
+     * @returns {import("@web/core/navigation/navigation").NavigationOptions}
      */
-    onWindowClick(ev) {
-        if (this.items.length && !this.root.el.contains(ev.target)) {
-            this.resetState({ focus: false });
-        }
+    getInputDropdownNavOptions() {
+        return {
+            virtualFocus: true,
+            hotkeys: {
+                arrowright: {
+                    bypassEditableProtection: true,
+                    isAvailable: (navigator) => {
+                        const focusedItem = this.items[navigator.activeItemIndex];
+                        return (
+                            focusedItem &&
+                            focusedItem.isParent &&
+                            this.inputRef.el.selectionStart === this.state.query.length
+                        );
+                    },
+                    callback: (navigator) => {
+                        const focusedItem = this.items[navigator.activeItemIndex];
+                        if (focusedItem.isExpanded) {
+                            navigator.next();
+                        } else {
+                            this.toggleItem(focusedItem, true);
+                        }
+                    },
+                },
+                arrowleft: {
+                    bypassEditableProtection: true,
+                    isAvailable: (navigator) => {
+                        const focusedItem = this.items[navigator.activeItemIndex];
+                        return (
+                            focusedItem &&
+                            ((focusedItem.isParent && focusedItem.isExpanded) ||
+                                focusedItem.isChild ||
+                                focusedItem.isFieldProperty)
+                        );
+                    },
+                    callback: (navigator) => {
+                        const focusedItem = this.items[navigator.activeItemIndex];
+                        const findIndex = (id) =>
+                            this.items.findIndex(
+                                (item) => item.isParent && item.searchItemId === id
+                            );
+                        if (focusedItem.isParent && focusedItem.isExpanded) {
+                            this.toggleItem(focusedItem, false);
+                        } else if (focusedItem.isChild) {
+                            navigator.items[findIndex(focusedItem.searchItemId)]?.setActive();
+                        } else if (focusedItem.isFieldProperty) {
+                            navigator.items[findIndex(focusedItem.propertyItemId)]?.setActive();
+                        }
+                    },
+                },
+            },
+            onEnabled: (items) => items[0]?.setActive(),
+        };
     }
 
-    /**
-     * @param {KeyboardEvent} ev
-     */
-    onWindowKeydown(ev) {
-        if (this.items.length && ev.key === "Escape") {
-            this.resetState();
+    onInputDropdownChanged(isOpen) {
+        if (!isOpen) {
+            this.resetState({ focus: false });
         }
     }
 }
