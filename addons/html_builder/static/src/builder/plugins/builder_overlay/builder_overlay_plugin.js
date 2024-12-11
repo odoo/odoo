@@ -69,6 +69,7 @@ export class BuilderOverlayPlugin extends Plugin {
             const overlay = new BuilderOverlay(option.element, {
                 overlayContainer: this.overlayContainer,
                 addStep: this.dependencies.history.addStep,
+                refreshAllOverlaysPosition: this.refreshPosition.bind(this),
             });
             this.overlays.push(overlay);
             this.overlayContainer.append(overlay.overlayElement);

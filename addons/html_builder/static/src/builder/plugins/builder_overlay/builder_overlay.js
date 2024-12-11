@@ -22,8 +22,9 @@ const sizingGrid = {
 };
 
 export class BuilderOverlay {
-    constructor(overlayTarget, { overlayContainer, addStep }) {
+    constructor(overlayTarget, { overlayContainer, addStep, refreshAllOverlaysPosition }) {
         this.addStep = addStep;
+        this.refreshAllOverlaysPosition = refreshAllOverlaysPosition;
         this.overlayContainer = overlayContainer;
         this.overlayElement = renderToElement("html_builder.BuilderOverlay");
         this.overlayTarget = overlayTarget;
@@ -541,7 +542,7 @@ export class BuilderOverlay {
             }
 
             if (changeTotal) {
-                this.refreshPosition();
+                this.refreshAllOverlaysPosition();
             }
         };
 
