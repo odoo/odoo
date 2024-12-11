@@ -15,3 +15,4 @@ class ResConfigSettings(models.TransientModel):
         default="0.7",
         help="By default, should be one of 0.1, 0.3, 0.7, 0.9.\n1.0 is very likely a good interaction, 0.0 is very likely a bot"
     )
+    recaptcha_enabled = fields.Boolean("Enable reCAPTCHA", config_parameter='recaptcha_enabled', groups='base.group_system')
