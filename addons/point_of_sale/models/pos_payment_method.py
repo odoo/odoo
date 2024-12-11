@@ -66,10 +66,6 @@ class PosPaymentMethod(models.Model):
     def get_provider_status(self, modules_list):
         return {
             'state': self.env['ir.module.module'].search_read([('name', 'in', modules_list)], ['name', 'state']),
-            'iot_state': {
-                'worldline': self.env['ir.config_parameter'].sudo().get_param('pos_iot.worldline_payment_terminal'),
-                'ingenico': self.env['ir.config_parameter'].sudo().get_param('pos_iot.ingenico_payment_terminal'),
-            }
         }
 
     @api.model
