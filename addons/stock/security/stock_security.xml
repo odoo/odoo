@@ -141,9 +141,9 @@
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
-    <record model="ir.rule" id="stock_quant_package_comp_rule">
-        <field name="name">stock_quant_package multi-company</field>
-        <field name="model_id" ref="model_stock_quant_package"/>
+    <record model="ir.rule" id="stock_package_comp_rule">
+        <field name="name">stock_package multi-company</field>
+        <field name="model_id" ref="model_stock_package"/>
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 

@@ -95,7 +95,7 @@ class StockMoveLine(models.Model):
 
     def _set_delivery_package_type(self):
         """ This method returns an action allowing to set the package type and the shipping weight
-        on the stock.quant.package.
+        on the stock.package.
         """
         view_id = self.env.ref('stock_delivery.choose_delivery_package_view_form').id
         context = dict(
