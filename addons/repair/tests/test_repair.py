@@ -560,8 +560,8 @@ class TestRepair(common.TransactionCase):
         sn_2 = self.env['stock.lot'].create({'name': 'sn_2', 'product_id': self.product_product_3.id})
 
         # Create two packages
-        package_1 = self.env['stock.quant.package'].create({'name': 'Package-test-1'})
-        package_2 = self.env['stock.quant.package'].create({'name': 'Package-test-2'})
+        package_1 = self.env['stock.package'].create({'name': 'Package-test-1'})
+        package_2 = self.env['stock.package'].create({'name': 'Package-test-2'})
 
         # update the quantity of the product in the stock
         self.env['stock.quant']._update_available_quantity(self.product_product_3, self.stock_warehouse.lot_stock_id, 1, lot_id=sn_1, package_id=package_1)

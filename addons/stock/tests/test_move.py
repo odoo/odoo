@@ -1049,7 +1049,7 @@ class StockMove(TransactionCase):
             'name': 'Super Package Type',
         })
 
-        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+        package = self.env['stock.package'].create({'package_type_id': package_type.id})
 
         self.env['stock.putaway.rule'].create({
             'product_id': self.product.id,
@@ -1089,7 +1089,7 @@ class StockMove(TransactionCase):
             'name': 'Super Package Type',
         })
 
-        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+        package = self.env['stock.package'].create({'package_type_id': package_type.id})
 
         self.env['stock.putaway.rule'].create({
             'product_id': self.product.id,
@@ -1156,7 +1156,7 @@ class StockMove(TransactionCase):
         package_type = self.env['stock.package.type'].create({
             'name': 'Super Package Type',
         })
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'package_type_id': package_type.id,
         })
 
@@ -1489,7 +1489,7 @@ class StockMove(TransactionCase):
             'putaway_rule_ids': [(4, putaway.id, 0)],
         })
 
-        package = self.env['stock.quant.package'].create({
+        package = self.env['stock.package'].create({
             'name': 'package',
             'package_type_id': package_type.id,
         })
@@ -1563,7 +1563,7 @@ class StockMove(TransactionCase):
         })
 
         # first package
-        package1 = self.env['stock.quant.package'].create({
+        package1 = self.env['stock.package'].create({
             'name': 'package 1',
             'package_type_id': package_type.id,
         })
@@ -1592,7 +1592,7 @@ class StockMove(TransactionCase):
         self.assertEqual(package1.location_id.id, shelf2_location.id)
 
         # second package
-        package2 = self.env['stock.quant.package'].create({
+        package2 = self.env['stock.package'].create({
             'name': 'package 2',
             'package_type_id': package_type.id,
         })
@@ -1670,7 +1670,7 @@ class StockMove(TransactionCase):
         })
 
         # first package
-        package1 = self.env['stock.quant.package'].create({
+        package1 = self.env['stock.package'].create({
             'name': 'package 1',
             'package_type_id': package_type.id,
         })
@@ -1699,7 +1699,7 @@ class StockMove(TransactionCase):
         self.assertEqual(package1.location_id.id, shelf2_location.id)
 
         # second package
-        package2 = self.env['stock.quant.package'].create({
+        package2 = self.env['stock.package'].create({
             'name': 'package 2',
             'package_type_id': package_type.id,
         })
@@ -1776,7 +1776,7 @@ class StockMove(TransactionCase):
         })
 
         # first package
-        package1 = self.env['stock.quant.package'].create({
+        package1 = self.env['stock.package'].create({
             'name': 'package 1',
             'package_type_id': package_type.id,
         })
@@ -1805,7 +1805,7 @@ class StockMove(TransactionCase):
         self.assertEqual(package1.location_id.id, shelf2_location.id)
 
         # second package
-        package2 = self.env['stock.quant.package'].create({
+        package2 = self.env['stock.package'].create({
             'name': 'package 2',
             'package_type_id': package_type.id,
         })
@@ -2331,7 +2331,7 @@ class StockMove(TransactionCase):
         """ Check that unreserving a stock move sets the products reserved as available and
         set the state back to confirmed even if they are in a pack.
         """
-        package1 = self.env['stock.quant.package'].create({'name': 'test_unreserve_2_pack'})
+        package1 = self.env['stock.package'].create({'name': 'test_unreserve_2_pack'})
 
         # make some stock
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 150.0, package_id=package1)
@@ -3541,8 +3541,8 @@ class StockMove(TransactionCase):
         """ Test that editing a stock move line linked to a packed product correctly and directly
         adapts the reservation. In this case, we edit the package to another available one.
         """
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
-        package2 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_3'})
+        package2 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_3'})
 
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, package_id=package1)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, package_id=package2)
@@ -3620,7 +3620,7 @@ class StockMove(TransactionCase):
             'name': 'lot2',
             'product_id': self.product.id,
         })
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_5'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_5'})
 
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, lot_id=lot1, package_id=package1)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, lot_id=lot2)
@@ -3931,8 +3931,8 @@ class StockMove(TransactionCase):
         """ Test that editing a done stock move line linked to a packed product correctly and directly
         adapts the transfer. In this case, we edit the package to another available one.
         """
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
-        package2 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_3'})
+        package2 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_3'})
 
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, package_id=package1)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, package_id=package2)
@@ -4014,7 +4014,7 @@ class StockMove(TransactionCase):
             'name': 'lot2',
             'product_id': self.product.id,
         })
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_5'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_5'})
 
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, lot_id=lot1, package_id=package1)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0, lot_id=lot2)
@@ -4314,7 +4314,7 @@ class StockMove(TransactionCase):
             'name': 'lot2',
             'product_id': self.product_lot.id,
         })
-        self.env['stock.quant.package'].create({'name': 'test_edit_done_move_line_12'})
+        self.env['stock.package'].create({'name': 'test_edit_done_move_line_12'})
         move1 = self.env['stock.move'].create({
             'name': 'test_edit_moveline_1',
             'location_id': self.supplier_location.id,
@@ -4348,7 +4348,7 @@ class StockMove(TransactionCase):
             'name': 'lot2',
             'product_id': self.product_lot.id,
         })
-        package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_5'})
+        package1 = self.env['stock.package'].create({'name': 'test_edit_reserved_move_line_5'})
 
         move1 = self.env['stock.move'].create({
             'name': 'test_edit_moveline_1',
@@ -6815,7 +6815,7 @@ class StockMove(TransactionCase):
             'product_id': self.product_serial.id,
         } for name in ['sn01', 'sn02', 'sn03']])
 
-        pack = self.env['stock.quant.package'].create({
+        pack = self.env['stock.package'].create({
             'name': 'Pack A',
         })
 
