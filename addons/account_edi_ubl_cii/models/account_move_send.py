@@ -5,7 +5,7 @@ import io
 from lxml import etree
 from xml.sax.saxutils import escape, quoteattr
 
-from odoo import _, api, fields, models, tools, SUPERUSER_ID
+from odoo import _, api, fields, models, tools
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
@@ -227,6 +227,6 @@ class AccountMoveSend(models.AbstractModel):
             if invoice_data.get('ubl_cii_xml_attachment_values')
         ]
         if attachments_vals:
-            attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
+            attachments = self.env['ir.attachment'].with_user(api.SUPERUSER_ID).create(attachments_vals)
             res_ids = attachments.mapped('res_id')
             self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['ubl_cii_xml_id', 'ubl_cii_xml_file'])

@@ -14,7 +14,7 @@ from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
 from unittest.mock import call, patch, PropertyMock
 
-from odoo import api, Command, fields, SUPERUSER_ID
+from odoo import api, Command, fields
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
@@ -998,7 +998,7 @@ class TestMailMailRace(common.TransactionCase):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_bounce_during_send(self):
         cr = self.registry.cursor()
-        env = api.Environment(cr, SUPERUSER_ID, {})
+        env = api.Environment(cr, api.SUPERUSER_ID, {})
 
         self.partner = env['res.partner'].create({
             'name': 'Ernest Partner',

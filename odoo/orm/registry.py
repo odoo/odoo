@@ -21,7 +21,6 @@ from operator import attrgetter
 import psycopg2.sql
 
 import odoo
-from odoo import SUPERUSER_ID
 from odoo.modules.db import FunctionStatus
 from odoo.sql_db import TestCursor
 from odoo.tools import (
@@ -37,6 +36,8 @@ from odoo.tools.func import locked
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
 
+from .utils import SUPERUSER_ID
+
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
     from odoo.fields import Field
@@ -47,7 +48,6 @@ if typing.TYPE_CHECKING:
 
 _logger = logging.getLogger('odoo.registry')
 _schema = logging.getLogger('odoo.schema')
-
 
 _REGISTRY_CACHES = {
     'default': 8192,
@@ -319,7 +319,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
-        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        from .environments import Environment  # noqa: PLC0415
+        env = Environment(cr, SUPERUSER_ID, {})
         env.invalidate_all()
 
         # Uninstall registry hooks. Because of the condition, this only happens
@@ -604,7 +605,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         elif context.get('models_to_check', False):
             _logger.info("verifying fields for every extended model")
 
-        env = odoo.api.Environment(cr, SUPERUSER_ID, context)
+        from .environments import Environment  # noqa: PLC0415
+        env = Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
 
         try:
@@ -757,7 +759,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """
         Verify that all tables are present and try to initialize those that are missing.
         """
-        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        from .environments import Environment  # noqa: PLC0415
+        env = Environment(cr, SUPERUSER_ID, {})
         table2model = {
             model._table: name
             for name, model in env.registry.items()

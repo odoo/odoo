@@ -6,8 +6,13 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
-from odoo import SUPERUSER_ID, _, api, fields, models
-from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
+from odoo import _, api, fields, models
+from odoo.exceptions import (
+    AccessError,
+    RedirectWarning,
+    UserError,
+    ValidationError,
+)
 from odoo.fields import Command
 from odoo.http import request
 from odoo.osv import expression
@@ -1196,7 +1201,7 @@ class SaleOrder(models.Model):
 
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
-            self = self.with_user(SUPERUSER_ID)
+            self = self.with_user(api.SUPERUSER_ID)  # noqa: PLW0642
 
         self.with_context(force_send=True).message_post_with_source(
             mail_template,
@@ -1902,7 +1907,7 @@ class SaleOrder(models.Model):
                     file_name=file_data['filename'],
                     decoder=decoder.__name__,
                 )
-                self.with_user(SUPERUSER_ID).message_post(body=message)
+                self.with_user(api.SUPERUSER_ID).message_post(body=message)
                 _logger.exception(message)
 
         if file_data.get('on_close'):
