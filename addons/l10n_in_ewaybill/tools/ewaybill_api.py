@@ -51,7 +51,7 @@ class EWayBillApi:
     DEFAULT_HELP_MESSAGE = _lt(
         "Somehow this E-waybill has been %s in the government portal before. "
         "You can verify by checking the details into the government "
-        "(https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"
+        "(https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)"
     )
 
     def __init__(self, company):
