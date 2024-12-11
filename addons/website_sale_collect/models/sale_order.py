@@ -29,10 +29,17 @@ class SaleOrder(models.Model):
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
+            partner_id = self.warehouse_id.partner_id
+            dummy_order = self.env['sale.order'].new(origin=self)
+            dummy_order._update_address(partner_id.id, ['partner_id'])
+            self.write({
+                'fiscal_position_id': dummy_order.fiscal_position_id.id,
+                'order_line': dummy_order.order_line.ids,
+            })
         else:
             self._compute_warehouse_id()
 
-    def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
+    def _get_pickup_locations(self, zip_code=None, country=None, selected_country=None, **kwargs):
         """ Override of `website_sale` to ensure that a country is provided when there is a zip
         code.
 
@@ -48,7 +55,8 @@ class SaleOrder(models.Model):
             country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
             if not country:
                 zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
-        return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
+        return super()._get_pickup_locations(
+            zip_code=zip_code, country=country, selected_country=selected_country, **kwargs)
 
     def _check_cart_is_ready_to_be_paid(self):
         """ Override of `website_sale` to check if all products are in stock in the selected
