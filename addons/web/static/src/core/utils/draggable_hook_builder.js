@@ -545,9 +545,11 @@ export function makeDraggableHook(hookParams) {
                 if (ctx.cursor) {
                     dom.addStyle(document.body, { cursor: ctx.cursor });
                 }
-
+                // TODO: change this someday somehow but not by me !
                 if (
-                    (ctx.current.scrollParentX || ctx.current.scrollParentY) &&
+                    (ctx.edgeScrolling.force ||
+                        ctx.current.scrollParentX ||
+                        ctx.current.scrollParentY) &&
                     ctx.edgeScrolling.enabled
                 ) {
                     const cleanupFn = setRecurringAnimationFrame(handleEdgeScrolling);
