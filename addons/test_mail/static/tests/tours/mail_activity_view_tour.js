@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("mail_activity_view", {
             run: "edit Test Activity View"
         },
         {
-            trigger: ".o_menu_item.focus",
+            trigger: ".o_searchview_autocomplete .o-dropdown-item.focus",
             content: "Validate search",
             run: "click",
         },

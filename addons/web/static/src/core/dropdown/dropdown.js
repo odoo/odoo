@@ -97,6 +97,9 @@ export class Dropdown extends Component {
         },
         manual: { type: Boolean, optional: true },
 
+        /** When true, do not add optional styling css classes on the target*/
+        noClasses: { type: Boolean, optional: true },
+
         /**
          * Override the internal navigation hook options
          * @type {import("@web/core/navigation/navigation").NavigationOptions}
@@ -108,6 +111,7 @@ export class Dropdown extends Component {
         holdOnHover: false,
         menuClass: "",
         state: undefined,
+        noClasses: false,
         navigationOptions: {},
     };
 
@@ -239,22 +243,30 @@ export class Dropdown extends Component {
         }
 
         target.ariaExpanded = false;
-        target.classList.add("o-dropdown");
+        const optionalClasses = [];
+        const requiredClasses = [];
+        optionalClasses.push("o-dropdown");
 
         if (this.hasParent) {
-            target.classList.add("o-dropdown--has-parent");
+            requiredClasses.push("o-dropdown--has-parent");
         }
 
         const tagName = target.tagName.toLowerCase();
         if (!["input", "textarea", "table", "thead", "tbody", "tr", "th", "td"].includes(tagName)) {
-            target.classList.add("dropdown-toggle");
+            optionalClasses.push("dropdown-toggle");
             if (this.hasParent) {
-                target.classList.add("o-dropdown-item", "o-navigable", "dropdown-item");
+                optionalClasses.push("o-dropdown-item", "dropdown-item");
+                requiredClasses.push("o-navigable");
 
                 if (!target.classList.contains("o-dropdown--no-caret")) {
-                    target.classList.add("o-dropdown-caret");
+                    requiredClasses.push("o-dropdown-caret");
                 }
             }
+        }
+
+        target.classList.add(...requiredClasses);
+        if (!this.props.noClasses) {
+            target.classList.add(...optionalClasses);
         }
 
         this.defaultDirection = this.position.split("-")[0];
@@ -272,7 +284,7 @@ export class Dropdown extends Component {
     }
 
     setTargetDirectionClass(direction) {
-        if (!this.target) {
+        if (!this.target || this.props.noClasses) {
             return;
         }
         const directionClasses = {

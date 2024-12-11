@@ -36,11 +36,11 @@ registry.category("web_tour.tours").add('test_multiple_warehouses_filter', {
             run: 'edit warehouse',
         },
         {
-            trigger: '.o_menu_item.dropdown-item:contains("Search Warehouse for:") a.o_expand > i',
+            trigger: '.o-dropdown-item:contains("Search Warehouse for:") a.o_expand > i',
             run: 'click',
         },
         {
-            trigger: '.o_menu_item.dropdown-item.o_indent:contains("Warehouse A") a',
+            trigger: '.o-dropdown-item.o_indent:contains("Warehouse A") a',
             run: 'click',
         },
         {
@@ -48,11 +48,11 @@ registry.category("web_tour.tours").add('test_multiple_warehouses_filter', {
             run: 'edit warehouse',
         },
         {
-            trigger: '.o_menu_item.dropdown-item:contains("Search Warehouse for:") a.o_expand > i',
+            trigger: '.o-dropdown-item:contains("Search Warehouse for:") a.o_expand > i',
             run: 'click',
         },
         {
-            trigger: '.o_menu_item.dropdown-item.o_indent:contains("Warehouse B") a',
+            trigger: '.o-dropdown-item.o_indent:contains("Warehouse B") a',
             run: 'click',
         },
         // Go to product page
