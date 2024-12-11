@@ -15,7 +15,7 @@ class IrActionsReport(models.Model):
         report = self._get_report(report_ref)
         if report.report_name == 'hr_expense.report_expense':
             for expense in self.env['hr.expense'].browse(res_ids):
-                # Will contains the expense report
+                # Will contains the expense
                 stream_list = []
                 stream = res[expense.id]['stream']
                 stream_list.append(stream)

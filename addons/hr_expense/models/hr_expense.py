@@ -786,7 +786,7 @@ class HrExpense(models.Model):
 
         if 'tax_ids' in vals or 'analytic_distribution' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
-                raise UserError(_('You are not authorized to edit this expense report.'))
+                raise UserError(_('You are not authorized to edit this expense.'))
 
         self._check_amount_not_zero(vals)
 

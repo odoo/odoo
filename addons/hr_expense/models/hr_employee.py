@@ -77,7 +77,7 @@ class HrEmployee(models.Model):
             next_parent = employee_to_parent_map[employee]
             while next_parent:
                 # If the current parent is valid, we add the queue to the cache and return the current parent
-                if next_parent.user_id.has_group('hr_expense.group_hr_expense_team_approver'):
+                if next_parent.user_id and next_parent.user_id.has_group('hr_expense.group_hr_expense_team_approver'):
                     valid_manager = next_parent.user_id
                     employee_to_valid_manager_cache.update({employee: valid_manager for employee in employees_to_cache})
                     break
