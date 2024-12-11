@@ -1,18 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-import logging
-import typing
 from unittest.mock import patch
 
-from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tests.common import BaseCase
 from odoo.modules.packages import PackageGraph
-from odoo.modules.module import _DEFAULT_MANIFEST, get_manifest
+from odoo.modules.module import _DEFAULT_MANIFEST
 from odoo.tools import mute_logger
-
-from .graph_legacy import Graph as GraphLegacy
-
-_logger = logging.getLogger(__name__)
 
 
 class TestGraph(BaseCase):
@@ -38,23 +31,16 @@ class TestGraph(BaseCase):
             for name, depends in dependency.items()
         }
         with patch('odoo.modules.packages.PackageGraph._update_from_database'), \
-                patch(__package__ + '.graph_legacy.Graph.update_from_db'), \
-                patch(__package__ + '.graph_legacy.get_manifest', lambda name: manifests.get(name, {})), \
                 patch('odoo.modules.packages.get_manifest', lambda name: manifests.get(name, {})), \
                 patch('odoo.modules.packages.PackageGraph._imported_modules', set(['studio_customization'])):
             dummy_cr = None
             graph = PackageGraph(dummy_cr)
-            graph_legacy = GraphLegacy()
 
             for modules in modules_list:
                 graph.add(modules)
-                graph_legacy.add_modules(dummy_cr, modules)
 
             names = list(p.name for p in graph)
-            names_legacy = list(p.name for p in graph_legacy.packages())
-
             self.assertListEqual(names, expected)
-            self.assertListEqual(names_legacy, expected)
 
     def test_graph_order_1(self):
         dependency = {
@@ -122,33 +108,3 @@ class TestGraph(BaseCase):
             [['base'], ['module3', 'module4', 'module1', 'module5', 'module2']],
             ['base', 'module1', 'module2']
         )
-
-
-class TestGraphAll(TransactionCase):
-    @mute_logger('odoo.modules.packages')
-    def test_graph_order_all(self):
-        self.env['ir.module.module'].update_list()
-        modules = self.env['ir.module.module'].search([])
-        module_names = modules.mapped('name')
-        module_names = [m for m in module_names if not m.startswith('test_')]
-        for module_name in module_names:  # cache manifest for fair performance comparison
-            get_manifest(module_name)
-
-        modules.filtered(lambda m: m.state != 'uninstallable').state = 'installed'
-        modules.flush_model()
-
-        graph = PackageGraph(self.cr)
-        graph_legacy = GraphLegacy()
-
-        time0 = time.time()
-        graph.add(module_names)
-        names = list(p.name for p in graph)
-        time1 = time.time()
-
-        time0_legacy = time.time()
-        graph_legacy.add_modules(self.cr, module_names)
-        names_legacy = list(g.name for g in graph_legacy.packages())
-        time1_legacy = time.time()
-
-        self.assertListEqual(names, names_legacy)
-        _logger.info('\nCurrent Graph order time: %s\nLegacy Graph order time: %s', time1 - time0, time1_legacy - time0_legacy)
