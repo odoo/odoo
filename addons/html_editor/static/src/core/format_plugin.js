@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { hasAnyNodesColor } from "@html_editor/utils/color";
-import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
+import { cleanTextNode, splitTextNode, unwrapContents, fillEmpty } from "../utils/dom";
 import {
     areSimilarElements,
     isContentEditable,
@@ -377,18 +377,42 @@ export class FormatPlugin extends Plugin {
                 }
             }
         }
+        for (const el of selectElements(root, "[data-oe-inline-line-break]")) {
+            const splitBr = el.innerHTML.split("<br>");
+            const splitTextContent = splitBr[splitBr.length - 1];
+            if (!allWhitespaceRegex.test(splitTextContent)) {
+                delete el.dataset.oeInlineLineBreak;
+                this.cleanZWS(el);
+            }
+        }
         this.mergeAdjacentInlines(root);
     }
 
     cleanForSave({ root, preserveSelection = false } = {}) {
-        for (const element of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
+        for (const element of root.querySelectorAll(
+            "[data-oe-zws-empty-inline], [data-oe-inline-line-break]"
+        )) {
+            let currentElement = element.parentElement;
             this.cleanElement(element, { preserveSelection });
+            while (
+                currentElement &&
+                !isBlock(currentElement) &&
+                !currentElement.childNodes.length
+            ) {
+                const parentElement = currentElement.parentElement;
+                currentElement.remove();
+                currentElement = parentElement;
+            }
+            if (currentElement && isBlock(currentElement)) {
+                fillEmpty(currentElement);
+            }
         }
         this.mergeAdjacentInlines(root, { preserveSelection });
     }
 
     cleanElement(element, { preserveSelection }) {
         delete element.dataset.oeZwsEmptyInline;
+        delete element.dataset.oeInlineLineBreak;
         if (!allWhitespaceRegex.test(element.textContent)) {
             // The element has some meaningful text. Remove the ZWS in it.
             this.cleanZWS(element, { preserveSelection });

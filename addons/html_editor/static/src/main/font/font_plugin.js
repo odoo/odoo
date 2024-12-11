@@ -324,12 +324,20 @@ export class FontPlugin extends Plugin {
             (nodesAfterTarget.length === 1 && nodesAfterTarget[0].nodeName === "BR")
         ) {
             // Remove the last empty block node within pre tag
-            if (closestBlockNode.nodeName !== "PRE") {
-                closestBlockNode.remove();
+            const [beforeElement, afterElement] = this.dependencies.split.splitElementBlock({
+                targetNode,
+                targetOffset,
+                blockToSplit: closestBlockNode,
+            });
+            const isPreBlock = beforeElement.nodeName === "PRE";
+            const p = isPreBlock ? this.document.createElement("p") : afterElement;
+            if (isPreBlock) {
+                p.replaceChildren(...afterElement.childNodes);
+                afterElement.replaceWith(p);
+            } else {
+                beforeElement.remove();
+                closestPre.after(afterElement);
             }
-            const p = this.document.createElement("p");
-            closestPre.after(p);
-            fillEmpty(p);
             this.dependencies.selection.setCursorStart(p);
         } else {
             const lineBreak = this.document.createElement("br");
@@ -393,8 +401,8 @@ export class FontPlugin extends Plugin {
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
                 const p = this.document.createElement("P");
+                p.replaceChildren(...newElement.childNodes);
                 newElement.replaceWith(p);
-                p.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(p);
             }
             return true;
