@@ -317,6 +317,8 @@ class Import(models.TransientModel):
             definition_record_field = field['definition_record_field']
 
             target_model = Model.env[Model._fields[definition_record].comodel_name]
+            if not target_model.has_access('read'):  # ignore if you cannot read target_model at all
+                continue
             # Do not take into account the definition of archived parents,
             # we do not import archived records most of the time.
             definition_records = target_model.search_fetch(
