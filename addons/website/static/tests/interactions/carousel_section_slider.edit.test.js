@@ -1,5 +1,4 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
 import {
     startInteractions,
     setupInteractionWhiteList,
@@ -41,8 +40,7 @@ const carouselHtml = `
 `;
 
 test("carousel section slider resets slide to attributes", async () => {
-    const { core, el } = await startInteractions(carouselHtml, { editMode: true });
-    await animationFrame();
+    const { core, el } = await startInteractions(carouselHtml, { waitForStart: true, editMode: true });
     expect(core.interactions.length).toBe(1);
     const controlEls = el.querySelectorAll(".carousel-control-prev, .carousel-control-next");
     const indicatorEls = el.querySelectorAll(".carousel-indicators > *");
@@ -53,7 +51,6 @@ test("carousel section slider resets slide to attributes", async () => {
         expect(indicatorEl.dataset.bsSlideTo).toBe(undefined);
     }
     core.stopInteractions();
-    await animationFrame();
     expect(core.interactions.length).toBe(0);
     for (const controlEl of controlEls) {
         expect(controlEl.dataset.bsSlide).not.toBe(undefined);
