@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { contains, inputFiles } from "@web/../tests/utils";
+import { contains, dragenterFiles, dropFiles, inputFiles } from "@web/../tests/utils";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -35,8 +35,8 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             content: "Add one file in composer",
             trigger: ".o-mail-Composer button[title='Attach Files']",
             async run() {
-                const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
-                await inputFiles(".o-mail-Composer .o_input_file", [text]);
+                const files = [new File(["hello, world"], "file1.txt", { type: "text/plain" })];
+                await inputFiles(".o-mail-Composer .o_input_file", files);
             },
         },
         {
@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Check the earlier provided attachment is listed",
-            trigger: ".o_field_mail_composer_attachment_list a:contains(text.txt)",
+            trigger: ".o_field_mail_composer_attachment_list a:contains(file1.txt)",
         },
         {
             content: "Check subject is autofilled",
@@ -91,6 +91,19 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             },
         },
         {
+            content: "Drop a file on the full composer",
+            trigger: ".o_mail_composer_form_view",
+            async run() {
+                const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
+                await dragenterFiles(".o_mail_composer_form_view .o_form_renderer", files);
+                await dropFiles(".o-Dropzone", files);
+            }
+        },
+        {
+            content: "Check the attachment is listed",
+            trigger: ".o_field_mail_composer_attachment_list a:contains(file2.txt)",
+        },
+        {
             content: "Click on the mail template selector",
             trigger: ".mail-composer-template-dropdown-btn",
             run: "click",
@@ -121,8 +134,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             trigger: ".o-mail-MessageNotificationPopover:contains('Not A Demo User\nJane')",
         },
         {
-            content: "Check message contains the attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            content: "Check message contains the first attachment",
+            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("file1.txt")',
+        },
+        {
+            content: "Check message contains the second attachment",
+            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("file2.txt")',
         },
         // Test the full composer input text is kept on closing
         {

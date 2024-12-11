@@ -7,8 +7,9 @@ import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list
 import { FollowerList } from "@mail/core/web/follower_list";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useDropzone } from "@web/core/dropzone/dropzone_hook";
+import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
+import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 
@@ -94,9 +95,10 @@ patch(Chatter.prototype, {
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
-        useDropzone(
-            this.rootRef,
-            async (ev) => {
+        useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
+            extraClass: "o-mail-Chatter-dropzone",
+            /** @param {Event} ev */
+            onDrop: async (ev) => {
                 if (this.state.composerType) {
                     return;
                 }
@@ -117,9 +119,8 @@ patch(Chatter.prototype, {
                     );
                     this.state.isAttachmentBoxOpened = true;
                 }
-            },
-            "o-mail-Chatter-dropzone"
-        );
+            }
+        });
         useEffect(
             () => {
                 if (!this.state.thread) {

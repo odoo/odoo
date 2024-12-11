@@ -281,4 +281,7 @@ class TestMailComposerUI(MailCommon, HttpCase):
             )
         message = self._new_msgs.filtered(lambda message: message.author_id == self.user_employee.partner_id)
         self.assertEqual(len(message), 1)
+        self.assertEqual(
+            sorted(message.attachment_ids.mapped('raw')),
+            sorted([b'hello, world', b'hi there']))
         self.assertIn(user.partner_id, message.partner_ids)
