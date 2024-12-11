@@ -31,6 +31,7 @@ from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
+from odoo.tools.misc import OrderedSet
 
 _logger = logging.getLogger(__name__)
 
@@ -1368,6 +1369,8 @@ class GroupsImplied(models.Model):
         res = super(GroupsImplied, self).write(values)
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
+            updated_group_ids = OrderedSet()
+            updated_user_ids = OrderedSet()
             for group in self:
                 self._cr.execute("""
                     WITH RECURSIVE group_imply(gid, hid) AS (
@@ -1388,8 +1391,22 @@ class GroupsImplied(models.Model):
                            FROM res_groups_users_rel r
                            JOIN group_imply i ON (r.gid = i.hid)
                           WHERE i.gid = %(gid)s
+                    RETURNING gid, uid
                 """, dict(gid=group.id))
-            self._check_one_user_type()
+                updated = self.env.cr.fetchall()
+                gids, uids = zip(*updated) if updated else ([], [])
+                updated_group_ids.update(gids)
+                updated_user_ids.update(uids)
+            # notify the ORM about the updated users and groups
+            updated_groups = self.env['res.groups'].browse(updated_group_ids)
+            updated_groups.invalidate_recordset(['users'])
+            updated_groups.modified(['users'])
+            updated_users = self.env['res.users'].browse(updated_user_ids)
+            updated_users.invalidate_recordset(['groups_id'])
+            updated_users.modified(['groups_id'])
+            # explicitly check constraints
+            updated_groups._validate_fields(['users'])
+            updated_users._validate_fields(['groups_id'])
         return res
 
     def _apply_group(self, implied_group):
