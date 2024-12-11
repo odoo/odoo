@@ -90,7 +90,7 @@ class AutoCompleteController(http.Controller):
             params['sessiontoken'] = session_id
 
         try:
-            results = requests.get(f'{GOOGLE_PLACES_ENDPOINT}/autocomplete/json', params=params, timeout=TIMEOUT).json()
+            results = self._call_google_route("/autocomplete/json", params)
         except (TimeoutError, ValueError) as e:
             _logger.error(e)
             return {
@@ -125,7 +125,7 @@ class AutoCompleteController(http.Controller):
             params['sessiontoken'] = session_id
 
         try:
-            results = requests.get(f'{GOOGLE_PLACES_ENDPOINT}/details/json', params=params, timeout=TIMEOUT).json()
+            results = self._call_google_route("/details/json", params)
         except (TimeoutError, ValueError) as e:
             _logger.error(e)
             return {'address': None}
@@ -162,6 +162,9 @@ class AutoCompleteController(http.Controller):
                 standard_address['formatted_street_number'] = formatted_manually
         standard_address['street2'] = standard_address.get("sublocality_level_1", "")
         return standard_address
+
+    def _call_google_route(self, route, params):
+        return requests.get(f'{GOOGLE_PLACES_ENDPOINT}{route}', params=params, timeout=TIMEOUT).json()
 
     @http.route('/autocomplete/address', methods=['POST'], type='jsonrpc', auth='public', website=True)
     def _autocomplete_address(self, partial_address, session_id=None):
