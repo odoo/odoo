@@ -54,7 +54,6 @@ registry.category("web_tour.tours").add("self_multi_attribute_selector", {
 });
 
 registry.category("web_tour.tours").add("selfAlwaysAttributeVariants", {
-    test: true,
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Chair"),
