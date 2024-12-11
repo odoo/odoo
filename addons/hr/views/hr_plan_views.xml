@@ -57,6 +57,7 @@
                                         <field name="summary"/>
                                         <field name="responsible"/>
                                         <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}" optional="hide"/>
+                                        <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     </tree>
                                 </field>
                             </page>
