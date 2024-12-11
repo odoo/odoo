@@ -8,6 +8,7 @@ from ast import literal_eval
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv import expression
 from odoo.tools import is_html_empty
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -131,19 +132,37 @@ class MailTemplate(models.Model):
 
     @api.model
     def _search_template_category(self, operator, value):
-        if operator in ['in', 'not in'] and isinstance(value, list):
-            value_templates = self.env['mail.template'].search([]).filtered(
-                lambda t: t.template_category in value
-            )
-            return [('id', operator, value_templates.ids)]
+        if operator not in ['in', 'not in', '=', '!=']:
+            raise NotImplementedError(_('Operation not supported'))
 
-        if operator in ['=', '!='] and isinstance(value, str):
-            value_templates = self.env['mail.template'].search([]).filtered(
-                lambda t: t.template_category == value
-            )
-            return [('id', 'in' if operator == "=" else 'not in', value_templates.ids)]
+        value = [value] if isinstance(value, str) else value
+        operator = 'in' if operator in ("in", "=") else 'not in'
 
-        raise NotImplementedError(_('Operation not supported'))
+        templates_with_xmlid = self.env['ir.model.data']._search([
+            ('model', '=', 'mail.template'),
+            ('module', '!=', '__export__')
+        ]).subselect('res_id')
+
+        domain = []
+        if 'hidden_template' in value:
+            domain.append(['|', ('active', '=', False), '&', ('description', '=', False), ('id', 'in', templates_with_xmlid)])
+
+        if 'base_template' in value:
+            domain.append(['&', ('description', '!=', False), ('id', 'in', templates_with_xmlid)])
+
+        if 'custom_template' in value:
+            domain.append([('template_category', 'not in', ['base_template', 'hidden_template'])])
+
+        if operator == 'not in':
+            for dom in domain:
+                dom.insert(0, "!")
+
+        if len(domain) > 1:
+            domain = (expression.OR if operator == 'in' else expression.AND)(domain)
+        else:
+            domain = domain[0]
+
+        return domain
 
     @api.onchange("model")
     def _onchange_model(self):
