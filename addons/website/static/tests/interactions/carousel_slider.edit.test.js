@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import {
-    startEditInteractions,
+    startInteractions,
     setupInteractionWhiteList,
 } from "../core/helpers";
 
@@ -38,18 +38,22 @@ const carouselHtml = `
     </div>
 `;
 
-test.todo("carousel slider prevents ride", async () => {
-    const { core, el } = await startEditInteractions(carouselHtml);
+test("carousel slider prevents ride", async () => {
+    const { core, el } = await startInteractions(carouselHtml, { editMode: true });
+    await animationFrame();
     expect(core.interactions.length).toBe(1);
     const carouselEl = el.querySelector(".carousel");
-    expect(carouselEl.dataset.bsRide).toBe("false");
+    const carouselBS = window.Carousel.getInstance(carouselEl);
+    expect(carouselBS._config.ride).toBe(false);
+    expect(carouselBS._config.pause).toBe(true);
     core.stopInteractions();
     expect(core.interactions.length).toBe(0);
     expect(carouselEl.dataset.bsRide).toBe("ride");
 });
 
-test.todo("carousel slider computes height upon content_changed", async () => {
-    const { core, el } = await startEditInteractions(carouselHtml);
+test("carousel slider computes height upon content_changed", async () => {
+    const { core, el } = await startInteractions(carouselHtml, { editMode: true });
+    await animationFrame();
     expect(core.interactions.length).toBe(1);
     const carouselEl = el.querySelector(".carousel");
     const itemEl = carouselEl.querySelector(".carousel-item");
