@@ -5,7 +5,7 @@ import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 
-const { formatValue, isDefined, toCartesian, toXC } = helpers;
+const { formatValue, isDefined, toCartesian, toXC, isNumber } = helpers;
 import {
     isMarkdownViewUrl,
     isMarkdownIrMenuIdUrl,
@@ -69,6 +69,11 @@ export async function freezeOdooData(model) {
             const sheetId = sheet.id;
             const position = { sheetId, col, row };
             const evaluatedCell = model.getters.getEvaluatedCell(position);
+            if (evaluatedCell.type === "text" && !isNaN(evaluatedCell.value)) {
+                cell.content =  `="${evaluatedCell.value}"`;
+            } else {
+                cell.content = evaluatedCell.value.toString();
+            }
             if (containsOdooFunction(cell.content)) {
                 cell.content = evaluatedCell.value.toString();
                 if (evaluatedCell.format) {
