@@ -36,6 +36,7 @@ import {
     isCSSColor,
     convertCSSColorToRgba,
     normalizeCSSColor,
+    rgbToHex,
  } from '@web/core/utils/colors';
 import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
@@ -5875,7 +5876,13 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
         const moveLeftOrRight = ["move_left_opt", "move_right_opt"].includes(params.name);
-
+        this.trigger_up('option_update', {
+            optionName: 'BackgroundShape',
+            name: 'snippetMoved',
+            data: { preview: false,
+                target: this.$target[0]
+            },
+        });
         let siblingEls, mobileOrder;
         if (moveLeftOrRight) {
             siblingEls = this.$target[0].parentElement.children;
@@ -5917,6 +5924,13 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 this._removeMobileOrders(siblingEls);
             }
         }
+        this.trigger_up('option_update', {
+            optionName: 'BackgroundShape',
+            name: 'bgColorChanged',
+            data: { preview: false,
+                target: this.$target[0]
+            },
+        });
         if (!this.$target.is(this.data.noScroll)
                 && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
             const mainScrollingEl = $().getScrollingElement()[0];
@@ -8348,11 +8362,34 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         this.options.wysiwyg.odooEditor.editable.focus();
     },
 });
-
 /**
  * Handles background shapes.
  */
 registry.BackgroundShape = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    onFocus() {
+        this.rerender = true;
+    },
+    /**
+     * @override
+     */
+    onRemove() {
+        this._updateShapeForNeighborBeforeMoving();
+    },
+    onClone() {
+        if (this.$target[0].querySelector(".o_we_shape")) {
+            this._handlePreviewState(false, () => {
+                const shape = this._getShapeData().shape;
+                return { colors: this._getImplicitColors(shape) };
+            });
+        }
+        const elements = this._getNeighborShape();
+        for (const element of elements) {
+            this._updateShapeForNeighbor(element);
+        }
+    },
     /**
      * @override
      */
@@ -8375,6 +8412,27 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             });
         }
     },
+    /**
+     * @override
+     */
+    notify(name, data) {
+        if (name === "bgColorChanged" && data.target === this.$target[0]) {
+            if (this.$target[0].querySelector(".o_we_shape")) {
+                this._handlePreviewState(data.preview, () => {
+                    const shape = this._getShapeData().shape;
+                    return { colors: this._getImplicitColors(shape) };
+                });
+            }
+            const elements = this._getNeighborShape();
+            for (const element of elements) {
+                this._updateShapeForNeighbor(element);
+            }
+        } else if (name === "snippetMoved" && data.target === this.$target[0]) {
+            this._updateShapeForNeighborBeforeMoving();
+        } else {
+            this._super(...arguments);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -8387,12 +8445,13 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     shape(previewMode, widgetValue, params) {
         this._handlePreviewState(previewMode, () => {
+            const { colors, flip, shapeAnimationSpeed } = this._getShapeData();
             return {
                 shape: widgetValue,
-                colors: this._getImplicitColors(widgetValue, this._getShapeData().colors),
-                flip: [],
+                colors: this._getImplicitColors(widgetValue, colors),
+                flip: flip,
                 animated: params.animated,
-                shapeAnimationSpeed: this._getShapeData().shapeAnimationSpeed,
+                shapeAnimationSpeed: shapeAnimationSpeed,
             };
         });
     },
@@ -8409,6 +8468,9 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             const newColors = Object.assign(previousColors, {[colorName]: newColor});
             return {colors: newColors};
         });
+        if (!previewMode) {
+            this.rerender = true;
+        }
     },
     /**
      * Flips the shape on its x axis.
@@ -8425,6 +8487,13 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     flipY(previewMode, widgetValue, params) {
         this._flipShape(previewMode, 'y');
+        this._handlePreviewState(previewMode, () => {
+            const shape = this._getShapeData().shape;
+            return { colors: this._getImplicitColors(shape) };
+        });
+        if (!previewMode) {
+            this.rerender = true;
+        }
     },
     /**
      * Shows/Hides the shape on mobile.
@@ -8498,6 +8567,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @override
      */
     _renderCustomXML(uiFragment) {
+        // uiFragment.querySelector('[data-name="colors"]').innerHTML = "";
         Object.keys(this._getDefaultColors()).map(colorName => {
             uiFragment.querySelector('[data-name="colors"]')
                 .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}"></we-colorpicker>`)[0]);
@@ -8540,7 +8610,26 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             shapeEl.classList.add(shapeClassName);
             // Match current palette.
             const shapeBackgroundImage = this._shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`];
-            shapeEl.style.setProperty("background-image", shapeBackgroundImage);
+
+            //For the connection shape, if one was already set then we keep the current color
+            // and the current flip
+            const { flip, colors } = this._getShapeData();
+            if (!shape.includes("web_editor/Connections") || Object.keys(colors).length == 0) {
+                shapeEl.style.setProperty("background-image", shapeBackgroundImage);
+                btn.append(btnContent);
+                return;
+            }
+            const isFlippedY = flip.includes("y");
+            const urlMatch = shapeBackgroundImage.match(/url\(["']?(.*?)["']?\)/);
+            const url = new URL(urlMatch[1], window.location.origin);
+            Object.entries(colors).forEach(([key, value]) => {
+                url.searchParams.set(key, value);
+            });
+            if (isFlippedY) {
+                url.searchParams.set("flip", "y");
+                shapeEl.style.setProperty("background-position", "50% 0%");
+            }
+            shapeEl.style.setProperty("background-image", `url("${url.toString()}")`);
             btn.append(btnContent);
         });
         return uiFragment;
@@ -8744,7 +8833,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     _getShapeData(target = this.$target[0]) {
         const defaultData = {
             shape: '',
-            colors: this._getDefaultColors($(target)),
+            colors: this._getDefaultColors(target),
             flip: [],
             showOnMobile: false,
             shapeAnimationSpeed: "0",
@@ -8759,19 +8848,26 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @param {jQueryElement} [$target=this.$target] the target on which to read
      *   the shape data.
      */
-    _getDefaultColors($target = this.$target) {
-        const $shapeContainer = $target.find('> .o_we_shape')
-            .clone()
-            .addClass('d-none')
-            // Needs to be in document for bg-image class to take effect
-            .appendTo(this.$target[0].ownerDocument.body);
-        const shapeContainer = $shapeContainer[0];
-        $shapeContainer.css('background-image', '');
+    _getDefaultColors(target = this.$target[0]) {
+        const shapeElement = target.querySelector(".o_we_shape"); 
+        if (!shapeElement) {
+            return {};
+        }
+        const shapeContainer = shapeElement.cloneNode(true);
+        shapeContainer.classList.add("d-none");
+
+        // Needs to be in document for bg-image class to take effect
+        document.body.appendChild(shapeContainer);
+
+        shapeContainer.style.backgroundImage = "";
         const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
-        $shapeContainer.remove();
+
+        shapeContainer.remove();
+
         if (!shapeSrc) {
             return {};
         }
+
         const url = new URL(shapeSrc, window.location.origin);
         return Object.fromEntries(url.searchParams.entries());
     },
@@ -8786,7 +8882,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const shapeContainer = $shapeContainer[0];
         const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
         const url = new URL(shapeSrc, window.location.origin);
-        return Object.fromEntries(url.searchParams.entries());
+        return Object.fromEntries(url.searchParams.entries().filter(([key]) => key !== "flip"));
     },
     /**
      * Returns the implicit colors for the currently selected shape.
@@ -8794,6 +8890,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * The implicit colors are use upon shape selection. They are computed as:
      * - the default colors
      * - patched with each set of colors of previous siblings shape
+     * - patched with the background colors of the next snippets if the shape is a "Connections"
      * - patched with the colors of the previously selected shape
      * - filtered to only keep the colors involved in the current shape
      *
@@ -8804,6 +8901,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     _getImplicitColors(shape, previousColors) {
         const defaultColors = this._getShapeDefaultColors(shape);
         let colors = previousColors || {};
+        colors = Object.assign(this._getConnectionsColors(shape), colors);
         let sibling = this.$target[0].previousElementSibling;
         while (sibling) {
             colors = Object.assign(this._getShapeData(sibling).colors || {}, colors);
@@ -8855,6 +8953,290 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 }
             ));
         }
+    },
+    //--------------------------------------------------------------------------
+    // Connections Shape
+    //--------------------------------------------------------------------------
+    /**
+     * Returns the computed colors for the currently selected Connections shape.
+     *
+     * The color is computed based on the bgcolor of the next snippet or on the bgcolor
+     * of the previous if the shape flip on Y.
+     *
+     * @private
+     * @param {string} shape identifier of the selected shape.
+     * @param {Element} target Element for which the color has to be computed.
+     */
+    _getConnectionsColors(shape, target = this.$target[0]) {
+        if (!shape.includes("web_editor/Connections/")) {
+            return {};
+        }
+        const defaultColor = this._getShapeDefaultColors(shape);
+        const defaultKey = Object.keys(defaultColor)[0];
+        const targetRect = target.getBoundingClientRect();
+        const shapeData = this._getShapeData(target);
+        const x = targetRect.left + targetRect.width / 2;
+        const y = shapeData.flip.includes("y") ? targetRect.top - 1 : targetRect.bottom + 1;
+        const neighborEl = this._getBackgroundElementFromPoint(x, y);
+        const neighborElHexColor = rgbToHex(getComputedStyle(neighborEl).backgroundColor);
+
+        let curBgColorEl = target;
+        while (getComputedStyle(curBgColorEl).backgroundColor.includes("rgba(0, 0, 0, 0)")) {
+            curBgColorEl = curBgColorEl.parentElement;
+        }
+        const curBgHexColor = rgbToHex(getComputedStyle(curBgColorEl).backgroundColor);
+
+        return {
+            ...defaultColor,
+            [defaultKey]:
+                curBgHexColor !== neighborElHexColor
+                    ? neighborElHexColor
+                    : this._getContrastingColor(neighborElHexColor),
+        };
+    },
+    /**
+     * Compute the luminance of a color.
+     *
+     * @private
+     * @param {string} color the color to analyze (rgb or Hex)
+     */
+    _getLuminance(color) {
+        const hexColor = rgbToHex(color);
+        const r = parseInt(hexColor.slice(1, 3), 16);
+        const g = parseInt(hexColor.slice(3, 5), 16);
+        const b = parseInt(hexColor.slice(5), 16);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    },
+    /**
+     * Return the color of the current theme with the most contrast compared to
+     * the given color.
+     *
+     * @private
+     * @param {Object} baseColor the base color for which the most contrasting 
+     *      theme color will be found
+     */
+    _getContrastingColor(baseColor) {
+        const baseLuminance = this._getLuminance(baseColor);
+
+        const colors = ["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"];
+        const luminances = colors.map((color) => {
+            const colorValue = weUtils.getCSSVariableValue(color);
+            return { color, luminance: this._getLuminance(colorValue) };
+        });
+
+        let bestContrast;
+        let maxDifference = 0;
+
+        for (const { color, luminance } of luminances) {
+            const difference = Math.abs(baseLuminance - luminance);
+            if (difference > maxDifference) {
+                maxDifference = difference;
+                bestContrast = color;
+            }
+        }
+
+        return weUtils.getCSSVariableValue(bestContrast);
+    },
+    /**
+     * Update the connection shape of its neighbors before the snippet move
+     * @private
+     */
+    _updateShapeForNeighborBeforeMoving() {
+        const targetRect = this.$target[0].getBoundingClientRect();
+        const topNeighbors = this._getNeighborShape(this.$target[0], "top");
+        const bottomNeighbors = this._getNeighborShape(this.$target[0], "bottom");
+
+        [...topNeighbors, ...bottomNeighbors].forEach((element, index) => {
+            const elRect = element.getBoundingClientRect();
+            const x = elRect.left + elRect.width / 2;
+            const y = index < topNeighbors.length ? targetRect.bottom + 1 : targetRect.top - 1;
+
+            let newColor = getComputedStyle(
+                this._getBackgroundElementFromPoint(x, y)
+            ).backgroundColor;
+            let curBgColorEl = element;
+            while (getComputedStyle(curBgColorEl).backgroundColor.includes("rgba(0, 0, 0, 0)")) {
+                curBgColorEl = curBgColorEl.parentElement;
+            }
+            const curBgColor = getComputedStyle(curBgColorEl).backgroundColor;
+            if (curBgColor === newColor) {
+                newColor = this._getContrastingColor(newColor);
+            }
+            this._updateShapeForNeighbor(element, newColor);
+        });
+    },
+    /**
+     * Return the elements with a shape inside a common snippet.
+     *
+     * @private
+     * @param {Element} element an element within an snippet or a snippet itself
+     */
+    _findInnerElementsWithShape(element) {
+        if (!element || element.tagName === "BODY") {
+            return [];
+        }
+        while (element.parentElement?.closest("[data-snippet]")) {
+            element = element.parentElement.closest("[data-snippet]");
+        }
+        const allEl = [element, ...element.querySelectorAll("*")];
+        const allShapeEl = allEl.filter((el) => el.querySelector(":scope > .o_we_shape"));
+        return allShapeEl;
+    },
+    /**
+     * Return all the elements on a certain point of the viewport.
+     *
+     * @private
+     * @param {number} viewportX
+     * @param {number} viewportY
+     */
+    _getElementsFromPoint(viewportX, viewportY) {
+        const iframe = document.querySelector(".o_iframe");
+        const iframeWin = iframe.contentWindow;
+        const iframeDoc = this.$target[0].ownerDocument;
+        const pageX = iframeWin.scrollX + viewportX;
+        const pageY = iframeWin.scrollY + viewportY;
+        let elements;
+        if (
+            viewportX < 0 ||
+            viewportY < 0 ||
+            viewportX > iframeWin.innerWidth ||
+            viewportY > iframeWin.innerHeight
+        ) {
+            elements = [...iframeDoc.querySelectorAll("*")].filter((el) => {
+                const rect = el.getBoundingClientRect();
+                return (
+                    pageX >= iframeWin.scrollX + rect.left &&
+                    pageX <= iframeWin.scrollX + rect.right &&
+                    pageY >= iframeWin.scrollY + rect.top &&
+                    pageY <= iframeWin.scrollY + rect.bottom
+                );
+            });
+            elements.reverse();
+        } else {
+            elements = iframeDoc.elementsFromPoint(viewportX, viewportY);
+        }
+        const header = iframeDoc.querySelector("header");
+        const headerHeight = header.offsetHeight;
+        const isHeaderTop = !header.classList.contains("o_header_sidebar");
+        if (pageY < headerHeight && isHeaderTop) {
+            elements.unshift(iframeDoc.querySelector("nav"));
+        }
+        return elements;
+    },
+    /**
+     * Return the first element that has a background color on a certain point.
+     *
+     * @private
+     * @param {number} viewportX
+     * @param {number} viewportY
+     */
+    _getBackgroundElementFromPoint(viewportX, viewportY) {
+        const iframeDoc = this.$target[0].ownerDocument;
+        const elements = this._getElementsFromPoint(viewportX, viewportY);
+        const classBlacklist = [".o_handles", ".o_header_is_scrolled"];
+        const idBlacklist = ["wrap"];
+        const element = elements.find(
+            (el) =>
+                el.tagName.toLowerCase() !== "html" &&
+                !classBlacklist.some((cls) => el.closest(cls)) &&
+                !idBlacklist.includes(el.id) &&
+                !getComputedStyle(el).backgroundColor.includes("rgba(0, 0, 0, 0)")
+        );
+        return element || iframeDoc.querySelector("body");
+    },
+    /**
+     * Check if a bg shape is next to the given element.
+     *
+     * @private
+     * @param {Element} curEl The element to check adjacency against
+     * @param {Element} shapeTarget The element containing the background shape
+     */
+    _isShapeNeighbor(curEl, shapeTarget) {
+        if (!shapeTarget.querySelector(".o_we_shape")) {
+            return false;
+        }
+        const targetRect = shapeTarget.getBoundingClientRect();
+        const shapeData = this._getShapeData(shapeTarget);
+        const x = targetRect.left + targetRect.width / 2;
+        const y = shapeData.flip.includes("y") ? targetRect.top - 1 : targetRect.bottom + 1;
+        return this._getElementsFromPoint(x, y).includes(curEl);
+    },
+    /**
+     * Return all the shapes next to the target.
+     *
+     * @private
+     * @param {Element} target
+     * @param {string} direction top/bottom/inner or nothing
+     */
+    _getNeighborShape(target = this.$target[0], direction) {
+        const targetRect = target.getBoundingClientRect();
+        const x = targetRect.left + targetRect.width / 2;
+        let y;
+        switch (direction) {
+            case "top":
+                y = targetRect.top - 1;
+                break;
+            case "bottom":
+                y = targetRect.bottom + 1;
+                break;
+            case "inner": {
+                const innerElements = this._findInnerElementsWithShape(target);
+                return innerElements.filter((el) => this._isShapeNeighbor(target, el));
+            }
+            default: {
+                const topNeighbors = this._getNeighborShape(target, "top");
+                const bottomNeighbors = this._getNeighborShape(target, "bottom");
+                const innerNeighbors = this._getNeighborShape(target, "inner");
+                return [...topNeighbors, ...bottomNeighbors, ...innerNeighbors];
+            }
+        }
+        const elements = this._getElementsFromPoint(x, y);
+        const element = elements.find((el) => el.querySelector(":scope > .o_we_shape"));
+        const ShapeElements = this._findInnerElementsWithShape(element);
+        return ShapeElements.filter((el) => this._isShapeNeighbor(target, el));
+    },
+    /**
+     * Set the background color of a neighboring connection shape.
+     *
+     * @param {Element} snippetEl the neighboring element of the current snippet
+     * @param {Object} newColor The new background color to apply to the connection
+     *     shape. If not given it will be computed automatically.
+     */
+    _updateShapeForNeighbor(snippetEl, newColor) {
+        if (!snippetEl) {
+            return;
+        }
+        const shapeEl = snippetEl.querySelector(".o_we_shape");
+        if (!shapeEl) {
+            return;
+        }
+        const shapeData = this._getShapeData(snippetEl);
+        if (!shapeData.shape.includes("web_editor/Connections")) {
+            return;
+        }
+        const defaultColor = this._getDefaultColors(snippetEl);
+        const defaultKeys = Object.keys(defaultColor);
+        newColor = newColor
+            ? { [defaultKeys[0]]: rgbToHex(newColor) }
+            : this._getConnectionsColors(shapeData.shape, snippetEl);
+
+        if (JSON.stringify(shapeData.colors) === JSON.stringify(newColor)) {
+            return;
+        }
+        let shapeBackgroundImageURL = getBgImageURL(shapeEl);
+        if (shapeBackgroundImageURL) {
+            const url = new URL(shapeBackgroundImageURL, window.location.origin);
+            Object.entries(newColor).forEach(([key, value]) => {
+                url.searchParams.set(key, value);
+            });
+            shapeBackgroundImageURL = `url("${url.toString()}")`;
+            shapeEl.style.backgroundImage = shapeBackgroundImageURL;
+        }
+        if (JSON.stringify(defaultColor) === JSON.stringify(newColor) && !shapeData.flip.length) {
+            shapeEl.style.removeProperty("background-image");
+        }
+        shapeData.colors = { ...shapeData.colors, ...newColor };
+        snippetEl.dataset.oeShapeData = JSON.stringify(shapeData);
     },
 });
 
@@ -9191,7 +9573,28 @@ registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
      */
     onBuilt: function () {
         this._markColorLevel();
+        this.trigger_up("option_update", {
+            optionName: "BackgroundShape",
+            name: "bgColorChanged",
+            data: { preview: false,
+                    target: this.$target[0]
+                },
+        });
     },
+    /**
+     * @override
+     */
+    selectStyle: async function (previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        this.trigger_up("option_update", {
+            optionName: "BackgroundShape",
+            name: "bgColorChanged",
+            data: { preview: false,
+                    target: this.$target[0]
+                },
+        });
+    },
+
 
     //--------------------------------------------------------------------------
     // Private
