@@ -1081,7 +1081,7 @@ class TestStockFlow(TestStockCommon):
         packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'is_storable': True})
         lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'is_storable': True})
         quant_obj = self.env['stock.quant'].with_context(inventory_mode=True)
-        pack_obj = self.env['stock.quant.package']
+        pack_obj = self.env['stock.package']
         lot_obj = self.env['stock.lot']
         pack1 = pack_obj.create({'name': 'PACK00TEST1'})
         pack_obj.create({'name': 'PACK00TEST2'})
@@ -1364,7 +1364,7 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.stock_location.id,
         })
         picking_in.action_confirm()
-        pack_obj = self.env['stock.quant.package']
+        pack_obj = self.env['stock.package']
         pack1 = pack_obj.create({'name': 'PACKINOUTTEST1'})
         pack2 = pack_obj.create({'name': 'PACKINOUTTEST2'})
         picking_in.move_line_ids[0].result_package_id = pack1
@@ -1428,7 +1428,7 @@ class TestStockFlow(TestStockCommon):
         })
 
         picking_in.action_confirm()
-        pack_obj = self.env['stock.quant.package']
+        pack_obj = self.env['stock.package']
         pack1 = pack_obj.create({'name': 'PACKINOUTTEST1'})
         pack2 = pack_obj.create({'name': 'PACKINOUTTEST2'})
         picking_in.move_line_ids[0].result_package_id = pack1

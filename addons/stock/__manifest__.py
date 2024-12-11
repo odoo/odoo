@@ -83,6 +83,7 @@
         'views/stock_rule_views.xml',
         'views/stock_package_level_views.xml',
         'views/stock_package_type_view.xml',
+        'views/stock_package_views.xml',
         'views/stock_forecasted.xml',
         'views/uom_uom_views.xml',
     ],

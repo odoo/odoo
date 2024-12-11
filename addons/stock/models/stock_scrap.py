@@ -31,7 +31,7 @@ class StockScrap(models.Model):
         'stock.lot', 'Lot/Serial',
         domain="[('product_id', '=', product_id)]", check_company=True)
     package_id = fields.Many2one(
-        'stock.quant.package', 'Package',
+        'stock.package', 'Package',
         check_company=True)
     owner_id = fields.Many2one('res.partner', 'Owner', check_company=True)
     move_ids = fields.One2many('stock.move', 'scrap_id')

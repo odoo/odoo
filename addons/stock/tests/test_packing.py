@@ -108,7 +108,7 @@ class TestPacking(TestPackingCommon):
         ship_picking._action_done()
 
     def test_pick_a_pack_confirm(self):
-        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        pack = self.env['stock.package'].create({'name': 'The pack to pick'})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, package_id=pack)
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.int_type_id.id,
@@ -156,13 +156,13 @@ class TestPacking(TestPackingCommon):
                          'The move  should have one move line which is the reservation')
         self.assertEqual(package_level.state, 'done', 'The package level must be in state done')
         self.assertEqual(pack.location_id.id, picking.location_dest_id.id,
-                          'The quant package must be in the destination location')
+                          'The package must be in the destination location')
         self.assertEqual(pack.quant_ids[0].location_id.id, picking.location_dest_id.id,
                           'The quant must be in the destination location')
 
     def test_pick_a_pack_cancel(self):
         """Cancel a reserved operation with a not-done package level (is_done=False)."""
-        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        pack = self.env['stock.package'].create({'name': 'The pack to pick'})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, package_id=pack)
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.int_type_id.id,
@@ -187,7 +187,7 @@ class TestPacking(TestPackingCommon):
 
     def test_pick_a_pack_cancel_is_done(self):
         """Cancel a reserved operation with a package level that is done (is_done=True)."""
-        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        pack = self.env['stock.package'].create({'name': 'The pack to pick'})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, package_id=pack)
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.int_type_id.id,
@@ -219,7 +219,7 @@ class TestPacking(TestPackingCommon):
             and that the location_id of the package is the one where the package is once it
             is reserved.
         """
-        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        pack = self.env['stock.package'].create({'name': 'The pack to pick'})
         shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
             'usage': 'internal',
@@ -291,7 +291,7 @@ class TestPacking(TestPackingCommon):
         picking.action_assign()
         picking.move_ids.filtered(lambda ml: ml.product_id == self.productA).picked = True
         picking.action_put_in_pack()
-        pack1 = self.env['stock.quant.package'].search([], order='id')[-1]
+        pack1 = self.env['stock.package'].search([], order='id')[-1]
         picking.write({
             'move_line_ids': [(0, 0, {
                 'product_id': self.productB.id,
@@ -320,7 +320,7 @@ class TestPacking(TestPackingCommon):
         wizard.location_dest_id = shelf2_location.id
         wizard.action_done()
         picking._action_done()
-        pack2 = self.env['stock.quant.package'].search([], order='id')[-1]
+        pack2 = self.env['stock.package'].search([], order='id')[-1]
         self.assertEqual(pack2.location_id.id, shelf2_location.id, 'The package must be stored  in shelf2')
         self.assertEqual(pack1.location_id.id, shelf1_location.id, 'The package must be stored  in shelf1')
         qp1 = pack2.quant_ids[0]
@@ -339,7 +339,7 @@ class TestPacking(TestPackingCommon):
             **location_dict,
             **{'product_id': self.productA.id, 'quantity': 355.4},  # important number
         })
-        package = self.env['stock.quant.package'].create({
+        self.env['stock.package'].create({
             **location_dict, **{'quant_ids': [(6, 0, [quant.id])]},
         })
         location_dict.update({
@@ -379,7 +379,7 @@ class TestPacking(TestPackingCommon):
             'location_id': self.stock_location.id,
             'name': 'Shelf 2',
         })
-        package = self.env['stock.quant.package'].create({})
+        package = self.env['stock.package'].create({})
 
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.in_type_id.id,
@@ -803,8 +803,8 @@ class TestPacking(TestPackingCommon):
         * picked lines (quantity > 0)
         * lines with a different result package already
         """
-        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
-        dest_package1 = self.env["stock.quant.package"].create({"name": "Dest Pack1"})
+        package = self.env["stock.package"].create({"name": "Src Pack"})
+        dest_package1 = self.env["stock.package"].create({"name": "Dest Pack1"})
 
         # Create new picking: 120 productA
         picking = self.env['stock.picking'].create({
@@ -837,7 +837,7 @@ class TestPacking(TestPackingCommon):
         line.result_package_id = dest_package1
 
         # Update quantity on hand: 20 units in new_package
-        new_package = self.env["stock.quant.package"].create({"name": "New Pack"})
+        new_package = self.env["stock.package"].create({"name": "New Pack"})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20, package_id=new_package)
 
         # Check Availability
@@ -859,7 +859,7 @@ class TestPacking(TestPackingCommon):
         what they initially ordered, and update the quantity on the sales order to reflect what was actually sent.
         """
         self.warehouse.delivery_steps = 'ship_only'
-        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
+        package = self.env["stock.package"].create({"name": "Src Pack"})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
         self.warehouse.out_type_id.show_entire_packs = True
         picking = self.env['stock.picking'].create({
@@ -904,7 +904,7 @@ class TestPacking(TestPackingCommon):
         stock move.
         """
         self.warehouse.delivery_steps = 'ship_only'
-        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
+        package = self.env["stock.package"].create({"name": "Src Pack"})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
         self.warehouse.out_type_id.show_entire_packs = True
         picking = self.env['stock.picking'].create({
@@ -1029,7 +1029,7 @@ class TestPacking(TestPackingCommon):
             'location_id': self.pack_location.id,
         })
 
-        pack = self.env['stock.quant.package'].create({'name': 'Super Package'})
+        pack = self.env['stock.package'].create({'name': 'Super Package'})
         self.env['stock.quant']._update_available_quantity(self.productA, shelf1_location, 20.0, package_id=pack)
 
         picking = self.env['stock.picking'].create({
@@ -1069,7 +1069,7 @@ class TestPacking(TestPackingCommon):
         package_type = self.env['stock.package.type'].create({
             'name': "Super Pallet",
         })
-        package_01, package_02 = self.env['stock.quant.package'].create([{
+        package_01, package_02 = self.env['stock.package'].create([{
             'name': 'Pallet %s' % i,
             'package_type_id': package_type.id,
         } for i in [1, 2]])
@@ -1171,7 +1171,7 @@ class TestPacking(TestPackingCommon):
         package_type = self.env['stock.package.type'].create({
             'name': "Super Pallet",
         })
-        package_01, package_02 = self.env['stock.quant.package'].create([{
+        package_01, package_02 = self.env['stock.package'].create([{
             'name': 'Pallet %s' % i,
             'package_type_id': package_type.id,
         } for i in [1, 2]])
@@ -1318,7 +1318,7 @@ class TestPacking(TestPackingCommon):
 
         moves = receipt.move_ids
         moves.move_line_ids.quantity = 1
-        moves.move_line_ids.result_package_id = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+        moves.move_line_ids.result_package_id = self.env['stock.package'].create({'package_type_id': package_type.id})
         moves.picked = True
         receipt.button_validate()
         internal_picking = moves.move_dest_ids.picking_id
@@ -1328,7 +1328,7 @@ class TestPacking(TestPackingCommon):
         internal_picking.action_cancel()
 
         # Second test part
-        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+        package = self.env['stock.package'].create({'package_type_id': package_type.id})
         self.env['stock.quant']._update_available_quantity(self.productA, loc01, 1.0, package_id=package)
 
         receipt = self.env['stock.picking'].create({
@@ -1353,7 +1353,7 @@ class TestPacking(TestPackingCommon):
             'product_uom_id': self.productA.uom_id.id,
             'location_id': supplier_location.id,
             'location_dest_id': input_location.id,
-            'result_package_id': self.env['stock.quant.package'].create({'package_type_id': package_type.id}).id,
+            'result_package_id': self.env['stock.package'].create({'package_type_id': package_type.id}).id,
             'picking_id': receipt.id,
         } for _ in range(2)])
         receipt.move_ids.picked = True
@@ -1391,7 +1391,7 @@ class TestPacking(TestPackingCommon):
             'product_uom_id': product.uom_id.id,
             'location_id': supplier_location.id,
             'location_dest_id': input_location.id,
-            'result_package_id': self.env['stock.quant.package'].create({'package_type_id': package_type.id}).id,
+            'result_package_id': self.env['stock.package'].create({'package_type_id': package_type.id}).id,
             'picking_id': receipt.id,
         } for product, move in [
             (self.productA, moves[0]),
@@ -1462,7 +1462,7 @@ class TestPacking(TestPackingCommon):
             'name': 'Location B',
             'location_id': self.stock_location.id,
         })
-        pack = self.env['stock.quant.package'].create({'name': 'New Package'})
+        pack = self.env['stock.package'].create({'name': 'New Package'})
         self.env['stock.quant']._update_available_quantity(self.productA, loc_1, 5, package_id=pack)
         self.env['stock.quant']._update_available_quantity(self.productB, loc_1, 4, package_id=pack)
 
@@ -1593,7 +1593,7 @@ class TestPacking(TestPackingCommon):
             [('method', '=', 'least_packages')])
         product.categ_id.removal_strategy_id = least_package_strategy.id
         # Create three packages with different quantities: 10, 10 and 20
-        pack_1 = self.env['stock.quant.package'].create({
+        pack_1 = self.env['stock.package'].create({
             'name': 'Pack 1',
             'quant_ids': [(0, 0, {
                 'product_id': product.id,
@@ -1601,7 +1601,7 @@ class TestPacking(TestPackingCommon):
                 'location_id': self.stock_location.id,
             })],
         })
-        pack_2 = self.env['stock.quant.package'].create({
+        pack_2 = self.env['stock.package'].create({
             'name': 'Pack 2',
             'quant_ids': [(0, 0, {
                 'product_id': product.id,
@@ -1609,7 +1609,7 @@ class TestPacking(TestPackingCommon):
                 'location_id': self.stock_location.id,
             })],
         })
-        pack_3 = self.env['stock.quant.package'].create({
+        pack_3 = self.env['stock.package'].create({
             'name': 'Pack 3',
             'quant_ids': [(0, 0, {
                 'product_id': product.id,
@@ -1675,7 +1675,7 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(move_03.move_line_ids.result_package_id, pack_2)
 
     def test_change_package_location(self):
-        pack_1 = self.env['stock.quant.package'].create({
+        pack_1 = self.env['stock.package'].create({
             'name': 'Pack 1',
             'quant_ids': [Command.create({
                 'product_id': self.productA.id,
@@ -1683,7 +1683,7 @@ class TestPacking(TestPackingCommon):
                 'location_id': self.stock_location.id,
             })],
         })
-        pack_2 = self.env['stock.quant.package'].create({
+        pack_2 = self.env['stock.package'].create({
             'name': 'Pack 2',
             'quant_ids': [Command.create({
                 'product_id': self.productB.id,
@@ -1794,7 +1794,7 @@ class TestPacking(TestPackingCommon):
         """
         self.warehouse.delivery_steps = 'ship_only'
 
-        pack1, pack2, pack3 = self.env['stock.quant.package'].create([
+        pack1, pack2, pack3 = self.env['stock.package'].create([
             {'name': 'pack1'},
             {'name': 'pack2'},
             {'name': 'pack3'}
@@ -1917,11 +1917,11 @@ class TestPackagePropagation(TestPackingCommon):
     def test_reusable_package_propagation(self):
         """ Test a reusable package should not be propagated to the next picking
         of a mto chain """
-        reusable_package = self.env['stock.quant.package'].create({
+        reusable_package = self.env['stock.package'].create({
             'name': 'Reusable Package',
             'package_use': 'reusable',
         })
-        disposable_package = self.env['stock.quant.package'].create({
+        disposable_package = self.env['stock.package'].create({
             'name': 'disposable Package',
             'package_use': 'disposable',
         })
@@ -1971,7 +1971,7 @@ class TestPackagePropagation(TestPackingCommon):
         On the other hand, if the quantity of the same pack is split between several pickings, you want to leave the result_package_id empty.
         """
         # Storable product : 30 qty in a package.
-        package = self.env['stock.quant.package'].create({'name': 'packtest'})
+        package = self.env['stock.package'].create({'name': 'packtest'})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 30.0, package_id=package)
 
         # 1 delivery picking, 30 product, action_assign => On move line, package_id == result_package_id
