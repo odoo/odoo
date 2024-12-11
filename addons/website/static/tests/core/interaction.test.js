@@ -24,6 +24,12 @@ const TemplateTestDoubleSpan = `
         <span>span2</span>
     </div>`
 
+const TemplateTestDoubleButton = `
+    <div class="test">
+        <button>button1</button>
+        <button>button2</button>
+    </div>`
+
 const getTemplateWithAttribute = function (attribute) {
     return `
     <div>
@@ -443,7 +449,6 @@ describe("using qualifiers", () => {
             };
             doSomething(ev) {
                 clicked = true;
-                console.log(ev);
                 expect(ev.defaultPrevented).toBe(false);
                 expect(ev.cancelBubble).toBe(true);
             }
@@ -1507,6 +1512,62 @@ describe("insert", () => {
         core.stopInteractions();
         insertedEl = el.querySelector("inserted");
         expect(insertedEl).toBe(null);
+    });
+});
+
+describe("waitForABetterName", () => {
+    test("waitForABetterName disable any further execution while already executing", async () => {
+        let started = 0
+        let finished = 0
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = { "button:t-on-click": this.waitForABetterName(this.onClickLong) }
+            async onClickLong() {
+                started++;
+                await (new Promise(resolve => setTimeout(resolve, 5000)))
+                finished++;
+            }
+        }
+        const { el } = await startInteraction(Test, TemplateTestDoubleButton);
+        const buttonEls = el.querySelectorAll("button");
+        for (const buttonEl of buttonEls) {
+            await click(buttonEl);
+        }
+        expect(started).toBe(1);
+        expect(finished).toBe(0);
+        await advanceTime(10000);
+        expect(started).toBe(1);
+        expect(finished).toBe(1);
+    });
+
+    test("waitForABetterName doesn't add a loading icon if not required", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = { "button:t-on-click": this.waitForABetterName(this.onClickLong) }
+            async onClickLong() {
+                await (new Promise(resolve => setTimeout(resolve, 5000)))
+            }
+        }
+        const { el } = await startInteraction(Test, TemplateTestDoubleButton);
+        expect(el.querySelectorAll("span")).toHaveLength(0);
+        await click("button");
+        await advanceTime(500);
+        expect(el.querySelectorAll("span")).toHaveLength(0);
+    });
+
+    test("waitForABetterName add a loading icon when the execution takes more than 400ms", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = { "button:t-on-click": this.waitForABetterName(this.onClickLong, true) }
+            async onClickLong() {
+                await (new Promise(resolve => setTimeout(resolve, 5000)))
+            }
+        }
+        const { el } = await startInteraction(Test, TemplateTestDoubleButton);
+        expect(el.querySelectorAll("span")).toHaveLength(0);
+        await click("button");
+        await advanceTime(500);
+        expect(el.querySelectorAll("span")).toHaveLength(1);
     });
 });
 

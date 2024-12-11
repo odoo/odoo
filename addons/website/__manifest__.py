@@ -295,7 +295,7 @@
             'website/static/tests/redirect_field_tests.js',
         ],
         'web.assets_unit_tests': [
-            'web/static/src/legacy/js/public/interaction_util.js',
+            'web/static/src/legacy/js/public/minimal_dom.js',
             'website/static/tests/core/**/*',
             'website/static/tests/interactions/**/*',
         ],

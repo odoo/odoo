@@ -1,5 +1,6 @@
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { SKIP_IMPLICIT_UPDATE } from "./colibri"
+import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/public/minimal_dom";
 
 /**
  * This is the base class to describe interactions. The Interaction class
@@ -207,6 +208,19 @@ export class Interaction {
                 cancel: debouncedFn.cancel,
             },
         );
+    }
+
+    /**
+     * Make sure the function is not started again before it is completed.
+     * If required, add a loading animation on button if the execution takes 
+     * more than 400ms.
+     */
+    waitForABetterName(fn, useLoadingAnimation = false) {
+        if (useLoadingAnimation) {
+            return makeButtonHandler(fn);
+        } else {
+            return makeAsyncHandler(fn);
+        }
     }
 
     /**
