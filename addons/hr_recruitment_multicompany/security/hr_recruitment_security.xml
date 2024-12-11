@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="hr_candidate_comp_rule" model="ir.rule">
+        <field name="name">Candidate multi company rule</field>
+        <field name="model_id" ref="model_hr_candidate"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">[('company_ids', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>
