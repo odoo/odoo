@@ -2987,7 +2987,7 @@ export class Model extends Array {
                     result[field.name] = record[field.name] || [];
                 } else if (field.type === "properties") {
                     const container = this._getPropertyContainer(field, record);
-                    if (container) {
+                    if (container && container[field.definition_record_field]) {
                         result[field.name] = container[field.definition_record_field].map(
                             (def) => ({
                                 ...def,

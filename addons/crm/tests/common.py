@@ -50,7 +50,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
     FIELDS_FIRST_SET = [
         'name', 'partner_id', 'campaign_id', 'company_id', 'country_id',
         'team_id', 'state_id', 'stage_id', 'medium_id', 'source_id', 'user_id',
-        'title', 'city', 'contact_name', 'mobile', 'partner_name',
+        'city', 'contact_name', 'mobile', 'partner_name',
         'phone', 'probability', 'expected_revenue', 'street', 'street2', 'zip',
         'create_date', 'date_automation_last', 'email_from', 'email_cc', 'website'
     ]
@@ -203,7 +203,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'name': 'Philip J Fry',
             'email': cls.test_email_data[1],
             'mobile': cls.test_phone_data[0],
-            'title': cls.env.ref('base.res_partner_title_mister').id,
             'function': 'Delivery Boy',
             'lang': cls.lang_en.code,
             'phone': False,
