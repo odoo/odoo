@@ -86,7 +86,7 @@
                         </page>
                         <page string="Communication" name="event_communication">
                             <field name="event_mail_ids">
-                                <list string="Communication" editable="bottom">
+                                <list string="Communication" editable="bottom" decoration-danger="mail_state == 'error'">
                                     <field name="sequence" widget="handle"/>
                                     <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}" widget="EventMailTemplateReferenceField"/>
                                     <field name="interval_nbr" readonly="interval_unit == 'now'"/>
@@ -95,7 +95,7 @@
                                     <field name="scheduled_date" groups="base.group_no_one"/>
                                     <field name="mail_count_done"/>
                                     <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"
-                                        options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
+                                        options="{'error': 'fa fa-exclamation-triangle', 'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
                                 </list>
                             </field>
                         </page>
