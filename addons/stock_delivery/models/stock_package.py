@@ -3,8 +3,8 @@
 from odoo import api, fields, models
 
 
-class StockQuantPackage(models.Model):
-    _inherit = "stock.quant.package"
+class StockPackage(models.Model):
+    _inherit = "stock.package"
 
     @api.depends('quant_ids', 'package_type_id')
     def _compute_weight(self):

@@ -22,7 +22,7 @@ class TestStockMoveLine(TestStockCommon):
             'is_storable': True,
             'tracking': 'lot',
         })
-        cls.pack = cls.env['stock.quant.package'].create({
+        cls.pack = cls.env['stock.package'].create({
             'name': 'Pack A',
         })
         cls.lot = cls.env['stock.lot'].create({
