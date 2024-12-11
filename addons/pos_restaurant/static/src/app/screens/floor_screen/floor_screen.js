@@ -8,7 +8,16 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onMounted, useRef, useState, useEffect, useExternalListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    useRef,
+    useState,
+    useEffect,
+    useExternalListener,
+    onWillUnmount,
+    onPatched,
+} from "@odoo/owl";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
@@ -65,6 +74,7 @@ const useDraggable = makeDraggableHook({
     onDragStart: ({ ctx }) => pick(ctx.current, "element"),
     onDrag: ({ ctx }) => pick(ctx.current, "element"),
     onDrop: ({ ctx }) => pick(ctx.current, "element"),
+    onDragEnd: ({ ctx }) => pick(ctx.current, "element"),
 });
 
 const GRID_SIZE = 10;
@@ -86,6 +96,7 @@ export class FloorScreen extends Component {
             floorWidth: "100%",
             selectedTableIds: [],
             potentialLink: null,
+            floorMapOffset: { x: 0, y: 0 },
         });
         this.doCreateTable = useTrackedAsync(async () => {
             await this.createTable();
@@ -232,27 +243,27 @@ export class FloorScreen extends Component {
         onMounted(() => {
             this.pos.openOpeningControl();
             this.resetTable();
+            this.restoreFloorScrollPosition();
         });
+
+        onWillUnmount(() => {
+            this.saveCurrentFloorScrollPosition();
+        });
+
         useEffect(
             () => {
                 this.computeFloorSize();
             },
-            () => [this.activeFloor, this.pos.floorPlanStyle]
+            () => [this.activeFloor, this.pos.floorPlanStyle, this.pos.isEditMode]
         );
-        useEffect(
-            (tableL) => {
-                if (hasTouch()) {
-                    if (tableL) {
-                        this.floorScrollBox.el.classList.remove("overflow-auto");
-                        this.floorScrollBox.el.classList.add("overflow-hidden");
-                    } else {
-                        this.floorScrollBox.el.classList.remove("overflow-hidden");
-                        this.floorScrollBox.el.classList.add("overflow-auto");
-                    }
-                }
-            },
-            () => [this.state.selectedTableIds.length]
-        );
+
+        onPatched(() => {
+            if (this.scrollTo) {
+                const scrollTo = this.scrollTo;
+                this.floorScrollBox.el.scrollTo(scrollTo);
+                this.scrollTo = null;
+            }
+        });
     }
     getPosTable(el) {
         return this.pos.getTableFromElement(el);
@@ -272,6 +283,11 @@ export class FloorScreen extends Component {
                 startPosV = table.position_v;
                 startWidth = table.width;
                 startHeight = table.height;
+
+                if (hasTouch()) {
+                    this.floorScrollBox.el.classList.remove("overflow-auto");
+                    this.floorScrollBox.el.classList.add("overflow-hidden");
+                }
             },
             onDrag: (ctx) => {
                 const newPosition = {
@@ -311,9 +327,21 @@ export class FloorScreen extends Component {
                     pick(table, "position_h", "position_v", "width", "height")
                 );
             },
+            onDragEnd: ({ element }) => {
+                if (hasTouch()) {
+                    this.floorScrollBox.el.classList.remove("overflow-hidden");
+                    this.floorScrollBox.el.classList.add("overflow-auto");
+                }
+            },
         });
     }
     computeFloorSize() {
+        const previousFloorMapOffset = {
+            x: this.state.floorMapOffset.x,
+            y: this.state.floorMapOffset.y,
+        };
+        this.state.floorMapOffset = { x: 0, y: 0 };
+
         if (this.pos.floorPlanStyle === "kanban") {
             this.state.floorHeight = "100%";
             this.state.floorWidth = window.innerWidth + "px";
@@ -325,8 +353,9 @@ export class FloorScreen extends Component {
         }
 
         const tables = this.activeFloor.table_ids;
-        const floorV = this.floorMapRef.el.clientHeight;
-        const floorH = this.floorMapRef.el.offsetWidth;
+        const floorV = this.floorScrollBox.el.clientHeight;
+        const floorH = this.floorScrollBox.el.offsetWidth;
+
         const positionH = Math.max(
             ...tables.map((table) => table.position_h + table.width),
             floorH
@@ -336,6 +365,8 @@ export class FloorScreen extends Component {
             floorV
         );
 
+        this.restoreFloorScrollPosition();
+
         if (this.activeFloor.floor_background_image) {
             const img = new Image();
             img.onload = () => {
@@ -343,13 +374,59 @@ export class FloorScreen extends Component {
                 const width = Math.max(img.width, positionH);
                 this.state.floorHeight = `${height}px`;
                 this.state.floorWidth = `${width}px`;
+                this.restoreFloorScrollPosition();
             };
             img.src = "data:image/png;base64," + this.activeFloor.floor_background_image;
         } else {
-            this.state.floorHeight = `${positionV}px`;
-            this.state.floorWidth = `${positionH}px`;
+            this.state.floorMapOffset = this._computeFloorMapOffset();
+            this.state.floorHeight = `${positionV + this.state.floorMapOffset.y}px`;
+            this.state.floorWidth = `${positionH + this.state.floorMapOffset.x}px`;
+
+            // Ensure the view scrolls to the same position when switching to edit mode on mobile devices
+            if (
+                this.pos.isEditMode &&
+                hasTouch() &&
+                (previousFloorMapOffset.x !== 0 || previousFloorMapOffset.y !== 0)
+            ) {
+                this.scrollTo = {
+                    top: this.floorScrollBox.el.scrollTop - previousFloorMapOffset.y,
+                    left: this.floorScrollBox.el.scrollLeft - previousFloorMapOffset.x,
+                };
+            }
         }
     }
+
+    _computeFloorMapOffset() {
+        const offset = { x: 0, y: 0 };
+
+        // Adjusts the offset to reduce the scrolling area on mobile devices
+        if (hasTouch() && !this.pos.isEditMode && !this.activeFloor.floor_background_image) {
+            const MIN_OFFSET = 20; // Minimum space between the border and the table
+
+            const tables = this.activeTables;
+            if (!tables?.length) {
+                return offset;
+            }
+
+            // Find minimum horizontal and vertical positions
+            const { minLeft, minTop } = tables.reduce(
+                (data, table) => ({
+                    minLeft: Math.min(data.minLeft, table.position_h),
+                    minTop: Math.min(data.minTop, table.position_v),
+                }),
+                { minLeft: Infinity, minTop: Infinity }
+            );
+
+            if (isFinite(minLeft) && minLeft > MIN_OFFSET) {
+                offset.x = -(minLeft - MIN_OFFSET);
+            }
+            if (isFinite(minTop) && minTop > MIN_OFFSET) {
+                offset.y = -(minTop - MIN_OFFSET);
+            }
+        }
+        return offset;
+    }
+
     async resetTable() {
         this.pos.searchProductWord = "";
         const table = this.pos.selectedTable;
@@ -417,6 +494,7 @@ export class FloorScreen extends Component {
         } else {
             let posV = 0;
             let posH = 10;
+
             const referenceScreenWidth = 1180;
             const spaceBetweenTable = 15 * (screen.width / referenceScreenWidth);
             const h_min = spaceBetweenTable;
@@ -610,9 +688,11 @@ export class FloorScreen extends Component {
         }
     }
     selectFloor(floor) {
+        this.saveCurrentFloorScrollPosition();
         this.pos.currentFloor = floor;
         this.state.selectedFloorId = floor.id;
         this.unselectTables();
+        this.restoreFloorScrollPosition();
     }
     async onClickTable(table, ev) {
         if (this.pos.isEditMode) {
@@ -681,7 +761,38 @@ export class FloorScreen extends Component {
         if (newTable) {
             this.state.selectedTableIds = [newTable.id];
         }
+
+        // Ensure the new table is visible
+        const margin = 40;
+        if (!this._isTableVisible(newTable, margin)) {
+            this.scrollTo = {
+                top: newTable.position_v - margin,
+                left: newTable.position_h - margin,
+                behavior: "smooth",
+            };
+        }
     }
+
+    _isTableVisible(table, margin = 0) {
+        const container = this.floorScrollBox.el;
+        const containerTop = container.scrollTop;
+        const containerBottom = containerTop + container.clientHeight;
+        const containerLeft = container.scrollLeft;
+        const containerRight = containerLeft + container.clientWidth;
+
+        const tableTop = table.position_v + margin;
+        const tableLeft = table.position_h + margin;
+        const tableBottom = tableTop + table.height;
+        const tableRight = tableLeft + table.width;
+
+        return (
+            tableBottom <= containerBottom &&
+            tableTop >= containerTop &&
+            tableRight <= containerRight &&
+            tableLeft >= containerLeft
+        );
+    }
+
     async duplicateFloor() {
         const floor = this.activeFloor;
         const tables = this.activeFloor.table_ids;
@@ -1025,6 +1136,21 @@ export class FloorScreen extends Component {
     clickNewOrder() {
         this.pos.addNewOrder();
         this.pos.showScreen("ProductScreen");
+    }
+    saveCurrentFloorScrollPosition() {
+        if (!this.state.selectedFloorId) {
+            return;
+        }
+        this.pos.storeFloorScrollPosition(this.state.selectedFloorId, {
+            left: this.floorScrollBox.el.scrollLeft,
+            top: this.floorScrollBox.el.scrollTop,
+        });
+    }
+    restoreFloorScrollPosition() {
+        if (!this.state.selectedFloorId) {
+            return;
+        }
+        this.scrollTo = this.pos.getFloorScrollPositions(this.state.selectedFloorId);
     }
 }
 
