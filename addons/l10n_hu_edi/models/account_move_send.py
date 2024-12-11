@@ -105,3 +105,37 @@ class AccountMoveSend(models.AbstractModel):
 
         if self._can_commit():
             self.env.cr.commit()
+<<<<<<< 18.0:addons/l10n_hu_edi/models/account_move_send.py
+||||||| 780a2ccaa38be97a945e5b6f9b86c609905189b9:addons/l10n_hu_edi/wizard/account_move_send.py
+
+    @api.model
+    def _l10n_hu_edi_cron_update_status(self):
+        final_states = [False, 'confirmed', 'confirmed_warning', 'rejected', 'cancel_pending', 'cancelled']
+        invoices_pending = self.env['account.move'].search([('l10n_hu_edi_state', 'not in', final_states)])
+        invoices_pending.l10n_hu_edi_button_update_status(from_cron=True)
+
+        if any(m.state not in final_states for m in invoices_pending):
+            # Trigger cron again in 10 minutes.
+            self.env.ref('l10n_hu_edi.ir_cron_update_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=10))
+=======
+
+    @api.model
+    def _l10n_hu_edi_cron_update_status(self):
+        final_states = [False, 'confirmed', 'confirmed_warning', 'rejected', 'cancel_pending', 'cancelled']
+        invoices_pending = self.env['account.move'].search([('l10n_hu_edi_state', 'not in', final_states)])
+        invoices_pending.l10n_hu_edi_button_update_status(from_cron=True)
+
+        if any(m.state not in final_states for m in invoices_pending):
+            # Trigger cron again in 10 minutes.
+            self.env.ref('l10n_hu_edi.ir_cron_update_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=10))
+
+    @api.model
+    def _generate_invoice_documents(self, invoices_data, allow_fallback_pdf=False):
+        # EXTENDS 'account'
+        # If we want to re-generate the PDF, we need to unlink the previous one.
+        for invoice, invoice_data in invoices_data.items():
+            if invoice.country_code == 'HU':
+                invoice.invoice_pdf_report_id = False
+                invoice.invoice_pdf_report_file = False
+        return super()._generate_invoice_documents(invoices_data, allow_fallback_pdf)
+>>>>>>> bfc6d1fa76ccf92e8e39763232bcad13d5741989:addons/l10n_hu_edi/wizard/account_move_send.py
