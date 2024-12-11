@@ -142,15 +142,18 @@ export class Interaction {
      * code has acted.
      */
     waitFor(promise) {
-        return new Promise(async (resolve) => {
+        const prom = new Promise(async (resolve) => {
             const result = await promise;
             if (!this.isDestroyed) {
                 resolve(result);
-                if (this.isReady) {
-                    this.updateContent();
-                }
+                prom.then(() => {
+                    if (this.isReady) {
+                        this.updateContent();
+                    }
+                });
             }
         });
+        return prom;
     }
 
     /**

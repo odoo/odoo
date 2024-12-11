@@ -272,6 +272,7 @@ export class Colibri {
         this.interaction.destroy();
         this.core = null;
         this.isDestroyed = true;
+        this.isReady = false;
     }
 }
 

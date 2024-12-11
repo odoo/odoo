@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 
-import { animationFrame, click, dblclick } from "@odoo/hoot-dom";
+import { animationFrame, click, dblclick, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Colibri } from "@website/core/colibri";
@@ -725,7 +725,7 @@ describe("waitFor...", () => {
                             expect.step("timeout");
                             resolve();
                         }, 100);
-                    })
+                    });
                 }
                 start() {
                     expect.step("start");
@@ -735,6 +735,27 @@ describe("waitFor...", () => {
             expect.verifySteps(["waitfor", "willstart"]);
             await advanceTime(150);
             expect.verifySteps(["timeout", "start"]);
+        });
+
+        test("waitFor triggers updateContent at the end of the callback queue", async () => {
+            class Test extends Interaction {
+                static selector = ".test";
+                dynamicContent = {
+                    "_root:t-on-click": this.onClick,
+                };
+                async onClick() {
+                    await this.waitFor(Promise.resolve(expect.step("waitfor")));
+                    expect.step("clicked");
+                }
+                updateContent() {
+                    expect.step("updatecontent");
+                    super.updateContent();
+                }
+            }
+            await startInteraction(Test, TemplateTest);
+            expect.verifySteps([]);
+            await click(queryOne(".test"));
+            expect.verifySteps(["waitfor", "clicked", "updatecontent"]);
         });
     });
 
