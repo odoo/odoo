@@ -161,6 +161,8 @@ class AccountMove(models.Model):
             default_domain += [('move_id.commercial_partner_id.l10n_in_pan', '=', commercial_partner_id.l10n_in_pan)]
         else:
             default_domain += [('move_id.commercial_partner_id', '=', commercial_partner_id.id)]
+        if section_alert.only_on_over_limit:
+            fiscalyear_end_date = self.date
         frequency_domains = {
             'monthly': [('date', '>=', month_start_date), ('date', '<=', month_end_date)],
             'fiscal_yearly': [('date', '>=', fiscalyear_start_date), ('date', '<=', fiscalyear_end_date)],
@@ -197,6 +199,14 @@ class AccountMove(models.Model):
             case _:
                 return False
 
+    def _l10n_in_is_tds_tcs_applicable(self, section_alert):
+        self.ensure_one()
+        existing_section = (
+            self.l10n_in_withhold_move_ids.filtered(lambda m: m.state == 'posted').line_ids |
+            self.line_ids
+        ).tax_ids.l10n_in_section_id
+        return section_alert not in existing_section
+
     def _get_l10n_in_tds_tcs_applicable_sections(self):
         def _group_by_section_alert(invoice_lines):
             group_by_lines = {}
@@ -227,10 +237,10 @@ class AccountMove(models.Model):
         if self.country_code == 'IN' and self.move_type in ['in_invoice', 'out_invoice']:
             warning = set()
             commercial_partner_id = self.commercial_partner_id
-            existing_section = (self.l10n_in_withhold_move_ids.line_ids + self.line_ids).tax_ids.l10n_in_section_id
+
             for section_alert, lines in _group_by_section_alert(self.invoice_line_ids).items():
                 if (
-                    (section_alert not in existing_section
+                    (self._l10n_in_is_tds_tcs_applicable(section_alert)
                     or self._get_tcs_applicable_lines(lines))
                     and self._l10n_in_is_warning_applicable(section_alert)
                     and _is_section_applicable(
