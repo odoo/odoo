@@ -298,7 +298,7 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         """ Test that posting a WIP accounting entry works as expected.
         WIP MO = MO with some time completed on WOs and/or 'consumed' components
         """
-        self.env.user.write({'groups_id': [(4, self.env.ref('mrp.group_mrp_routings').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('mrp.group_mrp_routings').id)]})
         wc = self.env['mrp.workcenter'].create({
             'name': 'Funland',
             'time_start': 0,

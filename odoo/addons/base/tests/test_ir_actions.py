@@ -406,7 +406,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'model_id': self.res_country_model.id,
             'binding_model_id': self.res_country_model.id,
-            'groups_id': [Command.link(group0.id)],
+            'group_ids': [Command.link(group0.id)],
             'code': 'record.write({"vat_label": "VatFromTest"})',
         })
 
@@ -419,7 +419,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertFalse(self.test_country.vat_label)
 
         # add group to the user, and test again
-        self.env.user.write({'groups_id': [Command.link(group0.id)]})
+        self.env.user.write({'group_ids': [Command.link(group0.id)]})
 
         bindings = Actions.get_bindings('res.country')
         self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))

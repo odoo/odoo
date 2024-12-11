@@ -668,7 +668,7 @@ class TestUnbuild(TestMrpCommon):
         unbuild order are applied on the stock moves
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id, 0)]})
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', self.env.user.id)])
         subloc01, subloc02, = self.stock_location.child_ids[:2]

@@ -525,7 +525,7 @@ if env.context.get('old_values', None):  # on write
         comodel_access = self.env.ref('test_base_automation.access_base_automation_linked_test')
         comodel_access.group_id = self.env['res.groups'].create({
             'name': "Access to base.automation.linked.test",
-            "users": [Command.link(self.user_admin.id)],
+            "user_ids": [Command.link(self.user_admin.id)],
         })
 
         # sanity check: user demo has no access to the comodel of 'linked_id'

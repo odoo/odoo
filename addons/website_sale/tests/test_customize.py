@@ -66,7 +66,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
 
     def test_01_admin_shop_customize_tour(self):
         # Enable Variant Group
-        self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
+        self.env.ref('product.group_product_variant').write({'user_ids': [(4, self.env.ref('base.user_admin').id)]})
         self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_customize', login="admin", timeout=120)
 
     def test_01_admin_shop_custom_attribute_value_tour(self):
@@ -217,7 +217,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         )
 
     def test_06_admin_list_view_b2c(self):
-        self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
+        self.env.ref('product.group_product_variant').write({'user_ids': [(4, self.env.ref('base.user_admin').id)]})
 
         # activate b2c
         self.env['res.config.settings'].create({

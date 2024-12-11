@@ -114,7 +114,7 @@ class StockQuant(models.Model):
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.",
-        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)])
+        domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
 
     @api.depends('quantity', 'reserved_quantity')
     def _compute_available_quantity(self):

@@ -84,7 +84,7 @@ class IrConfig_Parameter(models.Model):
             group_mail_template_editor = self.env.ref('mail.group_mail_template_editor')
 
             if not value and group_mail_template_editor not in group_user.implied_ids:
-                group_user.implied_ids |= group_mail_template_editor
+                group_user._apply_group(group_mail_template_editor)
 
             elif value and group_mail_template_editor in group_user.implied_ids:
                 # remove existing users, including inactive template user

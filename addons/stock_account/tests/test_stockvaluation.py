@@ -74,7 +74,7 @@ class TestStockValuationBase(TransactionCase):
             'login': 'pauline',
             'email': 'p.p@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
+            'group_ids': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
         })
 
         cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)

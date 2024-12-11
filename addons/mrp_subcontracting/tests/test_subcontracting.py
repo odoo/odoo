@@ -292,7 +292,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         automatically created.
         """
         # Required for `location_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         # Tick "manufacture" and MTO on self.comp2
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
@@ -1570,7 +1570,7 @@ class TestSubcontractingPortal(TransactionCase):
             'login': 'subcontractor',
             'password': 'subcontractor',
             'email': 'subcontractor@subcontracting.portal',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id, cls.env.ref('stock.group_production_lot').id])]
+            'group_ids': [(6, 0, [cls.env.ref('base.group_portal').id, cls.env.ref('stock.group_production_lot').id])]
         })
 
         # 2. Create a BOM of subcontracting type

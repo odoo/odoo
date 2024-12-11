@@ -93,7 +93,7 @@
                         </div>
                         <notebook>
                             <page string="Operators" name="operators">
-                                    <field name="user_ids" nolabel="1" colspan="2" domain="[['groups_id', 'not in', %(base.group_portal)d]]">
+                                    <field name="user_ids" nolabel="1" colspan="2" domain="[['all_group_ids', 'not in', %(base.group_portal)d]]">
                                         <kanban>
                                             <templates>
                                                 <t t-name="card" class="flex-row">

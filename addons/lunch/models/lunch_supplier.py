@@ -51,7 +51,7 @@ class LunchSupplier(models.Model):
     country_id = fields.Many2one('res.country', related='partner_id.country_id', readonly=False)
     company_id = fields.Many2one('res.company', related='partner_id.company_id', readonly=False, store=True)
 
-    responsible_id = fields.Many2one('res.users', string="Responsible", domain=lambda self: [('groups_id', 'in', self.env.ref('lunch.group_lunch_manager').id)],
+    responsible_id = fields.Many2one('res.users', string="Responsible", domain=lambda self: [('all_group_ids', 'in', self.env.ref('lunch.group_lunch_manager').id)],
                                      default=lambda self: self.env.user,
                                      help="The responsible is the person that will order lunch for everyone. It will be used as the 'from' when sending the automatic email.")
 

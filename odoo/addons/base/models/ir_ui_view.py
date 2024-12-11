@@ -172,7 +172,7 @@ class IrUiView(models.Model):
                                     compute='_compute_model_data_id', search='_search_model_data_id')
     xml_id = fields.Char(string="External ID", compute='_compute_xml_id',
                          help="ID of the view defined in xml file")
-    groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
+    group_ids = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
                                  string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only.")
     mode = fields.Selection([('primary', "Base view"), ('extension', "Extension View")],
                             string="View inheritance mode", default='primary', required=True,
@@ -420,10 +420,10 @@ actual arch.
 
         return True
 
-    @api.constrains('type', 'groups_id', 'inherit_id')
+    @api.constrains('type', 'group_ids', 'inherit_id')
     def _check_groups(self):
         for view in self:
-            if (view.groups_id and
+            if (view.group_ids and
                 view.inherit_id and
                 view.mode != 'primary'):
                 raise ValidationError(_("Inherited view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
@@ -664,13 +664,13 @@ actual arch.
         """
         if self.inherit_id and self.mode != 'primary':
             return self.inherit_id._check_view_access()
-        if self.groups_id & self.env.user.groups_id:
+        if set(self.group_ids.ids) & set(self.env.user._get_group_ids()):
             return True
-        if self.groups_id:
+        if self.group_ids:
             error = _(
                 "View '%(name)s' accessible only to groups %(groups)s ",
                 name=self.key,
-                groups=", ".join([g.name for g in self.groups_id]
+                groups=", ".join([g.name for g in self.group_ids]
             ))
         else:
             error = _("View '%(name)s' is private", name=self.key)
@@ -987,10 +987,6 @@ actual arch.
         group_definitions = self.env['res.groups']._get_group_definitions()
 
         user_group_ids = self.env.user._get_group_ids()
-        # The 'base.group_no_one' is not actually involved by any other group because it is session dependent.
-        group_no_one_id = group_definitions.get_id('base.group_no_one')
-        if group_no_one_id in user_group_ids and not (request and request.session.debug):
-            user_group_ids = [g for g in user_group_ids if g != group_no_one_id]
 
         # check the read/visibility access
         @functools.cache
@@ -1048,6 +1044,30 @@ actual arch.
 
         return tree
 
+    def _postprocess_features_to_cache(self, tree):
+        group_features = {'base.group_no_one'}
+        remove = {f'!{group}' for group in group_features}
+        group_features |= remove
+        for node in tree.xpath("//*[@groups]"):
+            groups = set(node.attrib.get('groups', '').split(','))
+            features = group_features & groups
+            if features:
+                node.attrib['__features__'] = ','.join(features)
+                node.attrib['groups'] = ','.join(groups - remove)
+
+    def _postprocess_features(self, tree):
+        debug = request and request.session.debug
+        group_features = {
+            'base.group_no_one': debug,
+            '!base.group_no_one': not debug,
+        }
+        for node in tree.xpath('//*[@__features__]'):
+            features = node.attrib.pop('__features__')
+            for feature, value in group_features.items():
+                if value == (feature not in features):
+                    node.attrib['invisible'] = '1'
+        return tree
+
     def _postprocess_view(self, node, model_name, editable=True, node_info=None, **options):
         """ Process the given architecture, modifying it in-place to add and
         remove stuff.
@@ -1086,6 +1106,8 @@ actual arch.
         }
 
         is_compute_warning_info = options.get('is_compute_warning_info')
+
+        self._postprocess_features_to_cache(root)
 
         # use a stack to recursively traverse the tree
         stack = [(root, view_groups, editable)]
@@ -2740,6 +2762,7 @@ class Base(models.AbstractModel):
 
         node = etree.fromstring(result['arch'])
         node = self.env['ir.ui.view']._postprocess_access_rights(node)
+        node = self.env['ir.ui.view']._postprocess_features(node)
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result

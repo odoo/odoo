@@ -1616,7 +1616,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'name': 'Super Accountman',
             'login': 'super_accountman',
             'password': 'super_accountman',
-            'groups_id': [(6, 0, self.env.ref('account.group_account_invoice').ids)],
+            'group_ids': [(6, 0, self.env.ref('account.group_account_invoice').ids)],
         })
 
         in_moves = self.env['stock.move'].create([{

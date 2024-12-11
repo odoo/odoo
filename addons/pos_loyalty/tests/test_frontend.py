@@ -139,7 +139,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # that will be used in the second part of the tour.
         #
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -200,7 +200,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -274,7 +274,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         (self.promo_programs | self.coupon_program).write({'active': False})
 
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -298,7 +298,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # In this program, each whiteboard pen gives 1 point.
         # 4 points can be used to get a free whiteboard pen.
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -369,7 +369,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # 5 points can be used to get a free whiteboard pen.
         # and the whiteboard pen sale price is zero
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -476,7 +476,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Test for gift card program.
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -517,7 +517,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         partner_bbb = self.env['res.partner'].create({'name': 'BBBBBBB'})
 
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -559,7 +559,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         partner_aaa = self.env['res.partner'].create({'name': 'AAAAAAA'})
         partner_bbb = self.env['res.partner'].create({'name': 'BBBBBBB'})
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -676,7 +676,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1420,7 +1420,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.env['res.partner'].create({'name': 'AAA Partner'})
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1636,7 +1636,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
 
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1659,7 +1659,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         loyalty program applies on all product (no domain).
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1696,7 +1696,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         loyalty program applies on all product (no domain).
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1745,7 +1745,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Expected behavior: The discount is not included in the computation of points
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1802,7 +1802,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         domain of the loyalty program.
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1861,7 +1861,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Check the calculation for point awarded when using ewallet
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1918,7 +1918,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Check the calculation for point awarded when using a gift card
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -1957,7 +1957,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         the case where at least one reward is  active.
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
@@ -2308,7 +2308,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Test for gift card program when pos.config.gift_card_settings == 'create_set'.
         """
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })

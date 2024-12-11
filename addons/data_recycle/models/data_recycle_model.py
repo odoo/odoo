@@ -60,7 +60,7 @@ class Data_RecycleModel(models.Model):
     # User Notifications for Manual clean
     notify_user_ids = fields.Many2many(
         'res.users', string='Notify Users',
-        domain=lambda self: [('groups_id', 'in', self.env.ref('base.group_system').id)],
+        domain=lambda self: [('all_group_ids', 'in', self.env.ref('base.group_system').id)],
         default=lambda self: self.env.user,
         help='List of users to notify when there are new records to recycle')
     notify_frequency = fields.Integer(string='Notify', default=1)

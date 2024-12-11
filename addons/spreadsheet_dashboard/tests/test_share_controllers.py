@@ -42,7 +42,7 @@ class TestShareController(DashboardTestCommon, HttpCase):
         response = self.url_open(f"/dashboard/data/{share.id}/{share.access_token}")
         self.assertEqual(response.status_code, 200) # access granted
 
-        self.user.groups_id -= self.group # revoke access
+        self.user.group_ids -= self.group # revoke access
 
         with mute_logger('odoo.http'):  # mute 403 warning
             response = self.url_open(f"/dashboard/data/{share.id}/{share.access_token}")
@@ -72,7 +72,7 @@ class TestShareController(DashboardTestCommon, HttpCase):
         response = self.url_open(f"/dashboard/download/{share.id}/{share.access_token}")
         self.assertEqual(response.status_code, 200) # access granted
 
-        self.user.groups_id -= self.group # revoke access
+        self.user.group_ids -= self.group # revoke access
 
         with mute_logger('odoo.http'):  # mute 403 warning
             response = self.url_open(f"/dashboard/download/{share.id}/{share.access_token}")

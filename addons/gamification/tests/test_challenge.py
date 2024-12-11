@@ -13,7 +13,7 @@ class TestGamificationCommon(TransactionCaseGamification):
     def setUp(self):
         super(TestGamificationCommon, self).setUp()
         employees_group = self.env.ref('base.group_user')
-        self.user_ids = employees_group.users
+        self.user_ids = employees_group.all_user_ids
 
         # Push demo user into the challenge before creating a new one
         self.env.ref('gamification.challenge_base_discover')._update_all()
@@ -21,7 +21,7 @@ class TestGamificationCommon(TransactionCaseGamification):
             'name': 'R2D2',
             'login': 'r2d2@openerp.com',
             'email': 'r2d2@openerp.com',
-            'groups_id': [(6, 0, [employees_group.id])]
+            'group_ids': [(6, 0, [employees_group.id])]
         })
         self.badge_good_job = self.env.ref('gamification.badge_good_job')
 
@@ -75,9 +75,9 @@ class test_challenge(TestGamificationCommon):
                 'name': f'{kind} {age} login',
                 'login': f'{kind}_{age}',
                 'email': f'{kind}_{age}',
-                'groups_id': [(6, 0, groups_id)],
+                'group_ids': [(6, 0, group_ids)],
             }
-            for kind, groups_id in (
+            for kind, group_ids in (
                 ('Portal', []),
                 ('Internal', [self.env.ref('base.group_user').id]),
             )

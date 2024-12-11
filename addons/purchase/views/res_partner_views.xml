@@ -33,7 +33,7 @@
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
             ]"/>
             <field name="context">{'search_default_partner_id': active_id, 'default_partner_id': active_id}</field>
-            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+            <field name="group_ids" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     This vendor has no purchase order. Create a new RfQ

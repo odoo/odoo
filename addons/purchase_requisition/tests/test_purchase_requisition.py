@@ -555,7 +555,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
     def test_alternative_purchase_order_merge(self):
         group_purchase_alternatives = self.env.ref('purchase_requisition.group_purchase_alternatives')
-        self.env.user.write({'groups_id': [(4, group_purchase_alternatives.id, 0)]})
+        self.env.user.write({'group_ids': [(4, group_purchase_alternatives.id, 0)]})
         po_1 = Form(self.env['purchase.order'])
         res_partner_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
         res_partner_3 = self.env['res.partner'].create({'name': 'Vendor 3'})

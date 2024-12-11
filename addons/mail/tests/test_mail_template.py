@@ -17,7 +17,7 @@ class TestMailTemplate(MailCommon):
         super(TestMailTemplate, cls).setUpClass()
         # Enable the Jinja rendering restriction
         cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
-        cls.user_employee.groups_id -= cls.env.ref('mail.group_mail_template_editor')
+        cls.user_employee.group_ids -= cls.env.ref('mail.group_mail_template_editor')
         cls.test_partner = cls.env['res.partner'].create({
             'email': 'test.rendering@test.example.com',
             'name': 'Test Rendering',
@@ -432,8 +432,15 @@ class TestTemplateConfigRestrictEditor(MailCommon):
 
     def test_switch_icp_value(self):
         # Sanity check
+        group = self.env.ref('mail.group_mail_template_editor')
+
         self.assertTrue(self.user_employee.has_group('mail.group_mail_template_editor'))
         self.assertFalse(self.user_employee.has_group('base.group_system'))
+
+        # Check that the group is on the user via the settings configuration and not that
+        # the right has been added specifically to this person.
+        self.assertIn(group, self.user_employee.all_group_ids)
+        self.assertNotIn(group, self.user_employee.group_ids)
 
         self.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
         self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))

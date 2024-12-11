@@ -330,7 +330,7 @@ class StockWarehouse(models.Model):
             group_stock_multi_locations = self.env.ref('stock.group_stock_multi_locations')
             if max_count <= 1 and group_stock_multi_warehouses in group_user.implied_ids:
                 group_user.write({'implied_ids': [(3, group_stock_multi_warehouses.id)]})
-                group_stock_multi_warehouses.write({'users': [(3, user.id) for user in group_user.users]})
+                group_stock_multi_warehouses.write({'user_ids': [(3, user.id) for user in group_user.all_user_ids]})
             if max_count > 1 and group_stock_multi_warehouses not in group_user.implied_ids:
                 if group_stock_multi_locations not in group_user.implied_ids:
                     self.env['res.config.settings'].create({

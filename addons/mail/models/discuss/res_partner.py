@@ -53,7 +53,7 @@ class ResPartner(models.Model):
             domain = expression.AND([domain, [("channel_ids", "not in", channel.id)]])
             if channel.group_public_id:
                 domain = expression.AND(
-                    [domain, [("user_ids.groups_id", "in", channel.group_public_id.id)]]
+                    [domain, [("user_ids.all_group_ids", "in", channel.group_public_id.id)]]
                 )
         query = self._search(domain, limit=limit)
         # bypass lack of support for case insensitive order in search()

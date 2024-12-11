@@ -253,7 +253,7 @@ class TestPosMrp(TestPointOfSaleCommon):
         """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
            the price unit is correctly computed on the invoice lines.
         """
-        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
         category = self.env['product.category'].create({
             'name': 'Category for kit',
             'property_cost_method': 'fifo',

@@ -160,7 +160,7 @@ class IrActionsReport(models.Model):
     report_name = fields.Char(string='Template Name', required=True)
     report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
                               help="The path to the main report file (depending on Report Type) or empty if the content is in another field")
-    groups_id = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
+    group_ids = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper Format')

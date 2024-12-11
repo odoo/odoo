@@ -174,7 +174,7 @@ class TestSaleOrder(SaleCommon):
         are correctly calculated when one of them changed.
         """
         # Required for `product_packaging_qty` to be visible in the view
-        self.env.user.groups_id += self.env.ref('product.group_stock_packaging')
+        self.env.user.group_ids += self.env.ref('product.group_stock_packaging')
         packaging_single, packaging_dozen = self.env['product.packaging'].create([{
             'name': "I'm a packaging",
             'product_id': self.product.id,
@@ -345,7 +345,7 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(self.sale_order.state, 'sent')
         self.assertIn(self.sale_order.partner_id, self.sale_order.message_follower_ids.partner_id)
 
-        self.env.user.groups_id += self.env.ref('sale.group_auto_done_setting')
+        self.env.user.group_ids += self.env.ref('sale.group_auto_done_setting')
         self.sale_order.action_confirm()
         self.assertEqual(self.sale_order.state, 'sale')
         self.assertTrue(self.sale_order.locked)
@@ -449,7 +449,7 @@ class TestSaleOrder(SaleCommon):
 
     def test_order_auto_lock_with_public_user(self):
         public_user = self.env.ref('base.public_user')
-        self.sale_order.create_uid.groups_id += self.env.ref('sale.group_auto_done_setting')
+        self.sale_order.create_uid.group_ids += self.env.ref('sale.group_auto_done_setting')
         self.sale_order.with_user(public_user.id).sudo().action_confirm()
 
         self.assertFalse(public_user.has_group('sale.group_auto_done_setting'))
@@ -711,7 +711,7 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(sale_order.team_id.id, self.sale_team_2.id, 'Should not reset the team to default')
 
     def test_sale_order_analytic_distribution_change(self):
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account', 'plan_id': analytic_plan.id})

@@ -13,9 +13,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     def setUpClass(cls):
         super().setUpClass()
         # Required for `uom_id` to be visible in the view
-        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
         # Required for `manufacture_steps` to be visible in the view
-        cls.env.user.groups_id += cls.env.ref('stock.group_adv_location')
+        cls.env.user.group_ids += cls.env.ref('stock.group_adv_location')
         # Create warehouse
         cls.customer_location = cls.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
         warehouse_form = Form(cls.env['stock.warehouse'])
@@ -718,7 +718,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             Checks if transfers is updated when we adding a new byproduct/component
             after confirm the MO
         """
-        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
         demo = self.env['product.product'].create({
             'name': 'DEMO',
             'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))],

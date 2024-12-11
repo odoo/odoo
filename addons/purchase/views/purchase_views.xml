@@ -27,7 +27,7 @@
             parent="menu_purchase_config" sequence="30"/>
 
         <record model="ir.ui.menu" id="menu_product_in_config_purchase">
-            <field name="groups_id" eval="False"/>
+            <field name="group_ids" eval="False"/>
         </record>
 
         <menuitem id="menu_product_attribute_action"
@@ -840,7 +840,7 @@
         <field name="name">Create Vendor Bills</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name='groups_id' eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name='group_ids' eval="[(4, ref('account.group_account_invoice'))]"/>
         <field name="state">code</field>
         <field name="code">
             if records:
@@ -852,7 +852,7 @@
         <field name="name">Send Reminder</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name='groups_id' eval="[(4, ref('purchase.group_send_reminder'))]"/>
+        <field name='group_ids' eval="[(4, ref('purchase.group_send_reminder'))]"/>
         <field name="binding_view_types">form</field>
         <field name="state">code</field>
         <field name="code">
@@ -866,7 +866,7 @@
         <field name="res_model">account.accrued.orders.wizard</field>
         <field name="view_mode">form</field>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="group_ids" eval="[(4, ref('account.group_account_user'))]"/>
         <field name="target">new</field>
     </record>
 
@@ -874,7 +874,7 @@
         <field name="name">Merge</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name='groups_id' eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name='group_ids' eval="[(4, ref('account.group_account_invoice'))]"/>
         <field name="state">code</field>
         <field name="sequence">1</field>
         <field name="code">

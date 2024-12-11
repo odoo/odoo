@@ -96,7 +96,7 @@
                         </group>
                         <notebook>
                             <page name="security" string="Visibility">
-                                <field name="groups_id"/>
+                                <field name="group_ids"/>
                             </page>
                             <page name='advanced' string="Advanced Properties">
                                 <group>
@@ -247,7 +247,7 @@
                             </group>
                         </page>
                         <page string="Visibility" name="security">
-                            <field name="groups_id"/>
+                            <field name="group_ids"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -335,7 +335,7 @@
                         <group string="Technical Settings" groups="base.group_no_one">
                             <group>
                                 <field name="model_id" options="{'no_create': True, 'no_open': True}" />
-                                <field name="groups_id" widget="many2many_tags" />
+                                <field name="group_ids" widget="many2many_tags" />
                             </group>
                         </group>
                         <separator string="Action Details" groups="base.group_no_one" />

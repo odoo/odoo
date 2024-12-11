@@ -104,7 +104,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertIn('visitor', livechat_info)
 
         # Remove access to visitors and try again, visitors info shouldn't be included
-        self.operator.groups_id -= self.group_livechat_user
+        self.operator.group_ids -= self.group_livechat_user
         init_messaging = self.make_jsonrpc_request(f"{self.livechat_base_url}/mail/data", params=params)
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
         self.assertNotIn('visitor', livechat_info)

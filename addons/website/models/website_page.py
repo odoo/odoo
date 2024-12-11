@@ -158,7 +158,7 @@ class WebsitePage(models.Model):
                 vals['key'] = self.env['website'].with_context(website_id=website_id).get_unique_key(self.env['ir.http']._slugify(vals['name'] or ''))
             if 'visibility' in vals:
                 if vals['visibility'] != 'restricted_group':
-                    vals['groups_id'] = False
+                    vals['group_ids'] = False
         self.env.registry.clear_cache()  # write on page == write on view that invalid cache
         return super().write(vals)
 

@@ -219,7 +219,7 @@ class TestPacking(TestPackingCommon):
             'name': 'test user company a',
             'login': 'test@testing.testing',
             'password': 'password',
-            'groups_id': [Command.set([self.env.ref('stock.group_stock_user').id])],
+            'group_ids': [Command.set([self.env.ref('stock.group_stock_user').id])],
         })
         wh_a = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         wh_a.delivery_steps = 'pick_pack_ship'
@@ -287,6 +287,6 @@ class TestPacking(TestPackingCommon):
         other_picking_company_b.move_ids.quantity = 3.0
         other_picking_company_b.button_validate()
 
-        company_a_user.groups_id = [Command.unlink(self.env.ref('stock.group_stock_multi_warehouses').id)]
+        company_a_user.group_ids = [Command.unlink(self.env.ref('stock.group_stock_multi_warehouses').id)]
         res = delivery_company_a.with_user(company_a_user).read()
         self.assertTrue(res)
