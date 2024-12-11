@@ -27,7 +27,7 @@ function mapObj(obj, fn) {
 const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
 const AVAILABLE_EVENT = ["create", "update", "delete"];
-const SERIALIZABLE_MODELS = [
+export const SERIALIZABLE_MODELS = [
     "pos.order",
     "pos.order.line",
     "pos.payment",
