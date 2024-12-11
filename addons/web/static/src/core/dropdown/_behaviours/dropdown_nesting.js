@@ -123,21 +123,21 @@ export function useDropdownNesting(state) {
             },
             hotkeys: {
                 escape: () => current.close(),
-                arrowleft: (index, items) => {
+                arrowleft: (navigator) => {
                     if (
                         localization.direction === "rtl" &&
-                        items[index]?.target.classList.contains("o-dropdown")
+                        navigator.activeItem?.target.classList.contains("o-dropdown")
                     ) {
-                        items[index]?.select();
+                        navigator.activeItem?.select();
                     } else if (current.parent) {
                         current.close();
                     }
                 },
-                arrowright: (index, items) => {
+                arrowright: (navigator) => {
                     if (localization.direction === "rtl" && current.parent) {
                         current.close();
-                    } else if (items[index]?.target.classList.contains("o-dropdown")) {
-                        items[index]?.select();
+                    } else if (navigator.activeItem?.target.classList.contains("o-dropdown")) {
+                        navigator.activeItem?.select();
                     }
                 },
             },
