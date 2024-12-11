@@ -785,7 +785,9 @@ test("callback: received context", async () => {
         static template = xml`<button class="a">a</button>`;
         static props = ["*"];
         setup() {
-            useHotkey("a", expect.step);
+            useHotkey("a", ({ area, target, event }) =>
+                expect.step({ area, target, event: event instanceof KeyboardEvent })
+            );
         }
     }
     const fixture = getFixture();
@@ -793,16 +795,21 @@ test("callback: received context", async () => {
         static template = xml`<button class="b">b</button>`;
         static props = ["*"];
         setup() {
-            useHotkey("b", expect.step, { area: () => fixture });
+            useHotkey(
+                "b",
+                ({ area, target, event }) =>
+                    expect.step({ area, target, event: event instanceof KeyboardEvent }),
+                { area: () => fixture }
+            );
         }
     }
 
     await mountWithCleanup(A);
     await mountWithCleanup(B);
     await contains(".a").press("a");
-    expect.verifySteps([{ area: undefined, target: document.activeElement }]);
+    expect.verifySteps([{ area: undefined, target: document.activeElement, event: true }]);
     await contains(".b").press("b");
-    expect.verifySteps([{ area: fixture, target: document.activeElement }]);
+    expect.verifySteps([{ area: fixture, target: document.activeElement, event: true }]);
 });
 
 test("operating area can be restricted", async () => {

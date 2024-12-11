@@ -4,7 +4,7 @@ import { browser } from "../browser/browser";
 import { getVisibleElements } from "../utils/ui";
 
 /**
- * @typedef {(context: { area: HTMLElement, target: EventTarget }) => void} HotkeyCallback
+ * @typedef {(context: { area: HTMLElement, target: EventTarget, event: KeyboardEvent }) => void} HotkeyCallback
  *
  * @typedef {Object} HotkeyOptions
  * @property {boolean} [allowRepeat]
@@ -22,6 +22,8 @@ import { getVisibleElements } from "../utils/ui";
  *  provides the element on which the overlay should be displayed
  *  Please note that if provided the hotkey will only work with
  *  the overlay access key, similarly to all [data-hotkey] DOM attributes.
+ * @property {boolean} [preventDefault]
+ *  if true event.preventDefault() will be called, true by default
  *
  * @typedef {HotkeyOptions & {
  *  hotkey: string,
@@ -187,6 +189,7 @@ export const hotkeyService = {
 
             // Finally, prepare and dispatch.
             const infos = {
+                event,
                 activeElement,
                 hotkey,
                 isRepeated: event.repeat,
@@ -196,8 +199,10 @@ export const hotkeyService = {
             const dispatched = dispatch(infos);
             if (dispatched) {
                 // Only if event has been handled.
-                // Purpose: prevent browser defaults
-                event.preventDefault();
+                if (dispatched.preventDefault) {
+                    // Purpose: prevent browser defaults
+                    event.preventDefault();
+                }
                 // Purpose: stop other window keydown listeners (e.g. home menu)
                 event.stopImmediatePropagation();
             }
@@ -217,6 +222,7 @@ export const hotkeyService = {
          * - then all registrations done through the DOM [data-hotkey] attribute
          *
          * @param {{
+         *  event: KeyboardEvent,
          *  activeElement: HTMLElement,
          *  hotkey: string,
          *  isRepeated: boolean,
@@ -226,7 +232,8 @@ export const hotkeyService = {
          * @returns {boolean} true if has been dispatched
          */
         function dispatch(infos) {
-            const { activeElement, hotkey, isRepeated, target, shouldProtectEditable } = infos;
+            const { event, activeElement, hotkey, isRepeated, target, shouldProtectEditable } =
+                infos;
 
             // Prepare registrations and the common filter
             const reversedRegistrations = Array.from(registrations.values()).reverse();
@@ -260,8 +267,9 @@ export const hotkeyService = {
                 winner.callback({
                     area: winner.area && winner.area(),
                     target,
+                    event,
                 });
-                return true;
+                return winner;
             }
             return false;
         }
@@ -433,6 +441,7 @@ export const hotkeyService = {
                 area: options && options.area,
                 isAvailable: options && options.isAvailable,
                 withOverlay: options && options.withOverlay,
+                preventDefault: options?.preventDefault ?? true,
             };
 
             // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
