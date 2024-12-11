@@ -175,15 +175,14 @@ class Currency(models.Model):
         parts = formatted.partition('.')
         integer_value = int(parts[0])
         fractional_value = int(parts[2] or 0)
-
-        lang = tools.get_lang(self.env)
+        lang = tools.get_lang(self.env).iso_code or 'en'
         amount_words = tools.ustr('{amt_value} {amt_word}').format(
-                        amt_value=_num2words(integer_value, lang=lang.iso_code),
+                        amt_value=_num2words(integer_value, lang=lang),
                         amt_word=self.currency_unit_label,
                         )
         if not self.is_zero(amount - integer_value):
             amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
-                        amt_value=_num2words(fractional_value, lang=lang.iso_code),
+                        amt_value=_num2words(fractional_value, lang=lang),
                         amt_word=self.currency_subunit_label,
                         )
         return amount_words
