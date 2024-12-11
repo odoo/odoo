@@ -107,6 +107,9 @@ export function createPointerState() {
         intersection.setTarget(anchor);
         if (anchor) {
             let { tooltipPosition, content } = step;
+            if (!tooltipPosition) {
+                tooltipPosition = "bottom";
+            }
             switch (intersection.targetPosition) {
                 case "unknown": {
                     // Do nothing for unknown target position.
