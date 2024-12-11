@@ -348,14 +348,18 @@ class ChatbotScriptStep(models.Model):
 
             # next, add the human_operator to the channel and post a "Operator joined the channel" notification
             discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True)
-
-            # finally, rename the channel to include the operator's name
-            discuss_channel.sudo().name = ' '.join([
-                self.env.user.display_name if not self.env.user._is_public() else discuss_channel.anonymous_name,
-                human_operator.livechat_username if human_operator.livechat_username else human_operator.name
-            ])
-
-            discuss_channel._broadcast(human_operator.partner_id.ids)
+            # sudo: discuss.channel - setting the operator to the actual operator is part of the flow.
+            discuss_channel.sudo().livechat_operator_id = human_operator.partner_id
+            # sudo - discuss.channel.member: finding bot member to remove it from the members is part of the flow.
+            if bot_member := discuss_channel.sudo().channel_member_ids.filtered(
+                lambda m: m.partner_id == self.chatbot_script_id.operator_partner_id
+            ):
+                # sudo - discuss.channel: removing bot from the channel is part of the flow.
+                discuss_channel.sudo()._action_unfollow(partner=bot_member.partner_id)
+            # finally, rename the channel to include the operator's name.
+            discuss_channel.sudo().name = (human_operator.livechat_username or human_operator.name,)
+            # sudo - discuss.channel: can broadcast the channel to the new operator.
+            discuss_channel.sudo()._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
 
         return posted_message
