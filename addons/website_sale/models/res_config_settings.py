@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -96,6 +97,12 @@ class ResConfigSettings(models.TransientModel):
     enabled_buy_now_button = fields.Boolean(string="Buy Now",
                                             compute='_compute_checkout_process_steps', readonly=False, store=True)
 
+    enabled_gmc_src = fields.Boolean(
+        string="Google Merchant Center Data Source",
+        related='website_id.enabled_gmc_src',
+        readonly=False,
+    )
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('website_id.account_on_checkout')
@@ -129,6 +136,17 @@ class ResConfigSettings(models.TransientModel):
                 record.website_id.auth_signup_uninvited = 'b2c'
             else:
                 record.website_id.auth_signup_uninvited = 'b2b'
+
+    # === CONSTRAINT METHODS === #
+
+    @api.constrains('enabled_gmc_src')
+    def _check_website_id_has_domain_set(self):
+        for config in self:
+            if config.enabled_gmc_src and not config.website_domain:
+                raise ValidationError(_(
+                    "To enable the Google Merchant Center data source, "
+                    "your website must have a domain set."
+                ))
 
     #=== CRUD METHODS ===#
 

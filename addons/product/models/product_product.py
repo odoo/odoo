@@ -836,3 +836,15 @@ class ProductProduct(models.Model):
         if lst_price:
             return (lst_price - self._get_contextual_price()) / lst_price
         return 0.0
+
+    def _get_gmc_values(self):
+        return {
+            product: {
+                # Required
+                'id': product.code or product.id,
+                'title': product.name,
+                'availability': 'in_stock',
+            }
+            for product in self
+            if product.type in ('consu', 'combo')
+        }
