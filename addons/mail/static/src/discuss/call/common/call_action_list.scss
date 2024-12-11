@@ -1,4 +1,9 @@
 .o-discuss-CallActionList button:not(.btn-danger):not(.btn-success):not(.o-discuss-CallActionList-pushToTalk) {
     background-color: var(--o-discuss-CallActionList-bgColor, #{$o-gray-800});
     color: #FFFFFF;
+
+    &.o-unavailable {
+        background-color: var(--o-discuss-CallActionList-unavailableBgColor, #{$o-gray-600});
+        opacity: 75%;
+    }
 }
