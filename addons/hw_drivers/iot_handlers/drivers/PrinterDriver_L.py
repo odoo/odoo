@@ -104,10 +104,7 @@ class PrinterDriver(Driver):
         if (
                 any(x in device['url'] for x in protocol)
                 and device['device-make-and-model'] != 'Unknown'
-                or (
-                'direct' in device['device-class']
-                and 'serial=' in device['url']
-        )
+                or 'direct' in device['device-class']
         ):
             model = cls.get_device_model(device)
             ppd_file = ''
