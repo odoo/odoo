@@ -5,14 +5,14 @@
 <template id="s_facebook_page" name="Facebook">
     <div class="o_facebook_page">
         <div class="fb-page"
-             data-href="https://www.facebook.com/Odoo"
-             data-tabs="timeline"
-             data-width="500"
-             data-height="500"
-             data-small-header="true"
-             data-adapt-container-width="true"
-             data-hide-cover="true"
-             data-show-facepile="true">
+            data-href="https://www.facebook.com/Odoo"
+            data-tabs="timeline, events, messages"
+            data-height="700"
+            data-width="500"
+            data-show-facepile="true"
+            data-adapt-container-width="false"
+            data-adapt-container-height="false"
+            >
             <blockquote cite="https://www.facebook.com/Odoo" class="fb-xfbml-parse-ignore">
             <a href="https://www.facebook.com/Odoo">Facebook</a>
             </blockquote>
@@ -30,6 +30,8 @@
             <we-checkbox string="Events" data-option-name="tab.events" data-toggle-option="true" data-no-preview="true"/>
             <we-checkbox string="Messages" data-option-name="tab.messages" data-toggle-option="true" data-no-preview="true"/>
             <we-checkbox string="Small Header" data-option-name="small_header" data-toggle-option="true" data-no-preview="true"/>
+            <we-input class="o_we_large" string="Height" data-set-height="" data-no-preview="true"/>
+            <we-input class="o_we_large" string="Width" data-set-width="" data-no-preview="true"/>
         </div>
     </xpath>
 </template>
@@ -44,7 +46,7 @@
 <!-- Facebook SDK -->
 <template id="assets_frontend" inherit_id="website.layout">
     <xpath expr="//head" position="inside">
-        <script async="async" defer="defer" crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v10.0"></script>
+        <script defer="defer" crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v10.0"></script>
     </xpath>
 </template>
 

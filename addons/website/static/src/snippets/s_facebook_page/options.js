@@ -20,11 +20,11 @@ options.registry.facebookPage = options.Class.extend({
         var defaults = {
             href: '',
             id: '',
-            height: 215,
-            width: 350,
+            height: 700, // Default height
+            width: 500,  // Default width
             tabs: '',
-            small_header: true,
-            hide_cover: "true",
+            small_header: false,
+            hide_cover: false,
         };
         this.fbData = Object.assign({}, defaults, pick(this.$target[0].dataset, ...Object.keys(defaults)));
         if (!this.fbData.href) {
@@ -76,7 +76,7 @@ options.registry.facebookPage = options.Class.extend({
             }
         } else {
             if (optionName === 'show_cover') {
-                this.fbData.hide_cover = widgetValue ? "false" : "true";
+                this.fbData.hide_cover = widgetValue ? false : true;
             } else {
                 this.fbData[optionName] = widgetValue;
             }
@@ -93,6 +93,29 @@ options.registry.facebookPage = options.Class.extend({
         return this._markFbElement();
     },
 
+    /**
+     * Sets the Facebook page's height.
+     *
+     * @see this.selectClass for parameters
+     */
+    setHeight: function (previewMode, widgetValue, params) {
+        const height = JSON.parse(widgetValue);
+        this.fbData.height = height;
+        this.$target.find('.fb-page').attr('data-height', height);
+        return this._markFbElement();
+    },
+
+    /**
+     * Sets the Facebook page's width.
+     *
+     * @see this.selectClass for parameters
+     */
+    setWidth: function (previewMode, widgetValue, params) {
+        const width = JSON.parse(widgetValue);
+        this.fbData.width = width;
+        this.$target.find('.fb-page').attr('data-width', width);
+        return this._markFbElement();
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -121,17 +144,11 @@ options.registry.facebookPage = options.Class.extend({
             // Managing height based on options
             if (this.fbData.tabs) {
                 this.fbData.height = this.fbData.tabs === 'events' ? 300 : 500;
-            } else if (this.fbData.small_header) {
+            } else if (JSON.parse(this.fbData.small_header)) {
                 this.fbData.height = 70;
-            } else {
-                this.fbData.height = 150;
             }
             for (const [key, value] of Object.entries(this.fbData)) {
                 this.$target[0].dataset[key] = value;
-            }
-            // Initialize the Facebook SDK
-            if (typeof FB !== 'undefined') {
-                FB.XFBML.parse();
             }
         });
     },
@@ -146,13 +163,19 @@ options.registry.facebookPage = options.Class.extend({
                     return this.fbData.tabs.split(',').includes(optionName.replace(/^tab./, ''));
                 } else {
                     if (optionName === 'show_cover') {
-                        return this.fbData.hide_cover === "false";
+                        return this.fbData.hide_cover === false;
                     }
                     return this.fbData[optionName];
                 }
             }
             case 'pageUrl': {
                 return this._checkURL().then(() => this.fbData.href);
+            }
+            case 'setHeight': {
+                return this.fbData.height;
+            }
+            case 'setWidth': {
+                return this.fbData.width;
             }
         }
         return this._super(...arguments);

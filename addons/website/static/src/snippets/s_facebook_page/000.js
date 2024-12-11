@@ -15,7 +15,7 @@ const FacebookPageWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin
         var def = this._super.apply(this, arguments);
         this.previousWidth = 0;
 
-        const params = pick(this.$el[0].dataset, 'href', 'height', 'tabs', 'small_header', 'hide_cover');
+        const params = pick(this.$el[0].dataset, 'href', 'tabs', 'small_header', 'hide_cover');
         if (!params.href) {
             return def;
         }
