@@ -1,14 +1,12 @@
-/** @odoo-module **/
-
-import { ExtendedAutocomplete } from "./extended_autocomplete";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { CharField, charField } from "@web/views/fields/char/char_field";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 export class AddressAutoComplete extends CharField {
     static template = "google_address_autocomplete.AddressAutoCompleteTemplate";
-    static components = { ExtendedAutocomplete, ...CharField };
+    static components = { AutoComplete, ...CharField };
 
     setup() {
         this.sessionId = this._generateUUID();
@@ -36,6 +34,14 @@ export class AddressAutoComplete extends CharField {
                             partial_address: request,
                             session_id: this.sessionId || null,
                         });
+                        if (suggestions.results.length) {
+                            suggestions.results.push({
+                                id: "credits",
+                                classList: "pe-none",
+                                type: "template",
+                                name: "google_address_autocomplete.google_credits", 
+                            })
+                        }
                         return suggestions.results;
                     } else {
                         return [];
