@@ -12,44 +12,37 @@ export const SKIP_IMPLICIT_UPDATE = Symbol();
 export class Colibri {
     constructor(core, I, el) {
         this.el = el;
-        this.isStarted = false;
-        this.I = I;
         this.isReady = false;
         this.isDestroyed = false;
-        this.update = null;
         this.dynamicAttrs = [];
         this.tOuts = [];
         this.cleanups = [];
-        this.startProm = null;
         this.core = core;
-        const interaction = new I(el, core.env, this);
-        this.interaction = interaction;
-        interaction.setup();
-        this.startProm = (interaction.willStart() || Promise.resolve()).then(
-            () => {
-                if (this.isDestroyed) {
-                    return;
-                }
-                this.isStarted = true;
-                if (I.dynamicContent) {
-                    throw new Error(`The dynamic content object should be defined on the instance, not on the class (${I.name})`);
-                }
-                this.isReady = true;
-                const content = interaction.dynamicContent;
-                if (content) {
-                    this.processContent(content);
-                    this.updateContent();
-                }
-                interaction.start();
-            },
-        );
+        this.interaction = new I(el, core.env, this);
+        if (I.dynamicContent) {
+            throw new Error(`The dynamic content object should be defined on the instance, not on the class (${I.name})`);
+        }
+        this.interaction.setup();
+    }
+    async start() {
+        await this.interaction.willStart();
+        if (this.isDestroyed) {
+            return;
+        }
+        this.isReady = true;
+        const content = this.interaction.dynamicContent;
+        if (content) {
+            this.processContent(content);
+            this.updateContent();
+        }
+        this.interaction.start();
     }
 
     addListener(nodes, event, fn, options) {
         if (!fn) {
             throw new Error(`Invalid listener for event '${event}' (received falsy value)`);
         }
-        if (!this.isStarted) {
+        if (!this.isReady) {
             throw new Error("this.addListener can only be called after the interaction is started. Maybe move the call in the start method.");
         }
         const re = /^(?<event>.*)\.(?<suffix>prevent|stop|capture|noupdate)$/;

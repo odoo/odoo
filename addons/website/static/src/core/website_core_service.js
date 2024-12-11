@@ -122,7 +122,7 @@ class WebsiteCore {
                 // console.log(`[colibri] starting ${I.name}`);
                 const interaction = new Colibri(this, I, el);
                 this.interactions.push(interaction);
-                proms.push(interaction.startProm);
+                proms.push(interaction.start());
             } catch (e) {
                 this.proms.push(Promise.reject(e));
             }
