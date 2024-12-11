@@ -12,7 +12,6 @@
     </t>
 </template>
 
-
 <!-- Event - Description -->
 <template id="event_description_full" name="Event Description" track="1">
     <t t-set="hide_submenu" t-value="True"/>
@@ -215,6 +214,7 @@
                 </div>
             </t>
         </div>
+
         <div t-attf-class="d-flex align-items-center flex-wrap gap-2 {{'flex-basis-50 flex-basis-md-auto' if event.is_one_day else 'mt-3'}}">
             <small class="text-muted">Add to calendar:</small>
             <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if event.is_one_day else 'gap-2'}}">
