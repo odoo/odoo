@@ -15,6 +15,7 @@
         'data/res.country.state.csv',
         'data/account_tax_vat_report.xml',
         'data/account_tax_wh_report.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
