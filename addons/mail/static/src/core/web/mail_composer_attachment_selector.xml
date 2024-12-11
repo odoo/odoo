@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="mail.MailComposerAttachmentSelector">
-        <FileInput
-            multiUpload="true"
-            onUpload.bind="onFileUploaded"
-            resModel="props.record.resModel"
-            resId="props.record.resId or 0">
-            <button class="btn btn-light w-auto" data-hotkey="a">
-                <i class="fa fa-fw fa-paperclip"/>
-            </button>
-        </FileInput>
+        <FileUploader multiUpload="true" onUploaded.bind="onFileUploaded">
+            <t t-set-slot="toggler">
+                <button class="btn btn-light w-auto" data-hotkey="a">
+                    <i class="fa fa-fw fa-paperclip"/>
+                </button>
+            </t>
+        </FileUploader>
     </t>
 </templates>
