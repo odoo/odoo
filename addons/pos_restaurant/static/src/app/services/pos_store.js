@@ -575,4 +575,17 @@ patch(PosStore.prototype, {
             this.tableSelectorState = false;
         }
     },
+    storeFloorScrollPosition(floorId, position) {
+        if (!floorId) {
+            return;
+        }
+        this.floorScrollPositions = this.floorScrollPositions || {};
+        this.floorScrollPositions[floorId] = position;
+    },
+    getFloorScrollPositions(floorId) {
+        if (!floorId || !this.floorScrollPositions) {
+            return;
+        }
+        return this.floorScrollPositions[floorId];
+    },
 });
