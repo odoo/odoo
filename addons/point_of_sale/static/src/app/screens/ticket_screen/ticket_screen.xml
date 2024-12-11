@@ -135,7 +135,7 @@
                         <OrderWidget lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
                             taxTotals="_selectedSyncedOrder.taxTotals"
                             generalCustomerNote="_selectedSyncedOrder?.general_customer_note or ''"
-                            internalNote="_selectedSyncedOrder.internal_note or ''">
+                            internalNote="_selectedSyncedOrder.internal_note or '[]'">
                             <t t-set="line" t-value="scope.line" />
                             <Orderline line="line.getDisplayData()"
                                 class="{'selected': line.id === getSelectedOrderlineId()}"
