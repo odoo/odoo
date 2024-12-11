@@ -426,6 +426,25 @@ QUnit.module("Form Renderer", (hooks) => {
         assert.containsOnce(target, "button[id=action_button]");
     });
 
+    QUnit.test("compile a button with disabled", async (assert) => {
+        serverData.views = {
+            "partner,1,form": /*xml*/ `
+                <form>
+                    <button string="ActionButton" class="demo" name="action_button" type="object" disabled="disabled"/>
+                </form>`,
+        };
+
+        await makeView({
+            serverData,
+            resModel: "partner",
+            type: "form",
+            resId: 1,
+        });
+
+        const button = target.querySelector(".demo");
+        assert.ok(button.hasAttribute("disabled"), "The button should have the 'disabled' attribute");
+    });
+
     QUnit.test("invisible is correctly computed with another t-if", (assert) => {
         patchWithCleanup(FormCompiler.prototype, {
             setup() {
