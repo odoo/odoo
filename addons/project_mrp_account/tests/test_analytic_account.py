@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
@@ -147,18 +148,20 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
 
         # change duration to 60
         mo_form = Form(mo)
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 60.0
-        mo_form.save()
+        with freeze_time('2017-01-01 00:00:00') as frozen_time:
+            with mo_form.workorder_ids.edit(0) as line_edit:
+                line_edit.duration = 60.0
+            mo_form.save()
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -10.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -10.0)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
         # change duration to 120
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 120.0
-        mo_form.save()
+        with freeze_time('2017-01-01 02:00:00') as frozen_time:  # Trick to avoid an overlap of the timesheets
+            with mo_form.workorder_ids.edit(0) as line_edit:
+                line_edit.duration = 120.0
+            mo_form.save()
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)

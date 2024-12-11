@@ -375,6 +375,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         operations = []
         total_duration = total_duration_expected = total_cost = total_mo_cost = 0
         total_bom_cost = False
+        index_time_ids = 0
         for index, workorder in enumerate(production.workorder_ids):
             hourly_cost = workorder.costs_hour or workorder.workcenter_id.costs_hour
             duration = workorder.get_duration() / 60
@@ -403,6 +404,32 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'currency_id': currency.id,
                 'currency': currency,
             })
+            for employee, time_ids in workorder.time_ids.grouped('employee_id').items():
+                if not employee:
+                    continue
+                for times in time_ids.grouped('employee_cost').values():
+                    hourly_cost = times[0].employee_cost
+                    duration = sum(times.mapped('duration'))
+                    operation_cost = duration / 60 * hourly_cost
+                    mo_cost = workorder._get_current_theorical_employee_cost()
+                    total_mo_cost += mo_cost
+                    total_cost += operation_cost
+                    operations.append({
+                        'level': level,
+                        'index': f"{current_index}WE{index_time_ids}",
+                        'name': f"{employee.display_name}: {workorder.display_name}",
+                        'quantity': duration / 60,
+                        'uom_name': done_operation_uom,
+                        'uom_precision': 4,
+                        'unit_cost': hourly_cost,
+                        'mo_cost': currency.round(mo_cost),
+                        'real_cost_decorator': self._get_comparison_decorator(mo_cost, operation_cost, currency.rounding),
+                        'bom_cost': False,
+                        'real_cost': currency.round(operation_cost),
+                        'currency_id': currency.id,
+                        'currency': currency,
+                    })
+                    index_time_ids += 1
         return {
             'summary': {
                 'index': f"{current_index}W",
@@ -419,6 +446,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             },
             'details': operations,
         }
+
 
     def _get_byproducts_data(self, production, current_mo_cost, current_bom_cost, current_real_cost, level=0, current_index=False):
         currency = (production.company_id or self.env.company).currency_id

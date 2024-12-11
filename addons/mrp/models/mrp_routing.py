@@ -61,6 +61,8 @@ class MrpRoutingWorkcenter(models.Model):
                                      string="Blocks", help="Operations that cannot start before this operation is completed.",
                                      domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
                                      copy=False)
+    employee_ratio = fields.Float("Employee Capacity", default=1, help="Number of employees needed to complete operation.")
+
 
     @api.depends('time_mode', 'time_mode_batch')
     def _compute_time_computed_on(self):
@@ -188,4 +190,6 @@ class MrpRoutingWorkcenter(models.Model):
         return workcenter._get_expected_duration(product) + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency
 
     def _compute_operation_cost(self):
-        return (self.time_cycle / 60.0) * (self.workcenter_id.costs_hour)
+        expected_employee_cost = (self.time_cycle / 60) * self.workcenter_id.employee_costs_hour * (self.employee_ratio or 1)
+        return (self.time_cycle / 60) * (self.workcenter_id.costs_hour + self.workcenter_id.employee_costs_hour * (self.employee_ratio or 1))
+
