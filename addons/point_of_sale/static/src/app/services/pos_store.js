@@ -37,6 +37,7 @@ import { user } from "@web/core/user";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
+import { WebRTCManager } from "../utils/rtc_data_channel";
 
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
@@ -149,6 +150,23 @@ export class PosStore extends WithLazyGetterTrap {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
+        this.initWebRTC();
+
+        setInterval(() => {
+            this.rtc.sendMessage({ type: "ping", login_number: odoo.login_number });
+        }, 1500);
+    }
+
+    handleRTCMessage(data) {}
+
+    async initWebRTC() {
+        setTimeout(() => {
+            this.rtc = new WebRTCManager({
+                data: this.data,
+                signal: this.onNotified,
+                callback: this.handleRTCMessage,
+            });
+        }, 1000);
     }
 
     get firstScreen() {

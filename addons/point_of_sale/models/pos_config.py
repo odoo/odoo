@@ -205,6 +205,10 @@ class PosConfig(models.Model):
         help="When active, orderlines will be sorted based on product category and sequence in the product screen's order cart.")
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
 
+    def dispatch_rtc_signal(self, offer=False):
+        self._notify('RTC_SIGNAL', offer)
+        return True
+
     @api.model
     def _load_pos_data_domain(self, data):
         return [('id', '=', data['pos.session'][0]['config_id'])]

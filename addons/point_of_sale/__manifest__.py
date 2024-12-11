@@ -147,6 +147,23 @@
             'web/static/lib/owl/odoo_module.js',
             'web/static/lib/zxing-library/zxing-library.js',
 
+            # Mail web RTC requirements
+            # 'mail/static/src/core/common/record.js',
+            # 'mail/static/src/model/record.js',
+            # 'mail/static/src/model/export.js',
+            # 'mail/static/src/model/misc.js',
+            # 'mail/static/src/model/store.js',
+            # 'mail/static/src/model/make_store.js',
+            # 'mail/static/src/model/store_internal.js',
+            # 'mail/static/src/model/model_internal.js',
+            # 'mail/static/src/model/record_internal.js',
+            # 'mail/static/src/model/record_list.js',
+            # 'mail/static/src/model/record_uses.js',
+            # 'mail/static/src/utils/common/media_monitoring.js',
+            # 'mail/static/src/utils/common/misc.js',
+            # 'mail/static/src/discuss/call/common/call_actions.js',
+            # 'mail/static/src/discuss/call/common/rtc_service.js',
+            # 'mail/static/src/discuss/call/common/blur_manager.js',
 
             ('include', 'point_of_sale.base_app'),
 
