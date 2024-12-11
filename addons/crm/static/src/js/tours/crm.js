@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     trigger: ".o_opportunity_kanban",
 },
 {
-    trigger: '.o-kanban-button-new',
+    trigger: '.o_opportunity_kanban .o-kanban-button-new',
     content: markup(_t("<b>Create your first opportunity.</b>")),
     tooltipPosition: 'bottom',
     run: "click",
