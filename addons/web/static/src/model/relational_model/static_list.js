@@ -529,7 +529,9 @@ export class StaticList extends DataPoint {
                             }
                             changes[fieldName] = command[2][fieldName];
                         }
-                        record._applyChanges(record._parseServerValues(changes, record.data));
+                        record._applyChanges(
+                            record._parseServerValues(changes, { currentValues: record.data })
+                        );
                     }
                     break;
                 }
@@ -996,9 +998,9 @@ export class StaticList extends DataPoint {
             }
         }
         const allRecords = currentIds.map((id) => this._cache[id]);
-        const sortedRecords = allRecords.sort((r1, r2) => {
-            return compareRecords(r1, r2, orderBy, this.fields);
-        });
+        const sortedRecords = allRecords.sort((r1, r2) =>
+            compareRecords(r1, r2, orderBy, this.fields)
+        );
         await this._load({
             orderBy,
             nextCurrentIds: sortedRecords.map((r) => r.resId || r._virtualId),
