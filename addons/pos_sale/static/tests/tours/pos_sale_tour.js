@@ -351,3 +351,19 @@ registry.category("web_tour.tours").add("PosRepairSettleOrder", {
             ProductScreen.selectedOrderlineHas("Test Product", 1),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.shippingLaterHighlighted(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
