@@ -1084,32 +1084,32 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
     :return: an iterator over ``(lineno, funcname, message, comments)``
              tuples
     """
-    terms = []
+    terms = set()
     data = json.load(fileobj)
     for sheet in data.get('sheets', []):
         for cell in sheet['cells'].values():
             # 'cell' was an object in versions <saas-18.1
             content = cell if isinstance(cell, str) else cell.get('content', '')
             if content.startswith('='):
-                terms += extract_formula_terms(content)
+                terms.update(extract_formula_terms(content))
             else:
                 markdown_link = re.fullmatch(r'\[(.+)\]\(.+\)', content)
                 if markdown_link:
-                    terms.append(markdown_link[1])
+                    terms.add(markdown_link[1])
         for figure in sheet['figures']:
             if figure['tag'] == 'chart':
                 title = figure['data']['title']
                 if isinstance(title, str):
-                    terms.append(title)
+                    terms.add(title)
                 elif 'text' in title:
-                    terms.append(title['text'])
+                    terms.add(title['text'])
                 if 'axesDesign' in figure['data']:
-                    for axes in figure['data']['axesDesign'].values():
-                        terms.append(axes.get('title', {}).get('text', ''))
+                    terms.update(
+                        axes.get('title', {}).get('text', '') for axes in figure['data']['axesDesign'].values()
+                    )
                 if 'baselineDescr' in figure['data']:
-                    terms.append(figure['data']['baselineDescr'])
-    for global_filter in data.get('globalFilters', []):
-        terms.append(global_filter['label'])
+                    terms.add(figure['data']['baselineDescr'])
+    terms.update(global_filter['label'] for global_filter in data.get('globalFilters', []))
     return (
         (0, None, term, [])
         for term in terms
@@ -1403,6 +1403,8 @@ class TranslationModuleReader(TranslationReader):
         self._path_list.append((config.root_path, False))
         _logger.debug("Scanning modules at paths: %s", self._path_list)
 
+        spreadsheet_files_regex = re.compile(r".*_dashboard(\.osheet)?\.json$")
+
         for (path, recursive) in self._path_list:
             _logger.debug("Scanning files of modules at %s", path)
             for root, _dummy, files in os.walk(path, followlinks=True):
@@ -1421,7 +1423,7 @@ class TranslationModuleReader(TranslationReader):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
                                                   extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT])
                 if fnmatch.fnmatch(root, '*/data/*'):
-                    for fname in fnmatch.filter(files, '*_dashboard.json'):
+                    for fname in filter(spreadsheet_files_regex.match, files):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:extract_spreadsheet_terms',
                                                   extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT])
                 if not recursive:
