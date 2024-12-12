@@ -162,6 +162,7 @@ class Package:
             for dependency in self.depends
         )
 
+    @property
     def demo_installable(self) -> bool:
         return all(p.dbdemo for p in self.depends)
 
