@@ -10,7 +10,10 @@ export class BuilderOptionsPlugin extends Plugin {
     };
 
     setup() {
-        this.builderOptions = this.getResource("builder_options");
+        this.builderOptions = this.getResource("builder_options").map((option) => ({
+            ...option,
+            id: uniqueId(),
+        }));
         this.addDomListener(this.editable, "pointerup", (e) => {
             this.updateContainers(e.target);
         });
@@ -64,9 +67,7 @@ export class BuilderOptionsPlugin extends Plugin {
 
         const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
         this.lastContainers = [...elementToOptions]
-            .sort(([a], [b]) => {
-                return b.contains(a) ? 1 : -1;
-            })
+            .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
             .map(([element, options]) => ({
                 id: previousElementToIdMap.get(element) || uniqueId(),
                 element,

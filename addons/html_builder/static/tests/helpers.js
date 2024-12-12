@@ -94,9 +94,7 @@ export async function setupWebsiteBuilder(
 
     if (snippets) {
         patchWithCleanup(IrUiView.prototype, {
-            render_public_asset: () => {
-                return getSnippetView(snippets);
-            },
+            render_public_asset: () => getSnippetView(snippets),
         });
     }
 
@@ -148,21 +146,22 @@ export function addOption({ selector, exclude, template, Component, sequence }) 
         registry.category("website-plugins").remove(pluginId);
     });
 }
-function makeOptionPlugin({ id, template, selector, sequence, OptionComponent }) {
+function makeOptionPlugin({ pluginId, template, selector, exclude, sequence, OptionComponent }) {
     const option = {
         OptionComponent,
         template,
         selector,
+        exclude,
     };
 
     const Class = {
-        [id]: class extends Plugin {
-            static id = id;
+        [pluginId]: class extends Plugin {
+            static id = pluginId;
             resources = {
                 builder_options: sequence ? withSequence(sequence, option) : option,
             };
         },
-    }[id];
+    }[pluginId];
 
     return Class;
 }
