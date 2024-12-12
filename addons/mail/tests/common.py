@@ -5,6 +5,7 @@ import base64
 import email
 import email.policy
 import json
+import re
 import time
 
 from ast import literal_eval
@@ -14,7 +15,9 @@ from freezegun import freeze_time
 from functools import partial
 from lxml import html
 from unittest.mock import patch
+from urllib.parse import urlparse, urlencode, parse_qsl
 
+from odoo import tools
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.bus.models.bus import BusBus, json_dump
@@ -907,7 +910,6 @@ class MailCase(MockEmail):
         cls.email_template = cls.env['mail.template'].create(create_values)
         return cls.email_template
 
-
     def _generate_notify_recipients(self, partners, record=None):
         """ Tool method to generate recipients data according to structure used
         in notification methods. Purpose is to allow testing of internals of
@@ -919,9 +921,11 @@ class MailCase(MockEmail):
         return [
             {'id': partner.id,
              'active': partner.active,
+             'email_normalized': partner.email_normalized,
              'is_follower': partner in record.message_partner_ids if record else False,
              'groups': partner.user_ids.groups_id.ids,
              'lang': partner.lang,
+             'name': partner.name,
              'notif': partner.user_ids.notification_type or 'email',
              'share': partner.partner_share,
              'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
@@ -929,6 +933,38 @@ class MailCase(MockEmail):
              'ushare': all(user.share for user in partner.user_ids) if partner.user_ids else False,
             } for partner in partners
         ]
+
+    def _message_post_and_get_unfollow_urls(self, record, partner_ids):
+        """ Post a message on the record for the partners and extract the unfollow URLs. """
+        with self.mock_mail_gateway():
+            _message = record.message_post(
+                body='test message',
+                partner_ids=partner_ids.ids,
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+        self.assertEqual(len(self._mails), len(partner_ids))
+        mail_by_email = {
+            email_normalize(email_to, strict=False): mail
+            for mail in self._mails for email_to in mail['email_to']
+        }
+
+        # Extract unfollow URL for each partner from the body of the emails
+        results = []
+        for partner in partner_ids:
+            mail_body = mail_by_email[partner.email_normalized]['body']
+            unfollow_urls = [
+                link_url
+                for _, link_url, _, _ in re.findall(tools.mail.HTML_TAG_URL_REGEX, mail_body)
+                if '/mail/unfollow' in link_url
+            ]
+            self.assertLessEqual(len(unfollow_urls), 1)
+            results.append(unfollow_urls[0] if unfollow_urls else False)
+        self.assertEqual(len(results), len(partner_ids))
+        return results
+
+    def _url_update_query_parameters(self, url, **kwargs):
+        parsed_url = urlparse(url)
+        return parsed_url._replace(query=urlencode(dict(parse_qsl(parsed_url.query), **kwargs))).geturl()
 
     # ------------------------------------------------------------
     # MAIL ASSERTS WRAPPERS
