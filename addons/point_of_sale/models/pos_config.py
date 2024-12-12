@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+import logging
 from uuid import uuid4
 import pytz
 import secrets
@@ -12,12 +13,112 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import SQL, convert
 from odoo.osv import expression
 
-
+_logger = logging.getLogger(__name__)
 class PosConfig(models.Model):
     _name = 'pos.config'
     _inherit = ['pos.bus.mixin', 'pos.load.mixin']
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
+
+    def sync_from_ui_2(self, queue):
+
+
+
+
+            # const idUpdateMap = await this.orm.call(
+            #     "pos.config",
+            #     "sync_from_ui_2",
+            #     [odoo.pos_config_id, this.queue],
+            #     {},
+            #     false
+            # );
+            # for (const [model, uuid, id] of idUpdateMap) {
+            #     this.models[model].find((x) => x.uuid === uuid).id = id;
+            # }
+        get_record = lambda model, id: self.env[model].search([('uuid', '=', id)], limit=1) if type(id) == str else self.env[model].browse(id)
+        def replace_uuid_with_id(vals):
+            return {
+                key: (
+                    get_record(self.env[model]._fields[key].comodel_name, vals[key]).id
+                    if self.env[model]._fields[key].type == "many2one"
+                    else (
+                        [
+                            (
+                                6,
+                                0,
+                                [
+                                    get_record(
+                                        self.env[model]._fields[key].comodel_name, val
+                                    ).id
+                                    for val in value
+                                ],
+                            )
+                        ]
+                        if self.env[model]._fields[key].type
+                        in ["many2many", "one2many"]
+                        else value
+                    )
+                )
+                for key, value in vals.items()
+            }
+        records_affected = []
+        to_send = {}
+        configs_that_might_be_interested = self._configs_that_might_be_interested()
+
+        id_updates = []
+
+        for [operation, *data] in queue:
+            # _logger.info('Processing operation %s with data %s', operation, data)
+            match operation:
+                case "CREATE":
+                    [model, vals] = data
+                    updated_vals = replace_uuid_with_id(vals)
+                    print("CREATE", model, updated_vals)
+                    new_record = self.env[model].create([updated_vals])
+                    id_updates.append([model, vals['uuid'], new_record.id])
+                    for config in configs_that_might_be_interested:
+                        if config._interested_in_this_change(self, new_record):
+                            to_send.setdefault(config, []).append([operation, *data])
+                case "UPDATE":
+                    [model, id, vals] = data
+                    updated_vals = replace_uuid_with_id(vals)
+                    print('UPDATE', model, id, updated_vals)
+                    record = get_record(model, id)
+                    record.write(updated_vals)
+                    for config in configs_that_might_be_interested:
+                        if config._interested_in_this_change(self, record):
+                            to_send.setdefault(config, []).append([operation, *data])
+
+                case "DELETE":
+                    [model, id] = data
+                    record = get_record(model, id)
+                    for config in configs_that_might_be_interested:
+                        if config._interested_in_this_change(self, record):
+                            to_send.setdefault(config, []).append([operation, *data])
+                    if record.exists():
+                        print('DELETE', model, id)
+                        id_updates = [update for update in id_updates if update[1] != record.uuid]
+                        record.unlink()
+                case _:
+                    pass
+        # we only update the other pos configs after we are sure that
+        # the changes have been successfully made to the db
+        # for config in self.env['pos.config'].search([(
+        #     'id', '!=', self.id
+        # )]).filtered(lambda c: c._interested_in_these_changes(config, queue, records_affected)):
+        #     config._notify('DATA_CHANGED', queue )
+        for config, queue in to_send.items():
+            config._notify('DATA_CHANGED', queue)
+        return id_updates
+
+    def _interested_in_this_change(self, original_config, record_changed):
+        self.ensure_one()
+        print('interested_in_this_change',self.id, record_changed)
+        return self.id in original_config.trusted_config_ids.ids
+
+    def _configs_that_might_be_interested(self):
+        self.ensure_one()
+        return self.trusted_config_ids
 
     def _default_warehouse_id(self):
         warehouse = self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
@@ -206,33 +307,6 @@ class PosConfig(models.Model):
         help="When active, orderlines will be sorted based on product category and sequence in the product screen's order cart.")
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
-
-    def notify_synchronisation(self, session_id, login_number, records={}):
-        static_records = {}
-
-        for model, ids in records.items():
-            fields = self.env[model]._load_pos_data_fields(self.id)
-            static_records[model] = self.env[model].browse(ids).read(fields, load=False)
-
-        self._notify('SYNCHRONISATION', {
-            'static_records': static_records,
-            'session_id': session_id,
-            'login_number': login_number,
-            'records': records
-        })
-
-    def read_config_open_orders(self, domain, record_ids):
-        all_domain = expression.OR([domain, [('id', 'in', record_ids.get('pos.order')), ('config_id', '=', self.id)]])
-        all_orders = self.env['pos.order'].search(all_domain)
-        delete_record_ids = {}
-
-        for model, ids in record_ids.items():
-            delete_record_ids[model] = [id for id in ids if not self.env[model].browse(id).exists()]
-
-        return {
-            'dynamic_records': all_orders.filtered_domain(domain).read_pos_data([], self.id),
-            'deleted_record_ids': delete_record_ids,
-        }
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -574,7 +648,6 @@ class PosConfig(models.Model):
                     field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
                     field_groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in field_group_xmlids))
                     field_groups.write({'implied_ids': [(4, self.env.ref(field.implied_group).id)]})
-
 
     def execute(self):
         return {
