@@ -570,6 +570,10 @@ class MailMessage(models.Model):
         message = self.browse(message_id).exists()
         if not message:
             return message
+        # sanity check on kwargs
+        allowed_params = self.env[message.sudo().model]._get_allowed_access_params()
+        if invalid := (set(kwargs.keys()) - allowed_params):
+            raise ValueError(f"Invalid parameters to access check {invalid }")
 
         if self.env.user._is_public() and self.env["mail.guest"]._get_guest_from_context():
             # Don't check_access_rights for public user with a guest, as the rules are

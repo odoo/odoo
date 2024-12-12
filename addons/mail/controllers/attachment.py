@@ -84,15 +84,14 @@ class AttachmentController(http.Controller):
 
     @http.route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def mail_attachment_delete(self, attachment_id, access_token=None, **kwargs):
+    def mail_attachment_delete(self, attachment_id, access_token=None, attachment_tokens=None, **kwargs):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment:
             request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
             return
         attachment_message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
-        message = request.env["mail.message"].sudo(False)._get_with_access(attachment_message.id,
-                                                                           "create", **kwargs)
+        message = request.env["mail.message"].sudo(False)._get_with_access(attachment_message.id, "create", **kwargs)
         if not request.env.user.share:
             # Check through standard access rights/rules for internal users.
             attachment._delete_and_notify(message)

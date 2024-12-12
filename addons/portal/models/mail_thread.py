@@ -92,6 +92,9 @@ class MailThread(models.AbstractModel):
         """
         return False
 
+    def _get_allowed_access_params(self):
+        return super()._get_allowed_access_params() | {'hash', 'pid', 'token'}
+
     @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
         if thread := super()._get_thread_with_access(thread_id, mode, **kwargs):
