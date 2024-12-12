@@ -118,9 +118,14 @@
         <function model="res.company" name="create_missing_scrap_location"/>
         <function model="res.company" name="create_missing_scrap_sequence"/>
 
+        <!-- Config Parameters -->
         <record model="ir.config_parameter" id="barcode_separator" forcecreate="False">
             <field name="key">stock.barcode_separator</field>
             <field name="value">,</field>
+        </record>
+        <record model="ir.config_parameter" id="visibility_days">
+            <field name="key">stock.visibility_days</field>
+            <field name="value">0</field>
         </record>
     </data>
 </odoo>
