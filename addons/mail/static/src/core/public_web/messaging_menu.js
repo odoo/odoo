@@ -157,6 +157,32 @@ export class MessagingMenu extends Component {
             this.store.discuss.thread = undefined;
         }
     }
+
+    messagePreview(message) {
+        if (!message) {
+            return { text: "" };
+        }
+        if (!message.isBodyEmpty || message.subtype_description) {
+            return { text: message.inlineBody || message.subtype_description };
+        }
+        const { attachment_ids: attachments } = message;
+        if (!attachments || attachments.length === 0) {
+            return { text: "" };
+        }
+        const [firstAttachment] = attachments;
+        const { isImage, isVideo, mimetype, name, voice } = firstAttachment;
+        const icon =
+            (isImage && "fa-picture-o") ||
+            (mimetype === "audio/mpeg" && (voice ? "fa-microphone" : "fa-headphones")) ||
+            (isVideo && "fa-video-camera") ||
+            "fa-file";
+        const text = mimetype === "audio/mpeg" && voice ? _t("Voice Message") : name || "";
+        const attachmentCountText =
+            attachments.length > 1
+                ? _t(" and %s other attachment(s).", attachments.length - 1)
+                : "";
+        return { icon, text: text + attachmentCountText };
+    }
 }
 
 registry
