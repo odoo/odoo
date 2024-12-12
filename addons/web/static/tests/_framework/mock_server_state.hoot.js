@@ -37,6 +37,19 @@ const SERVER_STATE_VALUES = {
         {
             id: 1,
             name: "Hermit",
+            country_id: 1,
+        },
+    ],
+    countries: [
+        {
+            id: 1,
+            name: "Belgium",
+            code: "BE",
+        },
+        {
+            id: 2,
+            name: "PERU",
+            code: "PE",
         },
     ],
     currencies: [

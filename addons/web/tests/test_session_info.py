@@ -11,10 +11,12 @@ class TestSessionInfo(common.HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_a = cls.env['res.company'].create({'name': "A"})
-        cls.company_b = cls.env['res.company'].create({'name': "B"})
+        be = cls.env.ref('base.be')
+        fr = cls.env.ref('base.fr')
+        cls.company_a = cls.env['res.company'].create({'name': "A", 'country_id': be.id})
+        cls.company_b = cls.env['res.company'].create({'name': "B", 'country_id': fr.id})
         cls.company_c = cls.env['res.company'].create({'name': "C"})
-        cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company_b.id})
+        cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company_b.id, 'country_id': fr.id})
         cls.allowed_companies = cls.company_a + cls.company_b_branch + cls.company_c
         cls.disallowed_ancestor_companies = cls.company_b
 
@@ -54,6 +56,7 @@ class TestSessionInfo(common.HttpCase):
                 'sequence': company.sequence,
                 'child_ids': company.child_ids.ids,
                 'parent_id': company.parent_id.id,
+                'country_code': company.country_id.code,
             } for company in self.allowed_companies
         }
 
@@ -64,6 +67,7 @@ class TestSessionInfo(common.HttpCase):
                 'sequence': company.sequence,
                 'child_ids': company.child_ids.ids,
                 'parent_id': company.parent_id.id,
+                'country_code': company.country_id.code,
             } for company in self.disallowed_ancestor_companies
         }
 

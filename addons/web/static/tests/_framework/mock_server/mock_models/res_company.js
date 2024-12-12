@@ -13,5 +13,6 @@ export class ResCompany extends ServerModel {
         active: true,
         name: company.name,
         partner_id: company.id,
+        country_id: company.country_id,
     }));
 }

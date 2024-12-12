@@ -157,6 +157,7 @@ class IrHttp(models.AbstractModel):
                             'sequence': comp.sequence,
                             'child_ids': (comp.child_ids & user_company_ids).ids,
                             'parent_id': comp.parent_id.id,
+                            'country_code': comp.country_id.code,
                         } for comp in user_company_ids
                     },
                     'disallowed_ancestor_companies': {
@@ -166,6 +167,7 @@ class IrHttp(models.AbstractModel):
                             'sequence': comp.sequence,
                             'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
                             'parent_id': comp.parent_id.id,
+                            'country_code': comp.country_id.code,
                         } for comp in disallowed_ancestor_companies_sudo
                     },
                 },

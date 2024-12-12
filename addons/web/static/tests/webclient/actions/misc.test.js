@@ -27,7 +27,7 @@ import { listView } from "@web/views/list/list_view";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { WebClient } from "@web/webclient/webclient";
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 
 class Partner extends models.Model {
     _rec_name = "display_name";
@@ -85,7 +85,7 @@ class Pony extends models.Model {
     };
 }
 
-defineModels([Partner, Pony, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, Pony, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {

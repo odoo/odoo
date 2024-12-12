@@ -19,7 +19,7 @@ import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { WebClient } from "@web/webclient/webclient";
 
-const { ResCompany, ResPartner, ResUsers } = webModels;
+const { ResCompany, ResCountry, ResPartner, ResUsers } = webModels;
 const actionRegistry = registry.category("actions");
 
 class TestClientAction extends Component {
@@ -60,7 +60,7 @@ class Partner extends models.Model {
     };
 }
 
-defineModels([Partner, ResCompany, ResPartner, ResUsers]);
+defineModels([Partner, ResCompany, ResCountry, ResPartner, ResUsers]);
 
 defineActions([
     {
