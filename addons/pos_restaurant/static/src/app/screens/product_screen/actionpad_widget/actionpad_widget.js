@@ -30,7 +30,7 @@ patch(ActionpadWidget.prototype, {
         hasChange =
             hasChange.generalCustomerNote == ""
                 ? true // for the case when removed all general note
-                : hasChange.count || hasChange.generalCustomerNote;
+                : hasChange.count || hasChange.generalCustomerNote || hasChange.modeUpdate;
         return hasChange;
     },
     async submitOrder() {
