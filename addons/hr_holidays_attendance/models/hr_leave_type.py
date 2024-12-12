@@ -46,8 +46,3 @@ class HRLeaveType(models.Model):
                 else:
                     leave_data[1]['overtime_deductible'] = False
         return res
-
-    def _get_days_request(self, date=None):
-        res = super()._get_days_request(date)
-        res[1]['overtime_deductible'] = self.overtime_deductible
-        return res
