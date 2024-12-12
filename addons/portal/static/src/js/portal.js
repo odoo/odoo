@@ -1,10 +1,12 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
     events: {
         'change select[name="country_id"]': '_onCountryChange',
+        "change .o_file_upload": "_onFileUploadChange",
     },
 
     /**
@@ -16,6 +18,9 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
         this.$state = this.$('select[name="state_id"]');
         this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
         this._adaptAddressForm();
+        this.notification = this.bindService("notification");
+        const profileInputEl = document.querySelector(".current_picture");
+        profileInputEl.value = document.querySelector(".o_wportal_avatar_img").src;
 
         return def;
     },
@@ -46,7 +51,93 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     _onCountryChange: function () {
         this._adaptAddressForm();
     },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFileUploadChange: function (ev) {
+        if (!ev.currentTarget.files.length) {
+            return;
+        }
+        const formEl = ev.currentTarget.closest("form");
+        const reader = new FileReader();
+        const file = ev.currentTarget.files[0];
+        const self = this; // Preserve context
+        reader.onload = function (ev) {
+            const img = new Image();
+            img.onload = () => {
+                formEl.querySelector(".o_wportal_avatar_img").src = ev.target.result;
+            };
+            img.onerror = () => {
+                self.notification.add(_t("The selected image is broken or invalid."), {
+                    type: "danger",
+                });
+                formEl.querySelector("input[type=file]").value = null;
+                formEl.querySelector(".o_wportal_avatar_img").src = document.querySelector(".current_picture").value;
+            };
+
+            img.src = ev.target.result;
+        };
+        reader.onerror = () => {
+            this.notification.add(_t("Failed to read the selected image."), {
+                type: "danger",
+            });
+        };
+
+        reader.readAsDataURL(file);
+    },
 });
+
+publicWidget.registry.portalPicture = publicWidget.Widget.extend({
+    selector: ".o_portal_picture_card",
+    events: {
+        "click .o_portal_profile_pic_edit": "_onEditProfilePicClick",
+        "click .o_portal_profile_pic_clear": "_onProfilePicClearClick",
+    },
+
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        return def;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onEditProfilePicClick: function (ev) {
+        ev.preventDefault();
+        ev.currentTarget.closest("form").querySelector(".o_file_upload")?.click();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onProfilePicClearClick: function (ev) {
+        const formEl = ev.currentTarget.closest("form");
+        formEl.querySelector(".o_wportal_avatar_img").src = "/web/static/img/placeholder.png";
+
+        const inputElement = document.createElement("input");
+        inputElement.type = "hidden";
+        Object.assign(
+            inputElement,
+            this.target.querySelector("span")?.textContent === "Public Profile"
+                ? { name: "clear_image", id: "forum_clear_image" }
+                : { name: "remove_profile", id: "remove_profile", value: "true" }
+        );
+        formEl.appendChild(inputElement);
+    },
+});
+
+export default publicWidget.registry.portalDetails;
 
 export const PortalHomeCounters = publicWidget.Widget.extend({
     selector: '.o_portal_my_home',
