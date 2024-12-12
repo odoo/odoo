@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="html_editor.EmbeddedTableOfContent">
-    <div class="o_embedded_toc_content">
+    <div class="d-flex align-items-center cursor-pointer user-select-none" t-on-click="toggleToc">
+        <div class="o_embedded_toc_label px-2 py-1 text-break">
+            Table of Contents
+            <i t-attf-class="align-self-center fa fa-fw #{this.state.open ? 'fa-caret-down' : 'fa-caret-right'}"/>
+        </div>
+    </div>
+    <div class="o_embedded_toc_content" t-attf-style="#{!this.state.open or !state.toc.headings.length ? 'display: none' : 'margin-bottom: 5px'}">
         <t t-foreach="this.state.toc.headings" t-as="heading" t-key="heading_index">
             <a href="#" contenteditable="false"
                 t-out="heading.name"
@@ -10,7 +16,7 @@
         </t>
     </div>
     <i class="o_embedded_toc_hint" t-if="displayTocHint()">
-        Add headings in this field to fill the Table of Content
+        Add headings to fill the Table of Contents
     </i>
 </t>
 </templates>

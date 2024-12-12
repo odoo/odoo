@@ -9,7 +9,7 @@ export class EmbeddedTableOfContentComponent extends Component {
     };
 
     setup() {
-        this.state = useState({ toc: this.props.manager.structure });
+        this.state = useState({ toc: this.props.manager.structure, open: true });
         onWillStart(async () => {
             await this.props.manager.batchedUpdateStructure();
         });
@@ -25,6 +25,11 @@ export class EmbeddedTableOfContentComponent extends Component {
     onTocLinkClick(heading) {
         this.props.manager.scrollIntoView(heading);
     }
+
+    toggleToc() {
+        this.state.open = !this.state.open;
+    }
+
 }
 
 export const tableOfContentEmbedding = {

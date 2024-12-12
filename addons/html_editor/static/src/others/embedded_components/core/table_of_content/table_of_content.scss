@@ -8,16 +8,19 @@ $embedded-toc-bg--active: #1ba1e4;
     outline: 1px solid $o-gray-300;
     outline-offset: -1px;
     border-radius: 5px;
-    padding: 8px;
+    background-color: $o-gray-100;
+    overflow-y: auto;
     & > .o_embedded_toc_content {
+        margin: 0 5px;
+        background-color: $o-view-background-color;
         @for $depth from 0 through 5 {
             a.o_embedded_toc_link_depth_#{$depth} {
                 padding-left: calc(5px + Min(30px, 10%) * #{$depth});
                 font-family: $font-family-base !important;
-                font-weight: $font-weight-bolder;
                 border-radius: 5px;
                 min-height: $line-height-base * $font-size-base;
                 border: transparent;
+                color: unset;
 
                 &:hover {
                     background-color: rgba($embedded-toc-bg--active, 0.2);
@@ -34,6 +37,13 @@ $embedded-toc-bg--active: #1ba1e4;
     & .o_embedded_toc_hint {
         padding-left: 5px;
     }
+
+    & .o_embedded_toc_label {
+            font-family: $font-family-base !important;
+            font-weight: $font-weight-bold;
+            color: $o-gray-600;
+    }
+
 }
 
 .o_field_html {
