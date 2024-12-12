@@ -41,6 +41,31 @@ test("Open custom tab with Component option", async () => {
     expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
 });
 
+test("Don't display option base on exclude", async () => {
+    addOption({
+        selector: ".test-options-target",
+        exclude: ".test-exclude",
+        template: xml`<WeRow label="'Row 1'">a</WeRow>`,
+    });
+    addOption({
+        selector: ".test-options-target",
+        exclude: ".test-exclude-2",
+        template: xml`<WeRow label="'Row 2'">b</WeRow>`,
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<WeRow label="'Row 3'">
+            <WeButton classAction="'test-exclude-2'">c</WeButton>
+        </WeRow>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target test-exclude">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 2\nb", "Row 3\nc"]);
+
+    await contains("[data-class-action='test-exclude-2']").click();
+    expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 3\nc"]);
+});
+
 test("basic multi options containers", async () => {
     addOption({
         selector: ".test-options-target",
