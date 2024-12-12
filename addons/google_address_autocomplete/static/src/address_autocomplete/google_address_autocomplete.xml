@@ -10,11 +10,6 @@
          />
     </t>
     <t t-name="google_address_autocomplete.CharFieldDropdownOption">
-        <t t-if="option.type === 'template'" t-call="{{ option.name }}" />
-        <strong t-else="" t-esc="option.formatted_address or '&#160;'"/>
-    </t>
-
-    <t t-name="google_address_autocomplete.google_credits">
-        <img class="ms-auto pe-1" src="/website_sale_autocomplete/static/src/img/powered_by_google_on_white.png" alt="Powered by Google"/>
+        <strong t-esc="option.formatted_address or '&#160;'"/>
     </t>
 </templates>

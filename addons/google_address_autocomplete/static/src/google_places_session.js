@@ -39,7 +39,7 @@ function makeGooglePlacesSession() {
     }
 
     return {
-        get sessionId() {
+        get sessionToken() {
             return current;
         },
         getAddressPropositions,
