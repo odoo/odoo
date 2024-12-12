@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, fields, models, _
+from odoo.exceptions import UserError
 
 
 class CrmTeamMember(models.Model):
@@ -38,7 +39,7 @@ class CrmTeamMember(models.Model):
     email = fields.Char(string='Email', related='user_id.email')
     phone = fields.Char(string='Phone', related='user_id.phone')
     mobile = fields.Char(string='Mobile', related='user_id.mobile')
-    company_id = fields.Many2one('res.company', string='Company', related='user_id.company_id')
+    company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id')
 
     @api.constrains('crm_team_id', 'user_id', 'active')
     def _constrains_membership(self):
@@ -136,6 +137,22 @@ class CrmTeamMember(models.Model):
                                              )
                 else:
                     member.member_warning = False
+
+    @api.depends('crm_team_id.company_id')
+    def _compute_company_id(self):
+        for member in self:
+            user = member.user_id
+            team = member.crm_team_id
+            if member.active and team.company_id:  # allow changing the company and removing a member with no access to the company at the same time
+                if team.company_id not in user.company_ids:
+                    raise UserError(_(
+                        "The user '%(user)s' does not have access to the company of the team '%(team)s.'",
+                        user=user.name,
+                        team=team.name
+                    ))
+                member.company_id = team.company_id
+            else:
+                member.company_id = user.company_id
 
     # ------------------------------------------------------------
     # CRUD
