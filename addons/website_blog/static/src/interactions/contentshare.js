@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
 import { scrollTo } from "@web_editor/js/common/scrolling";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 
 export class BlogContentShare extends Interaction {
     static selector = ".js_comment, .js_tweet";

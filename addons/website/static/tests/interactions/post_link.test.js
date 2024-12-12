@@ -5,7 +5,7 @@ import {
     mockSendRequests,
     startInteractions,
     setupInteractionWhiteList,
-} from "../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.post_link");
 

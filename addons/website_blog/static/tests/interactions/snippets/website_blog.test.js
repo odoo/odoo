@@ -2,7 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import {click } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
-import { startInteractions, setupInteractionWhiteList } from "@website/../tests/core/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList(["website_blog.website_blog"]);
 

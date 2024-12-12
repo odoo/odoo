@@ -5,7 +5,7 @@ import { escape } from "@web/core/utils/strings";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.chart");
 

@@ -3,7 +3,8 @@ import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../../core/helpers";
+} from "@web/../tests/public/helpers";
+import { switchToEditMode } from "../../helpers";
 
 const formXml = `
     <div id="wrapwrap">
@@ -64,6 +65,7 @@ function setupUser() {
 test("form formats date in edit mode", async () => {
     setupInteractionWhiteList("website.form_date_formatter");
     const { core, el } = await startInteractions(formXml, { waitForStart: true, editMode: true });
+    await switchToEditMode(core);
     expect(core.interactions.length).toBe(1);
     const formEl = el.querySelector("form");
     const dateEl = formEl.querySelector("input[name=When]");
@@ -77,6 +79,7 @@ test("form is NOT prefilled in edit mode", async () => {
     setupInteractionWhiteList("website.form_date_formatter");
     setupUser();
     const { core, el } = await startInteractions(formXml, { waitForStart: true, editMode: true });
+    await switchToEditMode(core)
     expect(core.interactions.length).toBe(1);
     const formEl = el.querySelector("form");
     const companyEl = formEl.querySelector("input[name=company]");
@@ -87,6 +90,7 @@ test("form is NOT prefilled in translate mode", async () => {
     setupInteractionWhiteList("website.form");
     setupUser();
     const { core, el } = await startInteractions(formXml, { waitForStart: true, translateMode: true });
+    await switchToEditMode(core);
     expect(core.interactions.length).toBe(1);
     const formEl = el.querySelector("form");
     const companyEl = formEl.querySelector("input[name=company]");

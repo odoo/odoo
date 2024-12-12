@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { sendRequest } from "@website/js/utils";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 
 class PostLink extends Interaction {
     static selector = ".post_link";

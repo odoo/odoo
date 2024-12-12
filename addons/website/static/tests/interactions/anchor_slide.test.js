@@ -5,7 +5,7 @@ import {
     isElementInViewport,
     startInteractions,
     setupInteractionWhiteList,
-} from "../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.anchor_slide");
 

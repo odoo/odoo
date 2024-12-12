@@ -3,7 +3,7 @@ import { mockUserAgent } from "@odoo/hoot-mock";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.footer_slideout");
 

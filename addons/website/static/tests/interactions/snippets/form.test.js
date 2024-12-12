@@ -5,7 +5,7 @@ import { MockServer, onRpc, patchWithCleanup } from "@web/../tests/web_test_help
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.form", "website.post_link");
 

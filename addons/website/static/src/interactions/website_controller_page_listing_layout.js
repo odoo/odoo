@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { rpc } from "@web/core/network/rpc";
 
 export class WebsiteControllerPageListingLayout extends Interaction {

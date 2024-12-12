@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 
 export class FooterSlideout extends Interaction {
     static selector = "#wrapwrap:has(.o_footer_slideout)";

@@ -39,33 +39,35 @@ export class Colibri {
     }
 
     addListener(nodes, event, fn, options) {
-        if (typeof (fn) !== "function") {
+        if (typeof fn !== "function") {
             throw new Error(`Invalid listener for event '${event}' (not a function)`);
         }
         if (!this.isReady) {
-            throw new Error("this.addListener can only be called after the interaction is started. Maybe move the call in the start method.");
+            throw new Error(
+                "this.addListener can only be called after the interaction is started. Maybe move the call in the start method."
+            );
         }
         const re = /^(?<event>.*)\.(?<suffix>prevent|stop|capture|noupdate)$/;
         let groups = re.exec(event)?.groups;
         while (groups) {
             fn = {
-                prevent: (f) => ((ev) => {
+                prevent: (f) => (ev) => {
                     ev.preventDefault();
                     return f(ev);
-                }),
-                stop: (f) => ((ev) => {
+                },
+                stop: (f) => (ev) => {
                     ev.stopPropagation();
                     return f(ev);
-                }),
+                },
                 capture: (f) => {
                     options ||= {};
                     options.capture = true;
                     return f;
                 },
-                noupdate: (f) => ((ev) => {
+                noupdate: (f) => (ev) => {
                     f(ev);
                     return SKIP_IMPLICIT_UPDATE;
-                }),
+                },
             }[groups.suffix](fn);
             event = groups.event;
             groups = re.exec(event)?.groups;
@@ -73,10 +75,10 @@ export class Colibri {
         const handler = fn.isHandler
             ? fn
             : (ev) => {
-                if (SKIP_IMPLICIT_UPDATE !== fn.call(this.interaction, ev)) {
-                    this.updateContent();
-                }
-            };
+                  if (SKIP_IMPLICIT_UPDATE !== fn.call(this.interaction, ev)) {
+                      this.updateContent();
+                  }
+              };
         handler.isHandler = true;
         for (const node of nodes) {
             node.addEventListener(event, handler, options);
@@ -121,7 +123,7 @@ export class Colibri {
     }
 
     mountComponent(nodes, C, props) {
-        for (let node of nodes) {
+        for (const node of nodes) {
             const root = this.core.prepareRoot(node, C, props);
             root.mount();
             this.cleanups.push(() => root.destroy());
@@ -163,7 +165,11 @@ export class Colibri {
                 } else {
                     style = String(style);
                     if (style.endsWith(" !important")) {
-                        el.style.setProperty(prop, style.substring(0, style.length - 11), "important");
+                        el.style.setProperty(
+                            prop,
+                            style.substring(0, style.length - 11),
+                            "important"
+                        );
                     } else {
                         el.style.setProperty(prop, style);
                     }
@@ -210,15 +216,13 @@ export class Colibri {
                     this.tOuts.push([nodes, value]);
                 } else if (directive === "t-component") {
                     const { Component } = odoo.loader.modules.get("@odoo/owl");
-                    if (Component.isPrototypeOf(value)) {
+                    if (Object.prototype.isPrototypeOf.call(Component, value)) {
                         this.mountComponent(nodes, value);
                     } else {
                         this.mountComponent(nodes, ...value());
                     }
                 } else {
-                    const suffix = directive.startsWith("t-")
-                        ? ""
-                        : " (should start with t-)";
+                    const suffix = directive.startsWith("t-") ? "" : " (should start with t-)";
                     throw new Error(`Invalid directive: '${directive}'${suffix}`);
                 }
             }
@@ -227,7 +231,9 @@ export class Colibri {
 
     updateContent() {
         if (this.isDestroyed || !this.isReady) {
-            throw new Error("Cannot update content of an interaction that is not ready or is destroyed");
+            throw new Error(
+                "Cannot update content of an interaction that is not ready or is destroyed"
+            );
         }
         if (this.isUpdating) {
             throw new Error("Updatecontent should not be called while interaction is updating");
@@ -259,7 +265,9 @@ export class Colibri {
                                 for (const property of Object.keys(value)) {
                                     const propertyValue = node.style.getPropertyValue(property);
                                     const priority = node.style.getPropertyPriority(property);
-                                    attrValue[property] = propertyValue ? (propertyValue + (priority ? ` !${priority}` : "")) : "";
+                                    attrValue[property] = propertyValue
+                                        ? propertyValue + (priority ? ` !${priority}` : "")
+                                        : "";
                                 }
                                 break;
                             default:
@@ -281,9 +289,11 @@ export class Colibri {
         this.isUpdating = false;
         if (errors.length) {
             const { attribute, error } = errors[0];
-            throw Error(`An error occured while updating dynamic attribute '${attribute}' (in interaction '${this.interaction.constructor.name}')`, { cause: error });
+            throw Error(
+                `An error occured while updating dynamic attribute '${attribute}' (in interaction '${this.interaction.constructor.name}')`,
+                { cause: error }
+            );
         }
-
     }
 
     destroy() {
@@ -311,4 +321,3 @@ export class Colibri {
         this.isReady = false;
     }
 }
-

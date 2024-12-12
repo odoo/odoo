@@ -3,7 +3,8 @@ import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-do
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../core/helpers";
+} from "@web/../tests/public/helpers";
+import { switchToEditMode } from "../helpers";
 
 setupInteractionWhiteList("website.carousel_slider");
 
@@ -39,8 +40,8 @@ const carouselHtml = `
 `;
 
 test("carousel slider prevents ride", async () => {
-    const { core, el } = await startInteractions(carouselHtml, { editMode: true });
-    await animationFrame();
+    const { core, el } = await startInteractions(carouselHtml);
+    await switchToEditMode(core);
     expect(core.interactions.length).toBe(1);
     const carouselEl = el.querySelector(".carousel");
     const carouselBS = window.Carousel.getInstance(carouselEl);
@@ -52,8 +53,8 @@ test("carousel slider prevents ride", async () => {
 });
 
 test("carousel slider computes height upon content_changed", async () => {
-    const { core, el } = await startInteractions(carouselHtml, { editMode: true });
-    await animationFrame();
+    const { core, el } = await startInteractions(carouselHtml);
+    await switchToEditMode(core);
     expect(core.interactions.length).toBe(1);
     const carouselEl = el.querySelector(".carousel");
     const itemEl = carouselEl.querySelector(".carousel-item");

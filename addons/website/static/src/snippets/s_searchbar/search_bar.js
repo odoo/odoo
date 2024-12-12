@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { getTemplate } from "@web/core/templates";
@@ -106,7 +106,7 @@ export class SearchBar extends Interaction {
 
     render(res) {
         if (this.menuEl) {
-            this.services.website_core.stopInteractions(this.menuEl);
+            this.services["public.interactions"].stopInteractions(this.menuEl);
         }
         const prevMenuEl = this.menuEl;
         if (res && this.limit) {
@@ -125,7 +125,7 @@ export class SearchBar extends Interaction {
                 widget: this,
             });
             this.insert(this.menuEl, this.el);
-            this.services.website_core.startInteractions(this.menuEl);
+            this.services["public.interactions"].startInteractions(this.menuEl);
         }
         prevMenuEl?.remove();
     }

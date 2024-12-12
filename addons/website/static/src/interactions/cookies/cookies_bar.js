@@ -56,7 +56,7 @@ export class CookiesBar extends Popup {
             </button>
             `).firstElementChild;
             this.insert(this.toggleEl, this.el, "beforebegin");
-            this.services.website_core.startInteractions(this.toggleEl);
+            this.services["public.interactions"].startInteractions(this.toggleEl);
         }
     }
 

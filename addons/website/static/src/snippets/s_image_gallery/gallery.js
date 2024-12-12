@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -73,14 +73,14 @@ export class Gallery extends Interaction {
                 backdropEl.remove(); // bootstrap leaves a modal-backdrop
             }
             const slideshowEl = this.modalEl.querySelector(".modal-body.o_slideshow");
-            this.services.website_core.stopInteractions(slideshowEl);
+            this.services["public.interactions"].stopInteractions(slideshowEl);
             this.modalEl.removeEventListener("keydown", this.__onModalKeydown);
             this.modalEl.remove();
             this.modalEl = undefined;
         });
         this.modalEl.addEventListener("shown.bs.modal", () => {
             const slideshowEl = this.modalEl.querySelector(".modal-body.o_slideshow");
-            this.services.website_core.startInteractions(slideshowEl);
+            this.services["public.interactions"].startInteractions(slideshowEl);
             this.modalEl.addEventListener("keydown", this.__onModalKeydown);
         }, { once: true });
         document.body.append(this.modalEl);

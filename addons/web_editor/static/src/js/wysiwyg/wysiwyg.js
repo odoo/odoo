@@ -2855,7 +2855,7 @@ export class Wysiwyg extends Component {
 
         // force a destroy of all elements to clean dom
         const iframe = document.querySelector("iframe.o_iframe");
-        const websiteCore = iframe.contentWindow.odoo.__WOWL_DEBUG__.root.env.services["website_core"];
+        const websiteCore = iframe.contentWindow.odoo.__WOWL_DEBUG__.root.env.services["public.interactions"];
         websiteCore.stopInteractions();
         // remove ZeroWidthSpace from odoo field value
         // ZeroWidthSpace may be present from OdooEditor edition process

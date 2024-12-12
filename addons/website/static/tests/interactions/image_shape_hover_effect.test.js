@@ -3,7 +3,7 @@ import { hover } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { MockServer } from "@web/../tests/_framework/mock_server/mock_server";
-import { startInteractions, setupInteractionWhiteList } from "../core/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 setupInteractionWhiteList("website.image_shape_hover_effect");

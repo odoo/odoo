@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import multirange from "@website/../lib/multirange/multirange_custom";
 
 export class WebsiteMultirangeInput extends Interaction {

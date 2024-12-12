@@ -2,10 +2,10 @@ import { registry } from "@web/core/registry";
 import { EventBus } from "@website/utils/misc";
 
 registry.category("services").add("website_cookies", {
-    dependencies: ["website_core"],
-    start(env, { website_core }) {
+    dependencies: ["public.interactions"],
+    start(env, deps) {
         const bus = new EventBus();
-
+        const publicInteractions = deps["public.interactions"];
         /**
          * Updates the element's iframe according to whether the cookies should
          * be approved (marked by `_post_processing_att` server-side).
@@ -20,7 +20,7 @@ registry.category("services").add("website_cookies", {
                 iframeEl.dataset.nocookieSrc = src;
                 iframeEl.setAttribute("src", "about:blank");
                 iframeEl.dataset.needCookiesApproval = "true";
-                website_core.startInteractions(iframeEl);
+                publicInteractions.startInteractions(iframeEl);
             }
         }
 

@@ -2,7 +2,8 @@ import { expect, test } from "@odoo/hoot";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../core/helpers";
+} from "@web/../tests/public/helpers";
+import { switchToEditMode } from "../helpers";
 
 setupInteractionWhiteList("website.carousel_section_slider");
 
@@ -40,7 +41,8 @@ const carouselHtml = `
 `;
 
 test("carousel section slider resets slide to attributes", async () => {
-    const { core, el } = await startInteractions(carouselHtml, { waitForStart: true, editMode: true });
+    const { core, el } = await startInteractions(carouselHtml, { waitForStart: true });
+    await switchToEditMode(core);
     expect(core.interactions.length).toBe(1);
     const controlEls = el.querySelectorAll(".carousel-control-prev, .carousel-control-next");
     const indicatorEls = el.querySelectorAll(".carousel-indicators > *");

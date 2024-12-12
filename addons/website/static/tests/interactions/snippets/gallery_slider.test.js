@@ -5,7 +5,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../../core/helpers";
+} from "@web/../tests/public/helpers";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 setupInteractionWhiteList("website.gallery_slider");

@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 
 export class SharedPopup extends Interaction {
     static selector = ".s_popup";

@@ -5,7 +5,7 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { onRpc } from "@web/../tests/web_test_helpers";
-import { startInteractions, setupInteractionWhiteList } from "../../core/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.search_bar");
 

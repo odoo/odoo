@@ -13,7 +13,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { defineStyle } from "@web/../tests/web_test_helpers";
-import { startInteractions, setupInteractionWhiteList } from "../../core/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.popup");
 

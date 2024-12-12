@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { startInteractions, setupInteractionWhiteList } from "@website/../tests/core/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 import { session } from "@web/session";
 
 setupInteractionWhiteList("website_cf_turnstile.turnstile_captcha");

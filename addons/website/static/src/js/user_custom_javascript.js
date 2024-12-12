@@ -7,7 +7,7 @@
 //
 /*
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 class HelloWorldPopup extends Interaction {

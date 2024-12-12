@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, tick } from "@odoo/hoot-dom";
 import { defineStyle } from "@web/../tests/web_test_helpers";
-import { setupInteractionWhiteList, startInteractions } from "@website/../tests/core/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.popup");
 

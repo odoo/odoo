@@ -5,7 +5,7 @@ import { MockServer } from "@web/../tests/_framework/mock_server/mock_server";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.website_controller_page_listing_layout");
 

@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 
 export class CookiesApproval extends Interaction {
     static selector = "[data-need-cookies-approval]";
@@ -40,7 +40,7 @@ export class CookiesApproval extends Interaction {
                 ? "" : "my-3",
         });
         this.insert(optionalCookiesWarningEl, this.iframeEl, "afterend");
-        this.services.website_core.startInteractions(optionalCookiesWarningEl);
+        this.services["public.interactions"].startInteractions(optionalCookiesWarningEl);
     }
 
     onOptionalCookiesAccepted() {

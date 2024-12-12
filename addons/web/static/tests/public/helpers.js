@@ -1,16 +1,11 @@
 import { getFixture, after } from "@odoo/hoot";
-import {
-    clearRegistry,
-    makeMockEnv,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { clearRegistry, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
-import { buildEditableInteractions } from "@website/core/website_edit_service";
+// import { buildEditableInteractions } from "@website/core/website_edit_service";
 
 let activeInteractions = null;
-let elementRegistry = registry.category("website.active_elements");
-let content = elementRegistry.content;
+const elementRegistry = registry.category("website.active_elements");
+const content = elementRegistry.content;
 
 export function setupInteractionWhiteList(interactions) {
     if (typeof interactions === "string") {
@@ -21,18 +16,20 @@ export function setupInteractionWhiteList(interactions) {
 
 export async function startInteraction(I, html, options) {
     clearRegistry(elementRegistry);
-    for (let Interaction of (Array.isArray(I) ? I : [I])) {
+    for (const Interaction of Array.isArray(I) ? I : [I]) {
         elementRegistry.add(Interaction.name, Interaction);
-
     }
     return startInteractions(html, options);
 }
 
 export async function startInteractions(
     html,
-    options = { waitForStart: true, editMode: false, translateMode: false },
+    options = { waitForStart: true, editMode: false, translateMode: false }
 ) {
-    defineMailModels();
+    if (odoo.loader.modules.has("@mail/../tests/mail_test_helpers")) {
+        const { defineMailModels } = odoo.loader.modules.get("@mail/../tests/mail_test_helpers");
+        defineMailModels();
+    }
     const fixture = getFixture();
     if (!html.includes("wrapwrap")) {
         html = `<div id="wrapwrap">${html}</div>`;
@@ -54,23 +51,7 @@ export async function startInteractions(
         }
     }
     const env = await makeMockEnv();
-    const core = env.services.website_core;
-    if (options.editMode) {
-        core.stopInteractions();
-        const unmatchedInteractions = activeInteractions ? new Set(activeInteractions) : new Set();
-        const builders = registry.category("website.editable_active_elements_builders").getEntries();
-        for (const [key, builder] of builders) {
-            if (activeInteractions && !activeInteractions.includes(key)) {
-                builder.isAbstract = true;
-            }
-            unmatchedInteractions.delete(key);
-        }
-        if (unmatchedInteractions.size) {
-            throw new Error(`White-listed Interaction does not exist: ${[...unmatchedInteractions]}.`);
-        }
-        const editableInteractions = buildEditableInteractions(builders.map((builder) => builder[1]));
-        core.activate(editableInteractions);
-    }
+    const core = env.services["public.interactions"];
     if (options.waitForStart) {
         await core.isReady;
     }
@@ -100,13 +81,13 @@ export function mockSendRequests() {
 
 export function isElementInViewport(el) {
     const rect = el.getBoundingClientRect();
-    const width = (window.innerWidth || document.documentElement.clientWidth);
-    const height = (window.innerHeight || document.documentElement.clientHeight);
+    const width = window.innerWidth || document.documentElement.clientWidth;
+    const height = window.innerHeight || document.documentElement.clientHeight;
     return (
-        Math.round(rect.top) >= 0
-        && Math.round(rect.left) >= 0
-        && Math.round(rect.right) <= width
-        && Math.round(rect.bottom) <= height
+        Math.round(rect.top) >= 0 &&
+        Math.round(rect.left) >= 0 &&
+        Math.round(rect.right) <= width &&
+        Math.round(rect.bottom) <= height
     );
 }
 

@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 
 const CAROUSEL_SLIDING_CLASS = "o_carousel_sliding";
 

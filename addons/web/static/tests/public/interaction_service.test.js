@@ -3,15 +3,13 @@ import { animationFrame } from "@odoo/hoot-mock";
 
 import { Component, xml } from "@odoo/owl";
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { startInteraction } from "./helpers";
 
 test("properly handles case where we have no match for wrapwrap", async () => {
     const env = await makeMockEnv();
-    expect(env.services.website_core).toBe(null);
-
+    expect(env.services["public.interactions"]).toBe(null);
 });
-
 
 test("wait for translation before starting interactions", async () => {
     class Test extends Interaction {
@@ -48,7 +46,7 @@ test("start interactions even if there is a crash", async () => {
 
         setup() {
             expect.step("start boom");
-            throw new Error("boom")
+            throw new Error("boom");
         }
         destroy() {
             expect.step("destroy boom");
@@ -65,7 +63,9 @@ test("start interactions even if there is a crash", async () => {
         }
     }
 
-    const { core } = await startInteraction([Boom,NotBoom], `<div class="test"></div>`, { waitForStart: false});
+    const { core } = await startInteraction([Boom, NotBoom], `<div class="test"></div>`, {
+        waitForStart: false,
+    });
 
     let e = null;
     try {
@@ -75,9 +75,9 @@ test("start interactions even if there is a crash", async () => {
     }
     expect(e.message).toBe("boom");
 
-    expect.verifySteps(["start boom", "start notboom"])
+    expect.verifySteps(["start boom", "start notboom"]);
     core.stopInteractions();
-    expect.verifySteps(["destroy notboom"])
+    expect.verifySteps(["destroy notboom"]);
 });
 
 test("recover from error as much as possible when applying dynamiccontent", async () => {
@@ -89,7 +89,7 @@ test("recover from error as much as possible when applying dynamiccontent", asyn
     class Test extends Interaction {
         static selector = ".test";
         dynamicContent = {
-            "_root": {
+            _root: {
                 "t-att-a": () => a,
                 "t-att-b": () => {
                     if (b === "boom") {
@@ -98,15 +98,15 @@ test("recover from error as much as possible when applying dynamiccontent", asyn
                     return b;
                 },
                 "t-att-c": () => c,
-            }
-        }
+            },
+        };
         setup() {
             interaction = this;
         }
     }
 
     const { el } = await startInteraction(Test, `<div class="test"></div>`);
-    
+
     expect(el.querySelector(".test").outerHTML).toBe(`<div class="test" a="a" b="b" c="c"></div>`);
 
     a = "aa";
@@ -118,12 +118,14 @@ test("recover from error as much as possible when applying dynamiccontent", asyn
     } catch (e) {
         error = e;
     }
-    expect(error.message).toBe("An error occured while updating dynamic attribute 'b' (in interaction 'Test')")
+    expect(error.message).toBe(
+        "An error occured while updating dynamic attribute 'b' (in interaction 'Test')"
+    );
 
-    expect(el.querySelector(".test").outerHTML).toBe(`<div class="test" a="aa" b="b" c="cc"></div>`);
-
+    expect(el.querySelector(".test").outerHTML).toBe(
+        `<div class="test" a="aa" b="b" c="cc"></div>`
+    );
 });
-
 
 test("interactions are stopped in reverse order", async () => {
     let n = 1;
@@ -139,24 +141,26 @@ test("interactions are stopped in reverse order", async () => {
         }
     }
 
-    const { core } = await startInteraction(Test, `<div class="test"></div><div class="test"></div>`);
+    const { core } = await startInteraction(
+        Test,
+        `<div class="test"></div><div class="test"></div>`
+    );
     expect.verifySteps(["setup 1", "setup 2"]);
     core.stopInteractions();
     expect.verifySteps(["destroy 2", "destroy 1"]);
 });
-
-
 
 test("can mount a component", async () => {
     class Test extends Component {
         static selector = ".test";
         static template = xml`owl component`;
     }
-    const {core, el} = await startInteraction(Test, `<div class="test"></div>`);
-    expect(el.querySelector(".test").innerHTML).toBe(`<owl-component contenteditable="false" data-oe-protected="true">owl component</owl-component>`);
+    const { core, el } = await startInteraction(Test, `<div class="test"></div>`);
+    expect(el.querySelector(".test").innerHTML).toBe(
+        `<owl-component contenteditable="false" data-oe-protected="true">owl component</owl-component>`
+    );
     core.stopInteractions();
     expect(el.querySelector(".test").outerHTML).toBe(`<div class="test"></div>`);
-
 });
 
 test("can start interaction in specific el", async () => {
@@ -164,8 +168,8 @@ test("can start interaction in specific el", async () => {
     class Test extends Interaction {
         static selector = ".test";
         dynamicContent = {
-            "_root": { "t-att-a": () => "b" },
-        }
+            _root: { "t-att-a": () => "b" },
+        };
 
         setup() {
             n++;
@@ -198,22 +202,31 @@ test("can start and stop interaction in specific el", async () => {
         }
     }
 
-    const { core, el } = await startInteraction(Test, `
+    const { core, el } = await startInteraction(
+        Test,
+        `
         <p>
             <span class="a test"></span>
             <span class="b"></span>
-        </p>`);
+        </p>`
+    );
 
     expect(n).toBe(1);
     const p = el.querySelector("p");
-    expect(p).toHaveInnerHTML(`<span class="a test" data-start="true"></span> <span class="b"></span>`)
-    
+    expect(p).toHaveInnerHTML(
+        `<span class="a test" data-start="true"></span> <span class="b"></span>`
+    );
+
     p.querySelector(".b").classList.add("test");
     await core.startInteractions(p.querySelector(".b"));
     expect(n).toBe(2);
-    expect(p).toHaveInnerHTML(`<span class="a test" data-start="true"></span> <span class="b test" data-start="true"></span>`)
+    expect(p).toHaveInnerHTML(
+        `<span class="a test" data-start="true"></span> <span class="b test" data-start="true"></span>`
+    );
 
     core.stopInteractions(p.querySelector(".b"));
     expect(n).toBe(1);
-    expect(p).toHaveInnerHTML(`<span class="a test" data-start="true"></span> <span class="b test"></span>`)
+    expect(p).toHaveInnerHTML(
+        `<span class="a test" data-start="true"></span> <span class="b test"></span>`
+    );
 });

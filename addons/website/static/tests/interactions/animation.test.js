@@ -3,7 +3,7 @@ import { animationFrame, click, scroll } from "@odoo/hoot-dom";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.animation");
 

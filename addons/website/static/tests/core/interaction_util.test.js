@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { buildEditableInteractions } from "@website/core/website_edit_service";
 
 test("buildEditableInteractions concrete", async () => {
@@ -10,18 +10,16 @@ test("buildEditableInteractions concrete", async () => {
             doStuff();
         }
     }
-    const BaseEdit = I => class extends I {
-        stuff() {} // don't
-    };
+    const BaseEdit = (I) =>
+        class extends I {
+            stuff() {} // don't
+        };
     class Specific extends Base {
         otherStuff() {
             doStuff("other");
         }
     }
-    const builders = [
-        { Interaction: Base, mixin: BaseEdit },
-        { Interaction: Specific },
-    ];
+    const builders = [{ Interaction: Base, mixin: BaseEdit }, { Interaction: Specific }];
     const [baseEI, specificEI] = buildEditableInteractions(builders);
     expect(baseEI.name).toBe("Base__mixin");
     expect(specificEI.name).toBe("Specific__mixin");
@@ -40,9 +38,10 @@ test("buildEditableInteractions abstract", async () => {
             doStuff();
         }
     }
-    const AbstractBaseEdit = I => class extends I {
-        stuff() {} // don't
-    };
+    const AbstractBaseEdit = (I) =>
+        class extends I {
+            stuff() {} // don't
+        };
     class AbstractIntermediate extends AbstractBase {
         moreStuff() {
             doStuff("more");

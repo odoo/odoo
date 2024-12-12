@@ -1,7 +1,7 @@
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
 import { _t } from "@web/core/l10n/translation";

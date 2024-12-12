@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { startInteractions, setupInteractionWhiteList } from "../core/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.plausible_push");
 

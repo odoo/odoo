@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { Interaction } from "./interaction";
 import { getTemplate } from "@web/core/templates";
-import { PairSet } from "@website/utils/misc";
+import { PairSet } from "./utils";
 import { Colibri } from "./colibri";
 
 /**
@@ -25,12 +25,11 @@ import { Colibri } from "./colibri";
  *
  */
 
-
-class WebsiteCore {
+class InteractionService {
     /**
-     * 
-     * @param {HTMLElement} el 
-     * @param {Object} env 
+     *
+     * @param {HTMLElement} el
+     * @param {Object} env
      */
     constructor(el, env) {
         this.Interactions = [];
@@ -47,8 +46,8 @@ class WebsiteCore {
     }
 
     /**
-     * 
-     * @param {Interaction[]} Interactions 
+     *
+     * @param {Interaction[]} Interactions
      */
     activate(Interactions) {
         this.Interactions = Interactions;
@@ -83,7 +82,7 @@ class WebsiteCore {
             destroy: () => {
                 root.destroy();
                 compElem.remove();
-            }
+            },
         };
     }
 
@@ -97,10 +96,14 @@ class WebsiteCore {
         const proms = [];
         for (const I of this.Interactions) {
             if (I.selector === "") {
-                throw new Error(`The selector should be defined as a static property on the class ${I.name}, not on the instance`);
+                throw new Error(
+                    `The selector should be defined as a static property on the class ${I.name}, not on the instance`
+                );
             }
             if (I.dynamicContent) {
-                throw new Error(`The dynamic content object should be defined on the instance, not on the class (${I.name})`);
+                throw new Error(
+                    `The dynamic content object should be defined on the instance, not on the class (${I.name})`
+                );
             }
             if (el.matches(I.selector)) {
                 this._startInteraction(el, I, proms);
@@ -143,7 +146,7 @@ class WebsiteCore {
             if (el === interaction.el || el.contains(interaction.el)) {
                 // console.log(`[colibri] stopping ${interaction.interaction.constructor.name}`);
                 interaction.destroy();
-                this.activeInteractions.delete(interaction.el, interaction.I);
+                this.activeInteractions.delete(interaction.el, interaction.interaction.constructor);
             } else {
                 interactions.push(interaction);
             }
@@ -175,7 +178,7 @@ class WebsiteCore {
     }
 }
 
-registry.category("services").add("website_core", {
+registry.category("services").add("public.interactions", {
     dependencies: ["localization"],
     async start(env) {
         const el = document.querySelector("#wrapwrap");
@@ -184,8 +187,8 @@ registry.category("services").add("website_core", {
             return null;
         }
         const Interactions = registry.category("website.active_elements").getAll();
-        const websiteCore = new WebsiteCore(el, env);
-        websiteCore.activate(Interactions);
-        return websiteCore;
+        const service = new InteractionService(el, env);
+        service.activate(Interactions);
+        return service;
     },
 });

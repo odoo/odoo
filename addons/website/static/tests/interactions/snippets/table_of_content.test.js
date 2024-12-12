@@ -5,7 +5,7 @@ import {
     isElementVerticallyInViewportOf,
     startInteractions,
     setupInteractionWhiteList,
-} from "../../core/helpers";
+} from "@web/../tests/public/helpers";
 
 import {
     setupTest,

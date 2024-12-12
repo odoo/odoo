@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { rpc } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
@@ -140,12 +140,12 @@ export class DynamicSnippet extends Interaction {
         this.renderContent();
         // TODO What was this about ? Rendered content is already started.
         // for (const childEl of this.el.children) {
-        //     this.services.website_core.startInteractions(childEl);
+        //     this.services["public.interactions"].startInteractions(childEl);
         // }
     }
     renderContent() {
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
-        this.services.website_core.stopInteractions(templateAreaEl);
+        this.services["public.interactions"].stopInteractions(templateAreaEl);
         const mainPageUrl = this.getMainPageUrl();
         const allContentLink = this.el.querySelector(".s_dynamic_snippet_main_page_url");
         if (allContentLink && mainPageUrl) {
@@ -156,7 +156,7 @@ export class DynamicSnippet extends Interaction {
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.
-        this.services.website_core.startInteractions(templateAreaEl);
+        this.services["public.interactions"].startInteractions(templateAreaEl);
         // Same as above and probably should be done automatically for any
         // bootstrap behavior (apparently needed since BS 5.3): start potential
         // carousel in new content (according to their data-bs-ride and other

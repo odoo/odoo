@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { startInteractions, setupInteractionWhiteList } from "../core/helpers";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ImageLazyLoading } from "@website/interactions/image_lazy_loading";
 import { advanceTime } from "@odoo/hoot-mock";

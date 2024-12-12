@@ -42,14 +42,14 @@ export function buildEditableInteractions(builders) {
 
 
 registry.category("services").add("website_edit", {
-    dependencies: ["website_core"],
-    start(env, { website_core }) {
+    dependencies: ["public.interactions"],
+    start(env, { ["public.interactions"]: publicInteractions }) {
         let editableInteractions = null;
         let editMode = false;
 
         return {
             isEditingTranslations() {
-                return !!website_core.el.closest("html").dataset.edit_translations;
+                return !!publicInteractions.el.closest("html").dataset.edit_translations;
             },
             update(target, mode) {
                 // editMode = true;
@@ -58,16 +58,16 @@ registry.category("services").add("website_edit", {
                 // interactions are already started. we only restart them if the
                 // public root is not just starting.
 
-                website_core.stopInteractions(target);
+                publicInteractions.stopInteractions(target);
                 if (shouldActivateEditInteractions) {
                     if (!editableInteractions) {
                         const builders = registry.category("website.editable_active_elements_builders").getAll();
                         editableInteractions = buildEditableInteractions(builders);
                     }
                     editMode = true;
-                    website_core.activate(editableInteractions);
+                    publicInteractions.activate(editableInteractions);
                 } else {
-                    website_core.startInteractions(target);
+                    publicInteractions.startInteractions(target);
                 }
 
             }

@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { isVisible } from "@web/core/utils/ui";
 
 export class FullScreenHeight extends Interaction {

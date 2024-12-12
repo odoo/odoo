@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { Component, xml, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 

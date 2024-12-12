@@ -3,7 +3,7 @@ import { browser } from "@web/core/browser/browser";
 const localStorage = browser.localStorage;
 
 odoo.loader.bus.addEventListener("module-started", (e) => {
-    if (e.detail.moduleName !== "@website/core/interaction") {
+    if (e.detail.moduleName !== "@web/public/interaction") {
         return;
     }
 

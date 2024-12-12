@@ -4,7 +4,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.carousel_bootstrap_upgrade_fix");
 

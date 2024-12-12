@@ -8,7 +8,7 @@ import {
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList([
     "website.header_standard",

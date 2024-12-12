@@ -4,7 +4,7 @@ import { hover, pointerDown } from "@odoo/hoot-dom";
 import {
     startInteractions,
     setupInteractionWhiteList,
-} from "../../core/helpers";
+} from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList("website.mega_menu_dropdown");
 

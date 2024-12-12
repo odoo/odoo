@@ -5,8 +5,8 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
-import { startInteractions, setupInteractionWhiteList } from "../../core/helpers";
+import { Interaction } from "@web/public/interaction";
+import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 class TestItem extends Interaction {
     static selector = ".s_test_item";

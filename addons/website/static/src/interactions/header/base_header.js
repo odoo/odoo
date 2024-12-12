@@ -1,4 +1,4 @@
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 

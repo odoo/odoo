@@ -1,6 +1,6 @@
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
-import { SKIP_IMPLICIT_UPDATE } from "./colibri"
-import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/public/minimal_dom";
+import { SKIP_IMPLICIT_UPDATE } from "./colibri";
+import { makeAsyncHandler, makeButtonHandler } from "./utils";
 
 /**
  * This is the base class to describe interactions. The Interaction class
@@ -8,7 +8,7 @@ import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/public/minim
  * specified lifecycle, some dynamic content, and a few helper functions
  * designed to accomplish common tasks, such as adding dom listener or waiting for
  * some task to complete.
- * 
+ *
  * Note that even though interactions are not destroyed in the standard workflow
  * (a user visiting the website), there are still some cases where it happens:
  * for example, when someone switch the website in "edit" mode. This means that
@@ -20,7 +20,7 @@ export class Interaction {
      * This static property describes the set of html element targeted by this
      * interaction. An instance will be created for each match when the website
      * framework is initialized.
-     * 
+     *
      * @type {string}
      */
     static selector = "";
@@ -43,7 +43,7 @@ export class Interaction {
      * The dynamic content of an interaction is an object describing the set of
      * "dynamic elements" managed by the framework: event handlers, dynamic
      * attributes, dynamic content, sub components.
-     * 
+     *
      * Its syntax looks like the following:
      * dynamicContent = {
      *      ".some-selector:t-on-click": (ev) => this.onClick(ev),
@@ -53,9 +53,9 @@ export class Interaction {
      *
      * A selector is either a standard css selector, or a special keyword
      * (see dynamicSelectors: _body, _root, _document, _window)
-     * 
+     *
      * Accepted directives includes: t-on-, t-att-, t-out and t-component
-     * 
+     *
      * Note that this is not owl! It is similar, to make it easy to learn, but
      * it is different, the syntax and semantics are somewhat different.
      *
@@ -66,7 +66,7 @@ export class Interaction {
     /**
      * The constructor is not supposed to be defined in a subclass. Use setup
      * instead
-     * 
+     *
      * @param {HTMLElement} el
      * @param {import("@web/env").OdooEnv} env
      * @param {Object} metadata
@@ -99,28 +99,28 @@ export class Interaction {
      * initialize everything needed by the interaction. The el element is
      * available and can be used. Services are ready and available as well.
      */
-    setup() { }
+    setup() {}
 
     /**
      * If the interaction needs some asynchronous work to be ready, it should
      * be done here. The website framework will wait for this method to complete
      * before applying the dynamic content (event handlers, ...)
      */
-    async willStart() { }
+    async willStart() {}
 
     /**
      * The start function when we need to execute some code after the interaction
      * is ready. It is the equivalent to the "mounted" owl lifecycle hook. At
      * this point, event handlers have been attached.
      */
-    start() { }
+    start() {}
 
     /**
      * All side effects done should be cleaned up here. Note that like all
      * other lifecycle methods, it is not necessary to call the super.destroy
      * method (unless you inherit from a concrete subclass)
      */
-    destroy() { }
+    destroy() {}
 
     // -------------------------------------------------------------------------
     // helpers
@@ -143,16 +143,17 @@ export class Interaction {
      * code has acted.
      */
     waitFor(promise) {
-        const prom = new Promise(async (resolve) => {
-            const result = await promise;
-            if (!this.isDestroyed) {
-                resolve(result);
-                prom.then(() => {
-                    if (this.isReady) {
-                        this.updateContent();
-                    }
-                });
-            }
+        const prom = new Promise((resolve) => {
+            promise.then((result) => {
+                if (!this.isDestroyed) {
+                    resolve(result);
+                    prom.then(() => {
+                        if (this.isReady) {
+                            this.updateContent();
+                        }
+                    });
+                }
+            });
         });
         return prom;
     }
@@ -202,17 +203,20 @@ export class Interaction {
         });
         return Object.assign(
             {
-                [debouncedFn.name]: () => { debouncedFn(); return SKIP_IMPLICIT_UPDATE; },
+                [debouncedFn.name]: () => {
+                    debouncedFn();
+                    return SKIP_IMPLICIT_UPDATE;
+                },
             }[debouncedFn.name],
             {
                 cancel: debouncedFn.cancel,
-            },
+            }
         );
     }
 
     /**
      * Make sure the function is not started again before it is completed.
-     * If required, add a loading animation on button if the execution takes 
+     * If required, add a loading animation on button if the execution takes
      * more than 400ms.
      */
     blockedUntilDone(fn, useLoadingAnimation = false) {
@@ -238,11 +242,14 @@ export class Interaction {
         });
         return Object.assign(
             {
-                [throttledFn.name]: () => { throttledFn(); return SKIP_IMPLICIT_UPDATE; },
+                [throttledFn.name]: () => {
+                    throttledFn();
+                    return SKIP_IMPLICIT_UPDATE;
+                },
             }[throttledFn.name],
             {
                 cancel: throttledFn.cancel,
-            },
+            }
         );
     }
 
@@ -286,7 +293,7 @@ export class Interaction {
      * destroyed. It is sometimes useful, so we can explicitely add the cleanup
      * at the location where the side effect is created.
      *
-     * @param {Function} fn 
+     * @param {Function} fn
      */
     registerCleanup(fn) {
         this.__colibri__.cleanups.push(fn.bind(this));

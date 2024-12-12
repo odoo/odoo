@@ -1,6 +1,6 @@
 import { uniqueId } from "@web/core/utils/functions";
 import { registry } from "@web/core/registry";
-import { Interaction } from "@website/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { session } from "@web/session";
 import { TurnStile } from "./turnstile";
 
