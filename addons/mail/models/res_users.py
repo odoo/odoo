@@ -14,7 +14,7 @@ class ResUsers(models.Model):
         - add a welcome message
         - add suggestion preference
     """
-    _inherit = ['res.users']
+    _inherit = ["res.users", "bus.listener.mixin"]
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
@@ -24,6 +24,8 @@ class ResUsers(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+    presence_id = fields.One2many("mail.presence", "user_id")
+    im_status = fields.Char("IM Status", compute="_compute_im_status")
 
     _notification_type = models.Constraint(
         "CHECK (notification_type = 'email' OR NOT share)",
@@ -49,6 +51,11 @@ class ResUsers(models.Model):
 
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
         self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')]).notification_type = 'email'
+
+    def _compute_im_status(self):
+        for user in self:
+            # sudo: partner can access their presences
+            user.im_status = user.sudo().presence_id.status or "offline"
 
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
@@ -252,6 +259,12 @@ class ResUsers(models.Model):
                           user_name=current_user.name, user_id=current_user.id,
                           portal_user_name=user.name)
             )
+
+    def _bus_channel(self):
+        return self.partner_id._bus_channel()
+
+    def _is_user_available(self):
+        return self.im_status == "online"
 
     # ------------------------------------------------------------
     # DISCUSS

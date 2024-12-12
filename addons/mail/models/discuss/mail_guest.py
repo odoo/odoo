@@ -57,14 +57,12 @@ class MailGuest(models.Model):
     lang = fields.Selection(string="Language", selection=_lang_get)
     timezone = fields.Selection(string="Timezone", selection=_tz_get)
     channel_ids = fields.Many2many(string="Channels", comodel_name='discuss.channel', relation='discuss_channel_member', column1='guest_id', column2='channel_id', copy=False)
+    presence_id = fields.One2many("mail.presence", "guest_id")
     im_status = fields.Char('IM Status', compute='_compute_im_status')
 
     def _compute_im_status(self):
-        # sudo - bus.presence: guests can access other guest's presences
-        presences = self.env["bus.presence"].sudo().search([("guest_id", "in", self.ids)])
-        im_status_by_guest = {presence.guest_id: presence.status for presence in presences}
         for guest in self:
-            guest.im_status = im_status_by_guest.get(guest, "offline")
+            guest.im_status = guest.presence_id.status or "offline"
 
     def _get_guest_from_token(self, token=""):
         """Returns the guest record for the given token, if applicable."""
