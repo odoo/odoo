@@ -70,6 +70,11 @@ $spacers: (
 $body-bg: o-color('o-cc1-bg') !default;
 $body-color: o-color('o-cc1-text') or color-contrast($body-bg) !default;
 
+// Bootstrap 5.3 introduced the tertiary-bg variable which is now the default
+// value on hover on some components eg. dropdown-item. To ensure contrast
+// with the user's palette, a relative value of the bg-color is used.
+$body-tertiary-bg: rgba(color-contrast($body-bg), .1) !default;
+
 // Links
 //
 // Style anchor elements.
