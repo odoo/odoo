@@ -33,7 +33,7 @@
                 </button>
                 <button t-if="props.thread.rtcInvitingSession?.is_camera_on" class="btn smaller btn-success d-flex m-1 border-0 rounded-circle shadow-none align-items-center"
                     t-att-class="{ 'p-0': isSmall, 'p-1': !isSmall }"
-                    aria-label="Acceot with camera"
+                    aria-label="Accept with camera"
                     title="Accept with camera"
                     t-att-disabled="rtc.state.hasPendingRequest"
                     t-on-click="(ev) => this.onClickToggleAudioCall(ev, { camera: true })">
