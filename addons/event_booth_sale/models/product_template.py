@@ -27,13 +27,17 @@ class ProductTemplate(models.Model):
         """ Prevent changing the service_tracking field if the product template or any of its variants
         is linked to an Event Booth Category.
         """
-        for template in self:
+        if product_variants_not_event_booth := self.product_variant_ids.filtered(lambda p: p.service_tracking != 'event_booth'):
             linked_booth_category = self.env['event.booth.category'].sudo().search([
-                ('product_id', 'in', template.product_variant_ids.ids)
+                ('product_id', 'in', product_variants_not_event_booth.ids)
             ], limit=1)
-            if linked_booth_category and template.service_tracking != 'event_booth':
+            if linked_booth_category:
                 raise ValidationError(
-                    _('The "service_tracking" for this product template cannot be changed because '
-                      'one of its variants is assigned to an Event Booth Category. '
-                      'The service_tracking must remain "Event Booth".')
+                    _(
+                        'The "service_tracking" for the product template, %(product_template_name)s cannot be changed because '
+                        'one of its variants is assigned to the Event Booth Category, %(event_booth_category_name)s. '
+                        'The service_tracking must remain "Event Booth".',
+                        product_template_name=linked_booth_category.product_id.name,
+                        event_booth_category_name=linked_booth_category.name,
+                    )
                 )
