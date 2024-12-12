@@ -139,6 +139,15 @@
                                         </div>
                                     </group>
                                 </group>
+                                <group>
+                                    <setting id="concurrent_sessions_number" name="concurrent_sessions_number_container">
+                                        <field name="concurrent_session" string="Limit the number of concurrent sessions" help="If limited, operators will only handle the selected number of sessions at a time. While on a call, they will not receive new conversations." widget="radio" options="{'horizontal': true}"/>
+                                        <div class="mt16" invisible="concurrent_session != 'limited'">
+                                            <field name="concurrent_session_number" string="Sessions" class="oe_inline"/>
+                                            <label for="concurrent_session_number" class="o_light_label mr8"/>
+                                        </div>
+                                    </setting>
+                                </group>
                             </page>
                             <page string="Channel Rules" name="channel_rules">
                                 <field name="rule_ids" colspan="2"/>
