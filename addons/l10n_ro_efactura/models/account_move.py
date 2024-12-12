@@ -250,13 +250,14 @@ class AccountMove(models.Model):
                     company=invoice.company_id,
                     key_download=result['key_download'],
                     session=session,
+                    status=result['state_status'],
                 )
                 to_delete_documents |= invoice._l10n_ro_edi_get_sending_and_failed_documents()
                 final_result['key_loading'] = active_sending_document.key_loading
-                if 'error' in final_result:
+                if final_result.get('error'):
                     final_result['attachment_raw'] = previous_raw
                     invoice._l10n_ro_edi_create_document_invoice_sending_failed(
-                        message=final_result['error'],
+                        message=final_result['error'].replace('\t', ''),
                         attachment_raw=final_result['attachment_raw'],
                         key_loading=final_result['key_loading'],
                     )
