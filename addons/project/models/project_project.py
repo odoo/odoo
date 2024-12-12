@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
@@ -462,13 +461,30 @@ class Project(models.Model):
             for vals in vals_list:
                 if 'label_tasks' in vals and not vals['label_tasks']:
                     vals['label_tasks'] = task_label
-        if len(self.env.companies) > 1 and self.env.user.has_group('project.group_project_stages'):
-            # Select the stage whether the default_stage_id field is set in context (quick create) or if it is not (normal create)
-            stage = self.env['project.project.stage'].browse(self._context['default_stage_id']) if 'default_stage_id' in self._context else self._default_stage_id()
-            # The project's company_id must be the same as the stage's company_id
-            if stage.company_id:
+        if self.env.user.has_group('project.group_project_stages'):
+            if 'default_stage_id' in self._context:
+                stage = self.env['project.project.stage'].browse(self._context['default_stage_id'])
+                # The project's company_id must be the same as the stage's company_id
+                if stage.company_id:
+                    for vals in vals_list:
+                        vals['company_id'] = stage.company_id.id
+            else:
+                # If a company is set on the project, use a stage with the same company or no company
+                companies_ids = set(vals.get('company_id', False) for vals in vals_list)
+                default_stages_by_company = {
+                    company_id: self.env['project.project.stage'].search(
+                        [('company_id', 'in', [False, company_id])],
+                        limit=1) if company_id else self._default_stage_id()
+                    for company_id in companies_ids
+                }
                 for vals in vals_list:
-                    vals['company_id'] = stage.company_id.id
+                    if vals.get('company_id'):
+                        vals['stage_id'] = default_stages_by_company[vals['company_id']].id
+                    else:
+                        vals['stage_id'] = default_stages_by_company[False].id
+                        if default_stages_by_company[False].company_id:
+                            vals['company_id'] = default_stages_by_company[False].company_id.id
+
         projects = super().create(vals_list)
         return projects
 
