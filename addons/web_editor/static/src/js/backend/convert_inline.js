@@ -532,46 +532,11 @@ function enforceTablesResponsivity(editable) {
         .filter(tr => [...tr.children].some(td => td.classList.contains('o_converted_col')))
         .reverse();
     for (const tr of trs) {
-        const commonTable = _createTable();
-        commonTable.style.height = '100%';
-        const commonTr = document.createElement('tr');
-        const commonTd = document.createElement('td');
-        commonTr.appendChild(commonTd);
-        commonTable.appendChild(commonTr);
         const tds = [...tr.children].filter(child => child.nodeName === 'TD');
-        let index = 0;
         for (const td of tds) {
-            const width = td.style.maxWidth;
-            const div = document.createElement('div');
-            div.style.display = 'inline-block';
-            div.style.verticalAlign = 'top';
-            div.classList.add('o_stacking_wrapper');
-            commonTd.appendChild(div);
-            const newTable = _createTable();
-            newTable.style.width = width;
-            newTable.classList.add('o_stacking_wrapper');
-            div.appendChild(newTable);
-            const newTr = document.createElement('tr');
-            newTable.appendChild(newTr);
-            newTr.appendChild(td);
-            td.style.width = '100%';
-            td.removeAttribute('width');
-            if (index === 0) {
-                div.before(_createMso(`
-                    <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%;">
-                        <tr>
-                            <td valign="top" style="width: ${width};">`));
-            } else {
-                div.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
-            }
-            if (index === tds.length - 1) {
-                div.after(_createMso(`</td></tr></table>`));
-            }
-            index++;
+            td.style.verticalAlign = 'top';
+            td.classList.add("o_stacking_wrapper");
         }
-        const topTd = document.createElement('td');
-        topTd.appendChild(commonTable);
-        tr.prepend(topTd);
     }
 }
 // Masonry has crazy nested tables that require some extra treatment.
@@ -792,6 +757,16 @@ async function toInline($editable, cssRules, $iframe) {
         node.style.setProperty('display', displayValue);
     }
     $editable.addClass('odoo-editor-editable');
+    // Added a style here because we can't update the template in stable
+    // TODO : add it in xml template in master instead of here
+    const styleElement = document.createElement("style");
+    styleElement.innerHTML = `
+        @media screen and (max-width: 1135px) {
+            .o_stacking_wrapper {
+                display:inline-block;
+            }
+    `;
+    $editable.get(0).appendChild(styleElement);
 }
 /**
  * Take all elements with a `background-image` style and convert them to `vml`
