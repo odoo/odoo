@@ -319,6 +319,9 @@ export class Message extends Record {
     }
 
     get inlineBody() {
+        if (this.notificationType === "call") {
+            return _t("%(caller)s started a call", { caller: this.author.name });
+        }
         if (!this.body) {
             return "";
         }

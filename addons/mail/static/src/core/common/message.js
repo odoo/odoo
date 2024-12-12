@@ -40,6 +40,7 @@ import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
+import { CallNotificationMessage } from "./call_notification_message";
 
 /**
  * @typedef {Object} Props
@@ -71,6 +72,7 @@ export class Message extends Component {
         ImStatus,
         Popover: MessageNotificationPopover,
         RelativeTime,
+        CallNotificationMessage,
     };
     static defaultProps = {
         hasActions: true,
@@ -495,6 +497,15 @@ export class Message extends Component {
         }
         this.state.showTranslation =
             !this.state.showTranslation && Boolean(message.translationValue);
+    }
+
+    get callNotificationProps() {
+        return {
+            author: this.message.author,
+            messageDate: this.message.dateSimpleWithDay,
+            dateStart: this.message.create_date,
+            dateEnd: this.message.write_date,
+        };
     }
 }
 
