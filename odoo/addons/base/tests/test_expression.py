@@ -1641,7 +1641,7 @@ class TestAutoJoin(TransactionExpressionCase):
         )
 
 
-class TestQueries(TransactionCase):
+class TestQueries(TransactionExpressionCase):
 
     def test_logic(self):
         Model = self.env['res.partner']
@@ -1799,8 +1799,8 @@ class TestQueries(TransactionCase):
             SELECT "ir_model"."id", "ir_model"."name"->>%s
             FROM "ir_model"
             WHERE (
-                ("ir_model"."model" NOT ILIKE %s OR "ir_model"."model" IS NULL)
-                AND ("ir_model"."name"->>%s NOT ILIKE %s OR "ir_model"."name"->>%s IS NULL)
+                "ir_model"."model" NOT ILIKE %s
+                AND "ir_model"."name"->>%s NOT ILIKE %s
             )
             ORDER BY "ir_model"."model"
             LIMIT %s
@@ -1808,7 +1808,7 @@ class TestQueries(TransactionCase):
             Model.name_search('foo', operator='not ilike')
 
 
-class TestMany2one(TransactionCase):
+class TestMany2one(TransactionExpressionCase):
     def setUp(self):
         super().setUp()
         self.Partner = self.env['res.partner'].with_context(active_test=False)
@@ -2126,7 +2126,7 @@ class TestMany2one(TransactionCase):
             self.assertGreater(len(self.Partner.name_search('test')), 0)
 
 
-class TestOne2many(TransactionCase):
+class TestOne2many(TransactionExpressionCase):
     def setUp(self):
         super().setUp()
         self.Partner = self.env['res.partner'].with_context(active_test=False)
@@ -2356,7 +2356,7 @@ class TestOne2many(TransactionCase):
             self.Partner.search([('bank_ids', '=', False)], order='id')
 
 
-class TestMany2many(TransactionCase):
+class TestMany2many(TransactionExpressionCase):
     def setUp(self):
         super().setUp()
         self.User = self.env['res.users'].with_context(active_test=False)
