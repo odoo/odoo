@@ -164,29 +164,19 @@ class AccountMove(models.Model):
         for move in self:
             move.show_reset_to_draft_button = not move.l10n_it_edi_transaction and move.show_reset_to_draft_button
 
-    def _get_edi_decoder(self, file_data, new=False):
+    def _decode_edi_file(self, file_data, new=False):
         # EXTENDS 'account'
-        if file_data['type'] == 'l10n_it_edi':
-            return self._l10n_it_edi_import_invoice
-        return super()._get_edi_decoder(file_data, new=new)
+        if file_data['type'] == 'l10n_it.fatturapa':
+            # Italy needs a custom order in prediction, since prediction generally deduces taxes
+            # from products, while in Italian EDI, taxes are generally explicited in the XML file
+            # while the product may not be labelled exactly the same as in the database.
+            return self.with_context(disable_onchange_name_predictive=True)._l10n_it_edi_import_invoice(file_data)
+        return super()._decode_edi_file(file_data, new)
 
     def _post(self, soft=True):
         # EXTENDS 'account'
         self.with_context(skip_is_manually_modified=True).write({'l10n_it_edi_header': False})
         return super()._post(soft)
-
-    def _extend_with_attachments(self, attachments, new=False):
-        result = False
-        # Prediction is an enterprise feature.
-        if self._is_prediction_enabled():
-            # Italy needs a custom order in prediction, since prediction generally deduces taxes
-            # from products, while in Italian EDI, taxes are generally explicited in the XML file
-            # while the product may not be labelled exactly the same as in the database
-            l10n_it_attachments = attachments.filtered(lambda rec: rec._is_l10n_it_edi_import_file())
-            if l10n_it_attachments:
-                attachments = attachments - l10n_it_attachments
-                result = super(AccountMove, self.with_context(disable_onchange_name_predictive=True))._extend_with_attachments(l10n_it_attachments, new)
-        return result or super()._extend_with_attachments(attachments, new)
 
     # -------------------------------------------------------------------------
     # Business actions
@@ -836,8 +826,8 @@ class AccountMove(models.Model):
         """
         proxy_acks = []
         retrigger = False
-        moves = self.env['account.move']
 
+        attachment_vals = []
         for id_transaction, invoice_data in invoices_data.items():
 
             # The IAP server has a maximum number of documents it can send.
@@ -849,30 +839,48 @@ class AccountMove(models.Model):
 
             # `_l10n_it_edi_create_move_from_attachment` will create an empty move
             # then try and fill it with the content imported from the attachment.
-            # Should the import fail, thanks to try..except and savepoint,
+            # Should the import fail, thanks to try..except and rollback,
             # we will anyway end up with an empty `in_invoice` with the attachment posted on it.
-            if move := self.with_company(proxy_user.company_id)._l10n_it_edi_create_move_with_attachment(
+            if filename_and_decrypted_content := self._l10n_it_edi_check_and_decrypt_content(
                 invoice_data['filename'],
                 invoice_data['file'],
                 invoice_data['key'],
                 proxy_user,
             ):
+                attachment_vals.append({
+                    'name': filename_and_decrypted_content[0],
+                    'raw': filename_and_decrypted_content[1],
+                    'type': 'binary',
+                })
 
-                if not modules.module.current_test:
-                    self.env.cr.commit()
-                moves |= move
             proxy_acks.append(id_transaction)
 
-        # Extend created moves with the related attachments and commit
-        for move in moves:
-            move._extend_with_attachments(move.l10n_it_edi_attachment_id, new=True)
-            if not modules.module.current_test:
-                self.env.cr.commit()
+        if attachment_vals:
+            attachments = self.env['ir.attachment'].with_company(proxy_user.company_id).create(attachment_vals)
+
+            # Unwrap the attachments. Potentially each FatturaPA file can get unwrapped into several sub-files that
+            # should each create one invoice.
+            files_data = attachments._identify_and_unwrap_edi_attachments()
+
+            moves = self.with_company(proxy_user.company_id).create([{}] * len(files_data))
+
+            for move, file_data in zip(moves, files_data):
+                file_data['attachment'].write({'res_model': 'account.move', 'res_id': move.id, 'res_field': 'l10n_it_edi_attachment_file'})
+
+                # Copy the attachment and post it in the chatter
+                move.with_context(account_predictive_bills_disable_prediction=True).message_post(
+                    attachment_ids=file_data['attachment'].copy({'res_field': False}).ids
+                )
+
+            # Extend created moves with the related attachments.
+            for move, file_data in zip(moves, files_data):
+                self._extend_with_file_data(file_data, new=True)
 
         return {"retrigger": retrigger, "proxy_acks": proxy_acks}
 
-    def _l10n_it_edi_create_move_with_attachment(self, filename, content, key, proxy_user):
-        """ Creates a move and save an incoming file from the SdI as its attachment.
+    def _l10n_it_edi_check_and_decrypt_content(self, filename, content, key, proxy_user):
+        """ Check whether an incoming file from the SdI should be created as a new attachment,
+            and try to decrypt it.
 
             :param filename:       name of the file to be saved.
             :param content:        encrypted content of the file to be saved.
@@ -898,22 +906,7 @@ class AccountMove(models.Model):
             _logger.warning("Cannot decrypt e-invoice: %s, %s", filename, e)
             return False
 
-        # Create the attachment, an empty move, then attach the two and commit
-        move = self.with_company(proxy_user.company_id).create({})
-        attachment = Attachment.create({
-            'name': filename,
-            'raw': decrypted_content,
-            'type': 'binary',
-            'res_model': 'account.move',
-            'res_id': move.id,
-            'res_field': 'l10n_it_edi_attachment_file'
-        })
-        move.with_context(
-            account_predictive_bills_disable_prediction=True,
-            no_new_invoice=True,
-        ).message_post(attachment_ids=attachment.ids)
-
-        return move
+        return filename, decrypted_content
 
     def _l10n_it_edi_search_partner(self, company, vat, codice_fiscale, email):
         for domain in [vat and [('vat', 'ilike', vat)],
@@ -964,14 +957,19 @@ class AccountMove(models.Model):
             'type_tax_use_domain': [('type_tax_use', '=', 'purchase' if incoming else 'sale')],
         }, []
 
-    def _l10n_it_edi_import_invoice(self, invoice, data, is_new):
+    def _l10n_it_edi_import_invoice(self, data):
         """ Decodes a l10n_it_edi move into an Odoo move.
 
         :param data:   the dictionary with the content to be imported
                        keys: 'filename', 'content', 'xml_tree', 'type', 'sort_weight'
-        :param is_new: whether the move is newly created or to be updated
         :returns:      the imported move
         """
+        if not (
+            self._check_is_draft()
+            and self._check_has_no_invoice_lines()
+        ):
+            return
+
         with self._get_edi_creation() as self:
             buyer_seller_info = self._l10n_it_buyer_seller_info()
 
@@ -987,9 +985,9 @@ class AccountMove(models.Model):
             default_move_type = self.env.context.get('default_move_type')
             if default_move_type is None:
                 incoming_possibilities = [True, False]
-            elif default_move_type in invoice.get_purchase_types(include_receipts=True):
+            elif default_move_type in self.get_purchase_types(include_receipts=True):
                 incoming_possibilities = [True]
-            elif default_move_type in invoice.get_sale_types(include_receipts=True):
+            elif default_move_type in self.get_sale_types(include_receipts=True):
                 incoming_possibilities = [False]
             else:
                 _logger.warning("Cannot handle default_move_type '%s'.", default_move_type)
@@ -1005,7 +1003,7 @@ class AccountMove(models.Model):
                 if codice_fiscale and codice_fiscale.casefold() in (company.l10n_it_codice_fiscale or '').casefold():
                     break
             else:
-                invoice.message_post(body=_("Your company's VAT number and Fiscal Code haven't been found in the buyer and/or seller sections inside the document."))
+                self.message_post(body=_("Your company's VAT number and Fiscal Code haven't been found in the buyer and/or seller sections inside the document."))
                 return
 
             # For unsupported document types, just assume in_invoice, and log that the type is unsupported
@@ -1176,9 +1174,7 @@ class AccountMove(models.Model):
                     'res_model': 'account.move',
                     'res_id': self.id,
                 })
-
-                # no_new_invoice to prevent from looping on the.message_post that would create a new invoice without it
-                self.with_context(no_new_invoice=True).sudo().message_post(
+                self.sudo().message_post(
                     body=(_("Attachment from XML")),
                     attachment_ids=[attachment_64.id],
                 )
@@ -1725,7 +1721,7 @@ class AccountMove(models.Model):
         })
 
         if message and old_state != new_state:
-            self.with_context(no_new_invoice=True).sudo().message_post(body=message)
+            self.sudo().message_post(body=message)
 
         if new_state == 'rejected':
             self.l10n_it_edi_attachment_file = False

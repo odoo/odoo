@@ -505,23 +505,17 @@ class AccountMove(models.Model):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _get_edi_decoder(self, file_data, new=False):
-        def is_facturae(tree):
-            return tree.tag in [
-                '{http://www.facturae.es/Facturae/2014/v3.2.1/Facturae}Facturae',
-                '{http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml}Facturae',
-            ]
+    def _decode_edi_file(self, file_data, new=False):
+        # EXTENDS 'account'
+        if file_data['type'] == 'l10n_es.facturae':
+            return self._import_invoice_facturae(file_data)
+        return super()._decode_edi_file(file_data, new)
 
-        if file_data['type'] == 'xml' and is_facturae(file_data['xml_tree']):
-            return self._import_invoice_facturae
-
-        return super()._get_edi_decoder(file_data, new=new)
-
-    def _import_invoice_facturae(self, invoice, file_data, new=False):
+    def _import_invoice_facturae(self, file_data, new=False):
         tree = file_data['xml_tree']
-        is_bill = invoice.move_type.startswith('in_')
+        is_bill = self.move_type.startswith('in_')
         partner = self._import_get_partner(tree, is_bill)
-        self._import_invoice_facturae_invoices(invoice, partner, tree)
+        self._import_self_facturae_invoices(self, partner, tree)
 
     def _import_get_partner(self, tree, is_bill):
         # If we're dealing with a vendor bill, then the partner is the seller party, if an invoice then it's the buyer.
