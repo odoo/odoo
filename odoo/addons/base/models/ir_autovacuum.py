@@ -8,6 +8,8 @@ import traceback
 
 from odoo import api, models
 from odoo.exceptions import AccessDenied
+from odoo.modules.registry import _CACHES_BY_KEY
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -39,3 +41,16 @@ class IrAutovacuum(models.AbstractModel):
                 except Exception:
                     _logger.exception("Failed %s.%s()", model, attr)
                     self.env.cr.rollback()
+
+    @api.autovacuum
+    def _gc_orm_signaling(self):
+        for signal in ['registry', *_CACHES_BY_KEY]:
+            table = f'orm_signaling_{signal}'
+            # keep the last 10 entries for each signal, and all entries from the last
+            # hour. This keeps the signaling tables small enough for performance, but
+            # also gives a useful glimpse into the recent signaling history, including
+            # the timestamps of the increments.
+            self.env.cr.execute(SQL(
+                "DELETE FROM %s WHERE id < (SELECT max(id)-9 FROM %s) AND date < NOW() - interval '1 hours'",
+                SQL.identifier(table), SQL.identifier(table)
+            ))
