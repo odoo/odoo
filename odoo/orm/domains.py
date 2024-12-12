@@ -1138,20 +1138,20 @@ def _operator_equal_as_in(condition, _):
 
 
 @operator_optimization(['in', 'not in'])
-def _optimize_in_list(condition, _):
-    """Make sure the value is a collection or use 'any' operator"""
+def _optimize_in_set(condition, _model):
+    """Make sure the value is an OrderedSet or use 'any' operator"""
     value = condition.value
     if isinstance(value, ANY_TYPES):
         return DomainCondition(condition.field_expr, 'any' if condition.operator == 'in' else 'not any', value)
     if not value:
         # empty, return a boolean
         return _FALSE_DOMAIN if condition.operator == 'in' else _TRUE_DOMAIN
+    if isinstance(value, OrderedSet):
+        return condition
     if not isinstance(value, COLLECTION_TYPES):
         # TODO show warning, note that condition.field_expr in ('group_ids', 'user_ids') gives a lot of them
         _logger.debug("The domain condition %r should have a list value.", condition)
         value = [value]
-    if value is condition.value:
-        return condition
     return DomainCondition(condition.field_expr, condition.operator, OrderedSet(value))
 
 
@@ -1522,6 +1522,57 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
 # --------------------------------------------------
 # Optimizations: nary
 # --------------------------------------------------
+
+
+@nary_condition_optimization(operators=('in', 'not in'), field_condition=lambda f: not f.type.endswith('2many'))
+def _optimize_merge_set_conditions(cls: type[DomainNary], model, conditions):
+    """Merge equality conditions.
+
+    Combine the 'in' and 'not in' conditions to a single set of values.
+    Do no touch x2many fields which have a different semantic.
+
+    Examples:
+
+        a in {1} or a in {2}  <=>  a in {1, 2}
+        a in {1, 2} and a not in {2, 5}  =>  a in {2}
+    """
+    assert isinstance(conditions, list)
+    assert all(isinstance(cond.value, OrderedSet) for cond in conditions)
+    set_in: OrderedSet | None = None
+    set_not_in: OrderedSet | None = None
+    is_and = cls.OPERATOR == '&'
+    # build the sets for 'in' and 'not in' conditions
+    for cond in conditions:
+        value = cond.value
+        if cond.operator == 'in':
+            if set_in is None:
+                set_in = OrderedSet(value)
+                continue
+            current_set = set_in
+        else:
+            if set_not_in is None:
+                set_not_in = OrderedSet(value)
+                continue
+            current_set = set_not_in
+        if (cond.operator == 'in') == is_and:
+            current_set &= value
+        else:
+            current_set |= value
+    # combine the sets
+    if is_and:
+        # set_in and set_not_in
+        set_dominating, set_other, op = set_in, set_not_in, 'in'
+    else:
+        # set_in or set_not_in
+        set_dominating, set_other, op = set_not_in, set_in, 'not in'
+    if set_dominating is not None:
+        if set_other is not None:
+            set_dominating -= set_other
+        result_condition = DomainCondition(cond.field_expr, op, set_dominating)
+    else:
+        op = 'not in' if op == 'in' else 'in'
+        result_condition = DomainCondition(cond.field_expr, op, set_other)
+    return [result_condition]
 
 
 @nary_condition_optimization(operators=('any',), field_condition=lambda f: f.type == 'many2one')

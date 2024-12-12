@@ -910,7 +910,7 @@ class TestPrivateReadGroup(common.TransactionCase):
                     AND "test_read_group_task__user_ids"."user_id" IN (
                         SELECT "test_read_group_user"."id"
                         FROM "test_read_group_user"
-                        WHERE "test_read_group_user"."id" = %s
+                        WHERE "test_read_group_user"."id" IN %s
                     )
                 )
             GROUP BY "test_read_group_task__user_ids"."user_id"
