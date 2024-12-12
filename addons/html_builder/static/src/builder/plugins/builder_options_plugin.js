@@ -54,8 +54,11 @@ export class BuilderOptionsPlugin extends Plugin {
         }
         const elementToOptions = new Map();
         for (const option of this.builderOptions) {
-            const { selector } = option;
-            const elements = getClosestElements(this.target, selector);
+            const { selector, exclude } = option;
+            let elements = getClosestElements(this.target, selector);
+            if (exclude) {
+                elements = elements.filter((el) => !el.matches(exclude));
+            }
             for (const element of elements) {
                 if (elementToOptions.has(element)) {
                     elementToOptions.get(element).push(option);

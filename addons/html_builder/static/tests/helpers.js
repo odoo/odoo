@@ -102,12 +102,13 @@ export function getEditable(inWrap) {
 
 const actionsRegistry = registry.category("website-builder-actions");
 
-export function addOption({ selector, template, Component, sequence }) {
+export function addOption({ selector, exclude, template, Component, sequence }) {
     const optionId = uniqueId("test-option");
     registry.category("sidebar-element-option").add(optionId, {
         OptionComponent: Component,
         template,
         selector,
+        exclude,
         sequence,
     });
     after(() => {
