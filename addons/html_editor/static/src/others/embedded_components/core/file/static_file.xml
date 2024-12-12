@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- /file template -->
+    <t t-name="html_editor.staticFileBanner">
+        <div class="d-flex justify-content-between flex-wrap w-100 alert alert-info">
+            <div class="d-flex flex-grow-1 align-items-center">
+                <div class="o_file_image d-flex o_image user-select-none"
+                    t-att-title="fileModel.filename" t-att-data-mimetype="fileModel.mimetype"/>
+                <div class="d-block ps-2 text-break flex-grow-1">
+                    <div class="o_embedded_file_name_container d-inline-flex">
+                        <a t-att-href="fileModel.downloadUrl"
+                            t-out="fileModel.filename"
+                            contenteditable="true"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

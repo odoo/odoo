@@ -2,6 +2,7 @@ import { DocumentSelector } from "@html_editor/main/media/media_dialog/document_
 import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
 import { _t } from "@web/core/l10n/translation";
+import { renderToElement } from "@web/core/utils/render";
 
 const documentMediaDialogTab = {
     id: "DOCUMENTS",
@@ -68,19 +69,29 @@ export class DocumentPlugin extends Plugin {
             unique: true,
             accessToken: true,
         });
+        // consider adding this to a template that t-calls the template below
         const banner = this.document.createElement("span");
         banner.classList.add("o_file_card");
         banner.contentEditable = false;
+        const bannerElement = renderToElement("html_editor.staticFileBanner", {
+            fileModel: {
+                filename: attachment.name,
+                mimetype: attachment.mimetype,
+                downloadUrl: url,
+            },
+        });
 
-        const bannerElement = parseHTML(
-            this.document,
-            `<span class="d-flex align-items-center alert alert-info">
-                <span class="o_file_image d-flex o_image" data-mimetype="${attachment.mimetype}"></div>
-                <span class="px-5 d-flex align-items-center" contenteditable="true">
-                    <a href="${url}">${attachment.name}</a>
-                </span>
-            </span>`
-        ).childNodes[0];
+
+
+        // const bannerElement = parseHTML(
+        //     this.document,
+        //     `<span class="d-flex align-items-center alert alert-info">
+        //         <span class="o_file_image d-flex o_image" data-mimetype="${attachment.mimetype}"></div>
+        //         <span class="px-5 d-flex align-items-center" contenteditable="true">
+        //             <a href="${url}">${attachment.name}</a>
+        //         </span>
+        //     </span>`
+        // ).childNodes[0];
         banner.append(bannerElement);
         return banner;
     }
