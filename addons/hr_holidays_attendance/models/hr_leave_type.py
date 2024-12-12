@@ -10,6 +10,16 @@ class HrLeaveType(models.Model):
 
     requires_allocation = fields.Selection(selection_add=[('extra_hours', 'Based on Extra Hours')], ondelete={'extra_hours': 'set default'})
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
+    warning_multiple_types_based_on_extra_hours = fields.Boolean(compute='_compute_warning_multiple_types_based_on_extra_hours')
+    
+    @api.depends('requires_allocation')
+    def _compute_warning_multiple_types_based_on_extra_hours(self):
+        company = self.env.company
+        leave_types = self.env['hr.leave.type'].search_count([
+            '|', ('company_id', '=', False), ('company_id', '=', company.id),
+            ('requires_allocation', '=', 'extra_hours'),
+        ])
+        self.warning_multiple_types_based_on_extra_hours = leave_types > 1
 
     @api.depends('requires_allocation')
     @api.depends_context('request_type', 'leave', 'holiday_status_display_name', 'employee_id')
