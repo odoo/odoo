@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import reprlib
+from .func import filter_kwargs
 
 shortener = reprlib.Repr()
 shortener.maxstring = 150
@@ -23,13 +24,13 @@ class Speedscope:
         self.frame_count = 0
         self.profiles = []
 
-    def add(self, key, profile):
+    def add(self, key, profile, aggregate_sql=False):
         for entry in profile:
             self.caller_frame = self.init_caller_frame
             self.convert_stack(entry['stack'] or [])
             if 'query' in entry:
                 query = entry['query']
-                full_query = entry['full_query']
+                full_query = entry['full_query'] if not aggregate_sql else f'sql({shorten(query)})'
                 entry['stack'].append((f'sql({shorten(query)})', full_query, None))
         self.profiles_raw[key] = profile
 
@@ -50,7 +51,8 @@ class Speedscope:
         for name in names:
             entries += self.profiles_raw[name]
         entries.sort(key=lambda e: e['start'])
-        result = self.process(entries, use_context=use_context, **params)
+        filtered_params = filter_kwargs(self.process, params)
+        result = self.process(entries, use_context=use_context, **filtered_params)
         if not result:
             return self
         start = result[0]['at']
@@ -84,18 +86,18 @@ class Speedscope:
         })
         return self
 
-    def add_default(self):
+    def add_default(self,**params):
         if len(self.profiles_raw) > 1:
-            self.add_output(self.profiles_raw, display_name='Combined')
-            self.add_output(self.profiles_raw, display_name='Combined no context', use_context=False)
+            self.add_output(self.profiles_raw, display_name='Combined',**params)
+            self.add_output(self.profiles_raw, display_name='Combined no context', use_context=False,**params)
         for key, profile in self.profiles_raw.items():
             sql = profile and profile[0].get('query')
             if sql:
-                self.add_output([key], hide_gaps=True, display_name=f'{key} (no gap)')
-                self.add_output([key], continuous=False, complete=False, display_name=f'{key} (density)')
+                self.add_output([key], hide_gaps=True, display_name=f'{key} (no gap)',**params)
+                self.add_output([key], continuous=False, complete=False, display_name=f'{key} (density)',**params)
 
             else:
-                self.add_output([key], display_name=key)
+                self.add_output([key], display_name=key,**params)
         return self
 
     def make(self):
