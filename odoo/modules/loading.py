@@ -283,6 +283,7 @@ def load_module_graph(
             if suite.countTestCases():
                 if not needs_update:
                     registry._setup_models__(env.cr)
+                registry.check_null_constraints(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
                 test_results = loader.run_suite(suite)
@@ -568,6 +569,9 @@ def load_modules(
         for model in env.values():
             model._register_hook()
         env.flush_all()
+
+        # STEP 10: check that we can trust nullable columns
+        registry.check_null_constraints(cr)
 
 
 def reset_modules_state(db_name: str) -> None:
