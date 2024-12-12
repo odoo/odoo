@@ -2089,6 +2089,33 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         return this._addSlide();
     },
 
+    /**
+     * Add a custom class if all controllers are hidden.
+     */
+    toggleControllers() {
+        const carouselEl = this.$target[0].closest(".carousel");
+        const indicatorsWrapEl = carouselEl.querySelector(".carousel-indicators");
+        const areControllersHidden = carouselEl.classList.contains("s_carousel_arrows_hidden") && indicatorsWrapEl.classList.contains("s_carousel_indicators_hidden");
+        carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
+    },
+
+    /**
+     * Toggle card images.
+     */
+    toggleCardImg(previewMode, widgetValue, params) {
+        const carouselEl = this.$target[0].closest(".carousel");
+        const currentImageWrapperEls = carouselEl.querySelectorAll("figure");
+        const cardEls = carouselEl.querySelectorAll(".card");
+        if (widgetValue) {
+            cardEls.forEach((cardEl) => {
+                const imageWrapperEl = renderToElement("website.s_carousel_cards.imageWrapper");
+                cardEl.insertAdjacentElement("afterbegin", imageWrapperEl);
+            });
+        } else {
+            currentImageWrapperEls.forEach((elt) => elt.remove());
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2182,6 +2209,28 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         });
     },
 
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        // Prevent the "Controllers" option from being "centered" when
+        // arrows and indicators are displayed.
+        if (methodName === "selectClass" && params.name === "carousel_controllers_centered_opt") {
+            const controllersEl = this.$target[0];
+            const carouselEl = controllersEl.closest(".carousel");
+            const indicatorsEl = controllersEl.querySelector(".carousel-indicators");
+            if (
+                !carouselEl.classList.contains("s_carousel_arrows_hidden")
+                && !indicatorsEl.classList.contains("s_carousel_indicators_hidden")
+            )
+            {
+                controllersEl.classList.toggle("justify-content-center");
+                controllersEl.classList.toggle("justify-content-between");
+            }
+        }
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -2251,7 +2300,7 @@ options.registry.CarouselItem = options.Class.extend({
         this.$targetCarousel = this.$target.closest(".carousel");
         this.$indicators = this.$carousel.find('.carousel-indicators');
         this.$controls = this.$carousel.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
-        this.carouselOptionName = this.$carousel[0].classList.contains("s_carousel_intro") ? "CarouselIntro" : "Carousel";
+        this.carouselOptionName = "Carousel";
 
         var leftPanelEl = this.$overlay.data('$optionsSection')[0];
         var titleTextEl = leftPanelEl.querySelector('we-title > span');
@@ -4411,8 +4460,7 @@ options.registry.GalleryElement = options.Class.extend({
      * @see this.selectClass for parameters
      */
     position(previewMode, widgetValue, params) {
-        const carouselOptionName = this.$target[0].parentNode.parentNode.classList.contains("s_carousel_intro") ? "CarouselIntro" : "Carousel";
-        const optionName = this.$target[0].classList.contains("carousel-item") ? carouselOptionName
+        const optionName = this.$target[0].classList.contains("carousel-item") ? "Carousel"
             : "GalleryImageList";
         const itemEl = this.$target[0];
         this.trigger_up("option_update", {
