@@ -23,6 +23,7 @@ patch(ActivityMenu.prototype, {
         // fetch the data from the button otherwise fetch the ones from the parent (.o_ActivityMenuView_activityGroup).
         const context = {};
         if (group.model === "crm.lead") {
+            this.dropdown.close();
             document.body.click(); // hack to close dropdown
             if (filter === "my") {
                 context["search_default_activities_overdue"] = 1;
