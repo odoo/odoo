@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.CallNotificationMessage">
+        <div class="d-flex justify-content-center align-items-end gap-1">
+            <i class="fa fa-lg fa-phone pt-1 text-success me-1"/>
+            <t t-if="props.author === store.self">You</t>
+            <span t-else="" class="o-mail-Message-author cursor-pointer o-hover-text-underline" t-on-click="ev => this.onClickAuthor(ev)">
+                <strong class="cursor-pointer" t-out="props.author.name"/>
+            </span>
+            <span t-esc="callInformation" />
+            <span class="text-muted opacity-75 smaller" t-esc="props.messageDate" />
+        </div>
+    </t>
+</templates>
