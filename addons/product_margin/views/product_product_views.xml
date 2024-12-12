@@ -63,7 +63,7 @@
             <field name="model">product.product</field>
             <field name="priority" eval="50"/>
             <field name="arch" type="xml">
-                <list string="Product Margins">
+                <list string="Product Margins" default_order="is_favorite desc, default_code, name, id">
                     <field name="name"/>
                     <field name="default_code"/>
                     <field name="sale_avg_price"/>

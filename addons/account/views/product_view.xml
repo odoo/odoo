@@ -6,7 +6,7 @@
             <field name="name">product.template.list</field>
             <field name="model">product.template</field>
             <field name="arch" type="xml">
-                <list string="Products" sample="1">
+                <list string="Products" sample="1" default_order="is_favorite desc, default_code, name, id">
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="list_price"/>

@@ -27,7 +27,7 @@
             <field name="model">product.template</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
-                <list string="Membership products">
+                <list string="Membership products" default_order="is_favorite desc, default_code, name, id">
                     <field name="name"/>
                     <field name="membership_date_from"/>
                     <field name="membership_date_to"/>
@@ -43,7 +43,7 @@
             <field name="name">product.template.kanban</field>
             <field name="model">product.template</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" default_order="is_favorite desc, default_code, name, id">
                     <templates>
                         <t t-name="card">
                             <div class="d-flex">
