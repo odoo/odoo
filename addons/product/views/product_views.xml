@@ -426,7 +426,7 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <list string="Product Variants" multi_edit="1" duplicate="false" sample="1">
+                <list string="Product Variants" multi_edit="1" duplicate="false" sample="1" default_order="is_favorite desc, default_code, name, id">
                 <header>
                     <button string="Print Labels" type="object" name="action_open_label_layout"/>
                 </header>
@@ -465,7 +465,7 @@
             <field name="name">product.product.view.list.tag</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <list string="Product Variants" editable="bottom">
+                <list string="Product Variants" editable="bottom" default_order="is_favorite desc, default_code, name, id">
                     <field name="name" readonly="1"/>
                     <field name="default_code" readonly="1" optional="show"/>
                     <field name="product_template_variant_value_ids"
@@ -554,7 +554,7 @@
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <kanban sample="1">
+                <kanban sample="1" default_order="is_favorite desc, default_code, name, id">
                     <field name="activity_state"/>
                     <field name="color"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -643,7 +643,7 @@ action = {
         <field name="name">product.view.kanban.catalog</field>
         <field name="model">product.product</field>
         <field name="arch" type="xml">
-            <kanban records_draggable="0" js_class="product_kanban_catalog">
+            <kanban records_draggable="0" js_class="product_kanban_catalog" default_order="is_favorite desc, default_code, name, id">
                 <field name="id"/>
                 <templates>
                     <t t-name="menu">
