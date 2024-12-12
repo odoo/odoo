@@ -16,7 +16,9 @@
                     <span class="nav-link disabled ps-0">Blogs:</span>
                 </li>
                 <li class="nav-item">
-                    <a href="/blog" t-attf-class="nav-link fw-bold #{(not blog) and 'active'}">All</a>
+                    <a href="/blog" t-attf-class="nav-link fw-bold #{(not blog) and 'active'}">
+                        <t t-call="website_blog.first_breadcrumb"/>
+                    </a>
                 </li>
                 <li class="nav-item" t-foreach="blogs" t-as="nav_blog">
                     <a t-attf-href="/blog/#{slug(nav_blog)}" t-cache="nav_blog,blog and nav_blog.id == blog.id"
@@ -153,12 +155,24 @@
 ============================================================================ -->
 <template id="post_breadcrumbs">
     <nav aria-label="breadcrumb" t-attf-class="breadcrumb flex-nowrap py-0 px-0 css_editable_mode_hidden #{additionnal_classes or ''}">
-        <li t-if="len(blogs) &gt; 1" class="breadcrumb-item"><a href="/blog">All Blogs</a></li>
+        <li t-if="len(blogs) &gt; 1" class="breadcrumb-item">
+            <a href="/blog">
+                <t t-call="website_blog.first_breadcrumb"/>
+            </a>
+        </li>
         <li class="breadcrumb-item">
             <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}" t-esc="blog.name"/>
         </li>
         <li class="breadcrumb-item text-truncate active"><span t-esc="blog_post.name"/></li>
     </nav>
+</template>
+
+<!-- ======   Template: First Breadcrumb   =====================================
+============================================================================ -->
+<template id="first_breadcrumb">
+    <b class="o_editable">
+        All blogs
+    </b>
 </template>
 
 <!-- ======   Template: Sidebar Blog  ==========================================

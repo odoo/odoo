@@ -1256,10 +1256,8 @@
                     <div class="row align-items-center">
                         <div class="col d-flex align-items-center order-1 order-lg-0">
                             <ol class="o_wsale_breadcrumb breadcrumb p-0 mb-4 m-lg-0">
-                                <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
-                                    <a t-att-href="keep(category=0, attribute_value=0, tags=0)">
-                                        <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
-                                    </a>
+                                <li class="o_editable breadcrumb-item d-none d-lg-inline-block">
+                                    <t t-call="website_sale.first_breadcrumb"/>
                                 </li>
                                 <li
                                     t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
@@ -1273,13 +1271,8 @@
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="category.name"/>
                                     </a>
                                 </li>
-                                <li t-else="" class="o_not_editable breadcrumb-item d-lg-none">
-                                    <a
-                                        class="py-2 py-lg-0"
-                                        t-att-href="keep(category=0, attribute_value=0, tags=0)"
-                                    >
-                                        <i class="oi oi-chevron-left me-1" role="presentation"/>All Products
-                                    </a>
+                                <li t-else="" class="o_editable breadcrumb-item d-lg-none">
+                                    <t t-call="website_sale.first_breadcrumb"/>
                                 </li>
                                 <li class="breadcrumb-item d-none d-lg-inline-block active">
                                     <span t-field="product.name" />
@@ -1442,6 +1435,12 @@
                 <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" t-att-data-editor-message="editor_message"/>
             </div>
         </t>
+    </template>
+
+    <template id="first_breadcrumb" name="First breadcrumb">
+            <a t-att-href="keep(category=0, attribute_value=0, tags=0)">
+                <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All products
+            </a>
     </template>
 
     <template id="product_accordion" name="Accordion On Product Page">
