@@ -34,6 +34,7 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { uiService } from "@web/core/ui/ui_service";
+import { delay } from "@web/core/utils/concurrency";
 
 const serviceRegistry = registry.category("services");
 
@@ -917,11 +918,13 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         // Select last one activated in previous scenario (item1)
         triggerHotkey("enter");
+        await delay();
         await nextTick();
         assert.containsNone(target, DROPDOWN_MENU, "menu is closed after item selection");
 
         // Reopen dropdown
         triggerHotkey("m", true);
+        await delay();
         await nextTick();
         assert.containsOnce(
             target,
@@ -945,6 +948,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         // Close dropdown with keynav
         triggerHotkey("escape");
+        await delay();
         await nextTick();
         assert.containsNone(target, DROPDOWN_MENU, "menu is closed after item selection");
 
