@@ -4373,7 +4373,7 @@ var SnippetsMenu = Widget.extend({
 
             // Always enable the deepest editor whose DOM target is still inside
             // the document.
-            if (editors[0] !== this._enabledEditorHierarchy[0]) {
+            if (editors.length && editors[0] !== this._enabledEditorHierarchy[0]) {
                 // No awaiting this as the mutex is currently locked here.
                 this._activateSnippet(editors[0].$target);
             }
