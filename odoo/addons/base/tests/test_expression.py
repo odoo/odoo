@@ -1798,8 +1798,8 @@ class TestQueries(TransactionCase):
             SELECT "ir_model"."id", "ir_model"."name"->>%s
             FROM "ir_model"
             WHERE (
-                ("ir_model"."model" NOT ILIKE %s OR "ir_model"."model" IS NULL)
-                AND ("ir_model"."name"->>%s NOT ILIKE %s OR "ir_model"."name"->>%s IS NULL)
+                "ir_model"."model" NOT ILIKE %s
+                AND "ir_model"."name"->>%s NOT ILIKE %s
             )
             ORDER BY "ir_model"."model"
             LIMIT %s
