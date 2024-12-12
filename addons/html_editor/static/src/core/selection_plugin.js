@@ -179,6 +179,7 @@ export class SelectionPlugin extends Plugin {
     }
 
     selectAll() {
+        this.dispatchTo("select_all_handlers");
         const selection = this.getEditableSelection();
         const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
         const container = selection && closestElement(selection.anchorNode, containerSelector);
