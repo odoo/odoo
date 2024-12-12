@@ -4623,7 +4623,7 @@ class MailThread(models.AbstractModel):
         return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid"}
 
     def _get_allowed_access_params(self):
-        return {}
+        return set()
 
     @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
