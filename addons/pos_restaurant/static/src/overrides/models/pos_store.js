@@ -105,6 +105,9 @@ patch(PosStore.prototype, {
                 } finally {
                     this.tableSyncing = false;
                 }
+            } else if (this.get_order()?.finalized && this.previousScreen !== "PaymentScreen") {
+                // if the order was paid from another device
+                this.showScreen("FloorScreen");
             }
         }
     },
