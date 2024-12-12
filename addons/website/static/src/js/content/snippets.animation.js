@@ -758,6 +758,10 @@ registry.Parallax = Animation.extend({
         this.visibleArea.push(this.visibleArea[0] + this.$el.innerHeight() + this.viewport);
         this.ratio = this.speed * (this.viewport / 10);
 
+        const parallaxType = this.el.dataset.parallaxType;
+        this.isZoomIn = parallaxType === "zoom_in";
+        this.isZoomOut = parallaxType === "zoom_out";
+
         // Provide a "safe-area" to limit parallax
         const absoluteRatio = Math.abs(this.ratio);
         this._updateBgCss({
@@ -806,9 +810,30 @@ registry.Parallax = Animation.extend({
 
         // Perform translation if the element is visible only
         var vpEndOffset = scrollOffset + this.viewport;
-        if (vpEndOffset >= this.visibleArea[0]
-         && vpEndOffset <= this.visibleArea[1]) {
-            this._updateBgCss({'transform': 'translateY(' + _getNormalizedPosition.call(this, vpEndOffset) + 'px)'});
+        if (vpEndOffset >= this.visibleArea[0] && vpEndOffset <= this.visibleArea[1]) {
+            // Difference between the current scroll position and the element’s position on the page
+            const elementOffset = scrollOffset - this.el.offsetTop;
+            if (this.isZoomIn) {
+                this._updateBgCss({ transform: `scale(${_getZoomInFactor.call(this, elementOffset)})` });
+            } else if (this.isZoomOut) {
+                this._updateBgCss({ transform: `scale(${_getZoomOutFactor.call(this, elementOffset)})` });       
+            } else {
+                this._updateBgCss({
+                    transform: `translateY(${_getNormalizedPosition.call(this, vpEndOffset)}px)`
+                });
+            }
+        }
+
+        function _getZoomInFactor(normalizedOffset) {
+            // Normalize the value and scale it with a 0.001 factor
+            return 1 + Math.max(0, normalizedOffset * 0.001 * this.speed);
+        }
+    
+        function _getZoomOutFactor(normalizedOffset) {
+            const progress = Math.min(1, normalizedOffset / this.viewport);
+            // +1 to normalize the initial value in a range from 1 to 2
+            const initialZoom = this.speed + 1;
+            return initialZoom - (initialZoom - 1) * progress;
         }
 
         function _getNormalizedPosition(pos) {
