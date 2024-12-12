@@ -1,9 +1,10 @@
 import { closestBlock, isBlock } from "./blocks";
-import { isShrunkBlock, isVisible, paragraphRelatedElements } from "./dom_info";
+import { isParagraphRelatedElement, isShrunkBlock, isVisible } from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes } from "./dom_traversal";
 import { childNodeIndex, DIRECTIONS } from "./position";
+import { BaseContainer } from "@html_editor/utils/base_container";
 
 /** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
@@ -19,7 +20,7 @@ export function makeContentsInline(node) {
     let childIndex = 0;
     for (const child of node.childNodes) {
         if (isBlock(child)) {
-            if (childIndex && paragraphRelatedElements.includes(child.nodeName)) {
+            if (childIndex && isParagraphRelatedElement(child)) {
                 child.before(document.createElement("br"));
             }
             for (const grandChild of child.childNodes) {
@@ -40,24 +41,45 @@ export function makeContentsInline(node) {
  * @param {HTMLElement} element - block element
  * @param {Cursors} [cursors]
  */
-export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
+export function wrapInlinesInBlocks(
+    element,
+    { baseContainer = new BaseContainer("P"), cursors = { update: () => {} } }
+) {
     // Helpers to manipulate preserving selection.
     const wrapInBlock = (node, cursors) => {
         const block = isPhrasingContent(node)
-            ? node.ownerDocument.createElement("P")
+            ? baseContainer.create(node.ownerDocument)
             : node.ownerDocument.createElement("DIV");
-        cursors.update(callbacksForCursorUpdate.before(node, block));
-        node.before(block);
+        // TODO ABD: explanation of the change:
+        // mutations are serialized with the final version of the elements
+        // they affect, instead of the actual value they had when the mutation
+        // occurred. Using `before` here creates a serialized mutation where
+        // the parent of a node must become the sibling of that node and
+        // therefore be a child of itself. This issue is caused by the current
+        // implementation of `stageRecords`.
+        if (node.nextSibling) {
+            const sibling = node.nextSibling;
+            node.remove();
+            sibling.before(block);
+        } else if (node.previousSibling) {
+            const sibling = node.previousSibling;
+            node.remove();
+            sibling.after(block);
+        } else {
+            const parent = node.parentElement;
+            node.remove();
+            parent.append(block);
+        }
         cursors.update(callbacksForCursorUpdate.append(block, node));
         block.append(node);
         return block;
     };
     const appendToCurrentBlock = (currentBlock, node, cursors) => {
-        if (currentBlock.tagName === "P" && !isPhrasingContent(node)) {
-            const block = document.createElement("DIV");
+        if (currentBlock.tagName === baseContainer.nodeName && !isPhrasingContent(node)) {
+            const block = currentBlock.ownerDocument.createElement("DIV");
             cursors.update(callbacksForCursorUpdate.before(currentBlock, block));
             currentBlock.before(block);
-            for (const child of [...currentBlock.childNodes]) {
+            for (const child of childNodes(currentBlock)) {
                 cursors.update(callbacksForCursorUpdate.append(block, child));
                 block.append(child);
             }
@@ -76,7 +98,7 @@ export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
 
     let currentBlock;
     let shouldBreakLine = true;
-    for (const node of [...element.childNodes]) {
+    for (const node of childNodes(element)) {
         if (isBlock(node)) {
             shouldBreakLine = true;
         } else if (!isVisible(node)) {
@@ -112,24 +134,48 @@ export function unwrapContents(node) {
 // This utils seem to handle a particular case of LI element.
 // If only relevant to the list plugin, a specific util should be created
 // that plugin instead.
-export function setTagName(el, newTagName) {
+export function setTagName(el, newTagName, ignoredAttrs = {}) {
     const document = el.ownerDocument;
     if (el.tagName === newTagName) {
         return el;
     }
     const newEl = document.createElement(newTagName);
-    while (el.firstChild) {
-        newEl.append(el.firstChild);
-    }
+    const content = childNodes(el);
     if (el.tagName === "LI") {
         el.append(newEl);
+        newEl.replaceChildren(...content);
     } else {
-        for (const attribute of el.attributes) {
-            newEl.setAttribute(attribute.name, attribute.value);
+        if (el.isConnected) {
+            el.before(newEl);
         }
-        el.parentNode.replaceChild(newEl, el);
+        copyAttributes(el, newEl, ignoredAttrs);
+        newEl.replaceChildren(...content);
+        el.remove();
     }
     return newEl;
+}
+
+export function copyAttributes(source, target, ignoredAttrs = {}) {
+    if (!source || !target) {
+        return;
+    }
+    for (const attr of source.attributes) {
+        if (attr.name === "class") {
+            const classes = [...source.classList];
+            if (ignoredAttrs.class) {
+                const ignoredClasses = new Set(ignoredAttrs.class.split(" "));
+                for (const className of classes) {
+                    if (!ignoredClasses.has(className)) {
+                        target.classList.add(className);
+                    }
+                }
+            } else {
+                target.classList.add(...source.classList);
+            }
+        } else if (!(attr in ignoredAttrs)) {
+            target.setAttribute(attr.name, attr.value);
+        }
+    }
 }
 
 /**

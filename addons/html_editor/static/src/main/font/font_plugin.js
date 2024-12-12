@@ -20,7 +20,7 @@ import { FontSelector } from "./font_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 
-export const fontItems = [
+export const fontItems = (baseContainer) => [
     {
         name: _t("Header 1 Display 1"),
         tagName: "h1",
@@ -51,9 +51,17 @@ export const fontItems = [
     { name: _t("Header 5"), tagName: "h5" },
     { name: _t("Header 6"), tagName: "h6" },
 
-    { name: _t("Normal"), tagName: "p" },
+    {
+        name: _t("Normal"),
+        tagName: baseContainer.nodeName,
+        // for the SET_TAG command
+        identityClasses: [...baseContainer.classSet],
+        // for the FontSelector component
+        selector: baseContainer.selector,
+    },
 
     // TODO @phoenix use them if showExtendedTextStylesOptions is true
+    // consider baseContainer if enabling them
     // {
     //     name: _t("Light"),
     //     tagName: "p",
@@ -99,7 +107,7 @@ const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 
 export class FontPlugin extends Plugin {
     static id = "font";
-    static dependencies = ["input", "split", "selection", "dom", "format"];
+    static dependencies = ["baseContainer", "input", "split", "selection", "dom", "format"];
     resources = {
         user_commands: [
             {
@@ -122,13 +130,6 @@ export class FontPlugin extends Plugin {
                 description: _t("Small section heading"),
                 icon: "fa-header",
                 run: () => this.dependencies.dom.setTag({ tagName: "H3" }),
-            },
-            {
-                id: "setTagParagraph",
-                title: _t("Text"),
-                description: _t("Paragraph block"),
-                icon: "fa-paragraph",
-                run: () => this.dependencies.dom.setTag({ tagName: "P" }),
             },
             {
                 id: "setTagQuote",
@@ -160,7 +161,7 @@ export class FontPlugin extends Plugin {
                 title: _t("Font style"),
                 Component: FontSelector,
                 props: {
-                    getItems: () => fontItems,
+                    getItems: () => fontItems(this.dependencies.baseContainer.getBaseContainer()),
                     getDisplay: () => this.font,
                     onSelected: (item) => {
                         this.dependencies.dom.setTag({
@@ -189,7 +190,6 @@ export class FontPlugin extends Plugin {
                 },
             },
         ],
-        powerbox_categories: withSequence(30, { id: "format", name: _t("Format") }),
         powerbox_items: [
             {
                 categoryId: "format",
@@ -202,10 +202,6 @@ export class FontPlugin extends Plugin {
             {
                 categoryId: "format",
                 commandId: "setTagHeading3",
-            },
-            {
-                categoryId: "format",
-                commandId: "setTagParagraph",
             },
             {
                 categoryId: "structure",
@@ -257,14 +253,16 @@ export class FontPlugin extends Plugin {
         const block = closestBlock(anchorNode);
         const tagName = block.tagName.toLowerCase();
 
-        const matchingItems = fontItems.filter((item) => {
-            return item.tagName === tagName;
-        });
+        const matchingItems = fontItems(this.dependencies.baseContainer.getBaseContainer()).filter(
+            (item) => {
+                return item.selector ? block.matches(item.selector) : item.tagName === tagName;
+            }
+        );
 
         const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
 
         if (!matchingItems.length) {
-            return "Normal";
+            return _t("Normal");
         }
 
         return (
@@ -316,7 +314,6 @@ export class FontPlugin extends Plugin {
         ) {
             return;
         }
-
         // Nodes to the right of the split position.
         const nodesAfterTarget = [...rightLeafOnlyNotBlockPath(targetNode, targetOffset)];
         if (
@@ -327,7 +324,7 @@ export class FontPlugin extends Plugin {
             if (closestBlockNode.nodeName !== "PRE") {
                 closestBlockNode.remove();
             }
-            const p = this.document.createElement("p");
+            const p = this.dependencies.baseContainer.getBaseContainer().create();
             closestPre.after(p);
             fillEmpty(p);
             this.dependencies.selection.setCursorStart(p);
@@ -364,7 +361,7 @@ export class FontPlugin extends Plugin {
             if (closestBlockNode.nodeName !== "BLOCKQUOTE") {
                 closestBlockNode.remove();
             }
-            const p = this.document.createElement("p");
+            const p = this.dependencies.baseContainer.getBaseContainer().create();
             closestQuote.after(p);
             fillEmpty(p);
             this.dependencies.selection.setCursorStart(p);
@@ -392,7 +389,7 @@ export class FontPlugin extends Plugin {
                 headingTags.includes(newElement.tagName) &&
                 !descendants(newElement).some(isVisibleTextNode)
             ) {
-                const p = this.document.createElement("P");
+                const p = this.dependencies.baseContainer.getBaseContainer().create();
                 newElement.replaceWith(p);
                 p.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(p);
@@ -420,7 +417,7 @@ export class FontPlugin extends Plugin {
         if (this.getResource("unremovable_node_predicates").some((p) => p(closestHandledElement))) {
             return;
         }
-        const p = this.document.createElement("p");
+        const p = this.dependencies.baseContainer.getBaseContainer().create();
         p.append(...closestHandledElement.childNodes);
         closestHandledElement.after(p);
         closestHandledElement.remove();

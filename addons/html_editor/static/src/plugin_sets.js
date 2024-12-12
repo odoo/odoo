@@ -1,3 +1,4 @@
+import { BaseContainerPlugin } from "./core/base_container_plugin";
 import { ClipboardPlugin } from "./core/clipboard_plugin";
 import { CommentPlugin } from "./core/comment_plugin";
 import { DeletePlugin } from "./core/delete_plugin";
@@ -48,6 +49,7 @@ import { TabulationPlugin } from "./main/tabulation_plugin";
 import { TextDirectionPlugin } from "./main/text_direction_plugin";
 import { ToolbarPlugin } from "./main/toolbar/toolbar_plugin";
 import { YoutubePlugin } from "./main/youtube_plugin";
+import { InterlinePlugin } from "./main/interline_plugin";
 import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_odoo_plugin";
 import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin";
 import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/collaboration_selection_avatar_plugin";
@@ -97,6 +99,7 @@ import { QWebPlugin } from "./others/qweb_plugin";
  */
 
 export const CORE_PLUGINS = [
+    BaseContainerPlugin,
     ClipboardPlugin,
     CommentPlugin,
     DeletePlugin,
@@ -135,6 +138,7 @@ export const MAIN_PLUGINS = [
     TableUIPlugin,
     TabulationPlugin,
     ToolbarPlugin,
+    InterlinePlugin,
     FontPlugin, // note: if before ListPlugin, there are a few split tests that fails
     YoutubePlugin,
     IconPlugin,

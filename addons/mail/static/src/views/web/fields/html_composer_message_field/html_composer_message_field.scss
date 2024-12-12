@@ -3,3 +3,17 @@
         min-height: 180px !important;
     }
 }
+
+.o_dialog {
+    .o_form_renderer.o_form_nosheet.o_form_editable {
+        padding-left: 25px; // WIDGET_CONTAINER_WIDTH in movenode_plugin.js
+        padding-right: 25px;
+        padding-top: 25px; // consistency with horizontal padding
+    }
+    .o_field_html_composer_message {
+        .note-editable {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}

@@ -1,6 +1,7 @@
 import { closestBlock, isBlock } from "./blocks";
-import { closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
+import { childNodes, closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
 import { DIRECTIONS, nodeSize } from "./position";
+import { BaseContainer } from "@html_editor/utils/base_container";
 
 export function isEmpty(el) {
     if (isProtecting(el) || isProtected(el)) {
@@ -391,6 +392,70 @@ export function isPhrasingContent(node) {
 }
 
 /**
+ * TODO ABD: split function, one to analyze blocks/inline
+ * and one to analyze phrasing/flow ? => much less expensive
+ * probably not necessary to compute both every time
+ */
+export function childNodesAnalysis(element) {
+    const analysis = {
+        childNodes: [],
+        // Style categories:
+        inline: [],
+        block: [],
+        // Content categories:
+        phrasingContent: [],
+        // Any node that is not recorded in another content category in the analysis
+        // (<=> other flow content, since flow content ~is the superset for content
+        // categories)
+        flowContent: [],
+    };
+    if (!element || element.nodeType !== Node.ELEMENT_NODE) {
+        return analysis;
+    }
+    analysis.childNodes = childNodes(element);
+    for (const child of analysis.childNodes) {
+        // Style categories:
+        if (isBlock(child)) {
+            analysis.block.push(child);
+        } else if (
+            child.nodeType === Node.ELEMENT_NODE ||
+            (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== "")
+        ) {
+            analysis.inline.push(child);
+        }
+        // Content categories:
+        if (isPhrasingContent(child)) {
+            analysis.phrasingContent.push(child);
+        } else {
+            analysis.flowContent.push(child);
+        }
+    }
+    return analysis;
+}
+
+/**
+ * TODO ABD: remove ? unused for now
+ */
+export function isEligibleForBaseContainer(element) {
+    if (!element) {
+        return false;
+    }
+    if (element.tagName === "P") {
+        return true;
+    } else if (element.tagName !== "DIV") {
+        return false;
+    }
+    const isContentEditable = (el) =>
+        element.isContentEditable ||
+        (!element.isConnected && !closestElement(element, "[contenteditable]"));
+    if (isContentEditable(element) && !isProtected(element) && !isProtecting(element)) {
+        const analysis = childNodesAnalysis(element);
+        return analysis.flowContent.length === 0;
+    }
+    return false;
+}
+
+/**
  * A "protected" node will have its mutations filtered and not be registered
  * in an history step. Some editor features like selection handling, command
  * hint, toolbar, tooltip, etc. are also disabled. Protected roots have their
@@ -439,18 +504,9 @@ export function isUnprotecting(node) {
 }
 
 // This is a list of "paragraph-related elements", defined as elements that
-// behave like paragraphs.
-export const paragraphRelatedElements = [
-    "P",
-    "H1",
-    "H2",
-    "H3",
-    "H4",
-    "H5",
-    "H6",
-    "PRE",
-    "BLOCKQUOTE",
-];
+// behave like paragraphs. It is non-exhaustive and should not be used as a
+// standalone. @see isParagraphRelatedElement
+const paragraphRelatedElements = ["P", "H1", "H2", "H3", "H4", "H5", "H6", "PRE", "BLOCKQUOTE"];
 
 /**
  * Return true if the given node allows "paragraph-related elements".
@@ -460,13 +516,47 @@ export const paragraphRelatedElements = [
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return isBlock(node) && !["P", "H1", "H2", "H3", "H4", "H5", "H6"].includes(node.nodeName);
+    // TODO ABD: investigate why PRE and BLOCKQUOTE should potentially allow paragraph related elements
+    return isBlock(node) && !isParagraphRelatedElement(node);
+}
+
+export function isParagraphRelatedElement(node) {
+    if (!node) {
+        return false;
+    }
+    return (
+        paragraphRelatedElements.includes(node.nodeName) ||
+        (node.nodeType === Node.ELEMENT_NODE && node.matches(BaseContainer.selector))
+    );
+}
+
+export function paragraphRelatedElementsSelector() {
+    return [...paragraphRelatedElements, BaseContainer.selector].join(",");
+}
+
+export function isListItemElement(node) {
+    return [...listItems].includes(node.nodeName);
+}
+
+export function listItemElementSelector() {
+    return [...listItems].join(",");
+}
+
+export function isListContainerElement(node) {
+    return [...listContainers].includes(node.nodeName);
+}
+
+export function listContainersSelector() {
+    return [...listContainers].join(",");
 }
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
 const flowContent = new Set([...phrasingContent, ...paragraphRelatedElements, "DIV", "HR"]);
-export const listItem = new Set(["LI"]);
+const listItems = new Set(["LI"]);
+const listContainers = new Set(["UL", "OL"]);
 
+// TODO ABD: check usage of this for DIV that would "allow flow content" but can't because
+// they are baseContainer
 const allowedContent = {
     BLOCKQUOTE: phrasingContent, // HTML spec: flow content
     DIV: flowContent,
@@ -478,8 +568,8 @@ const allowedContent = {
     H6: phrasingContent,
     HR: new Set(),
     LI: flowContent,
-    OL: listItem,
-    UL: listItem,
+    OL: listItems,
+    UL: listItems,
     P: phrasingContent,
     PRE: phrasingContent,
     TD: flowContent,

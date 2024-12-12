@@ -4,10 +4,10 @@ import { removeClass, toggleClass, wrapInlinesInBlocks } from "@html_editor/util
 import {
     getDeepestPosition,
     isEmptyBlock,
+    isParagraphRelatedElement,
     isProtected,
     isProtecting,
     isVisible,
-    paragraphRelatedElements,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -23,6 +23,7 @@ import { compareListTypes, createList, insertListAfter, isListItem } from "./uti
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { getListMode, switchListMode } from "@html_editor/utils/list";
 import { withSequence } from "@html_editor/utils/resource";
+import { BaseContainer } from "@html_editor/utils/base_container";
 
 function isListActive(listMode) {
     return (selection) => {
@@ -33,7 +34,16 @@ function isListActive(listMode) {
 
 export class ListPlugin extends Plugin {
     static id = "list";
-    static dependencies = ["tabulation", "history", "input", "split", "selection", "delete", "dom"];
+    static dependencies = [
+        "baseContainer",
+        "tabulation",
+        "history",
+        "input",
+        "split",
+        "selection",
+        "delete",
+        "dom",
+    ];
     resources = {
         user_commands: [
             {
@@ -280,7 +290,7 @@ export class ListPlugin extends Plugin {
      * @param {"UL"|"OL"|"CL"} mode
      */
     blockToList(element, mode) {
-        if (element.tagName === "P") {
+        if (element.matches(BaseContainer.selector)) {
             return this.pToList(element, mode);
         }
         // @todo @phoenix: check for callbacks registered as resources instead?
@@ -318,7 +328,7 @@ export class ListPlugin extends Plugin {
     }
 
     /**
-     * @param {HTMLParagraphElement} p
+     * @param {HTMLParagraphElement} p // TODO ABD: baseContainerElement, not P.
      * @param {"UL"|"OL"|"CL"} mode
      */
     pToList(p, mode) {
@@ -358,7 +368,7 @@ export class ListPlugin extends Plugin {
             return;
         }
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = this.document.createElement("p");
+        const paragraph = this.dependencies.baseContainer.getBaseContainer.create();
         element.replaceWith(paragraph);
         paragraph.replaceChildren(...element.childNodes);
     }
@@ -398,7 +408,10 @@ export class ListPlugin extends Plugin {
             )
         ) {
             const cursors = this.dependencies.selection.preserveSelection();
-            wrapInlinesInBlocks(element, cursors);
+            wrapInlinesInBlocks(element, {
+                baseContainer: this.dependencies.baseContainer.getBaseContainer(),
+                cursors,
+            });
             cursors.restore();
         }
     }
@@ -541,7 +554,7 @@ export class ListPlugin extends Plugin {
                 cursors.update(callbacksForCursorUpdate.after(ul, toMove));
                 ul.after(toMove);
             } else {
-                p = p || this.document.createElement("P");
+                p = p || this.dependencies.baseContainer.getBaseContainer().create();
                 if (dir) {
                     p.setAttribute("dir", dir);
                     p.style.setProperty("text-align", ul.style.getPropertyValue("text-align"));
@@ -606,7 +619,7 @@ export class ListPlugin extends Plugin {
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
-                paragraphRelatedElements.includes(block.nodeName) &&
+                isParagraphRelatedElement(block) &&
                 ancestors(block, closestLI).find((node) =>
                     this.dependencies.split.isUnsplittable(node)
                 );
@@ -630,7 +643,7 @@ export class ListPlugin extends Plugin {
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
-                paragraphRelatedElements.includes(block.nodeName) &&
+                isParagraphRelatedElement(block) &&
                 ancestors(block, closestLI).find((node) =>
                     this.dependencies.split.isUnsplittable(node)
                 );

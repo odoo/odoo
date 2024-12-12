@@ -7,27 +7,38 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
 import { pasteHtml, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
+import { BaseContainer } from "@html_editor/utils/base_container";
 
 function isInline(node) {
     return ["I", "B", "U", "S", "EM", "STRONG", "IMG", "BR", "A", "FONT"].includes(node);
 }
 
 function toIgnore(node) {
-    return ["TABLE", "THEAD", "TH", "TBODY", "TR", "TD", "IMG", "BR", "LI", ".fa"].includes(node);
+    return ["TABLE", "THEAD", "TH", "TBODY", "TR", "TD", "IMG", "BR", "LI", ".FA"].includes(node);
 }
 
 describe("Html Paste cleaning - whitelist", () => {
     test("should keep whitelisted Tags tag", async () => {
-        for (const node of CLIPBOARD_WHITELISTS.nodes) {
-            if (!toIgnore(node)) {
-                const html = isInline(node)
-                    ? `a<${node.toLowerCase()}>b</${node.toLowerCase()}>c`
-                    : `a</p><${node.toLowerCase()}>b</${node.toLowerCase()}><p>c`;
+        const baseContainer = BaseContainer("DIV");
+        const baseContainerString = `${baseContainer.nodeName}"`;
+        const agg = [baseContainerString];
+        const attributes = baseContainer.attributes;
+        for (const attr in attributes) {
+            agg.append(attributes[attr]);
+        }
+        const baseContainerNode = agg.join(" ");
+        for (const node of [...CLIPBOARD_WHITELISTS.nodes, baseContainerNode]) {
+            const tagDescription = node.toLowerCase();
+            const tagName = node.split(" ")[0].toLowerCase();
+            if (!toIgnore(tagName.toUpperCase())) {
+                const html = isInline(tagName.toUpperCase())
+                    ? `a<${tagDescription}>b</${tagName}>c`
+                    : `a</p><${tagDescription}>b</${tagName}><p>c`;
 
                 await testEditor({
                     contentBefore: "<p>123[]4</p>",
                     stepFunction: async (editor) => {
-                        pasteHtml(editor, `a<${node.toLowerCase()}>b</${node.toLowerCase()}>c`);
+                        pasteHtml(editor, `a<${tagDescription}>b</${tagName}>c`);
                     },
                     contentAfter: "<p>123" + html + "[]4</p>",
                 });

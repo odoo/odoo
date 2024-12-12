@@ -22,6 +22,7 @@ import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
  * @typedef { Object } EditorConfig
  * @property { string } [content]
  * @property { boolean } [allowInlineAtRoot]
+ * @property { string } [baseContainer]
  * @property { PluginConstructor[] } [Plugins]
  * @property { boolean } [disableFloatingToolbar]
  * @property { string[] } [classList]

@@ -100,7 +100,9 @@ import { childNodes, descendants, getCommonAncestor } from "../utils/dom_travers
 
 export class HistoryPlugin extends Plugin {
     static id = "history";
-    static dependencies = ["selection", "sanitize"];
+    // baseContainer is a dependency to make sure that it is loaded before the
+    // history (so that handling START_EDITION is done in baseContainer first)
+    static dependencies = ["baseContainer", "selection", "sanitize"];
     static shared = [
         "addExternalStep",
         "addStep",
@@ -1048,6 +1050,9 @@ export class HistoryPlugin extends Plugin {
             for (const node of [unserializedNode, ...descendants(unserializedNode)]) {
                 const id = nodeMap.get(node);
                 if (id) {
+                    // TODO ABD: if there is an existing node with id in
+                    // nodeToIdMap, which is not `node`, mutations refering to
+                    // that node position will not have the desired effect.
                     this.nodeToIdMap.set(node, id);
                     this.idToNodeMap.set(id, node);
                 }
