@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import tagged, Form, HttpCase
 
@@ -52,6 +53,53 @@ class TestTourManualConsumption(HttpCase):
         self.assertEqual(move_nt.manual_consumption, True)
         self.assertEqual(move_nt.picked, True)
         self.assertEqual(move_nt.quantity, 16.0)
+
+    def test_mrp_manual_consumption_03(self):
+        """ Check that manually consumed products are not consumed when the
+        production is started."""
+        Product = self.env['product.product']
+        product_finish = Product.create({
+            'name': 'Finish',
+            'type': 'product',
+            'tracking': 'none',})
+        product_nt = Product.create({
+            'name': 'Component',
+            'type': 'product',
+            'tracking': 'none',})
+        self.env['stock.quant']._update_available_quantity(product_nt, self.env.ref('stock.stock_location_stock'), 2)
+        workcenter_1 = self.env['mrp.workcenter'].create({
+            'name': 'Nuclear Workcenter',
+            'default_capacity': 2,
+            'time_start': 10,
+            'time_stop': 5,
+            'time_efficiency': 80,
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': product_finish.id,
+            'product_tmpl_id': product_finish.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_nt.id, 'product_qty': 1, 'manual_consumption': True}),
+            ],
+            'operation_ids':[Command.create({
+                'name': 'Cutting Machine',
+                'workcenter_id': workcenter_1.id,
+                'time_cycle': 12,
+                'sequence': 1,
+            })]
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_finish
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.mapped('picked'), [False])
+        url = '/odoo/shop-floor'
+        self.start_tour(url, "test_mrp_manual_consumption_03", login="admin", timeout=100)
+        self.assertEqual(mo.move_raw_ids.mapped('picked'), [False])
 
 class TestManualConsumption(TestMrpCommon):
     @classmethod
