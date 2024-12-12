@@ -198,7 +198,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'holiday_status_id': leave_type_paid.id,
             'request_date_from': datetime(2024, 9, 10),
             'request_date_to': datetime(2024, 9, 10),
-            'request_unit_hours': True,
+            'request_unit': 'hour',
             'request_hour_from': '8',
             'request_hour_to': '9',
         },
@@ -208,7 +208,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'holiday_status_id': leave_type_unpaid.id,
             'request_date_from': datetime(2024, 9, 10),
             'request_date_to': datetime(2024, 9, 10),
-            'request_unit_hours': True,
+            'request_unit': 'hour',
             'request_hour_from': '9',
             'request_hour_to': '10',
         }])
