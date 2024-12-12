@@ -34,5 +34,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_ee_vat_in_22_g',
                 'income_account_id': 'l10n_ee_40000',
                 'expense_account_id': 'l10n_ee_50',
+                'l10n_ee_rounding_difference_loss_account_id': 'l10n_ee_6851',
+                'l10n_ee_rounding_difference_profit_account_id': 'l10n_ee_431',
             },
         }
