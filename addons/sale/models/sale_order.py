@@ -2125,6 +2125,12 @@ class SaleOrder(models.Model):
                 res[product.id]['warning'] = product.sale_line_warn_msg
             if product.sale_line_warn == "block":
                 res[product.id]['readOnly'] = True
+            packaging = product.packaging_ids.filtered('sales')[:1]
+            if packaging:
+                res[product.id]['packaging'] = {
+                        'id': packaging.id,
+                        'qty': packaging.product_uom_id._compute_quantity(packaging.qty, product.uom_po_id),
+                    }
         return res
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):
@@ -2161,8 +2167,13 @@ class SaleOrder(models.Model):
         """
         request.update_context(catalog_skip_tracking=True)
         sol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
+        product_packaging_id = kwargs.get('product_packaging_id', False)
+        product_packaging_qty = kwargs.get('product_packaging_qty', False)
         if sol:
-            if quantity != 0:
+            if product_packaging_id:
+                sol.product_packaging_id = product_packaging_id
+                sol.product_packaging_qty = product_packaging_qty
+            elif quantity != 0:
                 sol.product_uom_qty = quantity
             elif self.state in ['draft', 'sent']:
                 price_unit = self.pricelist_id._get_product_price(
