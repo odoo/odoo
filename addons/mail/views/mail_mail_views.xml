@@ -46,9 +46,16 @@
                         </group>
                         <notebook>
                             <page string="Body" name="body">
+<<<<<<< 17.0
                             <field name="body_html" widget="html"
                                    options="{'sandboxedPreview': true}"
                                    readonly="state not in ['outgoing', 'exception']"/>
+||||||| 65bd1e8828b492f7b9fcd3a2d43ba88704fc648f
+                                <field name="body_content"/>
+=======
+                                <field name="body_content"/>
+                                <field name="body_html" attrs="{'invisible': 1}"/>
+>>>>>>> 97011f3473e25a313647dabcc56b1c33f418dfee
                             </page>
                             <page string="Advanced" name="advanced" groups="base.group_no_one">
                                 <group>
