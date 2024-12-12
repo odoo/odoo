@@ -676,6 +676,9 @@ class AccountMove(models.Model):
 
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
 
+    # Used to displays a warning when the taxes on a move line do not align with the fiscal position.
+    display_incorrect_taxes_warning = fields.Boolean(compute="_compute_incorrect_taxes_warning")
+
     # used to display the various dates and amount dues on the invoice's PDF
     payment_term_details = fields.Binary(compute="_compute_payment_term_details", exportable=False)
     show_payment_term_details = fields.Boolean(compute="_compute_show_payment_term_details")
@@ -1997,6 +2000,13 @@ class AccountMove(models.Model):
     def _compute_next_payment_date(self):
         for move in self:
             move.next_payment_date = min([line.payment_date for line in move.line_ids.filtered(lambda l: l.payment_date and not l.reconciled)], default=False)
+
+    @api.depends('line_ids.tax_ids', 'fiscal_position_id')
+    def _compute_incorrect_taxes_warning(self):
+        for move in self:
+            move.display_incorrect_taxes_warning = (
+                move.fiscal_position_id and not move.invoice_line_ids._validate_tax_alignment_with_fpos()
+            )
 
     def _search_next_payment_date(self, operator, value):
         if operator not in ('=', '<', '<='):
