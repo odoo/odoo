@@ -12,6 +12,7 @@ class IrActionsServer(models.Model):
     _description = 'Server Action'
     _inherit = ['ir.actions.server']
 
+    warning_msg = fields.Text(string='Warning Message', help="Warning message to display to the user.", compute='_compute_warning_msg')
     state = fields.Selection(
         selection_add=[
             ('next_activity', 'Create Activity'),
@@ -186,6 +187,59 @@ class IrActionsServer(models.Model):
                 action.activity_user_type = 'specific'
             if not action.activity_user_field_name:
                 action.activity_user_field_name = 'user_id'
+
+    @api.depends('followers_partner_field_name', 'activity_user_field_name')
+    def _compute_warning_msg(self):
+        to_check = self.filtered(
+            lambda act: act.followers_partner_field_name or act.activity_user_field_name
+        )
+        self.warning_msg = False
+        for action in to_check:
+            match action.state:
+                case 'followers' | 'remove_followers':
+                    related_chain = action._get_field_related_chain(
+                        action.followers_partner_field_name
+                    )
+                    if related_chain and (
+                        not "relation" in related_chain[-1]
+                        or related_chain[-1]["relation"] != "res.partner"
+                    ):
+                        display_names = [
+                            field_def["string"] for field_def in related_chain
+                        ]
+                        action.warning_msg = _(
+                            "The field '%(field_chain_names)s' is not a partner field.",
+                            field_chain_names=" > ".join(display_names),
+                        )
+                case 'next_activity':
+                    related_chain = action._get_field_related_chain(
+                        action.activity_user_field_name
+                    )
+                    if related_chain and (
+                        not "relation" in related_chain[-1]
+                        or related_chain[-1]["relation"] != "res.users"
+                    ):
+                        display_names = [
+                            field_def["string"] for field_def in related_chain
+                        ]
+                        action.warning_msg = _(
+                            "The field '%(field_chain_names)s' is not a user field.",
+                            field_chain_names=" > ".join(display_names),
+                        )
+
+    def _get_field_related_chain(self, field_name):
+        self.ensure_one()
+        if not field_name:
+            return []
+        Model = self.env[self.model_name]
+        chain = []
+        for field in field_name.split('.'):
+            field_def = Model.fields_get([field], ['string', 'relation'])[field]
+            chain.append(field_def)
+            if not field_def.get('relation', False):
+                break
+            Model = self.env[field_def['relation']]
+        return chain
 
     @api.constrains('activity_date_deadline_range')
     def _check_activity_date_deadline_range(self):

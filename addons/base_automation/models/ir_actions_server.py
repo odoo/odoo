@@ -66,9 +66,11 @@ class IrActionsServer(models.Model):
                     )
                 case 'followers':
                     if action.followers_type == 'generic':
+                        related_chain = action._get_field_related_chain(action.followers_partner_field_name)
+                        display_names = [field_def['string'] for field_def in related_chain]
                         action.name = _(
-                            'Add followers based on field: %(field_name)s',
-                            field_name=action.followers_partner_field_name
+                            'Add followers based on field: %(field_chain_names)s',
+                            field_chain_names=' > '.join(display_names)
                         )
                     else:
                         action.name = _(
@@ -77,9 +79,11 @@ class IrActionsServer(models.Model):
                         )
                 case 'remove_followers':
                     if action.followers_type == 'generic':
+                        related_chain = action._get_field_related_chain(action.followers_partner_field_name)
+                        display_names = [field_def['string'] for field_def in related_chain]
                         action.name = _(
-                            'Remove followers based on field: %(field_name)s',
-                            field_name=action.followers_partner_field_name
+                            'Remove followers based on field: %(field_chain_names)s',
+                            field_chain_names=' > '.join(display_names)
                         )
                     else:
                         action.name = _(
