@@ -4373,6 +4373,25 @@ class TestMrpOrder(TestMrpCommon):
         production = production_form.save()
         self.assertEqual(production.workorder_ids[0].duration_expected, 15)
 
+    def test_block_wo_from_another_mo(self):
+        """
+        Ensure that a work order cannot be blocked by another work order linked to a different `production_id`.
+        """
+        self.assertTrue(self.bom_2.operation_ids)
+        mo_1 = self.env['mrp.production'].create({
+            'bom_id': self.bom_2.id,
+        })
+        mo_2 = mo_1.copy()
+        mo_3 = mo_1.copy()
+        (mo_1 | mo_2 | mo_3).action_confirm()
+        self.assertEqual((mo_1 | mo_2 | mo_3).mapped('state'), ['confirmed', 'confirmed', 'confirmed'])
+        mo_1._plan_workorders()
+        self.assertTrue(mo_1.workorder_ids.leave_id)
+        with self.assertRaises(UserError):
+            mo_1.workorder_ids[0].blocked_by_workorder_ids = [
+                Command.link(mo_2.workorder_ids[0].id),
+                Command.link(mo_3.workorder_ids[0].id)
+            ]
 
 @tagged('post_install', '-at_install')
 class TestMrpSynchronization(HttpCase):

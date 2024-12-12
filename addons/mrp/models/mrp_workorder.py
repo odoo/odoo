@@ -431,6 +431,13 @@ class MrpWorkorder(models.Model):
         new_workcenter = False
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
+        # Check that all work orders belong to the same MO before adding the link.
+        if 'blocked_by_workorder_ids' in values:
+            blocked_workorder_ids = [item[1] for item in values['blocked_by_workorder_ids'] if item[0] in (1, 4)]
+            if len(self.production_id) > 1 or\
+                not all(wo in self.production_id.workorder_ids.ids for wo in blocked_workorder_ids):
+                raise UserError(_('You cannot link work orders from one manufacturing order to another.'))
+
         if 'workcenter_id' in values:
             new_workcenter = self.env['mrp.workcenter'].browse(values['workcenter_id'])
             for workorder in self:
