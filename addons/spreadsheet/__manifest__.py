@@ -16,6 +16,7 @@
     'assets': {
         'web.chartjs_lib' : [
             'spreadsheet/static/lib/chartjs-chart-geo/chartjs-chart-geo.js',
+            'spreadsheet/static/lib/chart_js_treemap.js',
         ],
         'spreadsheet.o_spreadsheet': [
             'web/static/src/views/graph/graph_model.js',
