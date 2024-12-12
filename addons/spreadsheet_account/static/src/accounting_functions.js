@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
+import { deepCopy } from "@web/core/utils/objects";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { EvaluationError } from "@odoo/o-spreadsheet";
@@ -91,10 +92,10 @@ function parseAccountingYear(dateRange, locale) {
     const dateNumber = toNumber(dateRange?.value, locale);
     // This allows a bit of flexibility for the user if they were to input a
     // numeric value instead of a year.
-    // Users won't need to fetch accounting info for year 3000 before a long time
-    // And the numeric value 3000 corresponds to 18th march 1908, so it's not an
-    //issue to prevent them from fetching accounting data prior to that date.
-    if (dateNumber < 3000) {
+    // Excel doesn't accept date with a year higher than 9999 and the numeric
+    // value 9999 corresponds to 18th may 1927, so it's not an issue to prevent
+    // them from fetching accounting data prior to that date.
+    if (dateNumber <= 9999) {
         return { rangeType: "year", year: dateNumber };
     }
     return undefined;
@@ -141,10 +142,14 @@ export function parseAccountingDate(dateRange, locale) {
 const ODOO_FIN_ARGS = () => [
     arg("account_codes (string)", _t("The prefix of the accounts.")),
     arg(
-        "date_range (string, date)",
-        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+        "date_from (string, date)",
+        _t(`The date from which we gather lines. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
     ),
-    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
+    arg(
+        "date_to (string, date, optional)",
+        _t(`The date to which we gather lines. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+    ),
+    arg("offset (number, default=0)", _t("Offset applied to the years.")),
     arg("company_id (number, optional)", _t("The company to target (Advanced).")),
     arg(
         "include_unposted (boolean, default=FALSE)",
@@ -159,7 +164,8 @@ functionRegistry.add("ODOO.CREDIT", {
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
-        dateRange,
+        dateFrom,
+        dateTo,
         offset = { value: 0 },
         companyId = { value: null },
         includeUnposted = { value: false }
@@ -169,13 +175,18 @@ functionRegistry.add("ODOO.CREDIT", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _dateFrom = parseAccountingDate(dateFrom, this.locale);
+        if ( !dateTo?.value ) {
+            dateTo = { value: 9999 }
+        }
+        const _dateTo = parseAccountingDate(dateTo, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         return {
             value: this.getters.getAccountPrefixCredit(
                 _accountCodes,
-                _dateRange,
+                _dateFrom,
+                _dateTo,
                 _offset,
                 _companyId,
                 _includeUnposted
@@ -192,7 +203,8 @@ functionRegistry.add("ODOO.DEBIT", {
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
-        dateRange,
+        dateFrom,
+        dateTo,
         offset = { value: 0 },
         companyId = { value: null },
         includeUnposted = { value: false }
@@ -202,13 +214,18 @@ functionRegistry.add("ODOO.DEBIT", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _dateFrom = parseAccountingDate(dateFrom, this.locale);
+        if ( !dateTo?.value ) {
+            dateTo = { value: 9999 }
+        }
+        const _dateTo = parseAccountingDate(dateTo, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         return {
             value: this.getters.getAccountPrefixDebit(
                 _accountCodes,
-                _dateRange,
+                _dateFrom,
+                _dateTo,
                 _offset,
                 _companyId,
                 _includeUnposted
@@ -225,7 +242,8 @@ functionRegistry.add("ODOO.BALANCE", {
     returns: ["NUMBER"],
     compute: function (
         accountCodes,
-        dateRange,
+        dateFrom,
+        dateTo,
         offset = { value: 0 },
         companyId = { value: null },
         includeUnposted = { value: false }
@@ -235,20 +253,26 @@ functionRegistry.add("ODOO.BALANCE", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _dateFrom = parseAccountingDate(dateFrom, this.locale);
+        if ( !dateTo?.value ) {
+            dateTo = { value: 9999 }
+        }
+        const _dateTo = parseAccountingDate(dateTo, this.locale);
         const _companyId = companyId?.value;
         const _includeUnposted = toBoolean(includeUnposted);
         const value =
             this.getters.getAccountPrefixDebit(
                 _accountCodes,
-                _dateRange,
+                _dateFrom,
+                _dateTo,
                 _offset,
                 _companyId,
                 _includeUnposted
             ) -
             this.getters.getAccountPrefixCredit(
                 _accountCodes,
-                _dateRange,
+                _dateFrom,
+                _dateTo,
                 _offset,
                 _companyId,
                 _includeUnposted

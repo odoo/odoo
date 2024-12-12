@@ -40,34 +40,36 @@ export class AccountingPlugin extends OdooUIPlugin {
     /**
      * Gets the total balance for given account code prefix
      * @param {string[]} codes prefixes of the accounts' codes
-     * @param {DateRange} dateRange start date of the period to look
-     * @param {number} offset end  date of the period to look
+     * @param {DateRange} dateFrom start date of the period to look
+     * @param {DateRange} dateTo end date of the period to look
+     * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
      * @returns {number}
      */
-    getAccountPrefixCredit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
+    getAccountPrefixCredit(codes, dateFrom, dateTo, offset, companyId, includeUnposted) {
+        const data = this._fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted);
         return data.credit;
     }
 
     /**
      * Gets the total balance for a given account code prefix
-     * @param {string[]} codes prefixes of the accounts codes
-     * @param {DateRange} dateRange start date of the period to look
-     * @param {number} offset end  date of the period to look
+     * @param {string[]} codes prefixes of the accounts' codes
+     * @param {DateRange} dateFrom start date of the period to look
+     * @param {DateRange} dateTo end date of the period to look
+     * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
      * @returns {number}
      */
-    getAccountPrefixDebit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
+    getAccountPrefixDebit(codes, dateFrom, dateTo, offset, companyId, includeUnposted) {
+        const data = this._fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted);
         return data.debit;
     }
 
     /**
      * @param {Date} date Date included in the fiscal year
-     * @param {number | null} companyId specific company to target
+     * @param {number | undefined} companyId specific company to target
      * @returns {string | undefined}
      */
     getFiscalStartDate(date, companyId) {
@@ -95,26 +97,30 @@ export class AccountingPlugin extends OdooUIPlugin {
      * Fetch the account information (credit/debit) for a given account code
      * @private
      * @param {string[]} codes prefix of the accounts' codes
-     * @param {DateRange} dateRange start date of the period to look
-     * @param {number} offset end  date of the period to look
+     * @param {DateRange} dateFrom start date of the period to look
+     * @param {DateRange} dateTo end date of the period to look
+     * @param {number} offset year offset of the period to look
      * @param {number | null} companyId specific companyId to target
      * @param {boolean} includeUnposted wether or not select unposted entries
      * @returns {{ debit: number, credit: number }}
      */
-    _fetchAccountData(codes, dateRange, offset, companyId, includeUnposted) {
-        dateRange = deepCopy(dateRange);
-        dateRange.year += offset;
-        // Excel dates start at 1899-12-30, we should not support date ranges
-        // that do not cover dates prior to it.
-        // Unfortunately, this check needs to be done right before the server
-        // call as a date to low (year <= 1) can raise an error server side.
-        if (dateRange.year < 1900) {
-            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
+    _fetchAccountData(codes, dateFrom, dateTo, offset, companyId, includeUnposted) {
+        dateFrom = deepCopy(dateFrom);
+        dateTo = deepCopy(dateTo);
+        dateFrom.year += offset;
+        dateTo.year += offset;
+        // Excel dates start at 1899-12-31 and end at 9999-12-31 (inclusive), we
+        // should not support date ranges outside of it.
+        if ( dateFrom.year < 1900 || dateFrom.year > 9999 ) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateFrom.year));
+        }
+        if ( dateTo.year < 1900 || dateTo.year > 9999 ) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateTo.year));
         }
         return this.serverData.batch.get(
             "account.account",
             "spreadsheet_fetch_debit_credit",
-            camelToSnakeObject({ dateRange, codes, companyId, includeUnposted })
+            camelToSnakeObject({ dateFrom, dateTo, codes, companyId, includeUnposted })
         );
     }
 
@@ -123,7 +129,7 @@ export class AccountingPlugin extends OdooUIPlugin {
      * Defaults on the current user company if not provided
      * @private
      * @param {Date} date
-     * @param {number | null} companyId
+     * @param {number | undefined} companyId
      * @returns {{start: string, end: string}}
      */
     _fetchCompanyData(date, companyId) {

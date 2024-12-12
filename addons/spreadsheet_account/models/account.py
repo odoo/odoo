@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from datetime import date
 import calendar
+from collections import defaultdict
+from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import models, api, _
@@ -12,6 +10,10 @@ from odoo.tools import date_utils
 
 class AccountAccount(models.Model):
     _inherit = "account.account"
+
+    # ------------------------ #
+    # Domain utility functions #
+    # ------------------------ #
 
     @api.model
     def _get_date_period_boundaries(self, date_period, company):
@@ -38,19 +40,20 @@ class AccountAccount(models.Model):
         elif period_type == "day":
             fiscal_day = company.fiscalyear_last_day
             fiscal_month = int(company.fiscalyear_last_month)
-            end = date(year, month, day)
-            start, _ = date_utils.get_fiscal_year(end, fiscal_day, fiscal_month)
+            start = end = date(year, month, day)
         return start, end
 
     def _build_spreadsheet_formula_domain(self, formula_params):
         codes = [code for code in formula_params["codes"] if code]
         if not codes:
             return expression.FALSE_DOMAIN
+
         company_id = formula_params["company_id"] or self.env.company.id
-        company = self.env["res.company"].browse(company_id)
-        start, end = self._get_date_period_boundaries(
-            formula_params["date_range"], company
-        )
+        account_ids = self._get_all_accounts([formula_params])[company_id].ids
+
+        start = formula_params['date_from_boundary']
+        end = formula_params['date_to_boundary']
+
         balance_domain = [
             ("account_id.include_initial_balance", "=", True),
             ("date", "<=", end),
@@ -60,14 +63,6 @@ class AccountAccount(models.Model):
             ("date", ">=", start),
             ("date", "<=", end),
         ]
-        # It is more optimized to (like) search for code directly in account.account than in account_move_line
-        code_domain = expression.OR(
-            [
-                ("code", "=like", f"{code}%"),
-            ]
-            for code in codes
-        )
-        account_ids = self.env["account.account"].with_company(company_id).search(code_domain).ids
         code_domain = [("account_id", "in", account_ids)]
         period_domain = expression.OR([balance_domain, pnl_domain])
         domain = expression.AND([code_domain, period_domain, [("company_id", "=", company_id)]])
@@ -81,9 +76,128 @@ class AccountAccount(models.Model):
             )
         return domain
 
+    def _pre_process_date_period_boundaries(self, args_list):
+        for args in args_list:
+            company_id = args['company_id'] or self.env.company.id
+            company = self.env['res.company'].browse(company_id)
+
+            start, _end = self._get_date_period_boundaries(
+                args['date_from'], company
+            )
+            _start, end = self._get_date_period_boundaries(
+                args['date_to'], company
+            )
+
+            args['date_from_boundary'] = start
+            args['date_to_boundary'] = end
+
+    def _pre_process_timeline(self, args_list):
+
+        # Get all boundaries
+        all_boundaries = set()
+        for args in args_list:
+            all_boundaries.add((args['date_from_boundary'], 'begin'))
+            all_boundaries.add((args['date_to_boundary'], 'end'))
+
+        all_boundaries = list(all_boundaries)
+        all_boundaries.sort()
+
+        # Compute non overlapping time period
+        timeline = []
+        for i in range(len(all_boundaries) - 1):
+            start = all_boundaries[i]
+            end = all_boundaries[i + 1]
+
+            timeline.append((
+                start[0] if start[1] == 'begin' else start[0] + relativedelta(days=1),
+                end[0] if end[1] == 'end' else end[0] + relativedelta(days=-1),
+            ))
+
+        # Compute in which time period(s) the cell is part of
+        all_starts = [period[0] for period in timeline]
+        all_ends = [period[1] for period in timeline]
+        for args in args_list:
+            start = args['date_from_boundary']
+            end = args['date_to_boundary']
+
+            start_index = all_starts.index(start)
+            end_index = all_ends.index(end)
+
+            args['date_periods'] = timeline[start_index:end_index + 1]
+
+        return [(date(year=1900, month=1, day=1), timeline[0][0] + relativedelta(days=-1))] + timeline
+
+    def _get_all_accounts(self, args_list):
+        company_to_codes = defaultdict(set)
+        for args in args_list:
+            codes = tuple({code for code in args["codes"] if code})
+            company_to_codes[args['company_id'] or self.env.company.id].update(codes)
+
+        all_accounts = dict()
+        for company_id, codes in company_to_codes.items():
+            domain = expression.OR(
+                [
+                    ('code', '=like', f'{code}%'),
+                ]
+                for code in codes
+            )
+            accounts = self.env['account.account'].with_company(company_id).search(domain)
+            all_accounts[company_id] = accounts
+
+        return all_accounts
+
+    def _get_all_lines(self, args_list, fields, timeline, accounts):
+        if not args_list or not fields:
+            return {}
+
+        all_lines = {}
+        aggregates = [field + ':sum' for field in fields]
+
+        include_initial_balance_account_ids = []
+        for company_id, acc in accounts.items():
+            include_initial_balance_account_ids += acc.with_company(company_id).filtered('include_initial_balance').ids
+
+        for period_num, period in enumerate(timeline):
+            if period_num == 0:
+                company_ids = list({args['company_id'] or self.env.company.id for args in args_list})
+                account_ids = include_initial_balance_account_ids
+            else:
+                args_list_in_period = [args for args in args_list if period in args['date_periods']]
+                company_ids = list({args['company_id'] or self.env.company.id for args in args_list_in_period})
+                subcodes = tuple({subcode for args in args_list_in_period for subcode in args['codes'] if subcode})
+                account_ids_in_period = self.env['account.account']
+                for company_id in company_ids:
+                    account_ids_in_period |= accounts[company_id].filtered(
+                        lambda account:
+                        account.with_company(company_id).code.startswith(subcodes)
+                        or account.with_company(company_id).include_initial_balance
+                    )
+                account_ids = account_ids_in_period.ids
+
+            domain = [
+                *self.env['account.move.line']._check_company_domain(company_ids),
+                ('account_id', 'in', account_ids),
+                ('parent_state', 'in', ('draft', 'posted')),
+                ('date', '>=', period[0]),
+                ('date', '<=', period[1]),
+            ]
+
+            lines_in_period = self.env['account.move.line'].with_context(allowed_company_ids=company_ids)._read_group(
+                domain=domain,
+                groupby=['company_id', 'parent_state', 'account_id'],
+                aggregates=aggregates,
+            )
+            all_lines.update({(period, company.id, state, account.id): dict(zip(fields, val)) for company, state, account, *val in lines_in_period})
+        return all_lines
+
+    # ------------------------ #
+    #      API functions       #
+    # ------------------------ #
+
     @api.readonly
     @api.model
     def spreadsheet_move_line_action(self, args):
+        self._pre_process_date_period_boundaries([args])
         domain = self._build_spreadsheet_formula_domain(args)
         return {
             "type": "ir.actions.act_window",
@@ -101,7 +215,11 @@ class AccountAccount(models.Model):
         """Fetch data for ODOO.CREDIT, ODOO.DEBIT and ODOO.BALANCE formulas
         The input list looks like this:
         [{
-            date_range: {
+            date_from: {
+                range_type: "year"
+                year: int
+            },
+            date_to: {
                 range_type: "year"
                 year: int
             },
@@ -110,14 +228,56 @@ class AccountAccount(models.Model):
             include_unposted: bool
         }]
         """
+        return self._spreadsheet_fetch_data(args_list, ['debit', 'credit'])
+
+    @api.readonly
+    @api.model
+    def _spreadsheet_fetch_data(self, args_list, fields):
+        if not args_list:
+            return []
+
+        self._pre_process_date_period_boundaries(args_list)
+        timeline = self._pre_process_timeline(args_list)
+        all_accounts = self._get_all_accounts(args_list)
+        all_lines = self._get_all_lines(args_list, fields, timeline, all_accounts)
+
         results = []
         for args in args_list:
-            company_id = args["company_id"] or self.env.company.id
-            domain = self._build_spreadsheet_formula_domain(args)
-            MoveLines = self.env["account.move.line"].with_company(company_id)
-            [(debit, credit)] = MoveLines._read_group(domain, aggregates=['debit:sum', 'credit:sum'])
-            results.append({'debit': debit or 0, 'credit': credit or 0})
+            subcodes = tuple({subcode for subcode in args["codes"] if subcode})
 
+            if not subcodes:
+                results.append({field: 0.0 for field in fields})
+                continue
+
+            company_id = args['company_id'] or self.env.company.id
+            states = ['posted', 'draft'] if args['include_unposted'] else ['posted']
+            periods = args['date_periods']
+            accounts = all_accounts[company_id].filtered(lambda account: account.with_company(company_id).code.startswith(subcodes))
+
+            matching_keys = set()
+            for account in accounts:
+                # Initial balanced accounts are cumulated over the periods due to their nature. For that reason,
+                # we need to add all previous period values for that account as well.
+                past_periods = []
+                if account.with_company(company_id).include_initial_balance:
+                    past_periods = timeline[0:timeline.index(periods[0])]
+
+                matching_keys.update(set(filter(
+                    lambda line_key: (
+                        # line_key should be (period, company_id, state, account_id)
+                        line_key[0] in past_periods + periods
+                        and line_key[1] == company_id
+                        and line_key[2] in states
+                        and line_key[3] == account.id
+                    ),
+                    all_lines.keys()
+                )))
+
+            cell_data = {field: 0.0 for field in fields}
+            for matching_key in matching_keys:
+                cell_data = {field: cell_data.get(field, 0.0) + all_lines[matching_key].get(field, 0.0) for field in fields}
+
+            results.append(cell_data)
         return results
 
     @api.readonly
@@ -125,7 +285,7 @@ class AccountAccount(models.Model):
     def get_account_group(self, account_types):
         data = self._read_group(
             [
-                *self._check_company_domain(self.env.company),
+                *self.env['account.account']._check_company_domain(self.env.company),
                 ("account_type", "in", account_types),
             ],
             ['account_type'],
