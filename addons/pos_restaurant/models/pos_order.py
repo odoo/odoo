@@ -23,7 +23,7 @@ class PosOrder(models.Model):
 
     @api.model
     def sync_from_ui(self, orders):
-        result = super().sync_from_ui(orders)
+        result = super().create(orders)
 
         order_ids = self.browse([o['id'] for o in result["pos.order"]])
         if order_ids:

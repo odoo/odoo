@@ -46,7 +46,7 @@ class PosOrder(models.Model):
 
     @api.model
     def sync_from_ui(self, orders):
-        data = super().sync_from_ui(orders)
+        data = super().create(orders)
         if len(orders) == 0:
             return data
 
