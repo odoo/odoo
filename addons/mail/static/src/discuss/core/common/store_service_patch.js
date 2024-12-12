@@ -1,6 +1,7 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
 
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
 
@@ -25,7 +26,7 @@ const storeServicePatch = {
         return ["away", "bot", "online"];
     },
     async createGroupChat({ default_display_mode, partners_to, name }) {
-        const data = await this.env.services.orm.call("discuss.channel", "create_group", [], {
+        const data = await rpc("/discuss/channel/create_group", {
             default_display_mode,
             partners_to,
             name,
