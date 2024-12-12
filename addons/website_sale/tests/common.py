@@ -79,3 +79,9 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
     def _prepare_carrier(cls, product, website_published=True, **values):
         # Publish carriers by default
         return super()._prepare_carrier(product, website_published=website_published, **values)
+
+    @classmethod
+    def _create_product(cls, **kwargs):
+        if 'website_published' not in kwargs:
+            kwargs['website_published'] = True
+        return super()._create_product(**kwargs)

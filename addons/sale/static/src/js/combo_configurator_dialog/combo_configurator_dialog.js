@@ -94,6 +94,7 @@ export class ComboConfiguratorDialog extends Component {
      * @param {Number} quantity The new quantity of this combo product.
      */
     async setQuantity(quantity) {
+        if (quantity <= 0) quantity = 1;
         this.state.quantity = quantity;
         this.state.basePrice = await rpc(this.getPriceUrl, {
             product_tmpl_id: this.props.product_tmpl_id,
