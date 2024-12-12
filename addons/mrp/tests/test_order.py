@@ -4152,7 +4152,7 @@ class TestMrpOrder(TestMrpCommon):
             {'name': "00003"},
             {'name': "00004"},
         ])
-        self.assertEqual(productions.mapped('state'), ['to_close'] * 4)
+        self.assertEqual(productions.mapped('state'), ['confirmed'] * 4)
 
     def test_batch_production_02(self):
         """ Test the wizard mrp.batch.produce with a single tracked serial.
@@ -4227,7 +4227,7 @@ class TestMrpOrder(TestMrpCommon):
             00001,LOT01;2|LOT02;3,P01|P02
             00002,LOT01;4,P03
             00003,LOT01,P04|P05
-            00004
+            00004,LOT03,P06
         """
         batch_produce = batch_produce.save()
         self.assertEqual(batch_produce.production_text_help.split('\n')[1],
@@ -4280,8 +4280,10 @@ class TestMrpOrder(TestMrpCommon):
 
         move_1 = production_4.move_raw_ids.filtered(lambda m: m.product_id == self.product_1)
         move_2 = production_4.move_raw_ids.filtered(lambda m: m.product_id == self.product_2)
-        self.assertRecordValues(move_2.move_line_ids, [{'quantity': 0.5, 'lot_id': False}])
-        self.assertRecordValues(move_1.move_line_ids, [{'quantity': 1, 'lot_id': False}])
+        self.assertRecordValues(move_2.move_line_ids, [{'quantity': 0.5}])
+        self.assertRecordValues(move_2.move_line_ids.lot_id, [{'name': 'LOT03'}])
+        self.assertRecordValues(move_1.move_line_ids, [{'quantity': 1}])
+        self.assertRecordValues(move_1.move_line_ids.lot_id, [{'name': 'P06'}])
 
     def test_batch_production_04(self):
         """ Test that splitting a MO correctly computes the duration of the workorders. """
