@@ -475,7 +475,11 @@ const ColorPaletteWidget = Widget.extend({
         }
         this._buildCustomColors();
         if (this.colorPicker) {
-            this.colorPicker.setSelectedColor(colorInfo.color);
+            if (ColorpickerWidget.isCSSColor(colorInfo.color)) {
+                this.colorPicker.setSelectedColor(colorInfo.color);
+            } else {
+                this.colorPicker.setSelectedColor(weUtils.getCSSVariableValue(colorInfo.color, this.style));
+            }
         }
         if (this.gradientColorPicker) {
             const customGradient = weUtils.isColorGradient(colorInfo.color) ? colorInfo.color : false;
