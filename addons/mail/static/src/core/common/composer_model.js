@@ -22,6 +22,8 @@ export class Composer extends Record {
     }
 
     attachments = Record.many("ir.attachment");
+    /** @type {boolean} */
+    emailAddSignature = true;
     message = Record.one("mail.message");
     mentionedPartners = Record.many("Persona");
     mentionedChannels = Record.many("Thread");
