@@ -28,13 +28,13 @@
                                  <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu o_control_panel_collapsed_create">
-                                <t t-slot="layout-buttons"/>
+                                <t t-if="!env.inDialog" t-slot="layout-buttons"/>
                                 <t t-slot="control-panel-always-buttons"/>
                             </ul>
                         </div>
                         <div t-else="" class="d-inline-flex gap-1">
                             <t t-slot="control-panel-create-button"/>
-                            <t t-slot="layout-buttons"/>
+                            <t t-if="!env.inDialog" t-slot="layout-buttons"/>
                             <t t-slot="control-panel-always-buttons"/>
                         </div>
                     </div>
@@ -133,7 +133,7 @@
             </button>
             <t t-set-slot="content">
                 <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
-                    <DropdownItem 
+                    <DropdownItem
                         class="this.getDropdownClass(action)"
                         onSelected="() => this.env.isSmall ? this.onEmbeddedActionClick(action) : this._setVisibility(action.id)"
                         closingMode="'none'"
