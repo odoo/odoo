@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- TODO mover esto a settings tal como boton de odoo que lleva a certificados -->
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <notebook>
+                <page string="Withholdings" invisible="country_code != 'AR'">
+                    <field name="l10n_ar_tax_ids">
+                        <list editable="bottom">
+                            <field name="tax_group_id" domain="[('company_id', '=', company_id)]" />
+                            <field name="default_tax_id" domain="[('tax_group_id', '=', tax_group_id), ('l10n_ar_type_tax_use', '=', 'supplier')]" options="{'no_create': True}"/>
+                            <field name="webservice"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
+
