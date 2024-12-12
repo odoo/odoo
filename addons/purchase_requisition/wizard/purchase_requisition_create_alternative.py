@@ -85,10 +85,14 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
 
     @api.model
     def _get_alternative_line_value(self, order_line):
+        product_codes = self.env['product.supplierinfo'].search([
+            ('product_tmpl_id', '=', order_line.product_id.product_tmpl_id.id),
+            ('partner_id', '=', self.partner_id.id)
+        ]).mapped('product_code')
         return {
             'product_id': order_line.product_id.id,
             'product_qty': order_line.product_qty,
             'product_uom_id': order_line.product_uom_id.id,
             'display_type': order_line.display_type,
-            **({'name': order_line.name} if order_line.display_type in ('line_section', 'line_note') else {}),
+            **({'name': order_line.name} if order_line.display_type in ('line_section', 'line_note') or not any(product_codes) else {}),
         }
