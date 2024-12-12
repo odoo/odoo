@@ -96,7 +96,7 @@ class TestHttpRegistry(BaseCase):
 
         # invalidate the registry of the current db
         with Registry(get_db_name()).cursor() as cr:
-            cr.execute("select nextval('base_registry_signaling')")
+            cr.execute("INSERT INTO orm_signaling_registry default values")
 
         # the registry should rebuild itself just fine
         with self.assertLogs('odoo.registry', logging.INFO) as capture:
@@ -166,7 +166,7 @@ class TestHttpRegistry(BaseCase):
         ])
 
     @mute_logger('odoo.sql_db')
-    def test_corrupt_sequences(self):
+    def test_corrupt_signaling(self):
         db_duplicate = self.duplicate_current_db('corrupt-sequence')
 
         # open a registry + session on the current db (for first subtest)
@@ -177,7 +177,7 @@ class TestHttpRegistry(BaseCase):
         # drop the signaling sequence
         with db_connect(db_duplicate).cursor() as cr:
             cr.execute('''
-                DROP SEQUENCE "base_registry_signaling"
+                DROP table "orm_signaling_registry"
             ''')
 
         with self.subTest(name="existing registry"):
@@ -187,7 +187,7 @@ class TestHttpRegistry(BaseCase):
                 self.assertEqual(res.status_code, 404)
             self.assertEqual(capture.output, [
                 Like("WARNING:odoo.http:Database or registry unusable, trying without\n"
-                     'Traceback...relation "base_registry_signaling" does not exist...')
+                     'Traceback...relation "orm_signaling_registry" does not exist...')
             ])
 
         with self.subTest(name="new registry"):
