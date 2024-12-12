@@ -507,55 +507,114 @@ class AccountChartTemplate(models.AbstractModel):
 
         :param ignore_duplicates: if true, inputs that match records already in the DB will be ignored
         """
-        def deref_values(values, model):
-            """Replace xml_id references by database ids in all provided values.
 
-            This allows to define all the data before the records even exist in the database.
+        class ProxyRef():
+            instances = []
+            repo = {}
+            env = self.env
+
+            @classmethod
+            def register(cls, xmlids, parent, key, multi=False):
+                commas = xmlids.split(',')
+                if cls.repo and (res_ids := [cls.repo.get(xmlid) for xmlid in commas]) and all(res_ids):
+                    parent[key] = res_ids if multi else res_ids[0]
+                    return
+
+                modules = []
+                names = []
+                for comma in commas:
+                    dots = comma.split('.')
+                    if len(dots) > 1:
+                        module, name = dots
+                    else:
+                        module, name = 'account', comma
+                    modules.append(module)
+                    names.append(name)
+                ProxyRef.instances.append((parent, key, modules, names, multi))
+
+            @classmethod
+            def _build_set(cls, module, name):
+                if module == 'account':
+                    return {name, f'{cls.env.company.id}_{name}', f'{cls.env.company.parent_ids[0].id}_{name}'}
+                else:
+                    return {name}
+
+            @classmethod
+            def fetch(cls, company):
+                xmlids = {
+                    xmlid
+                    for xmlid_set in [
+                        cls._build_set(module, name)
+                        for instance in cls.instances
+                        for module, name in zip(instance[2], instance[3])
+                    ]
+                    for xmlid in xmlid_set
+                    if xmlid not in cls.repo
+                }
+                modules = list({module for instance in cls.instances for module in instance[2]})
+                cls.env.cr.execute("""
+                     SELECT imd.module,
+                            imd.name,
+                            imd.res_id
+                       FROM ir_model_data imd
+                      WHERE imd.module = ANY(%s)
+                        AND imd.name = ANY(%s)
+                    """,
+                    [modules, list(xmlids)]
+                )
+                for module, name, res_id in cls.env.cr.fetchall():
+                    cls.repo[f'{module}.{name}'] = res_id
+
+            @classmethod
+            def replace_all(cls):
+                def get(module, name):
+                    for xmlid in cls._build_set(module, name):
+                        if value := cls.repo.get(f'{module}.{xmlid}'):
+                            return value
+                    else:
+                        return False
+                for instance in cls.instances:
+                    parent, key, modules, names, multi = instance
+                    res_ids = []
+                    for module, name in zip(modules, names):
+                        if not (res_id := get(module, name)):
+                            raise Exception(f"Reference not found for '{module}.{name}'")
+                        res_ids.append(res_id)
+                    parent[key] = res_ids if multi else res_ids[0]
+                cls.instances = []
+
+        def deref_values(values, model):
+            """ Replace xml_id references by database ids in all provided values.
+                This allows to define all the data before the records even exist in the database.
             """
             fields = ((model._fields[k], k, v) for k, v in values.items() if k in model._fields)
-            failed_fields = []
             for field, fname, value in fields:
-                if not value:
-                    values[fname] = False
-                elif isinstance(value, str) and (
-                    field.type == 'many2one'
-                    or (field.type in ('integer', 'many2one_reference') and not value.isdigit())
-                ):
-                    try:
-                        values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
-                    except ValueError:
-                        if model != self.env['res.company']:
-                            _logger.warning("Failed when trying to recover %s for field=%s", value, field)
-                            failed_fields.append(fname)
-
-                        # We can't find the record referenced in the chart template in our database.
-                        # This might happen when we're creating a branch and the parent company has deleted the
-                        # referenced record and replaced it with something else.
-                        #
-                        # In this case, we try looking for the record already set on the company or its root.
-                        values[fname] = self.env.company[fname] or self.env.company.parent_ids[0][fname] or False
-                elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
-                    for i, (command, _id, *last_part) in enumerate(value):
-                        if last_part:
-                            last_part = last_part[0]
-                        # (0, 0, {'test': 'account.ref_name'}) -> Command.Create({'test': 13})
-                        if command in (Command.CREATE, Command.UPDATE):
-                            deref_values(last_part, self.env[field.comodel_name])
-                        # (6, 0, ['account.ref_name']) -> Command.Set([13])
-                        elif command == Command.SET:
-                            for subvalue_idx, subvalue in enumerate(last_part):
-                                if isinstance(subvalue, str):
-                                    last_part[subvalue_idx] = self.ref(subvalue).id
-                        elif command == Command.LINK and isinstance(_id, str):
-                            value[i] = Command.link(self.ref(_id).id)
-                elif field.type in ('one2many', 'many2many') and isinstance(value, str):
-                    values[fname] = [Command.set([
-                        self.ref(v).id
-                        for v in value.split(',')
-                        if v
-                    ])]
-            for fname in failed_fields:
-                del values[fname]
+                comodel = field.comodel_name
+                match field.type, value:
+                    case _, _ if not value:
+                        values[fname] = False
+                    case 'integer' | 'many2one' | 'many2one_reference', 'False' | 'None':
+                        values[fname] = False
+                    case 'many2one', str():
+                        ProxyRef.register(value, values, fname)
+                    case 'integer' | 'many2one_reference', str() if not value.isdigit():
+                        ProxyRef.register(value, values, fname)
+                    case 'one2many' | 'many2many', list() | tuple() as commands:
+                        for idx, command in enumerate(commands):
+                            match command:
+                                case Command.CREATE | Command.UPDATE, _, dict() as subvalues:
+                                    deref_values(subvalues, self.env[comodel])
+                                case Command.SET, _, list() as subvalues:
+                                    for subidx, subvalue in enumerate(subvalues):
+                                        if isinstance(subvalue, str):
+                                            ProxyRef.register(subvalue, subvalues, subidx)
+                                case Command.LINK, str() as res_id, _:
+                                    value[idx] = list(Command.link(0))
+                                    ProxyRef.register(res_id, value[idx], 1)
+                    case 'one2many' | 'many2many', str():
+                        set_command = list(Command.set([]))
+                        values[fname] = [set_command]
+                        ProxyRef.register(value, set_command, 2, multi=True)
             return values
 
         def delay(all_data):
@@ -596,8 +655,10 @@ class AccountChartTemplate(models.AbstractModel):
                                 model == 'account.tax' and 'repartition_line_ids' in field_name
                                 and not self.ref(xml_id, raise_if_not_found=False)
                                 and all(
-                                    isinstance(x, tuple | list) and len(x)
-                                    and isinstance(x[0], Command | int) for x in field_val
+                                    isinstance(x, tuple | list)
+                                    and len(x)
+                                    and isinstance(x[0], Command | int)
+                                    for x in field_val
                                 )
                             ):
                                 field_val = [Command.clear()] + field_val
@@ -610,6 +671,7 @@ class AccountChartTemplate(models.AbstractModel):
                 yield model, data
                 created_models.add(model)
 
+        self_with_context = self.with_context(lang='en_US')
         created_records = {}
         for model, model_data in delay(list(deepcopy(data).items())):
             all_records_vals = []
@@ -623,15 +685,22 @@ class AccountChartTemplate(models.AbstractModel):
                 if isinstance(xml_id, int):
                     record_vals['id'] = xml_id
                     xml_id = False
-                else:
-                    xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
+                elif '.' not in xml_id:
+                    xml_id = f"account.{self.env.company.id}_{xml_id}"
 
                 all_records_vals.append({
                     'xml_id': xml_id,
                     'values': deref_values(record_vals, self.env[model]),
                     'noupdate': True,
                 })
-            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals, ignore_duplicates=ignore_duplicates)
+
+            if ProxyRef.instances:
+                ProxyRef.fetch(self.env.company)
+                ProxyRef.replace_all()
+            created_records[model] = self_with_context.env[model]._load_records(
+                all_records_vals, ignore_duplicates=ignore_duplicates
+            )
+
         return created_records
 
     def _post_load_data(self, template_code, company, template_data):
