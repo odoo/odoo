@@ -1,13 +1,14 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { InvisibleElementsPanel } from "@html_builder/builder/snippets_menu_tabs/invisible_elements_panel";
+import { unformat } from "@html_editor/../tests/_helpers/format";
 import {
     defineWebsiteModels,
     getSnippetStructure,
     invisiblePopup,
     setupWebsiteBuilder,
 } from "./helpers";
-import { unformat } from "@html_editor/../tests/_helpers/format";
 
 defineWebsiteModels();
 
@@ -59,4 +60,38 @@ test("Add an element on the invisible elements tab", async () => {
     expect(
         ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') .fa-eye-slash"
     ).toHaveCount(1);
+});
+
+test("mobile and desktop invisible elements", async () => {
+    await setupWebsiteBuilder(`
+        <div class="o_snippet_invisible" data-name="Popup1"></div>
+        <div class="o_snippet_mobile_invisible" data-name="Popup2"></div>
+        <div class="o_snippet_desktop_invisible" data-name="Popup3"></div>
+    `);
+    expect(queryAllTexts(".o_we_invisible_el_panel .o_we_invisible_entry")).toEqual([
+        "Popup1",
+        "Popup3",
+    ]);
+    await contains("button[data-action='mobile']").click();
+    expect(queryAllTexts(".o_we_invisible_el_panel .o_we_invisible_entry")).toEqual([
+        "Popup1",
+        "Popup2",
+    ]);
+});
+
+test("invisible elements efficiency", async () => {
+    patchWithCleanup(InvisibleElementsPanel.prototype, {
+        updateInvisibleElementsPanel() {
+            expect.step("update invisible panel");
+            return super.updateInvisibleElementsPanel(...arguments);
+        },
+    });
+    await setupWebsiteBuilder(`
+        <div class="o_snippet_invisible" data-name="Popup1"></div>
+        <div class="o_snippet_mobile_invisible" data-name="Popup2"></div>
+        <div class="o_snippet_desktop_invisible" data-name="Popup3"></div>
+    `);
+    expect.verifySteps(["update invisible panel"]);
+    await contains("button[data-action='mobile']").click();
+    expect.verifySteps(["update invisible panel"]);
 });

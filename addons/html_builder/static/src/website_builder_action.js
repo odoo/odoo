@@ -86,6 +86,7 @@ export class WebsiteBuilder extends Component {
             overlayRef: this.overlayRef,
             isTranslation: this.translation,
             iframeLoaded: this.iframeLoaded,
+            isMobile: this.state.isMobile,
         };
     }
 

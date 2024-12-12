@@ -76,6 +76,7 @@ export async function setupWebsiteBuilder(
                 isTranslation: !!this.translation,
                 iframeLoaded: iframeLoaded,
                 overlayRef: this.overlayRef,
+                isMobile: this.state.isMobile,
             };
         },
     });

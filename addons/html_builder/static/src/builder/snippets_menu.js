@@ -6,6 +6,7 @@ import {
     onMounted,
     onWillDestroy,
     onWillStart,
+    onWillUpdateProps,
     useRef,
     useState,
     useSubEnv,
@@ -53,6 +54,7 @@ export class SnippetsMenu extends Component {
         overlayRef: { type: Function },
         isTranslation: { type: Boolean },
         iframeLoaded: { type: Object },
+        isMobile: { type: Boolean },
     };
 
     setup() {
@@ -73,9 +75,6 @@ export class SnippetsMenu extends Component {
         this.orm = useService("orm");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
-        // TODO: modify this selector when the mobile version is implemented
-        this.invisibleSelector =
-            ".o_snippet_invisible, .o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
 
         const editorBus = new EventBus();
         // TODO: maybe do a different config for the translate mode and the
@@ -158,6 +157,11 @@ export class SnippetsMenu extends Component {
             // TODO: onload editor
             this.updateInvisibleEls();
         });
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.isMobile !== this.props.isMobile) {
+                this.updateInvisibleEls(nextProps.isMobile);
+            }
+        });
     }
 
     discard() {
@@ -172,6 +176,12 @@ export class SnippetsMenu extends Component {
         } else {
             this.props.closeEditor();
         }
+    }
+
+    getInvisibleSelector(isMobile = this.props.isMobile) {
+        return `.o_snippet_invisible, ${
+            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
+        }`;
     }
 
     async save() {
@@ -285,12 +295,11 @@ export class SnippetsMenu extends Component {
 
     onMobilePreviewClick() {
         this.props.toggleMobile();
-        // TODO update invisible elements panel
     }
 
-    updateInvisibleEls() {
+    updateInvisibleEls(isMobile = this.props.isMobile) {
         this.state.invisibleEls = [
-            ...this.editor.editable.querySelectorAll(this.invisibleSelector),
+            ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
         ];
     }
 }

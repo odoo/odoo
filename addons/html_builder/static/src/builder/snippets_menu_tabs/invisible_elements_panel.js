@@ -14,7 +14,7 @@ export class InvisibleElementsPanel extends Component {
 
         onWillStart(() => this.updateInvisibleElementsPanel(this.props.invisibleEls));
 
-        onWillUpdateProps(async (nextProps) => {
+        onWillUpdateProps((nextProps) => {
             this.updateInvisibleElementsPanel(nextProps["invisibleEls"]);
         });
     }
@@ -52,8 +52,8 @@ export class InvisibleElementsPanel extends Component {
         //     └ descendantInvisibleSnippet
         //          └ descendantOfDescendantInvisibleSnippet
         //               └ etc...
-        const createInvisibleEntries = (snippetEls, isDescendant) => {
-            return snippetEls.map((snippetEl) => {
+        const createInvisibleEntries = (snippetEls, isDescendant) =>
+            snippetEls.map((snippetEl) => {
                 const descendantSnippetEls = descendantPerSnippet.get(snippetEl);
                 // An element is considered as "RootParent" if it has one or
                 // more invisible descendants but is not a descendant.
@@ -70,7 +70,6 @@ export class InvisibleElementsPanel extends Component {
                 }
                 return invisibleElement;
             });
-        };
         this.state.invisibleEntries = createInvisibleEntries(rootInvisibleSnippetEls, false);
     }
 
