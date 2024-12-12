@@ -10,7 +10,7 @@ import werkzeug
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import is_html_empty
+from odoo.tools import is_html_empty, SQL
 
 
 class SurveySurvey(models.Model):
@@ -1258,6 +1258,32 @@ class SurveySurvey(models.Model):
             'challenge_id': challenge.id,
             'target_goal': 1
         })
+
+    def _get_languages(self):
+        """ Return languages available for the survey ((code, name) pairs sorted by name).
+
+        A language is considered to be available for the survey
+        if the language is available in the front-end AND:
+        - if the survey title is translated or
+        - if at least one question/page title is translated in that language
+        """
+        self.ensure_one()
+        langs = self.env['res.lang']._get_frontend()
+        if len(langs) > 1:
+            self._cr.execute(SQL(
+                """SELECT DISTINCT jsonb_object_keys(sq.title)
+                     FROM survey_question sq
+                    WHERE sq.survey_id = %(survey_id)s
+                    UNION
+                   SELECT DISTINCT jsonb_object_keys(s.title)
+                     FROM survey_survey s
+                    WHERE s.id = %(survey_id)s""",
+                survey_id=self.id))
+            lang_codes_available = {r[0] for r in self._cr.fetchall()}
+            langs = {lang_code: lang_info
+                     for lang_code, lang_info in langs.items() if lang_code in lang_codes_available}
+        return sorted([(lang_code, lang_info['name']) for lang_code, lang_info in langs.items()],
+                      key=lambda item: item[1])
 
     def _handle_certification_badges(self, vals):
         if vals.get('certification_give_badge'):
