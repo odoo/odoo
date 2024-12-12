@@ -24,10 +24,10 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
         cls.test_record = cls.env['mail.test.sms'].with_context(**cls._test_context).create({
             'name': 'Test',
             'customer_id': cls.partner_1.id,
-            'mobile_nbr': cls.test_numbers[0],
             'phone_nbr': cls.test_numbers[1],
         })
         cls.test_record = cls._reset_mail_context(cls.test_record)
+        cls.test_record_phone_san = cls.test_numbers_san[1]
 
     def test_message_sms_internals_body(self):
         with self.with_user('employee'), self.mockSMSGateway():
@@ -63,14 +63,14 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
             In that case sms shall NOT be sent twice."""
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            additional_number_same_as_partner_number = self.partner_1.mobile
+            additional_number_same_as_partner_number = self.partner_1.phone
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
             test_record._message_sms(
                 body=self._test_body,
                 partner_ids=self.partner_1.ids,
                 subtype_id=subtype_id,
                 sms_numbers=[additional_number_same_as_partner_number],
-                number_field='mobile'
+                number_field='phone'
             )
         self.assertEqual(len(self._new_sms.filtered(lambda s: s.number == self.partner_numbers[0])), 1,
             "There should be one message sent if additional number is the same as partner number")
@@ -105,7 +105,7 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
         self.assertSMSNotification([{'partner': self.partner_1}, {'partner': self.partner_2}], self._test_body, messages)
 
     def test_message_sms_model_partner_fallback(self):
-        self.partner_1.write({'mobile': False, 'phone': self.random_numbers[0]})
+        self.partner_1.write({'phone': self.random_numbers[0]})
 
         with self.mockSMSGateway():
             messages = self.partner_1._message_sms(self._test_body)
@@ -153,25 +153,24 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
     def test_message_sms_on_field_w_partner(self):
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            messages = test_record._message_sms(self._test_body, number_field='mobile_nbr')
+            messages = test_record._message_sms(self._test_body, number_field='phone_nbr')
 
-        self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_record.mobile_nbr}], self._test_body, messages)
+        self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_record_phone_san}], self._test_body, messages)
 
     def test_message_sms_on_field_wo_partner(self):
         self.test_record.write({'customer_id': False})
 
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            messages = test_record._message_sms(self._test_body, number_field='mobile_nbr')
+            messages = test_record._message_sms(self._test_body, number_field='phone_nbr')
 
-        self.assertSMSNotification([{'number': self.test_record.mobile_nbr}], self._test_body, messages)
+        self.assertSMSNotification([{'number': self.test_record_phone_san}], self._test_body, messages)
 
     def test_message_sms_on_field_wo_partner_wo_value(self):
         """ Test record without a partner and without phone values. """
         self.test_record.write({
             'customer_id': False,
             'phone_nbr': False,
-            'mobile_nbr': False,
         })
 
         with self.with_user('employee'), self.mockSMSGateway():
@@ -189,15 +188,6 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
             messages = test_record._message_sms(self._test_body)
 
         self.assertSMSNotification([{'number': self.test_numbers_san[1]}], self._test_body, messages)
-
-    def test_message_sms_on_field_wo_partner_default_field_2(self):
-        self.test_record.write({'customer_id': False, 'phone_nbr': False})
-
-        with self.with_user('employee'), self.mockSMSGateway():
-            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            messages = test_record._message_sms(self._test_body)
-
-        self.assertSMSNotification([{'number': self.test_numbers_san[0]}], self._test_body, messages)
 
     def test_message_sms_on_numbers(self):
         with self.with_user('employee'), self.mockSMSGateway():
@@ -335,7 +325,7 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
             'name': 'Ernestine Loubine',
             'email': 'ernestine.loubine@agrolait.com',
             'country_id': cls.env.ref('base.be').id,
-            'mobile': '0475556644',
+            'phone': '0475556644',
         })
 
     def test_message_sms_w_numbers_invalid(self):
@@ -349,8 +339,7 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
 
     def test_message_sms_w_partners_nocountry(self):
         self.test_record.customer_id.write({
-            'mobile': self.random_numbers[0],
-            'phone': self.random_numbers[1],
+            'phone': self.random_numbers[0],
             'country_id': False,
         })
         with self.with_user('employee'), self.mockSMSGateway():
@@ -362,7 +351,6 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
     def test_message_sms_w_partners_falsy(self):
         # TDE FIXME: currently sent to IAP
         self.test_record.customer_id.write({
-            'mobile': 'youpie',
             'phone': 'youpla',
         })
         with self.with_user('employee'), self.mockSMSGateway():

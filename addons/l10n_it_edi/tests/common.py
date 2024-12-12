@@ -43,7 +43,6 @@ class TestItEdi(AccountTestInvoicingCommon):
             name='company_2_data',
             vat='IT01234560157',
             phone='0266766700',
-            mobile='+393288088988',
             email='test@test.it',
             street="1234 Test Street",
             zip="12345",
