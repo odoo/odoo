@@ -25,6 +25,7 @@ export class DataServiceOptions {
         const indexes = {
             "pos.order": ["uuid"],
             "pos.order.line": ["uuid"],
+            "pos.payment": ["uuid"],
             "product.template": ["pos_categ_ids", "write_date"],
             "product.product": ["pos_categ_ids", "barcode"],
             "account.fiscal.position": ["tax_ids"],

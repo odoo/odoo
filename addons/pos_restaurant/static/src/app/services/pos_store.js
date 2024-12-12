@@ -58,17 +58,127 @@ patch(PosStore.prototype, {
             this.showScreen("FloorScreen");
         }
     },
-    // using the same floorplan.
     async wsSyncTableCount(data) {
-        if (data["login_number"] === odoo.login_number) {
+        if (data.login_number === this.session.login_number) {
+            this.computeTableCount(data);
             return;
         }
 
-        const orderIds = this.models["pos.order"]
-            .filter((order) => !order.finalized && typeof order.id === "number")
-            .map((o) => o.id);
-        const orderToLoad = new Set([...data["order_ids"], ...orderIds]);
-        await this.data.read("pos.order", [...orderToLoad]);
+        const missingTable = data["table_ids"].find(
+            (tableId) => !(tableId in this.models["restaurant.table"].getAllBy("id"))
+        );
+        if (missingTable) {
+            const response = await this.data.searchRead("restaurant.floor", [
+                ["pos_config_ids", "in", this.config.id],
+            ]);
+
+            const table_ids = response.map((floor) => floor.raw.table_ids).flat();
+            await this.data.read("restaurant.table", table_ids);
+        }
+        const tableLocalOrders = this.models["pos.order"].filter(
+            (o) => data["table_ids"].includes(o.table_id?.id) && !o.finalized
+        );
+        const localOrderlines = tableLocalOrders
+            .filter((o) => typeof o.id === "number")
+            .flatMap((o) => o.lines)
+            .filter((l) => typeof l.id !== "number");
+        const lineIdByOrderId = localOrderlines.reduce((acc, curr) => {
+            if (!acc[curr.order_id.id]) {
+                acc[curr.order_id.id] = [];
+            }
+            acc[curr.order_id.id].push(curr.id);
+            return acc;
+        }, {});
+
+        const orders = await this.data.searchRead("pos.order", [
+            ["session_id", "=", this.session.id],
+            ["table_id", "in", data["table_ids"]],
+        ]);
+        await this.data.read(
+            "pos.order.line",
+            orders.flatMap((o) => o.lines).map((l) => l.id),
+            ["qty"]
+        );
+        for (const [orderId, lineIds] of Object.entries(lineIdByOrderId)) {
+            const lines = this.models["pos.order.line"].readMany(lineIds);
+            for (const line of lines) {
+                line.update({ order_id: orderId });
+            }
+        }
+
+        let isDraftOrder = false;
+        for (const order of orders) {
+            if (order.state !== "draft") {
+                this.removePendingOrder(order);
+                continue;
+            } else {
+                this.addPendingOrder([order.id]);
+            }
+
+            const tableId = order.table_id?.id;
+            if (!tableId) {
+                continue;
+            }
+
+            const draftOrder = this.models["pos.order"].find(
+                (o) => o.table_id?.id === tableId && o.id !== order.id && o.state === "draft"
+            );
+
+            if (!draftOrder) {
+                continue;
+            }
+
+            for (const orphanLine of draftOrder.lines) {
+                const adoptingLine = order.lines.find((l) => l.canBeMergedWith(orphanLine));
+                if (adoptingLine && adoptingLine.id !== orphanLine.id) {
+                    adoptingLine.merge(orphanLine);
+                } else if (!adoptingLine) {
+                    orphanLine.update({ order_id: order });
+                }
+            }
+
+            if (this.selectedOrderUuid === draftOrder.uuid) {
+                this.selectedOrderUuid = order.uuid;
+            }
+
+            await this.removeOrder(draftOrder, true);
+            isDraftOrder = true;
+        }
+
+        if (this.getOrder()?.finalized) {
+            this.addNewOrder();
+        }
+
+        if (isDraftOrder) {
+            await this.syncAllOrders();
+        }
+
+        this.computeTableCount(data);
+    },
+    computeTableCount(data) {
+        const tableIds = data?.table_ids;
+        const tables = tableIds
+            ? this.models["restaurant.table"].readMany(tableIds)
+            : this.models["restaurant.table"].getAll();
+        const orders = this.getOpenOrders();
+        for (const table of tables) {
+            const tableOrders = orders.filter(
+                (order) => order.table_id?.id === table.id && !order.finalized
+            );
+            const qtyChange = tableOrders.reduce(
+                (acc, order) => {
+                    const quantityChange = this.getOrderChanges(false, order);
+                    const quantitySkipped = this.getOrderChanges(true, order);
+                    acc.changed += quantityChange.count;
+                    acc.skipped += quantitySkipped.count;
+                    return acc;
+                },
+                { changed: 0, skipped: 0 }
+            );
+
+            table.uiState.orderCount = tableOrders.length;
+            table.uiState.changeCount = qtyChange.changed;
+        }
     },
     get categoryCount() {
         const orderChanges = this.getOrderChanges();
