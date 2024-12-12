@@ -497,7 +497,10 @@ class AccountBankStatementLine(models.Model):
         return [
             # Base domain.
             ('display_type', 'not in', ('line_section', 'line_note')),
+            # Domain includes draft moves with a partner
+            '|',
             ('parent_state', '=', 'posted'),
+            '&', ('parent_state', '=', 'draft'), ('partner_id', '!=', False),
             ('company_id', 'child_of', self.company_id.root_id.id),
             # Reconciliation domain.
             ('reconciled', '=', False),
