@@ -25,6 +25,10 @@ export class Persona extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
+    delete() {
+        this.store.groupIdToPersonas.get(this.group_id)?.delete(this);
+        super.delete(...arguments);
+    }
     static new() {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(
@@ -89,6 +93,18 @@ export class Persona extends Record {
     isInternalUser = false;
     /** @type {luxon.DateTime} */
     write_date = Record.attr(undefined, { type: "datetime" });
+    group_id = Record.attr(undefined, {
+        compute() {
+            if (!this.group_id) {
+                return;
+            }
+            this.store.groupIdToPersonas.get(this.group_id)?.delete(this);
+            if (!this.store.groupIdToPersonas.has(this.group_id)) {
+                this.store.groupIdToPersonas.set(this.group_id, new Set());
+            }
+            this.store.groupIdToPersonas.get(this.group_id).add(this);
+        },
+    });
 
     /**
      * @returns {boolean}
