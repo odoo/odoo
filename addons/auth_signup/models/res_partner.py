@@ -173,16 +173,16 @@ class ResPartner(models.Model):
                 expiration = int(self.env['ir.config_parameter'].get_param("auth_signup.reset_password.validity.hours", 4))
             else:
                 expiration = int(self.env['ir.config_parameter'].get_param("auth_signup.signup.validity.hours", 144))
-        plist = [self.id, self._get_login_date(), self.signup_type]
+        plist = [self.id, self.user_ids.ids, self._get_login_date(), self.signup_type]
         payload = tools.hash_sign(self.sudo().env, 'signup', plist, expiration_hours=expiration)
         return payload
 
     @api.model
     def _get_partner_from_token(self, token):
         if payload := tools.verify_hash_signed(self.sudo().env, 'signup', token):
-            partner_id, login_date, signup_type = payload
+            partner_id, user_ids, login_date, signup_type = payload
             # login_date can be either an int or "None" as a string for signup
             partner = self.browse(partner_id)
-            if login_date == partner._get_login_date() and signup_type == partner.browse(partner_id).signup_type:
+            if login_date == partner._get_login_date() and partner.user_ids.ids == user_ids and signup_type == partner.browse(partner_id).signup_type:
                 return partner
         return None
