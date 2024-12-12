@@ -58,7 +58,7 @@ export class TogglePlugin extends Plugin {
         split_element_block_overrides: withSequence(1, this.handleSplitElementBlock.bind(this)),
         power_buttons_visibility_predicates: this.showPowerButtons.bind(this),
         before_paste_handlers: this.beforePaste.bind(this),
-        disallowed_list_selectors: `${titleSelector} *, div.collapsed > [data-embedded-editable='content'] *`,
+        disallowed_to_move_node_selectors: `${titleSelector} *, div.collapsed > [data-embedded-editable='content'] *`,
         mount_component_handlers: this.setupNewToggle.bind(this),
         select_all_handlers: this.selectAll.bind(this),
     };
@@ -74,6 +74,9 @@ export class TogglePlugin extends Plugin {
         });
     }
 
+    /**
+     * Handler when the `Select All` command is called. (ctrl+a)
+     */
     selectAll() {
         const selection = this.dependencies.selection.getEditableSelection();
         if (closestElement(selection.anchorNode, "[data-embedded='toggle']")) {
@@ -181,24 +184,33 @@ export class TogglePlugin extends Plugin {
     }
 
     normalize(element) {
-        const toggleNodes = element.querySelectorAll("[data-embedded='toggle']");
-        for (const toggleNode of toggleNodes) {
-            const target = toggleNode.querySelector("[data-embedded-editable]:empty");
-            if (target) {
-                const newParagraph = this.document.createElement("p");
-                newParagraph.appendChild(this.document.createElement("br"));
-                target.replaceChildren(newParagraph);
-            }
+        const emptyToggleNodes = element.querySelectorAll(
+            "[data-embedded='toggle'] [data-embedded-editable]:empty"
+        );
+        for (const emptyToggleNode of emptyToggleNodes) {
+            const newParagraph = this.document.createElement("p");
+            newParagraph.appendChild(this.document.createElement("br"));
+            emptyToggleNode.replaceChildren(newParagraph);
         }
     }
 
+    /**
+     * This method blocks the insertion of html inside a toggle title when pasting content.
+     * @param {Selection} selection
+     * @param {Event} ev
+     */
     beforePaste(selection, ev) {
         const { anchorNode } = selection;
         const closestToggleTitle = closestElement(anchorNode, titleSelector);
         if (!closestToggleTitle) {
             return;
         }
-        const fragmentToCheck = parseHTML(this.document, ev.clipboardData.getData("text/html"));
+        const htmlData = ev.clipboardData.getData("text/html");
+        if (!htmlData) {
+            // We only have some plain/text so we let the other plugin handle it.
+            return;
+        }
+        const fragmentToCheck = parseHTML(this.document, htmlData);
         if (fragmentToCheck.childNodes.length === 1) {
             if (fragmentToCheck.childNodes[0].nodeType === Node.TEXT_NODE) {
                 return;
@@ -213,13 +225,9 @@ export class TogglePlugin extends Plugin {
         }
         // new paragraph after toggle
         const newParagraph = this.document.createElement("p");
-        const [node, offset] = rightPos(closestToggleTitle.closest("[data-embedded]"));
-        this.dependencies.selection.setSelection({
-            anchorNode: node,
-            anchorOffset: offset,
-        });
-        // setSelection in newParagraph
-        this.dependencies.dom.insert(newParagraph);
+        newParagraph.appendChild(this.document.createElement("br"));
+        closestToggleTitle.closest("[data-embedded]").after(newParagraph);
+        this.dependencies.history.addStep();
         this.dependencies.selection.setCursorStart(newParagraph);
     }
 
@@ -228,13 +236,7 @@ export class TogglePlugin extends Plugin {
     }
 
     insertToggleList() {
-        // Done to ensure the block is rendered with the classes of the current document's realm
-        const block = parseHTML(
-            this.document,
-            renderToString("html_editor.ToggleBlueprint", {
-                embeddedProps: JSON.stringify({ toggleId: this.getUniqueIdentifier() }),
-            })
-        );
+        const block = this.renderToggleList();
         const target = block.querySelector("[data-embedded-editable='title'] > p");
         this.dependencies.dom.insert(block);
         this.addDomListener(block, "keydown", (ev) => {
@@ -246,6 +248,12 @@ export class TogglePlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
+    /**
+     * Handles the deleteForward done inside a toggle title. We explode the following toggle and
+     * insert the title inside the current toggle title.
+     *
+     * @param {Range} range
+     */
     handleDeleteForward(range) {
         const { startContainer, startOffset, endContainer, endOffset } = range;
         const closestToggleTitle = closestElement(startContainer, titleSelector);
@@ -259,17 +267,18 @@ export class TogglePlugin extends Plugin {
             return;
         }
         const container = closestToggleTitle.closest("[data-embedded]");
+        // We are inside a toggle title
         const nextSibling = container.nextElementSibling;
         if (nextSibling.matches("[data-embedded='toggle']")) {
-            const cursors = this.dependencies.selection.preserveSelection();
+            const { restore: restoreSelection } = this.dependencies.selection.preserveSelection();
             const nextTitle = nextSibling.querySelector("[data-embedded-editable='title']");
             const nextContent = nextSibling.querySelector("[data-embedded-editable='content']");
-            const right = rightPos(nextSibling);
+            const [rightNode, rightOffset] = rightPos(nextSibling);
             this.dependencies.selection.setSelection({
-                anchorNode: right[0],
-                anchorOffset: right[1],
-                focusNode: right[0],
-                focusOffset: right[1],
+                anchorNode: rightNode,
+                anchorOffset: rightOffset,
+                focusNode: rightNode,
+                focusOffset: rightOffset,
             });
             const fragment = this.document.createDocumentFragment();
             let childrenToInsert = children(nextContent);
@@ -287,7 +296,7 @@ export class TogglePlugin extends Plugin {
                     closestToggleTitle.querySelector("p").lastChild
                 );
             nextSibling.remove();
-            cursors.restore();
+            restoreSelection();
         }
         return true;
     }
@@ -297,7 +306,7 @@ export class TogglePlugin extends Plugin {
      * We need to handle some specific behaviors:
      *  1. When we aren't in a toggle title but the previous element is a toggle. (opened and closed)
      *  2. When we are at the start of the title and we have nothing above the current embedded toggle.
-     * @param {Object} range
+     * @param {Range} range
      */
     handleDeleteBackward(range) {
         // startContainer should be the editable to indicate the start of the block.
@@ -354,12 +363,12 @@ export class TogglePlugin extends Plugin {
         }
         const contentToInsert = container.querySelectorAll(`${contentSelector} > *`);
         if (contentToInsert.length > 1 || !isEmptyBlock(contentToInsert[0])) {
-            const right = rightPos(container);
+            const [rightNode, rightOffset] = rightPos(container);
             this.dependencies.selection.setSelection({
-                anchorNode: right[0],
-                anchorOffset: right[1],
-                focusNode: right[0],
-                focusOffset: right[1],
+                anchorNode: rightNode,
+                anchorOffset: rightOffset,
+                focusNode: rightNode,
+                focusOffset: rightOffset,
             });
             const fragment = this.document.createDocumentFragment();
             fragment.replaceChildren(...contentToInsert);
@@ -377,16 +386,15 @@ export class TogglePlugin extends Plugin {
      * the previous one.
      */
     handleTab() {
-        const selection = this.dependencies.selection.getEditableSelection();
-        const closestToggleTitle = closestElement(selection.anchorNode, titleSelector);
-        if (closestToggleTitle) {
+        const container = this.getToggleContainer();
+        if (container) {
             // If selection is in a title.
-            const container = closestToggleTitle.closest("[data-embedded]");
             const previousSibling = container.previousElementSibling;
             if (previousSibling.matches("[data-embedded='toggle']")) {
                 // If the previous element of the embedded component is also a toggle, we need to handle
                 // it.
-                const cursors = this.dependencies.selection.preserveSelection();
+                const { restore: restoreSelection } =
+                    this.dependencies.selection.preserveSelection();
                 this.dependencies.selection.setCursorEnd(
                     previousSibling.querySelector("[data-embedded-editable='content']")
                 );
@@ -404,7 +412,7 @@ export class TogglePlugin extends Plugin {
                     this.dependencies.dom.insert(fragment);
                 }
                 this.dependencies.history.addStep();
-                window.setTimeout(cursors.restore, "animationFrame"); // Used to handle caret displaying issues
+                window.setTimeout(restoreSelection, "animationFrame"); // Used to handle caret displaying issues
             }
             return true;
         }
@@ -415,25 +423,23 @@ export class TogglePlugin extends Plugin {
      * @returns
      */
     handleShiftTab() {
-        const selection = this.dependencies.selection.getEditableSelection();
-        const closestToggleTitle = closestElement(selection.anchorNode, titleSelector);
-        if (closestToggleTitle) {
-            // We are indeed inside a title.
-            const container = closestToggleTitle.closest("[data-embedded]");
+        const container = this.getToggleContainer();
+        if (container) {
             if (container.parentElement.closest("[data-embedded='toggle']")) {
                 // If we are inside an indented toggle we need to outdent the current toggle.
-                const nextPosition = rightPos(
+                const [nextPositionNode, nextPositionOffset] = rightPos(
                     container.parentElement.closest("[data-embedded='toggle']")
                 );
-                const cursors = this.dependencies.selection.preserveSelection();
+                const { restore: restoreSelection } =
+                    this.dependencies.selection.preserveSelection();
                 this.dependencies.selection.setSelection({
-                    anchorNode: nextPosition[0],
-                    anchorOffset: nextPosition[1],
-                    focusNode: nextPosition[0],
-                    focusOffset: nextPosition[1],
+                    anchorNode: nextPositionNode,
+                    anchorOffset: nextPositionOffset,
+                    focusNode: nextPositionNode,
+                    focusOffset: nextPositionOffset,
                 });
                 this.dependencies.dom.insert(container);
-                cursors.restore();
+                restoreSelection();
                 this.dependencies.history.addStep();
             }
             return true;
@@ -457,7 +463,7 @@ export class TogglePlugin extends Plugin {
      * @returns true if indeed handled by the method
      */
     handleSplitElementBlock({ targetNode }) {
-        if (targetNode.closest("[data-embedded='toggle'] [data-embedded-editable='title']")) {
+        if (targetNode.closest(titleSelector)) {
             const selection = this.dependencies.selection.getEditableSelection();
             if (isEmptyBlock(selection.anchorNode)) {
                 // If no text is in title, we remove the toggle.
@@ -476,12 +482,11 @@ export class TogglePlugin extends Plugin {
             }
             if (insertInside) {
                 // Toggle is open
-                const target = container
-                    .querySelector(contentSelector)
-                    .querySelector("*:first-child");
+                const target = container.querySelector(contentSelector).firstElementChild;
                 if (insertBefore) {
                     // There is some text to move
-                    const { restore } = this.dependencies.selection.preserveSelection();
+                    const { restore: restoreSelection } =
+                        this.dependencies.selection.preserveSelection();
                     const newParagraph = this.document.createElement("p");
                     newParagraph.replaceChildren(
                         selection.anchorNode,
@@ -489,7 +494,7 @@ export class TogglePlugin extends Plugin {
                     );
                     target.before(newParagraph); // The original anchorNode is moved in this case.
                     this.dependencies.history.addStep();
-                    restore();
+                    restoreSelection();
                 } else {
                     // No text to move just change the selection
                     this.dependencies.selection.setCursorEnd(
@@ -500,12 +505,7 @@ export class TogglePlugin extends Plugin {
                 }
                 return true;
             }
-            const block = parseHTML(
-                this.document,
-                renderToString("html_editor.ToggleBlueprint", {
-                    embeddedProps: JSON.stringify({ toggleId: this.getUniqueIdentifier() }),
-                })
-            );
+            const block = this.renderToggleList();
             const target = block.querySelector("[data-embedded-editable='title'] > p");
             container[insertBefore ? "before" : "after"](block);
             if (selection.anchorNode.previousSibling) {
@@ -517,5 +517,25 @@ export class TogglePlugin extends Plugin {
             }
             return true;
         }
+    }
+
+    // HELPERS
+    getToggleContainer() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const closestToggleTitle = closestElement(selection.anchorNode, titleSelector);
+        if (closestToggleTitle) {
+            // If selection is in a title.
+            return closestToggleTitle.closest("[data-embedded]");
+        }
+    }
+
+    renderToggleList() {
+        // Done to ensure the block is rendered with the classes of the current document's realm
+        return parseHTML(
+            this.document,
+            renderToString("html_editor.ToggleBlueprint", {
+                embeddedProps: JSON.stringify({ toggleId: this.getUniqueIdentifier() }),
+            })
+        );
     }
 }

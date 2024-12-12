@@ -6,7 +6,7 @@ import { ancestors, closestElement } from "../utils/dom_traversal";
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
 
-const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote, ul, ol, table";
+const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote";
 
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
@@ -191,7 +191,7 @@ export class MoveNodePlugin extends Plugin {
                     node.matches(
                         [
                             ALLOWED_ELEMENTS,
-                            ...this.getResource("allowed_movable_elements_selectors"),
+                            ...this.getResource("allowed_to_move_elements_selectors"),
                         ].join(", ")
                     )
             );
@@ -430,7 +430,7 @@ export class MoveNodePlugin extends Plugin {
         return (
             node.parentElement?.getAttribute("contentEditable") === "true" &&
             !node.parentElement.closest(".o_editor_banner") &&
-            !node.matches(this.getResource("disallowed_list_selectors").join(", "))
+            !node.matches(this.getResource("disallowed_to_move_node_selectors").join(", "))
         );
     }
 }

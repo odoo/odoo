@@ -22,7 +22,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         attribute_change_processors: this.onChangeAttribute.bind(this),
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
-        allowed_movable_elements_selectors: "[data-embedded]",
+        allowed_to_move_elements_selectors: "[data-embedded]",
     };
 
     setup() {
