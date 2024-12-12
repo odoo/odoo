@@ -374,6 +374,37 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         remaining_message = channel_message.exists()
         self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
+    def test_correct_parent(self):
+        # Should create a message by OdooBot saying Simple Chatter Model Created
+        thread_with_log = self.env['mail.test.simple'].create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com',
+        })
+        # All notifications are ignored
+        thread_with_log.message_notify(
+            body='Stage changed',
+            message_type='user_notification',
+            partner_ids=self.partner_2.ids,
+        )
+        # The first real message, all emails should have this in the reference_id
+        first_real_msg = thread_with_log.message_post(
+            body='Hi there!',
+            message_type='email',
+        )
+        thread_with_log.message_post(
+            body='Another email',
+            message_type='email',
+        )
+        third_email = thread_with_log.message_post(
+            body='Last email',
+            message_type='email',
+        )
+        # Now make sure that the first real message is in the references of the third_email so that external
+        # partners have a synced mail thread with messages they can both reference. Notifications shouldn't be
+        # in the references since the recipient doesn't have those in their db.
+        email_values = thread_with_log._notify_by_email_get_base_mail_values(third_email)
+        self.assertTrue(first_real_msg.message_id in email_values["references"])
+
 
 @tagged('mail_thread')
 class TestNoThread(TestMailCommon, TestRecipients):
