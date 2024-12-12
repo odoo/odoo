@@ -1498,7 +1498,7 @@ class MailingMailing(models.Model):
     def _parse_mailing_domain(self):
         self.ensure_one()
         try:
-            mailing_domain = literal_eval(self.mailing_domain)
+            mailing_domain = self.env['mailing.filter']._evaluate_domain(self.mailing_domain)
         except Exception:
             mailing_domain = [('id', 'in', [])]
         return mailing_domain
