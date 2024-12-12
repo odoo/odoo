@@ -68,7 +68,6 @@ class ForumForum(models.Model):
         'Guidelines', translate=html_translate,
         sanitize=True, sanitize_overridable=True)
     description = fields.Text('Description', translate=True)
-    teaser = fields.Text('Teaser', compute='_compute_teaser', store=True)
     welcome_message = fields.Html(
         'Welcome Message', translate=html_translate,
         default=_get_default_welcome_message,
@@ -188,11 +187,6 @@ class ForumForum(models.Model):
         for forum in forums_with_tags:
             forum.tag_most_used_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['most_used_ids'])
             forum.tag_unused_ids = self.env['forum.tag'].browse(forum_tags[forum.id]['unused_ids'])
-
-    @api.depends('description')
-    def _compute_teaser(self):
-        for forum in self:
-            forum.teaser = textwrap.shorten(forum.description, width=180, placeholder='...') if forum.description else ""
 
     @api.depends('post_ids')
     def _compute_last_post_id(self):
