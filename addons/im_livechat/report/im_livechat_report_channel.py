@@ -7,6 +7,7 @@ from odoo import api, fields, models, tools
 class Im_LivechatReportChannel(models.Model):
     """ Livechat Support Report on the Channels """
 
+    _name = 'im_livechat.report.channel'
     _description = "Livechat Support Channel Report"
     _order = 'start_date, technical_name'
     _auto = False

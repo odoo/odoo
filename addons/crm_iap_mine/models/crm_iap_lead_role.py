@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class CrmIapLeadRole(models.Model):
     """ CRM Reveal People Roles for People """
+    _name = 'crm.iap.lead.role'
     _description = 'People Role'
 
     name = fields.Char(string='Role Name', required=True, translate=True)

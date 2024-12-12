@@ -11,6 +11,7 @@ _logger = logging.getLogger(__name__)
 class MailAliasMixin(models.AbstractModel):
     """ A mixin for models that inherits mail.alias to have a one-to-one relation
     between the model and its alias. """
+    _name = 'mail.alias.mixin'
     _inherit = ['mail.alias.mixin.optional']
     _inherits = {'mail.alias': 'alias_id'}
     _description = 'Email Aliases Mixin'

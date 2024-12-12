@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 class DeliveryZipPrefix(models.Model):
     """ Zip prefix that a delivery.carrier will deliver to. """
+    _name = 'delivery.zip.prefix'
     _description = 'Delivery Zip Prefix'
     _order = 'name, id'
 

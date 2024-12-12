@@ -12,6 +12,7 @@ class AccountCashRounding(models.Model):
     0.05 CHF because coins of 0.01 CHF and 0.02 CHF aren't used anymore.
     see https://en.wikipedia.org/wiki/Cash_rounding for more details.
     """
+    _name = 'account.cash.rounding'
     _description = 'Account Cash Rounding'
     _check_company_auto = True
 

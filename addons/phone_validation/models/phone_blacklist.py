@@ -7,6 +7,7 @@ from odoo.tools import _, SQL
 
 class PhoneBlacklist(models.Model):
     """ Blacklist of phone numbers. Used to avoid sending unwanted messages to people. """
+    _name = 'phone.blacklist'
     _inherit = ['mail.thread']
     _description = 'Phone Blacklist'
     _rec_name = 'number'
