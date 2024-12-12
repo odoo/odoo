@@ -70,7 +70,10 @@ export class BaseHeader extends Interaction {
     }
 
     start() {
-        this.onScroll();
+        this.services.website_menus.triggerCallbacks();
+        if (this.scrollingElement.scrollTop > 0) {
+            this.adjustPosition();
+        }
     }
 
     //--------------------------------------------------------------
@@ -88,13 +91,8 @@ export class BaseHeader extends Interaction {
     }
 
     onScroll() {
-        const scroll = this.scrollingElement.scrollTop;
-
         if (!this.hasScrolled) {
             this.hasScrolled = true;
-            if (scroll > 0) {
-                this.adjustPosition();
-            }
         } else {
             this.closeDropdowns = true;
         }

@@ -224,7 +224,7 @@ test.tags("desktop")("table_of_content update titles position with a o_header_st
     await setupTest(core, wrapwrap);
     // Since the header does not move in Hoot, we have to take into 
     // account the scroll in the test when checking where the bottom
-    // of the header is (ie. when the header is shown).
+    // of the header is (ie. when the header is shown and scroll != 0).
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET)
     await customScroll(wrapwrap, 0, 40);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - 40)
@@ -248,23 +248,24 @@ test.tags("desktop")("table_of_content is update titles position with a o_header
     await setupTest(core, wrapwrap);
     // Since the header does not move in Hoot, the first scroll we do 
     // create a scroll offset we have to take into account when checking 
-    // where the bottom of the header is (ie. when the header is shown).
+    // where the bottom of the header is (ie. when the header is shown
+    // and scroll != 0).
     //
     // TODO Investigate where this issue comes from (might be like to
     // the fact the state "atTop" is updated and there is a transform
     // applied to the header).
-    const offset = 1;
+    const offset = 10;
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET)
     await customScroll(wrapwrap, 0, offset);
     document.dispatchEvent(new Event("scroll"));
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - offset)
-    await customScroll(wrapwrap, offset, 10);
+    await customScroll(wrapwrap, offset, 15);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - offset)
-    await customScroll(wrapwrap, 10, 400);
+    await customScroll(wrapwrap, 15, 400);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - offset)
-    await customScroll(wrapwrap, 400, 10);
+    await customScroll(wrapwrap, 400, 15);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - offset)
-    await customScroll(wrapwrap, 10, 0);
+    await customScroll(wrapwrap, 15, 0);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET)
 });
 
@@ -276,15 +277,15 @@ test.tags("desktop")("table_of_content is update titles position with a o_header
     await setupTest(core, wrapwrap);
     // Since the header does not move in Hoot, we have to take into 
     // account the scroll in the test when checking where the bottom
-    // of the header is (ie. when the header is shown).
+    // of the header is (ie. when the header is shown and scroll != 0).
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET);
     await customScroll(wrapwrap, 0, 10);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - 10)
     await customScroll(wrapwrap, 10, 400);
     expect(Math.round(parseFloat(title.style.top))).toBe(DEFAULT_OFFSET)
-    await customScroll(wrapwrap, 400, 10);
-    expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - 10)
-    await customScroll(wrapwrap, 10, 0);
+    await customScroll(wrapwrap, 400, 15);
+    expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - 15)
+    await customScroll(wrapwrap, 15, 0);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET)
 });
 
@@ -296,14 +297,14 @@ test.tags("desktop")("table_of_content is update titles position with a o_header
     await setupTest(core, wrapwrap);
     // Since the header does not move in Hoot, we have to take into 
     // account the scroll in the test when checking where the bottom
-    // of the header is (ie. when the header is shown).
+    // of the header is (ie. when the header is shown and scroll != 0).
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET);
     await customScroll(wrapwrap, 0, 10);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - 10)
     await customScroll(wrapwrap, 10, 400);
     expect(Math.round(parseFloat(title.style.top))).toBe(DEFAULT_OFFSET)
-    await customScroll(wrapwrap, 400, 10);
-    expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - 10)
-    await customScroll(wrapwrap, 10, 0);
+    await customScroll(wrapwrap, 400, 15);
+    expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET - 15)
+    await customScroll(wrapwrap, 15, 0);
     expect(Math.round(parseFloat(title.style.top))).toBe(HEADER_SIZE + DEFAULT_OFFSET)
 });

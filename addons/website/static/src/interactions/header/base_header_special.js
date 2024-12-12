@@ -30,14 +30,6 @@ export class BaseHeaderSpecial extends BaseHeader {
         this.dropdownClickedEl = null;
     }
 
-    start() {
-        if (this.isAnimated) {
-            this.transitionActive = false;
-        }
-        super.start();
-        this.transitionActive = true;
-    }
-
     onDropdownShow(ev) {
         // If a dropdown inside the element 'this.hideEl' is clicked while the 
         // header is fixed, we need to scroll the page up so that the 
