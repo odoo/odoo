@@ -8,8 +8,6 @@
     'version': '1.3',
     'depends': ['website_event'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/event_track_security.xml',
         'data/event_data.xml',
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
@@ -32,6 +30,7 @@
         'views/website_visitor_views.xml',
         'views/event_menus.xml',
         'views/snippets.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/event_demo.xml',

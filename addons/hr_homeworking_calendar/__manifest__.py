@@ -6,9 +6,8 @@
     'category': 'Human Resources/Remote Work',
     'depends': ['hr_homeworking', 'calendar'],
     'data': [
-        'security/security.xml',
-        'security/ir.model.access.csv',
         'wizard/homework_location_wizard.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'auto_install': True,

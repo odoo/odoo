@@ -9,10 +9,9 @@
     'depends': ['base', 'web', 'web_tour'],
     'installable': True,
     'data': [
-        'security/ir.model.access.csv',
-        'security/test_new_api_security.xml',
         'views/test_new_api_views.xml',
         'data/test_new_api_data.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_tests': [

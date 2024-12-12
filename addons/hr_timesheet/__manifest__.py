@@ -23,7 +23,6 @@ up a management by affair.
     'depends': ['hr', 'hr_hourly_cost', 'analytic', 'project', 'uom'],
     'data': [
         'security/hr_timesheet_security.xml',
-        'security/ir.model.access.csv',
         'security/ir.model.access.xml',
         'data/digest_data.xml',
         'views/hr_timesheet_views.xml',
@@ -42,6 +41,7 @@ up a management by affair.
         'views/project_update_views.xml',
         'wizard/hr_employee_delete_wizard_views.xml',
         'views/hr_timesheet_menus.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_timesheet_demo.xml',
