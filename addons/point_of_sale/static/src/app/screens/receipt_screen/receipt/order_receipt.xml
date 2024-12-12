@@ -45,16 +45,16 @@
                 <div class="text-center">--------------------------------</div>
                 <div class="pos-receipt-amount receipt-total">
                     <span class="label-total">TOTAL</span>
-                    <span t-esc="formatCurrency(taxTotals.order_total)" class="pos-receipt-right-align"/>
+                    <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.order_total)" class="pos-receipt-right-align"/>
                 </div>
                 <t t-if="'order_rounding' in taxTotals">
                     <div class="pos-receipt-amount receipt-rounding">
                         <span class="label-rounding">Rounding</span>
-                        <span t-esc='formatCurrency(taxTotals.order_rounding)' class="pos-receipt-right-align"/>
+                        <span t-esc='formatCurrency(taxTotals.order_sign * taxTotals.order_rounding)' class="pos-receipt-right-align"/>
                     </div>
                     <div class="pos-receipt-amount receipt-to-pay">
                         To Pay
-                        <span t-esc='formatCurrency(taxTotals.order_to_pay)' class="pos-receipt-right-align"/>
+                        <span t-esc='formatCurrency(taxTotals.order_sign * taxTotals.order_to_pay)' class="pos-receipt-right-align"/>
                     </div>
                 </t>
 
@@ -66,7 +66,7 @@
 
                 <div t-if="'order_change' in taxTotals" class="pos-receipt-amount receipt-change">
                     <span class="label-change">CHANGE</span>
-                    <span t-esc="formatCurrency(order.amount_return)" class="pos-receipt-right-align"/>
+                    <span t-esc="formatCurrency(taxTotals.order_sign * order.amount_return)" class="pos-receipt-right-align"/>
                 </div>
 
                 <!-- Extra Payment Info -->

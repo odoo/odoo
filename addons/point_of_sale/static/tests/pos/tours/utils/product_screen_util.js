@@ -127,9 +127,6 @@ export function clickSubcategory(name) {
 }
 /**
  * Press the numpad in sequence based on the given space-separated keys.
- * NOTE: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
- * fast inputs. Fast inputs is the case in tours.
- *
  * @param {...String} keys space-separated numpad keys
  */
 export function clickNumpad(...keys) {
@@ -629,6 +626,32 @@ export function finishOrder() {
 
 export function checkTaxAmount(amount) {
     return {
-        trigger: `.tax:contains(${amount})`,
+        trigger: `.order-summary .tax:contains(${amount})`,
+    };
+}
+
+export function checkRoundingAmountIsNotThere() {
+    return [
+        {
+            isActive: ["desktop"], // not rendered on mobile
+            trigger: ".order-summary",
+            run: function () {
+                if (document.querySelector(".rounding")) {
+                    throw new Error("A rounding amount has been found in order display.");
+                }
+            },
+        },
+    ];
+}
+
+export function checkRoundingAmount(amount) {
+    return {
+        trigger: `.order-summary .rounding:contains(${amount})`,
+    };
+}
+
+export function checkTotalAmount(amount) {
+    return {
+        trigger: `.order-summary .total:contains(${amount})`,
     };
 }
