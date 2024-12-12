@@ -3633,14 +3633,12 @@ test(`onchange send only the present fields to the server`, async () => {
                     },
                 },
                 limit: 40,
-                order: "",
             },
             type_ids: {
                 fields: {
                     name: {},
                 },
                 limit: 40,
-                order: "",
             },
         });
     });
@@ -3852,7 +3850,6 @@ test(`default record with a one2many and an onchange on sub field`, async () => 
                     foo: {},
                 },
                 limit: 40,
-                order: "",
             },
         });
     });
@@ -3922,7 +3919,6 @@ test(`form with one2many with dynamic context`, async () => {
                 },
                 context: { static: 4 },
                 limit: 40,
-                order: "",
             },
         });
     });
@@ -6458,7 +6454,6 @@ test(`display_name not sent for onchanges if not in view`, async () => {
                     color: {},
                 },
                 limit: 40,
-                order: "",
             },
         });
     });
@@ -6482,7 +6477,6 @@ test(`display_name not sent for onchanges if not in view`, async () => {
                     color: {},
                 },
                 limit: 40,
-                order: "",
             },
         });
     });
