@@ -3320,9 +3320,9 @@ test("group order by count", async () => {
             readGroupCount++;
         } else {
             expect(kwargs.groupby).toHaveLength(1);
-            expect.step(`web_read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
+            expect.step(`web_read_group ${kwargs.groupby[0]} order by ${kwargs.order}`);
             // The mock server cannot handle orderby count
-            kwargs.orderby = "";
+            kwargs.order = "";
             return parent();
         }
     });
@@ -3361,9 +3361,9 @@ test("order by count reset", async () => {
             readGroupCount++;
         } else {
             expect(kwargs.groupby).toHaveLength(1);
-            expect.step(`web_read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
+            expect.step(`web_read_group ${kwargs.groupby[0]} order by ${kwargs.order}`);
             // The mock server cannot handle orderby count
-            kwargs.orderby = "";
+            kwargs.order = "";
             return parent();
         }
     });
@@ -4500,7 +4500,7 @@ test(`currency_field is taken into account when formatting monetary values`, asy
 test(`groups can not be sorted on a different field than the first field of the groupBy - 1`, async () => {
     onRpc("web_read_group", ({ kwargs }) => {
         expect.step("web_read_group");
-        expect(kwargs.orderby).toBe("", { message: "should not have an orderBy" });
+        expect(kwargs.order).toBe("", { message: "should not have an orderBy" });
     });
     await mountView({
         resModel: "foo",
@@ -4514,7 +4514,7 @@ test(`groups can not be sorted on a different field than the first field of the 
 test(`groups can not be sorted on a different field than the first field of the groupBy - 2`, async () => {
     onRpc("web_read_group", ({ kwargs }) => {
         expect.step("web_read_group");
-        expect(kwargs.orderby).toBe("", { message: "should not have an orderBy" });
+        expect(kwargs.order).toBe("", { message: "should not have an orderBy" });
     });
 
     await mountView({
@@ -4534,7 +4534,7 @@ test(`groups can not be sorted on a different field than the first field of the 
 test(`groups can be sorted on the first field of the groupBy`, async () => {
     onRpc("web_read_group", ({ kwargs }) => {
         expect.step("web_read_group");
-        expect(kwargs.orderby).toBe("bar DESC", { message: "should have an orderBy" });
+        expect(kwargs.order).toBe("bar DESC", { message: "should have an orderBy" });
     });
 
     await mountView({
@@ -4552,7 +4552,7 @@ test(`groups can't be sorted on aggregates if there is no record`, async () => {
     Foo._records = [];
 
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(kwargs.orderby || "default order");
+        expect.step(kwargs.order || "default order");
     });
 
     await mountView({
@@ -4572,7 +4572,7 @@ test(`groups can't be sorted on aggregates if there is no record`, async () => {
 
 test(`groups can be sorted on aggregates`, async () => {
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(kwargs.orderby || "default order");
+        expect.step(kwargs.order || "default order");
     });
 
     await mountView({
@@ -4612,7 +4612,7 @@ test(`groups cannot be sorted on non-aggregable fields if every group is folded`
     });
 
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(kwargs.orderby || "default order");
+        expect.step(kwargs.order || "default order");
     });
 
     await mountView({
@@ -4648,7 +4648,7 @@ test(`groups cannot be sorted on non-aggregable fields if every group is folded`
 
 test(`groups can be sorted on non-aggregable fields if a group isn't folded`, async () => {
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(`web_read_group.orderby: ${kwargs.orderby || "default order"}`);
+        expect.step(`web_read_group.orderby: ${kwargs.order || "default order"}`);
     });
     onRpc("web_search_read", ({ kwargs }) => {
         expect.step(`web_search_read.order: ${kwargs.order || "default order"}`);
@@ -4674,7 +4674,7 @@ test(`groups can be sorted on non-aggregable fields if a group isn't folded`, as
 
 test(`groups can be sorted on non-aggregable fields if a group isn't folded with expand='1'`, async () => {
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(`web_read_group.orderby: ${kwargs.orderby || "default order"}`);
+        expect.step(`web_read_group.orderby: ${kwargs.order || "default order"}`);
     });
     onRpc("web_search_read", ({ kwargs }) => {
         expect.step(`web_search_read.orderby: ${kwargs.order || "default order"}`);

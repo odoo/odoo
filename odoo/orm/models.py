@@ -2690,7 +2690,10 @@ class BaseModel(metaclass=MetaModel):
         :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: if user is not allowed to access requested information
         """
-        warnings.warn("Since 19.0, read_group is deprecated. Please use _read_group in the backend code, web_read_group for a complete formatted result or search_read_group for an unformatted result")
+        warnings.warn(
+            "Since 19.0, read_group is deprecated. Please use _read_group in the backend code, web_read_group for a complete formatted result or search_read_group for an unformatted result",
+            DeprecationWarning
+        )
         groupby = [groupby] if isinstance(groupby, str) else groupby
         lazy_groupby = groupby[:1] if lazy else groupby
 

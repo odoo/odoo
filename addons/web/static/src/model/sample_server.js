@@ -1,7 +1,6 @@
 import {
     deserializeDate,
     deserializeDateTime,
-    parseDate,
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
@@ -208,9 +207,12 @@ export class SampleServer {
             return false;
         }
         const { type, interval, relation } = options;
-        if (["date", "datetime"].includes(type)) {
+        if (["date", "datetime"].includes(type) && value) {
+            const deserialize = type === "date" ? deserializeDate : deserializeDateTime;
+            const serialize = type === "date" ? serializeDate : serializeDateTime;
+            const from = deserialize(value).startOf(interval);
             const fmt = SampleServer.FORMATS[interval];
-            return [value, parseDate(value).toFormat(fmt)];
+            return [serialize(from), from.toFormat(fmt)];
         } else if (["many2one", "many2many"].includes(type)) {
             const rec = this.data[relation].records.find(({ id }) => id === value);
             return [value, rec.display_name];
@@ -430,7 +432,7 @@ export class SampleServer {
                 const { fieldName, type, alias } = gb;
                 let fieldVals;
                 if (["date", "datetime"].includes(type)) {
-                    fieldVals = [this._formatValue(record[fieldName], gb)[1]];
+                    fieldVals = [this._formatValue(record[fieldName], gb)];
                 } else if (type === "many2many") {
                     fieldVals = record[fieldName].length ? record[fieldName] : [false];
                 } else {
@@ -486,7 +488,6 @@ export class SampleServer {
                     group[alias] = this._formatValue(parsedId[fieldName], gb);
                 } else {
                     group[alias] = this._formatValue(firstElem[fieldName], gb);
-                    // TODO: not correct for the date, it's depends of the granularity
                 }
             }
             Object.assign(group, this._aggregateFields(measures, records));
