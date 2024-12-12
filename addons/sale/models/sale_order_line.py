@@ -308,7 +308,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-            lang = line.order_id._get_lang()
+            lang = line.order_id and line.order_id._get_lang()
             if lang != self.env.lang:
                 line = line.with_context(lang=lang)
             name = line._get_sale_order_line_multiline_description_sale()
