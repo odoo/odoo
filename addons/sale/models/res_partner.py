@@ -72,13 +72,6 @@ class ResPartner(models.Model):
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
 
-    @api.readonly
-    def action_view_sale_order(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('sale.act_res_partner_2_sale_order')
-        all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        action["domain"] = [("partner_id", "in", all_child.ids)]
-        return action
-
     def _compute_credit_to_invoice(self):
         # EXTENDS 'account'
         super()._compute_credit_to_invoice()
