@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
+import { deepCopy } from "@web/core/utils/objects";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { EvaluationError } from "@odoo/o-spreadsheet";
@@ -146,7 +147,7 @@ const ODOO_FIN_ARGS = () => [
         "date_range (string, date)",
         _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
     ),
-    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
+    arg("offset (number, default=0)", _t("Offset applied to the years.")),
     arg("company_id (number, optional)", _t("The company to target (Advanced).")),
     arg(
         "include_unposted (boolean, default=FALSE)",

@@ -7,6 +7,23 @@ from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
+def _get_cell_date(year, month=None, day=None, quarter=None):
+    assert not (quarter and month)
+    assert not day or month
+    return {
+        'range_type': (
+            'day' if day 
+            else 'month' if month 
+            else 'quarter' if quarter 
+            else 'year'
+        ),
+        'year': year,
+        **{'quarter': quarter},
+        **{'month': month},
+        **{'day': day},
+    }
+
+
 @tagged("post_install", "-at_install")
 class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
     @classmethod
@@ -100,6 +117,226 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 ],
             }
         )
+    
+    def test_pre_process_date_period_boundaries(self):
+        expense_account = self.account_expense_c1
+        income_account = self.account_revenue_c1
+        receivable_account = self.company_data['default_account_receivable']
+        cells = [
+            {
+                'codes': [expense_account.code, income_account.code],
+                'date_range': _get_cell_date(2022),
+                'company_id': None,
+            },
+            {
+                'codes': [expense_account.code, receivable_account.code],
+                'date_range': _get_cell_date(2022),
+                'company_id': None,
+            },
+        ]
+
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: expense_account + income_account + receivable_account})
+
+        self.assertEqual(cells[0]['date_from_boundary'], date(2022, 1, 1))
+        self.assertEqual(cells[0]['date_to_boundary'], date(2022, 12, 31))
+        self.assertFalse(cells[0]['needs_initial_balance'])
+
+        self.assertEqual(cells[1]['date_from_boundary'], date(2022, 1, 1))
+        self.assertEqual(cells[1]['date_to_boundary'], date(2022, 12, 31))
+        self.assertTrue(cells[1]['needs_initial_balance'])
+
+    def test_get_timeline_same_start_different_finish(self):
+        cells = [
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021, quarter=2),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021, 4),
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: self.account_expense_c1})
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(2021, 4, 1), date(2021, 4, 30)),
+            (date(2021, 5, 1), date(2021, 6, 30)),
+        ])
+
+    def test_get_timeline_same_start_different_finish_in_broader_period(self):
+        cells = [
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021, quarter=2),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021, 4),
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: self.account_expense_c1})
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(2021, 1, 1), date(2021, 3, 31)),
+            (date(2021, 4, 1), date(2021, 4, 30)),
+            (date(2021, 5, 1), date(2021, 6, 30)),
+            (date(2021, 7, 1), date(2021, 12, 31)),
+        ])
+
+    def test_get_timeline_different_start_same_finish(self):
+        cells = [
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021, quarter=2),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021, 6),
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: self.account_expense_c1})
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(2021, 4, 1), date(2021, 5, 31)),
+            (date(2021, 6, 1), date(2021, 6, 30)),
+        ])
+
+    def test_get_timeline_different_start_same_finish_in_broader_period(self):
+        cells = [
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021, quarter=2),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021, 6),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2021),
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: self.account_expense_c1})
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(2021, 1, 1), date(2021, 3, 31)),
+            (date(2021, 4, 1), date(2021, 5, 31)),
+            (date(2021, 6, 1), date(2021, 6, 30)),
+            (date(2021, 7, 1), date(2021, 12, 31)),
+        ])
+
+    def test_get_timeline_following_periods(self):
+        cells = [
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2022, quarter=2),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2022, quarter=3),
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: self.account_expense_c1})
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(2022, 4, 1), date(2022, 6, 30)),
+            (date(2022, 7, 1), date(2022, 9, 30)),
+        ])
+    
+    def test_get_timeline_following_periods_in_broader_period(self):
+        cells = [
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2022, quarter=2),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2022, quarter=3),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2022),
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: self.account_expense_c1})
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(2022, 1, 1), date(2022, 3, 31)),
+            (date(2022, 4, 1), date(2022, 6, 30)),
+            (date(2022, 7, 1), date(2022, 9, 30)),
+            (date(2022, 10, 1), date(2022, 12, 31)),
+        ])
+    
+    def test_get_timeline_gapped_periods(self):
+        cells = [
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2022),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2024),
+                'company_id': None,
+            }
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: self.account_expense_c1})
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(2022, 1, 1), date(2022, 12, 31)),
+            (date(2024, 1, 1), date(2024, 12, 31)),
+        ])
+
+    def test_get_timeline_overlapping_periods(self):
+        cells = [
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2024),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2024, quarter=4),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2024, 10),
+                'company_id': None,
+            },
+            {
+                'codes': [self.account_expense_c1.code],
+                'date_range': _get_cell_date(2024, 10, 2),
+                'company_id': None,
+            }
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells, {self.env.company.id: self.account_expense_c1})
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(2024, 1, 1), date(2024, 9, 30)),
+            (date(2024, 10, 1), date(2024, 10, 2)),
+            (date(2024, 10, 3), date(2024, 10, 31)),
+            (date(2024, 11, 1), date(2024, 12, 31)),
+        ])
 
     def test_empty_payload(self):
         self.assertEqual(
@@ -986,7 +1223,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     ("company_id", "=", self.account_revenue_c1.company_ids.id),
                     ("move_id.state", "!=", "cancel"),
                 ],
-                "name": "Journal items for account prefix sp1234566",
+                "name": "Cell Audit",
             },
         )
 
@@ -1011,6 +1248,6 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "views": [[False, "list"]],
                 "target": "current",
                 "domain": [(0, "=", 1)],
-                "name": "Journal items for account prefix ",
+                "name": "Cell Audit",
             },
         )
