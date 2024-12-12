@@ -132,11 +132,12 @@ export class SelfOrder extends Reactive {
                 });
                 return;
             }
-            if (product.attributes.length) {
-                this.router.navigate("product", { id: product.id });
+            const productTemplate = product.product_tmpl_id;
+            if (productTemplate.isConfigurable()) {
+                this.router.navigate("product", { id: productTemplate.id });
                 return;
             }
-            this.addToCart(product, 1, "", {}, {});
+            this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
     }
