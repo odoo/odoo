@@ -1195,6 +1195,9 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         if operator in SQL_OPERATORS and isinstance(value, SQL):
             return SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], value)
 
+        # nullability
+        nullable = not (self.required and model.env.registry.constraints_validated)
+
         # operator: in (equality)
         equal_operator = None
         if operator in ('=', '!='):
@@ -1226,12 +1229,14 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             if (operator == 'in') == null_in_condition:
                 # field in {val, False} => field IN vals OR field IS NULL
                 # field not in {val} => field NOT IN vals OR field IS NULL
+                if not nullable:
+                    return sql or SQL("FALSE")
                 sql_null = SQL("%s IS NULL", sql_field)
                 return SQL("(%s OR %s)", sql, sql_null) if sql else sql_null
 
             elif operator == 'not in' and null_in_condition and not sql:
                 # if we have a base query, null values are already exluded
-                return SQL("%s IS NOT NULL", sql_field)
+                return SQL("%s IS NOT NULL", sql_field) if nullable else SQL("TRUE")
 
             assert sql, f"Missing sql query for {operator} {value!r}"
             return sql
@@ -1252,7 +1257,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                 sql_value = model.env.registry.unaccent(sql_value)
 
             sql = SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], sql_value)
-            if operator in NEGATIVE_CONDITION_OPERATORS:
+            if operator in NEGATIVE_CONDITION_OPERATORS and nullable:
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
             return sql
 
@@ -1261,7 +1266,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             can_be_null = False
             if (null_value := self.falsy_value) is not None and not isinstance(null_value, str):  # TODO remove check on str
                 value = self.convert_to_cache(value, model) or null_value
-                can_be_null = (
+                can_be_null = nullable and (
                     null_value < value if operator == '<' else
                     null_value > value if operator == '>' else
                     null_value <= value if operator == '<=' else
