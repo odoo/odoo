@@ -16,3 +16,10 @@ class TestInheritMother(models.Model):
 
     def foo(self):
         return super().foo() * 2
+
+
+class TestInheritAnimal(models.Model):
+    _inherit = ['test.inherit.animal']
+
+    name = fields.Char(default='Animal')
+    height = fields.Integer()

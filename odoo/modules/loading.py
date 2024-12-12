@@ -610,6 +610,9 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
                 cr.commit()
+                # remove ir.model.data for ir.model.fields deleted by ondelete cascade after uninstallation
+                # the deleted ir.model.data's res_id doesn't exist in ir_model_fields.id anymore
+                cr.execute("DELETE FROM ir_model_data WHERE model='ir.model.fields' AND res_id NOT IN (SELECT id FROM ir_model_fields)")
                 _logger.info('Reloading registry once more after uninstalling modules')
                 registry = Registry.new(
                     cr.dbname, force_demo, update_module=update_module
