@@ -246,11 +246,15 @@ class AccountMove(models.Model):
                     company=invoice.company_id,
                     key_download=result['key_download'],
                     session=session,
+                    status=result['state_status'],
                 )
                 to_delete_documents |= invoice._l10n_ro_edi_get_sent_and_failed_documents()
                 final_result['key_loading'] = invoice.l10n_ro_edi_index
-                if 'error' in final_result:
-                    final_result['attachment_raw'] = previous_raw
+                if final_result.get('error'):
+                    final_result.update({
+                        'attachment_raw': previous_raw,
+                        'error': final_result['error'].replace('\t', '')
+                    })
                     invoice._l10n_ro_edi_create_document_invoice_sending_failed(final_result)
                 else:
                     invoice._l10n_ro_edi_create_document_invoice_validated(final_result)
