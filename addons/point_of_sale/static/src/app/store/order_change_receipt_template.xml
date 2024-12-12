@@ -36,7 +36,8 @@
             </t>
             <t t-if="changes.new.length > 0">
                 <div class="pos-receipt-title">
-                    NEW
+                    <t t-if="!reprint">NEW</t>
+                    <t t-else="">REPRINT</t>
                     <t t-esc='changes.time.hours'/>:<t t-esc='changes.time.minutes'/>
                 </div>
                 <br />

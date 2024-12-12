@@ -56,6 +56,7 @@ export class PosOrder extends Base {
             TipScreen: {
                 inputTipAmount: "",
             },
+            changeStack: {},
         };
 
         if (!this.session_id) {
@@ -326,30 +327,38 @@ export class PosOrder extends Base {
             return sequenceA - sequenceB;
         });
 
+        const printChanges = async (printer, changes, reprint = false) => {
+            const printingChanges = {
+                new: changes["new"],
+                cancelled: changes["cancelled"],
+                table_name: this.table_id?.table_number,
+                floor_name: this.table_id?.floor_id?.name,
+                time: {
+                    hours,
+                    minutes,
+                },
+                order_name: this.getName(),
+            };
+            console.log("printingChanges", printingChanges, reprint);
+            const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                changes: printingChanges,
+                reprint: reprint,
+            });
+            const result = await printer.printReceipt(receipt);
+            return result.successful;
+        };
+
         for (const printer of unwatchedPrinter) {
             const changes = this._getPrintingCategoriesChanges(
                 printer.config.product_categories_ids,
                 orderChange
             );
             if (changes["new"].length > 0 || changes["cancelled"].length > 0) {
-                const printingChanges = {
-                    new: changes["new"],
-                    cancelled: changes["cancelled"],
-                    table_name: this.table_id?.table_number,
-                    floor_name: this.table_id?.floor_id?.name,
-                    time: {
-                        hours,
-                        minutes,
-                    },
-                    order_name: this.getName(),
-                };
-                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
-                    changes: printingChanges,
-                });
-                const result = await printer.printReceipt(receipt);
-                if (!result.successful) {
-                    isPrintSuccessful = false;
-                }
+                this.uiState.changeStack[printer.config.id] = changes;
+                isPrintSuccessful = printChanges(printer, changes, false);
+            } else if (this.uiState.changeStack[printer.id]) {
+                const oldChanges = this.uiState.changeStack[printer.id];
+                isPrintSuccessful = printChanges(printer, oldChanges, true);
             }
         }
 

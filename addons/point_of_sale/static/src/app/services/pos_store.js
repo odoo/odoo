@@ -25,7 +25,7 @@ import {
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
+import { getOrderChanges } from "../models/utils/order_change";
 import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
@@ -1492,25 +1492,17 @@ export class PosStore extends WithLazyGetterTrap {
     async sendOrderInPreparation(order, cancelled = false) {
         if (this.printers_category_ids_set.size) {
             try {
-                const changes = changesToOrder(
-                    order,
+                const isPrintSuccessful = await order.printChanges(
                     false,
                     this.orderPreparationCategories,
-                    cancelled
+                    cancelled,
+                    this.unwatched.printers
                 );
-                if (changes.cancelled.length > 0 || changes.new.length > 0) {
-                    const isPrintSuccessful = await order.printChanges(
-                        false,
-                        this.orderPreparationCategories,
-                        cancelled,
-                        this.unwatched.printers
-                    );
-                    if (!isPrintSuccessful) {
-                        this.dialog.add(AlertDialog, {
-                            title: _t("Printing failed"),
-                            body: _t("Failed in printing the changes in the order"),
-                        });
-                    }
+                if (!isPrintSuccessful) {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Printing failed"),
+                        body: _t("Failed in printing the changes in the order"),
+                    });
                 }
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
