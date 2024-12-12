@@ -8,26 +8,6 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
     /**
-     * Simulates `_get_im_status` on `ir.websocket`.
-     *
-     * @param {Object} imStatusIdsByModel
-     * @param {Number[]|undefined} mail.guest ids of mail.guest whose im_status
-     * should be monitored.
-     */
-    _mockIrWebsocket__getImStatus(imStatusIdsByModel) {
-        const imStatus = super._mockIrWebsocket__getImStatus(imStatusIdsByModel);
-        const { "mail.guest": guestIds } = imStatusIdsByModel;
-        if (guestIds) {
-            imStatus["mail.guest"] = this.pyEnv["mail.guest"]
-                .search_read([["id", "in", guestIds]], {
-                    context: { active_test: false },
-                    fields: ["im_status"],
-                })
-                .map((g) => ({ id: g.id, im_status: g.im_status }));
-        }
-        return imStatus;
-    },
-    /**
      * Simulates `_build_bus_channel_list` on `ir.websocket`.
      */
     _mockIrWebsocket__buildBusChannelList(channels) {
