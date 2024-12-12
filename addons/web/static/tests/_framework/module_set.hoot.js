@@ -333,6 +333,16 @@ const runTests = async () => {
     }
 
     await stop();
+
+    // Clear large objects to help final GC
+    if (loader.modules.has(TEMPLATE_MODULE_NAME)) {
+        const templateModule = loader.modules.get(TEMPLATE_MODULE_NAME);
+        templateModule.setUrlFilters([]);
+        templateModule.clearProcessedTemplates();
+    }
+    moduleNamesCache.clear();
+    serverModelCache.clear();
+
     __gcAndLogMemory("tests done");
 };
 

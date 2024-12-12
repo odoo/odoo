@@ -103,10 +103,10 @@ export class HootStatusPanel extends Component {
                     Ready
                 </t>
                 <t t-elif="runnerState.status === 'running'">
-                    <i t-if="state.debug" class="text-skip fa fa-bug" title="Debugging" />
+                    <i t-if="state.debug" class="text-cyan fa fa-bug" title="Debugging" />
                     <div
                         t-else=""
-                        class="animate-spin shrink-0 grow-0 w-4 h-4 border-2 border-pass border-t-transparent rounded-full"
+                        class="animate-spin shrink-0 grow-0 w-4 h-4 border-2 border-emerald border-t-transparent rounded-full"
                         role="status"
                         title="Running"
                     />
@@ -128,12 +128,12 @@ export class HootStatusPanel extends Component {
                     <HootTestPath test="runnerState.currentTest" />
                 </t>
                 <t t-if="state.timer">
-                    <span class="text-skip" t-esc="formatTime(state.timer, 's')" />
+                    <span class="text-cyan" t-esc="formatTime(state.timer, 's')" />
                 </t>
             </div>
             <div class="flex items-center gap-1">
                 <t t-if="runnerReporting.passed">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'passed' ? 'pass' : 'muted'" />
+                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'passed' ? 'emerald' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
                         t-on-click.stop="() => this.filterResults('passed')"
@@ -144,7 +144,7 @@ export class HootStatusPanel extends Component {
                     </button>
                 </t>
                 <t t-if="runnerReporting.failed">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'failed' ? 'fail' : 'muted'" />
+                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'failed' ? 'rose' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
                         t-on-click.stop="() => this.filterResults('failed')"
@@ -155,7 +155,7 @@ export class HootStatusPanel extends Component {
                     </button>
                 </t>
                 <t t-if="runnerReporting.skipped">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'skipped' ? 'skip' : 'muted'" />
+                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'skipped' ? 'cyan' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
                         t-on-click.stop="() => this.filterResults('skipped')"
@@ -166,7 +166,7 @@ export class HootStatusPanel extends Component {
                     </button>
                 </t>
                 <t t-if="runnerReporting.todo">
-                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'todo' ? 'todo' : 'muted'" />
+                    <t t-set="color" t-value="!uiState.statusFilter or uiState.statusFilter === 'todo' ? 'purple' : 'gray'" />
                     <button
                         t-attf-class="text-{{ color }} transition-colors flex items-center gap-1 p-1 font-bold"
                         t-on-click.stop="() => this.filterResults('todo')"
@@ -196,7 +196,7 @@ export class HootStatusPanel extends Component {
                             <i class="fa fa-chevron-left" />
                         </button>
                         <strong class="text-primary" t-esc="uiState.resultsPage + 1" />
-                        <span class="text-muted">/</span>
+                        <span class="text-gray">/</span>
                         <t t-esc="lastPage + 1" />
                         <button
                             class="px-1 transition-color"
@@ -341,16 +341,16 @@ export class HootStatusPanel extends Component {
             const x = $floor(this.progressBarIndex * cellSize);
             switch (test.status) {
                 case Test.ABORTED:
-                    ctx.fillStyle = colors.abort;
+                    ctx.fillStyle = colors.amber;
                     break;
                 case Test.FAILED:
-                    ctx.fillStyle = colors.fail;
+                    ctx.fillStyle = colors.rose;
                     break;
                 case Test.PASSED:
-                    ctx.fillStyle = test.config.todo ? colors.todo : colors.pass;
+                    ctx.fillStyle = test.config.todo ? colors.purple : colors.emerald;
                     break;
                 case Test.SKIPPED:
-                    ctx.fillStyle = colors.skip;
+                    ctx.fillStyle = colors.cyan;
                     break;
             }
             ctx.fillRect(x, 0, $ceil(cellSize), height);

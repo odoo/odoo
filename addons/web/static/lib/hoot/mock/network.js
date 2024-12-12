@@ -5,7 +5,7 @@ import {
     mockedRequestAnimationFrame,
 } from "@web/../lib/hoot-dom/helpers/time";
 import { makeNetworkLogger } from "../core/logger";
-import { ensureArray, makePublicListeners, MIME_TYPE } from "../hoot_utils";
+import { ensureArray, MockEventTarget, makePublicListeners, MIME_TYPE } from "../hoot_utils";
 import { getSyncValue, MockBlob, setSyncValue } from "./sync_values";
 
 //-----------------------------------------------------------------------------
@@ -16,7 +16,6 @@ const {
     AbortController,
     BroadcastChannel,
     document,
-    EventTarget,
     fetch,
     Headers,
     Map,
@@ -284,15 +283,16 @@ export class MockBroadcastChannel extends BroadcastChannel {
     }
 
     static _clear() {
-        while (MockBroadcastChannel._instances.length) {
-            MockBroadcastChannel._instances.pop().close();
+        for (const instance of MockBroadcastChannel._instances) {
+            instance.close();
         }
+        MockBroadcastChannel._instances.length = 0;
     }
 }
 
 export class MockCookie {
     /** @type {Record<string, string>} */
-    _jar = {};
+    _jar = Object.create(null);
 
     get() {
         return $entries(this._jar)
@@ -415,7 +415,7 @@ export class MockHistory {
     }
 }
 
-export class MockLocation extends EventTarget {
+export class MockLocation extends MockEventTarget {
     _anchor = document.createElement("a");
     /** @type {(() => any)[]} */
     _onReload = [];
@@ -515,7 +515,7 @@ export class MockLocation extends EventTarget {
     }
 }
 
-export class MockMessagePort extends EventTarget {
+export class MockMessagePort extends MockEventTarget {
     /** @type {() => any} */
     _execute;
     /** @type {SharedWorker} */
@@ -615,7 +615,7 @@ export class MockResponse extends Response {
     }
 }
 
-export class MockSharedWorker extends EventTarget {
+export class MockSharedWorker extends MockEventTarget {
     /**
      * @param {string | URL} scriptURL
      * @param {WorkerOptions} [options]
@@ -646,7 +646,7 @@ export class MockURL extends URL {
     }
 }
 
-export class MockWebSocket extends EventTarget {
+export class MockWebSocket extends MockEventTarget {
     /** @type {ServerWebSocket | null} */
     _serverWs = null;
     /** @type {ReturnType<typeof makeNetworkLogger>} */
@@ -700,7 +700,7 @@ export class MockWebSocket extends EventTarget {
     }
 }
 
-export class MockWorker extends EventTarget {
+export class MockWorker extends MockEventTarget {
     /**
      * @param {string | URL} scriptURL
      * @param {WorkerOptions} [options]
@@ -739,7 +739,7 @@ export class MockWorker extends EventTarget {
     }
 }
 
-export class MockXMLHttpRequest extends EventTarget {
+export class MockXMLHttpRequest extends MockEventTarget {
     _headers = {};
     _method = "GET";
     _response = null;
@@ -793,7 +793,7 @@ export class MockXMLHttpRequest extends EventTarget {
     getResponseHeader() {}
 }
 
-export class MockXMLHttpRequestUpload extends EventTarget {
+export class MockXMLHttpRequestUpload extends MockEventTarget {
     constructor() {
         super(...arguments);
 
@@ -809,7 +809,7 @@ export class MockXMLHttpRequestUpload extends EventTarget {
     }
 }
 
-export class ServerWebSocket extends EventTarget {
+export class ServerWebSocket extends MockEventTarget {
     /** @type {WebSocket | null} */
     _clientWs = null;
     /** @type {ReturnType<typeof makeNetworkLogger>} */

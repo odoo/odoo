@@ -10,12 +10,25 @@ import {
     mockedSetInterval,
     mockedSetTimeout,
 } from "@web/../lib/hoot-dom/helpers/time";
+import { MockEventTarget } from "../hoot_utils";
 import { getRunner } from "../main_runner";
+import {
+    MockAnimation,
+    mockedAnimate,
+    mockedScroll,
+    mockedScrollBy,
+    mockedScrollIntoView,
+    mockedScrollTo,
+    mockedWindowScroll,
+    mockedWindowScrollBy,
+    mockedWindowScrollTo,
+} from "./animation";
 import { MockConsole } from "./console";
 import { MockDate } from "./date";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBroadcastChannel,
+    MockMessagePort,
     MockRequest,
     MockResponse,
     MockSharedWorker,
@@ -23,6 +36,7 @@ import {
     MockWebSocket,
     MockWorker,
     MockXMLHttpRequest,
+    MockXMLHttpRequestUpload,
     mockCookie,
     mockHistory,
     mockedFetch,
@@ -41,7 +55,6 @@ const {
     HTMLBodyElement,
     HTMLHeadElement,
     HTMLHtmlElement,
-    MessagePort,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
         defineProperty: $defineProperty,
@@ -56,9 +69,7 @@ const {
     ontouchstart,
     Reflect: { ownKeys: $ownKeys },
     Set,
-    SharedWorker,
     Window,
-    Worker,
 } = globalThis;
 
 const touchFunctions = { ontouchcancel, ontouchend, ontouchmove, ontouchstart };
@@ -94,9 +105,9 @@ const applyPropertyDescriptors = (target, descriptors) => {
  * @param {keyof T} property
  */
 const findOriginalDescriptor = (target, property) => {
-    for (const { descriptor, target: t, property: p } of originalDescriptors) {
-        if (t === target && p === property) {
-            return descriptor;
+    for (const od of originalDescriptors) {
+        if (od.target === target && od.property === property) {
+            return od.descriptor;
         }
     }
     return null;
@@ -118,20 +129,13 @@ const findPropertyOwner = (object, property) => {
     return object;
 };
 
-function mockedElementFromPoint() {
-    return mockedElementsFromPoint.call(this, ...arguments)[0];
+function mockedElementFromPoint(...args) {
+    return mockedElementsFromPoint.call(this, ...args)[0];
 }
 
-function mockedElementsFromPoint() {
-    const { value: elementsFromPoint } = findOriginalDescriptor(document, "elementsFromPoint");
-    const elements = elementsFromPoint
-        .call(this, ...arguments)
-        .filter(
-            (el) =>
-                !el.tagName.startsWith("HOOT") && el !== this.body && el !== this.documentElement
-        );
-    elements.push(this.body, this.documentElement);
-    return elements;
+function mockedElementsFromPoint(...args) {
+    const { value: elementsFromPoint } = findOriginalDescriptor(this, "elementsFromPoint");
+    return elementsFromPoint.call(this, ...args).filter((el) => !el.tagName.startsWith("HOOT"));
 }
 
 const EVENT_TARGET_PROTOTYPES = new Map(
@@ -143,12 +147,9 @@ const EVENT_TARGET_PROTOTYPES = new Map(
         HTMLBodyElement,
         HTMLHeadElement,
         HTMLHtmlElement,
-        // Workers
-        MessagePort,
-        SharedWorker,
-        Worker,
-        // Others
+        // Other event targets
         EventBus,
+        MockEventTarget,
     ].map(({ prototype }) => [
         prototype,
         [prototype.addEventListener, prototype.removeEventListener],
@@ -163,6 +164,8 @@ const mockLocalStorage = new MockStorage();
 const mockSessionStorage = new MockStorage();
 let mockTitle = "";
 
+const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
+
 // Mock descriptors
 const DOCUMENT_MOCK_DESCRIPTORS = {
     cookie: {
@@ -176,22 +179,31 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
         set: (value) => (mockTitle = value),
     },
 };
-const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
+const ELEMENT_MOCK_DESCRIPTORS = {
+    animate: { value: mockedAnimate },
+    scroll: { value: mockedScroll },
+    scrollBy: { value: mockedScrollBy },
+    scrollIntoView: { value: mockedScrollIntoView },
+    scrollTo: { value: mockedScrollTo },
+};
 const WINDOW_MOCK_DESCRIPTORS = {
+    Animation: { value: MockAnimation },
     Blob: { value: MockBlob },
     BroadcastChannel: { value: MockBroadcastChannel },
     cancelAnimationFrame: { value: mockedCancelAnimationFrame, writable: false },
     clearInterval: { value: mockedClearInterval, writable: false },
     clearTimeout: { value: mockedClearTimeout, writable: false },
-    console: { value: mockConsole, writable: false },
     ClipboardItem: { value: MockClipboardItem },
+    console: { value: mockConsole, writable: false },
     Date: { value: MockDate, writable: false },
+    EventTarget: { value: MockEventTarget },
     fetch: { value: mockedFetch, writable: false },
     history: { value: mockHistory },
     innerHeight: { get: () => getCurrentDimensions().height },
     innerWidth: { get: () => getCurrentDimensions().width },
     localStorage: { value: mockLocalStorage, writable: false },
     matchMedia: { value: mockedMatchMedia },
+    MessagePort: { value: MockMessagePort },
     navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
     outerHeight: { get: () => getCurrentDimensions().height },
@@ -199,6 +211,9 @@ const WINDOW_MOCK_DESCRIPTORS = {
     Request: { value: MockRequest, writable: false },
     requestAnimationFrame: { value: mockedRequestAnimationFrame, writable: false },
     Response: { value: MockResponse, writable: false },
+    scroll: { value: mockedWindowScroll },
+    scrollBy: { value: mockedWindowScrollBy },
+    scrollTo: { value: mockedWindowScrollTo },
     sessionStorage: { value: mockSessionStorage, writable: false },
     setInterval: { value: mockedSetInterval, writable: false },
     setTimeout: { value: mockedSetTimeout, writable: false },
@@ -207,6 +222,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     WebSocket: { value: MockWebSocket },
     Worker: { value: MockWorker },
     XMLHttpRequest: { value: MockXMLHttpRequest },
+    XMLHttpRequestUpload: { value: MockXMLHttpRequestUpload },
 };
 
 //-----------------------------------------------------------------------------
@@ -220,6 +236,14 @@ export function cleanupWindow() {
 
     // Title
     mockTitle = "";
+
+    // Body & head attributes
+    for (const { name } of document.head.attributes) {
+        document.head.removeAttribute(name);
+    }
+    for (const { name } of document.body.attributes) {
+        document.body.removeAttribute(name);
+    }
 
     // Touch
     for (const [fnName, originalFn] of $entries(touchFunctions)) {
@@ -284,6 +308,7 @@ export function mockTouch(setTouch, { Document, HTMLElement, SVGElement } = glob
  */
 export function patchWindow({ document, window } = globalThis) {
     applyPropertyDescriptors(window, WINDOW_MOCK_DESCRIPTORS);
+    applyPropertyDescriptors(window.Element.prototype, ELEMENT_MOCK_DESCRIPTORS);
     whenReady(() => {
         applyPropertyDescriptors(document, DOCUMENT_MOCK_DESCRIPTORS);
     });
@@ -324,9 +349,10 @@ export function watchListeners() {
     }
 
     return function unwatchAllListeners() {
-        while (remaining.length) {
-            remaining.pop()();
+        for (const cleanup of remaining) {
+            cleanup();
         }
+        remaining.length = 0;
 
         for (const [proto, [addEventListener]] of EVENT_TARGET_PROTOTYPES) {
             proto.addEventListener = addEventListener;
