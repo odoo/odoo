@@ -1078,7 +1078,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.amount_to_invoice = 0.0
 
-    @api.depends('order_id.partner_id', 'product_id')
+    @api.depends('order_id.partner_id', 'company_id', 'product_id')
     def _compute_analytic_distribution(self):
         for line in self:
             if not line.display_type:
