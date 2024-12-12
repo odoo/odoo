@@ -70,7 +70,7 @@ class DiscussChannel(models.Model):
                 "scriptStep": current_step_sudo.id,
                 "message": step_message.mail_message_id.id,
                 "operatorFound": current_step_sudo.step_type == "forward_operator"
-                and len(channel.channel_member_ids) > 2,
+                and channel.livechat_operator_id != chatbot_script.operator_partner_id,
             }
             store.add(current_step_sudo)
             store.add(chatbot_script)
