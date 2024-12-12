@@ -29,10 +29,12 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { useSetupAction } from "@web/search/action_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { BuilderActionsPlugin } from "./plugins/builder_actions_plugin";
+import { OperationPlugin } from "./plugins/operation_plugin";
 
 const BUILDER_PLUGIN = [
     BuilderOptionsPlugin,
     BuilderActionsPlugin,
+    OperationPlugin,
     BuilderOverlayPlugin,
     DropZonePlugin,
     MediaWebsitePlugin,

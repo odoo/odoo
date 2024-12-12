@@ -20,9 +20,5 @@ export class CustomizeTab extends Component {
         useVisibilityObserver("content", (hasContent) => {
             this.state.hasContent = hasContent;
         });
-        useSubEnv({
-            mutex: new Mutex(),
-            callable: {},
-        });
     }
 }

@@ -19,7 +19,7 @@ export class WeSelectItem extends Component {
 
     setup() {
         const item = useRef("item");
-        const { state, call, isActive } = useClickableWeWidget();
+        const { state, operation, isActive } = useClickableWeWidget();
         if (this.props.id) {
             useDependecyDefinition({ id: this.props.id, isActive });
         }
@@ -39,11 +39,11 @@ export class WeSelectItem extends Component {
 
         this.state = state;
         this.onClick = () => {
-            call.commit();
+            operation.commit();
             setSelectLabel();
             this.env.weSelectBus?.trigger("select-item");
         };
-        this.onMouseenter = call.preview;
-        this.onMouseleave = call.revert;
+        this.onMouseenter = operation.preview;
+        this.onMouseleave = operation.revert;
     }
 }

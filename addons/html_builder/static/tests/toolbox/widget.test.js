@@ -7,6 +7,7 @@ import {
     hover,
     queryAllTexts,
     queryFirst,
+    runAllTimers,
     waitFor,
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
@@ -264,7 +265,7 @@ describe("WeButton", () => {
         expect("[data-class-action='test']").toHaveCount(1);
         expect("[data-class-action='test']").not.toHaveClass("active");
     });
-    test("handle async actions with commit and preview", async () => {
+    describe("Operation", () => {
         function makeAsyncActionItem(actionName) {
             const item = {};
             const promise = new Promise((resolve) => {
@@ -276,10 +277,9 @@ describe("WeButton", () => {
                         expect.step(`load ${actionName}`);
                         await promise;
                     },
-                    apply: async ({ editingElement, editor }) => {
+                    apply: async ({ editingElement }) => {
                         expect.step(`apply ${actionName}`);
                         editingElement.innerText = editingElement.innerText + `-${actionName}`;
-                        editor.shared.history.addStep();
                     },
                 },
             });
@@ -288,56 +288,120 @@ describe("WeButton", () => {
         function makeActionItem(actionName) {
             addActionOption({
                 [actionName]: {
-                    apply: ({ editingElement, editor }) => {
+                    apply: ({ editingElement }) => {
                         expect.step(actionName);
                         editingElement.innerText = editingElement.innerText + `-${actionName}`;
-                        editor.shared.history.addStep();
                     },
                 },
             });
         }
 
-        const asyncAction1 = makeAsyncActionItem("asyncAction1");
-        const asyncAction2 = makeAsyncActionItem("asyncAction2");
-        const asyncAction3 = makeAsyncActionItem("asyncAction3");
-        makeActionItem("action1");
-        makeActionItem("action2");
+        test("handle async actions with commit and preview (separated by running all timers)", async () => {
+            const asyncAction1 = makeAsyncActionItem("asyncAction1");
+            const asyncAction2 = makeAsyncActionItem("asyncAction2");
+            const asyncAction3 = makeAsyncActionItem("asyncAction3");
+            makeActionItem("action1");
+            makeActionItem("action2");
 
-        addOption({
-            selector: ".test-options-target",
-            template: xml`<WeRow label="'my label'">
+            addOption({
+                selector: ".test-options-target",
+                template: xml`<WeRow label="'my label'">
                 <WeButton action="'asyncAction1'"/>
                 <WeButton action="'asyncAction2'"/>
                 <WeButton action="'asyncAction3'"/>
                 <WeButton action="'action1'"/>
                 <WeButton action="'action2'"/>
             </WeRow>`,
-        });
+            });
 
-        await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
-        await contains(":iframe .test-options-target").click();
-        // const editor = getEditor();
-        await hover("[data-action-id='asyncAction1']");
-        await hover("[data-action-id='asyncAction2']");
-        await contains("[data-action-id='asyncAction3']").click();
-        await hover("[data-action-id='action1']");
-        asyncAction1.resolve();
-        asyncAction2.resolve();
-        asyncAction3.resolve();
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        expect.verifySteps([
-            "load asyncAction1",
-            "load asyncAction3",
-            "apply asyncAction3",
-            "action1",
-        ]);
-        expect(":iframe .test-options-target").toHaveInnerHTML("a-asyncAction3-action1");
-        // If the code is not working properly, hovering on another action at
-        // this moment could revert the changes made by asyncAction3 through the
-        // revert of the preview. In order to test this case, we hover action2.
-        await hover("[data-action-id='action2']");
-        expect(":iframe .test-options-target").toHaveInnerHTML("a-asyncAction3-action2");
-        expect.verifySteps(["action2"]);
+            await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
+            await contains(":iframe .test-options-target").click();
+
+            await hover("[data-action-id='asyncAction1']");
+            await animationFrame();
+            await hover("[data-action-id='asyncAction2']");
+            await animationFrame();
+            await hover("[data-action-id='asyncAction3']");
+            await animationFrame();
+            await contains("[data-action-id='asyncAction3']").click();
+            await hover("[data-action-id='action1']");
+            await animationFrame();
+
+            asyncAction1.resolve();
+            asyncAction2.resolve();
+            asyncAction3.resolve();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+
+            expect.verifySteps([
+                "load asyncAction1",
+                "load asyncAction3",
+                "apply asyncAction3",
+                "action1",
+            ]);
+            expect(":iframe .test-options-target").toHaveInnerHTML("a-asyncAction3-action1");
+
+            // If the code is not working properly, hovering on another action at
+            // this moment could revert the changes made by asyncAction3 through the
+            // revert of the preview. In order to test this case, we hover action2.
+            await hover("[data-action-id='action2']");
+            await animationFrame();
+            expect(":iframe .test-options-target").toHaveInnerHTML("a-asyncAction3-action2");
+            expect.verifySteps(["action2"]);
+        });
+        test("handle async actions with commit and preview (separated by animation frame)", async () => {
+            const asyncAction1 = makeAsyncActionItem("asyncAction1");
+            const asyncAction2 = makeAsyncActionItem("asyncAction2");
+            const asyncAction3 = makeAsyncActionItem("asyncAction3");
+            makeActionItem("action1");
+            makeActionItem("action2");
+
+            addOption({
+                selector: ".test-options-target",
+                template: xml`<WeRow label="'my label'">
+                <WeButton action="'asyncAction1'"/>
+                <WeButton action="'asyncAction2'"/>
+                <WeButton action="'asyncAction3'"/>
+                <WeButton action="'action1'"/>
+                <WeButton action="'action2'"/>
+            </WeRow>`,
+            });
+
+            await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
+            await contains(":iframe .test-options-target").click();
+
+            await hover("[data-action-id='asyncAction1']");
+            await runAllTimers();
+            await hover("[data-action-id='asyncAction2']");
+            await runAllTimers();
+            await hover("[data-action-id='asyncAction3']");
+            await runAllTimers();
+            await contains("[data-action-id='asyncAction3']").click();
+            await hover("[data-action-id='action1']");
+            await runAllTimers();
+
+            asyncAction1.resolve();
+            asyncAction2.resolve();
+            asyncAction3.resolve();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+
+            expect.verifySteps([
+                "load asyncAction1",
+                "load asyncAction2",
+                "load asyncAction3",
+                "load asyncAction3",
+                "apply asyncAction3",
+                "action1",
+            ]);
+            expect(":iframe .test-options-target").toHaveInnerHTML("a-asyncAction3-action1");
+
+            // If the code is not working properly, hovering on another action at
+            // this moment could revert the changes made by asyncAction3 through the
+            // revert of the preview. In order to test this case, we hover action2.
+            await hover("[data-action-id='action2']");
+            await animationFrame();
+            expect(":iframe .test-options-target").toHaveInnerHTML("a-asyncAction3-action2");
+            expect.verifySteps(["action2"]);
+        });
     });
 });
 describe("WeButtonGroup", () => {

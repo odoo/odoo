@@ -10,6 +10,7 @@ import {
     useSubEnv,
     xml,
 } from "@odoo/owl";
+import { zip } from "@web/core/utils/arrays";
 import { useBus } from "@web/core/utils/hooks";
 
 export function useDomState(getState) {
@@ -136,60 +137,22 @@ export function useClickableWeWidget() {
     useWeComponent();
     const comp = useComponent();
     const getAction = comp.env.editor.shared.builderActions.getAction;
-    const _call = comp.env.editor.shared.history.makePreviewableOperation(callActions);
-    const action = getCustomAction();
-    const load = action?.actionId && getAction(action.actionId).load;
-    const callWithLoad = async (fn, { isCancel } = {}) => {
-        await Promise.all(
-            comp.env.getEditingElements().map((editingElement) => {
-                return load({
-                    editingElement,
-                    param: action.actionParam,
-                    value: action.actionValue,
-                }).then((loadResult) => {
-                    if (isCancel?.()) {
-                        return;
-                    }
-                    fn(loadResult);
-                });
-            })
-        );
-    };
-    const call = {
+    const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
+
+    const operation = {
         commit: () => {
-            comp.env.callable.cancel?.();
-            return comp.env.mutex.exec(async () => {
-                if (load) {
-                    await callWithLoad(_call.commit, { fromCommit: true });
-                } else {
-                    _call.commit();
-                }
-            });
+            callOperation(applyOperation.commit);
         },
         preview: () => {
-            comp.env.callable.cancel?.();
-            comp.env.callable.cancel = () => {
-                cancel = true;
-                comp.env.callable.cancel = null;
-            };
-            let cancel = false;
-
-            const fn = () => {
-                if (cancel) {
-                    return;
-                }
-                if (load) {
-                    return callWithLoad(_call.preview, { isCancel: () => cancel });
-                } else {
-                    _call.preview();
-                }
-            };
-
-            return comp.env.mutex.exec(fn);
+            callOperation(applyOperation.preview, {
+                cancellable: true,
+                cancelPrevious: () => applyOperation.revert(),
+            });
         },
         revert: () => {
-            comp.env.callable.cancel?.();
-            return comp.env.mutex.exec(_call.revert, { force: true });
+            // The `next` will cancel the previous operation, which will revert
+            // the operation in case of a preview.
+            comp.env.editor.shared.operation.next();
         },
     };
 
@@ -197,7 +160,7 @@ export function useClickableWeWidget() {
         comp.props.preview === false ||
         (comp.env.weContext.preview === false && comp.props.preview !== true)
     ) {
-        call.preview = () => {};
+        operation.preview = () => {};
     }
 
     const state = useDomState(() => ({
@@ -206,7 +169,7 @@ export function useClickableWeWidget() {
 
     if (comp.env.actionBus) {
         useBus(comp.env.actionBus, "BEFORE_CALL_ACTIONS", () => {
-            for (const [actionId, actionParam, actionValue] of getActions()) {
+            for (const { actionId, actionParam, actionValue } of getAllActions()) {
                 for (const editingElement of comp.env.getEditingElements()) {
                     getAction(actionId).clean?.({
                         editingElement,
@@ -218,38 +181,74 @@ export function useClickableWeWidget() {
         });
     }
 
-    function callActions(loadResult) {
-        comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
-        for (const [actionId, actionParam, actionValue] of getActions()) {
+    function callOperation(fn, operationParams) {
+        const actionsSpecs = getActionsSpecs(getAllActions());
+        comp.env.editor.shared.operation.next(
+            () => {
+                fn(actionsSpecs);
+            },
+            {
+                load: async () => {
+                    return Promise.all(
+                        actionsSpecs.map(async (applySpec) => {
+                            if (!applySpec.load) {
+                                return;
+                            }
+                            const result = await applySpec.load({
+                                editingElement: applySpec.editingElement,
+                                param: applySpec.actionParam,
+                                value: applySpec.actionValue,
+                            });
+                            result.loadResult = result;
+                        })
+                    );
+                },
+                ...operationParams,
+            }
+        );
+    }
+    function getActionsSpecs(actions) {
+        const specs = [];
+        for (const { actionId, actionParam, actionValue } of actions) {
+            const action = getAction(actionId);
             for (const editingElement of comp.env.getEditingElements()) {
-                getAction(actionId).apply({
+                specs.push({
                     editingElement,
-                    param: actionParam,
-                    value: actionValue,
-                    loadResult,
+                    actionId,
+                    actionParam,
+                    actionValue,
+                    apply: action.apply,
+                    load: action.load,
                 });
             }
         }
+        return specs;
     }
-    function getActions() {
-        const actions = [];
+    function callApply(applySpecs) {
+        comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
+        for (const applySpec of applySpecs) {
+            getAction(applySpec.actionId).apply({
+                editingElement: applySpec.editingElement,
+                param: applySpec.actionParam,
+                value: applySpec.actionValue,
+                loadResult: applySpec.loadResult,
+            });
+        }
+    }
 
+    function getShorthandActions() {
+        const actions = [];
         const shorthands = [
             ["classAction", "classActionValue"],
             ["attributeAction", "attributeActionValue"],
             ["dataAttributeAction", "dataAttributeActionValue"],
             ["styleAction", "styleActionValue"],
         ];
-        for (const [actionName, actionValue] of shorthands) {
-            const value = comp.env.weContext[actionName] || comp.props[actionName];
-            if (value) {
-                actions.push([actionName, value, comp.props[actionValue]]);
+        for (const [actionId, actionValue] of shorthands) {
+            const actionParam = comp.env.weContext[actionId] || comp.props[actionId];
+            if (actionParam) {
+                actions.push({ actionId, actionParam, actionValue: comp.props[actionValue] });
             }
-        }
-
-        const { actionId, actionParam, actionValue } = getCustomAction() || {};
-        if (actionId) {
-            actions.push([actionId, actionParam, actionValue]);
         }
         return actions;
     }
@@ -263,12 +262,22 @@ export function useClickableWeWidget() {
             return action;
         }
     }
+    function getAllActions() {
+        const actions = getShorthandActions();
+
+        const { actionId, actionParam, actionValue } = getCustomAction() || {};
+        if (actionId) {
+            actions.push({ actionId, actionParam, actionValue });
+        }
+        return actions;
+    }
     function isActive() {
         const editingElements = comp.env.getEditingElements();
         if (!editingElements.length) {
             return;
         }
-        return getActions().every(([actionId, actionParam, actionValue]) => {
+        return getAllActions().every((o) => {
+            const { actionId, actionParam, actionValue } = o;
             // TODO isActive === first editing el or all ?
             const editingElement = editingElements[0];
             return getAction(actionId).isActive?.({
@@ -281,7 +290,7 @@ export function useClickableWeWidget() {
 
     return {
         state,
-        call,
+        operation,
         isActive,
     };
 }

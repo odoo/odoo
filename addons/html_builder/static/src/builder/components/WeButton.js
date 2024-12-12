@@ -23,14 +23,14 @@ export class WeButton extends Component {
     };
 
     setup() {
-        const { state, call, isActive } = useClickableWeWidget();
+        const { state, operation, isActive } = useClickableWeWidget();
         if (this.props.id) {
             useDependecyDefinition({ id: this.props.id, isActive });
         }
         this.state = state;
-        this.onClick = call.commit;
-        this.onMouseenter = call.preview;
-        this.onMouseleave = call.revert;
+        this.onClick = operation.commit;
+        this.onMouseenter = operation.preview;
+        this.onMouseleave = operation.revert;
     }
 
     get className() {
