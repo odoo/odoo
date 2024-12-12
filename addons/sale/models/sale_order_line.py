@@ -1177,6 +1177,12 @@ class SaleOrderLine(models.Model):
             if vals.get('display_type') or self.default_get(['display_type']).get('display_type'):
                 vals['product_uom_qty'] = 0.0
 
+            if 'technical_price_unit' in vals and 'price_unit' not in vals:
+                # price_unit field was set as readonly in the view (but technical price unit not)
+                # the field is not sent by the client and expected to be recomputed, but isn't
+                # because technical_price_unit is set.
+                vals.pop('technical_price_unit')
+
         lines = super().create(vals_list)
         for line in lines:
             linked_line = line._get_linked_line()
