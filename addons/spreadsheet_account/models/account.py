@@ -1,5 +1,5 @@
 import calendar
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
@@ -95,13 +95,17 @@ class AccountAccount(models.Model):
 
     def _get_timeline(self, args_list):
 
-        # Get all boundaries
-        all_boundaries = set()
+        # Counter and `depth` are used as a stack tracker to know whether or not we 
+        # are still in a broader period or at the end of one and about to start a new one.
+        # The counter is necessary as several cells may have the same start date but 
+        # different end dates. Thus, we use the Counter to track how many period deep we are.
+        all_boundaries_counter = Counter()
         for args in args_list:
-            all_boundaries.add((args['date_from_boundary'], 'begin'))
-            all_boundaries.add((args['date_to_boundary'], 'end'))
+            all_boundaries_counter[(args['date_from_boundary'], 'begin')] += 1
+            all_boundaries_counter[(args['date_to_boundary'], 'end')] += 1
 
-        all_boundaries = sorted(all_boundaries)
+        # Get all boundaries sorted by dates
+        all_boundaries = sorted(all_boundaries_counter)
 
         # Compute non overlapping time period
         timeline = []
@@ -110,19 +114,33 @@ class AccountAccount(models.Model):
             start = all_boundaries[i]
             end = all_boundaries[i + 1]
 
-            # `depth` is used as a stack tracker to know whether or not we are still
-            # in a broader period or at the end of one and starting a new one.
+            # We don't add a new time period if we just finished one and are not in a broader one. 
+            # For example:
+            # - cell 1: 01/03/2020 -> 31/03/2020
+            # - cell 2: 01/05/2020 -> 31/05/2020
+            # We don't want to compute the period between cell 1 and cell 2; 01/04/2020 -> 30/04/2020
+            # But if we also have:
+            # - cell 3: 01/01/2020 -> 31/12/2020, we want to compute it.
             if depth == 0 and start[1] == 'end':
                 continue
-            if start[1] == 'begin':
-                depth += 1
-            if end[1] == 'end':
-                depth -= 1
 
-            timeline.append((
-                start[0] if start[1] == 'begin' else start[0] + relativedelta(days=1),
-                end[0] if end[1] == 'end' else end[0] + relativedelta(days=-1),
-            ))
+            if start[1] == 'begin':
+                depth += all_boundaries_counter[start]
+            if end[1] == 'end':
+                depth -= all_boundaries_counter[end]
+
+            period_start = start[0] if start[1] == 'begin' else start[0] + relativedelta(days=1)
+            period_end = end[0] if end[1] == 'end' else end[0] + relativedelta(days=-1)
+
+            # The if condition deals with the issue that occurs when we have:
+            # cell 1 - 01/01/2020 -> 31/12/2020
+            # cell 2 - 01/03/2020 -> 31/03/2020
+            # cell 3 - 01/04/2020 -> 30/04/2020
+            # In such scenario, we actually compute the time period between cell 2 and cell 3 because
+            # we are are in a broader time period due to cell 1. This leads to the following unwanted
+            # time period to be added to the timeline: (01/04/2020, 31/03/2020)
+            if period_start < period_end:
+                timeline.append((period_start, period_end))
 
         # Compute in which time period(s) the cell is part of
         all_starts = [period[0] for period in timeline]

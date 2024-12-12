@@ -101,7 +101,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             }
         )
 
-    def test_get_timeline_non_overlapping_periods(self):
+    def test_get_timeline_same_start_different_finish(self):
         cells = [
             {
                 'date_from': {
@@ -109,11 +109,157 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     'year': 2021,
                 },
                 'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2021,
+                    'quarter': 2,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2021,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2021,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2020, 12, 31)),
+            (date(2021, 1, 1), date(2021, 6, 30)),
+            (date(2021, 7, 1), date(2021, 9, 30)),
+        ])
+
+    def test_get_timeline_different_start_same_finish(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2021,
+                    'quarter': 2,
+                },
+                'date_to': {
                     'range_type': 'year',
                     'year': 2021,
                 },
                 'company_id': None,
             },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2021,
+                    'quarter': 3,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2021,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2021, 3, 31)),
+            (date(2021, 4, 1), date(2021, 6, 30)),
+            (date(2021, 7, 1), date(2021, 12, 31)),
+        ])
+
+    def test_get_timeline_following_perdiods(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2022, 3, 31)),
+            (date(2022, 4, 1), date(2022, 6, 30)),
+            (date(2022, 7, 1), date(2022, 9, 30)),
+        ])
+    
+    def test_get_timeline_following_periods_in_bigger_period(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2021, 12, 31)),
+            (date(2022, 1, 1), date(2022, 3, 31)),
+            (date(2022, 4, 1), date(2022, 6, 30)),
+            (date(2022, 7, 1), date(2022, 9, 30)),
+            (date(2022, 10, 1), date(2022, 12, 31)),
+        ])
+    
+    def test_get_timeline_gapped_periods(self):
+        cells = [
             {
                 'date_from': {
                     'range_type': 'year',
@@ -141,7 +287,6 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
         timeline = self.env['account.account']._get_timeline(cells)
         self.assertListEqual(timeline, [
             (date(1900, 1, 1), date(2020, 12, 31)),
-            (date(2021, 1, 1), date(2021, 12, 31)),
             (date(2022, 1, 1), date(2022, 12, 31)),
             (date(2024, 1, 1), date(2024, 12, 31)),
         ])
@@ -211,7 +356,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             (date(2024, 10, 1), date(2024, 12, 31)),
         ])
 
-    def test_get_timeline_mix_overlapping_periods(self):
+    def test_get_timeline_mix_periods(self):
         cells = [
             {
                 'date_from': {
@@ -261,6 +406,30 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 },
                 'company_id': None,
             },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2023,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 1,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2026,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2026,
+                },
+                'company_id': None,
+            },
         ]
         self.env['account.account']._pre_process_date_period_boundaries(cells)
         timeline = self.env['account.account']._get_timeline(cells)
@@ -269,9 +438,15 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             (date(2022, 1, 1), date(2022, 3, 31)),
             (date(2022, 4, 1), date(2022, 9, 30)),
             (date(2022, 10, 1), date(2022, 12, 31)),
+
+            (date(2023, 4, 1), date(2023, 12, 31)),
             (date(2024, 1, 1), date(2024, 3, 31)),
+
+            # (date(2024, 4, 1), date(2024, 3, 31)), ???
+
             (date(2024, 4, 1), date(2024, 9, 30)),
             (date(2024, 10, 1), date(2024, 12, 31)),
+            (date(2026, 1, 1), date(2026, 12, 31)),
         ])
 
     def test_empty_payload(self):
