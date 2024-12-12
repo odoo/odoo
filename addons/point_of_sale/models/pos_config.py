@@ -28,9 +28,15 @@ class PosConfig(models.Model):
                     vals[key] = get_record(self.env[model]._fields[key].comodel_name, vals[key]).id
                 # We assume that m2m are only done with data that is already in the db
             return vals
+        def replace_uuid_with_id_2(vals):
+            for key in vals:
+                if self.env[model]._fields[key].type == 'many2one':
+                    vals[key] = (6, 0, [get_record(self.env[model]._fields[key].comodel_name, vals[key]).id])
+                # We assume that m2m are only done with data that is already in the db
+            return vals
 
         for [operation, *data] in queue:
-            _logger.debug('Processing operation %s with data %s', operation, data)
+            _logger.info('Processing operation %s with data %s', operation, data)
             match operation:
                 case "CREATE":
                     [model, vals] = data
@@ -40,7 +46,7 @@ class PosConfig(models.Model):
                 case "UPDATE":
                     [model, id, vals] = data
                     vals = self.update_vals(model, None, vals)
-                    vals = replace_uuid_with_id(vals)
+                    vals = replace_uuid_with_id_2(vals)
                     get_record(model, id).write(vals)
 
                 case "DELETE":
