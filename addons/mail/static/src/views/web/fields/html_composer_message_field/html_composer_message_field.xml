@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.HtmlComposerMessageField" t-inherit="html_editor.HtmlField" t-inherit-mode="primary">
+         <xpath expr="//Wysiwyg" position="after">
+           <button t-if="state.replyState" t-on-click="onClickView" class="badge rounded-pill border-0 m-1 py-0 px-1" title="Show content">
+                <i class="fa fa-ellipsis-h fa-lg"/>
+            </button>
+        </xpath>
+    </t>
+</templates>
