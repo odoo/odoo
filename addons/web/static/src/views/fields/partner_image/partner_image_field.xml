@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+     <t t-name="web.PartnerImageField" t-inherit="web.ImageField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('position-relative')]" position="before">
+            <t t-set="isImage" t-value="props.record.data[props.name] and state.isValid"/>
+        </xpath>
+        <xpath expr="//div[hasclass('position-relative')]" position="attributes">
+            <attribute name="t-att-class">{"o_empty_image_overlay": !isImage}</attribute>
+        </xpath>
+        <xpath expr="//div[@t-attf-class]" position="attributes">
+            <attribute
+                name="t-attf-class"
+                remove="opacity-0 opacity-100-hover"
+                add="{{isImage ? 'opacity-0 opacity-100-hover' : 'top-50 start-50 translate-middle opacity-100'}}"
+                separator=" "/>
+        </xpath>
+        <xpath expr="//button[hasclass('o_select_file_button')]" position="attributes">
+            <attribute name="t-if">isImage</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o_select_file_button')]" position="after">
+            <button
+                t-else=""
+                class="o_select_file_button btn btn-link border-0 rounded-circle d-flex justify-content-between w-100"
+                data-tooltip="Edit"
+                aria-label="Edit">
+                Add a picture
+            </button>
+        </xpath>
+        <xpath expr="//img" position="attributes">
+            <attribute name="t-if">isImage</attribute>
+        </xpath>
+    </t>
+</templates>
