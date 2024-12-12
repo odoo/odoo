@@ -1151,8 +1151,11 @@ export function makeActionManager(env, router = _router) {
         if (!views.length) {
             throw new Error(`No view found for act_window action ${action.id}`);
         }
-
-        let view = (options.viewType && views.find((v) => v.type === options.viewType)) || views[0];
+        const defaultViewType = actionServiceUtils.getDefaultViewType(action.xml_id);
+        let view =
+            (options.viewType && views.find((v) => v.type === options.viewType)) ||
+            (defaultViewType && views.find((v) => v.type === defaultViewType)) ||
+            views[0];
         if (env.isSmall) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
         }
@@ -1745,6 +1748,15 @@ export function makeActionManager(env, router = _router) {
             return _getCurrentController();
         },
     };
+}
+
+export const actionServiceUtils = {
+    // Patch to dynamically change the default view type of a specific 'ir.actions.act_window' action.
+    // If not found in the existing action views, defaults on the first available view.
+    // In mobile environments, 'mobile_view_mode' takes the priority if specified.
+    getDefaultViewType(actionXmlId) {
+        return;
+    }
 }
 
 export const actionService = {
