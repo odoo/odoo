@@ -238,7 +238,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             if ($(ev.currentTarget).data('showResults')) {
                 document.location = `/survey/results/${encodeURIComponent(self.surveyId)}`;
             } else {
-                window.history.back();
+                document.location = `/web#view_type=form&model=survey.survey&id=${self.surveyId}&action=survey.action_survey_form`;
             }
         });
     },
