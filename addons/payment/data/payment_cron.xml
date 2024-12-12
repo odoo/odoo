@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record model="ir.cron" id="cron_process_payment_data">
+        <field name="name">Payment: Process payment data</field>
+        <field name="model_id" ref="payment.model_payment_data" />
+        <field name="state">code</field>
+        <field name="code">model._cron_process()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">999999</field>
+        <field name="interval_type">hours</field>
+    </record>
+
     <record model="ir.cron" id="cron_post_process_payment_tx">
         <field name="name">Payment: Post-process transactions</field>
         <field name="model_id" ref="payment.model_payment_transaction" />
