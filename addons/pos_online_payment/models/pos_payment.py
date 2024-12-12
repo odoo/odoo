@@ -15,6 +15,9 @@ class PosPayment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if not any(vals.get('online_account_payment_id') for vals in vals_list):
+            return super().create(vals_list)
+
         online_account_payments_by_pm = {}
         for vals in vals_list:
             pm_id = vals['payment_method_id']

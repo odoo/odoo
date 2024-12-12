@@ -305,7 +305,15 @@ export class Base extends WithLazyGetterTrap {
     }
 }
 
-export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
+export function createRelatedModels(
+    modelDefs,
+    modelClasses = {},
+    opts = {
+        onCreate: () => {},
+        onUpdate: () => {},
+        onDelete: () => {},
+    }
+) {
     const indexes = opts.databaseIndex || {};
     const database = opts.databaseTable || {};
     const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
@@ -497,11 +505,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         const record = instantiateModel(model, { models, records: crud.records });
 
         const id = vals["id"];
+
         record.id = id;
-        if (!vals.uuid && database[model]?.key === "uuid") {
+        if (!vals.uuid) {
+            // FIXME
+            // if (!vals.uuid && database[model]?.key === "uuid") {
             record.uuid = uuidv4();
             vals.uuid = record.uuid;
         }
+        opts.onCreate(model, vals);
 
         if (!baseData[model][id]) {
             baseData[model][id] = vals;
@@ -611,7 +623,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     function _update(crud, model, record, vals) {
         const fields = getFields(model);
         Object.assign(baseData[model][record.id], vals);
-
+        // console.log("Updating record", model, record.id, vals);
+        opts.onUpdate(record, vals);
         for (const name in vals) {
             if (!(name in fields)) {
                 continue;
@@ -672,11 +685,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     }
 
     const delete_ = withoutProxyTrap(_delete);
-    function _delete(crud, model, record, opts = {}) {
+    function _delete(crud, model, record, deleteOptions = {}) {
         const id = record.id;
         const fields = getFields(model);
         const handleCommand = (inverse, field, record, backend = false) => {
-            if (inverse && !inverse.dummy && !opts.silent && typeof id === "number") {
+            if (inverse && !inverse.dummy && !deleteOptions.silent && typeof id === "number") {
                 const modelCommands = commands[field.relation];
                 const map = backend ? modelCommands.delete : modelCommands.unlink;
                 const oldVal = map.get(inverse.name);
@@ -690,11 +703,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
             if (X2MANY_TYPES.has(field.type)) {
                 for (const record2 of [...record[name]]) {
-                    handleCommand(inverse, field, record, opts.backend);
+                    handleCommand(inverse, field, record, deleteOptions.backend);
                     disconnect(field, record, record2);
                 }
             } else if (field.type === "many2one" && typeof record[name] === "object") {
-                handleCommand(inverse, field, record, opts.backend);
+                handleCommand(inverse, field, record, deleteOptions.backend);
                 disconnect(field, record, record[name]);
             }
         }
@@ -712,6 +725,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 delete crud.indexedRecords[model][key][keyVal];
             }
         }
+        opts.onDelete(model, record.uuid);
 
         return id;
     }

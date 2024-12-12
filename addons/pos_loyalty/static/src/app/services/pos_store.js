@@ -708,24 +708,25 @@ patch(PosStore.prototype, {
             );
         }
     },
-    postSyncAllOrders(orders) {
-        super.postSyncAllOrders(orders);
+    // TODO: figure out where to put this
+    // postSyncAllOrders(orders) {
+    //     super.postSyncAllOrders(orders);
 
-        for (const order of orders) {
-            for (const line of order.lines) {
-                if (line.uuid in this.couponByLineUuidCache) {
-                    line.coupon_id = this.models["loyalty.card"].get(
-                        this.couponByLineUuidCache[line.uuid]
-                    );
-                }
-            }
-            for (const line of order.lines) {
-                if (line.uuid in this.rewardProductByLineUuidCache) {
-                    line._reward_product_id = this.models["product.product"].get(
-                        this.rewardProductByLineUuidCache[line.uuid]
-                    );
-                }
-            }
-        }
-    },
+    //     for (const order of orders) {
+    //         for (const line of order.lines) {
+    //             if (line.uuid in this.couponByLineUuidCache) {
+    //                 line.coupon_id = this.models["loyalty.card"].get(
+    //                     this.couponByLineUuidCache[line.uuid]
+    //                 );
+    //             }
+    //         }
+    //         for (const line of order.lines) {
+    //             if (line.uuid in this.rewardProductByLineUuidCache) {
+    //                 line._reward_product_id = this.models["product.product"].get(
+    //                     this.rewardProductByLineUuidCache[line.uuid]
+    //                 );
+    //             }
+    //         }
+    //     }
+    // },
 });
