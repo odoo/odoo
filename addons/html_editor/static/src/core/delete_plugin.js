@@ -1026,9 +1026,7 @@ export class DeletePlugin extends Plugin {
 
         // If not preceded by content, it is invisible.
         if (offset) {
-            if (isWhitespace(textNode.textContent[offset - char.length])) {
-                return false;
-            }
+            return !isWhitespace(textNode.textContent[offset - char.length]);
         } else if (!(getState(...leftPos(textNode), DIRECTIONS.LEFT).cType & CTYPES.CONTENT)) {
             return false;
         }

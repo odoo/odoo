@@ -124,11 +124,11 @@
     <t t-name="mail.DiscussSidebarSubchannel.main">
         <li class="o-mail-DiscussSidebarSubchannel d-flex align-items-center flex-grow-1 position-relative" t-att-class="{ 'p-0': !store.discuss.isSidebarCompact }" t-ref="root">
             <t t-if="!store.discuss.isSidebarCompact">
-                <svg t-if="props.isFirst" class="position-absolute me-1" style="left: 26px; top: -6px;" xmlns="http://www.w3.org/2000/svg" width="10" height="20" viewBox="0 0 10 20">
+                <svg t-if="props.isFirst" class="position-absolute me-1" style="top: -6px;" xmlns="http://www.w3.org/2000/svg" width="10" height="20" viewBox="0 0 10 20">
                     <line x1="0" y1="3" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>
                     <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
                 </svg>
-                <svg t-else="" class="position-absolute me-1" style="left: 26px; top: -20px;" xmlns="http://www.w3.org/2000/svg" width="10" height="34" viewBox="0 0 10 34">
+                <svg t-else="" class="position-absolute me-1" style="top: -20px;" xmlns="http://www.w3.org/2000/svg" width="10" height="34" viewBox="0 0 10 34">
                     <line x1="0" y1="3" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>
                     <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
                 </svg>
