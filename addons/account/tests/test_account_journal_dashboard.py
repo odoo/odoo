@@ -379,3 +379,50 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
         self.assertEqual(dashboard_data.get('misc_operations_balance', 0), None)
         self.assertEqual(dashboard_data.get('misc_class', ''), 'text-warning')
+
+    def test_to_check_amount_different_currency(self):
+        eur = self.env['res.currency'].search([('name','=','EUR')],limit=1)
+        usd = self.env['res.currency'].search([('name','=','USD')],limit=1)
+        
+        journal = self.env['account.journal'].create({
+        'name': 'Test Foreign Currency Journal',
+        'type': 'sale',
+        'code': 'TEST',
+        'currency_id': eur.id,
+        'company_id': self.env.company.id,
+        })
+        move1 = self.env['account.move'].create({
+        'move_type': 'out_invoice',
+        'journal_id': journal.id,
+        'partner_id': self.partner_a.id,
+        'invoice_date': '2024-12-01',
+        'date': '2024-12-01',
+        'currency_id': eur.id,
+        'to_check': True,
+        'invoice_line_ids': [(0, 0, {
+            'product_id': self.product_a.id,
+            'quantity': 1,
+            'price_unit': 100,
+            'tax_ids': [],
+            })],
+        })
+        
+        move2 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_b.id,
+            'invoice_date': '2024-12-02',
+            'date': '2024-12-02',
+            'currency_id': usd.id,
+            'to_check': True,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_b.id,
+                'quantity': 2,
+                'price_unit': 50,
+                'tax_ids': [],
+            })],
+        })
+        
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['number_to_check'], 2)
+        self.assertIn('300.00\xa0€', dashboard_data['to_check_balance'])
