@@ -95,8 +95,17 @@ const applyWhenMounted = async ({ el, container, callback }) => {
  * This function assumes that the `renderer` service is available.
  */
 export const htmlToCanvas = async (el, options) => {
+<<<<<<< saas-17.2
     if (options.addClass) {
         el.classList.add(options.addClass);
+||||||| a5d50dc5cb26c8f572eb4e28ed2f792c9e7caeba
+    el.classList.add(options.addClass || "");
+=======
+    el.classList.add(options.addClass || "");
+    if (options.addEmailMargins === true)
+    {
+        $('.pos-receipt-print').css({ 'padding': '15px', 'padding-bottom': '30px'})
+>>>>>>> 37973d6768a4bca2e11968b62a33ddb7540d6dd2
     }
     return await applyWhenMounted({
         el,
