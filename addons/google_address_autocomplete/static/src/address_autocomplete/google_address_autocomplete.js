@@ -19,7 +19,7 @@ export class AddressAutoComplete extends CharField {
                         if (suggestions.results.length) {
                             suggestions.results.push({
                                 id: "credits",
-                                classList: "pe-none o_google_credits",
+                                classList: "pe-none o-google-credits",
                             });
                         }
                         return suggestions.results;
