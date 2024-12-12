@@ -291,8 +291,9 @@ class TestTaxCommonSale(TestTaxCommon):
 
     def assert_sale_order_tax_totals_summary(self, sale_order, expected_values, soft_checking=False):
         self._assert_tax_totals_summary(sale_order.tax_totals, expected_values, soft_checking=soft_checking)
+        cash_rounding_base_amount_currency = sale_order.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
         self.assertRecordValues(sale_order, [{
-            'amount_untaxed': expected_values['base_amount_currency'],
+            'amount_untaxed': expected_values['base_amount_currency'] + cash_rounding_base_amount_currency,
             'amount_tax': expected_values['tax_amount_currency'],
-            'amount_total': expected_values['total_amount_currency'],
+            'amount_total': expected_values['total_amount_currency'] + cash_rounding_base_amount_currency,
         }])
