@@ -20,7 +20,7 @@
                     <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
                         <div class="d-flex">
                             <span t-if="showTaxGroupLabels" class="me-2" style="visibility: hidden;">A</span>
-                            <span class="fw-bolder" t-out="subtotal.name"/>
+                            <span class="fw-bolder text-nowrap mw-100" t-out="subtotal.name"/>
                             <span t-esc="formatCurrency(subtotal.base_amount_currency)" class="ms-auto"/>
                         </div>
 
