@@ -116,6 +116,9 @@ export class Message extends Record {
     scheduledDatetime = Record.attr(undefined, { type: "datetime" });
     onlyEmojis = Record.attr(false, {
         compute() {
+            if (this.isEmpty) {
+                return false;
+            }
             const div = document.createElement("div");
             div.innerHTML = this.body;
             const bodyWithoutTags = div.textContent;
@@ -169,7 +172,7 @@ export class Message extends Record {
     }
 
     get editable() {
-        if (!this.allowsEdition) {
+        if (this.isEmpty || !this.allowsEdition) {
             return false;
         }
         return this.message_type === "comment";
@@ -319,6 +322,9 @@ export class Message extends Record {
     }
 
     get inlineBody() {
+        if (this.isEmpty) {
+            return _t("This message has been removed");
+        }
         if (!this.body) {
             return "";
         }
