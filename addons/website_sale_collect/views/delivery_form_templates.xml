@@ -48,7 +48,10 @@
         <xpath expr="//t[@t-set='is_pickup_needed']" position="attributes">
             <attribute name="t-value" add="dm.delivery_type=='in_store'" separator=" or "/>
         </xpath>
-        <div name="o_pickup_location" position="after">
+        <div name="o_pickup_location" position="attributes">
+            <attribute name="t-attf-class" add="d-none" separator=" "/>
+        </div>
+        <div name="delivery_method" position="after">
             <t t-if="dm.delivery_type=='in_store' and order.carrier_id.id==dm.id">
                 <t
                     t-if="unavailable_order_lines"
