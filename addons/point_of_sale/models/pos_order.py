@@ -306,6 +306,18 @@ class PosOrder(models.Model):
         comodel_name='account.fiscal.position', string='Fiscal Position',
         readonly=False,
     )
+    invoice_status = fields.Selection(
+        selection=[
+            ('to_invoice', 'To Invoice'),
+            ('draft', 'New'),
+            ('invoiced', 'Fully Invoiced'),
+            ('cancel', 'Cancelled'),
+        ],
+        string="Invoice Status",
+        compute="_compute_invoice_status",
+        default="to_invoice",
+        store=True
+    )
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments')
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice', copy=False)
@@ -406,6 +418,16 @@ class PosOrder(models.Model):
             else:
                 order.margin = 0
                 order.margin_percent = 0
+
+    @api.depends('account_move.state')
+    def _compute_invoice_status(self):
+        for order in self:
+            if order.account_move and order.account_move.state == 'draft':
+                order.invoice_status = 'draft'
+            if order.account_move and order.account_move.state == 'posted':
+                order.invoice_status = 'invoiced'
+            if order.account_move and order.account_move.state == 'cancel':
+                order.invoice_status = 'cancel'
 
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
@@ -596,6 +618,27 @@ class PosOrder(models.Model):
             'context': "{'move_type':'out_invoice'}",
             'type': 'ir.actions.act_window',
             'res_id': self.account_move.id,
+        }
+
+    def action_view_multiple_invoice(self, invoices):
+        """Return the appropriate action for the created invoices (list view or form view)."""
+        action = self.env['ir.actions.actions']._for_xml_id('account.action_move_out_invoice_type')
+        if len(invoices) == 1:
+            form_view = [(self.env.ref('account.view_move_form').id, 'form')]
+            action['views'] = form_view
+            action['res_id'] = invoices.id
+        else:
+            action['domain'] = [('id', 'in', invoices.ids)]
+        return action
+
+    def action_create_invoices(self):
+        return {
+            'name': _('Create Invoice(s)'),
+            'view_mode': 'form',
+            'view_id': self.env.ref('point_of_sale.view_pos_make_invoice').id,
+            'res_model': 'pos.make.invoice',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
         }
 
     # the refunded order is the order from which the items were refunded in this order

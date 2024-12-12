@@ -20,6 +20,7 @@
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',
         'wizard/pos_daily_sales_reports.xml',
+        'wizard/pos_make_invoice.xml',
         'views/pos_assets_index.xml',
         'views/point_of_sale_report.xml',
         'views/point_of_sale_view.xml',
