@@ -44,6 +44,7 @@ export class DateTimeField extends Component {
         minDate: { type: String, optional: true },
         alwaysRange: { type: Boolean, optional: true },
         placeholder: { type: String, optional: true },
+        placeholderField: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
@@ -76,6 +77,12 @@ export class DateTimeField extends Component {
 
     get values() {
         return ensureArray(this.state.value);
+    }
+
+    get placeholder() {
+        const dynamicPlaceholder =
+            this.props.placeholderField && this.props.record.data[this.props.placeholderField];
+        return dynamicPlaceholder ? dynamicPlaceholder : this.props.placeholder;
     }
 
     //-------------------------------------------------------------------------
@@ -295,6 +302,12 @@ export const dateField = {
             type: "boolean",
             help: _t(`Displays a warning icon if the input dates are in the future.`),
         },
+        {
+            label: _t("Placeholder field"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["string"],
+        },
     ],
     supportedTypes: ["date"],
     extractProps: ({ attrs, options }, dynamicInfo) => ({
@@ -303,6 +316,7 @@ export const dateField = {
         minDate: options.min_date,
         alwaysRange: archParseBoolean(options.always_range),
         placeholder: attrs.placeholder,
+        placeholderField: options.placeholder_field,
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
