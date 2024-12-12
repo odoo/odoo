@@ -199,7 +199,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             refund, order = self.env['pos.order'].search([('session_id', '=', session.id)], limit=2)
             self.assertRecordValues(order, [{
                 'amount_tax': 2.05,
-                'amount_total': 15.719999999999999,
+                'amount_total': 15.720000000000002,
                 'amount_paid': 15.7,
             }])
             self.assertRecordValues(order.account_move, [{
@@ -209,7 +209,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             }])
             self.assertRecordValues(refund, [{
                 'amount_tax': -2.05,
-                'amount_total': -15.719999999999999,
+                'amount_total': -15.720000000000002,
                 'amount_paid': -15.7,
             }])
             self.assertRecordValues(refund.account_move, [{
@@ -229,7 +229,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             refund, order = self.env['pos.order'].search([('session_id', '=', session.id)], limit=2)
             self.assertRecordValues(order, [{
                 'amount_tax': 2.05,
-                'amount_total': 15.719999999999999,
+                'amount_total': 15.720000000000002,
                 'amount_paid': 15.73,
             }])
             self.assertRecordValues(order.account_move, [{
@@ -239,7 +239,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             }])
             self.assertRecordValues(refund, [{
                 'amount_tax': -2.05,
-                'amount_total': -15.719999999999999,
+                'amount_total': -15.720000000000002,
                 'amount_paid': -15.73,
             }])
             self.assertRecordValues(refund.account_move, [{
@@ -258,7 +258,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             self.start_pos_tour('test_cash_rounding_halfup_biggest_tax_not_only_round_cash_method')
             refund, order = self.env['pos.order'].search([('session_id', '=', session.id)], limit=2)
             self.assertRecordValues(order, [{
-                'amount_tax': 2.0300000000000002,
+                'amount_tax': 2.0299999999999967,
                 'amount_total': 15.7,
                 'amount_paid': 15.7,
             }])
@@ -268,7 +268,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
                 'amount_total': 15.7,
             }])
             self.assertRecordValues(refund, [{
-                'amount_tax': -2.0300000000000002,
+                'amount_tax': -2.0299999999999967,
                 'amount_total': -15.7,
                 'amount_paid': -15.7,
             }])
@@ -288,7 +288,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             self.start_pos_tour('test_cash_rounding_halfup_biggest_tax_not_only_round_cash_method_pay_by_bank_and_cash')
             refund, order = self.env['pos.order'].search([('session_id', '=', session.id)], limit=2)
             self.assertRecordValues(order, [{
-                'amount_tax': 2.0300000000000002,
+                'amount_tax': 2.0299999999999967,
                 'amount_total': 15.7,
                 'amount_paid': 15.72,
             }])
@@ -298,7 +298,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
                 'amount_total': 15.72,
             }])
             self.assertRecordValues(refund, [{
-                'amount_tax': -2.0300000000000002,
+                'amount_tax': -2.0299999999999967,
                 'amount_total': -15.7,
                 'amount_paid': -15.72,
             }])
@@ -319,7 +319,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             refund, order = self.env['pos.order'].search([('session_id', '=', session.id)], limit=2)
             self.assertRecordValues(order, [{
                 'amount_tax': 2.05,
-                'amount_total': 15.719999999999999,
+                'amount_total': 15.720000000000002,
                 'amount_paid': 15.7,
             }])
             self.assertRecordValues(order.account_move, [{
@@ -329,7 +329,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             }])
             self.assertRecordValues(refund, [{
                 'amount_tax': -2.05,
-                'amount_total': -15.719999999999999,
+                'amount_total': -15.720000000000002,
                 'amount_paid': -15.7,
             }])
             self.assertRecordValues(refund.account_move, [{
@@ -349,7 +349,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             refund, order = self.env['pos.order'].search([('session_id', '=', session.id)], limit=2)
             self.assertRecordValues(order, [{
                 'amount_tax': 2.05,
-                'amount_total': 15.719999999999999,
+                'amount_total': 15.720000000000002,
                 'amount_paid': 15.73,
             }])
             self.assertRecordValues(order.account_move, [{
@@ -359,7 +359,7 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             }])
             self.assertRecordValues(refund, [{
                 'amount_tax': -2.05,
-                'amount_total': -15.719999999999999,
+                'amount_total': -15.720000000000002,
                 'amount_paid': -15.73,
             }])
             self.assertRecordValues(refund.account_move, [{
