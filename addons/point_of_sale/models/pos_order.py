@@ -1361,18 +1361,38 @@ class PosOrderLine(models.Model):
 
     @api.model
     def get_existing_lots(self, company_id, product_id):
+<<<<<<< 18.0
         self.check_access('read')
         existing_lots_sudo = self.sudo().env['stock.lot'].search([
+||||||| ab58b1febe1985f69bbc7853db40ec6a1a90baa2
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+        existing_lots_sudo = self.sudo().env['stock.lot'].search([
+=======
+        """
+        Return the lots that are still available in the given company.
+        The lot is available if its quantity in the corresponding stock_quant and pos stock location is > 0.
+        """
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+        pos_config = self.env['pos.config'].browse(self._context.get('config_id'))
+        if not pos_config:
+            raise UserError(_('No PoS configuration found'))
+
+        src_loc = pos_config.picking_type_id.default_location_src_id
+        src_loc_quants = self.sudo().env['stock.quant'].search([
+>>>>>>> e823d3b7e7cda591ef302d5e630af49449121dd1
             '|',
             ('company_id', '=', False),
             ('company_id', '=', company_id),
             ('product_id', '=', product_id),
+            ('location_id', '=', src_loc.id),
         ])
+        available_lots = src_loc_quants.\
+            filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0).\
+            mapped('lot_id')
 
-        if existing_lots_sudo and existing_lots_sudo[0].product_id.tracking == 'serial':
-            existing_lots_sudo = existing_lots_sudo.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) >= 0)
-
-        return existing_lots_sudo.read(['id', 'name'])
+        return available_lots.read(['id', 'name'])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_order_state(self):
