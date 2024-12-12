@@ -48,11 +48,6 @@ class HRLeaveType(models.Model):
                     leave_data[1]['overtime_deductible'] = False
         return res
 
-    def _get_days_request(self, date=None):
-        res = super()._get_days_request(date)
-        res[1]['overtime_deductible'] = self.overtime_deductible
-        return res
-
     @api.depends('company_id.hr_attendance_overtime')
     def _compute_hr_attendance_overtime(self):
         # If no company is linked to the time off type, use the current company's setting
