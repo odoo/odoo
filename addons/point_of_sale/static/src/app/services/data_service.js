@@ -1,66 +1,63 @@
 import { Reactive } from "@web/core/utils/reactive";
 import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
-import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw } from "@odoo/owl";
-import { batched } from "@web/core/utils/timing";
-import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
-import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
+import { getOnNotified } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
-
+import IndexedDB from "../models/utils/indexed_db";
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { batched, debounce } from "@web/core/utils/timing";
+import { serializeDateTime } from "@web/core/l10n/dates";
+import { omit } from "@web/core/utils/objects";
+
+const MIN_FLUSH_INTERVAL_MILLIS = 100;
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm", "bus_service"];
+    static serviceDependencies = ["orm", "bus_service", "dialog"];
 
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
 
-    async setup(env, { orm, bus_service }) {
-        this.orm = orm;
-        this.bus = bus_service;
+    async setup(env, services) {
         this.relations = [];
-        this.custom = {};
-        this.syncInProgress = false;
-        this.mutex = markRaw(new Mutex());
         this.records = {};
+        Object.assign(this, services);
         this.opts = new DataServiceOptions();
         this.channels = [];
+        this.idUpdates = {};
 
         this.network = {
-            warningTriggered: false,
-            offline: !navigator.onLine,
             loading: true,
-            unsyncData: [],
+            get offline() {
+                return !navigator.onLine;
+            },
         };
 
         this.initializeWebsocket();
         await this.intializeDataRelation();
-        browser.addEventListener("online", () => {
-            if (this.network.offline) {
-                this.network.offline = false;
-                this.network.warningTriggered = false;
-            }
-
-            this.syncData();
-        });
 
         browser.addEventListener("offline", () => {
-            this.network.offline = true;
+            this.dialog.add(AlertDialog, {
+                title: _t("Connection Lost"),
+                body: _t(
+                    "Until the connection is reestablished, Odoo Point of Sale will operate with limited functionality."
+                ),
+                confirmLabel: _t("Continue with limited functionality"),
+            });
         });
 
-        this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
+        this.bus_service.addEventListener("connect", this.reconnectWebSocket.bind(this));
     }
 
     initializeWebsocket() {
-        this.onNotified = getOnNotified(this.bus, odoo.access_token);
+        this.onNotified = getOnNotified(this.bus_service, odoo.access_token);
     }
 
     reconnectWebSocket() {
@@ -83,7 +80,6 @@ export class PosData extends Reactive {
 
         this.onNotified(channel, method);
     }
-
     get databaseName() {
         return `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
     }
@@ -113,7 +109,6 @@ export class PosData extends Reactive {
             this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models, resolve);
         });
     }
-
     async synchronizeLocalDataInIndexedDB() {
         // This methods will synchronize local data and state in indexedDB. This methods is mostly
         // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
@@ -150,7 +145,6 @@ export class PosData extends Reactive {
             }
         }
     }
-
     async getLocalDataFromIndexedDB() {
         // Used to retrieve models containing states from the indexedDB.
         // This method will load the records directly via loadData.
@@ -178,7 +172,6 @@ export class PosData extends Reactive {
 
         return results;
     }
-
     async getCachedServerDataFromIndexedDB() {
         // Used to load models that have not yet been loaded into related_models.
         // These models have been sent to the indexedDB directly after the RPC load_data.
@@ -195,7 +188,6 @@ export class PosData extends Reactive {
 
         return results;
     }
-
     async loadInitialData() {
         let localData = await this.getCachedServerDataFromIndexedDB();
         const session = localData?.["pos.session"]?.[0];
@@ -212,6 +204,7 @@ export class PosData extends Reactive {
                 const serverDateTime = DateTime.fromSQL(serverDate);
 
                 if (serverDateTime < lastConfigChange) {
+                    // FIXME how is this supposed to work? shouldn't it be t1.timestamp < t2.timestamp?
                     await this.resetIndexedDB();
                     await this.initIndexedDB(this.relations);
                     localData = [];
@@ -313,17 +306,159 @@ export class PosData extends Reactive {
                 ...extraFields,
             };
         }
+        this.queue = JSON.parse(
+            localStorage.getItem(`pos_config_${odoo.pos_config_id}_changes_queue`) || "[]"
+        );
+        // if (this.queue.length) {
+        //     // This means that we have unsynced data from the last session.
+        //     // We sync this data with the server and then we restart the initData method
+        //     // to get the latest data from the server.
+        //     // This means that we don't have to manually deal with the "merging" of this unsynced data
+        //     await this.flush();
+        //     return this.initData();
+        // }
+        this.debouncedFlush = debounce(this.flush.bind(this), MIN_FLUSH_INTERVAL_MILLIS);
 
+        const getId = (record) => record?.id ?? record ?? false; // the orm service ignores undefined values, so we need to set it to false
+        const prepareValue = (record) => {
+            if (!record) {
+                return false;
+            }
+            if (record instanceof Array) {
+                return record.map((r) => getId(r));
+            }
+            if (record.isValid) {
+                return serializeDateTime(record);
+            }
+            return getId(record);
+        };
+        const prepareVals = (vals) =>
+            Object.fromEntries(Object.entries(vals).map(([k, v]) => [k, prepareValue(v)]));
         const { models } = createRelatedModels(relations, modelClasses, this.opts);
+        Object.entries(models).forEach(([modelName, _]) => {
+            models[modelName].addEventListener("create", ({ ids, vals }) => {
+                if (!this.shouldSync) {
+                    return;
+                }
+                if (!ids.length) {
+                    return;
+                }
+                if (ids.some((x) => typeof x === "number")) {
+                    return;
+                }
+                this.queue.push(["CREATE", modelName, models[modelName].getBy("uuid", ids[0]).raw]);
+                this.debouncedFlush();
+            });
+            models[modelName].addEventListener("update", ({ id, vals }) => {
+                vals = omit(vals, "id");
+                if (!this.shouldSync) {
+                    return;
+                }
+                this.queue.push(["UPDATE", modelName, id, prepareVals(vals)]);
+                this.debouncedFlush();
+            });
+            models[modelName].addEventListener("delete", ({ id }) => {
+                if (!this.shouldSync) {
+                    return;
+                }
+                this.queue.push(["DELETE", modelName, id]);
+                this.debouncedFlush();
+            });
+        });
 
         this.fields = fields;
         this.relations = relations;
         this.models = models;
-
-        await this.initData();
+        await this.withoutSyncing(this.initData.bind(this));
         await this.getLocalDataFromIndexedDB();
         this.initListeners();
         this.network.loading = false;
+        this.shouldSync = true;
+        this.connectWebSocket("DATA_CHANGED", ({ queue: newData, login_number }) => {
+            if (login_number == odoo.login_number) {
+                return;
+            }
+            this.withoutSyncing(async () => {
+                console.debug("DATA_CHANGED", newData);
+                for (const [command, ...data] of newData) {
+                    const findRecord = async (modelName, id) =>
+                        this.models[modelName].find((x) => x.uuid === id || x.id === id) ||
+                        (
+                            await this.searchRead(modelName, [
+                                [typeof id === "string" ? "uuid" : "id", "=", id],
+                            ])
+                        )[0];
+
+                    const linkVals = async (modelName, vals) => {
+                        for (const key in vals) {
+                            const field = this.models[modelName]?.fields[key];
+
+                            if (field?.type === "many2one" && vals[key]) {
+                                vals[key] = await findRecord(field.relation, vals[key]);
+                            }
+                            if (field.type === "many2many" || field.type === "one2many") {
+                                const records = await Promise.all(
+                                    [...vals[key]].map(
+                                        async (id) => await findRecord(field.relation, id)
+                                    )
+                                );
+                                vals[key] = [["link", ...records.filter((x) => x)]]; // TODO: correctly choose between link and update
+                                // FIXME why do we need the filer? otherwise the last element is undefined, but why ???
+                            }
+                        }
+                        return vals;
+                    };
+
+                    if (command === "CREATE") {
+                        const [model, vals] = data;
+                        this.models[model].create(await linkVals(model, vals));
+                    } else if (command === "UPDATE") {
+                        const [model, id, vals] = data;
+                        (await findRecord(model, id))?.update?.(await linkVals(model, vals));
+                    } else if (command === "DELETE") {
+                        const [model, id] = data;
+                        this.models[model].find((x) => x.uuid === id || x.id === id)?.delete?.();
+                    }
+                }
+            });
+        });
+    }
+    async withoutSyncing(callback) {
+        this.shouldSync = false;
+        const value = await callback();
+        this.shouldSync = true;
+        return value;
+    }
+
+    async flush() {
+        if (this.queue.length === 0 || !navigator.onLine) {
+            return;
+        }
+        localStorage.setItem(`pos_config_${odoo.pos_config_id}_changes_queue`, []);
+        try {
+            console.debug("Trying to flush:");
+            console.debug(
+                "%c" + JSON.stringify(this.queue, null, 2),
+                "color: white; font-family: monospace; white-space: pre;"
+            );
+
+            const idUpdates = await this.orm.call(
+                "pos.config",
+                "flush",
+                [odoo.pos_config_id, this.queue, odoo.login_number],
+                {},
+                false
+            );
+            console.debug("Flushed queue");
+            Object.assign(this.idUpdates, idUpdates);
+            this.queue = [];
+        } catch (error) {
+            localStorage.setItem(
+                `pos_config_${odoo.pos_config_id}_changes_queue`,
+                JSON.stringify(this.queue)
+            );
+            console.error("Flush failed", error);
+        }
     }
 
     initListeners() {
@@ -354,170 +489,85 @@ export class PosData extends Reactive {
                         record[key] = value.map((v) => v.id);
                     }
                 }
-
                 this.synchronizeServerDataInIndexedDB({ [model]: [record] });
             });
         }
     }
-
-    async execute({
-        type,
-        model,
-        ids,
-        values,
-        method,
-        queue,
-        args = [],
-        kwargs = {},
-        fields = [],
-        options = [],
-        uuid = "",
-    }) {
+    async execute({ type, model, ids, args = [], fields = [], options = [] }) {
         this.network.loading = true;
+        ids = this.resolveIds(ids);
+        let result = true;
+        let limitedFields = false;
+        if (fields.length === 0) {
+            fields = this.fields[model] || [];
+        }
 
-        try {
-            if (this.network.offline) {
-                throw new ConnectionLostError();
-            }
+        if (this.fields[model] && fields.sort().join(",") !== this.fields[model].sort().join(",")) {
+            limitedFields = true;
+        }
 
-            let result = true;
-            let limitedFields = false;
-            if (fields.length === 0) {
-                fields = this.fields[model] || [];
-            }
+        switch (type) {
+            case "read":
+                result = await this.orm.read(model, ids, fields, {
+                    ...options,
+                    load: false,
+                });
+                break;
+            case "search_read":
+                result = await this.orm.searchRead(model, args, fields, {
+                    ...options,
+                    load: false,
+                });
+        }
 
-            if (
-                this.fields[model] &&
-                fields.sort().join(",") !== this.fields[model].sort().join(",")
-            ) {
-                limitedFields = true;
-            }
+        const nonExistentRecords = [];
+        if (limitedFields) {
+            const X2MANY_TYPES = new Set(["many2many", "one2many"]);
 
-            switch (type) {
-                case "write":
-                    result = await this.orm.write(model, ids, values);
-                    break;
-                case "delete":
-                    result = await this.orm.unlink(model, ids);
-                    break;
-                case "call":
-                    result = await this.orm.call(model, method, args, kwargs);
-                    break;
-                case "read":
-                    queue = false;
-                    result = await this.orm.read(model, ids, fields, {
-                        ...options,
-                        load: false,
-                    });
-                    break;
-                case "search_read":
-                    queue = false;
-                    result = await this.orm.searchRead(model, args, fields, {
-                        ...options,
-                        load: false,
-                    });
-            }
+            for (const record of result) {
+                const localRecord = this.models[model].get(record.id);
 
-            if (type === "create") {
-                const response = await this.orm.create(model, values);
-                values[0].id = response[0];
-                result = values;
-            }
+                if (localRecord) {
+                    const formattedForUpdate = {};
+                    for (const [field, value] of Object.entries(record)) {
+                        const fieldsParams = this.relations[model][field];
 
-            const nonExistentRecords = [];
-            if (limitedFields) {
-                const X2MANY_TYPES = new Set(["many2many", "one2many"]);
-
-                for (const record of result) {
-                    const localRecord = this.models[model].get(record.id);
-
-                    if (localRecord) {
-                        const formattedForUpdate = {};
-                        for (const [field, value] of Object.entries(record)) {
-                            const fieldsParams = this.relations[model][field];
-
-                            if (!fieldsParams) {
-                                console.info("Warning, attempt to load a non-existent field.");
-                                continue;
-                            }
-
-                            if (X2MANY_TYPES.has(fieldsParams.type)) {
-                                formattedForUpdate[field] = value
-                                    .filter((id) => this.models[fieldsParams.relation].get(id))
-                                    .map((id) => [
-                                        "link",
-                                        this.models[fieldsParams.relation].get(id),
-                                    ]);
-                            } else if (fieldsParams.type === "many2one") {
-                                if (this.models[fieldsParams.relation].get(value)) {
-                                    formattedForUpdate[field] = [
-                                        "link",
-                                        this.models[fieldsParams.relation].get(value),
-                                    ];
-                                }
-                            } else {
-                                formattedForUpdate[field] = value;
-                            }
+                        if (!fieldsParams) {
+                            console.info("Warning, attempt to load a non-existent field.");
+                            continue;
                         }
 
-                        localRecord.update(formattedForUpdate, { omitUnknownField: true });
-                        this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
-                    } else {
-                        nonExistentRecords.push(record);
+                        if (X2MANY_TYPES.has(fieldsParams.type)) {
+                            formattedForUpdate[field] = value
+                                .filter((id) => this.models[fieldsParams.relation].get(id))
+                                .map((id) => ["link", this.models[fieldsParams.relation].get(id)]);
+                        } else if (fieldsParams.type === "many2one") {
+                            if (this.models[fieldsParams.relation].get(value)) {
+                                formattedForUpdate[field] = [
+                                    "link",
+                                    this.models[fieldsParams.relation].get(value),
+                                ];
+                            }
+                        } else {
+                            formattedForUpdate[field] = value;
+                        }
                     }
-                }
 
-                if (nonExistentRecords.length) {
-                    console.warn(
-                        "Warning, attempt to load a non-existent record with limited fields."
-                    );
-                    result = nonExistentRecords;
-                }
-            }
-
-            if (
-                this.models[model] &&
-                this.opts.autoLoadedOrmMethods.includes(type) &&
-                (!limitedFields || nonExistentRecords.length)
-            ) {
-                const data = await this.missingRecursive({ [model]: result });
-                this.synchronizeServerDataInIndexedDB(data);
-                const results = this.models.connectNewData(data);
-                result = results[model];
-            } else if (type === "write") {
-                const localRecord = this.models[model].get(ids[0]);
-                if (localRecord) {
-                    localRecord.update(values, { omitUnknownField: true });
+                    localRecord.update(formattedForUpdate, { omitUnknownField: true });
                     this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
+                } else {
+                    nonExistentRecords.push(record);
                 }
             }
 
-            return result;
-        } catch (error) {
-            let throwErr = true;
-            const uuids = this.network.unsyncData.map((d) => d.uuid);
-            if (
-                queue &&
-                !uuids.includes(uuid) &&
-                method !== "sync_from_ui" &&
-                error instanceof ConnectionLostError
-            ) {
-                this.network.unsyncData.push({
-                    args: [...arguments],
-                    date: DateTime.now(),
-                    try: 1,
-                    uuid: uuidv4(),
-                });
-
-                throwErr = false;
+            if (nonExistentRecords.length) {
+                console.warn("Warning, attempt to load a non-existent record with limited fields.");
+                result = nonExistentRecords;
             }
-
-            if (throwErr) {
-                throw error;
-            }
-        } finally {
-            this.network.loading = false;
         }
+
+        this.network.loading = false;
+        return result;
     }
 
     async missingRecursive(recordMap, idsMap = {}, acc = {}) {
@@ -601,26 +651,6 @@ export class PosData extends Reactive {
         }
     }
 
-    async syncData() {
-        this.syncInProgress = true;
-
-        await this.mutex.exec(async () => {
-            while (this.network.unsyncData.length > 0) {
-                const data = this.network.unsyncData[0];
-                const result = await this.execute({ ...data.args[0], uuid: data.uuid });
-
-                if (result) {
-                    this.network.unsyncData.shift();
-                } else {
-                    this.network.unsyncData[0].try += 1;
-                    break;
-                }
-            }
-        });
-
-        this.syncInProgress = false;
-    }
-
     async checkAndDeleteMissingOrders(results) {
         if (results && results["pos.order"]) {
             const ids = results["pos.order"]
@@ -640,40 +670,6 @@ export class PosData extends Reactive {
         }
     }
 
-    write(model, ids, vals) {
-        const records = [];
-
-        for (const id of ids) {
-            const record = this.models[model].get(id);
-            delete vals.id;
-            record.update(vals, { omitUnknownField: true });
-
-            const dataToUpdate = {};
-            const keysToUpdate = Object.keys(vals);
-
-            for (const key of keysToUpdate) {
-                dataToUpdate[key] = vals[key];
-            }
-
-            records.push(record);
-            this.ormWrite(model, [record.id], dataToUpdate);
-        }
-
-        return records;
-    }
-
-    delete(model, ids) {
-        const deleted = [];
-        for (const id of ids) {
-            const record = this.models[model].get(id);
-            deleted.push(id);
-            record.delete();
-        }
-
-        this.ormDelete(model, ids);
-        return deleted;
-    }
-
     async searchRead(model, domain = [], fields = [], options = {}, queue = false) {
         return await this.execute({
             type: "search_read",
@@ -689,14 +685,39 @@ export class PosData extends Reactive {
         return await this.execute({ type: "read", model, ids, fields, options, queue });
     }
 
-    async call(model, method, args = [], kwargs = {}, queue = false) {
-        return await this.execute({ type: "call", model, method, args, kwargs, queue });
+    resolveIds(idOrIds) {
+        if (typeof idOrIds === "number") {
+            return idOrIds;
+        }
+        if (typeof idOrIds === "string") {
+            return this.idUpdates[idOrIds];
+        }
+        if (Array.isArray(idOrIds)) {
+            return idOrIds.map((id) => this.resolveIds(id));
+        }
+    }
+
+    async call(model, method, args = [], kwargs = {}) {
+        if (!navigator.onLine) {
+            throw new ConnectionLostError();
+        }
+        await this.flush();
+        if (this.queue.length > 0) {
+            throw new Error("There are unsynced changes in the queue.");
+        }
+        if (Array.isArray(args) && args.length == 0) {
+            return await this.orm.call(model, method, args, kwargs);
+        }
+
+        const ids = this.resolveIds(args[0]);
+
+        return await this.orm.call(model, method, [ids, ...args.slice(1)], kwargs);
     }
 
     // In a silent call we ignore the error and return false instead
-    async silentCall(model, method, args = [], kwargs = {}, queue = false) {
+    async silentCall(model, method, args = [], kwargs = {}) {
         try {
-            return await this.execute({ type: "call", model, method, args, kwargs, queue });
+            return this.call(model, method, args, kwargs);
         } catch (e) {
             console.warn("Silent call failed:", e);
             return false;
@@ -704,54 +725,7 @@ export class PosData extends Reactive {
     }
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
-        const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        if (data) {
-            this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
-            return this.models.connectNewData(data);
-        }
-        return false;
-    }
-
-    async create(model, values, queue = true) {
-        return await this.execute({ type: "create", model, values, queue });
-    }
-
-    async ormWrite(model, ids, values, queue = true) {
-        const result = await this.execute({ type: "write", model, ids, values, queue });
-        this.deviceSync?.dispatch &&
-            this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
-        return result;
-    }
-
-    async ormDelete(model, ids, queue = true) {
-        return await this.execute({ type: "delete", model, ids, queue });
-    }
-
-    localDeleteCascade(record, removeFromServer = false) {
-        const recordModel = record.constructor.pythonModel;
-
-        const relationsToDelete = Object.values(this.relations[recordModel])
-            .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
-            .map((rel) => rel.name);
-        const recordsToDelete = Object.entries(record)
-            .filter(([idx, values]) => relationsToDelete.includes(idx) && values)
-            .map(([idx, values]) => values)
-            .flat();
-
-        // Delete all children records before main record
-        this.indexedDB.delete(recordModel, [record.uuid]);
-        for (const item of recordsToDelete) {
-            this.indexedDB.delete(item.model.name, [item.uuid]);
-            item.delete({ silent: !removeFromServer });
-        }
-
-        // Delete the main record
-        const result = record.delete({ silent: !removeFromServer });
-        return result;
-    }
-
-    deleteUnsyncData(uuid) {
-        this.network.unsyncData = this.network.unsyncData.filter((d) => d.uuid !== uuid);
+        await this.execute({ type: "call", model, method, args, kwargs, queue });
     }
 
     async preLoadData(data) {
@@ -768,6 +742,7 @@ export class PosData extends Reactive {
         }
 
         return limitedLoading;
+        // return false;
     }
 }
 

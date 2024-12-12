@@ -49,3 +49,4 @@ from . import pos_preset
 from . import product_tag
 from . import resource_calendar_attendance
 from . import product_uom
+from . import pos_preparation_order

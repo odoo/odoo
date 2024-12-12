@@ -58,7 +58,7 @@ export class TipScreen extends Component {
         }
 
         if (!amount) {
-            await this.pos.data.write("pos.order", [serverId], { is_tipped: true, tip_amount: 0 });
+            order.update({ is_tipped: true, tip_amount: 0 });
             this.goNextScreen();
             return;
         }
@@ -86,14 +86,10 @@ export class TipScreen extends Component {
                 paymentline.uuid
             );
         }
-
         const serializedTipLine = order.getSelectedOrderline().serializeForORM();
         order.getSelectedOrderline().delete();
-        const serverTipLine = await this.pos.data.create("pos.order.line", [serializedTipLine]);
-        await this.pos.data.write("pos.order", [serverId], {
-            is_tipped: true,
-            tip_amount: serverTipLine[0].price_subtotal_incl,
-        });
+        const serverTipLine = this.pos.models["pos.order.line"].create(serializedTipLine);
+        order.update({ is_tipped: true, tip_amount: serverTipLine.price_subtotal_incl });
         this.goNextScreen();
     }
     goNextScreen() {

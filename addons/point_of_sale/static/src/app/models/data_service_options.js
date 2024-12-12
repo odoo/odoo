@@ -17,6 +17,28 @@ export class DataServiceOptions {
                 condition: (record) =>
                     record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
             },
+            "pos.preparation.order": {
+                key: "uuid",
+                condition: (record) => false,
+                // record.order_id?.finalized && typeof record.order_id.id === "number",
+            },
+            "pos.preparation.orderline": {
+                key: "uuid",
+                condition: (record) => false,
+                // record.preparation_order_id.pos_order_id?.finalized &&
+                // typeof record.preparaion_order_id.pos_order_id.id === "number",
+            },
+            "product.attribute.custom.value": {
+                key: "uuid",
+                condition: (record) => false,
+            },
+            // FIXME
+            // "restaurant.table": {
+            //     key: "uuid",
+            // },
+            // "restaurant.floor": {
+            //     key: "uuid",
+            // },
         };
     }
 
@@ -54,10 +76,6 @@ export class DataServiceOptions {
         }
 
         return indexes;
-    }
-
-    get autoLoadedOrmMethods() {
-        return ["read", "search_read", "create"];
     }
 
     get pohibitedAutoLoadedModels() {

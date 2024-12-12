@@ -20,6 +20,11 @@ class PosConfig(models.Model):
         forbidden_keys.append('floor_ids')
         return forbidden_keys
 
+    def _configs_that_share_data(self):
+        self.ensure_one()
+        configs_that_share_floors = self.floor_ids.mapped('pos_config_ids') - self
+        return super()._configs_that_share_data() + configs_that_share_floors
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

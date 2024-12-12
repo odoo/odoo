@@ -99,7 +99,7 @@ export class SplitBillScreen extends Component {
         if (this.getNumberOfProducts() > 0) {
             const originalOrder = this.currentOrder;
             await this.createSplittedOrder();
-            originalOrder.setScreenData({ name: "SplitBillScreen" });
+            this.pos.setOrderScreen(originalOrder, "SplitBillScreen");
         }
         this.pos.pay();
     }
@@ -158,7 +158,7 @@ export class SplitBillScreen extends Component {
                 const data = { ...line.raw };
                 delete data.uuid;
                 delete data.id;
-                const newLine = this.pos.models["pos.order.line"].create(
+                this.pos.models["pos.order.line"].create(
                     {
                         ...data,
                         qty: this.qtyTracker[line.uuid],
@@ -175,14 +175,6 @@ export class SplitBillScreen extends Component {
                     const newQty = line.getQuantity() - this.qtyTracker[line.uuid];
                     line.update({ qty: newQty });
                 }
-
-                this.pos.handlePreparationHistory(
-                    originalOrder.last_order_preparation_change.lines,
-                    newOrder.last_order_preparation_change.lines,
-                    line,
-                    newLine,
-                    this.qtyTracker[line.uuid]
-                );
             }
         }
 
@@ -190,9 +182,8 @@ export class SplitBillScreen extends Component {
             line.delete();
         }
 
-        await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         originalOrder.customer_count -= 1;
-        originalOrder.setScreenData({ name: "ProductScreen" });
+        this.pos.setOrderScreen(originalOrder, "ProductScreen");
         this.pos.selectedOrderUuid = null;
         this.pos.setOrder(newOrder);
         this.back();

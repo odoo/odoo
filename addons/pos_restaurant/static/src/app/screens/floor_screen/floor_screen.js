@@ -26,7 +26,6 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { getButtons, DECIMAL, ZERO, BACKSPACE } from "@point_of_sale/app/components/numpad/numpad";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
-import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
@@ -145,13 +144,13 @@ export class FloorScreen extends Component {
                 }
                 const table = this.getPosTable(ctx.element);
                 this.state.potentialLink = { child: table };
-                table.uiState.initialPosition = pick(table, "position_h", "position_v");
+                this.tableInitialPosition = pick(table, "position_h", "position_v");
                 // This helps when unlinking tables ( to keep the position )
                 table.position_h = table.getX();
                 table.position_v = table.getY();
                 if (table.parent_id) {
                     this.unMergeTable(table);
-                    this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
+                    table.parent_id = null;
                 }
             },
             onWillStartDrag: ({ element, x, y }) => {
@@ -161,13 +160,16 @@ export class FloorScreen extends Component {
             onDrag: ({ element, x, y }) => {
                 const table = this.getPosTable(element);
                 if (!suggestLinkingPositions()) {
-                    table.position_h =
-                        x - offsetX + this.map.el.parentElement.parentElement.scrollLeft;
-                    table.position_v = y - offsetY - this.map.el.getBoundingClientRect().top;
-                    if (this.pos.isEditMode && !this.activeFloor.floor_background_image) {
-                        table.position_h -= table.position_h % GRID_SIZE;
-                        table.position_v -= table.position_v % GRID_SIZE;
-                    }
+                    // FIXME: this is hacky; we shouldn't use data.withoutSyncing here
+                    this.pos.data.withoutSyncing(() => {
+                        table.position_h =
+                            x - offsetX + this.map.el.parentElement.parentElement.scrollLeft;
+                        table.position_v = y - offsetY - this.map.el.getBoundingClientRect().top;
+                        if (this.pos.isEditMode && !this.activeFloor.floor_background_image) {
+                            table.position_h -= table.position_h % GRID_SIZE;
+                            table.position_v -= table.position_v % GRID_SIZE;
+                        }
+                    });
                     if (this.pos.isEditMode || this.state.potentialLink?.parent) {
                         return;
                     }
@@ -212,19 +214,10 @@ export class FloorScreen extends Component {
                 this.alert.dismiss();
                 const table = this.getPosTable(element);
                 if (this.pos.isEditMode) {
-                    if (this.pos.floorPlanStyle !== "kanban") {
-                        this.pos.data.write("restaurant.table", [table.id], {
-                            position_h: table.position_h,
-                            position_v: table.position_v,
-                        });
-                    } else {
-                        table.position_h = table.uiState.initialPosition.position_h;
-                        table.position_v = table.uiState.initialPosition.position_v;
-                    }
                     return;
                 }
-                table.position_h = table.uiState.initialPosition.position_h;
-                table.position_v = table.uiState.initialPosition.position_v;
+                table.position_h = this.tableInitialPosition.position_h;
+                table.position_v = this.tableInitialPosition.position_v;
                 if (!suggestLinkingPositions()) {
                     this.state.potentialLink = null;
                     return;
@@ -233,9 +226,7 @@ export class FloorScreen extends Component {
                 if (oToTrans) {
                     this.pos.mergeTableOrders(oToTrans.uuid, this.state.potentialLink.parent);
                 }
-                this.pos.data.write("restaurant.table", [table.id], {
-                    parent_id: this.state.potentialLink.parent.id,
-                });
+                table.parent_id = this.state.potentialLink.parent;
                 this.state.potentialLink = null;
             },
         });
@@ -321,11 +312,7 @@ export class FloorScreen extends Component {
             },
             onDrop: (ctx) => {
                 const table = this.getPosTable(ctx.element.parentElement);
-                this.pos.data.write(
-                    "restaurant.table",
-                    [table.id],
-                    pick(table, "position_h", "position_v", "width", "height")
-                );
+                table.update(pick(table, "position_h", "position_v", "width", "height"));
             },
             onDragEnd: ({ element }) => {
                 if (hasTouch()) {
@@ -453,12 +440,6 @@ export class FloorScreen extends Component {
     onClickFloorMap(ev) {
         if (ev.target.closest(".table")) {
             return;
-        }
-        for (const tableId of this.state.selectedTableIds) {
-            const table = this.pos.models["restaurant.table"].get(tableId);
-            this.pos.data.write("restaurant.table", [tableId], {
-                ...table.serializeForORM(),
-            });
         }
         this.state.selectedTableIds = [];
     }
@@ -598,7 +579,7 @@ export class FloorScreen extends Component {
                 shape: "square",
                 seats: 2,
                 color: "rgb(53, 211, 116)",
-                floor_id: this.activeFloor.id,
+                floor_id: this.activeFloor,
             };
         }
         if (!duplicateFloor) {
@@ -609,8 +590,7 @@ export class FloorScreen extends Component {
     }
     async createTableFromRaw(newTableData) {
         newTableData.active = true;
-        const table = await this.pos.data.create("restaurant.table", [newTableData]);
-        return table[0];
+        return this.pos.models["restaurant.table"].create(newTableData);
     }
     async unMergeTable(table) {
         const mainOrder = this.pos.getActiveOrdersOnTable(table.rootTable)?.[0];
@@ -643,7 +623,8 @@ export class FloorScreen extends Component {
             : null;
     }
     get activeTables() {
-        return this.activeFloor?.table_ids?.filter((table) => table.active) || [];
+        // return this.activeFloor?.table_ids?.filter((table) => table.active) || [];
+        return this.activeFloor?.table_ids || [];
     }
     get selectedTables() {
         return this.state.selectedTableIds.map((id) => this.pos.models["restaurant.table"].get(id));
@@ -701,11 +682,6 @@ export class FloorScreen extends Component {
         }
     }
     unselectTables() {
-        if (this.selectedTables.length) {
-            for (const table of this.selectedTables) {
-                this.pos.data.write("restaurant.table", [table.id], table.serializeForORM());
-            }
-        }
         this.state.selectedTableIds = [];
     }
     closeEditMode() {
@@ -713,25 +689,19 @@ export class FloorScreen extends Component {
         this.unselectTables();
     }
     async addFloor() {
+        // FIXME: Unable to modify this PoS Configuration because you can't modify Restaurant Floors while a session is open.
         this.dialog.add(TextInputPopup, {
             title: _t("New Floor"),
             placeholder: _t("Floor name"),
             getPayload: async (newName) => {
                 const lightMode = cookie.get("pos_color_scheme") !== "dark";
                 const backgroundColor = lightMode ? "#E4E4E4" : "#1B1D26";
-                const floor = await this.pos.data.create(
-                    "restaurant.floor",
-                    [
-                        {
-                            name: newName,
-                            background_color: backgroundColor,
-                            pos_config_ids: [this.pos.config.id],
-                        },
-                    ],
-                    false
-                );
-
-                this.selectFloor(floor[0]);
+                const floor = await this.pos.models["restaurant.floor"].create({
+                    name: newName,
+                    background_color: backgroundColor,
+                    pos_config_ids: [["link", this.pos.config]],
+                });
+                this.selectFloor(floor);
                 this.pos.isEditMode = true;
             },
         });
@@ -778,13 +748,11 @@ export class FloorScreen extends Component {
         const floor = this.activeFloor;
         const tables = this.activeFloor.table_ids;
         const newFloorName = floor.name + " (copy)";
-        const copyFloor = await this.pos.data.create("restaurant.floor", [
-            {
-                name: newFloorName,
-                background_color: "#ACADAD",
-                pos_config_ids: [this.pos.config.id],
-            },
-        ]);
+        const copyFloor = this.pos.models["restaurant.floor"].create({
+            name: newFloorName,
+            background_color: "#ACADAD",
+            pos_config_ids: [["link", this.pos.config]],
+        });
 
         this.pos.isEditMode = true;
         for (const table of tables) {
@@ -793,7 +761,7 @@ export class FloorScreen extends Component {
             await this.createTableFromRaw(tableSerialized);
         }
 
-        this.selectFloor(copyFloor[0]);
+        this.selectFloor(copyFloor);
     }
     async duplicateTable() {
         const selectedTables = this.selectedTables;
@@ -811,12 +779,7 @@ export class FloorScreen extends Component {
             startingValue: this.activeFloor.name,
             title: _t("Floor Name ?"),
             getPayload: (newName) => {
-                if (newName !== this.activeFloor.name) {
-                    this.activeFloor.name = newName;
-                    this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                        name: newName,
-                    });
-                }
+                this.activeFloor.name = newName;
             },
         });
     }
@@ -833,9 +796,7 @@ export class FloorScreen extends Component {
                 isValid: (x) => x,
                 getPayload: (newNumber) => {
                     if (parseInt(newNumber) !== this.selectedTables[0].table_number) {
-                        this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
-                            table_number: parseInt(newNumber),
-                        });
+                        this.selectedTables[0].update({ table_number: parseInt(newNumber) });
                     }
                 },
             });
@@ -844,12 +805,7 @@ export class FloorScreen extends Component {
                 startingValue: this.activeFloor.name,
                 title: _t("Floor Name ?"),
                 getPayload: (newName) => {
-                    if (newName !== this.activeFloor.name) {
-                        this.activeFloor.name = newName;
-                        this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                            name: newName,
-                        });
-                    }
+                    this.activeFloor.name = newName;
                 },
             });
         }
@@ -865,9 +821,7 @@ export class FloorScreen extends Component {
                 const newSeatsNum = parseInt(num, 10);
                 selectedTables.forEach((selectedTable) => {
                     if (newSeatsNum !== selectedTable.seats) {
-                        this.pos.data.write("restaurant.table", [selectedTable.id], {
-                            seats: newSeatsNum,
-                        });
+                        selectedTable.update({ seats: newSeatsNum });
                     }
                 });
             },
@@ -875,22 +829,20 @@ export class FloorScreen extends Component {
     }
     changeShape(form) {
         for (const table of this.selectedTables) {
-            this.pos.data.write("restaurant.table", [table.id], { shape: form });
+            table.update({ shape: form });
         }
     }
 
     setFloorColor(color, key) {
+        // FIXME: what is color
         this.activeFloor.background_color = color;
-        this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-            background_color: key,
-            floor_background_image: false,
-        });
+        this.activeFloor.floor_background_image = false;
     }
 
     setTableColor(color) {
         if (this.selectedTables.length > 0) {
             for (const table of this.selectedTables) {
-                this.pos.data.write("restaurant.table", [table.id], { color: color });
+                table.update({ color });
             }
         }
     }
@@ -946,29 +898,24 @@ export class FloorScreen extends Component {
         if (!confirmed) {
             return;
         }
-        const activeFloor = this.activeFloor;
-        try {
-            await this.pos.data.call("restaurant.floor", "deactivate_floor", [
-                activeFloor.id,
-                this.pos.session.id,
-            ]);
-        } catch {
+        if (
+            this.pos.models["pos.order"].some(
+                (order) =>
+                    order.table_id.floor_id.id === this.activeFloor.id && order.state === "draft"
+            )
+        ) {
             this.dialog.add(AlertDialog, {
                 title: _t("Delete Error"),
                 body: _t("You cannot delete a floor with orders still in draft for this floor."),
             });
             return;
         }
-
-        const orderList = [...this.pos.getOpenOrders()];
-        for (const order of orderList) {
-            if (activeFloor.table_ids.includes(order.tableId)) {
-                this.pos.removeOrder(order, false);
-            }
+        for (const table of this.activeFloor.table_ids) {
+            table.active = false;
         }
-
-        this.pos.models["restaurant.table"].deleteMany(activeFloor.table_ids);
-        activeFloor.delete();
+        this.activeFloor.active = false;
+        // TODO: make it so the floor is not part of the frontend data anymore
+        // using "delete" will not work, because then it will be deleted from the backend too
 
         if (this.pos.models["restaurant.floor"].length > 0) {
             this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
@@ -986,45 +933,15 @@ export class FloorScreen extends Component {
         if (!confirmed) {
             return;
         }
-        const originalSelectedTableIds = [...this.state.selectedTableIds];
-
-        try {
-            const response = await this.pos.data.call(
-                "restaurant.table",
-                "are_orders_still_in_draft",
-                [originalSelectedTableIds]
-            );
-
-            if (response) {
-                for (const id of originalSelectedTableIds) {
-                    //remove order not send to server
-                    for (const order of this.pos.getOpenOrders()) {
-                        if (order.table_id == id) {
-                            this.pos.removeOrder(order, false);
-                        }
-                    }
-                    const records = this.pos.data.write("restaurant.table", [id], {
-                        active: false,
-                    });
-                    records[0].delete();
-                }
-            }
-        } catch {
+        if (this.selectedTables.some((table) => table.getOrder())) {
             this.dialog.add(AlertDialog, {
-                title: _t("Delete Error"),
+                title: _t("User Error"),
                 body: _t("You cannot delete a table with orders still in draft for this table."),
             });
+            return;
         }
-
-        // Value of an object can change inside async function call.
-        //   Which means that in this code block, the value of `state.selectedTableId`
-        //   before the await call can be different after the finishing the await call.
-        // Since we wanted to disable the selected table after deletion, we should be
-        //   setting the selectedTableId to null. However, we only do this if nothing
-        //   else is selected during the rpc call.
-        const equalsCheck = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-        if (equalsCheck(this.state.selectedTableIds, originalSelectedTableIds)) {
-            this.state.selectedTableIds = [];
+        for (const table of this.selectedTables) {
+            table.active = false;
         }
     }
     getFloorChangeCount(floor) {
@@ -1054,13 +971,7 @@ export class FloorScreen extends Component {
             const imageUrl = await getDataURLFromFile(file);
             const loadedImage = await loadImage(imageUrl);
             if (loadedImage) {
-                this.env.services.ui.block();
-                await this.pos.data.ormWrite("restaurant.floor", [this.activeFloor.id], {
-                    floor_background_image: imageUrl.split(",")[1],
-                });
-                // A read is added to be sure that we have the same image as the one in backend
-                await this.pos.data.read("restaurant.floor", [this.activeFloor.id]);
-                this.env.services.ui.unblock();
+                this.activeFloor.floor_background_image = imageUrl.split(",")[1];
             } else {
                 this.dialog.add(AlertDialog, {
                     title: _t("Loading Image Error"),
@@ -1070,19 +981,9 @@ export class FloorScreen extends Component {
         }
     }
     getChangeCount(table) {
-        // This information in uiState came by websocket
-        // If the table is not synced, we need to count the unsynced orders
-        let changeCount = 0;
-        const tableOrders = this.pos.models["pos.order"].filter(
-            (o) => o.table_id?.id === table.id && !o.finalized
-        );
-
-        for (const order of tableOrders) {
-            const changes = getOrderChanges(order, this.pos.config.preparationCategories);
-            changeCount += changes.nbrOfChanges;
-        }
-
-        return { changes: changeCount };
+        return {
+            changes: table.getOrder() ? table.getOrder().getChanges().nbrOfChanges : 0,
+        };
     }
     setColor(hasSelectedTable, color, key) {
         if (hasSelectedTable) {

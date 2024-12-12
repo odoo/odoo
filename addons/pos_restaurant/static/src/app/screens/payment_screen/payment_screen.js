@@ -18,8 +18,9 @@ patch(PaymentScreen.prototype, {
         const changedTables = this.currentOrder?.table_id?.children?.map((table) => table.id);
         // After the order has been validated the tables have no reason to be merged anymore.
         if (changedTables?.length) {
-            this.pos.data.write("restaurant.table", changedTables, { parent_id: null });
+            // TODO: can we update on a recordset or does it have to be 1 record at a time?
+            changedTables.update({ parent_id: null });
         }
-        return await super.afterOrderValidation(...arguments);
+        return await super.afterOrderValidation();
     },
 });

@@ -12,12 +12,57 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import SQL, convert
 from odoo.osv import expression
 
-
 class PosConfig(models.Model):
     _name = 'pos.config'
     _inherit = ['pos.bus.mixin', 'pos.load.mixin']
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
+
+    def flush(self, queue, login_number):
+        # print("SYNC FROM UI 2\n\n")
+        # print(queue)
+        # print("\n\n")
+
+        get_record = lambda model, id: self.env[model].search([('uuid', '=', id)], limit=1) if isinstance(id, str) else self.env[model].browse(id)
+        def replace_uuid_with_id(model, vals):
+            def adapt_value(model, key, value):
+                match self.env[model]._fields[key].type:
+                    case "many2one":
+                        return get_record(self.env[model]._fields[key].comodel_name, value).id
+                    case "many2many" | "one2many":
+                        return [(6, 0, [get_record(self.env[model]._fields[key].comodel_name, val).id for val in value])]
+                    case _:
+                        return value
+            return { key: adapt_value(model, key, value) for key, value in vals.items() }
+
+        id_updates = {}
+
+        for [operation, *data] in queue:
+            match operation:
+                case "CREATE":
+                    model, vals = data
+                    print("CREATE", model, vals)
+                    new_record = self.env[model].create([replace_uuid_with_id(model, vals)])
+                    id_updates[vals['uuid']] = new_record.id
+                case "UPDATE":
+                    model, id, vals = data
+                    print("UPDATE", model, id, vals)
+                    record = get_record(model, id)
+                    record.write(replace_uuid_with_id(model, vals))
+                case "DELETE":
+                    model, id = data
+                    record = get_record(model, id)
+                    if record.exists():
+                        record.unlink()
+                case _:
+                    pass
+        for config in self._configs_that_share_data() + self:
+            config._notify('DATA_CHANGED', {'queue': queue, 'login_number': login_number})
+        return id_updates
+
+    def _configs_that_share_data(self):
+        self.ensure_one()
+        return self.trusted_config_ids
 
     def _default_warehouse_id(self):
         warehouse = self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
@@ -207,36 +252,11 @@ class PosConfig(models.Model):
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
 
-    def notify_synchronisation(self, session_id, login_number, records={}):
-        static_records = {}
-
-        for model, ids in records.items():
-            fields = self.env[model]._load_pos_data_fields(self.id)
-            static_records[model] = self.env[model].browse(ids).read(fields, load=False)
-
-        self._notify('SYNCHRONISATION', {
-            'static_records': static_records,
-            'session_id': session_id,
-            'login_number': login_number,
-            'records': records
-        })
-
-    def read_config_open_orders(self, domain, record_ids):
-        all_domain = expression.OR([domain, [('id', 'in', record_ids.get('pos.order')), ('config_id', '=', self.id)]])
-        all_orders = self.env['pos.order'].search(all_domain)
-        delete_record_ids = {}
-
-        for model, ids in record_ids.items():
-            delete_record_ids[model] = [id for id in ids if not self.env[model].browse(id).exists()]
-
-        return {
-            'dynamic_records': all_orders.filtered_domain(domain).read_pos_data([], self.id),
-            'deleted_record_ids': delete_record_ids,
-        }
-
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.session'][0]['config_id'])]
+        main_config = self.env['pos.config'].browse(data['pos.session'][0]['config_id'])
+        other_configs = main_config._configs_that_share_data()
+        return [('id', 'in', [main_config.id] + other_configs.ids)]
 
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
@@ -468,7 +488,6 @@ class PosConfig(models.Model):
                     "Unable to modify this PoS Configuration because you can't modify %s while a session is open.",
                     ", ".join(forbidden_fields)
                 ))
-
         result = super(PosConfig, self).write(vals)
 
         self.sudo()._set_fiscal_position()

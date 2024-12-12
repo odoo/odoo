@@ -19,7 +19,7 @@ class PosPayment(models.Model):
 
     name = fields.Char(string='Label', readonly=True)
     pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True, ondelete='cascade')
-    amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', help="Total amount of the payment.")
+    amount = fields.Monetary(string='Amount', required=True, currency_field='currency_id', help="Total amount of the payment.", default=0)
     payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True)
     payment_date = fields.Datetime(string='Date', required=True, readonly=True, default=lambda self: fields.Datetime.now())
     currency_id = fields.Many2one('res.currency', string='Currency', related='pos_order_id.currency_id')
@@ -37,7 +37,18 @@ class PosPayment(models.Model):
     payment_method_issuer_bank = fields.Char(string='Payment Issuer Bank')
     payment_method_payment_mode = fields.Char(string='Payment Mode')
     transaction_id = fields.Char(string='Payment Transaction ID')
-    payment_status = fields.Char(string='Payment Status')
+    payment_status = fields.Selection([
+        ('draft', 'Draft'),
+        ('waitingCard', 'Waiting Card'),
+        ('waitingCapture', 'Waiting Capture'),
+        ('pending', 'Pending'),
+        ('retry', 'Retry'),
+        ('done', 'Done'),
+        ('force_done', 'Force Done'),
+        ('reversing', 'Reversing'),
+        ('reversed', 'Reversed'),
+        ('refunded', 'Refunded'),
+    ], string='Payment Status', default='done')
     ticket = fields.Char(string='Payment Receipt Info')
     is_change = fields.Boolean(string='Is this payment change?', default=False)
     account_move_id = fields.Many2one('account.move', index='btree_not_null')

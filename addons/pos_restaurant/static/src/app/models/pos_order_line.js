@@ -15,7 +15,7 @@ patch(PosOrderline.prototype, {
     getDisplayClasses() {
         return {
             ...super.getDisplayClasses(),
-            "has-change": this.uiState.hasChange && this.config.module_pos_restaurant,
+            "has-change": this.hasChange && this.config.module_pos_restaurant,
         };
     },
     canBeMergedWith(orderline) {

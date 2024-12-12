@@ -613,7 +613,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         ))
 
         # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].create(orders)
 
         self.assertEqual(orders[0]['amount_return'], 0, msg='The amount return should be 0')
         self.assertEqual(orders[1]['amount_return'], 0, msg='The amount return should be 0')
@@ -881,7 +881,7 @@ class TestPoSBasicConfig(TestPoSCommon):
 
             order_data = self.create_ui_order_data([(self.product3, pos_data['p_qty'])])
             pos_data['amount_paid'] += order_data['amount_paid']
-            self.env['pos.order'].sync_from_ui([order_data])
+            self.env['pos.order'].create([order_data])
 
             session.post_closing_cash_details(pos_data['amount_paid'])
             session.close_session_from_ui()
@@ -1116,15 +1116,15 @@ class TestPoSBasicConfig(TestPoSCommon):
             return [p['product_variant_ids'][0] for p in available_top_product[:count]]
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=1))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product1, 1)])])
+        self.env['pos.order'].create([self.create_ui_order_data([(self.product1, 1)])])
         self.assertEqual(get_top_product_ids(1), [self.product1.id])
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=2))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product2, 1)])])
+        self.env['pos.order'].create([self.create_ui_order_data([(self.product2, 1)])])
         self.assertEqual(get_top_product_ids(2), [self.product1.id, self.product2.id])
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=3))
-        self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
+        self.env['pos.order'].create([self.create_ui_order_data([(self.product3, 1)])])
         self.assertEqual(get_top_product_ids(3), [self.product1.id, self.product2.id, self.product3.id])
 
     def test_closing_entry_by_product(self):
@@ -1188,7 +1188,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         ))
 
         # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].create(orders)
         # close the session
         self.pos_session.action_pos_session_validate()
 

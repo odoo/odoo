@@ -52,7 +52,6 @@ export class PaymentScreen extends Component {
 
     onMounted() {
         const order = this.pos.getOrder();
-        this.pos.addPendingOrder([order.id]);
 
         for (const payment of order.payment_ids) {
             const pmid = payment.payment_method_id.id;
@@ -326,29 +325,20 @@ export class PaymentScreen extends Component {
             }
         }
 
-        this.pos.addPendingOrder([this.currentOrder.id]);
         this.currentOrder.state = "paid";
 
         this.env.services.ui.block();
-        let syncOrderResult;
         try {
-            // 1. Save order to server.
-            syncOrderResult = await this.pos.syncAllOrders({ throw: true });
-            if (!syncOrderResult) {
-                return;
-            }
-
-            // 2. Invoice.
+            this.currentOrder.recomputeOrderData();
+            // Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.isToInvoice()) {
-                if (this.currentOrder.raw.account_move) {
-                    await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
-                } else {
-                    throw {
-                        code: 401,
-                        message: "Backend Invoice",
-                        data: { order: this.currentOrder },
-                    };
-                }
+                const { res_id } = await this.pos.data.call(
+                    "pos.order",
+                    "action_pos_order_invoice",
+                    [this.currentOrder.id]
+                );
+                this.currentOrder.account_move = res_id;
+                await this.invoiceService.downloadPdf(res_id);
             }
         } catch (error) {
             if (error instanceof ConnectionLostError) {
@@ -360,27 +350,12 @@ export class PaymentScreen extends Component {
             } else {
                 throw error;
             }
-            return error;
         } finally {
             this.env.services.ui.unblock();
         }
 
-        // 3. Post process.
-        const postPushOrders = syncOrderResult.filter((order) => order.waitForPushOrder());
-        if (postPushOrders.length > 0) {
-            await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
-        }
-
-        await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
-    }
-    async postPushOrderResolve(ordersServerId) {
-        const postPushResult = await this._postPushOrderResolve(this.currentOrder, ordersServerId);
-        if (!postPushResult) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Error: no internet connection."),
-                body: _t("Some, if not all, post-processing after syncing order failed."),
-            });
-        }
+        // Post process.
+        await this.afterOrderValidation();
     }
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to

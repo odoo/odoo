@@ -9,17 +9,17 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
-import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+// import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            OfflineUtil.setOfflineMode(),
-            Chrome.clickOrders(),
-            Dialog.confirm("Continue with limited functionality"),
-            OfflineUtil.setOnlineMode(),
+            // OfflineUtil.setOfflineMode(),
+            // Chrome.clickOrders(),
+            // Dialog.confirm("Continue with limited functionality"),
+            // OfflineUtil.setOnlineMode(),
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1", "3"),
             Chrome.clickOrders(),

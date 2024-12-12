@@ -107,6 +107,7 @@ export class PosOrderline extends Base {
     }
 
     get session() {
+        // FIXME: this will not be correct when sharing floors between multiple sessions
         return this.models["pos.session"].getFirst();
     }
 
@@ -676,9 +677,6 @@ export class PosOrderline extends Base {
     setNote(note) {
         this.note = note || "[]";
     }
-    setHasChange(isChange) {
-        this.uiState.hasChange = isChange;
-    }
     getDiscountStr() {
         return this.discount ? this.discount.toString() : "";
     }
@@ -706,6 +704,14 @@ export class PosOrderline extends Base {
     }
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
+    }
+    get hasChange() {
+        // TODO
+        const res = this.order_id
+            .getPreparationOrderVals()
+            .preparation_line_ids.some((line) => this.uuid === line[1].pos_orderline_id.uuid);
+        console.log("has changes is ", res);
+        return res;
     }
 }
 

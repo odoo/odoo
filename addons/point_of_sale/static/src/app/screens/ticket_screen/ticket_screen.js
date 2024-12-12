@@ -11,7 +11,7 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -26,7 +26,6 @@ import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_
 import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-import { ConnectionLostError } from "@web/core/network/rpc";
 
 const NBR_BY_PAGE = 30;
 
@@ -84,22 +83,6 @@ export class TicketScreen extends Component {
         Object.assign(this.state, this.props.stateOverride || {});
 
         onMounted(this.onMounted);
-        onWillStart(async () => {
-            if (!this.pos.loadingOrderState) {
-                try {
-                    this.pos.loadingOrderState = true;
-                    await this.pos.getServerOrders();
-                } catch (error) {
-                    if (error instanceof ConnectionLostError) {
-                        Promise.reject(error);
-                        return error;
-                    }
-                    throw error;
-                } finally {
-                    this.pos.loadingOrderState = false;
-                }
-            }
-        });
     }
     onMounted() {
         setTimeout(() => {
@@ -245,6 +228,7 @@ export class TicketScreen extends Component {
                 return this.numberBuffer.reset();
             }
 
+            // const refundableQty = toRefundDetail.line.qty - (toRefundDetail.line.refunded_qty || 0);
             const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refunded_qty;
             if (refundableQty <= 0) {
                 return this.numberBuffer.reset();
@@ -642,9 +626,6 @@ export class TicketScreen extends Component {
     }
 
     async _setOrder(order) {
-        if (this.pos.config.isShareable) {
-            await this.pos.syncAllOrders();
-        }
         this.pos.setOrder(order);
         this.closeTicketScreen();
     }

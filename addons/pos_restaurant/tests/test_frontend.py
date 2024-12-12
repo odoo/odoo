@@ -217,6 +217,8 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.pos_config.with_user(self.pos_user).open_ui()
+        # TODO add ability to delete orders
+        # self.start_pos_tour('pos_restaurant_sync', debug=True, step_delay=200, erro)
         self.start_pos_tour('pos_restaurant_sync')
 
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))

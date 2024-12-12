@@ -15,21 +15,21 @@ class PosSession(models.Model):
             data += ['restaurant.floor', 'restaurant.table', 'restaurant.order.course']
         return data
 
-    @api.model
-    def _set_last_order_preparation_change(self, order_ids):
-        for order_id in order_ids:
-            order = self.env['pos.order'].browse(order_id)
-            last_order_preparation_change = {
-                'lines': {},
-                'generalCustomerNote': '',
-            }
-            for orderline in order['lines']:
-                last_order_preparation_change['lines'][orderline.uuid + " - "] = {
-                    "uuid": orderline.uuid,
-                    "name": orderline.full_product_name,
-                    "note": "",
-                    "product_id": orderline.product_id.id,
-                    "quantity": orderline.qty,
-                    "attribute_value_ids": orderline.attribute_value_ids.ids,
-                }
-            order.write({'last_order_preparation_change': json.dumps(last_order_preparation_change)})
+    # @api.model
+    # def _set_last_order_preparation_change(self, order_ids):
+    #     for order_id in order_ids:
+    #         order = self.env['pos.order'].browse(order_id)
+    #         last_order_preparation_change = {
+    #             'lines': {},
+    #             'generalCustomerNote': '',
+    #         }
+    #         for orderline in order['lines']:
+    #             last_order_preparation_change['lines'][orderline.uuid + " - "] = {
+    #                 "uuid": orderline.uuid,
+    #                 "name": orderline.full_product_name,
+    #                 "note": "",
+    #                 "product_id": orderline.product_id.id,
+    #                 "quantity": orderline.qty,
+    #                 "attribute_value_ids": orderline.attribute_value_ids.ids,
+    #             }
+    #         order.write({'last_order_preparation_change': json.dumps(last_order_preparation_change)})

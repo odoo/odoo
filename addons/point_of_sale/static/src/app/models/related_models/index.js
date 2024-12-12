@@ -20,9 +20,9 @@ import { processModelDefs } from "./model_defs";
 import { computeBackLinks, createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
 
-const AVAILABLE_EVENT = ["create", "update", "delete"];
+const AVAILABLE_EVENT = ["create", "update", "delete", "load"];
 
-export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
+export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}, triggers) {
     const database = opts.databaseTable || {};
     const dynamicModels = opts.dynamicModels || [];
     const store = new RecordStore(Object.keys(modelDefs), opts.databaseIndex);
@@ -138,7 +138,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         getBy() {
-            return this.readBy(...arguments);
+            // return this.readBy(...arguments);
+            return this.find((r) => r[arguments[0]] === arguments[1]);
         }
 
         get() {
@@ -305,8 +306,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return { rawData, uiState, extraFields, dataToConnect };
         }
 
-        _create(vals, opts = {}) {
-            const { connectRecords = true, serverData = false, delaySetup = false } = opts;
+        _create(vals, options = {}) {
+            const { connectRecords = true, serverData = false, delaySetup = false } = options;
             const { rawData, uiState, extraFields, dataToConnect } = this._sanitizeRawData(vals, {
                 serverData,
                 connectRecords,
@@ -327,12 +328,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             if (dataToConnect) {
                 this._connectRecords(record, dataToConnect);
             }
-
+            update.fire = false;
             if (!delaySetup) {
                 setupRecord(record, vals, uiState);
-                record.model.triggerEvents("create", { ids: [record.id] });
+                record.model.triggerEvents("create", { ids: [record.id], vals, rawData });
+                update.fire = true;
                 return record;
             }
+            // record.model.triggerEvents("create", { ids: [record.id], vals, rawData });
+            update.fire = true;
             return { record, uiState };
         }
 
@@ -443,13 +447,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 this[STORE_SYMBOL].remove(record);
                 this[STORE_SYMBOL].add(record);
             }
-
-            aggregatedUpdates.fireEventAndDirty({
-                silentModels: opts.silent ? [record.model.name] : [],
-            });
+            if (!opts.silent && update.fire) {
+                aggregatedUpdates.fireEventAndDirty({
+                    // silentModels: opts.silent ? [record.model.name] : [],
+                });
+            }
         }
 
         _delete(record, opts = {}) {
+            console.log("start_delete");
             const id = record.id;
             const ownFields = getFields(this.name);
             const handleCommand = (inverse, field, record, backend = false) => {
@@ -521,7 +527,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return serialized;
         }
     }
-
+    // FIXME: this is just a hack
+    const update = { fire: true };
     class Models {
         constructor(processedModelDefs) {
             Object.assign(
@@ -630,11 +637,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         if (!isUpdate) {
                             createdIds.push(record.id);
                         } else {
+                            // TODO: when does this fire and when does fireEventAndDirty fire ?
                             modelEvents.triggerEvents("update", { id: record.id });
                         }
                         resultsArray.push(record);
                     }
-                    modelEvents.triggerEvents("create", { ids: createdIds });
+                    modelEvents.triggerEvents("load", { ids: createdIds });
                 }
                 return finalResults;
             } finally {

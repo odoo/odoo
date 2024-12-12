@@ -1,8 +1,6 @@
 /* global waitForWebfonts */
 
-import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw, reactive } from "@odoo/owl";
-import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { deduceUrl, random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
@@ -25,7 +23,6 @@ import {
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -35,8 +32,6 @@ import { SelectionPopup } from "../components/popups/selection_popup/selection_p
 import { user } from "@web/core/user";
 import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
-import { debounce } from "@web/core/utils/timing";
-import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
 
@@ -98,7 +93,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
         this.unwatched = markRaw({});
-        this.pushOrderMutex = new Mutex();
 
         // Object mapping the order's name (which contains the uuid) to it's server_id after
         // validation (order paid then sent to the backend).
@@ -117,14 +111,6 @@ export class PosStore extends WithLazyGetterTrap {
                 offsetBySearch: {},
             },
         };
-        // Handle offline mode
-        // All of Set of ids
-        this.pendingOrder = {
-            write: new Set(),
-            delete: new Set(),
-            create: new Set(),
-        };
-
         this.hardwareProxy = hardware_proxy;
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
@@ -140,13 +126,11 @@ export class PosStore extends WithLazyGetterTrap {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
-        this.syncingOrders = new Set();
         await this.initServerData();
         if (this.config.useProxy) {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
-        this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
     }
 
@@ -270,12 +254,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         try {
-            const paidOrderNotSynced = this.models["pos.order"].filter(
-                (order) => order.state === "paid" && order.id !== "number"
-            );
-            this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
-            await this.syncAllOrders({ throw: true });
-
             this.dialog.add(AlertDialog, {
                 title: _t("Closing Session"),
                 body: _t("The session is being closed by another user. The page will be reloaded."),
@@ -323,16 +301,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
-        const models = Object.keys(this.models);
-        const dynamicModels = this.data.opts.dynamicModels;
-        const staticModels = models.filter((model) => !dynamicModels.includes(model));
-        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
-
-        this.deviceSync = deviceSync;
-        this.data.deviceSync = deviceSync;
-
-        await this.deviceSync.readDataFromServer();
-
         // Check cashier
         this.checkPreviousLoggedCashier();
 
@@ -357,10 +325,10 @@ export class PosStore extends WithLazyGetterTrap {
 
         // Monitor product pricelist
         this.models["product.product"].addEventListener(
-            "create",
+            "load",
             this.computeProductPricelistCache.bind(this)
         );
-        this.models["product.pricelist.item"].addEventListener("create", () => {
+        this.models["product.pricelist.item"].addEventListener("load", () => {
             const order = this.getOrder();
             if (!order) {
                 return;
@@ -422,7 +390,10 @@ export class PosStore extends WithLazyGetterTrap {
             const nbrProduct = products.length;
 
             for (let i = 0; i < nbrProduct - 1; i++) {
-                products[i].available_in_pos = false;
+                // FIXME
+                // this.data.withoutSyncing(() => {
+                //     products[i].available_in_pos = false;
+                // });
             }
         }
     }
@@ -443,7 +414,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
         const orderIsDeleted = await this.deleteOrders([order]);
         if (orderIsDeleted) {
-            order.uiState.displayed = false;
+            // order.uiState.displayed = false;
             await this.afterOrderDeletion();
         }
         return orderIsDeleted;
@@ -452,39 +423,32 @@ export class PosStore extends WithLazyGetterTrap {
         this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
     }
 
-    async deleteOrders(orders, serverIds = [], ignoreChange = false) {
-        const ids = new Set();
+    async deleteOrders(orders, ignoreChange = false) {
+        // const ids = new Set();
         for (const order of orders) {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     !ignoreChange &&
-                    typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0
+                    this.models["pos.preparation.order"].find(
+                        (change) => change.order_id.id === order.id
+                    )
                 ) {
-                    await this.sendOrderInPreparation(order, { cancelled: true, orderDone: true });
-                }
-
-                const cancelled = this.removeOrder(order, false);
-                this.removePendingOrder(order);
-                if (!cancelled) {
-                    return false;
-                } else if (typeof order.id === "number") {
-                    ids.add(order.id);
+                    await this.sendOrderInPreparation(order);
                 }
             }
         }
+        // TODO: how can we make this work offline too ?
+        // Maybe we can just move the python code here
+        // if (ids.size > 0) {
+        // await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+        // }
+        // await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
 
-        if (serverIds.length > 0) {
-            for (const id of serverIds) {
-                if (typeof id !== "number") {
-                    continue;
-                }
-                ids.add(id);
-            }
-        }
-
-        if (ids.size > 0) {
-            await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+        // FIXME:
+        for (const order of orders) {
+            // order.active = false;
+            // order.update({ active: false });
+            order.state = "cancel";
         }
 
         return true;
@@ -523,21 +487,11 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async afterProcessServerData() {
-        // Adding the not synced paid orders to the pending orders
-        const paidUnsyncedOrderIds = this.models["pos.order"]
-            .filter((order) => order.isUnsyncedPaid)
-            .map((order) => order.id);
-
-        if (paidUnsyncedOrderIds.length > 0) {
-            this.addPendingOrder(paidUnsyncedOrderIds);
-        }
-
         this.data.models["pos.order"]
             .filter((order) => order._isResidual)
             .forEach((order) => (order.state = "cancel"));
 
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
-        this.syncAllOrders();
 
         if (!this.config.module_pos_restaurant) {
             this.selectedOrderUuid = openOrders.length
@@ -547,7 +501,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.markReady();
         this.showScreen(this.firstScreen);
-        await this.deviceSync.readDataFromServer();
         if (this.config.customer_display_type !== "none") {
             openCustomerDisplay(
                 this.getDisplayDeviceIP(),
@@ -946,7 +899,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.hasJustAddedProduct = false;
         }, 3000);
 
-        this.addPendingOrder([order.id]);
         return order.getSelectedOrderline();
     }
 
@@ -981,33 +933,10 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     /**
-     * Remove the order passed in params from the list of orders
-     * @param order
-     */
-    removeOrder(order, removeFromServer = true) {
-        if (this.config.isShareable || removeFromServer) {
-            if (typeof order.id === "number" && !order.finalized) {
-                this.addPendingOrder([order.id], true);
-                this.syncAllOrdersDebounced();
-            }
-        }
-
-        if (typeof order.id === "string" && order.finalized) {
-            this.addPendingOrder([order.id]);
-            return;
-        }
-
-        return this.data.localDeleteCascade(order);
-    }
-
-    /**
      * Return the current cashier (in this case, the user)
      * @returns {name: string, id: int, role: string}
      */
     getCashier() {
-        if (!this.user.role) {
-            this.user.role = this.user.raw.role;
-        }
         return this.user;
     }
     getCashierUserId() {
@@ -1038,7 +967,6 @@ export class PosStore extends WithLazyGetterTrap {
             pos_reference: "",
             ...data,
         });
-
         this.getNextOrderRefs(order);
         order.setPricelist(this.config.pricelist_id);
 
@@ -1060,6 +988,26 @@ export class PosStore extends WithLazyGetterTrap {
         this.mobile_pane = "right";
         return order;
     }
+
+    // /* ---- Screen Status --- */
+    // // the order also stores the screen status, as the PoS supports
+    // // different active screens per order. This method is used to
+    // // store the screen status.
+    // getOrderScreen(order) {
+    //     if (order.finalized) {
+    //         return "";
+    //     }
+
+    //     if (this.orderScreenMap?.[order.id]) {
+    //         return this.orderScreenMap[order.id];
+    //     }
+
+    //     return order.payment_ids.length > 0 ? "PaymentScreen" : "ProductScreen";
+    // }
+    // setOrderScreen(order, screen) {
+    //     this.orderScreenMap ||= {};
+    //     this.orderScreenMap[order.id] = screen;
+    // }
     createOrderIfNeeded(data) {
         return this.createNewOrder(data);
     }
@@ -1085,7 +1033,7 @@ export class PosStore extends WithLazyGetterTrap {
                 throw error;
             }
         } finally {
-            this.data.synchronizeLocalDataInIndexedDB();
+            // this.data.synchronizeLocalDataInIndexedDB();
         }
     }
     /**
@@ -1115,161 +1063,17 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    addPendingOrder(orderIds, remove = false) {
-        if (remove) {
-            for (const id of orderIds) {
-                this.pendingOrder["create"].delete(id);
-                this.pendingOrder["write"].delete(id);
-            }
-
-            this.pendingOrder["delete"].add(...orderIds);
-            return true;
-        }
-
-        for (const id of orderIds) {
-            if (typeof id === "number") {
-                this.pendingOrder["write"].add(id);
-            } else {
-                this.pendingOrder["create"].add(id);
-            }
-        }
-
-        return true;
-    }
-
-    getPendingOrder() {
-        const orderToCreate = this.models["pos.order"].filter(
-            (order) =>
-                this.pendingOrder.create.has(order.id) && this.shouldCreatePendingOrder(order)
-        );
-        const orderToUpdate = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.write)
-        );
-        const orderToDelele = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.delete)
-        );
-
-        return {
-            orderToDelele,
-            orderToCreate,
-            orderToUpdate,
-        };
-    }
-
-    shouldCreatePendingOrder(order) {
-        return (
-            order.lines.length > 0 ||
-            order.payment_ids.some((p) => p.payment_method_id.type === "pay_later")
-        );
-    }
-
-    getOrderIdsToDelete() {
-        return [...this.pendingOrder.delete];
-    }
-
-    removePendingOrder(order) {
-        this.pendingOrder["create"].delete(order.id);
-        this.pendingOrder["write"].delete(order.id);
-        this.pendingOrder["delete"].delete(order.id);
-        return true;
-    }
-
-    clearPendingOrder() {
-        this.pendingOrder = {
-            create: new Set(),
-            write: new Set(),
-            delete: new Set(),
-        };
-    }
-
-    getSyncAllOrdersContext(orders, options = {}) {
-        return {
-            config_id: this.config.id,
-            login_number: odoo.login_number,
-            ...(options.context || {}),
-        };
-    }
-
-    // There for override
-    preSyncAllOrders(orders) {}
-    postSyncAllOrders(orders) {}
-    async syncAllOrders(options = {}) {
-        const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-        let orders = options.orders || [...orderToCreate, ...orderToUpdate];
-
-        // Filter out orders that are already being synced
-        orders = orders.filter(
-            (order) => !this.syncingOrders.has(order.id) && (order.isDirty() || options.force)
-        );
-
-        try {
-            const orderIdsToDelete = this.getOrderIdsToDelete();
-            if (orderIdsToDelete.length > 0) {
-                await this.deleteOrders([], orderIdsToDelete);
-            }
-
-            const context = this.getSyncAllOrdersContext(orders, options);
-            this.preSyncAllOrders(orders);
-
-            if (orders.length === 0) {
-                return;
-            }
-
-            // Add order IDs to the syncing set
-            orders.forEach((order) => this.syncingOrders.add(order.id));
-
-            // Re-compute all taxes, prices and other information needed for the backend
-            for (const order of orders) {
-                order.recomputeOrderData();
-            }
-
-            const serializedOrder = orders.map((order) => order.serializeForORM());
-            const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
-                context,
-            });
-            const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadConnectedData(missingRecords);
-
-            for (const line of newData["pos.order.line"]) {
-                const refundedOrderLine = line.refunded_orderline_id;
-
-                if (refundedOrderLine && ["paid", "done"].includes(line.order_id.state)) {
-                    const order = refundedOrderLine.order_id;
-                    if (order) {
-                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
-                    }
-                }
-            }
-
-            this.postSyncAllOrders(newData["pos.order"]);
-
-            if (data["pos.session"].length > 0) {
-                // Replace the original session by the rescue one. And the rescue one will have
-                // a higher id than the original one since it's the last one created.
-                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
-                this.models["pos.order"]
-                    .getAll()
-                    .filter((order) => order.state === "draft")
-                    .forEach((order) => (order.session_id = this.session));
-            }
-
-            this.clearPendingOrder();
-            return newData["pos.order"];
-        } catch (error) {
-            if (options.throw) {
-                throw error;
-            }
-            console.warn("Offline mode active, order will be synced later");
-            return error;
-        } finally {
-            orders.forEach((order) => this.syncingOrders.delete(order.id));
-        }
-    }
-
-    pushSingleOrder(order) {
-        return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
-    }
+    // TODO: what to do about rescue sessions
+    //     if (data["pos.session"].length > 0) {
+    //         // Replace the original session by the rescue one. And the rescue one will have
+    //         // a higher id than the original one since it's the last one created.
+    //         const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
+    //         session.delete();
+    //         this.models["pos.order"]
+    //             .getAll()
+    //             .filter((order) => order.state === "draft")
+    //             .forEach((order) => (order.session_id = this.session));
+    //     }
 
     async pay() {
         const currentOrder = this.getOrder();
@@ -1290,33 +1094,15 @@ export class PosStore extends WithLazyGetterTrap {
                     "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
                 ),
             });
-            if (confirmed) {
-                this.mobile_pane = "right";
-                this.showScreen("PaymentScreen", {
-                    orderUuid: this.selectedOrderUuid,
-                });
+            if (!confirmed) {
+                return;
             }
-        } else {
-            this.mobile_pane = "right";
-            this.showScreen("PaymentScreen", {
-                orderUuid: this.selectedOrderUuid,
-            });
         }
-    }
-    async getServerOrders() {
-        await this.syncAllOrders();
-        return await this.loadServerOrders([
-            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
-            ["state", "=", "draft"],
-        ]);
-    }
-    async loadServerOrders(domain) {
-        const orders = await this.data.searchRead("pos.order", domain);
-        for (const order of orders) {
-            order.config_id = this.config;
-            order.session_id = this.session;
-        }
-        return orders;
+        this.mobile_pane = "right";
+        // this.setOrderScreen(currentOrder, "PaymentScreen");
+        this.showScreen("PaymentScreen", {
+            orderUuid: this.selectedOrderUuid,
+        });
     }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();
@@ -1392,44 +1178,16 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.getOrder()) {
             this.getOrder().updateSavedQuantity();
         }
+        // if (!order.uuid) {
+        //     order.uuid = order.id;
+        //     order.update({ uuid: order.uuid });
+        // }
         this.selectedOrderUuid = order?.uuid;
     }
 
     // return the list of unpaid orders
     getOpenOrders() {
         return this.models["pos.order"].filter((o) => !o.finalized);
-    }
-
-    // To be used in the context of closing the POS
-    // Saves the order locally and try to send it to the backend.
-    // If there is an error show a popup
-    async pushOrdersWithClosingPopup(opts = {}) {
-        try {
-            await this.syncAllOrders(opts);
-            return true;
-        } catch (error) {
-            console.warn(error);
-            const reason = this.failed
-                ? _t(
-                      "Some orders could not be submitted to " +
-                          "the server due to configuration errors. " +
-                          "You can exit the Point of Sale, but do " +
-                          "not close the session before the issue " +
-                          "has been resolved."
-                  )
-                : _t(
-                      "Some orders could not be submitted to " +
-                          "the server due to internet connection issues. " +
-                          "You can exit the Point of Sale, but do " +
-                          "not close the session before the issue " +
-                          "has been resolved."
-                  );
-            await ask(this.dialog, {
-                title: _t("Offline Orders"),
-                body: reason,
-            });
-            return false;
-        }
     }
 
     /**
@@ -1518,204 +1276,41 @@ export class PosStore extends WithLazyGetterTrap {
             },
             { webPrintFallback: true }
         );
-        if (!printBillActionTriggered) {
+        if (!printBillActionTriggered && result) {
             order.nb_print += 1;
-            if (typeof order.id === "number" && result) {
-                await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
-            }
         }
         return true;
     }
-    getOrderChanges(order = this.getOrder()) {
-        return getOrderChanges(order, this.config.preparationCategories);
+    createPosPreparationOrder(order) {
+        return this.data.models["pos.preparation.order"].create(order.getPreparationOrderVals());
     }
-    changesToOrder(order, skipped = false, orderPreparationCategories, cancelled = false) {
-        return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
-    }
-    // Now the printer should work in PoS without restaurant
-    async sendOrderInPreparation(order, opts = {}) {
-        if (this.config.printerCategories.size && !opts.byPassPrint) {
-            try {
-                let reprint = false;
-                let orderChange = changesToOrder(
-                    order,
-                    this.config.preparationCategories,
-                    opts.cancelled
-                );
-
-                if (
-                    !orderChange.new.length &&
-                    !orderChange.cancelled.length &&
-                    !orderChange.noteUpdate.length &&
-                    !orderChange.internal_note &&
-                    !orderChange.general_customer_note &&
-                    order.uiState.lastPrint
-                ) {
-                    orderChange = order.uiState.lastPrint;
-                    reprint = true;
-                } else {
-                    order.uiState.lastPrint = orderChange;
-                }
-
-                if (reprint && opts.orderDone) {
-                    return;
-                }
-
-                this.printChanges(order, orderChange, reprint);
-            } catch (e) {
-                console.info("Failed in printing the changes in the order", e);
-            }
-        }
-        order.updateLastOrderChange();
-    }
-    async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
-        if (this.data.network.offline) {
-            this.data.network.warningTriggered = false;
-            throw new ConnectionLostError();
-        }
-        await this.sendOrderInPreparation(o, { cancelled });
-    }
-
-    generateOrderChange(order, orderChange, categories, reprint = false) {
-        const isPartOfCombo = (line) =>
-            line.isCombo || this.models["product.product"].get(line.product_id).type == "combo";
-        const comboChanges = orderChange.new.filter(isPartOfCombo);
-        const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
-        normalChanges.sort((a, b) => {
-            const sequenceA = a.pos_categ_sequence;
-            const sequenceB = b.pos_categ_sequence;
-            if (sequenceA === 0 && sequenceB === 0) {
-                return a.pos_categ_id - b.pos_categ_id;
-            }
-
-            return sequenceA - sequenceB;
-        });
-        orderChange.new = [...comboChanges, ...normalChanges];
-
-        const orderData = {
-            reprint: reprint,
-            pos_reference: order.getName(),
-            config_name: order.config_id.name,
-            time: DateTime.now().toFormat("HH:mm"),
-            tracking_number: order.tracking_number,
-            preset_name: order.preset_id?.name || "",
-            preset_time: order.presetDateTime,
-            employee_name: order.employee_id?.name || order.user_id?.name,
-            internal_note: order.internal_note,
-            general_customer_note: order.general_customer_note,
-            changes: {
-                title: "",
-                data: [],
-            },
-        };
-
-        const changes = this.filterChangeByCategories(categories, orderChange);
-        return { orderData, changes };
-    }
-
-    async printChanges(order, orderChange, reprint = false) {
-        const unsuccedPrints = [];
-
-        for (const printer of this.unwatched.printers) {
-            const { orderData, changes } = this.generateOrderChange(
-                order,
-                orderChange,
-                printer.config.product_categories_ids,
-                reprint
-            );
-
-            if (changes.new.length) {
-                orderData.changes = {
-                    title: _t("NEW"),
-                    data: changes.new,
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-            }
-
-            if (changes.cancelled.length) {
-                orderData.changes = {
-                    title: _t("CANCELLED"),
-                    data: changes.cancelled,
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-            }
-
-            if (changes.noteUpdate.length) {
-                const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
-                orderData.changes = {
-                    title: noteUpdateTitle || _t("NOTE UPDATE"),
-                    data: printNoteUpdateData ? changes.noteUpdate : [],
-                };
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-                orderData.changes.noteUpdate = [];
-            }
-
-            if (orderChange.internal_note || orderChange.general_customer_note) {
-                orderData.changes = {};
-                const result = await this.printOrderChanges(orderData, printer);
-                if (!result.successful) {
-                    unsuccedPrints.push(printer.config.name);
-                }
-            }
-        }
-
-        // printing errors
-        if (unsuccedPrints.length) {
-            const failedReceipts = unsuccedPrints.join(", ");
+    sendOrderInPreparation(order) {
+        // this.createPosPreparationOrder(order);
+        // this.dialog.add(AlertDialog, {
+        //     title: _t("Printing failed"),
+        //     body: _t("Failed in printing the changes of the order"),
+        // });
+        // return;
+        const preparationOrder = this.createPosPreparationOrder(order);
+        if (this.unwatched.printers.length === 0) {
             this.dialog.add(AlertDialog, {
                 title: _t("Printing failed"),
-                body: _t("Failed in printing %s changes of the order", failedReceipts),
+                body: _t("Failed in printing the changes of the order"),
             });
         }
-    }
-
-    async printOrderChanges(data, printer) {
-        const dataChanges = data.changes?.data;
-        if (dataChanges && dataChanges.some((c) => c.group)) {
-            const groupedData = dataChanges.reduce((acc, c) => {
-                const { name = "", index = -1 } = c.group || {};
-                if (!acc[name]) {
-                    acc[name] = { name, index, data: [] };
-                }
-                acc[name].data.push(c);
-                return acc;
-            }, {});
-            data.changes.groupedData = Object.values(groupedData).sort((a, b) => a.index - b.index);
-        }
-        const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
-            data: data,
-        });
-        return await printer.printReceipt(receipt);
-    }
-
-    filterChangeByCategories(categories, currentOrderChange) {
-        const filterFn = (change) => {
-            const product = this.models["product.product"].get(change["product_id"]);
-            const categoryIds = product.parentPosCategIds;
-
-            for (const categoryId of categoryIds) {
-                if (categories.includes(categoryId)) {
-                    return true;
-                }
+        for (const printer of this.unwatched.printers) {
+            const result = preparationOrder.print(printer);
+            if (!result) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Printing failed"),
+                    body: _t("Failed in printing the changes of the order"),
+                });
             }
-        };
-
-        return {
-            new: currentOrderChange["new"].filter(filterFn),
-            cancelled: currentOrderChange["cancelled"].filter(filterFn),
-            noteUpdate: currentOrderChange["noteUpdate"].filter(filterFn),
-        };
+        }
     }
-
+    getOrderChanges(order = this.getOrder()) {
+        return order.getChanges();
+    }
     closeScreen() {
         this.showOrderScreen(false);
     }
@@ -1723,10 +1318,13 @@ export class PosStore extends WithLazyGetterTrap {
     showOrderScreen(forceEmpty = false) {
         this.addOrderIfEmpty(forceEmpty);
         if (this.mainScreen.component === PaymentScreen) {
+            // this.setOrderScreen(this.getOrder(), "PaymentScreen");
             this.getOrder().setScreenData({ name: "PaymentScreen", props: {} });
+
             this.showScreen("ProductScreen");
             return;
         }
+        // const screenName = this.getOrderScreen(this.getOrder());
         const { name: screenName } = this.getOrder().getScreenData();
         const props = {};
         if (screenName === "PaymentScreen") {
@@ -1856,11 +1454,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        // If there are orders in the db left unsynced, we try to sync.
-        const syncSuccess = await this.pushOrdersWithClosingPopup();
-        if (syncSuccess) {
-            this.redirectToBackend();
-        }
+        this.redirectToBackend();
     }
     async selectPricelist(pricelist) {
         await this.getOrder().setPricelist(pricelist);
@@ -2179,7 +1773,14 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     redirectToBackend() {
+        // TODO: what we have to do is that when the window.location changes or when the
+        // user tries to reload we automatically perform a flush
         window.location = "/odoo/action-point_of_sale.action_client_pos_menu";
+        // this.data.flush().then((successfulFlush) => {
+        //     if (successfulFlush) {
+        //         window.location = "/odoo/action-point_of_sale.action_client_pos_menu";
+        //     }
+        // });
     }
 
     getDisplayDeviceIP() {

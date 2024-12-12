@@ -120,6 +120,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.clickReview(),
             ProductScreen.clickControlButton("Cancel Order"),
             Chrome.noFloatingOrder("006"),
+            Chrome.endTour(),
         ].flat(),
 });
 

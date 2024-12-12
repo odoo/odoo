@@ -5,6 +5,7 @@ import { random5Chars } from "@point_of_sale/utils";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
+import { unique } from "@web/core/utils/arrays";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -27,21 +28,6 @@ export class PosOrder extends Base {
         this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
         this.state = vals.state || "draft";
-
-        if (!vals.last_order_preparation_change) {
-            this.last_order_preparation_change = {
-                lines: {},
-                general_customer_note: "",
-                internal_note: "",
-                sittingMode: 0,
-            };
-        } else {
-            this.last_order_preparation_change =
-                typeof vals.last_order_preparation_change === "object"
-                    ? vals.last_order_preparation_change
-                    : JSON.parse(vals.last_order_preparation_change);
-        }
-
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
 
@@ -271,52 +257,10 @@ export class PosOrder extends Base {
     }
 
     get hasChange() {
-        return this.lines.some((l) => l.uiState.hasChange);
+        return this.getChanges().nbrOfChanges;
     }
-    /**
-     * This function is called after the order has been successfully sent to the preparation tool(s).
-     * In the future, this status should be separated between the different preparation tools,
-     * so that if one of them returns an error, it is possible to send the information back to it
-     * without impacting the other tools.
-     */
-    updateLastOrderChange() {
-        const orderlineIdx = [];
-        this.lines.forEach((line) => {
-            orderlineIdx.push(line.preparationKey);
-
-            if (this.last_order_preparation_change.lines[line.preparationKey]) {
-                this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
-                    line.getQuantity();
-                this.last_order_preparation_change.lines[line.preparationKey]["note"] =
-                    line.getNote();
-            } else {
-                this.last_order_preparation_change.lines[line.preparationKey] = {
-                    attribute_value_names: line.attribute_value_ids.map((a) => a.name),
-                    uuid: line.uuid,
-                    isCombo: line.combo_item_id?.id,
-                    product_id: line.getProduct().id,
-                    name: line.getFullProductName(),
-                    basic_name: line.getProduct().name,
-                    display_name: line.getProduct().display_name,
-                    note: line.getNote(),
-                    quantity: line.getQuantity(),
-                };
-            }
-            line.setHasChange(false);
-        });
-        // Checks whether an orderline has been deleted from the order since it
-        // was last sent to the preparation tools or updated. If so we delete older changes.
-        for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
-            const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
-            const lineNote = orderline?.note;
-            const changeNote = change?.note;
-            if (!orderline || (lineNote && changeNote && changeNote.trim() !== lineNote.trim())) {
-                delete this.last_order_preparation_change.lines[key];
-            }
-        }
-        this.last_order_preparation_change.general_customer_note = this.general_customer_note;
-        this.last_order_preparation_change.internal_note = this.internal_note;
-        this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
+    isDisplayed() {
+        return this.state !== "cancel";
     }
 
     isEmpty() {
@@ -880,17 +824,6 @@ export class PosOrder extends Base {
         return this.lines;
     }
 
-    serializeForORM() {
-        const data = super.serializeForORM();
-        if (
-            data.last_order_preparation_change &&
-            typeof data.last_order_preparation_change === "object"
-        ) {
-            data.last_order_preparation_change = JSON.stringify(data.last_order_preparation_change);
-        }
-        return data;
-    }
-
     getCustomerDisplayData() {
         return {
             lines: this.getSortedOrderlines().map((l) => ({
@@ -909,7 +842,7 @@ export class PosOrder extends Base {
         };
     }
     get floatingOrderName() {
-        return this.floating_order_name || this.tracking_number.toString() || "";
+        return this.floating_order_name || this.tracking_number?.toString?.() || "";
     }
 
     sortBySequenceAndCategory(a, b) {
@@ -966,6 +899,58 @@ export class PosOrder extends Base {
 
     get showChange() {
         return !this.currency.isZero(this.orderChange) && this.finalized;
+    }
+    getPreparationOrderVals(preparationCategories = this.config_id.preparationCategories) {
+        const alreadyPreparedOrderLines = this.models["pos.preparation.orderline"].filter(
+            (line) => line.preparation_order_id?.order_id?.id === this.id
+        );
+        const preparedQuantitiesMap = Object.fromEntries(
+            unique(
+                alreadyPreparedOrderLines
+                    .map((line) => line.pos_orderline_id.id)
+                    .map((id) => [
+                        id,
+                        alreadyPreparedOrderLines
+                            .filter((line) => line.pos_orderline_id.id === id)
+                            .reduce((acc, line) => acc + line.qty, 0),
+                    ])
+            )
+        );
+        // TODO: take notes into account
+        const preparation_line_ids = this.lines
+            .map((line) =>
+                // Object.fromEntries([
+                //     ["pos_orderline_id", line],
+                //     [
+                //         "qty",
+                //         // alreadyPreparedOrderLines
+                //         //     .filter((preparedLine) => preparedLine.pos_orderline_id.id === line.id)
+                //         //     .reduce((acc, preparationLine) => acc - preparationLine.qty, line.qty),
+                //         line.qty - (preparedQuantitiesMap[line.id] || 0),
+                //     ],
+                // ])
+                ({
+                    pos_orderline_id: line,
+                    qty: line.qty - (preparedQuantitiesMap[line.id] || 0),
+                })
+            )
+            // .filter((preparationLine) => preparationLine.qty !== 0 && preparationLine.note !== );
+            .filter((preparationLine) => preparationLine.qty !== 0);
+        return {
+            order_id: this,
+            preparation_line_ids: preparation_line_ids.map((record) => ["create", record]),
+        };
+    }
+    getChanges(preparationCategories = this.config_id.preparationCategories) {
+        const preparationOrderVals = this.getPreparationOrderVals(preparationCategories);
+        return {
+            nbrOfChanges: preparationOrderVals.preparation_line_ids
+                .map(([_, line]) => Math.abs(line.qty))
+                .reduce((acc, qty) => acc + qty, 0),
+            noteUpdate: "",
+            // orderlines: changes,
+            count: 2,
+        };
     }
 }
 

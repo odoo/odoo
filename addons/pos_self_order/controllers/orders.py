@@ -35,7 +35,7 @@ class PosSelfOrderController(http.Controller):
         order['fiscal_position_id'] = preset_id.fiscal_position_id.id if preset_id else pos_config.default_fiscal_position_id.id
         order['pricelist_id'] = preset_id.pricelist_id.id if preset_id else pos_config.pricelist_id.id
 
-        results = pos_config.env['pos.order'].sudo().with_context(from_self=True).with_company(pos_config.company_id.id).sync_from_ui([order])
+        results = pos_config.env['pos.order'].sudo().with_context(from_self=True).with_company(pos_config.company_id.id).create([order])
         line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
 

@@ -1,9 +1,16 @@
-from odoo import models, api
+from odoo import api, fields, models
 
 
 class ResUsers(models.Model):
     _name = 'res.users'
     _inherit = ['res.users', 'pos.load.mixin']
+
+    role = fields.Selection([('manager', 'Manager'), ('cashier', 'Cashier')], string='Role', compute='_compute_role')
+
+    @api.depends('group_ids')
+    def _compute_role(self):
+        for user in self:
+            user.role = 'manager' if self.env.ref('point_of_sale.group_pos_manager') in user.group_ids else 'cashier'
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -11,7 +18,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'partner_id', 'all_group_ids']
+        return ['id', 'name', 'partner_id', 'all_group_ids', 'role']
 
     def _load_pos_data(self, data):
         user = super()._load_pos_data(data)

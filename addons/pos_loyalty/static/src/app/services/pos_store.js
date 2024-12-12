@@ -552,7 +552,7 @@ patch(PosStore.prototype, {
             rule.validProductIds = new Set(rule.raw.valid_product_ids);
         }
 
-        this.models["loyalty.card"].addEventListener("create", (records) => {
+        this.models["loyalty.card"].addEventListener("load", (records) => {
             records = records.ids.map((record) => this.models["loyalty.card"].get(record));
             this.computePartnerCouponIds(records);
         });
@@ -671,55 +671,5 @@ patch(PosStore.prototype, {
             );
         }
         return loyaltyCards;
-    },
-    /**
-     * IMPROVEMENT: It would be better to update the local order object instead of creating a new one.
-     *   - This way, we don't need to remember the lines linked to negative coupon ids and relink them after pushing the order.
-     */
-    preSyncAllOrders(orders) {
-        super.preSyncAllOrders(orders);
-
-        for (const order of orders) {
-            Object.assign(
-                this.couponByLineUuidCache,
-                order.lines.reduce((agg, line) => {
-                    if (line.coupon_id && line.coupon_id.id < 0) {
-                        return { ...agg, [line.uuid]: line.coupon_id.id };
-                    } else {
-                        return agg;
-                    }
-                }, {})
-            );
-            Object.assign(
-                this.rewardProductByLineUuidCache,
-                order.lines.reduce((agg, line) => {
-                    if (line._reward_product_id) {
-                        return { ...agg, [line.uuid]: line._reward_product_id.id };
-                    } else {
-                        return agg;
-                    }
-                }, {})
-            );
-        }
-    },
-    postSyncAllOrders(orders) {
-        super.postSyncAllOrders(orders);
-
-        for (const order of orders) {
-            for (const line of order.lines) {
-                if (line.uuid in this.couponByLineUuidCache) {
-                    line.coupon_id = this.models["loyalty.card"].get(
-                        this.couponByLineUuidCache[line.uuid]
-                    );
-                }
-            }
-            for (const line of order.lines) {
-                if (line.uuid in this.rewardProductByLineUuidCache) {
-                    line._reward_product_id = this.models["product.product"].get(
-                        this.rewardProductByLineUuidCache[line.uuid]
-                    );
-                }
-            }
-        }
     },
 });

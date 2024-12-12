@@ -42,11 +42,10 @@
                     <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(pos.mainScreen.component.name) and !pos.config.module_pos_restaurant" t-on-click="onClickScan">
                         <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
                     </button>
-                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none">
-                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" />
-                        <div t-if="this.pos.data.network.offline" class="fa fa-fw fa-chain-broken text-danger"/>
-                        <div t-else="" class="fa fa-fw fa-spin fa-circle-o-notch text-warning"/>
-                    </div>
+                    <div t-if="this.pos.data.network.offline" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none fa fa-fw fa-chain-broken text-danger"/>
+                    <!-- TODO: remove this line; it is needed for the tour, in order to be able to wait for the data to be synced before ending the tour -->
+                    <!-- Surely we can find a more convenient way to achieve the result -->
+                    <div t-esc="this.pos.data.queue.length" class="queue-length" />
                     <!-- No need to show the cashier name on small screens -->
                     <CashierName t-if="!ui.isSmall"/>
                     <Dropdown>
