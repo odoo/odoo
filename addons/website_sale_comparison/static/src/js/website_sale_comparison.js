@@ -112,6 +112,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 if (!productId) {
                     return;
                 }
+                // To display the hidden popover behind the model
+                self.el.classList.remove("o_bottom_fixed_element_hidden");
                 self._addNewProducts(productId).then(function () {
                     website_sale_utils.animateClone(
                         $('#comparelist .o_product_panel_header'),
@@ -123,6 +125,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             });
         } else {
             this.$('.o_comparelist_limit_warning').show();
+            this.el.classList.remove("o_bottom_fixed_element_hidden");
             $('#comparelist .o_product_panel_header').popover('show');
         }
     },
@@ -169,11 +172,10 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     _addNewProductsImpl: function (product_id) {
         var self = this;
         $('.o_product_feature_panel').addClass('d-md-block');
+        this._updateContent();
         if (!self.comparelist_product_ids.includes(product_id)) {
             self.comparelist_product_ids.push(product_id);
-            if (Object.prototype.hasOwnProperty.call(self.product_data, product_id)) {
-                self._updateContent();
-            } else {
+            if (!Object.prototype.hasOwnProperty.call(this.product_data, product_id)) {
                 return self._loadProducts([product_id]).then(function () {
                     self._updateContent();
                     self._updateCookie();
