@@ -101,7 +101,7 @@ class AccountChartTemplate(models.AbstractModel):
         field = self.env['ir.module.module']._fields['account_templates']
         modules = (
             self.env.cache.get_records(self.env['ir.module.module'], field)
-            or self.env['ir.module.module'].search([])
+            or self.env['ir.module.module'].sudo().search([])
         )
 
         return {
