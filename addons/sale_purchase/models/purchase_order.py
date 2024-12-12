@@ -11,11 +11,24 @@ class PurchaseOrder(models.Model):
         "Number of Source Sale",
         compute='_compute_sale_order_count',
         groups='sales_team.group_sale_salesman')
+    has_sale_order = fields.Boolean(
+        "Technical field for whether the purchase order has associated sale orders",
+        compute='_compute_has_sale_order')
 
     @api.depends('order_line.sale_order_id')
     def _compute_sale_order_count(self):
         for purchase in self:
             purchase.sale_order_count = len(purchase._get_sale_orders())
+
+    @api.depends('sale_order_count')
+    def _compute_has_sale_order(self):
+        for purchase in self:
+            purchase.has_sale_order = bool(purchase.sale_order_count)
+
+    @api.depends('order_line.sale_order_id.partner_shipping_id')
+    def _compute_dest_address_id(self):
+        for order in self:
+            order.dest_address_id = order._get_sale_orders().partner_shipping_id
 
     def action_view_sale_orders(self):
         self.ensure_one()

@@ -13,6 +13,9 @@
                     </div>
                 </button>
             </xpath>
+            <xpath expr="//field[@name='dest_address_id']" position="attributes">
+                <attribute name="readonly">state in ['cancel', 'done', 'purchase'] or has_sale_order</attribute>
+            </xpath>
         </field>
     </record>
 </data></odoo>
