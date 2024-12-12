@@ -722,7 +722,7 @@ class StockMoveLine(models.Model):
         lots = self.env['stock.lot'].create(lot_vals)
         for key, mls in key_to_mls.items():
             lot = lots[key_to_index[key]].with_prefetch(lots._ids)   # With prefetch to reconstruct the ones broke by accessing by index
-            mls.write({'lot_id': lot.id})
+            mls.with_prefetch(self._prefetch_ids).write({'lot_id': lot.id})
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         # To remove in master
