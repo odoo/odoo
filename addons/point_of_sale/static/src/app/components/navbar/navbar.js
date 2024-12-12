@@ -22,8 +22,6 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
 
-const { DateTime } = luxon;
-
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
     static components = {
@@ -34,7 +32,6 @@ export class Navbar extends Component {
         Input,
         Dropdown,
         DropdownItem,
-        SyncPopup,
         OrderTabs,
     };
     static props = {};
@@ -176,10 +173,6 @@ export class Navbar extends Component {
             }
 
             order.preset_time = data.slot.datetime;
-            if (data.slot.datetime > DateTime.now()) {
-                this.pos.addPendingOrder([order.id]);
-                await this.pos.syncAllOrders();
-            }
         }
     }
 

@@ -31,10 +31,11 @@ export function isCashMoveButtonHidden() {
     ];
 }
 export function endTour() {
-    return {
-        content: "Last tour step that avoids error mentioned in commit 443c209",
-        trigger: "body",
-    };
+    // return {
+    //     content: "Last tour step that avoids error mentioned in commit 443c209",
+    //     trigger: "body",
+    // };
+    return isQueueFlushed();
 }
 export function isSyncStatusConnected() {
     return {
@@ -153,4 +154,10 @@ export function freezeDateTime(millis) {
             },
         },
     ];
+}
+
+export function isQueueFlushed() {
+    return {
+        trigger: ".queue-length:contains(0)",
+    };
 }

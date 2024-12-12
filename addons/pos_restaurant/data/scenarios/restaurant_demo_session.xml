@@ -51,11 +51,6 @@
             <field name="full_product_name">Funghi</field>
         </record>
 
-        <record id="pos_payment_1" model="pos.payment" forcecreate="False">
-            <field name="payment_method_id" ref="pos_restaurant.payment_method" />
-            <field name="pos_order_id" ref="pos_closed_order_3_1" />
-            <field name="amount">14.0</field>
-        </record>
 
         <record id="pos_closed_order_3_2" model="pos.order" forcecreate="False">
             <field name="session_id" ref="pos_closed_session_3" />

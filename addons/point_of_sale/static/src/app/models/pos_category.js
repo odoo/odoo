@@ -33,7 +33,11 @@ export class PosCategory extends Base {
     get associatedProducts() {
         const allCategoryIds = this.getAllChildren().map((cat) => cat.id);
         const products = allCategoryIds.flatMap(
-            (catId) => this.models["product.template"].getBy("pos_categ_ids", catId) || []
+            // (catId) => this.models["product.template"].getBy("pos_categ_ids", catId) || []
+            (catId) =>
+                this.models["product.template"].filter((p) =>
+                    p.pos_categ_ids.map((c) => c.id).includes(catId)
+                ) || []
         );
         // Remove duplicates since owl doesn't like them.
         return Array.from(new Set(products));

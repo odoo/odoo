@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { constructFullProductName, uuidv4, constructAttributeString } from "@point_of_sale/utils";
+import { constructFullProductName, constructAttributeString } from "@point_of_sale/utils";
 import { Base } from "./related_models";
 import { parseFloat } from "@web/views/fields/parsers";
 import { formatFloat } from "@web/core/utils/numbers";
@@ -18,13 +18,8 @@ export class PosOrderline extends Base {
             this.delete();
             return;
         }
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
+        this.uuid = this.id;
         this.setFullProductName();
-
-        // Data that are not saved in the backend
-        this.uiState = {
-            hasChange: true,
-        };
     }
 
     setFullProductName() {
@@ -105,6 +100,7 @@ export class PosOrderline extends Base {
     }
 
     get session() {
+        // FIXME: this will not be correct when sharing floors between multiple sessions
         return this.models["pos.session"].getFirst();
     }
 
@@ -342,9 +338,9 @@ export class PosOrderline extends Base {
     merge(orderline) {
         this.order_id.assertEditable();
         this.setQuantity(this.getQuantity() + orderline.getQuantity());
-        this.update({
-            pack_lot_ids: [["link", ...orderline.pack_lot_ids]],
-        });
+        // this.update({
+        //     pack_lot_ids: [["link", ...orderline.pack_lot_ids]],
+        // });
     }
 
     prepareBaseLineForTaxesComputationExtraValues(customValues = {}) {
@@ -689,9 +685,6 @@ export class PosOrderline extends Base {
     setNote(note) {
         this.setDirty();
         this.note = note;
-    }
-    setHasChange(isChange) {
-        this.uiState.hasChange = isChange;
     }
     getDiscountStr() {
         return this.discount ? this.discount.toString() : "";
