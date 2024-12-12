@@ -924,7 +924,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         replenishment/orderpoint has a sensible planned reception date.
         """
         wh = self.env.user._get_default_warehouse_id()
-        #self.env['ir.config_parameter'].sudo().set_param('stock.visibility_days', '365')
         self.finished2.seller_ids = [Command.create({
             'partner_id': self.subcontractor_partner1.id,
             'delay': 0,
