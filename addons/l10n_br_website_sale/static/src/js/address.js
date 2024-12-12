@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import websiteSaleAddress from "@website_sale/js/address";
+// To Do: check can be moved to another module
+import portalAddress from "@portal/js/address";
 import { Component, useState } from "@odoo/owl";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { attachComponent } from "@web_editor/js/core/owl_utils";
@@ -30,8 +31,8 @@ class SelectMenuWrapper extends Component {
     }
 }
 
-websiteSaleAddress.include({
-    events: Object.assign({}, websiteSaleAddress.prototype.events, {
+portalAddress.include({
+    events: Object.assign({}, portalAddress.prototype.events, {
         'input input[name="zip"]': "_onChangeZip",
         "change .o_select_city": "_onChangeBrazilianCity",
     }),
