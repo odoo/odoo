@@ -598,6 +598,11 @@ export class SelfOrder extends Reactive {
         return orderAccessTokenSet;
     }
 
+    resetTableIdentifier() {
+        this.router.deleteTableIdentifier();
+        this.currentTable = null;
+    }
+
     initKioskData() {
         if (this.session && this.access_token) {
             this.ordering = true;
@@ -801,6 +806,9 @@ export class SelfOrder extends Reactive {
             } else if (error.data.name === "werkzeug.exceptions.NotFound") {
                 message = _t("Orders not found on server");
                 cleanOrders = true;
+            } else if (error?.data?.name === "odoo.exceptions.UserError") {
+                message = error.data.message;
+                this.resetTableIdentifier();
             }
         } else if (error instanceof ConnectionLostError) {
             message = _t("Connection lost, please try again later");
