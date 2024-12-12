@@ -1562,12 +1562,25 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "AutofillCashCount", login="pos_user")
 
     def test_lot(self):
+        default_warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.main_pos_config.company_id.id)], limit=1)
+        self.stock_location = default_warehouse.lot_stock_id
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'serial',
             'available_in_pos': True,
         })
+
+        lot1 = self.env['stock.lot'].create({
+            'name': '1001',
+            'product_id': self.product1.id,
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product1.id,
+            'inventory_quantity': 1,
+            'location_id': self.stock_location.id,
+            'lot_id': lot1.id
+        }).action_apply_inventory()
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotTour', login="pos_user")

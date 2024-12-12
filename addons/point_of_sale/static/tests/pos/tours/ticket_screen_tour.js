@@ -243,6 +243,10 @@ registry.category("web_tour.tours").add("LotTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product A"),
+            {
+                content: `check 1001 lot number in dropdown list`,
+                trigger: `.options-dropdown .option:contains("1001")`,
+            },
             ProductScreen.enterLotNumber("1"),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
             inLeftSide(
