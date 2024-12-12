@@ -12,7 +12,7 @@ from odoo.addons.mail.tools.discuss import Store
 class ResPartner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
-    _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
+    _inherit = ["res.partner", "mail.activity.mixin", "mail.thread.blacklist", "bus.listener.mixin"]
     _mail_flat_thread = False
 
     # override to add and order tracking
@@ -26,6 +26,7 @@ class ResPartner(models.Model):
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
     starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
+    im_status = fields.Char("IM Status", compute="_compute_im_status")
 
     @api.depends('contact_address')
     def _compute_contact_address_inline(self):
@@ -35,7 +36,20 @@ class ResPartner(models.Model):
             partner.contact_address_inline = re.sub(r'\n(\s|\n)*', ', ', partner.contact_address).strip().strip(',')
 
     def _compute_im_status(self):
-        super()._compute_im_status()
+        status_by_partner = {}
+        # sudo: partner can access their presences
+        for presence in self.user_ids.sudo().presence_id:
+            partner = presence.user_id.partner_id
+            if (
+                status_by_partner.get(partner, "offline") == "offline"
+                or presence.status == "online"
+            ):
+                status_by_partner[partner] = presence.status
+        for partner in self:
+            partner.im_status = status_by_partner.get(
+                partner,
+                "offline" if partner.user_ids else "im_partner"
+            )
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
         odoobot = self.env['res.partner'].browse(odoobot_id)
         if odoobot in self:
