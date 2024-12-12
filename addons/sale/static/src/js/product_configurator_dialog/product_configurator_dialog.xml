@@ -6,7 +6,8 @@
             <ProductList
                 t-if="this.state.optionalProducts.length"
                 products="this.state.optionalProducts"
-                areProductsOptional="true"/>
+                areProductsOptional="true"
+                options="this.props.options"/>
             <t t-set-slot="footer">
                 <button
                     name="sale_product_configurator_confirm_button"
