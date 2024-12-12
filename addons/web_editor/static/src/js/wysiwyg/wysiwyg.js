@@ -1543,13 +1543,14 @@ const Wysiwyg = Widget.extend({
                 return;
             }
             const $image = $(this.lastMediaClicked);
+            const imgTransformBtn = this.toolbar.el.querySelector('#image-transform');
             if ($image.data('transfo-destroy')) {
                 $image.removeData('transfo-destroy');
                 return;
             }
             $image.transfo({document: this.odooEditor.document});
             const mouseup = () => {
-                $('#image-transform').toggleClass('active', $image.is('[style*="transform"]'));
+                imgTransformBtn.classList.toggle('active', $image[0].matches('[style*="transform"]'));
             };
             $(this.odooEditor.document).on('mouseup', mouseup);
             const mousedown = mousedownEvent => {
@@ -1559,6 +1560,7 @@ const Wysiwyg = Widget.extend({
                 }
                 if ($(mousedownEvent.target).closest('#image-transform').length) {
                     $image.data('transfo-destroy', true).attr('style', ($image.attr('style') || '').replace(/[^;]*transform[\w:]*;?/g, ''));
+                    imgTransformBtn.classList.remove('active');
                 }
                 $image.trigger('content_changed');
             };
@@ -1903,6 +1905,7 @@ const Wysiwyg = Widget.extend({
             for (const button of this.toolbar.$el.find('#image-width div')) {
                 button.classList.toggle('active', e.target.style.width === button.id);
             }
+            this.toolbar.el.querySelector('#image-transform').classList.toggle('active', e.target.matches('[style*="transform"]'));
             this._updateMediaJustifyButton();
             this._updateFaResizeButtons();
         }
