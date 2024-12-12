@@ -227,6 +227,8 @@ export class ClosePosPopup extends Component {
                 });
                 this.pos.redirectToBackend();
             }
+        } finally {
+            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
         }
     }
     async handleClosingError(response) {

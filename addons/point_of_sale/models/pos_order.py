@@ -915,6 +915,9 @@ class PosOrder(models.Model):
                 (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
         return payment_moves
 
+    def _get_open_order(self, order):
+        return self.env["pos.order"].search([('uuid', '=', order.get('uuid'))], limit=1)
+
     @api.model
     def sync_from_ui(self, orders):
         """ Create and update Orders from the frontend PoS application.
@@ -932,18 +935,15 @@ class PosOrder(models.Model):
         order_ids = []
         session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
-            existing_draft_order = self.env["pos.order"].search(
-                ['&', ('id', '=', order.get('id', False)), ('state', '=', 'draft')], limit=1) if isinstance(order.get('id'), int) else False
+            existing_order = self._get_open_order(order)
 
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
-            if existing_draft_order:
-                order_ids.append(self._process_order(order, existing_draft_order))
-            else:
-                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order.get('name', False))])
-                if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):
-                    order_ids.append(self._process_order(order, False))
+            if existing_order and existing_order.state == 'draft':
+                order_ids.append(self._process_order(order, existing_order))
+            elif not existing_order:
+                order_ids.append(self._process_order(order, False))
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)

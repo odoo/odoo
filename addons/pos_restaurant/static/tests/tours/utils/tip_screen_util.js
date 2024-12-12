@@ -51,3 +51,11 @@ export function inputAmountIs(amount) {
         },
     ];
 }
+export function back() {
+    return [
+        {
+            trigger: ".tip-screen button:contains('Back')",
+            run: "click",
+        },
+    ];
+}

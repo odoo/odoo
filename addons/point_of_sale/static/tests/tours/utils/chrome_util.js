@@ -40,3 +40,6 @@ export function endTour() {
         trigger: "body",
     };
 }
+export function createFloatingOrder() {
+    return { trigger: ".pos-topheader .list-plus-btn", run: "click" };
+}

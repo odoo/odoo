@@ -47,6 +47,21 @@ patch(ReceiptScreen.prototype, {
         }
         return super.isResumeVisible(...arguments);
     },
+    resumeOrder() {
+        if (!this.pos.config.module_pos_restaurant) {
+            return super.resumeOrder(...arguments);
+        }
+        this.currentOrder.uiState.screen_data.value = "";
+        this.currentOrder.uiState.locked = true;
+        this.pos.showScreen("TicketScreen", {
+            stateOverride: {
+                search: {
+                    fieldName: "",
+                    searchTerm: "",
+                },
+            },
+        });
+    },
     //@override
     get nextScreen() {
         if (this.pos.config.module_pos_restaurant) {

@@ -344,12 +344,6 @@ export class TicketScreen extends Component {
             return this.state.selectedOrderlineIds[this.state.selectedOrder.id];
         }
     }
-    /**
-     * Override to conditionally show the new order button, or prevent order
-     * creation when leaving the screen.
-     *
-     * @returns {boolean}
-     */
     get allowNewOrders() {
         return true;
     }

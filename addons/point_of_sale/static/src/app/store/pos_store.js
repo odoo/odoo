@@ -169,6 +169,7 @@ export class PosStore extends Reactive {
         this.currency = this.data.models["res.currency"].getFirst();
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
+        this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
         // Add Payment Interface to Payment Method
         for (const pm of this.models["pos.payment.method"].getAll()) {
@@ -1030,23 +1031,9 @@ export class PosStore extends Reactive {
                 context,
             });
 
-            const modelToAdd = {};
-            const newData = {};
-            for (const [model, records] of Object.entries(data)) {
-                const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
-
-                if (!modelKey) {
-                    modelToAdd[model] = records;
-                    continue;
-                }
-
-                Object.assign(
-                    newData,
-                    this.models.replaceDataByKey(modelKey, { [model]: records })
-                );
-            }
-
-            for (const order of [...orders, ...newData["pos.order"]]) {
+            const missingRecords = await this.data.missingRecursive(data);
+            const newData = this.models.loadData(missingRecords);
+            for (const order of newData["pos.order"]) {
                 if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
                     this.addPendingOrder([order.id]);
                 } else {
@@ -1064,10 +1051,9 @@ export class PosStore extends Reactive {
                 }
             }
 
-            this.models.loadData(modelToAdd);
             this.postSyncAllOrders(newData["pos.order"]);
 
-            if (modelToAdd["pos.session"].length > 0) {
+            if (data["pos.session"].length > 0) {
                 // Replace the original session by the rescue one. And the rescue one will have
                 // a higher id than the original one since it's the last one created.
                 const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];

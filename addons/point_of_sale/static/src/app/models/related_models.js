@@ -293,7 +293,12 @@ export class Base {
     }
 }
 
-export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) {
+export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
+    const indexes = opts.databaseIndex || {};
+    const keyByModel = opts.databaseTable.reduce((acc, { name, key }) => {
+        acc[name] = key;
+        return acc;
+    }, {});
     const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
     const records = mapObj(processedModelDefs, () => reactive({}));
     const orderedRecords = mapObj(processedModelDefs, () => reactive([]));
@@ -833,51 +838,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
 
     const models = mapObj(processedModelDefs, (model, fields) => createCRUD(model, fields));
 
-    function replaceDataByKey(key, rawData) {
-        const newRecords = {};
-        for (const model in rawData) {
-            const uiState = {};
-            const rawDataIdx = rawData[model].map((r) => r[key]);
-            const rec = records[model];
-
-            for (const data of Object.values(rec)) {
-                const rawLine = rawData[model].find((r) => r[key] === data[key]);
-                if (rawLine) {
-                    for (const [f, p] of Object.entries(modelClasses[model]?.extraFields || {})) {
-                        if (X2MANY_TYPES.has(p.type)) {
-                            rawLine[f] = data[f]?.map((r) => r.id) || [];
-                            continue;
-                        }
-                        rawLine[f] = data[f]?.id || false;
-                    }
-                }
-
-                if (rawDataIdx.includes(data[key])) {
-                    if (data.uiState) {
-                        uiState[data[key]] = { ...data.uiState };
-                    }
-                    data.delete({ silent: true });
-                }
-            }
-
-            const data = rawData[model];
-            const newRec = this.loadData({ [model]: data });
-            for (const record of newRec[model]) {
-                if (uiState[record[key]]) {
-                    record.setupState(uiState[record[key]]);
-                }
-            }
-
-            if (!newRecords[model]) {
-                newRecords[model] = [];
-            }
-
-            newRecords[model].push(...newRec[model]);
-        }
-
-        return newRecords;
-    }
-
     /**
      * Load the data without the relations then link the related records.
      * @param {*} rawData
@@ -887,6 +847,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         const oldStates = {};
 
         for (const model in rawData) {
+            const modelKey = keyByModel[model] || "id";
+
             if (!oldStates[model]) {
                 oldStates[model] = {};
             }
@@ -915,11 +877,22 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
 
                 baseData[model][record.id] = record;
 
-                if (records[model][record.id]) {
-                    oldStates[model][record.id] = records[model][record.id].serializeState();
+                const oldRecord = models[model].indexedRecords[model][modelKey][record[modelKey]];
+                if (oldRecord) {
+                    oldStates[model][oldRecord[modelKey]] = oldRecord.serializeState();
+                    for (const [f, p] of Object.entries(modelClasses[model]?.extraFields || {})) {
+                        if (X2MANY_TYPES.has(p.type)) {
+                            record[f] = oldRecord[f]?.map((r) => r.id) || [];
+                            continue;
+                        }
+                        record[f] = oldRecord[f]?.id || false;
+                    }
                 }
 
                 const result = create(model, record, true, false, true);
+                if (oldRecord && oldRecord.id !== result.id) {
+                    oldRecord.delete();
+                }
 
                 if (!(model in results)) {
                     results[model] = [];
@@ -1001,9 +974,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         // Setup all records when relations are linked
         for (const { raw, record } of modelToSetup) {
             record.setup(raw);
+            const modelKey = keyByModel[record.model.modelName] || "id";
 
-            if (oldStates[record.model.modelName][record.id]) {
-                record.setupState(oldStates[record.model.modelName][record.id]);
+            if (oldStates[record.model.modelName][record[modelKey]]) {
+                record.setupState(oldStates[record.model.modelName][record[modelKey]]);
             }
         }
 
@@ -1080,7 +1054,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
 
     models.loadData = loadData;
     models.commands = commands;
-    models.replaceDataByKey = replaceDataByKey;
 
     return { models, records, indexedRecords, orderedRecords };
 }
