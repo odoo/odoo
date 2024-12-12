@@ -170,6 +170,7 @@ class ProductTemplate(models.Model):
     product_tooltip = fields.Char(compute='_compute_product_tooltip')
 
     is_favorite = fields.Boolean(string="Favorite")
+    _is_favorite_index = models.Index("(is_favorite) WHERE is_favorite IS TRUE")
 
     product_tag_ids = fields.Many2many(
         string="Tags", comodel_name='product.tag', relation='product_tag_product_template_rel'

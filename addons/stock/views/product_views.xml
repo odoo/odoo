@@ -537,7 +537,7 @@
             <field name="model">product.product</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <list sample="1" js_class="stock_report_list_view" duplicate="0">
+                <list sample="1" js_class="stock_report_list_view" duplicate="0" default_order="is_favorite desc, default_code, name, id">
                     <header>
                         <button name="%(action_inventory_at_date)d" invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))" string="Inventory at Date" type="action" class="btn-primary ms-1" display="always"/>
                     </header>

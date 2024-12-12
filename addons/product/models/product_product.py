@@ -17,7 +17,7 @@ class ProductProduct(models.Model):
     _description = "Product Variant"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'is_favorite desc, default_code, name, id'
+    _order = 'default_code, name, id'
     _check_company_domain = models.check_company_domain_parent_of
 
     # price_extra: catalog extra value only, sum of variant extra attributes
@@ -107,6 +107,9 @@ class ProductProduct(models.Model):
     # Ensure there is at most one active variant for each combination.
     # There could be no variant for a combination if using dynamic attributes.
     _combination_unique = models.UniqueIndex("(product_tmpl_id, combination_indices) WHERE active IS TRUE")
+
+    is_favorite = fields.Boolean(related='product_tmpl_id.is_favorite', readonly=True, store=True)
+    _is_favorite_index = models.Index("(is_favorite) WHERE is_favorite IS TRUE")
 
     @api.depends('image_variant_1920', 'image_variant_1024')
     def _compute_can_image_variant_1024_be_zoomed(self):
