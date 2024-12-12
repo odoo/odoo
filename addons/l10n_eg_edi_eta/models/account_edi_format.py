@@ -323,7 +323,7 @@ class AccountEdiFormat(models.Model):
                     if grouping_key
                 ],
                 'salesTotal': price_subtotal_before_discount,
-                'netTotal': self._l10n_eg_edi_round(tax_details['total_excluded'] + tax_details['delta_base_amount']),
+                'netTotal': self._l10n_eg_edi_round(tax_details['total_excluded'] + tax_details['delta_total_excluded']),
                 'total': self._l10n_eg_edi_round(tax_details['total_included']),
             })
             totals['discount_total'] += discount_amount
