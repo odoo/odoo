@@ -328,10 +328,28 @@ msgstr ""
 
 #. module: event_booth_sale
 #. odoo-python
+#: code:addons/event_booth_sale/models/product_template.py:0
+msgid ""
+"The \"service_tracking\" for the product template, %(product_template_name)s"
+" cannot be changed because one of its variants is assigned to the Event "
+"Booth Category, %(event_booth_category_name)s. The service_tracking must "
+"remain \"Event Booth\"."
+msgstr ""
+
+#. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 msgid ""
 "The following booths are unavailable, please remove them to continue : "
 "%(booth_names)s"
+msgstr ""
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/event_booth_category.py:0
+msgid ""
+"The product, %(product_name)s , is used for Event Booth, it must have "
+"service_tracking set to \"Event Booth\"."
 msgstr ""
 
 #. module: event_booth_sale
@@ -355,6 +373,15 @@ msgstr ""
 msgid ""
 "You can't delete the following booths as they are linked to sales orders: "
 "%(booths)s"
+msgstr ""
+
+#. module: event_booth_sale
+#. odoo-python
+#: code:addons/event_booth_sale/models/product_product.py:0
+msgid ""
+"You cannot change the service_tracking of the product %(product_name)s "
+"because it is already assigned to %(booth_category_name)s. The "
+"service_tracking must remain 'event_booth'."
 msgstr ""
 
 #. module: event_booth_sale
