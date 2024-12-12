@@ -276,6 +276,12 @@ describe("wrapInlinesInBlocks", () => {
             `)
         );
     });
+    test("should wrap inlines in P, preserving space", async () => {
+        const div = document.createElement("div");
+        div.innerHTML = "<span>abc</span> <span>def</span>";
+        wrapInlinesInBlocks(div);
+        expect(div.innerHTML).toBe("<p><span>abc</span> <span>def</span></p>");
+    });
 });
 
 describe("fillEmpty", () => {

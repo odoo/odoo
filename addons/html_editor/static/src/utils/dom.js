@@ -74,12 +74,15 @@ export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
         node.remove();
     };
 
+    const children = childNodes(element);
+    const visibleNodes = new Set(children.filter(isVisible));
+
     let currentBlock;
     let shouldBreakLine = true;
-    for (const node of [...element.childNodes]) {
+    for (const node of children) {
         if (isBlock(node)) {
             shouldBreakLine = true;
-        } else if (!isVisible(node)) {
+        } else if (!visibleNodes.has(node)) {
             removeNode(node, cursors);
         } else if (node.nodeName === "BR") {
             if (shouldBreakLine) {
