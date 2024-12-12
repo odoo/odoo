@@ -2240,14 +2240,23 @@ export class OdooEditor extends EventTarget {
             start.remove();
             start = parent;
         }
-        // Ensure empty blocks be given a <br> child.
+        // Handles scenarios where the entire content is selected for deletion
+        // Ensure empty blocks be given a <br> & empty inline are given ZWS
         if (start) {
+            // For empty block elements
             if (start === this.editable && startBlock.textContent === '\u200B') {
                 const p = document.createElement('p');
                 start.appendChild(p);
                 start = p;
             }
             fillEmpty(closestBlock(start));
+
+            // For empty inline elements
+            const parentElement = start.parentElement;
+            if (parentElement) {
+                parentElement.innerHTML = ""; // Clear any empty text nodes
+                fillEmpty(parentElement);
+            }
         }
         fillEmpty(closestBlock(range.endContainer));
         range = getDeepRange(this.editable, { sel });
@@ -3978,6 +3987,7 @@ export class OdooEditor extends EventTarget {
      */
     _onKeyDown(ev) {
         const selection = this.document.getSelection();
+        const targetEl = selection.anchorNode?.parentElement;
         if (selection.anchorNode && isProtected(selection.anchorNode)) {
             return;
         }
@@ -4244,6 +4254,15 @@ export class OdooEditor extends EventTarget {
                 const offset = ev.key === 'ArrowUp' ? nodeSize(leafNode) : 0;
                 selection.extend(leafNode, offset);
                 ev.preventDefault();
+            }
+        }
+        // Ensure zws and data-oe-zws-empty-inline flag is removed
+        // if content other than zws is present.
+        if (ev.key !== 'Backspace' && targetEl && targetEl.hasAttribute("data-oe-zws-empty-inline")) {
+            const content = targetEl.textContent || "";
+            if (content.startsWith("\u200B")) {
+                targetEl.removeAttribute("data-oe-zws-empty-inline");
+                targetEl.textContent = content.replace("\u200B", "");
             }
         }
     }
