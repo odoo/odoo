@@ -15,7 +15,6 @@ This is the base module to manage the accounting chart for Taiwan in Odoo.
     "data": [
         "data/l10n_tw_chart_data.xml",
         "data/account.account.template.csv",
-        "data/res.country.state.csv",
         "data/account_chart_template_data.xml",
         "data/account.tax.group.csv",
         "data/account_tax_template_data.xml",
