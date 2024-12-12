@@ -1545,16 +1545,13 @@ class PosSession(models.Model):
         new_amounts['amount_converted'] += amount_converted
 
         # consider base_amount if present
-        if not amounts_to_add.get('base_amount') == None:
+
+        if amounts_to_add.get('base_amount'):
             base_amount = amounts_to_add.get('base_amount')
-            if self.is_in_company_currency or force_company_currency:
-                base_amount_converted = base_amount
-            else:
-                base_amount_converted = self._amount_converter(base_amount, date, round)
 
             # update base_amount and base_amount_converted
             new_amounts['base_amount'] += base_amount
-            new_amounts['base_amount_converted'] += base_amount_converted
+            new_amounts['base_amount_converted'] += base_amount
 
         return new_amounts
 
