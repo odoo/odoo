@@ -631,8 +631,23 @@ class ProductProduct(models.Model):
     #=== BUSINESS METHODS ===#
 
     def _prepare_sellers(self, params=False):
-        sellers = self.seller_ids.filtered(lambda s: s.partner_id.active and (not s.product_id or s.product_id == self))
-        return sellers.sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
+        company_id = self.env.company.id
+        if params and 'order_id' in params and params['order_id'].company_id:
+            company_id = params['order_id'].company_id.id
+        domain = [
+            ('product_tmpl_id', '=', self.product_tmpl_id.id),
+            ('company_id', 'in', [company_id] + [False]),
+            ('partner_id', 'any', [('active', '=', True)]),
+            '|',
+                ('product_id', '=', False),
+                ('product_id', '=', self.id),
+        ]
+
+        sellers = self.sudo().env['product.supplierinfo'].search(
+            domain,
+            order='sequence asc, min_qty desc, price asc, id asc'
+        )
+        return sellers
 
     def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
@@ -641,7 +656,6 @@ class ProductProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         sellers_filtered = self._prepare_sellers(params)
-        sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
         sellers = self.env['product.supplierinfo']
         for seller in sellers_filtered:
             # Set quantity in UoM of seller
