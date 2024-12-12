@@ -2308,8 +2308,9 @@ class AccountMove(models.Model):
         }
 
         while to_delete and to_create:
-            key, values = to_create.popitem()
-            line_id = to_delete.pop()
+            key = next(iter(to_create)) if len(to_create) > 1 else to_create
+            values = to_create.pop(key)
+            line_id = to_delete.pop(0)
             self.env['account.move.line'].browse(line_id).write(
                 {**key, **values, 'display_type': line_type}
             )
