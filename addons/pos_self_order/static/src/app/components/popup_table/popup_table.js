@@ -1,7 +1,6 @@
 import { Component, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
-import { groupBy } from "@web/core/utils/arrays";
 
 export class PopupTable extends Component {
     static template = "pos_self_order.PopupTable";
@@ -13,15 +12,6 @@ export class PopupTable extends Component {
         this.state = useState({
             selectedTable: "0",
         });
-    }
-
-    get availableFloor() {
-        const groupedFloors = groupBy(this.tables, (t) => t.floor_id[0]);
-        return Object.entries(groupedFloors).map(([floorId, tables]) => ({
-            id: floorId,
-            name: tables[0].floor_id[1],
-            tables,
-        }));
     }
 
     setTable() {

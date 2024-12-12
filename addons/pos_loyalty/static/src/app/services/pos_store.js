@@ -633,7 +633,7 @@ patch(PosStore.prototype, {
         return await this.data.searchRead(
             "loyalty.card",
             domain,
-            ["id", "points", "code", "partner_id", "program_id", "expiration_date"],
+            this.data.fields["loyalty.card"],
             { limit }
         );
     },

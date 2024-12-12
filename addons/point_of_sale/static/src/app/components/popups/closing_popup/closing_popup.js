@@ -251,6 +251,8 @@ export class ClosePosPopup extends Component {
             } else {
                 await this.handleClosingControlError();
             }
+        } finally {
+            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
         }
     }
     async handleClosingControlError() {

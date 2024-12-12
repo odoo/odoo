@@ -1007,6 +1007,9 @@ class PosOrder(models.Model):
                 (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
         return payment_moves
 
+    def _get_open_order(self, order):
+        return self.env["pos.order"].search([('uuid', '=', order.get('uuid'))], limit=1)
+
     @api.model
     def sync_from_ui(self, orders):
         """ Create and update Orders from the frontend PoS application.
@@ -1027,7 +1030,7 @@ class PosOrder(models.Model):
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
-            existing_order = self.env['pos.order'].search([('uuid', '=', order.get('uuid'))])
+            existing_order = self._get_open_order(order)
             if existing_order and existing_order.state == 'draft':
                 order_ids.append(self._process_order(order, existing_order))
             elif not existing_order:
@@ -1367,9 +1370,10 @@ class PosOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('order_id') and not vals.get('name'):
+            order = self.env['pos.order'].browse(vals['order_id']) if vals.get('order_id') else False
+            if order and order.exists() and not vals.get('name'):
                 # set name based on the sequence specified on the config
-                config = self.env['pos.order'].browse(vals['order_id']).session_id.config_id
+                config = order.session_id.config_id
                 if config.sequence_line_id:
                     vals['name'] = config.sequence_line_id._next()
             if not vals.get('name'):
