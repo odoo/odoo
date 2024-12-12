@@ -166,9 +166,12 @@ class AutoCompleteController(http.Controller):
     def _call_google_route(self, route, params):
         return requests.get(f'{GOOGLE_PLACES_ENDPOINT}{route}', params=params, timeout=TIMEOUT).json()
 
+    def _get_api_key(self):
+        return request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.google_places_api_key')
+
     @http.route('/autocomplete/address', methods=['POST'], type='jsonrpc', auth='public', website=True)
     def _autocomplete_address(self, partial_address, session_id=None):
-        api_key = request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.google_places_api_key')
+        api_key = self._get_api_key();
         if not api_key:
             return {
                 'results': [],
@@ -178,7 +181,7 @@ class AutoCompleteController(http.Controller):
 
     @http.route('/autocomplete/address_full', methods=['POST'], type='jsonrpc', auth='public', website=True)
     def _autocomplete_address_full(self, address, session_id=None, google_place_id=None, **kwargs):
-        api_key = request.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.google_places_api_key')
+        api_key = self._get_api_key()
         return self._perform_complete_place_search(address, google_place_id=google_place_id,
                                                    session_id=session_id, api_key=api_key, **kwargs)
 
