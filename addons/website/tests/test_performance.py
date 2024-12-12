@@ -125,7 +125,7 @@ class TestStandardPerformance(UtilPerf):
         self.env['res.users'].sudo().browse(2).website_published = True
         url = '/web/image/res.users/2/image_256'
         select_tables_perf = {
-            'base_registry_signaling': 1,
+            'orm_signaling_registry': 1,
             'res_company': 1,
             'res_users': 2,
             'res_partner': 1,
@@ -138,7 +138,7 @@ class TestStandardPerformance(UtilPerf):
     def test_20_perf_sql_img_controller_bis(self):
         url = '/web/image/website/1/favicon'
         select_tables_perf = {
-            'base_registry_signaling': 1,
+            'orm_signaling_registry': 1,
             'website': 2,
             # 1. `_find_record()` performs an access right check through
             #    `exists()` which perform a request on the website.
@@ -197,7 +197,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             self.env.registry.test_readonly_enabled = readonly_enabled
             with self.subTest(readonly_enabled=readonly_enabled), self.env.cr.savepoint() as savepoint:
                 select_tables_perf = {
-                    'base_registry_signaling': 1,
+                    'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
                     'website_page': 2,
@@ -222,7 +222,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             self.env.registry.test_readonly_enabled = readonly_enabled
             with self.subTest(readonly_enabled=readonly_enabled), self.env.cr.savepoint() as savepoint:
                 select_tables_perf = {
-                    'base_registry_signaling': 1,
+                    'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
                     'website_page': 2,
@@ -256,7 +256,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             self.env.registry.test_readonly_enabled = readonly_enabled
             with self.subTest(readonly=readonly_enabled), self.env.cr.savepoint() as savepoint:
                 select_tables_perf = {
-                    'base_registry_signaling': 1,
+                    'orm_signaling_registry': 1,
                     'website_menu': 1,
                     # homepage controller is prefetching all menus for perf in one go
                     'website_page': 2,
@@ -283,7 +283,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
         # untrack website.page with no call to layout templates
         self.page.arch = '<div>I am a blank page</div>'
         select_tables_perf = {
-            'base_registry_signaling': 1,
+            'orm_signaling_registry': 1,
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
             'website_page': 2,
@@ -314,7 +314,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
         menu_aa.parent_id = menu_a
 
         select_tables_perf = {
-            'base_registry_signaling': 1,
+            'orm_signaling_registry': 1,
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
             'website_page': 2,
@@ -335,7 +335,7 @@ class TestWebsitePerformancePost(UtilPerf):
         assets_url = self.env['ir.qweb']._get_asset_bundle('web.assets_frontend_lazy', css=False, js=True).get_links()[0]
         self.assertIn('web.assets_frontend_lazy.min.js', assets_url)
         select_tables_perf = {
-            'base_registry_signaling': 1,
+            'orm_signaling_registry': 1,
             'ir_attachment': 2,
             # All 2 coming from the /web/assets and ir.binary stack
             # 1. `search() the attachment`
