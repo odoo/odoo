@@ -16,7 +16,7 @@ publicWidget.registry.addressCard = publicWidget.Widget.extend({
     },
 
     /**
-     * Set the invoice or delivery address by default
+     * Set the billing or delivery address by default
      *
      * @private
      * @param {Event} ev

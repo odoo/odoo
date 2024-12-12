@@ -6,8 +6,8 @@ from odoo.http import request, route
 
 class L10nPEWebsiteSale(WebsiteSale):
 
-    def _get_mandatory_invoice_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_invoice_address_fields(country_sudo)
+    def _get_mandatory_billing_address_fields(self, country_sudo):
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
         if request.website.sudo().company_id.country_id.code != 'PE':
             return mandatory_fields
 

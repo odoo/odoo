@@ -1040,14 +1040,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         }
 
     @route(
-        '/portal/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False
+        '/shop/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False
     )
     def shop_address(
         self,
         partner_id=None,
         address_type='billing',
         use_delivery_as_billing=None,
-        is_shop_page=False,
         **query_params
     ):
         """ Display the address form.
@@ -1065,16 +1064,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The rendered address form.
         :rtype: str
         """
-        # Return if not shop page as we don't need to compute other values related to
-        # shop address
-        if not is_shop_page:
-            return super().shop_address(
-                partner_id=partner_id,
-                address_type=address_type,
-                use_delivery_as_billing=use_delivery_as_billing,
-                **query_params
-            )
-
         order_sudo = request.website.sale_get_order()
         partner_id = partner_id and int(partner_id)
         use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
@@ -1098,7 +1087,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_type,
             order_sudo=order_sudo,
             use_delivery_as_billing=use_delivery_as_billing,
-            is_shop_page=is_shop_page,
             **query_params
         )
 
@@ -1424,7 +1412,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if address_type == 'delivery' or use_delivery_as_billing:
             required_field_set |= self._get_mandatory_delivery_address_fields(country)
         if address_type == 'billing' or use_delivery_as_billing:
-            required_field_set |= self._get_mandatory_invoice_address_fields(country)
+            required_field_set |= self._get_mandatory_billing_address_fields(country)
             if not is_main_address:
                 commercial_fields = ResPartnerSudo._commercial_fields()
                 for fname in commercial_fields:
@@ -1968,7 +1956,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Check that the billing address is complete.
         invoice_partner_sudo = order_sudo.partner_invoice_id
         if (
-            not self._check_invoice_address(invoice_partner_sudo)
+            not self._check_billing_address(invoice_partner_sudo)
             and invoice_partner_sudo._can_edited_by_current_customer()
         ):
             return request.redirect(

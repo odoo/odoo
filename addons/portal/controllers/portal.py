@@ -248,7 +248,7 @@ class CustomerPortal(Controller):
         :rtype: dict
         """
         commercial_partner_sudo = partner_sudo.commercial_partner_id
-        invoice_partners_sudo = partner_sudo | partner_sudo.search([
+        billing_partners_sudo = partner_sudo | partner_sudo.search([
             ('id', 'child_of', commercial_partner_sudo.ids),
             '|',
             ('type', 'in', ['invoice', 'other']),
@@ -264,8 +264,8 @@ class CustomerPortal(Controller):
         if partner_sudo != commercial_partner_sudo:  # Child of the commercial partner.
             # Don't display the commercial partner's addresses if they are not complete, as its
             # children can't edit them.
-            if not self._check_invoice_address(commercial_partner_sudo):
-                invoice_partners_sudo = invoice_partners_sudo.filtered(
+            if not self._check_billing_address(commercial_partner_sudo):
+                billing_partners_sudo = billing_partners_sudo.filtered(
                     lambda p: p.id != commercial_partner_sudo.id
                 )
             if not self._check_delivery_address(commercial_partner_sudo):
@@ -274,7 +274,7 @@ class CustomerPortal(Controller):
                 )
 
         return {
-            'invoice_addresses': invoice_partners_sudo,
+            'billing_addresses': billing_partners_sudo,
             'delivery_addresses': delivery_partners_sudo,
         }
 
@@ -300,27 +300,27 @@ class CustomerPortal(Controller):
         return self._get_mandatory_address_fields(country_sudo)
 
 
-    def _check_invoice_address(self, partner_sudo):
-        """ Check that all mandatory invoice fields are filled for the given partner.
+    def _check_billing_address(self, partner_sudo):
+        """ Check that all mandatory billing fields are filled for the given partner.
 
-        :param res.partner: The partner whose invoice address to check.
+        :param res.partner: The partner whose billing address to check.
         :return: Whether all mandatory fields are filled.
         :rtype: bool
         """
-        mandatory_invoice_fields = self._get_mandatory_invoice_address_fields(
+        mandatory_billing_fields = self._get_mandatory_billing_address_fields(
             partner_sudo.country_id
         )
-        return all(partner_sudo.read(mandatory_invoice_fields)[0].values())
+        return all(partner_sudo.read(mandatory_billing_fields)[0].values())
 
-    def _get_mandatory_invoice_address_fields(self, country_sudo):
-        """ Return the set of mandatory invoice field names.
+    def _get_mandatory_billing_address_fields(self, country_sudo):
+        """ Return the set of mandatory billing field names.
 
         :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of mandatory invoice field names.
+        :return: The set of mandatory billing field names.
         :rtype: set
         """
         field_names = self._get_mandatory_address_fields(country_sudo)
-        # Include the required invoice fields from the portal logic.
+        # Include the required billing fields from the portal logic.
         field_names |= set(self._get_mandatory_fields())
         return field_names
 
@@ -477,8 +477,8 @@ class CustomerPortal(Controller):
     )
     def shop_country_info(self, country, address_type, **kw):
         address_fields = country.get_address_fields()
-        if address_type == 'invoice':
-            required_fields = self._get_mandatory_invoice_address_fields(country)
+        if address_type == 'billing':
+            required_fields = self._get_mandatory_billing_address_fields(country)
         else:
             required_fields = self._get_mandatory_delivery_address_fields(country)
         return {
@@ -504,11 +504,11 @@ class CustomerPortal(Controller):
             ('type', 'in', [address_type, 'other']),
             ('id', '=', address_sudo.commercial_partner_id.id),
         ])
-        if address_type == 'invoice':
+        if address_type == 'billing':
             related_partners.filtered(
-                'is_default_invoice_address'
-            ).is_default_invoice_address = False
-            address_sudo.is_default_invoice_address = True
+                'is_default_billing_address'
+            ).is_default_billing_address = False
+            address_sudo.is_default_billing_address = True
         else:
             related_partners.filtered(
                 'is_default_delivery_address'

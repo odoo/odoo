@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    is_default_invoice_address = fields.Boolean()
+    is_default_billing_address = fields.Boolean()
     is_default_delivery_address = fields.Boolean()
 
     def _can_edit_name(self):

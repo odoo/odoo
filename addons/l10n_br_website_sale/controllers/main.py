@@ -20,9 +20,9 @@ class L10nBRWebsiteSale(WebsiteSale):
 
         return mandatory_fields
 
-    def _get_mandatory_invoice_address_fields(self, country_sudo):
+    def _get_mandatory_billing_address_fields(self, country_sudo):
         """Extend mandatory fields to add the vat in case the website and the customer are from brazil"""
-        mandatory_fields = super()._get_mandatory_invoice_address_fields(country_sudo)
+        mandatory_fields = super()._get_mandatory_billing_address_fields(country_sudo)
 
         if (
             country_sudo.code == 'BR'
