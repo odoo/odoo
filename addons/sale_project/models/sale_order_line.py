@@ -125,13 +125,13 @@ class SaleOrderLine(models.Model):
             sol_id = line.id or line._origin.id
             line.qty_delivered = reached_milestones_per_sol.get(sol_id, 0.0) * line.product_uom_qty
 
-    @api.depends('order_id.partner_id', 'product_id', 'order_id.project_id')
+    @api.depends('order_id.partner_id', 'company_id', 'product_id', 'order_id.project_id')
     def _compute_analytic_distribution(self):
         super()._compute_analytic_distribution()
         for line in self:
             if line.display_type or line.analytic_distribution or not line.product_id:
                 continue
-            project = line.product_id.project_id or line.order_id.project_id
+            project = line.product_id.with_company(line.company_id).project_id or line.order_id.project_id
             distribution = project._get_analytic_distribution()
             if distribution:
                 line.analytic_distribution = distribution
