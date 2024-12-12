@@ -126,10 +126,10 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         // for stable version.
         // TODO in master: instead of adding `data-oe-type` attribute add
         // `oe_unbreakable` to XML snippet templates.
-        const anchorButtonEls = Array.from($html).find(el => el.id === "o_scroll").querySelectorAll("a[role='tab'], a[role='button'], a.btn");
-        anchorButtonEls.forEach(el => {
-            el.dataset.oeType = "button";
-        });
+        // const anchorButtonEls = Array.from($html).find(el => el.id === "o_scroll").querySelectorAll("a[role='tab'], a[role='button'], a.btn");
+        // anchorButtonEls.forEach(el => {
+        //     el.dataset.oeType = "button";
+        // });
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
