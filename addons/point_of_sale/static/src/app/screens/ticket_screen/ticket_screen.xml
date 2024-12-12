@@ -50,7 +50,7 @@
                                 <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
                                     t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
                                     <div class="col wide p-2 ">
-                                        <div><t t-esc="getDate(order)"></t></div>
+                                        <div><t t-esc="order.formatDateOrTime('date_order')"></t></div>
                                     </div>
                                     <div class="col wide p-2">
                                         <div><t t-esc="order.getName()"></t></div>
