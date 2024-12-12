@@ -413,6 +413,14 @@ class ProductPricelistItem(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
+            if values.get('product_id') and not values.get('product_tmpl_id'):
+                # Deduce product template from product variant if not specified.
+                # Ensures that the pricelist rule is properly configured and displayed in the UX
+                # even in case of partial/incomplete data (mostly for imports).
+                values['product_tmpl_id'] = self.env['product.product'].browse(
+                    values.get('product_id')
+                ).product_tmpl_id.id
+
             if not values.get('applied_on'):
                 values['applied_on'] = (
                     '0_product_variant' if values.get('product_id') else
