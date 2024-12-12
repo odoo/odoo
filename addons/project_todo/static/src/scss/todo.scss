@@ -1,5 +1,14 @@
 .o_todo_form_view {
     .o_form_sheet_bg {
+        .o_form_statusbar {
+            margin: 0;
+            .o_field_deadline {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0;
+            }
+        }
+
         .o_form_sheet {
             .oe_title {
                 max-width: initial;
@@ -22,6 +31,16 @@
         .o_widget_todo_chatter_panel {
             min-width: 100%;
         }
+    }
+
+    &.o_form_readonly {
+        .oe_description {
+            padding: $o-sheet-vpadding $o-horizontal-padding;
+        }
+    }
+
+    .oe_description {
+        overflow-x: hidden;
     }
 }
 
