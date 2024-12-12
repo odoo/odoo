@@ -87,6 +87,8 @@ class MailThreadPhone(models.AbstractModel):
             op = expression.AND if operator == '=' else expression.OR
             return op([[(phone_field, operator, False)] for phone_field in phone_fields])
 
+        if not value:
+            return [(1, '=', 1)]
         if self._phone_search_min_length and len(value) < self._phone_search_min_length:
             raise UserError(_('Please enter at least 3 characters when searching a Phone number.'))
 
