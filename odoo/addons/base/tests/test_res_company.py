@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests.common import TransactionCase
 
 
@@ -68,3 +68,20 @@ class TestCompany(TransactionCase):
     def test_create_branch_with_default_parent_id(self):
         branch = self.env['res.company'].with_context(default_parent_id=self.env.company.id).create({'name': 'Branch Company'})
         self.assertFalse(branch.partner_id.parent_id)
+
+    def test_access_parent_companies(self):
+        """Ensure a user can read the parents of the company it has access to even if
+        it doesn't have access to the parent company."""
+        branch = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': self.env.company.id,
+        })
+        user = self.env['res.users'].create({
+            'name': 'foo',
+            'login': 'foo',
+            'company_id': branch.id,
+            'company_ids': branch.ids,
+        })
+        self.assertEqual(branch.with_user(user).parent_ids, self.env.company + branch)
+        with self.assertRaises(AccessError, msg="The fields of the related records should not be exposed"):
+            self.env.company.with_user(user).name
