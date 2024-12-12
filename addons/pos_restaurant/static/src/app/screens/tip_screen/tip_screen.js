@@ -116,8 +116,8 @@ export class TipScreen extends Component {
             await this.printer.print(
                 TipReceipt,
                 {
-                    headerData: this.pos.getReceiptHeaderData(order),
                     data: receipts[i] || {},
+                    order: order,
                     total: this.env.utils.formatCurrency(this.totalAmount),
                 },
                 { webPrintFallback: false }

@@ -4,7 +4,7 @@ import { ReceiptHeader } from "@point_of_sale/app/screens/receipt_screen/receipt
 export class TipReceipt extends Component {
     static template = "pos_restaurant.TipReceipt";
     static components = { ReceiptHeader };
-    static props = ["headerData", "data", "total"];
+    static props = ["data", "total", "order"];
 
     get total() {
         return this.props.total;

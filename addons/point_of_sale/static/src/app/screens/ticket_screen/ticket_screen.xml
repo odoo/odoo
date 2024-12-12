@@ -126,14 +126,9 @@
                         <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-100 text-center">
                             Select the product(s) to refund and set the quantity
                         </div>
-                        <OrderWidget lines="_selectedSyncedOrder.lines" t-slot-scope="scope"
-                            taxTotals="_selectedSyncedOrder.taxTotals"
-                            generalCustomerNote="_selectedSyncedOrder?.general_customer_note or ''"
-                            internalNote="_selectedSyncedOrder.internal_note or ''">
+                        <OrderDisplay order="_selectedSyncedOrder" t-if="_selectedSyncedOrder" t-slot-scope="scope">
                             <t t-set="line" t-value="scope.line" />
-                            <Orderline line="line.getDisplayData()"
-                                class="{'selected': line.id === getSelectedOrderlineId()}"
-                                t-on-click="() => this.onClickOrderline(line)">
+                            <Orderline line="line" t-on-click="() => this.onClickOrderline(line)" class="{'selected': line.id === _selectedOrderlineId}">
                                 <t t-set="toRefundDetail" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]" />
                                 <li t-if="!pos.isProductQtyZero(line.refunded_qty)"
                                     class="info refund-note mt-1">
@@ -154,7 +149,7 @@
                                     </t>
                                 </li>
                             </Orderline>
-                        </OrderWidget>
+                        </OrderDisplay>
                         <div class="pads">
                             <t t-if="isOrderSynced">
                                 <div class="control-buttons d-flex gap-2 pb-2">

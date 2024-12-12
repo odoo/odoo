@@ -57,8 +57,8 @@ export class CashMovePopup extends Component {
         await this.printer.print(CashMoveReceipt, {
             reason,
             translatedType,
+            order: this.pos.getOrder() || this.pos.models["pos.order"].getFirst(),
             formattedAmount,
-            headerData: this.pos.getReceiptHeaderData(),
             date: new Date().toLocaleString(),
         });
 
