@@ -93,8 +93,6 @@ def load_demo(env: Environment, package: Package, idref, mode: str) -> bool:
     """
     Loads demo data for the specified package.
     """
-    if tools.config['without_demo'] or package.state != 'to install' or not package.demo_installable():
-        return False
 
     try:
         if package.manifest.get('demo') or package.manifest.get('demo_xml'):
@@ -239,7 +237,10 @@ def load_module_graph(
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.manifest))
             load_data(env, idref, mode, kind='data', package=package)
-            demo_loaded = package.dbdemo = load_demo(env, package, idref, mode)
+            if package.state == 'to upgrade':
+                demo_loaded = package.dbdemo = load_demo(env, package, idref, mode) if package.dbdemo else False
+            else:  # 'to install'
+                demo_loaded = package.dbdemo = False if tools.config['without_demo'] or not package.demo_installable else load_demo(env, package, idref, mode)
             env.cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
             module.invalidate_model(['demo'])
 
