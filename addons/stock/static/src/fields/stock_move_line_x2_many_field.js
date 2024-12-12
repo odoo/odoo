@@ -20,9 +20,9 @@ export class SMLX2ManyField extends X2ManyField {
             const orm = this.env.model.orm;
             this.quantsData = [];
             const usedByQuant = {};
-            if (this.props.record.data.move_line_ids.records.length) {
+            if (this._move_line_ids.length) {
                 const domains = [];
-                for (const ml of this.props.record.data.move_line_ids.records) {
+                for (const ml of this._move_line_ids) {
                     domains.push([
                         ["product_id", "=", ml.data.product_id[0]],
                         ["lot_id", "=", ml.data.lot_id?.[0] || false],
@@ -38,7 +38,7 @@ export class SMLX2ManyField extends X2ManyField {
                         [x.product_id[0], x.lot_id?.[0] || false, x.location_id[0], x.package_id?.[0] || false, x.owner_id?.[0] || false],
                         [x.id, x.display_name, x.available_quantity]
                     ]));
-                    for (const ml of this.props.record.data.move_line_ids.records) {
+                    for (const ml of this._move_line_ids) {
                         const entry = quants_by_key[[ml.data.product_id[0], ml.data.lot_id?.[0] || false, ml.data.location_id[0], ml.data.package_id?.[0] || false, ml.data.owner_id?.[0] || false].toString()];
                         if (!entry) {  // product not storable or has no quant yet
                             continue;
@@ -81,7 +81,7 @@ export class SMLX2ManyField extends X2ManyField {
             ["product_id", "=", this.props.record.data.product_id[0]],
             ["location_id", "child_of", this.props.context.default_location_id],
         ];
-        const usedByQuant = this.props.record.data.move_line_ids.records.reduce((result, current) => {
+        const usedByQuant = this._move_line_ids.reduce((result, current) => {
             const quant_id = current.data.quant_id[0];
             if (!quant_id)
                 return result;
@@ -128,6 +128,10 @@ export class SMLX2ManyField extends X2ManyField {
                 }
             },
         });
+    }
+
+    get _move_line_ids() {
+        return this.props.record.data.move_line_ids.records;
     }
 }
 
