@@ -216,6 +216,68 @@ class TestMailMail(MailCommon):
                              email_cc=['"Herbert" <test.cc.2@example.com>', 'test.cc.1@example.com'])
         self.assertEqual(len(self._mails), 1)
 
+    def test_mail_mail_recipients_tweaks(self):
+        """ Test tweaking recipients of mail.mail versus outgoing emails (SMTP).
+        Use case is to have recipients (SMTP envelope) but forge the To of
+        message to ease email flows. """
+        test_partners = self.env['res.partner'].create([
+            {
+                'name': name,
+                'email': email,
+            } for name, email in [('Partner1', 'partner.test@test.example.com'), ("Partner2", '<partner.test.2@test.example.com>')]
+        ])
+        for mail_values, exp_smtp, exp_to, exp_cc in [
+            (  # add "To" in each outgoing email based on a mail.mail
+                {
+                    'email_to': '"Customer" <customer@test.example.com>, user2@test.mycompany.com',
+                    'recipient_ids': [(4, p.id) for p in test_partners],
+                    'headers': {
+                        'X-Msg-To-Add': 'skip@test.example.com, "Skip 2" <skip.2@test.example.com>',
+                    },
+                }, [
+                    ['customer@test.example.com', 'user2@test.mycompany.com'],
+                    ['partner.test@test.example.com'], ['partner.test.2@test.example.com'],
+                ], [
+                    '"Customer" <customer@test.example.com>, user2@test.mycompany.com, skip@test.example.com, "Skip 2" <skip.2@test.example.com>',
+                    '"Partner1" <partner.test@test.example.com>, skip@test.example.com, "Skip 2" <skip.2@test.example.com>',
+                    '"Partner2" <partner.test.2@test.example.com>, skip@test.example.com, "Skip 2" <skip.2@test.example.com>',
+                ], ['', '', ''],
+            ), (  # additional "To" + include all recipients of all outgoing emails based on a mail.mail
+                {
+                    'email_cc': '"Cc Customer" <customer.cc@test.example.com>',
+                    'email_to': '"Customer" <customer@test.example.com>, user2@test.mycompany.com',
+                    'recipient_ids': [(4, p.id) for p in test_partners],
+                    'headers': {
+                        'X-Msg-To-Consolidate': '1',
+                        'X-Msg-To-Add': 'skip@test.example.com, "Skip 2" <skip.2@test.example.com>',
+                    },
+                }, [
+                    ['customer@test.example.com', 'user2@test.mycompany.com', 'customer.cc@test.example.com'],  # to and cc in same outgoing email
+                    ['partner.test@test.example.com'], ['partner.test.2@test.example.com'],
+                ], ['"Customer" <customer@test.example.com>, "Cc Customer" <customer.cc@test.example.com>, '
+                    'skip@test.example.com, "Skip 2" <skip.2@test.example.com>, '
+                    'user2@test.mycompany.com, "Partner1" <partner.test@test.example.com>, '
+                    '"Partner2" <partner.test.2@test.example.com>'] * 3,
+                ['"Cc Customer" <customer.cc@test.example.com>', '', ''],
+            ),
+        ]:
+            with self.subTest(mail_values=mail_values):
+                # with self.mock_smtplib_connection():
+                with self.mock_mail_gateway():
+                    self.env['mail.mail'].create({
+                        'subject': 'Test Recipients',
+                        **mail_values,
+                    }).send()
+                # self.assertEqual(len(self.emails), len(exp_smtp))
+                for exp_smtp_to_lst, exp_msg_to, exp_msg_cc in zip(exp_smtp, exp_to, exp_cc):
+                    self.assertSMTPEmailsSent(
+                        msg_from=f'{self.user_root.name} <{self.default_from}@{self.alias_domain}>',
+                        smtp_from=f'{self.default_from}@{self.alias_domain}',
+                        smtp_to_list=exp_smtp_to_lst,
+                        msg_cc=exp_msg_cc,
+                        msg_to=exp_msg_to,
+                    )
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_return_path(self):
         # mail without thread-enabled record
