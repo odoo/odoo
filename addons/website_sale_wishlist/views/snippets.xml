@@ -14,7 +14,10 @@
                    data-no-preview="true"
                    data-reload="/"/>
     </xpath>
-    <xpath expr="//we-button[hasclass('o_we_buy_now_btn')]" position="after">
+    <xpath expr="//div[@data-name='o_wsale_actions_opt']" position="attributes">
+        <attribute name="class" remove="d-none"/>
+    </xpath>
+    <xpath expr="//div[@data-name='o_wsale_actions_opt']/we-row" position="inside">
         <we-button title="Wishlist"
                    data-customize-website-views="website_sale_wishlist.product_add_to_wishlist"
                    data-no-preview="true"
