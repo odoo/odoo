@@ -1569,13 +1569,13 @@ export class PosStore extends Reactive {
                 const lines =
                     diningModeUpdate && Object.keys(lastChangedLines).length
                         ? lastChangedLines
-                        : order.lines;
+                        : changes["new"];
 
                 // converting in format we need to show on xml
                 const orderlines = Object.entries(lines).map(([key, value]) => ({
-                    basic_name: diningModeUpdate ? value.basic_name : value.product_id.name,
+                    basic_name: diningModeUpdate ? value.basic_name : value.name,
                     isCombo: diningModeUpdate ? value.isCombo : value.combo_item_id?.id,
-                    quantity: diningModeUpdate ? value.quantity : value.qty,
+                    quantity: value.quantity,
                     note: value.note,
                     attribute_value_ids: value.attribute_value_ids,
                 }));
