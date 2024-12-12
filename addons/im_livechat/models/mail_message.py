@@ -51,7 +51,7 @@ class MailMessage(models.Model):
                         "id": (step.id, channel.id),
                         "message": message.id,
                         "scriptStep": step.id,
-                        "operatorFound": step.step_type == "forward_operator"
+                        "operatorFound": step.step_type in step._get_operator_step_types()
                         and len(channel.channel_member_ids) > 2,
                     }
                     if answer := chatbot_message.user_script_answer_id:

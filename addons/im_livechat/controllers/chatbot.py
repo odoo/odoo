@@ -70,7 +70,7 @@ class LivechatChatbotScriptController(http.Controller):
                 "id": (next_step.id, discuss_channel.id),
                 "isLast": next_step._is_last_step(discuss_channel),
                 "message": posted_message.id,
-                "operatorFound": next_step.step_type == "forward_operator"
+                "operatorFound": next_step.step_type in next_step._get_operator_step_types()
                 and len(discuss_channel.channel_member_ids) > 2,
                 "scriptStep": next_step.id,
             },
