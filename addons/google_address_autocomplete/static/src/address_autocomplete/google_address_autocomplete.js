@@ -6,7 +6,7 @@ import { googlePlacesSession } from "../google_places_session";
 
 export class AddressAutoComplete extends CharField {
     static template = "google_address_autocomplete.AddressAutoCompleteTemplate";
-    static components = { AutoComplete, ...CharField };
+    static components = { AutoComplete, ...CharField.components };
 
     get sources() {
         return [

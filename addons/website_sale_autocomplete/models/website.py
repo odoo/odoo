@@ -11,4 +11,4 @@ class Website(models.Model):
         groups="base.group_system")
 
     def has_google_places_api_key(self):
-        return bool(self.env['ir.config_parameter'].sudo().get_param('google_address_autocomplete.google_places_api_key'))
+        return bool(self.sudo().google_places_api_key)
