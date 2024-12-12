@@ -37,7 +37,7 @@
                             groups="mrp.group_mrp_manager" invisible="consumption != 'strict'"
                             colspan="1" type="object" class="btn-primary"/>
                         <button name="action_confirm" string="Confirm" invisible="consumption == 'strict'" data-hotkey="q"
-                            colspan="1" type="object" class="btn-primary"/>
+                            colspan="1" type="object" class="btn-primary" barcode_trigger="NEXT"/>
                         <button name="action_set_qty" string="Set Quantities &amp; Validate" colspan="1" type="object" class="btn-secondary" invisible="'is_subcontracting_portal' in context"/>
                         <button name="action_cancel" string="Discard" data-hotkey="x"
                             colspan="1" type="object" class="btn-secondary"/>
