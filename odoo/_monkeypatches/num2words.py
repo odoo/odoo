@@ -971,14 +971,15 @@ class NumberToWords_BG(Num2Word_Base):
         return ret_minus + ''.join(ret)
 
 
-def patch_num2words():
+def patch():
     try:
         import num2words  # noqa: PLC0415
     except ImportError:
         _logger = logging.getLogger(__name__)
         _logger.warning("num2words is not available, Arabic number to words conversion will not work")
-        return
+        return {}
     if MIN_PY_VERSION >= (3, 12):
         raise RuntimeError("The num2words monkey patch is obsolete. Bump the version of the library to the latest available in the official package repository, if it hasn't already been done, and remove the patch.")
     num2words.CONVERTER_CLASSES["ar"] = Num2Word_AR_Fixed()
     num2words.CONVERTER_CLASSES["bg"] = NumberToWords_BG()
+    return {'num2words': num2words}
