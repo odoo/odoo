@@ -16,8 +16,9 @@ const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long 
 patch(PosStore.prototype, {
     async addProductFromUi(product, options) {
         const order = this.get_order();
-        const linkedPrograms =
-            this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || [];
+        const linkedPrograms = (
+            this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || []
+        ).filter((p) => ["gift_card", "ewallet"].includes(p.program_type));
         let selectedProgram = null;
         if (linkedPrograms.length > 1) {
             selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
