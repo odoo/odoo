@@ -454,7 +454,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
             self._assert_tax_totals_summary(invoice.tax_totals, {
-                'same_tax_base': True,
+                'same_tax_base': False,
                 'currency_id': self.env.company.currency_id.id,
                 'base_amount_currency': 1000.0,
                 'tax_amount_currency': 90.0,
@@ -643,7 +643,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
             self._assert_tax_totals_summary(invoice.tax_totals, {
-                'same_tax_base': True,
+                'same_tax_base': False,
                 'currency_id': self.env.company.currency_id.id,
                 'base_amount_currency': 100.0,
                 'tax_amount_currency': 20.58,

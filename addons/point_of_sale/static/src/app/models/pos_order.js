@@ -647,7 +647,10 @@ export class PosOrder extends Base {
     }
 
     getTotalWithoutTax() {
-        return this.taxTotals.order_sign * this.taxTotals.base_amount_currency;
+        const base_amount =
+            this.taxTotals.base_amount_currency +
+            (this.taxTotals.cash_rounding_base_amount_currency || 0.0);
+        return this.taxTotals.order_sign * base_amount;
     }
 
     _getIgnoredProductIdsTotalDiscount() {
