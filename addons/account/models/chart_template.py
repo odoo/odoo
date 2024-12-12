@@ -14,7 +14,7 @@ from odoo import Command, api, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import get_resource_from_path
-from odoo.tools import file_open, float_compare, get_lang, groupby, SQL
+from odoo.tools import file_open, float_compare, get_lang, groupby, partition, SQL
 from odoo.tools.translate import _, code_translations, TranslationImporter
 
 _logger = logging.getLogger(__name__)
@@ -1137,13 +1137,41 @@ class AccountChartTemplate(models.AbstractModel):
     # Tooling
     # --------------------------------------------------------------------------------
 
-    def ref(self, xmlid, raise_if_not_found=True):
-        if '.' in xmlid:
-            return self.env.ref(xmlid, raise_if_not_found)
-        return (
-            self.env.ref(f"account.{self.env.company.id}_{xmlid}", raise_if_not_found=False)
-            or self.env.ref(f"account.{self.env.company.parent_ids[0].id}_{xmlid}", raise_if_not_found)
-        )
+    def ref(self, *xml_ids, raise_if_not_found=True):
+        """
+            When giving xml_ids, three steps are tried:
+                1. if <module>.<record_id> is given, then we suppose the xml_ids
+                   are already well defined
+                2. if <module> is not given, `account` is assumed, and the record is searched
+                   in the company's CoA by <module>.<company_id>_<record_id>
+                3. if not found, we use <module>.<parent_company_id>_<record_id>
+            You cannot mix these kinds of xml_ids input, it's either 1, 2 or 3.
+        """
+        company, parent_company = self.env.company, self.env.company.parent_ids[0]
+        parent_company = parent_company if parent_company != company else False
+
+        dots, non_dots = partition(lambda xml_id: '.' in xml_id, xml_ids)
+        if dots and non_dots:
+            raise ValueError(
+                "You specified a module for '%(yes)s' and not for '%(no)s'"
+                % {'yes': dots[0], 'no': non_dots[0]},
+            )
+        elif dots:
+            return self.env.ref(*dots, raise_if_not_found=raise_if_not_found)
+        elif non_dots:
+            first_try = raise_if_not_found if not parent_company else False
+            non_dots_refs = self.env.ref(
+                *(f"account.{company.id}_{xml_id}" for xml_id in non_dots),
+                raise_if_not_found=first_try
+            )
+            if non_dots_refs and len(non_dots_refs) == len(xml_ids):
+                return non_dots_refs
+            if parent_company:
+                return self.env.ref(
+                    *(f"account.{parent_company.id}_{xml_id}" for xml_id in non_dots),
+                    raise_if_not_found=raise_if_not_found
+                )
+        return None
 
     def _get_parent_template(self, code):
         parents = []

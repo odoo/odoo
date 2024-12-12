@@ -41,7 +41,7 @@ class IrBinary(models.AbstractModel):
         """
         record = None
         if xmlid:
-            record = self.env.ref(xmlid, False)
+            record = self.env.ref(xmlid, raise_if_not_found=False)
         elif res_id is not None and res_model in self.env:
             record = self.env[res_model].browse(res_id).exists()
         if not record:
