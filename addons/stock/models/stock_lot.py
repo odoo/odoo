@@ -56,7 +56,12 @@ class StockLot(models.Model):
     company_id = fields.Many2one('res.company', 'Company', index=True, store=True, readonly=False, compute='_compute_company_id')
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
-    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_last_delivery_partner_id')
+    last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_last_delivery_partner_id', search='_search_last_delivery_partner_id')
+    partner_ids = fields.Many2many('res.partner', compute='_compute_partner_ids', search='_search_partner_ids')
+    last_delivery_date = fields.Datetime(compute='_compute_partner_delivery_info',
+        help="The delivery date of the most recent delivery for this Lot/Serial Number associated with the partner.")
+    quantity = fields.Float(compute='_compute_partner_delivery_info',
+        help="The total quantity delivered for this Lot/Serial Number associated with the partner.")
     lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
@@ -146,6 +151,24 @@ class StockLot(models.Model):
         for lot in self:
             lot.delivery_ids = delivery_ids_by_lot[lot.id]
             lot.delivery_count = len(lot.delivery_ids)
+
+    def _compute_partner_ids(self):
+        delivery_ids_by_lot = self._find_delivery_ids_by_lot()
+        for lot in self:
+            if delivery_ids_by_lot[lot.id]:
+                lot.partner_ids = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).partner_id
+            else:
+                lot.partner_ids = False
+
+    def _compute_partner_delivery_info(self):
+        if self.env.context.get('active_id'):
+            for lot in self:
+                domain = [('partner_id', '=', self.env.context.get('active_id')), ('move_line_ids.lot_id', '=', lot.id), ('picking_type_code', '=', 'outgoing')]
+                picking_ids = self.env['stock.picking'].search(domain)
+                lot.quantity = sum(picking_ids.move_ids.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id).mapped('quantity'))
+                lot.last_delivery_date = picking_ids.sorted(key='date_done', reverse=True)[0].date_done
+        else:
+            self.last_delivery_date = self.quantity = False
 
     def _compute_last_delivery_partner_id(self):
         serial_products = self.filtered(lambda l: l.product_id.tracking == 'serial')
@@ -237,6 +260,31 @@ class StockLot(models.Model):
         if include_zero:
             return ['|', ('id', 'in', ids), ('id', 'not in', lot_ids_w_qty)]
         return [('id', 'in', ids)]
+
+    def _search_last_delivery_partner_id(self, operator, value):
+        lot_ids = self.env['stock.lot'].search([]).filtered(lambda lot: lot.last_delivery_partner_id)
+        res_partner = self.env['res.partner']
+
+        if isinstance(value, bool):
+            if operator == '!=':
+                return [('id', 'in', lot_ids.ids)]
+            elif operator == '=':
+                return [('id', 'not in', lot_ids.ids)]
+        elif isinstance(value, (int, list)):
+            partner_ids = res_partner.search([('id', operator, value)])
+        elif isinstance(value, str):
+            partner_ids = res_partner.search([('name', operator, value)])
+        else:
+            return [('id', 'in', [])]
+
+        filtered_lot_ids = lot_ids.filtered(lambda lot: lot.last_delivery_partner_id.id in partner_ids.ids)
+        return [('id', 'in', filtered_lot_ids.ids)]
+
+    def _search_partner_ids(self, operator, value):
+        if isinstance(value, int):
+            lot_ids = self.env['stock.lot'].search([]).filtered(lambda lot: value in lot.partner_ids.ids)
+            return [('id', 'in', lot_ids.ids)]
+        return [('id', 'in', [])]
 
     def action_lot_open_quants(self):
         self = self.with_context(search_default_lot_id=self.id, create=False)
