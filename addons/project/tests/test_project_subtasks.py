@@ -542,3 +542,50 @@ class TestProjectSubtasks(TestProjectCommon):
             task_form.parent_id = Task
         self.assertEqual(task.project_id, self.task_1.project_id, "project_id should be affected")
         self.assertTrue(task.display_in_project, "display_in_project should be True when there is no parent task")
+
+    def test_convert_tasks_to_subtask(self):
+        """
+        Test the 'Convert to Subtask' functionality by assigning task_2
+        as the parent of task_1, and verify that the parent-child
+        relationships are updated correctly.
+        """
+        with Form(self.task_1, view="project.project_task_convert_to_subtask_view_form") as subtask:
+            subtask.parent_id = self.task_2
+        self.assertTrue(self.task_2 in self.task_1.parent_id, "Subtask must have parent task.")
+        self.assertTrue(self.task_1 in self.task_2.child_ids, "Parent task must have child tasks.")
+
+    def test_action_convert_to_subtask(self):
+        """
+        Test the conversion of a private task to a subtask with a notification,
+        and verify the conversion of a regular task returns the expected action.
+        """
+        private_task = self.env['project.task'].create({
+            'name': 'Private task',
+            'project_id': False,
+        })
+
+        # Attempt to convert the private task to a subtask
+        private_task_notification = private_task.action_convert_to_subtask()
+        # Verify the action returns the expected notification for private tasks
+        self.assertEqual(private_task_notification['type'], 'ir.actions.client')
+        self.assertEqual(private_task_notification['tag'], 'display_notification')
+        self.assertEqual(
+            private_task_notification['params'],
+            {
+                'message': 'Private tasks cannot be converted into sub-tasks. Please set a project on the task to gain access to this feature.',
+                'type': 'danger',
+            }
+        )
+
+        # Convert a regular task to a subtask
+        convert_task_action = self.task_1.action_convert_to_subtask()
+        # Verify the action returns the expected properties for regular tasks
+        self.assertEqual(convert_task_action['name'], 'Convert to Task/Sub-Task')
+        self.assertEqual(convert_task_action['res_id'], self.task_1.id)
+        self.assertEqual(convert_task_action['type'], 'ir.actions.act_window')
+        self.assertEqual(convert_task_action['res_model'], 'project.task')
+        self.assertEqual(convert_task_action['target'], 'new')
+        self.assertEqual(
+            convert_task_action['views'],
+            [(self.env.ref('project.project_task_convert_to_subtask_view_form').id, 'form')]
+        )
