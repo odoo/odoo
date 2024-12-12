@@ -18,9 +18,7 @@ class L10nECWebsiteSale(WebsiteSale):
 
     def _prepare_address_form_values(self, *args, address_type, **kwargs):
         rendering_values = super()._prepare_address_form_values(
-            *args,
-            address_type,
-            **kwargs,
+            *args, address_type, **kwargs,
         )
         if (
             (self._is_billing_address(address_type, **kwargs))

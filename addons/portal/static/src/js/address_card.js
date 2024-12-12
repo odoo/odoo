@@ -30,6 +30,7 @@ publicWidget.registry.addressCard = publicWidget.Widget.extend({
             address_type: addressType,
             address_id: partnerId,
         });
+        // To-Do avoid reloading and achieve same as Ecom
         location.reload();
     },
 

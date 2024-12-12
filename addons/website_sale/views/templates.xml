@@ -2235,8 +2235,8 @@
             <t t-set="additional_title">Shop - Checkout</t>
             <t t-set="redirect" t-valuef="/shop/checkout"/>
             <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
-            <t t-set="address_url" t-valuef="/shop/address?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"/>
             <div id="shop_checkout">
+                <t t-set="address_url" t-valuef="/shop/address"/>
                 <t t-if="order._has_deliverable_products()">
                     <t t-call="website_sale.delivery_address_row">
                         <t t-set="addresses" t-value="delivery_addresses"/>
@@ -2296,6 +2296,13 @@
         <t t-call="portal.address_kanban" position="inside">
             <t t-set="selected" t-value="address == selected_address"/>
             <t t-set="is_my_address_card" t-value="False"/>
+        </t>
+        <t t-set="new_address_url" position="after">
+            <t
+                t-if="address_type == 'delivery'"
+                t-set="new_address_url"
+                t-valuef="{{new_address_url}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+            />
         </t>
         <!-- We don't allow public users to have multiple delivery addresses. -->
         <div name="add_address" position="attributes">
