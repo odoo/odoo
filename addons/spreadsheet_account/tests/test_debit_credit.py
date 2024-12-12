@@ -101,6 +101,179 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             }
         )
 
+    def test_get_timeline_non_overlapping_periods(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2021,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2021,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'company_id': None,
+            }
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2020, 12, 31)),
+            (date(2021, 1, 1), date(2021, 12, 31)),
+            (date(2022, 1, 1), date(2022, 12, 31)),
+            (date(2024, 1, 1), date(2024, 12, 31)),
+        ])
+
+    def test_get_timeline_overlapping_periods(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2023,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 2,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'day',
+                    'year': 2024,
+                    'month': 7,
+                    'day': 2,
+                },
+                'date_to': {
+                    'range_type': 'month',
+                    'year': 2024,
+                    'month': 9,
+                },
+                'company_id': None,
+            }
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2023, 3, 31)),
+            (date(2023, 4, 1), date(2023, 12, 31)),
+            (date(2024, 1, 1), date(2024, 3, 31)),
+            (date(2024, 4, 1), date(2024, 6, 30)),
+            (date(2024, 7, 1), date(2024, 7, 1)),
+            (date(2024, 7, 2), date(2024, 9, 30)),
+            (date(2024, 10, 1), date(2024, 12, 31)),
+        ])
+
+    def test_get_timeline_mix_overlapping_periods(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2021, 12, 31)),
+            (date(2022, 1, 1), date(2022, 3, 31)),
+            (date(2022, 4, 1), date(2022, 9, 30)),
+            (date(2022, 10, 1), date(2022, 12, 31)),
+            (date(2024, 1, 1), date(2024, 3, 31)),
+            (date(2024, 4, 1), date(2024, 9, 30)),
+            (date(2024, 10, 1), date(2024, 12, 31)),
+        ])
+
     def test_empty_payload(self):
         self.assertEqual(
             self.env["account.account"].spreadsheet_fetch_debit_credit([]), []

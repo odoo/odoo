@@ -93,7 +93,7 @@ class AccountAccount(models.Model):
             args['date_from_boundary'] = start
             args['date_to_boundary'] = end
 
-    def _pre_process_timeline(self, args_list):
+    def _get_timeline(self, args_list):
 
         # Get all boundaries
         all_boundaries = set()
@@ -101,14 +101,23 @@ class AccountAccount(models.Model):
             all_boundaries.add((args['date_from_boundary'], 'begin'))
             all_boundaries.add((args['date_to_boundary'], 'end'))
 
-        all_boundaries = list(all_boundaries)
-        all_boundaries.sort()
+        all_boundaries = sorted(all_boundaries)
 
         # Compute non overlapping time period
         timeline = []
+        depth = 0
         for i in range(len(all_boundaries) - 1):
             start = all_boundaries[i]
             end = all_boundaries[i + 1]
+
+            # `depth` is used as a stack tracker to know whether or not we are still
+            # in a broader period or at the end of one and starting a new one.
+            if depth == 0 and start[1] == 'end':
+                continue
+            if start[1] == 'begin':
+                depth += 1
+            if end[1] == 'end':
+                depth -= 1
 
             timeline.append((
                 start[0] if start[1] == 'begin' else start[0] + relativedelta(days=1),
@@ -298,7 +307,7 @@ class AccountAccount(models.Model):
             return []
 
         self._pre_process_date_period_boundaries(args_list)
-        timeline = self._pre_process_timeline(args_list)
+        timeline = self._get_timeline(args_list)
         all_accounts = self._get_all_accounts(args_list, default_accounts=default_accounts)
         all_lines = self._get_all_lines(args_list, fields, timeline, all_accounts)
 
