@@ -6,9 +6,12 @@
                 <h4 class="modal-title" t-esc="props.title" />
             </t>
             <div class="payment-methods-overview overflow-auto">
-                <div class="w-100">
-                    It seems that the data we have is oudtaded. You could quickly update it by selecting "Limited Synchronisation" or reload all the data by choosing " Full synchronisation".
-                    Otherwise, you can keep going with the data we have in the memory by clicking on "Discard"
+                <div class="v-100">
+                    <p>You can update it by selecting one of the following options:</p>
+                    <ul>
+                        <li><strong>Limited Synchronization:</strong> Quickly refresh essential data.</li>
+                        <li><strong>Full Synchronization:</strong> Reload all data (may take longer depending on the amount of data).</li>
+                    </ul>
                 </div>
             </div>
             <t t-set-slot="footer">
