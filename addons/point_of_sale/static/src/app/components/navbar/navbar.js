@@ -74,9 +74,12 @@ export class Navbar extends Component {
     }
     onClickScan() {
         if (!this.pos.scanning) {
-            this.pos.showScreen("ProductScreen");
-            this.pos.mobile_pane = "right";
+            const screenName = this.pos.mainScreen.component.name;
+            if (["ProductScreen", "TicketScreen"].includes(screenName)) {
+                this.pos.showScreen(screenName);
+            }
         }
+        this.pos.mobile_pane = "right";
         this.pos.scanning = !this.pos.scanning;
     }
     get customerFacingDisplayButtonIsShown() {
