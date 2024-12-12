@@ -52,8 +52,10 @@ from __future__ import annotations
 
 import collections
 import enum
+import functools
 import itertools
 import logging
+import operator
 import typing
 import warnings
 from datetime import date, datetime, time, timedelta
@@ -856,7 +858,7 @@ ANY_TYPES = (Domain, Query, SQL)
 
 if typing.TYPE_CHECKING:
     ConditionOptimization = Callable[[DomainCondition, BaseModel], Domain]
-    MergeOptimization = Callable[[type[DomainNary], Iterable[Domain], BaseModel], Iterable[Domain]]
+    MergeOptimization = Callable[[type[DomainNary], list[Domain], BaseModel], Iterable[Domain]]
 
 _OPTIMIZATIONS_BY_OPERATOR: dict[str, list[ConditionOptimization]] = collections.defaultdict(list)
 _OPTIMIZATIONS_BY_FIELD_TYPE: dict[str, list[ConditionOptimization]] = collections.defaultdict(list)
@@ -1062,8 +1064,8 @@ def _operator_equal_as_in(condition, _):
 
 
 @operator_optimization(['in', 'not in'])
-def _optimize_in_list(condition, _):
-    """Make sure the value is a collection or use 'any' operator"""
+def _optimize_in_set(condition, _model):
+    """Make sure the value is an OrderedSet or use 'any' operator"""
     value = condition.value
     if isinstance(value, ANY_TYPES):
         operator = 'any' if condition.operator == 'in' else 'not any'
@@ -1440,6 +1442,51 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
 # --------------------------------------------------
 # Optimizations: nary
 # --------------------------------------------------
+
+
+@nary_condition_optimization(operators=('in', 'not in'))
+def _optimize_merge_set_conditions(cls: type[DomainNary], conditions, model):
+    """Merge equality conditions.
+
+    Combine the 'in' and 'not in' conditions to a single set of values.
+    Do not touch x2many fields which have a different semantic.
+
+    Examples:
+
+        a in {1} or a in {2}  <=>  a in {1, 2}
+        a in {1, 2} and a not in {2, 5}  =>  a in {1}
+    """
+    field = conditions[0]._field(model)
+    if field.type in ('many2many', 'one2many', 'properties'):
+        return conditions
+    assert all(isinstance(cond.value, OrderedSet) for cond in conditions)
+
+    # build the sets for 'in' and 'not in' conditions
+    in_sets = [c.value for c in conditions if c.operator == 'in']
+    not_in_sets = [c.value for c in conditions if c.operator == 'not in']
+
+    # combine the sets
+    field_expr = conditions[0].field_expr
+    if cls.OPERATOR == '&':
+        if in_sets:
+            return [DomainCondition(field_expr, 'in', intersection(in_sets) - union(not_in_sets))]
+        else:
+            return [DomainCondition(field_expr, 'not in', union(not_in_sets))]
+    else:
+        if not_in_sets:
+            return [DomainCondition(field_expr, 'not in', intersection(not_in_sets) - union(in_sets))]
+        else:
+            return [DomainCondition(field_expr, 'in', union(in_sets))]
+
+
+def intersection(sets: list[OrderedSet]) -> OrderedSet:
+    """Intersection of a list of OrderedSets"""
+    return functools.reduce(operator.and_, sets)
+
+
+def union(sets: list[OrderedSet]) -> OrderedSet:
+    """Union of a list of OrderedSets"""
+    return OrderedSet(elem for s in sets for elem in s)
 
 
 @nary_condition_optimization(['any'], ['many2one', 'one2many', 'many2many'])
