@@ -90,6 +90,8 @@ class MrpBom(models.Model):
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
              "Note that security lead times will also be considered when appropriate.")
 
+    additional_notes = fields.Html(string="Additional Notes")
+
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
         'The quantity to produce must be positive!',
