@@ -1620,15 +1620,15 @@ describe("insert", () => {
     });
 });
 
-describe("waitForABetterName", () => {
-    test("waitForABetterName disable any further execution while already executing", async () => {
+describe("blockedUntilDone", () => {
+    test("blockedUntilDone disable any further execution while already executing", async () => {
         let started = 0
         let finished = 0
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 "button": {
-                    "t-on-click": this.waitForABetterName(this.onClickLong)
+                    "t-on-click": this.blockedUntilDone(this.onClickLong)
                 }
             }
             async onClickLong() {
@@ -1649,12 +1649,12 @@ describe("waitForABetterName", () => {
         expect(finished).toBe(1);
     });
 
-    test("waitForABetterName doesn't add a loading icon if not required", async () => {
+    test("blockedUntilDone doesn't add a loading icon if not required", async () => {
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 "button": {
-                    "t-on-click": this.waitForABetterName(this.onClickLong)
+                    "t-on-click": this.blockedUntilDone(this.onClickLong)
                 }
             }
             async onClickLong() {
@@ -1668,12 +1668,12 @@ describe("waitForABetterName", () => {
         expect(el.querySelectorAll("span")).toHaveLength(0);
     });
 
-    test("waitForABetterName add a loading icon when the execution takes more than 400ms", async () => {
+    test("blockedUntilDone add a loading icon when the execution takes more than 400ms", async () => {
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
                 "button": {
-                    "t-on-click": this.waitForABetterName(this.onClickLong, true)
+                    "t-on-click": this.blockedUntilDone(this.onClickLong, true)
                 }
             }
             async onClickLong() {

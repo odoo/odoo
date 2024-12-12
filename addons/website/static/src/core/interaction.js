@@ -215,7 +215,7 @@ export class Interaction {
      * If required, add a loading animation on button if the execution takes 
      * more than 400ms.
      */
-    waitForABetterName(fn, useLoadingAnimation = false) {
+    blockedUntilDone(fn, useLoadingAnimation = false) {
         if (useLoadingAnimation) {
             return makeButtonHandler(fn);
         } else {
