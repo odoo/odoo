@@ -99,6 +99,9 @@ class WebsiteCore {
             if (I.selector === "") {
                 throw new Error(`The selector should be defined as a static property on the class ${I.name}, not on the instance`);
             }
+            if (I.dynamicContent) {
+                throw new Error(`The dynamic content object should be defined on the instance, not on the class (${I.name})`);
+            }
             if (el.matches(I.selector)) {
                 this._startInteraction(el, I, proms);
             } else {
@@ -123,7 +126,7 @@ class WebsiteCore {
         if (I.prototype instanceof Interaction) {
             try {
                 // console.log(`[colibri] starting ${I.name}`);
-                const interaction = new Colibri(this, I, el);
+                const interaction = new Colibri(this, el);
                 this.interactions.push(interaction);
                 proms.push(interaction.start());
             } catch (e) {

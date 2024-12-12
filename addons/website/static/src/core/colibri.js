@@ -10,7 +10,7 @@ let Markup = null;
 export const SKIP_IMPLICIT_UPDATE = Symbol();
 
 export class Colibri {
-    constructor(core, I, el) {
+    constructor(core, el) {
         this.el = el;
         this.isReady = false;
         this.isUpdating = false;
@@ -22,9 +22,6 @@ export class Colibri {
         this.dynamicNodes = new Map();
         this.core = core;
         this.interaction = new I(el, core.env, this);
-        if (I.dynamicContent) {
-            throw new Error(`The dynamic content object should be defined on the instance, not on the class (${I.name})`);
-        }
         this.interaction.setup();
     }
     async start() {

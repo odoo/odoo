@@ -517,7 +517,7 @@ describe("handling crashes", () => {
     test("crash if dynamicContent is defined on class, not on instance", async () => {
         class Test extends Interaction {
             static selector = ".test";
-            static dynamicContent = {}
+            static dynamicContent = {};
         }
         let error = null;
         try {
