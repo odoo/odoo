@@ -71,16 +71,16 @@ export class Record extends DataPoint {
         this._setData(data);
     }
 
-    _setData(data) {
+    _setData(data, { orderBys } = {}) {
         this._isEvalContextReady = false;
         if (this.resId) {
-            this._values = this._parseServerValues(data);
+            this._values = this._parseServerValues(data, { orderBys });
             this._changes = markRaw({});
             Object.assign(this._textValues, this._getTextValues(data));
         } else {
             this._values = markRaw({});
             const allVals = { ...this._getDefaultValues(), ...data };
-            this._initialChanges = markRaw(this._parseServerValues(allVals));
+            this._initialChanges = markRaw(this._parseServerValues(allVals, { orderBys }));
             this._changes = markRaw({ ...this._initialChanges });
             Object.assign(this._textValues, this._getTextValues(allVals));
         }
@@ -317,7 +317,7 @@ export class Record extends DataPoint {
         }
 
         // Apply server changes
-        const parsedChanges = this._parseServerValues(serverChanges, this.data);
+        const parsedChanges = this._parseServerValues(serverChanges, { currentValues: this.data });
         for (const fieldName in parsedChanges) {
             this._changes[fieldName] = parsedChanges[fieldName];
             this.data[fieldName] = parsedChanges[fieldName];
@@ -334,9 +334,7 @@ export class Record extends DataPoint {
     }
 
     _applyDefaultValues() {
-        const fieldNames = this.fieldNames.filter((fieldName) => {
-            return !(fieldName in this.data);
-        });
+        const fieldNames = this.fieldNames.filter((fieldName) => !(fieldName in this.data));
         const defaultValues = this._getDefaultValues(fieldNames);
         if (this.isNew) {
             this._applyChanges({}, defaultValues);
@@ -448,9 +446,10 @@ export class Record extends DataPoint {
         }
         const isValid = !this._invalidFields.size;
         if (!isValid && displayNotification) {
-            const items = [...this._invalidFields].map((fieldName) => {
-                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
-            }, this);
+            const items = [...this._invalidFields].map(
+                (fieldName) => `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`,
+                this
+            );
             this._closeInvalidFieldsNotification = this.model.notification.add(
                 markup(`<ul>${items.join("")}</ul>`),
                 {
@@ -539,7 +538,7 @@ export class Record extends DataPoint {
         };
     }
 
-    _createStaticListDatapoint(data, fieldName) {
+    _createStaticListDatapoint(data, fieldName, { orderBys } = {}) {
         const { related, limit, defaultOrderBy } = this.activeFields[fieldName];
         const config = {
             resModel: this.fields[fieldName].relation,
@@ -548,7 +547,7 @@ export class Record extends DataPoint {
             relationField: this.fields[fieldName].relation_field || false,
             offset: 0,
             resIds: data.map((r) => r.id),
-            orderBy: defaultOrderBy || [],
+            orderBy: orderBys?.[fieldName] || defaultOrderBy || [],
             limit: limit || Number.MAX_SAFE_INTEGER,
             currentCompanyId: this.currentCompanyId,
             context: {}, // will be set afterwards, see "_updateContext" in "_setEvalContext"
@@ -783,7 +782,7 @@ export class Record extends DataPoint {
         return data;
     }
 
-    _parseServerValues(serverValues, currentValues = {}) {
+    _parseServerValues(serverValues, { currentValues, orderBys } = {}) {
         const parsedValues = {};
         if (!serverValues) {
             return parsedValues;
@@ -795,18 +794,16 @@ export class Record extends DataPoint {
             }
             const field = this.fields[fieldName];
             if (field.type === "one2many" || field.type === "many2many") {
-                let staticList = currentValues[fieldName];
+                let staticList = currentValues?.[fieldName];
                 let valueIsCommandList = true;
                 // value can be a list of records or a list of commands (new record)
                 valueIsCommandList = value.length > 0 && Array.isArray(value[0]);
                 if (!staticList) {
                     let data = valueIsCommandList ? [] : value;
                     if (data.length > 0 && typeof data[0] === "number") {
-                        data = data.map((resId) => {
-                            return { id: resId };
-                        });
+                        data = data.map((resId) => ({ id: resId }));
                     }
-                    staticList = this._createStaticListDatapoint(data, fieldName);
+                    staticList = this._createStaticListDatapoint(data, fieldName, { orderBys });
                     if (valueIsCommandList) {
                         staticList._applyInitialCommands(value);
                     }
@@ -1040,12 +1037,22 @@ export class Record extends DataPoint {
         if (canProceed === false) {
             return false;
         }
+        // keep x2many orderBy if we stay on the same record
+        const orderBys = {};
+        if (!nextId) {
+            for (const fieldName of this.fieldNames) {
+                if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                    orderBys[fieldName] = this.data[fieldName].orderBy;
+                }
+            }
+        }
         let fieldSpec = {};
         if (reload) {
             fieldSpec = getFieldsSpec(
                 this.activeFields,
                 this.fields,
-                getBasicEvalContext(this.config)
+                getBasicEvalContext(this.config),
+                { orderBys }
             );
         }
         const kwargs = {
@@ -1089,7 +1096,7 @@ export class Record extends DataPoint {
             if (this.config.isRoot) {
                 this.model.hooks.onWillLoadRoot(this.config);
             }
-            this._setData(records[0]);
+            this._setData(records[0], { orderBys });
         } else {
             this._values = markRaw({ ...this._values, ...this._changes });
             if ("id" in this.activeFields) {

@@ -344,7 +344,7 @@ function getFieldContextForSpec(activeFields, fields, fieldName, evalContext) {
     }
 }
 
-export function getFieldsSpec(activeFields, fields, evalContext, { withInvisible } = {}) {
+export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, withInvisible } = {}) {
     const fieldsSpec = {};
     const properties = [];
     for (const fieldName in activeFields) {
@@ -371,8 +371,9 @@ export function getFieldsSpec(activeFields, fields, evalContext, { withInvisible
                         evalContext
                     );
                     fieldsSpec[fieldName].limit = limit;
-                    if (defaultOrderBy) {
-                        fieldsSpec[fieldName].order = orderByToString(defaultOrderBy);
+                    const orderBy = orderBys?.[fieldName] || defaultOrderBy || [];
+                    if (orderBy.length) {
+                        fieldsSpec[fieldName].order = orderByToString(orderBy);
                     }
                 }
                 break;
