@@ -777,7 +777,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
                 this.desktopMegaMenuToggleEls.push(el);
             }
         }
-
+        this._updateActiveMenuLinks();
         return this._super(...arguments);
     },
 
@@ -818,6 +818,38 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _updateActiveMenuLinks() {
+        if (this.el.querySelector("a.nav-link.active")) {
+            return;
+        }
+        const currentPathName = window.location.pathname;
+
+        // Check and update the active state of menu items based on the current
+        // page
+        const dropdownMenusEls = this.el.querySelectorAll(".o_mega_menu");
+        dropdownMenusEls.forEach((dropdownMenusEl, position) => {
+            const linkEls = dropdownMenusEl.querySelectorAll(`a:not([href="#"])`);
+            const navLinkEl = dropdownMenusEl
+                .closest(".nav-item")
+                .querySelector(".o_mega_menu_toggle");
+            // Target the corresponding link in the mobile navigation.
+            // Since the mega-menu for mobile is dynamically rendered,
+            // it is not accessible at this moment.
+            const mobileNavLinkEl = this.el.querySelectorAll(
+                "#top_menu_collapse_mobile .top_menu .dropdown-toggle"
+            )[position];
+            linkEls.forEach((linkEl) => {
+                const href = new URL(linkEl.href);
+                if (href.pathname === currentPathName) {
+                    navLinkEl.classList.add("active");
+                    mobileNavLinkEl.classList.add("active");
+                }
+            });
+        });
+    },
     /**
      * Called when a mega menu dropdown is clicked/key pressed.
      *
