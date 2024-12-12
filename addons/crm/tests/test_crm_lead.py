@@ -850,10 +850,9 @@ class TestCRMLead(TestCrmCommon):
         })
 
         # search term containing less than 3 characters should throw an error (some currently not working)
+        self.env['crm.lead'].search([('phone_mobile_search', 'like', '')])  # no restriction, returns all
         with self.assertRaises(UserError):
-            self.env['crm.lead'].search([('phone_mobile_search', 'like', '')])
-        # with self.assertRaises(UserError):
-        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', '7   ')])
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', '7   ')])
         with self.assertRaises(UserError):
             self.env['crm.lead'].search([('phone_mobile_search', 'like', 'c')])
         with self.assertRaises(UserError):
