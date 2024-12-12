@@ -62,11 +62,16 @@ class StockMove(models.Model):
             for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.move_id.state != 'posted':
                     continue
+                # Discount applied on bill prior to reception
+                if invoice_line.discount and not move_layer:
+                    price_unit = invoice_line.price_subtotal / invoice_line.quantity
+                else:
+                    price_unit = invoice_line.price_unit
                 if invoice_line.tax_ids:
                     invoice_line_value = invoice_line.tax_ids.with_context(round=False).compute_all(
-                        invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
+                        price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
                 else:
-                    invoice_line_value = invoice_line.price_unit * invoice_line.quantity
+                    invoice_line_value = price_unit * invoice_line.quantity
                 total_invoiced_value += invoice_line.currency_id._convert(
                         invoice_line_value, order.currency_id, order.company_id, invoice_line.move_id.invoice_date, round=False)
                 invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
