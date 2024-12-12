@@ -35,6 +35,7 @@ import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
+import { setElementContent } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} Props
@@ -143,7 +144,9 @@ export class Message extends Component {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
                 const shadowStyle = document.createElement("style");
-                shadowStyle.innerHTML = `
+                setElementContent(
+                    shadowStyle,
+                    markup(`
                     * {
                         background-color: transparent !important;
                         color: ${color} !important;
@@ -157,7 +160,8 @@ export class Message extends Component {
                     .o-mail-Message-searchHighlight {
                         background: ${this.constructor.SHADOW_HIGHLIGHT_COLOR} !important;
                     }
-                `;
+                `)
+                );
                 if (cookie.get("color_scheme") === "dark") {
                     this.shadowRoot.appendChild(shadowStyle);
                 }
@@ -167,10 +171,13 @@ export class Message extends Component {
             () => {
                 if (this.shadowBody.el) {
                     const body = document.createElement("span");
-                    body.innerHTML = this.state.showTranslation
-                        ? this.message.translationValue
-                        : this.props.messageSearch?.highlight(this.message.body) ??
-                          this.message.body;
+                    setElementContent(
+                        body,
+                        this.state.showTranslation
+                            ? this.message.translationValue
+                            : this.props.messageSearch?.highlight(this.message.body) ??
+                                  this.message.body
+                    );
                     this.prepareMessageBody(body);
                     this.shadowRoot.appendChild(body);
                     return () => {
