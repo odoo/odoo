@@ -1308,6 +1308,10 @@ class ProjectTask(models.Model):
         elif 'project_id' in vals:
             self.filtered(lambda t: t.state != '04_waiting_normal').state = '01_in_progress'
 
+        # Do not recompute the state when changing the parent (to avoid resetting the state)
+        if 'parent_id' in vals:
+            self.env.remove_to_compute(self._fields['state'], self)
+
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
 
         if partner_ids:
