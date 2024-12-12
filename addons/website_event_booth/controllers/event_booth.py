@@ -18,9 +18,12 @@ class WebsiteEventBoothController(WebsiteEventController):
             raise Forbidden()
 
         booth_category_id = int(booth_category_id) if booth_category_id else False
+        view = event.booth_menu_ids.sudo().view_id
+        page = view.key
+        seo_object = request.website.get_template(page)
         return request.render(
             'website_event_booth.event_booth_registration',
-            self._prepare_booth_main_values(event, booth_category_id=booth_category_id, booth_ids=booth_ids)
+            self._prepare_booth_main_values(event, booth_category_id=booth_category_id, booth_ids=booth_ids) | {'seo_object': seo_object}
         )
 
     @http.route('/event/<model("event.event"):event>/booth/register',

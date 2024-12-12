@@ -34,9 +34,12 @@ class WebsiteEventMeetController(EventCommunityController):
         :param event: event for which we display the meeting rooms
         :param lang: lang id used to perform a search
         """
+        view = event.community_menu_ids.sudo().view_id
+        page = view.key
+        seo_object = request.website.get_template(page)
         return request.render(
-            "website_event_meet.event_meet",
-            self._event_meeting_rooms_get_values(event, lang=lang)
+            "website_event.template_community",
+            self._event_meeting_rooms_get_values(event, lang=lang) | {'seo_object': seo_object}
         )
 
     def _event_meeting_rooms_get_values(self, event, lang=None):

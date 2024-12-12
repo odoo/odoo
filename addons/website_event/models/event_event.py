@@ -345,7 +345,7 @@ class EventEvent(models.Model):
             (_('Introduction'), False, 'website_event.template_intro', 1, 'introduction'),
             (_('Location'), False, 'website_event.template_location', 50, 'location'),
             (_('Info'), '/event/%s/register' % self.env['ir.http']._slug(self), False, 100, 'register'),
-            (_('Community'), '/event/%s/community' % self.env['ir.http']._slug(self), False, 80, 'community'),
+            (_('Community'), '/event/%s/community' % self.env['ir.http']._slug(self), 'website_event.template_community', 80, 'community'),
         ]
 
     def _update_website_menus(self, menus_update_by_field=None):
@@ -413,15 +413,16 @@ class EventEvent(models.Model):
         """
         self.browse().check_access('write')
         view_id = False
-        if not url:
+        if not url or (url and xml_id):
             # add_menu=False, ispage=False -> simply create a new ir.ui.view with name
             # and template
             page_result = self.env['website'].sudo().new_page(
                 name=f'{name} {self.name}', template=xml_id,
                 add_menu=False, ispage=False)
             view_id = page_result['view_id']
-            view = self.env["ir.ui.view"].browse(view_id)
-            url = f"/event/{self.env['ir.http']._slug(self)}/page/{view.key.split('.')[-1]}"  # url contains starting "/"
+            if not url:
+                view = self.env["ir.ui.view"].browse(view_id)
+                url = f"/event/{self.env['ir.http']._slug(self)}/page/{view.key.split('.')[-1]}"  # url contains starting "/"
 
         website_menu = self.env['website.menu'].sudo().create({
             'name': name,

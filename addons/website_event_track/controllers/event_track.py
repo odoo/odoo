@@ -80,10 +80,13 @@ class EventTrackController(http.Controller):
             # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
             slug = request.env['ir.http']._slug
             return request.redirect(f'/event/{slug(event)}/track', code=301)
+        view = event.track_menu_ids.filtered(lambda menu: menu.menu_id.url.endswith('/track')).sudo().view_id
+        page = view.key
+        seo_object = request.website.get_template(page)
 
         return request.render(
             "website_event_track.tracks_session",
-            self._event_tracks_get_values(event, tag=tag, **searches)
+            self._event_tracks_get_values(event, tag=tag, **searches) | {'seo_object': seo_object}
         )
 
     def _event_tracks_get_values(self, event, tag=None, **searches):
@@ -188,9 +191,13 @@ class EventTrackController(http.Controller):
     @http.route(['''/event/<model("event.event"):event>/agenda'''], type='http', auth="public", website=True, sitemap=False)
     def event_agenda(self, event, tag=None, **post):
         event = event.with_context(tz=event.date_tz or 'UTC')
+        view = event.track_menu_ids.filtered(lambda menu: menu.menu_id.url.endswith('/agenda')).sudo().view_id
+        page = view.key
+        seo_object = request.website.get_template(page)
         vals = {
             'event': event,
             'main_object': event,
+            'seo_object': seo_object,
             'tag': tag,
             'is_event_user': request.env.user.has_group('event.group_event_user'),
         }
@@ -426,7 +433,14 @@ class EventTrackController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal'''], type='http', auth="public", website=True, sitemap=False)
     def event_track_proposal(self, event, **post):
-        return request.render("website_event_track.event_track_proposal", {'event': event, 'main_object': event})
+        view = event.track_proposal_menu_ids.sudo().view_id
+        page = view.key
+        seo_object = request.website.get_template(page)
+        return request.render("website_event_track.event_track_proposal", {
+            'event': event,
+            'main_object': event,
+            'seo_object': seo_object,
+        })
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):

@@ -35,9 +35,12 @@ class ExhibitorController(WebsiteEventController):
         '/event/<model("event.event"):event>/exhibitor'
     ], type='http', auth="public", website=True, sitemap=False, methods=['GET', 'POST'])
     def event_exhibitors(self, event, **searches):
+        view = event.exhibitor_menu_ids.sudo().view_id
+        page = view.key
+        seo_object = request.website.get_template(page)
         return request.render(
             "website_event_exhibitor.event_exhibitors",
-            self._event_exhibitors_get_values(event, **searches)
+            self._event_exhibitors_get_values(event, **searches) | {'seo_object': seo_object}
         )
 
     def _event_exhibitors_get_values(self, event, **searches):

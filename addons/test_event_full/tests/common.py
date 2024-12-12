@@ -54,6 +54,16 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
             signature='--\nErnest',
         )
 
+        cls.user_event_web_manager = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='crm_manager@test.example.com',
+            groups='event.group_event_manager,website.group_website_designer',
+            login='user_event_web_manager',
+            name='Martin Sales Manager',
+            notification_type='inbox',
+        )
+
         cls.customer = cls.env['res.partner'].create({
             'country_id': cls.env.ref('base.be').id,
             'email': 'customer.test@example.com',
