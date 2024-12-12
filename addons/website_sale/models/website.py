@@ -638,3 +638,71 @@ class Website(models.Model):
     def has_ecommerce_access(self):
         """ Return whether the current user is allowed to access eCommerce-related content. """
         return not (self.env.user._is_public() and self.ecommerce_access == 'logged_in')
+
+    def get_product_seo_data(self, product_template):
+        """ Return SEO data for a given product.
+        If product has more than two variants return product group SEO data
+        else return only product SEO data.
+        :param `product.template` product_template: Current product template.
+        :rtype: dict
+        :return: A structured product data.
+        """
+        self.ensure_one()
+        if product_template.product_variant_count > 1:
+            return self._get_json_ld_product_group(product_template)
+        return self._get_json_ld_product(product_template)
+
+    def _get_json_ld_product_group(self, product_template):
+        """ Return product with variants structured data (json-ld) for SEO.
+        :param `product.template` product_template: Current product template.
+        :rtype: dict
+        :return: A structured product template data.
+        """
+        self.ensure_one()
+        base_url = self.get_base_url()
+        seo_data = {
+            '@context': 'https://schema.org/',
+            '@type': 'ProductGroup',
+            'name': product_template.name,
+            'image': base_url + self.image_url(product_template, 'image_1920'),
+            'url': base_url + product_template.website_url,
+            'hasVariant': [
+                self._get_json_ld_product(product)
+                for product in product_template.product_variant_ids
+            ],
+        }
+        if product_template.description_ecommerce:
+            seo_data['description'] = product_template.description_ecommerce
+        return seo_data
+
+    def _get_json_ld_product(self, product_or_template):
+        """ Return product structured data (json-ld) for SEO.
+        :param `product.product`|`product.template` product_or_template: A product.
+        :rtype: dict
+        :return: A structured product data.
+        """
+        self.ensure_one()
+        base_url = self.get_base_url()
+        seo_data = {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            'name': product_or_template.name,
+            'url': base_url + product_or_template.website_url,
+            'image': base_url + self.image_url(product_or_template, 'image_1920'),
+            'offers': {
+                '@type': 'Offer',
+                'price': self.pricelist_id._get_product_price(
+                    product_or_template, quantity=1, target_currency=self.currency_id
+                ),
+                'priceCurrency': self.currency_id.name,
+            },
+        }
+        if product_or_template.description_ecommerce:
+            seo_data['description'] = product_or_template.description_ecommerce
+        if product_or_template.rating_count:
+            seo_data['aggregateRating'] = {
+                '@type': 'AggregateRating',
+                'ratingValue': product_or_template.rating_avg,
+                'reviewCount': product_or_template.rating_count,
+            }
+        return seo_data
