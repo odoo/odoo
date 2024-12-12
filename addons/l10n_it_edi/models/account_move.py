@@ -10,7 +10,7 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
-from odoo.tools import cleanup_xml_node, float_is_zero, float_repr, html2plaintext
+from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -477,6 +477,13 @@ class AccountMove(models.Model):
                 if line.price_subtotal < 0 and line._get_downpayment_lines():
                     downpayment_lines.append(base_line)
                     base_lines.remove(base_line)
+
+            if float_compare(quantity, 0, 2) < 0:
+                # Negative quantity is refused by SDI, so we invert quantity and price_unit to keep the price_subtotal
+                base_line.update({
+                    'quantity': -quantity,
+                    'price_unit': -price_unit,
+                })
 
         dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
         base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
