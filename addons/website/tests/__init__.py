@@ -25,6 +25,7 @@ from . import test_qweb
 from . import test_redirect
 from . import test_res_users
 from . import test_skip_website_configurator
+from . import test_snippet_version
 from . import test_snippets
 from . import test_theme
 from . import test_ui
