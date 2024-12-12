@@ -263,13 +263,21 @@ SQL_ORDER_BY_TYPE = defaultdict(lambda: 16, {
 
 def create_model_table(cr, tablename, comment=None, columns=()):
     """ Create the table for a model. """
-    colspecs = [
-        SQL('id SERIAL NOT NULL'),
-        *(SQL("%s %s", SQL.identifier(colname), SQL(coltype)) for colname, coltype, _ in columns),
-        SQL('PRIMARY KEY(id)'),
-    ]
+    colspecs = (
+        SQL(", %s %s\n", SQL.identifier(colname), SQL(coltype))
+        for colname, coltype, _ in columns
+    )
     queries = [
-        SQL("CREATE TABLE %s (%s)", SQL.identifier(tablename), SQL(", ").join(colspecs)),
+        SQL(
+            """
+CREATE TABLE %s (
+  id integer primary key generated always as identity
+%s
+)
+""",
+            SQL.identifier(tablename),
+            SQL().join(colspecs)
+        ),
     ]
     if comment:
         queries.append(SQL(
