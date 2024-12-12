@@ -86,6 +86,7 @@ export class FloorScreen extends Component {
             floorWidth: "100%",
             selectedTableIds: [],
             potentialLink: null,
+            floorMapOffset:{x: 0, y: 0}
         });
         this.doCreateTable = useTrackedAsync(async () => {
             await this.createTable();
@@ -237,7 +238,7 @@ export class FloorScreen extends Component {
             () => {
                 this.computeFloorSize();
             },
-            () => [this.activeFloor, this.pos.floorPlanStyle]
+            () => [this.activeFloor, this.pos.floorPlanStyle, this.pos.isEditMode]
         );
         useEffect(
             (tableL) => {
@@ -314,6 +315,8 @@ export class FloorScreen extends Component {
         });
     }
     computeFloorSize() {
+        this.state.floorMapOffset = {x: 0, y: 0};
+
         if (this.pos.floorPlanStyle === "kanban") {
             this.state.floorHeight = "100%";
             this.state.floorWidth = window.innerWidth + "px";
@@ -325,8 +328,9 @@ export class FloorScreen extends Component {
         }
 
         const tables = this.activeFloor.table_ids;
-        const floorV = this.floorMapRef.el.clientHeight;
-        const floorH = this.floorMapRef.el.offsetWidth;
+        const floorV = this.floorScrollBox.el.clientHeight;
+        const floorH = this.floorScrollBox.el.offsetWidth;
+
         const positionH = Math.max(
             ...tables.map((table) => table.position_h + table.width),
             floorH
@@ -346,10 +350,47 @@ export class FloorScreen extends Component {
             };
             img.src = "data:image/png;base64," + this.activeFloor.floor_background_image;
         } else {
-            this.state.floorHeight = `${positionV}px`;
-            this.state.floorWidth = `${positionH}px`;
+            this.state.floorMapOffset = this._computeFloorMapOffset()
+            this.state.floorHeight = `this.state.floorMapOffset.y}px`;
+            this.state.floorWidth = `this.state.floorMapOffset.x}px`;
         }
     }
+
+    _computeFloorMapOffset() {
+        let offset = {x: 0, y: 0};
+
+        // Adjusts the offset to reduce the scrolling area on mobile devices
+        if (hasTouch()
+            && !this.pos.isEditMode
+            && !this.activeFloor.floor_background_image) {
+            const MIN_OFFSET = 20; // Minimum space between the border and the table
+
+            const tables = this.activeTables;
+            if (!tables?.length) {
+                 return offset;
+            }
+
+           // Find minimum horizontal and vertical positions
+            let { minLeft, minTop } = tables.reduce(
+                (data, table) => {
+                    return {
+                        minLeft: Math.min(data.minLeft, table.position_h),
+                        minTop: Math.min(data.minTop, table.position_v),
+                    };
+                },
+                { minLeft: Infinity, minTop: Infinity }
+            );
+
+            if (isFinite(minLeft) && minLeft > MIN_OFFSET ) {
+               offset.x = -(minLeft - MIN_OFFSET);
+           }
+            if (isFinite(minTop) && minTop > MIN_OFFSET ) {
+                offset.y = -(minTop - MIN_OFFSET);
+            }
+        }
+        return offset;
+    }
+
     async resetTable() {
         this.pos.searchProductWord = "";
         const table = this.pos.selectedTable;
