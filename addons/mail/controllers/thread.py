@@ -55,9 +55,9 @@ class ThreadController(http.Controller):
         """Computes:
         - message_subtype_data: data about document subtypes: which are
             available, which are followed if any"""
-        request.env["mail.followers"].check_access("read")
-        follower = request.env["mail.followers"].sudo().browse(follower_id)
-        follower.ensure_one()
+        # limited to internal, who can read all followers
+        follower = request.env["mail.followers"].browse(follower_id)
+        follower.check_access("read")
         record = request.env[follower.res_model].browse(follower.res_id)
         record.check_access("read")
         # find current model subtypes, add them to a dictionary
