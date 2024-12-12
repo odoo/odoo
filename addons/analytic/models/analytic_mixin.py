@@ -61,35 +61,44 @@ class AnalyticMixin(models.AbstractModel):
         if field_expr != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby'):
             return super()._condition_to_sql(alias, field_expr, operator, value, query)
 
-        if operator not in ('=', '!=', 'ilike', 'not ilike', 'in', 'not in'):
+        def search_value(value: str, exact: bool):
+            return list(self.env['account.analytic.account']._search(
+                [('display_name', ('=' if exact else 'ilike'), value)]
+            ))
+
+        # reformulate the condition as <field> in/not in <ids>
+        if operator in ('in', 'not in'):
+            ids = [
+                r
+                for v in value
+                for r in (search_value(v, exact=True) if isinstance(value, str) else [v])
+            ]
+        elif operator in ('ilike', 'not ilike'):
+            ids = search_value(value, exact=False)
+            operator = 'not in' if operator.startswith('not') else 'in'
+        else:
             raise UserError(_('Operation not supported'))
 
-        if operator in ('=', '!=') and isinstance(value, bool):
-            return super()._condition_to_sql(alias, field_expr, operator, value, query)
-
-        if isinstance(value, str) and operator in ('=', '!=', 'ilike', 'not ilike'):
-            value = list(self.env['account.analytic.account']._search(
-                [('display_name', '=' if operator in ('=', '!=') else 'ilike', value)]
-            ))
-            operator = 'in' if operator in ('=', 'ilike') else 'not in'
+        if not ids:
+            # not ids found, just call super with an empty list
+            return super()._condition_to_sql(alias, field_expr, operator, ids, query)
 
         # keys can be comma-separated ids, we will split those into an array and then make an array comparison with the list of ids to check
         analytic_accounts_query = self._query_analytic_accounts()
-        value = [str(id_) for id_ in value if id_]  # list of ids -> list of string
+        ids = [str(id_) for id_ in ids if id_]  # list of ids -> list of string
         if operator == 'in':
             return SQL(
                 "%s && %s",
                 analytic_accounts_query,
-                value,
+                ids,
             )
-        if operator == 'not in':
+        else:
             return SQL(
                 "(NOT %s && %s OR %s IS NULL)",
                 analytic_accounts_query,
-                value,
+                ids,
                 self._field_to_sql(alias, 'analytic_distribution', query),
             )
-        raise UserError(_('Operation not supported'))
 
     def _read_group_groupby(self, groupby_spec: str, query: Query) -> SQL:
         """To group by `analytic_distribution`, we first need to separate the analytic_ids and associate them with the ids to be counted

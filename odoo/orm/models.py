@@ -62,8 +62,10 @@ from odoo.tools.lru import LRU
 from odoo.tools.misc import LastOrderedSet, ReversedIterable, unquote
 from odoo.tools.translate import _, LazyTranslate
 
+from . import domains
 from . import decorators as api
 from .commands import Command
+from .domains import Domain, COLLECTION_TYPES, NEGATIVE_CONDITION_OPERATORS
 from .fields import Field, determine
 from .fields_misc import Id
 from .fields_temporal import Datetime
@@ -1713,9 +1715,9 @@ class BaseModel(metaclass=MetaModel):
         if operator.endswith('like') and not value and '=' not in operator:
             # optimize out the default criterion of ``like ''`` that matches everything
             # return all when operator is positive
-            return expression.FALSE_DOMAIN if operator in expression.NEGATIVE_TERM_OPERATORS else expression.TRUE_DOMAIN
-        aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-        return aggregator([[(field_name, operator, value)] for field_name in search_fnames])
+            return Domain.FALSE if operator in NEGATIVE_CONDITION_OPERATORS else Domain.TRUE
+        aggregator = Domain.AND if operator in NEGATIVE_CONDITION_OPERATORS else Domain.OR
+        return aggregator(Domain(field_name, operator, value) for field_name in search_fnames)
 
     @api.model
     def name_create(self, name) -> tuple[int, str] | typing.Literal[False]:
@@ -1765,7 +1767,7 @@ class BaseModel(metaclass=MetaModel):
         :rtype: list
         :return: list of pairs ``(id, display_name)`` for all matching records.
         """
-        domain = expression.AND([[('display_name', operator, name)], args or []])
+        domain = Domain('display_name', operator, name) & Domain(args or [])
         records = self.search_fetch(domain, ['display_name'], limit=limit)
         return [(record.id, record.display_name) for record in records.sudo()]
 
@@ -1856,7 +1858,8 @@ class BaseModel(metaclass=MetaModel):
         """
         self.browse().check_access('read')
 
-        if expression.is_false(self, domain):
+        query = self._search(domain)
+        if query.is_empty():
             if not groupby:
                 # when there is no group, postgresql always return a row
                 return [tuple(
@@ -1865,7 +1868,6 @@ class BaseModel(metaclass=MetaModel):
                 )]
             return []
 
-        query = self._search(domain)
         query.limit = limit
         query.offset = offset
 
@@ -2506,7 +2508,17 @@ class BaseModel(metaclass=MetaModel):
                         # date/datetime field value to False.
                         row.setdefault('__range', {})[group] = False
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
+        # normalize resulting '__domain',
+        # it is already a concatenation of normalized domains
+        for row in rows_dict:
+            domain = row['__domain']
+            condition_count = len(domain) - sum(
+                1 if d == '!' else 2
+                for d in domain
+                if isinstance(d, str)
+            )
+            row['__domain'] = ['&'] * (condition_count - 1) + domain
 
     def _read_group_format_result_properties(self, rows_dict, group):
         """Modify the final read group properties result.
@@ -2531,14 +2543,15 @@ class BaseModel(metaclass=MetaModel):
                 if not row[fullname]:
                     # can not do ('selection', '=', False) because we might have
                     # option in database that does not exist anymore
-                    additional_domain = expression.OR([
-                        [(fullname, '=', False)],
-                        [(fullname, 'not in', options)],
-                    ])
+                    additional_domain = [
+                        '|',
+                        (fullname, '=', False),
+                        (fullname, 'not in', options),
+                    ]
                 else:
                     additional_domain = [(fullname, '=', row[fullname])]
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
 
         elif property_type == 'many2one':
             comodel = definition.get('comodel')
@@ -2548,16 +2561,17 @@ class BaseModel(metaclass=MetaModel):
                 if not row[fullname]:
                     # can not only do ('many2one', '=', False) because we might have
                     # record in database that does not exist anymore
-                    additional_domain = expression.OR([
-                        [(fullname, '=', False)],
-                        [(fullname, 'not in', all_groups)],
-                    ])
+                    additional_domain = [
+                        '|',
+                        (fullname, '=', False),
+                        (fullname, 'not in', all_groups),
+                    ]
                 else:
                     additional_domain = [(fullname, '=', row[fullname])]
                     record = self.env[comodel].browse(row[fullname]).with_prefetch(prefetch_ids)
                     row[fullname] = (row[fullname], record.display_name)
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
 
         elif property_type == 'many2many':
             comodel = definition.get('comodel')
@@ -2565,38 +2579,38 @@ class BaseModel(metaclass=MetaModel):
             all_groups = tuple(row[fullname] for row in rows_dict if row[fullname])
             for row in rows_dict:
                 if not row[fullname]:
-                    additional_domain = expression.OR([
-                        [(fullname, '=', False)],
-                        expression.AND([[(fullname, 'not in', group)] for group in all_groups]),
-                    ]) if all_groups else []
+                    if all_groups:
+                        additional_domain = list(Domain(fullname, '=', False) | Domain.AND([(fullname, 'not in', group)] for group in all_groups))
+                    else:
+                        additional_domain = list(Domain.TRUE)
                 else:
                     additional_domain = [(fullname, 'in', row[fullname])]
                     record = self.env[comodel].browse(row[fullname]).with_prefetch(prefetch_ids)
                     row[fullname] = (row[fullname], record.display_name)
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
 
         elif property_type == 'tags':
             tags = definition.get('tags') or []
             tags = {tag[0]: tag for tag in tags}
             for row in rows_dict:
                 if not row[fullname]:
-                    additional_domain = expression.OR([
-                        [(fullname, '=', False)],
-                        expression.AND([[(fullname, 'not in', tag)] for tag in tags]),
-                    ]) if tags else []
+                    if tags:
+                        additional_domain = list(Domain(fullname, '=', False) | Domain.AND([(fullname, 'not in', tag)] for tag in tags))
+                    else:
+                        additional_domain = list(Domain.TRUE)
                 else:
                     additional_domain = [(fullname, 'in', row[fullname])]
                     # replace tag raw value with list of raw value, label and color
                     row[fullname] = tags.get(row[fullname])
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
 
         elif property_type in ('date', 'datetime'):
             for row in rows_dict:
                 if not row[group]:
                     row[group] = False
-                    row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', False)]])
+                    row['__domain'].append((fullname, '=', False))
                     row['__range'] = {}
                     continue
 
@@ -2611,9 +2625,8 @@ class BaseModel(metaclass=MetaModel):
                     start = (date_utils.start_of(row[group], func)).strftime(db_format)
                     end = (date_utils.end_of(row[group], func) + datetime.timedelta(minutes=1)).strftime(db_format)
 
-                row['__domain'] = expression.AND([
-                    row['__domain'],
-                    [(fullname, '>=', start), (fullname, '<', end)],
+                row['__domain'].extend([
+                    '&', (fullname, '>=', start), (fullname, '<', end),
                 ])
                 row['__range'] = {group: {'from': start, 'to': end}}
                 row[group] = babel.dates.format_date(
@@ -2623,7 +2636,7 @@ class BaseModel(metaclass=MetaModel):
                 )
         else:
             for row in rows_dict:
-                row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', row[fullname])]])
+                row['__domain'].append((fullname, '=', row[fullname]))
 
     @api.model
     def _read_group_get_annotated_groupby(self, groupby, lazy):
@@ -2733,6 +2746,7 @@ class BaseModel(metaclass=MetaModel):
         else:
             orderby = ','.join(annotated_groupby.values())
 
+        domain = Domain(domain)
         rows = self._read_group(domain, annotated_groupby.values(), annotated_aggregates.values(), offset=offset, limit=limit, order=orderby)
         rows_dict = [
             dict(zip(itertools.chain(annotated_groupby, annotated_aggregates), row))
@@ -2763,8 +2777,9 @@ class BaseModel(metaclass=MetaModel):
                 annotated_aggregates, rows_dict, read_group_order=orderby,
             )
 
+        domain_list = [] if domain.is_true() else list(domain)
         for row in rows_dict:
-            row['__domain'] = domain
+            row['__domain'] = domain_list[:]  # make a copy for each row
             if len(lazy_groupby) < len(groupby):
                 row['__context'] = {'group_by': groupby[len(lazy_groupby):]}
 
@@ -2944,23 +2959,8 @@ class BaseModel(metaclass=MetaModel):
         sure that the necessary fields are flushed before executing the final
         SQL query.
         """
-        assert operator in expression.TERM_OPERATORS, \
-            f"Invalid operator {operator!r} in domain term {(field_expr, operator, value)!r}"
-
-        # Field.condition_to_sql accepts only simple domains, adapt them here
-        if isinstance(value, Query):
-            operator = 'not any' if operator in expression.NEGATIVE_TERM_OPERATORS else 'any'
-        if operator.endswith('like') and not isinstance(value, str):
-            if '=' in operator and value:
-                raise TypeError(f"Invalid value type for =like comparison in {(field_expr, operator, value)!r}")
-            value = str(value or '')
-        if operator == '=?':
-            if value is False or value is None:
-                # '=?' is a short-circuit that makes the term TRUE if value is None or False
-                return SQL("TRUE")
-            else:
-                # '=?' behaves like '=' in other cases
-                return self._condition_to_sql(alias, field_expr, '=', value, query)
+        assert operator in domains.STANDARD_CONDITION_OPERATORS, \
+            f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
 
         field = self._fields[parse_field_expr(field_expr)[0]]
         return field.condition_to_sql(field_expr, operator, value, self, alias, query)
@@ -5319,18 +5319,25 @@ class BaseModel(metaclass=MetaModel):
         :return: the query expressing the given domain as provided in domain
         :rtype: Query
         """
+        domain = Domain(domain)
+
         # if the object has an active field ('active', 'x_active'), filter out all
         # inactive records unless they were explicitly asked for
-        if self._active_name and active_test and self._context.get('active_test', True):
-            # the item[0] trick below works for domain items and '&'/'|'/'!'
-            # operators too
-            if not any(item[0] == self._active_name for item in domain):
-                domain = [(self._active_name, '=', 1)] + domain
+        if (
+            self._active_name
+            and active_test
+            and self.env.context.get('active_test', True)
+            and not any(leaf.field_expr == self._active_name for leaf in domain.iter_conditions())
+        ):
+            domain &= Domain(self._active_name, '=', True)
 
-        if domain:
-            return expression.expression(domain, self).query
-        else:
-            return Query(self.env, self._table, self._table_sql)
+        domain = domain._optimize(self)
+        if domain.is_false():
+            return self.browse()._as_query()
+        query = Query(self.env, self._table, self._table_sql)
+        if not domain.is_true():
+            query.add_where(domain._to_sql(self, self._table, query))
+        return query
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
@@ -5353,10 +5360,11 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # apply main rules on the object
-        Rule = self.env['ir.rule']
-        domain = Rule._compute_domain(self._name, mode)
+        domain = self.env['ir.rule']._compute_domain(self._name, mode)
         if domain:
-            expression.expression(domain, self.sudo(), self._table, query)
+            model = self.sudo()
+            domain = domain._optimize(model)
+            query.add_where(domain._to_sql(model, query.table, query))
 
     def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None,
                       reverse: bool = False) -> SQL:
@@ -5576,17 +5584,30 @@ class BaseModel(metaclass=MetaModel):
         """
         self.browse().check_access('read')
 
-        if expression.is_false(self, domain):
-            # optimization: no need to query, as no record satisfies the domain
-            return self.browse()._as_query()
-
+        # deletegate to _where_calc
         query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
+        if query.is_empty():
+            return query
+
+        # security access domain
+        if self.env.su:
+            sec_domain = Domain.TRUE
+        else:
+            sec_domain = self.env['ir.rule']._compute_domain(self._name, 'read')
+            sec_domain = sec_domain._optimize(self.sudo())
+
+        # build the query
+        if sec_domain.is_false() or (not limit and limit is not None and limit is not False):
+            return self.browse()._as_query()
+        if not sec_domain.is_true():
+            query.add_where(sec_domain._to_sql(self.sudo(), self._table, query))
 
         if order:
             query.order = self._order_to_sql(order, query)
-        query.limit = limit
-        query.offset = offset
+        if limit is not None:
+            query.limit = limit
+        if offset is not None:
+            query.offset = offset
 
         return query
 
@@ -6369,6 +6390,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param domain: :ref:`A search domain <reference/orm/domains>`.
         """
+        domain = list(domain)  # for now, we can pass a Domain object which becomes a list TODO
         if not domain or not self:
             return self
 
@@ -6380,9 +6402,9 @@ class BaseModel(metaclass=MetaModel):
                 stack.append(set(self._ids) - stack.pop())
             elif leaf == '&':
                 stack.append(stack.pop() & stack.pop())
-            elif leaf == expression.TRUE_LEAF:
+            elif leaf == domains._TRUE_LEAF:
                 stack.append(set(self._ids))
-            elif leaf == expression.FALSE_LEAF:
+            elif leaf == domains._FALSE_LEAF:
                 stack.append(set())
             else:
                 (key, comparator, value) = leaf
