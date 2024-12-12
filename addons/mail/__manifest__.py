@@ -219,11 +219,22 @@ For more specific needs, you may also assign custom-defined actions
             ('include', 'web._assets_core'),
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
+            'web/static/lib/dompurify/DOMpurify.js',
 
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
+
+            'html_editor/static/src/wysiwyg.xml',
+            'html_editor/static/src/local_overlay_container.xml',
+            'html_editor/static/src/local_overlay_container.js',
+            'html_editor/static/src/plugin.js',
+            'html_editor/static/src/core/**/*',
+            'html_editor/static/src/main/**/*',
+            'html_editor/static/src/utils/**/*',
+            'html_editor/static/src/wysiwyg.js',
+            'html_editor/static/src/editor.js',
 
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
