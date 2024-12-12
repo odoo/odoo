@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             },
         },
         {
-            content: "Check composer content is kept",
+            content: "Check composer content is kept and contains the user's signature",
             trigger: '.o_field_html[name="body"]',
             run() {
                 const bodyContent = document.querySelector(
@@ -87,6 +87,14 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                     console.error(
                         `Full composer should contain mention link from small composer ("@Not A Demo User") in body input)`
                     );
+                }
+                /** When opening the full composer for the first time, the system
+                 * should add the user's signature to the end of the message so
+                 * that the user can edit it. After adding the signature to
+                 * the editor, the server shouldn't automatically add the
+                 * signature to the message (see: Python tests). */
+                if ((bodyContent.match(/--\nErnest/g) || []).length !== 1) {
+                    console.error("Full composer should contain the user's signature once.");
                 }
             },
         },
@@ -114,7 +122,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Test template")',
         },
         {
-            content: "Send message",
+            content: "Send message from full composer",
             trigger: ".o_mail_send",
             run: "click",
         },
@@ -153,6 +161,21 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             run: "click",
         },
         {
+            content: "Check that the composer contains the signature",
+            trigger: '.o_field_html[name="body"]',
+            run() {
+                const bodyContent = document.querySelector(
+                    '.o_field_html[name="body"]'
+                ).textContent;
+                /** When opening the full composer, the system should add the
+                 * user's signature, as this is a new message and the signature
+                 * has not yet been added to it. */
+                if ((bodyContent.match(/--\nErnest/g) || []).length !== 1) {
+                    console.log("Full composer should contain the user's signature once.");
+                }
+            }
+        },
+        {
             content: "Write something in full composer",
             trigger: ".note-editable",
             run: "editor keep the content",
@@ -177,6 +200,67 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                     );
                 }
             },
+        },
+        {
+            content: "Open full composer",
+            trigger: "button[title='Open Full Composer']",
+            run: "click",
+        },
+        {
+            content: "Check that the composer doesn't add the user's signature twice",
+            trigger: ".note-editable",
+            run() {
+                const bodyContent = document.querySelector(
+                    '.o_field_html[name="body"]'
+                ).textContent;
+                /** When re-opening the full composer, the system shouldn't re-add
+                 * the user's signature to the message. As the user deleted the
+                 * signature in the previous steps (see: `editor keep the content`),
+                 * the editor shouldn't contain any signature. */
+                if ((bodyContent.match(/--\nErnest/g) || []).length !== 0) {
+                    console.error("The composer should not contain the user's signature.");
+                }
+            }
+        },
+        {
+            content: "Close full composer",
+            trigger: ".btn-close",
+            run: "click",
+        },
+        {
+            content: "Click on Send Message",
+            trigger: "button:contains(Send message)",
+            run: "click",
+        },
+        {
+            content: "Send message from chatter",
+            trigger: ".o-mail-Composer-send",
+            run: "click"
+        },
+        {
+            content: "Check message is shown",
+            trigger: '.o-mail-Message-body:contains("keep the content")',
+        },
+        // Test that the server automatically adds the user's signature to the
+        // email when the user didn't open the full composer.
+        {
+            content: "Click on Send Message",
+            trigger: "button:contains(Send message)",
+            run: "click",
+        },
+        {
+            content: "Write a message",
+            trigger: ".o-mail-Composer-input",
+            run: "edit hello world",
+        },
+        {
+            content: "Send message from chatter",
+            trigger: ".o-mail-Composer-send",
+            run: "click"
+        },
+        {
+            content: "Check message is shown",
+            trigger: '.o-mail-Message-body:contains("hello world")',
         },
     ],
 });

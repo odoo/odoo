@@ -274,7 +274,7 @@ class ResUsers(models.Model):
             store.add_global_values(
                 store_self=Store.One(
                     self.env.user.partner_id,
-                    ["active", "isAdmin", "name", "notification_type", "user", "write_date"],
+                    ["active", "isAdmin", "name", "notification_type", "signature", "user", "write_date"],
                     main_user_by_partner={self.env.user.partner_id: self.env.user},
                 ),
                 settings=settings._res_users_settings_format(),
