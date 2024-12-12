@@ -47,10 +47,20 @@ const actions = {
     },
     styleAction: {
         getValue: ({ editingElement, param: styleName }) => {
-            return styleMap[styleName]?.getValue(editingElement);
+            const customStyle = styleMap[styleName];
+            if (customStyle) {
+                return customStyle.getValue(editingElement);
+            } else {
+                return getComputedStyle(editingElement).getPropertyValue(styleName);
+            }
         },
         apply: ({ editingElement, param: styleName, value }) => {
-            styleMap[styleName]?.apply(editingElement, value);
+            const customStyle = styleMap[styleName];
+            if (customStyle) {
+                customStyle?.apply(editingElement, value);
+            } else {
+                editingElement.style.setProperty(styleName, value);
+            }
         },
     },
     attributeAction: {
