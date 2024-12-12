@@ -308,6 +308,19 @@ class PosSession(models.Model):
                 'You cannot close the POS when invoices are not posted.\nInvoices: %s',
                 '\n'.join(f'{invoice.name} - {invoice.state}' for invoice in unposted_invoices)
             ))
+            
+    def _create_sequence(self, sessions):
+        name = sessions.name
+        irsequence = self.env["ir.sequence"].sudo()
+        val = {
+            "name": _("POS Session %s", name),
+            "implementation": "standard",
+            "padding": 3,
+            "prefix": "",
+            "code": "pos.session.login.number.%s" % sessions.id,
+            "company_id": sessions.company_id.id,
+        }
+        return irsequence.create(val)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -343,19 +356,26 @@ class PosSession(models.Model):
         else:
             sessions = super().create(vals_list)
         sessions.action_pos_session_open()
+        self._create_sequence(sessions)
 
         return sessions
 
     def unlink(self):
+        # Delete the pos.config records first then delete the sequences linked to them
+        session_login = "pos.session.login.number.%s" % self.id
+        sequences_to_delete = self.env["ir.sequence"].search([("code", "=", session_login)], limit=1)
         self.statement_line_ids.unlink()
-        return super(PosSession, self).unlink()
+        res = super(PosSession, self).unlink()
+        sequences_to_delete.unlink()
+        return res
 
     def login(self):
         self.ensure_one()
-        login_number = self.login_number + 1
-        self.write({
-            'login_number': login_number,
-        })
+        login_number = self.env["ir.sequence"].next_by_code("pos.session.login.number.%s" % self.id)
+        try:
+            login_number = int(login_number)
+        except ValueError:
+            login_number = self.login_number + 1
         return login_number
 
     def action_pos_session_open(self):
