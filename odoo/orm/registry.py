@@ -207,9 +207,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._is_modifying_relations: dict[Field, bool] = {}
 
         # Inter-process signaling:
-        # The `base_registry_signaling` sequence indicates the whole registry
+        # The `orm_signaling_registry` sequence indicates the whole registry
         # must be reloaded.
-        # The `base_cache_signaling sequence` indicates all caches must be
+        # The `orm_signaling_... sequence` indicates the corresponding cache must be
         # invalidated (i.e. cleared).
         self.registry_sequence: int = -1
         self.cache_sequences: dict[str, int] = {}
@@ -850,21 +850,24 @@ class Registry(Mapping[str, type["BaseModel"]]):
             return
 
         with self.cursor() as cr:
-            # The `base_registry_signaling` sequence indicates when the registry
+            # The `orm_signaling_registry` sequence indicates when the registry
             # must be reloaded.
-            # The `base_cache_signaling_...` sequences indicates when caches must
+            # The `orm_signaling_...` sequences indicates when caches must
             # be invalidated (i.e. cleared).
-            sequence_names = ('base_registry_signaling', *(f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY))
-            cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name IN %s", [sequence_names])
-            existing_sequences = tuple(s[0] for s in cr.fetchall())  # could be a set but not efficient with such a little list
+            signaling_tables = tuple(f'orm_signaling_{cache_name}' for cache_name in ['registry', *_CACHES_BY_KEY])
+            cr.execute("SELECT table_name FROM information_schema.tables WHERE table_name IN %s", [signaling_tables])
 
-            for sequence_name in sequence_names:
-                if sequence_name not in existing_sequences:
+            existing_sig_tables = tuple(s[0] for s in cr.fetchall())  # could be a set but not efficient with such a little list
+            # signaling was previously using sequence but this doesn't work with replication
+            # https://www.postgresql.org/docs/current/logical-replication-restrictions.html
+            # this is the reason why insert only tables are used.
+            for table_name in signaling_tables:
+                if table_name not in existing_sig_tables:
                     cr.execute(SQL(
-                        "CREATE SEQUENCE %s INCREMENT BY 1 START WITH 1",
-                        SQL.identifier(sequence_name),
+                        "CREATE TABLE %s (id SERIAL PRIMARY KEY, date TIMESTAMP DEFAULT now())",
+                        SQL.identifier(table_name),
                     ))
-                    cr.execute(SQL("SELECT nextval(%s)", sequence_name))
+                    cr.execute(SQL("INSERT INTO %s DEFAULT VALUES", SQL.identifier(table_name)))
 
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
             self.registry_sequence = db_registry_sequence
@@ -874,12 +877,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
                           self.registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
 
     def get_sequences(self, cr: BaseCursor) -> tuple[int, dict[str, int]]:
-        cache_sequences_query = ', '.join([f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY])
-        cache_sequences_values_query = ',\n'.join([f'base_cache_signaling_{cache_name}.last_value' for cache_name in _CACHES_BY_KEY])
-        cr.execute(f"""
-            SELECT base_registry_signaling.last_value, {cache_sequences_values_query}
-            FROM base_registry_signaling, {cache_sequences_query}
-        """)
+        signaling_tables = tuple(f'orm_signaling_{cache_name}' for cache_name in ['registry', *_CACHES_BY_KEY])
+        signaling_selects = SQL(', ').join([SQL('( SELECT max(id) FROM %s)', SQL.identifier(signaling_table)) for signaling_table in signaling_tables])
+        cr.execute(SQL("SELECT %s", signaling_selects))
         row = cr.fetchone()
         assert row is not None, "No result when reading signaling sequences"
         registry_sequence, *cache_sequences_values = row
@@ -893,7 +893,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         if self.in_test_mode():
             return self
 
-        with nullcontext(cr) if cr is not None else closing(self.cursor()) as cr:
+        with nullcontext(cr) if cr is not None else closing(self.cursor(readonly=True)) as cr:
             assert cr is not None
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
             changes = ''
@@ -931,8 +931,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         if self.registry_invalidated:
             _logger.info("Registry changed, signaling through the database")
-            with closing(self.cursor()) as cr:
-                cr.execute("select nextval('base_registry_signaling')")
+            with self.cursor() as cr:
+                cr.execute("INSERT INTO orm_signaling_registry DEFAULT VALUES")
                 # If another process concurrently updates the registry,
                 # self.registry_sequence will actually be out-of-date,
                 # and the next call to check_signaling() will detect that and trigger a registry reload.
@@ -943,9 +943,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # because reloading the registry implies starting with an empty cache
         elif self.cache_invalidated:
             _logger.info("Caches invalidated, signaling through the database: %s", sorted(self.cache_invalidated))
-            with closing(self.cursor()) as cr:
+            with self.cursor() as cr:
                 for cache_name in self.cache_invalidated:
-                    cr.execute("select nextval(%s)", [f'base_cache_signaling_{cache_name}'])
+                    cr.execute(SQL("INSERT INTO %s DEFAULT VALUES", SQL.identifier(f'orm_signaling_{cache_name}')))
                     # If another process concurrently updates the cache,
                     # self.cache_sequences[cache_name] will actually be out-of-date,
                     # and the next call to check_signaling() will detect that and trigger cache invalidation.
