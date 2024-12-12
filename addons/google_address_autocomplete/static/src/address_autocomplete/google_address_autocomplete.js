@@ -15,6 +15,7 @@ export class AddressAutoComplete extends CharField {
                     if (request.length > 5) {
                         const suggestions = await googlePlacesSession.getAddressPropositions({
                             partial_address: request,
+                            internal: true,
                         });
                         if (suggestions.results.length) {
                             suggestions.results.push({
@@ -37,6 +38,7 @@ export class AddressAutoComplete extends CharField {
         const address = await googlePlacesSession.getAddressDetails({
             address: option.formatted_address,
             google_place_id: option.google_place_id,
+            internal: true,
         });
 
         const dict = { [this.props.name]: address.formatted_street_number || "" };
