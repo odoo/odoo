@@ -11,7 +11,7 @@ import { patch } from "@web/core/utils/patch";
 import { getContent, getSelection, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { animationFrame, advanceTime } from "@odoo/hoot-mock";
-import { tick } from "@odoo/hoot-dom";
+import { tick, waitUntil } from "@odoo/hoot-dom";
 
 /**
  * @typedef PeerPool
@@ -1170,7 +1170,13 @@ describe("Selection", () => {
             peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection.anchorOffset
         ).toBe(1);
         peers.p1.plugins.delete.delete("backward", "character");
-        advanceTime(100);
+        await waitUntil(() => {
+            const selectionInAvatarPlugin =
+                peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection.anchorOffset == 0;
+            const selectionInCollabSelectionPlugin =
+                peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection.anchorOffset == 0;
+            return selectionInAvatarPlugin && selectionInCollabSelectionPlugin;
+        });
         expect(
             peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection
                 .anchorOffset
