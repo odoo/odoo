@@ -118,9 +118,13 @@ def force_demo(env: Environment) -> None:
     """
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
-    env.cr.execute('UPDATE ir_module_module SET demo=True')
     env.cr.execute(
-        "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
+        """
+        UPDATE ir_module_module
+        SET demo = True
+        WHERE state IN ('installed', 'to upgrade', 'to remove')
+        RETURNING name
+        """
     )
     module_list = [name for (name,) in env.cr.fetchall()]
     graph = PackageGraph(env.cr, mode='load')
@@ -358,14 +362,12 @@ def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
             _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
 
-def load_modules(registry: Registry, force_demo: bool = False, status: None = None, update_module: bool = False) -> None:
+def load_modules(registry: Registry, status: None = None, update_module: bool = False) -> None:
     """ Load the modules for a registry object that has just been created.  This
         function is part of Registry.new() and should not be used anywhere else.
     """
     if status is not None:
         warnings.warn("Deprecated since 19.0, status is deprecated, do not set it")
-    if force_demo is not False:
-        warnings.warn("Deprecated since 19.0, force_demo is deprecated, do not set it")
     initialize_sys_path()
 
     models_to_check: set[str] = set()
