@@ -23,6 +23,8 @@ import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_ref
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 
 const NBR_BY_PAGE = 30;
 
@@ -74,6 +76,8 @@ export class TicketScreen extends Component {
             selectedOrder: this.pos.getOrder() || null,
             selectedOrderlineIds: {},
             selectedPreset: null,
+            nbrByPage: NBR_BY_PAGE,
+            nbrByPageEdit: false,
         });
         Object.assign(this.state, this.props.stateOverride || {});
 
@@ -135,6 +139,23 @@ export class TicketScreen extends Component {
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {
             this.state.page += 1;
+            if (this.state.filter == "SYNCED") {
+                await this._fetchSyncedOrders();
+            }
+        }
+    }
+    async onClickPageNbr() {
+        const page = await makeAwaitable(this.dialog, NumberPopup, {
+            title: _t("Page number"),
+            subtitle: _t("Enter a page between %s and %s", 1, this.getNbrPages()),
+            isValid: (value) => {
+                const nbrPages = this.getNbrPages();
+                return value > 0 && value <= nbrPages;
+            },
+        });
+
+        if (page) {
+            this.state.page = page;
             if (this.state.filter == "SYNCED") {
                 await this._fetchSyncedOrders();
             }
@@ -368,19 +389,19 @@ export class TicketScreen extends Component {
 
         if (this.state.filter === "SYNCED") {
             return sortOrders(orders).slice(
-                (this.state.page - 1) * NBR_BY_PAGE,
-                this.state.page * NBR_BY_PAGE
+                (this.state.page - 1) * this.state.nbrByPage,
+                this.state.page * this.state.nbrByPage
             );
         } else {
             this.pos.ticketScreenState.totalCount = orders.length;
             return sortOrders(orders, true).slice(
-                (this.state.page - 1) * NBR_BY_PAGE,
-                this.state.page * NBR_BY_PAGE
+                (this.state.page - 1) * this.state.nbrByPage,
+                this.state.page * this.state.nbrByPage
             );
         }
     }
     getDate(order) {
-        return formatDateTime(parseUTCString(order.date_order));
+        return formatDateTime(parseUTCString(order.date_order), { format: "dd/mm/yyyy HH:mm" });
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.getTotalWithTax());
@@ -452,17 +473,23 @@ export class TicketScreen extends Component {
         };
     }
     getNbrPages() {
-        return Math.ceil(this.pos.ticketScreenState.totalCount / NBR_BY_PAGE);
+        return Math.ceil(this.pos.ticketScreenState.totalCount / this.state.nbrByPage);
     }
     getPageNumber() {
         if (!this.pos.ticketScreenState.totalCount) {
             return `0/0`;
         } else {
-            return `${(this.state.page - 1) * NBR_BY_PAGE + 1}-${Math.min(
-                this.state.page * NBR_BY_PAGE,
+            return `${(this.state.page - 1) * this.state.nbrByPage + 1}-${Math.min(
+                this.state.page * this.state.nbrByPage,
                 this.pos.ticketScreenState.totalCount
             )} / ${this.pos.ticketScreenState.totalCount}`;
         }
+    }
+    get currentPage() {
+        return `${(this.state.page - 1) * this.state.nbrByPage + 1}-${Math.min(
+            this.state.page * this.state.nbrByPage,
+            this.pos.ticketScreenState.totalCount
+        )}`;
     }
     getHasItemsToRefund() {
         const order = this.getSelectedOrder();
@@ -699,6 +726,15 @@ export class TicketScreen extends Component {
             return [];
         }
     }
+
+    handleInputChange(event) {
+        if (isNaN(event.target.value)) {
+            return;
+        }
+
+        const number = parseInt(event.target.value);
+        this.state.nbrByPage = number;
+    }
     /**
      * Fetches the done orders from the backend that needs to be shown.
      * If the order is already in cache, the full information about that
@@ -716,7 +752,7 @@ export class TicketScreen extends Component {
             {
                 config_id,
                 domain,
-                limit: 30,
+                limit: parseInt(this.state.nbrByPage),
                 offset,
             }
         );

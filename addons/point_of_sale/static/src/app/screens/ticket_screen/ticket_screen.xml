@@ -21,7 +21,17 @@
                             </button>
                         </div>
                         <div class="item d-flex align-items-center justify-content-end">
-                            <span class="page me-2"><t t-esc="getPageNumber()" /></span>
+                            <div class="align-items-center d-flex me-1">
+                                <div>
+                                    <span t-if="!this.state.nbrByPageEdit" t-on-click="() => this.state.nbrByPageEdit = true" t-esc="currentPage" />
+                                    <input t-else=""
+                                        class="border-0 text-end input-page-number"
+                                        t-on-focusout="() => this.state.nbrByPageEdit = false"
+                                        t-on-change="handleInputChange"
+                                        t-att-placeholder="this.state.nbrByPage" />
+                                </div>
+                                / <span t-esc="this.pos.ticketScreenState.totalCount" />
+                            </div>
                             <div class="page-controls d-flex align-items-center gap-1">
                                 <button class="previous btn btn-light" t-on-click="() => this.onPrevPage()">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
