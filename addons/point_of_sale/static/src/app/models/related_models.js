@@ -8,13 +8,6 @@ import { recursiveSerialization } from "./utils/recursive_serialization";
 const ID_CONTAINER = {};
 const { DateTime } = luxon;
 
-function getLocalId(model) {
-    if (!(model in ID_CONTAINER)) {
-        ID_CONTAINER[model] = 1;
-    }
-    return `${model}_${ID_CONTAINER[model]++}`;
-}
-
 function getBackRef(model, fieldName) {
     return `<-${model}.${fieldName}`;
 }
@@ -419,6 +412,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return this.name in records && this.records[this.name].has(id);
         }
         create(vals, ignoreRelations = false, fromSerialized = false, delayedSetup = false) {
+            vals.uuid ||= uuidv4();
+            vals.id ||= vals.uuid;
             const record = disabler.call(
                 (...args) => this._create(...args),
                 vals,
@@ -427,6 +422,18 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 delayedSetup
             );
             this.models.makeRecordsAvailable({ [this.name]: [record] }, { [this.name]: [vals] });
+            opts.onCreate(
+                this.name,
+                Object.fromEntries(
+                    Object.entries(record).filter(
+                        ([k, v]) =>
+                            Object.keys(record.model.fields).includes(k) &&
+                            !k.startsWith("<-") &&
+                            v &&
+                            !(Array.isArray(v) && v.length === 0)
+                    )
+                )
+            );
             return record;
         }
         deserialize(vals) {
@@ -439,11 +446,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             }
             return result;
         }
-        update(record, vals, opts = {}) {
-            return disabler.call((...args) => this._update(...args), record, vals, opts);
+        update(record, vals, options = {}) {
+            opts.onUpdate(record, vals);
+            if (vals.active === false) {
+                return this.delete(record, options);
+            }
+            return disabler.call((...args) => this._update(...args), record, vals, options);
         }
-        delete(record, opts = {}) {
-            return disabler.call((...args) => this._delete(...args), record, opts);
+        delete(record, options = {}) {
+            opts.onDelete(record);
+            return disabler.call((...args) => this._delete(...args), record, options);
         }
         deleteMany(toDelete, opts = {}) {
             const result = [];
@@ -466,14 +478,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return this.orderedRecords[0];
         }
         readBy(key, val) {
-            if (!indexes[this.name].includes(key)) {
-                throw new Error(`Unable to get record by '${key}'`);
-            }
-            const result = this.models.indexedRecords[this.name][key][val];
-            if (result instanceof Map) {
-                return Array.from(result.values());
-            }
-            return result;
+            // if (!indexes[this.name].includes(key)) {
+            //     throw new Error(`Unable to get record by '${key}'`);
+            // }
+            // const result = this.models.indexedRecords[this.name][key][val];
+            // if (result instanceof Map) {
+            //     return Array.from(result.values());
+            // }
+            // return result;
+            return this.find((record) => record[key] === val);
         }
         readAll() {
             return this.orderedRecords;
@@ -573,18 +586,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         _create(vals, ignoreRelations = false, fromSerialized = false, delayedSetup = false) {
-            if (!("id" in vals)) {
-                vals["id"] = getLocalId(this.name);
-            }
-
             const record = createNewRecord(this);
 
             const id = vals["id"];
             record.id = id;
-            if (!vals.uuid && database[this.name]?.key === "uuid") {
-                record.uuid = uuidv4();
-                vals.uuid = record.uuid;
-            }
 
             if (!baseData[this.name][id]) {
                 baseData[this.name][id] = vals;

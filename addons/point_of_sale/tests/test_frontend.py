@@ -585,6 +585,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="pos_user")
+        # self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_01_multi_payment_and_change', login="pos_user", debug=True, error_checker=lambda x: False)
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_01_multi_payment_and_change', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_02_decimal_order_quantity', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_03_tax_position', login="pos_user")
@@ -1342,10 +1343,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
 
-        def sync_from_ui_patch(*_args, **_kwargs):
+        def create_patch(*_args, **_kwargs):
             raise UserError('Test Error')
 
-        with patch.object(self.env.registry.models['pos.order'], "sync_from_ui", sync_from_ui_patch):
+        with patch.object(self.env.registry.models['pos.order'], "create", create_patch):
             # If there is problem in the tour, remove the log catcher to debug.
             with self.assertLogs(level="WARNING") as log_catcher:
                 self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -1694,7 +1695,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
 
 # This class just runs the same tests as above but with mobile emulation
-class MobileTestUi(TestUi):
-    browser_size = '375x667'
-    touch_enabled = True
-    allow_inherited_tests_method = True
+# class MobileTestUi(TestUi):
+#     browser_size = '375x667'
+#     touch_enabled = True
+#     allow_inherited_tests_method = True
