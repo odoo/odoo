@@ -6,7 +6,6 @@ import {
     isEmptyBlock,
     isProtected,
     isProtecting,
-    isVisible,
     paragraphRelatedElements,
 } from "@html_editor/utils/dom_info";
 import {
@@ -15,6 +14,7 @@ import {
     getAdjacents,
     selectElements,
     ancestors,
+    childNodes,
 } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
@@ -528,38 +528,37 @@ export class ListPlugin extends Plugin {
         cursors.restore();
     }
 
+    /**
+     * @param {HTMLLIElement} li
+     */
     outdentTopLevelLI(li) {
         const cursors = this.dependencies.selection.preserveSelection();
         const ul = li.parentNode;
         const dir = li.getAttribute("dir") || ul.getAttribute("dir");
-        let p;
-        let toMove = li.lastChild;
-        while (toMove) {
-            if (isBlock(toMove)) {
-                if (p && isVisible(p)) {
-                    cursors.update(callbacksForCursorUpdate.after(ul, p));
-                    ul.after(p);
-                }
-                p = undefined;
-                cursors.update(callbacksForCursorUpdate.after(ul, toMove));
-                ul.after(toMove);
-            } else {
-                p = p || this.document.createElement("P");
-                if (dir) {
-                    p.setAttribute("dir", dir);
-                    p.style.setProperty("text-align", ul.style.getPropertyValue("text-align"));
-                }
-                cursors.update(callbacksForCursorUpdate.prepend(p, toMove));
-                p.prepend(toMove);
+        const textAlign = ul.style.getPropertyValue("text-align");
+        wrapInlinesInBlocks(li, cursors);
+        if (!li.hasChildNodes()) {
+            // Outdenting an empty LI produces an empty P
+            const p = this.document.createElement("p");
+            p.append(this.document.createElement("br"));
+            li.append(p);
+            cursors.remapNode(li, p);
+        }
+        // Move LI's children to after UL
+        for (const block of childNodes(li).reverse()) {
+            if (dir && !block.getAttribute("dir")) {
+                block.setAttribute("dir", dir);
             }
-            toMove = li.lastChild;
+            if (textAlign && !block.style.getPropertyValue("text-align")) {
+                block.style.setProperty("text-align", textAlign);
+            }
+            cursors.update(callbacksForCursorUpdate.after(ul, block));
+            ul.after(block);
         }
-        if (p && isVisible(p)) {
-            cursors.update(callbacksForCursorUpdate.after(ul, p));
-            ul.after(p);
-        }
+        // Remove LI
         cursors.update(callbacksForCursorUpdate.remove(li));
         li.remove();
+        // Remove UL if left empty
         if (!ul.firstElementChild) {
             cursors.update(callbacksForCursorUpdate.remove(ul));
             ul.remove();
