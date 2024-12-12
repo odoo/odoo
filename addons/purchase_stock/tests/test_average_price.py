@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.fields import Date
 from odoo.tests import tagged, Form
 
 import time
@@ -302,3 +303,37 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         po.invoice_ids[0].action_post()
 
         self.assertFalse(po.picking_ids.move_ids.stock_valuation_layer_ids.stock_valuation_layer_ids)
+
+    def test_bill_discount_ordered_quantity_control_policy(self):
+        """
+        """
+        self.stock_account_product_categ.property_cost_method = 'average'
+        avco_product = self.env['product.product'].create({
+            'name': 'test_rounding_in_valuation product',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+            'purchase_method': 'purchase',
+        })
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': avco_product.id,
+                'product_qty': 1,
+                'price_unit': 10,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+        bill.invoice_line_ids[0].discount = 10
+        bill.invoice_date = Date.today()
+        bill.action_post()
+        receipt = purchase_order.picking_ids[0]
+        receipt.move_ids[0].quantity_done = 1
+        receipt.button_validate()
+        self.assertEqual(sum(self.env['stock.valuation.layer'].search([
+                ('product_id', '=', avco_product.id),
+            ]).mapped('value')),
+            9,
+        )
+        self.assertEqual(avco_product.standard_price, 9)
