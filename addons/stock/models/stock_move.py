@@ -570,23 +570,25 @@ Please change the quantity done or the rounding precision of your unit of measur
             ls = move.move_line_ids.lot_id
             for lot in move.lot_ids:
                 if lot not in ls:
-                    sml_location_id = lot.location_id.id \
-                        if lot.location_id and lot.location_id._child_of(move.location_id) \
-                        else move.location_id.id
-                    sml_lot_vals = {
-                        'location_id': sml_location_id,
-                        'lot_name': lot.name,
-                        'lot_id': lot.id,
-                        'product_uom_id': move.product_id.uom_id.id,
-                        'quantity': 1,
-                    }
                     if mls_without_lots[:1]:  # Updates an existing line without serial number.
                         move_line = mls_without_lots[:1]
-                        move_lines_commands.append(Command.update(move_line.id, sml_lot_vals))
+                        move_lines_commands.append(Command.update(move_line.id, {
+                            'lot_name': lot.name,
+                            'lot_id': lot.id,
+                            'product_uom_id': move.product_id.uom_id.id,
+                            'quantity': 1,
+                        }))
                         mls_without_lots -= move_line
                     else:  # No line without serial number, creates a new one.
-                        move_line_vals = self._prepare_move_line_vals(quantity=0)
-                        move_line_vals.update(**sml_lot_vals)
+                        reserved_quants = self.env['stock.quant']._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
+                        if reserved_quants:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
+                        else:
+                            move_line_vals = self._prepare_move_line_vals(quantity=0)
+                            move_line_vals['lot_id'] = lot.id
+                            move_line_vals['lot_name'] = lot.name
+                        move_line_vals['product_uom_id'] = move.product_id.uom_id.id
+                        move_line_vals['quantity'] = 1
                         move_lines_commands.append((0, 0, move_line_vals))
                 else:
                     move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
