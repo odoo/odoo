@@ -950,14 +950,14 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
         move = self.env['account.move'].with_context(default_move_type='entry')
         with Form(move) as move_form:
-            self.assertEqual(move_form.name, 'MISC/2021/10/0001')
+            self.assertEqual(move_form.name_placeholder, 'MISC/2021/10/0001')
             move_form.journal_id, journal = journal, move_form.journal_id
-            self.assertEqual(move_form.name, 'AJ/2021/10/0001')
+            self.assertEqual(move_form.name_placeholder, 'AJ/2021/10/0001')
             # ensure we aren't burning any sequence by switching journal
             move_form.journal_id, journal = journal, move_form.journal_id
-            self.assertEqual(move_form.name, 'MISC/2021/10/0001')
+            self.assertEqual(move_form.name_placeholder, 'MISC/2021/10/0001')
             move_form.journal_id, journal = journal, move_form.journal_id
-            self.assertEqual(move_form.name, 'AJ/2021/10/0001')
+            self.assertEqual(move_form.name_placeholder, 'AJ/2021/10/0001')
 
     def test_change_journal_posted_before(self):
         """ Changes to a move posted before can only de done if move name is '/' or empty (False) """
@@ -975,6 +975,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # Once move name in draft is changed to '/', changing the journal is allowed
         self.test_move.name = '/'
         self.test_move.journal_id = journal
+        self.test_move.action_post()
         self.assertEqual(self.test_move.name, 'AJ/2016/01/0001')
         self.assertEqual(self.test_move.journal_id, journal)
 
@@ -995,7 +996,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, 'You cannot edit the journal of an account move with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'):
             test_move_2.write({'journal_id': False})
         # Once move name in draft is changed to '/', changing the journal is allowed
-        test_move_2.write({'name': '/', 'journal_id': journal.id})
+        test_move_2.write({'name': False, 'journal_id': journal.id})
         test_move_2.action_post()
         # Sequence number is updated for the new journal
         self.assertEqual(test_move_2.sequence_number, 1)
