@@ -100,6 +100,9 @@ class PosPaymentMethod(models.Model):
         selection_options = self.env['res.partner.bank'].get_available_qr_methods_in_sequence()
         if len(selection_options) == 1:
             self.qr_code_method = selection_options[0][0]
+        # Unset the use_payment_terminal field when switching to a payment method that doesn't use it
+        if self.payment_method_type != 'terminal':
+            self.use_payment_terminal = None
 
     @api.onchange('use_payment_terminal')
     def _onchange_use_payment_terminal(self):
