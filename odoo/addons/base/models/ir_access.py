@@ -170,16 +170,6 @@ class IrAccess(models.Model):
             else:
                 restrictions.append(domain)
 
-        # add access for parent models as restrictions
-        if operation == 'read':
-            for parent_model_name, parent_field_name in self.env[model_name]._inherits.items():
-                domain = self._get_access_domain(parent_model_name, operation)
-                if domain is None:
-                    return None
-                if domain == expression.TRUE_DOMAIN:
-                    continue
-                restrictions.append([(parent_field_name, 'any', domain)])
-
         domain = expression.OR(permissions)
         if restrictions:
             domain = expression.AND([domain, *restrictions])
@@ -206,13 +196,6 @@ class IrAccess(models.Model):
         for access in accesses:
             domain = safe_eval(access.domain, eval_context) if access.domain else []
             restrictions.append(domain)
-
-        # add access for parent models as restrictions
-        for parent_model_name, parent_field_name in self.env[model_name]._inherits.items():
-            domain = self._get_access_domain(parent_model_name, operation)
-            if domain is None:
-                return [expression.FALSE_LEAF]
-            restrictions.append([(parent_field_name, 'any', domain)])
 
         return expression.AND(restrictions)
 

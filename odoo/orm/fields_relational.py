@@ -175,9 +175,6 @@ class Many2one(_Relational[M]):
         # determine self.delegate
         if not self.delegate and name in model_class._inherits.values():
             self.delegate = True
-        # self.delegate implies self.auto_join
-        if self.delegate:
-            self.auto_join = True
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
