@@ -219,6 +219,8 @@ class StockMove(models.Model):
         'Manual Consumption', compute='_compute_manual_consumption', store=True, readonly=False,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
+    production_ids = fields.Many2many('mrp.production', string="Move associated to this MO order",
+        help="Stores the Manufacturing Orders (MOs) associated with this move, even after the pickings related to this move are canceled.")
 
     @api.depends('product_id')
     def _compute_manual_consumption(self):
@@ -477,6 +479,15 @@ class StockMove(models.Model):
     def _action_confirm(self, merge=True, merge_into=False):
         moves = self.action_explode()
         merge_into = merge_into and merge_into.action_explode()
+        # It's necessary to set production_id to False when creating a new pre-picking/transfer for each split production/backorder.
+        filtered_moves = moves.filtered(
+            lambda m: (
+                m.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm'] and
+                m.move_dest_ids.raw_material_production_id
+            )
+        )
+        for move in filtered_moves:
+            move.production_id = False
         # we go further with the list of ids potentially changed by action_explode
         return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
@@ -561,7 +572,10 @@ class StockMove(models.Model):
 
     def _prepare_procurement_origin(self):
         self.ensure_one()
-        if self.raw_material_production_id and self.raw_material_production_id.orderpoint_id:
+        if (
+            self.raw_material_production_id and
+            (self.raw_material_production_id.orderpoint_id or self.warehouse_id.manufacture_steps in ['pbm_sam', 'pbm'])
+        ):
             return self.origin
         return super()._prepare_procurement_origin()
 
@@ -746,3 +760,14 @@ class StockMove(models.Model):
                         for move in self):
             res = 'assigned'
         return res
+
+    def _search_picking_for_assignation(self):
+        self.ensure_one()
+        # For a 3-step MRP process, when splitting an MO into backorders:
+        # If the first MO's post-picking/transfer are not done, and completing the second MO
+        # it will merge its post-picking/transfer with the first. So due to that Canceling the second MO or MO's post-picking
+        # would also show cancel in the first MO's transfer(also vice-versa), which is not desired.
+        # We need to ensure that each split MO's proceeds independently.
+        if self.env.context.get('is_split_production') or self.move_orig_ids.production_id.mrp_production_backorder_count > 1:
+            return False
+        return super()._search_picking_for_assignation()
