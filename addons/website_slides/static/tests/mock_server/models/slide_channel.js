@@ -10,4 +10,22 @@ export class SlideChannel extends models.ServerModel {
             </form>
         `,
     };
+
+    action_grant_access(partner_id) {
+        const partner = this.env["res.partner"].browse(partner_id)[0];
+        if (partner) {
+            this.env["mail.activity"].search([
+                ["request_partner_id", "=", partner.id],
+            ]).action_feedback();
+        }
+    }
+
+    action_refuse_access(partner_id) {
+        const partner = this.env["res.partner"].browse(partner_id)[0];
+        if (partner) {
+            this.env["mail.activity"].search([
+                ["request_partner_id", "=", partner.id],
+            ]).action_feedback();
+        }
+    }
 }
