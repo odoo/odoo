@@ -606,12 +606,13 @@
                t-value="'background: ' + str(v.html_color or v.name if not v.is_custom else '')"
             />
             <label t-attf-style="#{img_style or color_style}"
-                   t-attf-class="css_attribute_color mb-1 #{'active' if v.id in attrib_set else ''}"
+                   t-attf-class="css_attribute_color mb-1 #{'active' if v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])] else ''}"
+                   t-if="v.id in available_attribute_values.ids"
             >
                 <input type="checkbox"
                        name="attribute_value"
                        t-att-value="'%s-%s' % (a.id, v.id)"
-                       t-att-checked="'checked' if v.id in attrib_set else None"
+                       t-att-checked="'checked' if v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])] else None"
                        t-att-title="v.name"
                 />
             </label>
@@ -764,20 +765,77 @@
                                         <div t-if="a.display_type == 'color'" class="pt-1 pb-3">
                                             <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
                                         </div>
-                                        <div t-elif="a.display_type in ('radio', 'pills', 'select')"
+                                        <t t-if="a.display_type == 'select'">
+                                            <select class="form-select css_attribute_select my-2" name="attribute_value">
+                                                <option value="" selected="true">All <t t-out="a.name"/></option>
+                                                <t t-foreach="a.value_ids" t-as="v">
+                                                    <option t-if="v.id in available_attribute_values.ids" t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])]" />
+                                                </t>
+                                            </select>
+                                        </t>
+                                        <div t-elif="a.display_type in ('radio')"
                                              class="list-group list-group-flush">
-                                            <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
+                                            <t t-set="filtered_values" t-value="[v.id for v in a.value_ids if v.id in available_attribute_values.ids][:12]" />
+                                            <div t-foreach="a.value_ids" t-as="v" t-if="v.id in filtered_values or v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])]" class="list-group-item border-0 ps-0 pb-0">
                                                 <div class="form-check mb-1">
-                                                    <input type="checkbox"
-                                                           name="attribute_value"
-                                                           class="form-check-input"
-                                                           t-att-id="'%s-%s' % (a.id,v.id)"
-                                                           t-att-value="'%s-%s' % (a.id,v.id)"
-                                                           t-att-checked="'checked' if v.id in attrib_set else None"/>
-                                                    <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
+                                                    <input
+                                                        type="checkbox"
+                                                        name="attribute_value"
+                                                        class="form-check-input"
+                                                        t-att-id="'%s-%s' % (a.id,v.id)"
+                                                        t-att-value="'%s-%s' % (a.id,v.id)"
+                                                        t-att-checked="'checked' if v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])] else None"
+                                                    />
+                                                    <label
+                                                        class="form-check-label fw-normal"
+                                                        t-att-for="'%s-%s' % (a.id,v.id)"
+                                                        t-field="v.name"
+                                                    />
                                                 </div>
                                             </div>
+                                            <t t-if="len([v.id for v in a.value_ids if v.id in available_attribute_values.ids]) &gt; 12">
+                                                <div class="view_more text-center">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-link more-btn view_more_btn"
+                                                        t-att-data-attribute-id="a.id"
+                                                        t-att-data-attribute-name="a.name"
+                                                        t-att-data-available-attribute-values="available_attribute_values.ids"
+                                                        t-att-data-attrib-set="a.value_ids.filtered(lambda v: v.id in attrib_set).mapped('id')"
+                                                        t-att-data-session-att-values="[val[1] for val in request.session.get('attrib_values', [])]"
+                                                    >
+                                                        View More
+                                                    </button>
+                                                </div>
+                                            </t>
                                         </div>
+                                        <t t-elif="a.display_type == 'pills'">
+                                            <div
+                                                class="btn-group-toggle list-inline list-unstyled"
+                                                data-bs-toggle="buttons"
+                                            >
+                                                <t t-foreach="a.value_ids" t-as="v">
+                                                    <div
+                                                        t-if="v.id in available_attribute_values.ids"
+                                                        t-attf-class="o_variant_pills btn btn-primary mb-1 list-inline-item {{'active' if v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])]  else ''}}">
+                                                        <input
+                                                            type="radio"
+                                                            name="attribute_value"
+                                                            class="form-check-input"
+                                                            t-attf-class="js_variant_change {{a.create_variant}}"
+                                                            t-att-id="'%s-%s' % (a.id,v.id)"
+                                                            t-att-value="'%s-%s' % (a.id,v.id)"
+                                                            t-att-checked="'checked' if v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])] else None"
+                                                        />
+                                                        <label
+                                                            class="radio_input_value o_variant_pills_input_value"
+                                                            t-att-for="v.id"
+                                                            t-field="v.name"
+                                                        />
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
@@ -930,7 +988,7 @@
                 <ul class="nav d-flex flex-column mb-3">
                     <li class="nav-item mb-1">
                         <a
-                            t-att-href="keep('/shop', category=0)"
+                            t-att-href="keep('/shop', category=0, attribute_value=['%s-%s' % (val[0], val[1]) for val in request.session.get('attrib_values', [])])"
                             t-attf-class="{{not category and 'text-decoration-underline'}} p-0"
                         >
                             All Products
@@ -1058,31 +1116,81 @@
                                 <h6 class="mb-3">
                                     <b class="d-none d-lg-block" t-field="a.name"/>
                                 </h6>
-                                <div t-attf-id="o_products_attributes_{{a.id}}" class="">
+                                <t
+                                    t-set="computed_class"
+                                    t-value="'accordion-collapse collapse ' + ('' if len(attributes) >= 4 else 'show')"
+                                />
+                                <div t-attf-id="o_products_attributes_{{a.id}}" t-att-class="computed_class">
                                     <t t-if="a.display_type == 'select'">
                                         <select class="form-select css_attribute_select mb-2" name="attribute_value">
                                             <option value="" selected="true">All <t t-out="a.name"/></option>
                                             <t t-foreach="a.value_ids" t-as="v">
-                                                <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
+                                                <option t-if="v.id in available_attribute_values.ids" t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])]" />
                                             </t>
                                         </select>
                                     </t>
                                     <div t-elif="a.display_type == 'color'" class="mb-3">
                                         <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
                                     </div>
-                                    <div t-elif="a.display_type in ('radio', 'pills', 'multi')" class="flex-column mb-3">
+                                    <div t-elif="a.display_type in ('radio', 'multi')" class="flex-column mb-3">
+                                        <t t-set="filtered_values" t-value="[v.id for v in a.value_ids if v.id in available_attribute_values.ids][:12]" />
                                         <t t-foreach="a.value_ids" t-as="v">
-                                            <div class="form-check mb-1">
-                                                <input type="checkbox"
-                                                       name="attribute_value"
-                                                       class="form-check-input"
-                                                       t-att-id="'%s-%s' % (a.id,v.id)"
-                                                       t-att-value="'%s-%s' % (a.id,v.id)"
-                                                       t-att-checked="'checked' if v.id in attrib_set else None"/>
-                                                <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
+                                            <div class="form-check mb-1"  t-if="v.id in filtered_values or v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])]">
+                                                <input
+                                                    type="checkbox"
+                                                    name="attribute_value"
+                                                    class="form-check-input"
+                                                    t-att-id="'%s-%s' % (a.id,v.id)"
+                                                    t-att-value="'%s-%s' % (a.id,v.id)"
+                                                    t-att-checked="'checked' if v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])] else None"
+                                                />
+                                                <label
+                                                    class="form-check-label fw-normal"
+                                                    t-att-for="'%s-%s' % (a.id,v.id)"
+                                                    t-field="v.name"
+                                                />
+                                            </div>
+                                        </t>
+                                        <t t-if="len([v.id for v in a.value_ids if v.id in available_attribute_values.ids]) &gt; 12">
+                                            <div class="view_more text-center">
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-link more-btn view_more_btn"
+                                                    t-att-data-attribute-id="a.id"
+                                                    t-att-data-attribute-name="a.name"
+                                                    t-att-data-available-attribute-values="available_attribute_values.ids"
+                                                    t-att-data-attrib-set="a.value_ids.filtered(lambda v: v.id in attrib_set).mapped('id')"
+                                                    t-att-data-session-att-values="[val[1] for val in request.session.get('attrib_values', [])]"
+                                                >
+                                                    View More
+                                                </button>
                                             </div>
                                         </t>
                                     </div>
+                                    <t t-elif="a.display_type == 'pills'">
+                                        <div
+                                            class="btn-group-toggle list-inline list-unstyled"
+                                            data-bs-toggle="buttons">
+                                            <t t-foreach="a.value_ids" t-as="v">
+                                                <div t-if="v.id in available_attribute_values.ids" t-attf-class="o_variant_pills btn btn-primary mb-1 list-inline-item {{'active' if v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])]  else ''}}">
+                                                    <input
+                                                        type="radio"
+                                                        name="attribute_value"
+                                                        class="form-check-input"
+                                                        t-attf-class="js_variant_change {{a.create_variant}}"
+                                                        t-att-id="'%s-%s' % (a.id,v.id)"
+                                                        t-att-value="'%s-%s' % (a.id,v.id)"
+                                                        t-att-checked="'checked' if v.id in attrib_set or v.id in [val[1] for val in request.session.get('attrib_values', [])] else None"
+                                                    />
+                                                    <label
+                                                        class="radio_input_value o_variant_pills_input_value"
+                                                        t-att-for="v.id"
+                                                        t-field="v.name"
+                                                    />
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
                                 </div>
                             </div>
                         </t>
@@ -1113,7 +1221,7 @@
         <xpath expr="//div[hasclass('accordion-item')]//h6" position="replace">
             <h6 class="accordion-header">
                 <button
-                    class="accordion-button px-0 bg-transparent shadow-none"
+                    t-attf-class="accordion-button px-0 bg-transparent shadow-none {{'collapsed' if len(attributes) >= 4 else ''}}"
                     type="button"
                     data-bs-toggle="collapse"
                     t-attf-data-bs-target="#o_products_attributes_{{a.id}}"
@@ -1257,7 +1365,7 @@
                         <div class="col d-flex align-items-center order-1 order-lg-0">
                             <ol class="o_wsale_breadcrumb breadcrumb p-0 mb-4 m-lg-0">
                                 <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
-                                    <a t-att-href="keep(category=0, attribute_value=0, tags=0)">
+                                    <a t-att-href="keep(category=0, attribute_value=['%s-%s' % (val[0], val[1]) for val in request.session.get('attrib_values', [])], tags=0)">
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
                                     </a>
                                 </li>
@@ -1268,7 +1376,7 @@
                                 >
                                     <a
                                         class="py-2 py-lg-0"
-                                        t-att-href="keep('/shop/category/%s' % slug(category), category=0, attribute_value=0, tags=0)"
+                                        t-att-href="keep('/shop/category/%s' % slug(category), category=0, attribute_value=['%s-%s' % (val[0], val[1]) for val in request.session.get('attrib_values', [])], tags=0)"
                                     >
                                         <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="category.name"/>
                                     </a>
@@ -1276,7 +1384,7 @@
                                 <li t-else="" class="o_not_editable breadcrumb-item d-lg-none">
                                     <a
                                         class="py-2 py-lg-0"
-                                        t-att-href="keep(category=0, attribute_value=0, tags=0)"
+                                        t-att-href="keep(category=0, attribute_value=['%s-%s' % (val[0], val[1]) for val in request.session.get('attrib_values', [])], tags=0)"
                                     >
                                         <i class="oi oi-chevron-left me-1" role="presentation"/>All Products
                                     </a>

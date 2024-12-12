@@ -998,3 +998,24 @@ a.no-decoration {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+@include media-breakpoint-up(lg) {
+    .att-value-dialog{
+        .modal{
+            pointer-events: none;
+        }
+
+        .modal-content{
+            min-height: 400px !important;
+            max-height: 400px !important;
+        }
+
+        .modal:not([data-bs-backdrop="false"]){
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        .value-container{
+            max-height: 250px;
+        }
+    }
+}

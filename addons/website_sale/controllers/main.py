@@ -280,6 +280,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if attrib_list:
             post['attribute_value'] = attrib_list
 
+        if attrib_values:
+            request.session['attrib_values'] = attrib_values
+        else:
+            request.session.pop('attrib_values', None)
+
         filter_by_tags_enabled = website.is_view_active('website_sale.filter_products_tags')
         if filter_by_tags_enabled:
             tags = request_args.getlist('tags')
@@ -397,8 +402,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ('product_tmpl_ids', 'in', search_product.ids),
                 ('visibility', '=', 'visible'),
             ]))
+            available_attribute_values = lazy(lambda: request.env['product.attribute.value'].search([
+                ('pav_attribute_line_ids.product_tmpl_id', 'in', search_product.ids)
+            ]))
         else:
             attributes = lazy(lambda: ProductAttribute.browse(attributes_ids))
+            available_attribute_values = lazy(lambda: request.env['product.attribute.value'].search([
+                ('attribute_id', 'in', list(attributes_ids)),
+            ]))
+
 
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:
@@ -445,6 +457,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'products_prices': products_prices,
             'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
             'float_round': float_round,
+            'available_attribute_values': available_attribute_values,
         }
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price
@@ -457,6 +470,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values['main_object'] = category
         values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
+
+    @route('/shop/attribute_values', type='jsonrpc', auth='public', website=True)
+    def fetch_attribute_values(self, domain=None):
+        if domain is None:
+            domain = []
+
+        attribute_values = request.env['product.attribute.value'].sudo().search_read(domain, ['name'])
+        return attribute_values
 
     @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products, readonly=True)
     def product(self, product, category='', search='', **kwargs):
