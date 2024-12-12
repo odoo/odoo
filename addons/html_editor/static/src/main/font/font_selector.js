@@ -5,10 +5,10 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 export class FontSelector extends Component {
     static template = "html_editor.FontSelector";
     static props = {
+        title: String,
         getItems: Function,
         getDisplay: Function,
         onSelected: Function,
-        getSelection: Function,
     };
     static components = { Dropdown, DropdownItem };
 

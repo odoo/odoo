@@ -162,7 +162,6 @@ export class ImagePlugin extends Plugin {
             {
                 id: "image_transform",
                 groupId: "image_transform",
-                title: _t("Transform the picture (click twice to reset transformation)"),
                 Component: ImageTransformButton,
                 props: this.getImageTransformProps(),
             },
@@ -335,6 +334,7 @@ export class ImagePlugin extends Plugin {
     getImageTransformProps() {
         return {
             icon: "fa-object-ungroup",
+            title: _t("Transform the picture (click twice to reset transformation)"),
             getSelectedImage: this.getSelectedImage.bind(this),
             resetImageTransformation: this.resetImageTransformation.bind(this),
             addStep: this.dependencies.history.addStep.bind(this),

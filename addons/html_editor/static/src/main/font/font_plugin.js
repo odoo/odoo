@@ -257,9 +257,7 @@ export class FontPlugin extends Plugin {
         const block = closestBlock(anchorNode);
         const tagName = block.tagName.toLowerCase();
 
-        const matchingItems = fontItems.filter((item) => {
-            return item.tagName === tagName;
-        });
+        const matchingItems = fontItems.filter((item) => item.tagName === tagName);
 
         const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
 

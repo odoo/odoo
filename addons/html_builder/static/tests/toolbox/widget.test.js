@@ -1,3 +1,4 @@
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
@@ -412,9 +413,7 @@ describe("WeNumberInput", () => {
     test("should get the initial value of the input", async () => {
         addActionOption({
             customAction: {
-                getValue: ({ editingElement }) => {
-                    return editingElement.innerHTML;
-                },
+                getValue: ({ editingElement }) => editingElement.innerHTML,
                 apply: ({ param }) => {
                     expect.step(`customAction ${param}`);
                 },
@@ -435,9 +434,7 @@ describe("WeNumberInput", () => {
     test("should preview changes", async () => {
         addActionOption({
             customAction: {
-                getValue: ({ editingElement }) => {
-                    return editingElement.innerHTML;
-                },
+                getValue: ({ editingElement }) => editingElement.innerHTML,
                 apply: ({ editingElement, value }) => {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
@@ -463,9 +460,7 @@ describe("WeNumberInput", () => {
     test("should commit changes", async () => {
         addActionOption({
             customAction: {
-                getValue: ({ editingElement }) => {
-                    return editingElement.innerHTML;
-                },
+                getValue: ({ editingElement }) => editingElement.innerHTML,
                 apply: ({ editingElement, value }) => {
                     expect.step(`customAction ${value}`);
                     editingElement.innerHTML = value;
@@ -502,9 +497,7 @@ describe("WeNumberInput", () => {
         });
         addActionOption({
             customAction: {
-                getValue: () => {
-                    return "customValue";
-                },
+                getValue: () => "customValue",
             },
         });
 
@@ -540,9 +533,7 @@ describe("WeTextInput", () => {
         });
         addActionOption({
             customAction: {
-                getValue: () => {
-                    return "customValue";
-                },
+                getValue: () => "customValue",
             },
         });
 
@@ -603,6 +594,10 @@ describe("WeSelectItem", () => {
                     </WeSelect>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target" customAttribute="a">x</div>`);
+        setSelection({
+            anchorNode: queryFirst(":iframe .test-options-target").childNodes[0],
+            anchorOffset: 0,
+        });
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         expect(".we-bg-options-container .dropdown").toHaveText("A");
@@ -761,6 +756,10 @@ describe("dependencies", () => {
             `,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        setSelection({
+            anchorNode: queryFirst(":iframe .test-options-target").childNodes[0],
+            anchorOffset: 0,
+        });
         await contains(":iframe .test-options-target").click();
         expect(".options-container").toBeDisplayed();
         expect(
