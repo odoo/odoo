@@ -101,6 +101,354 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             }
         )
 
+    def test_get_timeline_same_start_different_finish(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2021,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2021,
+                    'quarter': 2,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2021,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2021,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2020, 12, 31)),
+            (date(2021, 1, 1), date(2021, 6, 30)),
+            (date(2021, 7, 1), date(2021, 9, 30)),
+        ])
+
+    def test_get_timeline_different_start_same_finish(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2021,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2021,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2021,
+                    'quarter': 3,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2021,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2021, 3, 31)),
+            (date(2021, 4, 1), date(2021, 6, 30)),
+            (date(2021, 7, 1), date(2021, 12, 31)),
+        ])
+
+    def test_get_timeline_following_perdiods(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2022, 3, 31)),
+            (date(2022, 4, 1), date(2022, 6, 30)),
+            (date(2022, 7, 1), date(2022, 9, 30)),
+        ])
+    
+    def test_get_timeline_following_periods_in_bigger_period(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2021, 12, 31)),
+            (date(2022, 1, 1), date(2022, 3, 31)),
+            (date(2022, 4, 1), date(2022, 6, 30)),
+            (date(2022, 7, 1), date(2022, 9, 30)),
+            (date(2022, 10, 1), date(2022, 12, 31)),
+        ])
+    
+    def test_get_timeline_gapped_periods(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'company_id': None,
+            }
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2020, 12, 31)),
+            (date(2022, 1, 1), date(2022, 12, 31)),
+            (date(2024, 1, 1), date(2024, 12, 31)),
+        ])
+
+    def test_get_timeline_overlapping_periods(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2023,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 2,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'day',
+                    'year': 2024,
+                    'month': 7,
+                    'day': 2,
+                },
+                'date_to': {
+                    'range_type': 'month',
+                    'year': 2024,
+                    'month': 9,
+                },
+                'company_id': None,
+            }
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2023, 3, 31)),
+            (date(2023, 4, 1), date(2023, 12, 31)),
+            (date(2024, 1, 1), date(2024, 3, 31)),
+            (date(2024, 4, 1), date(2024, 6, 30)),
+            (date(2024, 7, 1), date(2024, 7, 1)),
+            (date(2024, 7, 2), date(2024, 9, 30)),
+            (date(2024, 10, 1), date(2024, 12, 31)),
+        ])
+
+    def test_get_timeline_mix_periods(self):
+        cells = [
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2022,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2022,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2024,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 3,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'quarter',
+                    'year': 2023,
+                    'quarter': 2,
+                },
+                'date_to': {
+                    'range_type': 'quarter',
+                    'year': 2024,
+                    'quarter': 1,
+                },
+                'company_id': None,
+            },
+            {
+                'date_from': {
+                    'range_type': 'year',
+                    'year': 2026,
+                },
+                'date_to': {
+                    'range_type': 'year',
+                    'year': 2026,
+                },
+                'company_id': None,
+            },
+        ]
+        self.env['account.account']._pre_process_date_period_boundaries(cells)
+        timeline = self.env['account.account']._get_timeline(cells)
+        self.assertListEqual(timeline, [
+            (date(1900, 1, 1), date(2021, 12, 31)),
+            (date(2022, 1, 1), date(2022, 3, 31)),
+            (date(2022, 4, 1), date(2022, 9, 30)),
+            (date(2022, 10, 1), date(2022, 12, 31)),
+
+            (date(2023, 4, 1), date(2023, 12, 31)),
+            (date(2024, 1, 1), date(2024, 3, 31)),
+
+            # (date(2024, 4, 1), date(2024, 3, 31)), ???
+
+            (date(2024, 4, 1), date(2024, 9, 30)),
+            (date(2024, 10, 1), date(2024, 12, 31)),
+            (date(2026, 1, 1), date(2026, 12, 31)),
+        ])
+
     def test_empty_payload(self):
         self.assertEqual(
             self.env["account.account"].spreadsheet_fetch_debit_credit([]), []
@@ -111,7 +459,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -129,7 +481,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -173,7 +529,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -188,7 +548,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
 
     def test_response_order(self):
         request_1 = {
-            "date_range": {
+            "date_from": {
+                "range_type": "year",
+                "year": 2022,
+            },
+            "date_to": {
                 "range_type": "year",
                 "year": 2022,
             },
@@ -197,7 +561,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             "include_unposted": True,
         }
         request_2 = {
-            "date_range": {
+            "date_from": {
+                "range_type": "year",
+                "year": 2020,
+            },
+            "date_to": {
                 "range_type": "year",
                 "year": 2020,
             },
@@ -220,7 +588,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -240,7 +612,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -261,7 +637,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             Account.spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -270,7 +650,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "include_unposted": True,
                     },
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -314,7 +698,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2021,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2021,
                         },
@@ -357,7 +745,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2021,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2021,
                         },
@@ -402,7 +794,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -443,7 +839,12 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "quarter",
+                            "year": 2022,
+                            "quarter": 3,
+                        },
+                        "date_to": {
                             "range_type": "quarter",
                             "year": 2022,
                             "quarter": 3,
@@ -485,7 +886,8 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {"range_type": "month", "year": 2022, "month": 7},
+                        "date_from": {"range_type": "month", "year": 2022, "month": 7},
+                        "date_to": {"range_type": "month", "year": 2022, "month": 7},
                         "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
@@ -523,7 +925,13 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "day",
+                            "year": 2022,
+                            "month": 7,
+                            "day": 2,
+                        },
+                        "date_to": {
                             "range_type": "day",
                             "year": 2022,
                             "month": 7,
@@ -535,7 +943,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     }
                 ]
             ),
-            [{"credit": 555, "debit": 1055}],
+            [{"credit": 555, "debit": 555}],
         )
 
     def test_first_fiscal_day_date_period(self):
@@ -591,7 +999,13 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "day",
+                            "year": 2022,
+                            "month": 2,
+                            "day": 4,
+                        },
+                        "date_to": {
                             "range_type": "day",
                             "year": 2022,
                             "month": 2,
@@ -615,7 +1029,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2025,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2025,
                         },
@@ -659,7 +1077,12 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "quarter",
+                            "year": 2022,
+                            "quarter": 3,
+                        },
+                        "date_to": {
                             "range_type": "quarter",
                             "year": 2022,
                             "quarter": 3,
@@ -704,7 +1127,8 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {"range_type": "month", "year": 2022, "month": 7},
+                        "date_from": {"range_type": "month", "year": 2022, "month": 7},
+                        "date_to": {"range_type": "month", "year": 2022, "month": 7},
                         "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
@@ -745,7 +1169,13 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "day",
+                            "year": 2022,
+                            "month": 7,
+                            "day": 2,
+                        },
+                        "date_to": {
                             "range_type": "day",
                             "year": 2022,
                             "month": 7,
@@ -792,7 +1222,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -810,7 +1244,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -855,7 +1293,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -873,7 +1315,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -893,7 +1339,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -914,7 +1364,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -934,7 +1388,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             self.env["account.account"].spreadsheet_fetch_debit_credit(
                 [
                     {
-                        "date_range": {
+                        "date_from": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "date_to": {
                             "range_type": "year",
                             "year": 2022,
                         },
@@ -952,7 +1410,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
     def test_see_records_action(self):
         action = self.env["account.account"].spreadsheet_move_line_action(
             {
-                "date_range": {
+                "date_from": {
+                    "range_type": "year",
+                    "year": 2022,
+                },
+                "date_to": {
                     "range_type": "year",
                     "year": 2022,
                 },
@@ -993,7 +1455,11 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
     def test_see_records_action_no_code(self):
         action = self.env["account.account"].spreadsheet_move_line_action(
             {
-                "date_range": {
+                "date_from": {
+                    "range_type": "year",
+                    "year": 2022,
+                },
+                "date_to": {
                     "range_type": "year",
                     "year": 2022,
                 },
@@ -1002,15 +1468,35 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "include_unposted": True,
             }
         )
+        company = self.company_data['company']
+        payable_receivable_accounts = self.env['account.account'].with_company(company).search([
+            ('account_type', 'in', ['liability_payable', 'asset_receivable'])
+        ])
         self.assertEqual(
             action,
             {
+                "domain": [
+                    "&",
+                    "&",
+                    "&",
+                    ("account_id", "in", payable_receivable_accounts.ids),
+                    "|",
+                    "&",
+                    ("account_id.include_initial_balance", "=", True),
+                    ("date", "<=", date(2022, 12, 31)),
+                    "&",
+                    "&",
+                    ("account_id.include_initial_balance", "=", False),
+                    ("date", ">=", date(2022, 1, 1)),
+                    ("date", "<=", date(2022, 12, 31)),
+                    ("company_id", "=", company.id),
+                    ("move_id.state", "!=", "cancel")
+                ],
                 "type": "ir.actions.act_window",
                 "res_model": "account.move.line",
                 "view_mode": "list",
                 "views": [[False, "list"]],
                 "target": "current",
-                "domain": [(0, "=", 1)],
-                "name": "Journal items for account prefix ",
+                "name": "Journal items for payable and receivable accounts",
             },
         )

@@ -505,6 +505,32 @@ test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
     expect(migratedData.sheets[0].cells.A4).toBe(`=ODOO.PIVOT.POSITION("1",14)`);
 });
 
+test("CREDIT, DEBIT and BALANCE parameters are migrated (from 12 to 13)", () => {
+    const data = {
+        version: 16,
+        odooVersion: 9,
+        sheets: [
+            {
+                cells: {
+                    A1: { content: `=-ODOO.CREDIT("114", 2024)` },
+                    A2: { content: `=ODOO.DEBIT("114, 115, 116", "Q2/2024", , TRUE)` },
+                    A3: { content: `=-ODOO.BALANCE("114, 116", "12/12/2024",4)` },
+                },
+            },
+        ],
+    };
+    const migratedData = load(data);
+    expect(migratedData.sheets[0].cells.A1.content).toBe(
+        `=-ODOO.CREDIT("114", 2024,2024)`
+    );
+    expect(migratedData.sheets[0].cells.A2.content).toBe(
+        `=ODOO.DEBIT("114, 115, 116", "Q2/2024","Q2/2024", , TRUE)`
+    );
+    expect(migratedData.sheets[0].cells.A3.content).toBe(
+        `=-ODOO.BALANCE("114, 116", "12/12/2024","12/12/2024",4)`
+    );
+});
+
 test("Odoo version is exported", () => {
     const model = new Model();
     expect(model.exportData().odooVersion).toBe(ODOO_VERSION);
