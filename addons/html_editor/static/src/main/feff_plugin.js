@@ -1,8 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { cleanTextNode } from "@html_editor/utils/dom";
-import { isTextNode } from "@html_editor/utils/dom_info";
+import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
-import { descendants } from "@html_editor/utils/dom_traversal";
+import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
@@ -86,12 +86,44 @@ export class FeffPlugin extends Plugin {
         return feff;
     }
 
+    /**
+     * Adds a FEFF before and after each element that matches the selectors
+     * provided by the registered providers.
+     *
+     * @param {Element} root
+     * @param {Cursors} cursors
+     * @returns {Node[]}
+     */
+    padWithFeffs(root, cursors) {
+        const combinedSelector = this.getResource("selectors_for_feff_providers")
+            .map((provider) => provider())
+            .join(", ");
+        if (!combinedSelector) {
+            return [];
+        }
+        const elements = [...selectElements(root, combinedSelector)];
+        const feffNodes = elements
+            .flatMap((el) => {
+                const addFeff = (position) => this.addFeff(el, position, cursors);
+                return [
+                    isZwnbsp(el.previousSibling) ? el.previousSibling : addFeff("before"),
+                    isZwnbsp(el.nextSibling) ? el.nextSibling : addFeff("after"),
+                ];
+            })
+            // Avoid sequential FEFFs
+            .filter((feff, i, array) => !(i > 0 && areCloseSiblings(array[i - 1], feff)));
+        return feffNodes;
+    }
+
     updateFeffs(root) {
         const cursors = this.getCursors();
+        // Pad based on selectors
+        const feffNodesBasedOnSelectors = this.padWithFeffs(root, cursors);
+        // Custom feff adding
         // Each provider is responsible for adding (or keeping) FEFF nodes and
         // returning a list of them.
-        const feffNodes = this.getResource("feff_providers").flatMap((p) => p(root, cursors));
-        const feffNodesToKeep = new Set(feffNodes);
+        const customFeffNodes = this.getResource("feff_providers").flatMap((p) => p(root, cursors));
+        const feffNodesToKeep = new Set([...feffNodesBasedOnSelectors, ...customFeffNodes]);
         this.removeFeffs(root, cursors, { exclude: (node) => feffNodesToKeep.has(node) });
         cursors.restore();
     }
@@ -116,4 +148,20 @@ export class FeffPlugin extends Plugin {
         };
         return cursors;
     }
+}
+
+/**
+ * Whether two nodes are consecutive siblings, ignoring empty text nodes between
+ * them.
+ *
+ * @param {Node} a
+ * @param {Node} b
+ */
+function areCloseSiblings(a, b) {
+    let next = a.nextSibling;
+    // skip empty text nodes
+    while (next && isTextNode(next) && !next.textContent) {
+        next = next.nextSibling;
+    }
+    return next === b;
 }
