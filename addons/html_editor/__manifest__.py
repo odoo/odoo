@@ -17,12 +17,14 @@ This addon provides an extensible, maintainable editor.
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            ('include', 'html_editor.assets_media_dialog')
+            ('include', 'html_editor.assets_media_dialog'),
+            ('include', 'html_editor.assets_link_popover'),
         ],
         'web.assets_backend': [
             'html_editor/static/src/**/*',
             ('remove', 'html_editor/static/src/components/history_dialog/history_dialog.dark.scss'),
             ('include', 'html_editor.assets_media_dialog'),
+            ('include', 'html_editor.assets_link_popover'),
         ],
         'html_editor.assets_media_dialog': [
             # Bundle to use the media dialog in the backend and the frontend
@@ -39,6 +41,11 @@ This addon provides an extensible, maintainable editor.
         'html_editor.assets_image_cropper': [
             'html_editor/static/lib/cropperjs/cropper.css',
             'html_editor/static/lib/cropperjs/cropper.js',
+        ],
+        'html_editor.assets_link_popover': [
+            'html_editor/static/src/main/link/link_popover.js',
+            'html_editor/static/src/main/link/link_popover.xml',
+            'html_editor/static/src/main/link/utils.js',
         ],
     },
     'license': 'LGPL-3'
