@@ -4,15 +4,21 @@
 import base64
 import itertools
 import logging
+import re
 from ast import literal_eval
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import is_html_empty
 from odoo.tools.safe_eval import safe_eval, time
+from odoo.tools.rendering_tools import parse_inline_template
 
 _logger = logging.getLogger(__name__)
 
+
+ALLOWED_KEYWORDS = ['format_addr', 'format_date', 'format_datetime', 'format_time', 'format_amount', 'format_duration',
+                    'is_html_empty', 'slug', 'user', 'str', 'urlencode', 'datetime', 'len', 'abs', 'min', 'max', 'sum',
+                    'filter', 'reduce', 'map', 'relativedelta', 'round', 'hasattr', 'ctx']
 
 class MailTemplate(models.Model):
     "Templates for sending email"
@@ -153,6 +159,79 @@ class MailTemplate(models.Model):
                 upd_values = target._mail_template_default_values()
                 template.update(upd_values)
 
+    def _validate_reference(self, variable, expression, model=False):
+        # Avoid checking some python functions and ctx
+        if variable in ALLOWED_KEYWORDS:
+            return True
+        # Model is not provided
+        if not model and not self:
+            raise ValidationError(_("Model not provided for the template"))
+        allowed_variables = {
+            'object': self.env[self.env['ir.model'].browse(model).model if model else self.render_model],
+            'env': self.env,
+            'user': self.env.user
+        }
+        if variable not in allowed_variables:
+            raise ValidationError(_("Unknown variable %(variable)s used", variable=variable))
+
+        curr = allowed_variables[variable]
+        if not expression:
+            return True
+        refs = expression.split('.')
+        i = 0
+        while i < len(refs):
+            if refs[i] not in dir(curr):
+                raise ValidationError(_("Invalid Attribute: %(attribute)s not found", attribute=refs[i]))
+            if isinstance(curr, models.BaseModel):
+                if not refs[i] in curr._fields:
+                    # Stop at function as we do not know the return value of the function
+                    break
+                curr = curr._fields[refs[i]]
+                if curr.relational:
+                    curr = self.env[curr.comodel_name]
+            else:
+                curr = getattr(curr, refs[i])
+            i += 1
+        return True
+
+    def _parse_expression(self, expression):
+        if not expression:
+            return []
+
+        lst = []
+        try:
+            expressions = parse_inline_template(expression)
+            for string, expression, default in expressions:
+                processed_expr = self.env['ir.qweb']._compile_expr(expression, raise_on_missing=True)
+                lst.extend(re.findall(r"values\['(.+?)'\]\.?([\w\._]+)?", processed_expr))
+        except SyntaxError:
+            raise ValidationError(_("Invalid Syntax Used"))
+
+        return lst
+
+    def _validate_template(self, fields={}):
+
+        dynamic_fields = {
+            'subject',
+            'email_from',
+            'email_to',
+            'partner_to',
+            'email_cc',
+            'reply_to',
+            'scheduled_date',
+            'lang',
+        }
+
+        if fields and 'model_id' not in fields:
+            dynamic_fields = dynamic_fields & set(fields.keys())
+        for field in dynamic_fields:
+            try:
+                lst = self._parse_expression(fields.get(field, False))
+                for var, expr in lst:
+                    self._validate_reference(var, expr, fields.get('model_id', False))
+            except (UserError, AttributeError, ValueError) as e:
+                raise ValidationError(_("Error in %(field)s: %(error)s!", field=self._fields[field].string, error=str(e)))
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -170,14 +249,21 @@ class MailTemplate(models.Model):
             if self.env[model]._abstract:
                 raise ValidationError(_('You may not define a template on an abstract model: %s', model))
 
+    def _check_template(self, vals_list):
+        for vals in vals_list:
+            self._validate_template(fields=vals)
+
     @api.model_create_multi
     def create(self, vals_list):
         self._check_abstract_models(vals_list)
-        return super().create(vals_list)\
-            ._fix_attachment_ownership()
+        self._check_template(vals_list)
+        records = super().create(vals_list)
+        records._fix_attachment_ownership()
+        return records
 
     def write(self, vals):
         self._check_abstract_models([vals])
+        self._check_template([vals])
         super().write(vals)
         self._fix_attachment_ownership()
         return True
