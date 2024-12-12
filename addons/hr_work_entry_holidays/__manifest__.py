@@ -1,20 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
-    'name': 'Time Off in Payslips',
+    'name': 'Time Off - Work Entries',
     'version': '1.0',
-    'category': 'Human Resources/Payroll',
+    'category': 'Human Resources/Time Off',
     'sequence': 95,
-    'summary': 'Manage Time Off in Payslips',
+    'summary': 'Manage Work Entries in Time Off',
     'description': """
-Manage Time Off in Payslips
-============================
+Manage Work Entries in Time Off
+===============================
 
-This application allows you to integrate time off in payslips.
+This application allows you to integrate work entries in time off.
     """,
-    'depends': ['hr_holidays', 'hr_holidays_contract', 'hr_work_entry_contract'],
+    'depends': ['hr_holidays', 'hr_work_entry'],
     'data': [
         'data/hr_payroll_holidays_data.xml',
         'views/hr_leave_views.xml',

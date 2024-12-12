@@ -9,7 +9,7 @@ import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.utils import string_to_datetime, Intervals
+from odoo.addons.resource.models.utils import string_to_datetime
 from odoo.osv import expression
 from odoo.tools import ormcache, format_list
 from odoo.exceptions import UserError
@@ -46,50 +46,12 @@ class HrContract(models.Model):
         attendance = self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
 
-    def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
-        return self._get_leave_work_entry_type(leave)
-
-    def _get_leave_work_entry_type(self, leave):
-        return leave.work_entry_type_id
-
     # Is used to add more values, for example planning_slot_id
     def _get_more_vals_attendance_interval(self, interval):
         return []
 
-    # Is used to add more values, for example leave_id (in hr_work_entry_holidays)
-    def _get_more_vals_leave_interval(self, interval, leaves):
-        return []
-
     def _get_bypassing_work_entry_type_codes(self):
         return []
-
-    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
-        # returns the work entry time related to the leave that
-        # includes the whole interval.
-        # Overriden in hr_work_entry_contract_holiday to select the
-        # global time off first (eg: Public Holiday > Home Working)
-        self.ensure_one()
-        for leave in leaves:
-            if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
-                interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
-                interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
-                return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
-
-    def _get_sub_leave_domain(self):
-        return [('calendar_id', 'in', [False] + self.resource_calendar_id.ids)]
-
-    def _get_leave_domain(self, start_dt, end_dt):
-        domain = [
-            ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
-            ('date_from', '<=', end_dt),
-            ('date_to', '>=', start_dt),
-            ('company_id', 'in', [False, self.company_id.id]),
-        ]
-        return expression.AND([domain, self._get_sub_leave_domain()])
-
-    def _get_resource_calendar_leaves(self, start_dt, end_dt):
-        return self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
 
     def _get_attendance_intervals(self, start_dt, end_dt):
         # {resource: intervals}
@@ -142,7 +104,7 @@ class HrContract(models.Model):
 
         attendances_by_resource = self._get_attendance_intervals(start_dt, end_dt)
 
-        resource_calendar_leaves = self._get_resource_calendar_leaves(start_dt, end_dt)
+        resource_calendar_leaves = self.employee_id.resource_id._get_resource_calendar_leaves(start_dt, end_dt)
         # {resource: resource_calendar_leaves}
         leaves_by_resource = defaultdict(lambda: self.env['resource.calendar.leaves'])
         for leave in resource_calendar_leaves:
@@ -243,10 +205,17 @@ class HrContract(models.Model):
                 # sql constraint error
                 if interval[0] == interval[1]:  # if start == stop
                     continue
-                leaves_over_interval = [l for l in leaves_over_attendances if l[0] >= interval[0] and l[1] <= interval[1]]
-                for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
-                    leave_entry_type = contract._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
-                    interval_leaves = [leave for leave in leaves if leave[2].work_entry_type_id.id == leave_entry_type.id]
+                leaves_over_interval = [
+                    leave for leave in leaves_over_attendances
+                    if leave[0] >= interval[0] and leave[1] <= interval[1]
+                ]
+                for leave_interval in [(leave[0], leave[1], interval[2]) for leave in leaves_over_interval]:
+                    leave_entry_type = self.env['resource.calendar.leaves']._get_interval_leave_work_entry_type(
+                        interval, leaves, contract.employee_id, bypassing_work_entry_type_codes)
+                    interval_leaves = self.env['resource.calendar.leaves']
+                    for leave in leaves:
+                        if leave[2].work_entry_type_id.id == leave_entry_type.id:
+                            interval_leaves |= leave[2]
                     interval_start = leave_interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                     contract_vals += [dict([
@@ -258,7 +227,7 @@ class HrContract(models.Model):
                         ('company_id', contract.company_id.id),
                         ('state', 'draft'),
                         ('contract_id', contract.id),
-                    ] + contract._get_more_vals_leave_interval(interval, interval_leaves))]
+                    ] + interval_leaves._get_more_vals_leave_interval(interval, leave_interval))]
         return contract_vals
 
     def _get_work_entries_values(self, date_start, date_stop):

@@ -4457,7 +4457,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'payment',
             'whatsapp_payment',
             'pos_online_payment',
-            'hr_work_entry_holidays_enterprise',
+            'hr_work_entry_holidays',
             'project_timesheet_forecast',
             'pos_hr',
             'pos_iot',
