@@ -540,6 +540,31 @@ async function _isSrcCorsProtected(src) {
     return _isImageCorsProtected(dummyImg);
 }
 
+/**
+ * @param {jQuery} $element
+ * @param {jQuery} [$excluded]
+ * @param {boolean} [resolveOnError=false]
+ */
+function onceAllImagesLoaded($element, $excluded, resolveOnError = false) {
+    const defs = Array.from($element.find("img").addBack("img")).map((img) => {
+        if (img.complete || ($excluded && ($excluded.is(img) || $excluded.has(img).length))) {
+            return; // Already loaded
+        }
+        const def = new Promise(function (resolve, reject) {
+            $(img).one("load", function () {
+                resolve();
+            });
+            if (resolveOnError) {
+                $(img).one("error", function () {
+                    resolve();
+                });
+            }
+        });
+        return def;
+    });
+    return Promise.all(defs);
+}
+
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -571,4 +596,5 @@ export default {
     forwardToThumbnail: _forwardToThumbnail,
     isImageCorsProtected: _isImageCorsProtected,
     isSrcCorsProtected: _isSrcCorsProtected,
+    onceAllImagesLoaded: onceAllImagesLoaded,
 };
