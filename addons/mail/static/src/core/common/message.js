@@ -8,6 +8,7 @@ import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -125,6 +126,7 @@ export class Message extends Component {
         this.shadowBody = useRef("shadowBody");
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
+        this.avatarCard = usePopover(AvatarCardPopover);
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         useChildSubEnv({
@@ -358,8 +360,19 @@ export class Message extends Component {
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
-        if (this.store.handleClickOnLink(ev, this.props.thread)) {
-            return;
+        if (ev.target.closest(".o_mail_redirect")) {
+            ev.preventDefault();
+            let id = Number(ev.target.dataset.oeId);
+            const Partner = this.store.Persona.get({ type: "partner", id: id });
+            if (Partner.userId) {
+                id = Partner.userId;
+            }
+            const remodel = Partner.userId ? "res.users" : "res.partner";
+            this.avatarCard.open(ev.target, {
+                id: id,
+                res_model: remodel,
+            });
+            return true;
         }
         if (
             !isEventHandled(ev, "Message.ClickAuthor") &&
