@@ -139,6 +139,12 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
         # messages and ratings
         user_id_field = cls.env['ir.model.fields']._get(cls.record_ratings._name, 'user_id')
         comment_subtype_id = cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        cls.link_previews = cls.env["mail.link.preview"].create(
+            [
+                {"source_url": "https://www.odoo.com"},
+                {"source_url": "https://www.example.com"},
+            ]
+        )
         cls.messages_all = cls.env['mail.message'].sudo().create([
             {
                 'attachment_ids': [
@@ -154,11 +160,11 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                 'body': f'<p>Test {msg_idx}</p>',
                 'date': datetime(2023, 5, 15, 10, 30, 5),
                 'email_from': record.customer_id.email_formatted,
-                'link_preview_ids': [
+                'message_link_preview_ids': [
                     (0, 0, {
-                        'source_url': 'https://www.odoo.com',
+                        "link_preview_id": cls.link_previews[0].id,
                     }), (0, 0, {
-                        'source_url': 'https://www.example.com',
+                        "link_preview_id": cls.link_previews[1].id,
                     }),
                 ],
                 'notification_ids': [
