@@ -1552,6 +1552,29 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         _mail, message = composer._action_send_mail()
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
+        # Check that the message created from the mail composer gets the values
+        # we passed to the composer context. When we provide a custom `body`
+        # and `email_add_signature` flag, the message should keep those values
+        # and should not add any signature to the message body.
+
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record),
+            default_body='<p>Hello world</p>',
+            default_email_add_signature=False
+        ).create({})
+        _mail, message = composer._action_send_mail()
+        self.assertFalse(message.email_add_signature)
+        self.assertEqual(message.body, '<p>Hello world</p>')
+
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record),
+            default_body='<p>Hi there</p>',
+            default_email_add_signature=True
+        ).create({})
+        _mail, message = composer._action_send_mail()
+        self.assertTrue(message.email_add_signature)
+        self.assertEqual(message.body, '<p>Hi there</p>')
+
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_mail_composer_recipients(self):
