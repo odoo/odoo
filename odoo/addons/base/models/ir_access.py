@@ -171,16 +171,6 @@ class IrAccess(models.Model):
             else:
                 restrictions.append(domain)
 
-        # add access for parent models as restrictions
-        if operation == 'read':
-            for parent_model_name, parent_field_name in self.env[model_name]._inherits.items():
-                domain = self._get_access_domain(parent_model_name, operation)
-                if domain is None:
-                    return None
-                if domain.is_true():
-                    continue
-                restrictions.append(Domain(parent_field_name, 'any', domain))
-
         return Domain.OR(permissions) & Domain.AND(restrictions)
 
     @ormcache('self.env.uid', 'model_name', 'operation', 'tuple(self._get_access_context())')
@@ -204,13 +194,6 @@ class IrAccess(models.Model):
             Domain(safe_eval(access.domain, eval_context)) if access.domain else Domain.TRUE
             for access in accesses
         ]
-
-        # add access for parent models as restrictions
-        for parent_model_name, parent_field_name in self.env[model_name]._inherits.items():
-            domain = self._get_access_domain(parent_model_name, operation)
-            if domain is None:
-                return Domain.FALSE
-            restrictions.append(Domain(parent_field_name, 'any', domain))
 
         return Domain.AND(restrictions)
 

@@ -483,7 +483,7 @@ def _add_inherited_fields(model: BaseModel):
                 inherited=True,
                 inherited_field=field,
                 related=f"{parent_fname}.{name}",
-                related_sudo=False,
+                related_sudo=True,
                 copy=field.copy,
                 readonly=field.readonly,
                 export_string_translation=field.export_string_translation,
