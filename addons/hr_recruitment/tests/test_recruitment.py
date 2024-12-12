@@ -107,11 +107,11 @@ class TestRecruitment(TransactionCase):
         }
         # First application, a partner should be created
         self.env['hr.applicant'].create(applicant_data)
-        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
+        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com'), ('active', '=', False)])
         self.assertEqual(partner_count, 1)
         # Second application, no partner should be created
         self.env['hr.applicant'].create(applicant_data)
-        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
+        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com'), ('active', '=', False)])
         self.assertEqual(partner_count, 1)
 
     def test_target_on_application_hiring(self):
