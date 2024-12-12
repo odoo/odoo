@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_disclaimer" name="Disclaimer">
+        <div class="s_disclaimer oe_unmovable o_colored_level o_cc o_cc5 pt4 pb4" contenteditable="true" data-name="Disclaimer">
+            <div class="text-center">
+                <small> Free Returns and Standard Shipping </small>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_disclaimer_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <div data-selector=".s_disclaimer" data-js="Disclaimer">
+                <we-select string="Show on" data-no-preview="true">
+                    <we-button data-move-block="allPages">All pages</we-button>
+                    <we-button data-move-block="currentPage">This page</we-button>
+                </we-select>
+            </div>
+            <div data-selector=".s_disclaimer" data-drop-in="#o_snippet_above_header"/>
+        </xpath>
+    </template>
+
+    <record id="website.s_disclaimer_000_scss" model="ir.asset">
+        <field name="name">Disclaimer 000 SCSS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website/static/src/snippets/s_disclaimer/000.scss</field>
+    </record>
+</odoo>
