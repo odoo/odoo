@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
@@ -139,4 +139,25 @@ export function parseVersion(v) {
             return compareVersion(v, other) < 0;
         },
     };
+}
+
+/**
+ * @param {Element} node
+ * @param {string|ReturnType<markup>} content
+ */
+export function setElementContent(node, content) {
+    if (content instanceof markup().constructor) {
+        node.innerHTML = content;
+    } else {
+        node.textContent = content;
+    }
+}
+
+/**
+ * @param {string|ReturnType<markup>} content
+ */
+export function createDocumentFragmentFromContent(content) {
+    const div = document.createElement("div");
+    setElementContent(div, content);
+    return new DOMParser().parseFromString(div.innerHTML, "text/html");
 }

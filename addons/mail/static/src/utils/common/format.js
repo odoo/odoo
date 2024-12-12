@@ -1,7 +1,9 @@
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { markup } from "@odoo/owl";
 
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { escape, unaccent } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
+import { createDocumentFragmentFromContent, setElementContent } from "./misc";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
@@ -35,7 +37,7 @@ export async function prettifyMessageContent(rawBody, validRecords = []) {
     // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
     // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
     const escapedAndCompactContent = escapeAndCompactTextContent(rawBody);
-    let body = escapedAndCompactContent.replace(/&nbsp;/g, " ").trim();
+    let body = markup(escapedAndCompactContent.replace(/&nbsp;/g, " ").trim());
     // This message will be received from the mail composer as html content
     // subtype but the urls will not be linkified. If the mail composer
     // takes the responsibility to linkify the urls we end up with double
@@ -58,22 +60,19 @@ export async function prettifyMessageContent(rawBody, validRecords = []) {
  * @returns {string}
  */
 export function parseAndTransform(htmlString, transformFunction) {
-    const openToken = "OPEN" + Date.now();
-    const string = htmlString.replace(/&lt;/g, openToken);
     let children;
     try {
         const div = document.createElement("div");
-        div.innerHTML = string; // /!\ quotes are unescaped
+        setElementContent(div, htmlString);
         children = Array.from(div.childNodes);
     } catch {
         const div = document.createElement("div");
-        div.innerHTML = `<pre>${string}</pre>`;
+        const pre = document.createElement("pre");
+        setElementContent(pre, htmlString);
+        div.appendChild(pre);
         children = Array.from(div.childNodes);
     }
-    return _parseAndTransform(children, transformFunction).replace(
-        new RegExp(openToken, "g"),
-        "&lt;"
-    );
+    return _parseAndTransform(children, transformFunction);
 }
 
 /**
@@ -115,7 +114,7 @@ function linkify(text) {
         )}</a>`;
         curIndex = match.index + match[0].length;
     }
-    return result + _escapeEntities(text.slice(curIndex));
+    return markup(result + _escapeEntities(text.slice(curIndex)));
 }
 
 export function addLink(node, transformChildren) {
@@ -124,7 +123,7 @@ export function addLink(node, transformChildren) {
         const linkified = linkify(node.data);
         if (linkified !== node.data) {
             const div = document.createElement("div");
-            div.innerHTML = linkified;
+            setElementContent(div, linkified);
             for (const childNode of [...div.childNodes]) {
                 node.parentNode.insertBefore(childNode, node);
             }
@@ -154,7 +153,7 @@ export function escapeAndCompactTextContent(content) {
 
     // prevent html space collapsing
     value = value.replace(/ /g, "&nbsp;").replace(/([^>])&nbsp;([^<])/g, "$1 $2");
-    return value;
+    return markup(value);
 }
 
 /**
@@ -199,7 +198,7 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
         const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target} contenteditable="false">${mention.text}</a>`;
         body = body.replace(mention.placeholder, link);
     }
-    return body;
+    return markup(body);
 }
 
 /**
@@ -219,18 +218,21 @@ async function _generateEmojisOnHtml(htmlString) {
             htmlString = htmlString.replace(regexp, "$1" + emoji.codepoints);
         }
     }
-    return htmlString;
+    return markup(htmlString);
 }
 
 export function htmlToTextContentInline(htmlString) {
-    const fragment = document.createDocumentFragment();
     const div = document.createElement("div");
-    fragment.appendChild(div);
-    htmlString = htmlString.replace(/<br\s*\/?>/gi, " ");
+    if (htmlString instanceof markup().constructor) {
+        // br should not be removed in text/non-markup content
+        htmlString = markup(htmlString.replace(/<br\s*\/?>/gi, " "));
+    }
     try {
-        div.innerHTML = htmlString;
+        setElementContent(div, htmlString);
     } catch {
-        div.innerHTML = `<pre>${htmlString}</pre>`;
+        const pre = document.createElement("pre");
+        setElementContent(pre, htmlString);
+        div.appendChild(pre);
     }
     return div.textContent
         .trim()
@@ -239,9 +241,11 @@ export function htmlToTextContentInline(htmlString) {
 }
 
 export function convertBrToLineBreak(str) {
-    return new DOMParser().parseFromString(
-        str.replaceAll("<br>", "\n").replaceAll("</br>", "\n"),
-        "text/html"
+    if (!(str instanceof markup().constructor)) {
+        return str; // br should not be removed in text/non-markup content
+    }
+    return createDocumentFragmentFromContent(
+        markup(str.replaceAll("<br>", "\n").replaceAll("</br>", "\n"))
     ).body.textContent;
 }
 

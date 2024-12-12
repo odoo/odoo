@@ -1,5 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
 import { addLink, parseAndTransform } from "@mail/utils/common/format";
 import {
     click,
@@ -10,6 +8,9 @@ import {
     start,
     startServer,
 } from "./mail_test_helpers";
+
+import { describe, expect, test } from "@odoo/hoot";
+import { markup } from "@odoo/owl";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -78,7 +79,7 @@ test("addLink: utility function and special entities", () => {
 });
 
 test("addLink: linkify inside text node (1 occurrence)", async () => {
-    const content = "<p>some text https://somelink.com</p>";
+    const content = markup("<p>some text https://somelink.com</p>");
     const linkified = parseAndTransform(content, addLink);
     expect(linkified.startsWith("<p>some text <a")).toBe(true);
     expect(linkified.endsWith("</a></p>")).toBe(true);
@@ -99,7 +100,9 @@ test("addLink: linkify inside text node (2 occurrences)", () => {
     // linkify may add some attributes. Since we do not care of their exact
     // stringified representation, we continue deeper assertion with query
     // selectors.
-    const content = "<p>some text https://somelink.com and again https://somelink2.com ...</p>";
+    const content = markup(
+        "<p>some text https://somelink.com and again https://somelink2.com ...</p>"
+    );
     const linkified = parseAndTransform(content, addLink);
     const fragment = document.createDocumentFragment();
     const div = document.createElement("div");
