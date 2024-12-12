@@ -467,6 +467,7 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_19_website_page_options(self):
         self.start_tour("/odoo", "website_page_options", login="admin")
+        self.start_tour("/contactus", "website_page_breadcrumb", login="admin")
 
     def test_20_snippet_editor_panel_options(self):
         self.start_tour('/@/', 'snippet_editor_panel_options', login='admin')
