@@ -10,7 +10,7 @@ let Markup = null;
 export const SKIP_IMPLICIT_UPDATE = Symbol();
 
 export class Colibri {
-    constructor(core, el) {
+    constructor(core, I, el) {
         this.el = el;
         this.isReady = false;
         this.isUpdating = false;

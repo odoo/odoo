@@ -126,7 +126,7 @@ class WebsiteCore {
         if (I.prototype instanceof Interaction) {
             try {
                 // console.log(`[colibri] starting ${I.name}`);
-                const interaction = new Colibri(this, el);
+                const interaction = new Colibri(this, I, el);
                 this.interactions.push(interaction);
                 proms.push(interaction.start());
             } catch (e) {
