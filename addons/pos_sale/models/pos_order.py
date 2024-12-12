@@ -183,7 +183,7 @@ class PosOrderLine(models.Model):
     @api.depends('order_id.state', 'order_id.picking_ids', 'order_id.picking_ids.state', 'order_id.picking_ids.move_ids.quantity')
     def _compute_qty_delivered(self):
         for order_line in self:
-            if order_line.order_id.state in ['paid', 'done', 'invoiced']:
+            if order_line.order_id.state in ['paid', 'done']:
                 outgoing_pickings = order_line.order_id.picking_ids.filtered(
                     lambda pick: pick.state == 'done' and pick.picking_type_code == 'outgoing'
                 )
