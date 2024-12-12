@@ -34,9 +34,8 @@ function makeGooglePlacesSession() {
             current = current || generateUUID();
             params.session_id = current;
         }
-        const res = await rpc("/autocomplete/address_full", params);
         current = null;
-        return res;
+        return rpc("/autocomplete/address_full", params);
     }
 
     return {
