@@ -411,6 +411,7 @@ class Many2one(_Relational[M]):
         fname = field_expr
         comodel = model.env[self.comodel_name]
         sql_field = model._field_to_sql(alias, fname, query)
+        can_be_null = self not in model.env.registry.not_null_fields
 
         if not isinstance(value, Domain):
             # value is SQL or Query
@@ -426,7 +427,7 @@ class Many2one(_Relational[M]):
                 SQL(" IN ") if operator == 'any' else SQL(" NOT IN "),
                 subselect,
             )
-            if not self.required and operator != 'any':
+            if can_be_null and operator != 'any':
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
             if self.company_dependent:
                 sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
@@ -446,6 +447,8 @@ class Many2one(_Relational[M]):
 
             if operator == 'not any':
                 sql = value._to_sql(comodel, coalias, query)
+                if not can_be_null:
+                    return SQL("(%s) IS NOT TRUE", sql)
                 return SQL("(%s IS NULL OR (%s) IS NOT TRUE)", sql_field, sql)
             return value._to_sql(comodel, coalias, query)
 
@@ -1026,7 +1029,7 @@ class One2many(_RelationalMulti[M]):
 
     def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, value) -> Query:
         inverse_field = comodel._fields[self.inverse_name]
-        if not inverse_field.required:
+        if inverse_field not in comodel.env.registry.not_null_fields:
             # In the condition, one must avoid subqueries to return
             # NULL values, since it makes the IN test NULL instead
             # of FALSE.  This may discard expected results, as for
