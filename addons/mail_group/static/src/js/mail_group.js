@@ -12,8 +12,9 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.mailgroupId = this.$el.data('id');
-        this.isMember = this.$el.data('isMember') || false;
+        this.form = this.$el.find('.o_mg_subscribe_form')
+        this.mailgroupId = this.form.data('id');
+        this.isMember = this.form.data('isMember') || false;
         const searchParams = (new URL(document.location.href)).searchParams;
         this.token = searchParams.get('token');
         this.forceUnsubscribe = searchParams.has('unsubscribe');
@@ -27,17 +28,40 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
     /**
      * @private
      */
+    _showSubscriptionMode: function() {
+        this.$el.find('.o_mg_unsubscribe_btn').addClass('d-none');
+        this.$el.find('.o_mg_email_input_group').removeClass('d-none');
+    },
+
+    _showUnSubscriptionMode: function () {
+        this.$el.find('.o_mg_email_input_group').addClass('d-none');
+        this.$el.find('.o_mg_unsubscribe_btn').removeClass('d-none');
+    },
+
+    _updateMembersCount: function (action) {
+        var membersCountEle = this.$el.find(".o_mg_members_count");
+        var membersCount = parseInt(membersCountEle.text());
+        if (action === 'added'){
+            membersCountEle.text(membersCount + 1);
+        }
+        else if (action === 'removed'){
+            if (membersCount > 0){
+                membersCountEle.text(membersCount - 1);
+            }
+        }
+    },
+
     _onSubscribeBtnClick: async function (ev) {
         ev.preventDefault();
         const $email = this.$el.find(".o_mg_subscribe_email");
         const email = $email.val();
 
         if (!email.match(/.+@.+/)) {
-            this.$el.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
+            this.form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
             return false;
         }
 
-        this.$el.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
+        this.form.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
 
         const action = (this.isMember || this.forceUnsubscribe) ? 'unsubscribe' : 'subscribe';
 
@@ -51,19 +75,22 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
 
         if (response === 'added') {
             this.isMember = true;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+            this._showUnSubscriptionMode();
+            this._updateMembersCount('added');
+            console.log("pass inside added.")
         } else if (response === 'removed') {
             this.isMember = false;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Subscribe')).removeClass('btn-outline-primary').addClass('btn-primary');
+            this._showSubscriptionMode();
+            this._updateMembersCount('removed');
         } else if (response === 'email_sent') {
             // The confirmation email has been sent
-            this.$el.html(
+            this.form.html(
                 $('<div class="o_mg_alert alert alert-success" role="alert"/>')
                 .text(_t('An email with instructions has been sent.'))
             );
         } else if (response === 'is_already_member') {
             this.isMember = true;
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+            this._showUnSubscriptionMode();
             this.$el.find('.o_mg_subscribe_form').before(
                 $('<div class="o_mg_alert alert alert-warning" role="alert"/>')
                 .text(_t('This email is already subscribed.'))
@@ -71,7 +98,7 @@ publicWidget.registry.MailGroup = publicWidget.Widget.extend({
         } else if (response === 'is_not_member') {
             if (!this.forceUnsubscribe) {
                 this.isMember = false;
-                this.$el.find('.o_mg_subscribe_btn').text(_t('Subscribe'));
+                this._showSubscriptionMode();
             }
             this.$el.find('.o_mg_subscribe_form').before(
                 $('<div class="o_mg_alert alert alert-warning" role="alert"/>')
