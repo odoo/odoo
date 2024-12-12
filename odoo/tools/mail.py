@@ -266,6 +266,11 @@ def html_normalize(src, filter_callback=None, output_method="html"):
     if filter_callback:
         doc = filter_callback(doc)
 
+    if output_method == 'xml':
+        for t_tag in doc.xpath("//t"):
+            if not t_tag.text and not len(t_tag):
+                t_tag.text = ""
+
     src = html.tostring(doc, encoding='unicode', method=output_method)
 
     # this is ugly, but lxml/etree tostring want to put everything in a
