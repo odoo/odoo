@@ -10,8 +10,9 @@ export class PaymentScreenStatus extends Component {
         return this.env.utils.formatCurrency(this.props.order.getChange());
     }
     get remainingText() {
+        const due = this.props.order.getDue();
         return this.env.utils.formatCurrency(
-            this.props.order.getDue() > 0 ? this.props.order.getDue() : 0
+            this.props.order.taxTotals.order_sign * due > 0 ? due : 0
         );
     }
 }
