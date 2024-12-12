@@ -38,8 +38,11 @@
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <separator name="main_groupby_separator"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday'}"/>
                         <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'create_date'}"/>
+                        <separator name="secondary_groupby_separator"/>
+                        <separator name="managers_groupby_separator"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                     </group>
                 </search>
@@ -273,11 +276,11 @@
                     </header>
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
-                    <field name="work_email"/>
-                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="work_email" optional="hide"/>
+                    <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
-                    <field name="activity_date_deadline" widget="remaining_days" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
+                    <field name="activity_date_deadline" widget="remaining_days" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="department_id"/>
                     <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}"/>
                     <field name="parent_id" widget="many2one_avatar_user" optional="show"/>
