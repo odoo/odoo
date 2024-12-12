@@ -1012,6 +1012,7 @@ class SaleOrder(models.Model):
                     order._portal_ensure_token()
 
         action = {
+            'name': _('Send an email'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
