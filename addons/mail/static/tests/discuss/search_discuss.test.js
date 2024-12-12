@@ -253,18 +253,36 @@ test("Search a message containing round brackets", async () => {
 test("Search a message containing single quotes", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "I can't do it",
-        attachment_ids: [],
-        message_type: "comment",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
+    pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "I can't do it",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "I can&#x27;t do it",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "I can&apos;t do it",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
     await start();
     await openDiscuss(channelId);
     await click("button[title='Search Messages']");
     await insertText(".o_searchview_input", "can't");
     triggerHotkey("Enter");
-    await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
+    await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 3 });
 });

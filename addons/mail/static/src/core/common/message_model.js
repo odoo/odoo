@@ -1,5 +1,6 @@
 import { Record } from "@mail/core/common/record";
 import { EMOJI_REGEX, htmlToTextContentInline } from "@mail/utils/common/format";
+import { createDocumentFragmentFromContent, setElementContent } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -25,8 +26,7 @@ export class Message extends Record {
     update(data) {
         super.update(data);
         if (this.isNotification && !this.notificationType) {
-            const parser = new DOMParser();
-            const htmlBody = parser.parseFromString(this.body, "text/html");
+            const htmlBody = createDocumentFragmentFromContent(this.body);
             this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
         }
     }
@@ -45,7 +45,7 @@ export class Message extends Record {
                 return false;
             }
             const div = document.createElement("div");
-            div.innerHTML = this.body;
+            setElementContent(div, this.body);
             return Boolean(div.querySelector("a:not([data-oe-model])"));
         },
     });
@@ -85,7 +85,7 @@ export class Message extends Record {
     onlyEmojis = Record.attr(false, {
         compute() {
             const div = document.createElement("div");
-            div.innerHTML = this.body;
+            setElementContent(div, this.body);
             const bodyWithoutTags = div.textContent;
             const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
             return bodyWithoutTags.length > 0 && withoutEmojis.trim().length === 0;
