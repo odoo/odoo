@@ -128,10 +128,10 @@ class IrUiView(models.Model):
             custom_snippet_name = custom_snippet_el.get('data-name')
             custom_snippet_view = self.search([('name', '=', custom_snippet_name)], limit=1)
             if custom_snippet_view:
-                self._copy_field_terms_translations(custom_snippet_view, 'arch_db', record, html_field)
+                self._copy_field_terms_translations(custom_snippet_view, 'arch_db', record, html_field, overwrite=False)
 
     @api.model
-    def _copy_field_terms_translations(self, record_from, name_field_from, record_to, name_field_to):
+    def _copy_field_terms_translations(self, record_from, name_field_from, record_to, name_field_to, overwrite=True):
         """ Copy the terms translation from a record/field ``Model1.Field1``
         to a (possibly) completely different record/field ``Model2.Field2``.
 
@@ -172,7 +172,8 @@ class IrUiView(models.Model):
             record_from[name_field_from],
             {lang: record_from.with_context(prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
         )
-        existing_translation_dictionary.update(extra_translation_dictionary)
+        if overwrite or not any(translated_value != key for key in extra_translation_dictionary.keys() for translated_value in existing_translation_dictionary[key].values()): 
+            existing_translation_dictionary.update(extra_translation_dictionary)
         translation_dictionary = existing_translation_dictionary
 
         # The `en_US` jsonb value should always be set, even if english is not
