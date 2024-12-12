@@ -627,7 +627,7 @@
             <field name="model">product.product</field>
             <field eval="50" name="priority"/>
             <field name="arch" type="xml">
-                <list string="Product Variants">
+                <list string="Product Variants" default_order="is_favorite desc, default_code, name, id">
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="product_template_attribute_value_ids" widget="many2many_tags"
@@ -643,7 +643,7 @@
             <field name="name">product.product.expense.categories.list.view</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <list class="o_expense_categories">
+                <list class="o_expense_categories" default_order="is_favorite desc, default_code, name, id">
                     <field name="name" readonly="1"/>
                     <field name="currency_id" column_invisible="True"/>
                     <field name="default_code" optional="show" string="Reference" readonly="1"/>
