@@ -580,14 +580,6 @@ export const accountTaxHelpers = {
             }
         }
 
-        // Round 'total_per_tax'.
-        for (const amounts of Object.values(total_per_tax)) {
-            amounts.raw_tax_amount_currency = roundPrecision(amounts.raw_tax_amount_currency, amounts.currency_pd);
-            amounts.raw_tax_amount = roundPrecision(amounts.raw_tax_amount, amounts.company_currency_pd);
-            amounts.raw_base_amount_currency = roundPrecision(amounts.raw_base_amount_currency, amounts.currency_pd);
-            amounts.raw_base_amount = roundPrecision(amounts.raw_base_amount, amounts.company_currency_pd);
-        }
-
         // Dispatch the delta across the base lines.
         for (const amounts of Object.values(total_per_tax)) {
             if (!amounts.base_lines.length){
@@ -597,22 +589,22 @@ export const accountTaxHelpers = {
             const base_line = amounts.base_lines.sort(
                 (a, b) => a.tax_details.total_included_currency - b.tax_details.total_included_currency
             )[0];
-
             const tax_details = base_line.tax_details;
             const [index, tax_data] = tax_details.taxes_data.map((x, i) => [i, x]).find(([i, x]) => x.tax.id === amounts.tax.id);
-
-            const delta_base_amount_currency = amounts.raw_base_amount_currency - amounts.base_amount_currency;
-            const delta_base_amount = amounts.raw_base_amount - amounts.base_amount;
-
+            const delta_amount_currency = roundPrecision(amounts.raw_base_amount_currency + amounts.raw_tax_amount_currency, amounts.currency_pd) - amounts.base_amount_currency - amounts.tax_amount_currency;
+            const delta_amount = roundPrecision(amounts.raw_base_amount + amounts.raw_tax_amount, amounts.company_currency_pd) - amounts.base_amount - amounts.tax_amount;
+            const delta_tax_amount_currency = roundPrecision(amounts.raw_tax_amount_currency, amounts.currency_pd) - amounts.tax_amount_currency;
+            const delta_tax_amount = roundPrecision(amounts.raw_tax_amount, amounts.company_currency_pd) - amounts.tax_amount;
+            const delta_base_amount_currency = delta_amount_currency - delta_tax_amount_currency;
+            const delta_base_amount = delta_amount - delta_tax_amount;
             if (index === 0) {
                 tax_details.delta_base_amount_currency += delta_base_amount_currency;
                 tax_details.delta_base_amount += delta_base_amount;
             }
-
             tax_data.base_amount_currency += delta_base_amount_currency;
             tax_data.base_amount += delta_base_amount;
-            tax_data.tax_amount_currency += amounts.raw_tax_amount_currency - amounts.tax_amount_currency;
-            tax_data.tax_amount += amounts.raw_tax_amount - amounts.tax_amount;
+            tax_data.tax_amount_currency += delta_tax_amount_currency;
+            tax_data.tax_amount += delta_tax_amount;
         }
     },
 
