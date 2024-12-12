@@ -1922,6 +1922,9 @@ class SaleOrder(models.Model):
             return lambda *args: False
         return
 
+    def _get_edi_builders(self):
+        return []
+
     # PORTAL #
 
     def _has_to_be_signed(self):
