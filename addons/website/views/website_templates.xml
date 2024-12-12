@@ -227,6 +227,11 @@
         </t>
     </xpath>
 
+    <xpath expr="//header//nav" position="before">
+        <!-- Reserved div to drop the snippet above header -->
+        <div id="o_snippet_above_header" class="oe_empty"/>
+    </xpath>
+
     <xpath expr="//footer" position="attributes">
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
