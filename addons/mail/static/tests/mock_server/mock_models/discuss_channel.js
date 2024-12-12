@@ -606,7 +606,7 @@ export class DiscussChannel extends models.ServerModel {
         );
         return {
             data: store.get_result(),
-            sub_channel: mailDataHelpers.Store.one_id(subChannels),
+            sub_channel: subChannels[0].id,
         };
     }
 
