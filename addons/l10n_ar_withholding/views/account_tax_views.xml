@@ -18,7 +18,7 @@
                 <attribute name="invisible" separator="or" add="l10n_ar_tax_type == 'earnings_scale'"/>
             </xpath>
             <field name="name" position="after">
-                <field name="l10n_ar_tax_type" invisible="l10n_ar_type_tax_use not in ('customer', 'supplier')" required="l10n_ar_type_tax_use in ('customer', 'supplier')"/>
+                <field name="l10n_ar_tax_type" invisible="l10n_ar_type_tax_use not in ('customer', 'supplier')"/>
                 <field name="l10n_ar_scale_id" invisible="l10n_ar_tax_type != 'earnings_scale'" required="l10n_ar_tax_type == 'earnings_scale'" options="{'no_create': True}"/>
             </field>
             <field name="type_tax_use" position="after">
