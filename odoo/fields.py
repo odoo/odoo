@@ -5094,6 +5094,11 @@ class Id(Field):
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
 
+    def convert_to_cache(self, value, record, validate=True):
+        if not isinstance(value, NewId):
+            return int(value)
+        return value
+
 
 class PrefetchMany2one:
     """ Iterable for the values of a many2one field on the prefetch set of a given record. """
