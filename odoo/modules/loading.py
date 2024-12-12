@@ -583,6 +583,9 @@ def load_modules(
             model._register_hook()
         env.flush_all()
 
+        # STEP 10: check that we can trust nullable columns
+        registry.check_null_constraints(cr)
+
 
 def reset_modules_state(db_name: str) -> None:
     """
