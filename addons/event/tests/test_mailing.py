@@ -53,9 +53,11 @@ class TestMailing(EventCase, MockEmail):
 
     @users("user_eventuser")
     def test_event_mail_attendees(self):
-        template_form = Form(
-            self.env["mail.template"].with_context(default_model="event.registration", default_name="Test Template")
-        )
+        with self.debug_mode():
+            template_form = Form(
+                self.env["mail.template"].with_context(
+                    default_model="event.registration",
+                    default_name="Test Template"))
         template = template_form.save()
         event = self.test_event.with_user(self.env.user)
         event.write({
@@ -109,10 +111,14 @@ class TestMailing(EventCase, MockEmail):
     def test_mail_template_creation(self):
         """ Check default values when creating registration templates, should
         be correctly configured by default. """
-        template_form_default = Form(
-            self.env["mail.template"].with_context(default_model="event.registration")
-        )
-        template_form_user = Form(self.env["mail.template"])
+        with self.debug_mode():
+            template_form_default = Form(
+                self.env["mail.template"].with_context(
+                    default_model="event.registration",
+                    debug=True))
+            template_form_user = Form(
+                self.env["mail.template"].with_context(
+                    debug=True))
         template_form_user.model_id = self.env["ir.model"]._get("event.registration")
 
         for template in (template_form_default, template_form_user):
