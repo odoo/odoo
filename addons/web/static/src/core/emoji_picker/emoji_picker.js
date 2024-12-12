@@ -242,6 +242,12 @@ export class EmojiPicker extends Component {
             }
             this.emojiMatrix.at(-1).push(parseInt(emojiIndex));
         }
+        if (window.aku) {
+            for (const row of this.emojiMatrix) {
+                console.warn(row);
+            }
+            console.warn("---");
+        }
     }
 
     handleNavigation(key) {
@@ -297,6 +303,9 @@ export class EmojiPicker extends Component {
             }
         }
         this.state.activeEmojiIndex = newIdx ?? this.state.activeEmojiIndex;
+        if (window.aku) {
+            console.warn("ACTIVE_EMOJI_INDEX", this.state.activeEmojiIndex);
+        }
     }
 
     onKeydown(ev) {

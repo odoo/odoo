@@ -11,7 +11,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, getFixture, test } from "@odoo/hoot";
+import { after, describe, getFixture, test } from "@odoo/hoot";
 
 import { queryFirst } from "@odoo/hoot-dom";
 
@@ -85,6 +85,8 @@ test("Press Escape in emoji picker closes the emoji picker", async () => {
 });
 
 test("Basic keyboard navigation", async () => {
+    window.aku = 1;
+    after(() => delete window.aku);
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
