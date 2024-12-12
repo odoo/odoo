@@ -57,6 +57,11 @@ export class ChatGPTAlternativesDialog extends ChatGPTDialog {
         this.state.alternativesMode = ev.currentTarget.getAttribute('data-mode');
         this._generateAlternatives(1);
     }
+    preventDialogMousedown(ev) {
+        // Prevent the default behavior of a mousedown event on the dialog
+        // itself so it doesn't cancel the user's text selection in the editor.
+        ev.preventDefault();
+    }
 
     //--------------------------------------------------------------------------
     // Private
