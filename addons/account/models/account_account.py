@@ -160,10 +160,10 @@ class AccountAccount(models.Model):
                           FROM account_account_res_company_rel rel
                           JOIN res_company
                             ON res_company.id = rel.res_company_id
-                         WHERE rel.res_company_id IN %(authorized_company_ids)s
+                         WHERE rel.res_company_id = ANY(%(authorized_company_ids)s)
                       ORDER BY rel.account_account_id, company_id
                     )""",
-                    authorized_company_ids=self.env.user._get_company_ids(),
+                    authorized_company_ids=list(self.env.companies.ids),
                 ),
                 SQL('account_first_company.account_id = %(account_id)s', account_id=SQL.identifier(alias, 'id')),
             )
