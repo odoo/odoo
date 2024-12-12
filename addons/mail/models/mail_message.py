@@ -1096,6 +1096,7 @@ class MailMessage(models.Model):
         Notifications hold the information about each recipient of a message: if
         the message was successfully sent or if an exception or bounce occurred.
         """
+<<<<<<< master
         store.add(
             self,
             [
@@ -1106,6 +1107,35 @@ class MailMessage(models.Model):
                 Store.Many(
                     "notification_ids",
                     value=lambda m: m.notification_ids._filtered_for_web_client(),
+||||||| d3470834837b1b4738677900b87ef59b7e069b42
+        for message in self:
+            message_data = {
+                "author": Store.one(message.author_id, only_id=True),
+                "date": message.date,
+                "message_type": message.message_type,
+                "body": message.body,
+                "notifications": Store.many(message.notification_ids._filtered_for_web_client()),
+                "thread": (
+                    Store.one(
+                        self.env[message.model].browse(message.res_id) if message.model else False,
+                        as_thread=True,
+                        fields=["modelName"],
+                    )
+=======
+        for message in self:
+            message_data = {
+                "author": Store.one(message.author_id, only_id=True),
+                "date": message.date,
+                "message_type": message.message_type,
+                "body": message.body,
+                "notifications": Store.many(message.notification_ids._filtered_for_web_client()),
+                "thread": (
+                    Store.one(
+                        self.env[message.model].browse(message.res_id) if message.model else False,
+                        as_thread=True,
+                        fields=["modelName", "name"],
+                    )
+>>>>>>> 67b53beed50ff293bc7c52eb908d8f972671bca8
                 ),
                 Store.One(
                     "thread",
