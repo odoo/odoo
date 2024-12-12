@@ -37,6 +37,7 @@ __all__ = [
     "parse_contact_from_email",
     "plaintext2html",
     "single_email_re",
+    "tag_quote",
 ]
 
 _logger = logging.getLogger(__name__)
@@ -183,6 +184,9 @@ def tag_quote(el):
             child_node = new_node
             idx = item.end()
             node_idx = node_idx + 1
+
+    if el.get('data-o-mail-quote') or el.get('data-o-mail-quote-node'):
+        return
 
     el_class = el.get('class', '') or ''
     el_id = el.get('id', '') or ''
