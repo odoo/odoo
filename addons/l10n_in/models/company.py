@@ -55,6 +55,10 @@ class ResCompany(models.Model):
             else:
                 record.l10n_in_pan_type = False
 
+    @api.onchange('vat')
+    def onchange_vat(self):
+        self.partner_id.onchange_vat()
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
