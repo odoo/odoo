@@ -261,10 +261,10 @@
                                         </td>
                                     </tr>
                                 </t>
-                                <t t-if="is_view_active('website_sale.product_tags') and any([product.all_product_tag_ids for product in products])">
+                                <t t-if="is_view_active('website_sale.product_tags') and product.product_tag_ids or product.additional_product_tag_ids">
                                     <tr class="clickable" data-bs-toggle="collapse" data-bs-target=".o_ws_tags">
                                         <th class="text-start" t-att-colspan="len(products) + 1">
-                                            <i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span>Tags</span>
+                                            <i class="fa fa-chevron-circle-down o_product_comparison_collapse" role="img" aria-label="Collapse" title="Collapse"></i><span>Tags</span>
                                         </th>
                                     </tr>
                                     <tr class="collapse show o_ws_tags">
@@ -272,10 +272,9 @@
                                         <td t-foreach="products" t-as="product">
                                             <div class="d-flex justify-content-center">
                                                 <t t-call="website_sale.product_tags">
-                                                    <t t-set="all_product_tags" t-value="product.all_product_tag_ids"/>
+                                                    <t t-set="all_product_tags" t-value="product.product_tag_ids + product.additional_product_tag_ids"/>
                                                 </t>
                                             </div>
-
                                         </td>
                                     </tr>
                                 </t>

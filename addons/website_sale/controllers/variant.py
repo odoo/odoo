@@ -40,7 +40,8 @@ class WebsiteSaleVariantController(Controller):
         if product and request.website.is_view_active('website_sale.product_tags'):
             combination_info['product_tags'] = request.env['ir.ui.view']._render_template(
                 'website_sale.product_tags', values={
-                    'all_product_tags': product.all_product_tag_ids.filtered('visible_on_ecommerce')
+                    'product_tag_ids': product.product_tag_ids.filtered('visible_on_ecommerce'),
+                    'additional_product_tag_ids': product.additional_product_tag_ids.filtered('visible_on_ecommerce'),
                 }
             )
         return combination_info
