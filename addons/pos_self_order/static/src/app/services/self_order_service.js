@@ -132,7 +132,7 @@ export class SelfOrder extends Reactive {
                 });
                 return;
             }
-            if (product.attributes.length) {
+            if (product.isConfigurable()) {
                 this.router.navigate("product", { id: product.id });
                 return;
             }
