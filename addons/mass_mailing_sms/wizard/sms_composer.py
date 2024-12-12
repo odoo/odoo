@@ -77,17 +77,30 @@ class SmsComposer(models.TransientModel):
         return all_bodies
 
     def _prepare_mass_sms_values(self, records):
-        result = super()._prepare_mass_sms_values(records)
-        if self.composition_mode == 'mass' and self.mailing_id:
-            for record in records:
-                sms_values = result[record.id]
+        """ In mass mailing only:
+        - Add 'mailing.trace' values directly in the o2m field for mail not canceled.
+        - And only create trace in sudo (not sms) for canceled ones.
+        """
+        if self.composition_mode != 'mass' or not self.mailing_id:
+            return super()._prepare_mass_sms_values(records)
 
-                trace_values = self._prepare_mass_sms_trace_values(record, sms_values)
-                sms_values.update({
-                    'mailing_id': self.mailing_id.id,
-                    'mailing_trace_ids': [(0, 0, trace_values)],
-                })
-        return result
+        canceled_message_traces_values = []
+        results = {}
+        records, sms_values_by_record_id = super()._prepare_mass_sms_values(records)
+        for record in records:
+            sms_values = sms_values_by_record_id[record.id]
+
+            trace_values = self._prepare_mass_sms_trace_values(record, sms_values)
+            if sms_values['state'] == 'canceled':
+                canceled_message_traces_values.append(trace_values)
+                continue
+            results[record.id] = sms_values
+            sms_values.update({
+                'mailing_id': self.mailing_id.id,
+                'mailing_trace_ids': [(0, 0, trace_values)],
+            })
+        self.env['mailing.trace'].sudo().create(canceled_message_traces_values)
+        return self.env[records._name].browse(list(results.keys())), results
 
     def _prepare_mass_sms(self, records, sms_record_values):
         sms_all = super()._prepare_mass_sms(records, sms_record_values)

@@ -12,6 +12,7 @@ from collections import defaultdict
 from contextlib import contextmanager
 from freezegun import freeze_time
 from functools import partial
+from itertools import repeat
 from lxml import html
 from unittest.mock import patch
 
@@ -633,6 +634,26 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                     f'Message: expected {fvalue} for {fname}, got {message[fname]}',
                 )
 
+    def assertMessageRecordsCount(self, records, expected_counts, base_counts=None):
+        """ Assert the number of mail.message per records.
+
+        :param recordset records: records for which the number of message are asserted
+        :param list expected_counts: expected count of message in record order
+        :param list base_counts: optional list of initial count that will be deducted from
+            the count before comparing it to the expected count
+        """
+        self.assertEqual(len(records), len(expected_counts), 'Number of records and expected_counts must be equals')
+        if base_counts:
+            self.assertEqual(len(records), len(base_counts), 'Number of records and base_counts must be equals')
+        for idx, (count, base_count, expected_count) in enumerate(zip(
+                self.get_message_count_per_record(records),
+                base_counts if base_counts else repeat(0),
+                expected_counts)):
+            actual_count = count - base_count
+            self.assertEqual(
+                actual_count, expected_count,
+                f'Invalid message count for record #{idx} (actual: {actual_count}, expected_count: {expected_count})')
+
     def assertNoMail(self, recipients, mail_message=None, author=None):
         """ Check no mail.mail and email was generated during gateway mock. """
         try:
@@ -643,6 +664,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             raise AssertionError('mail.mail exists for message %s / recipients %s but should not exist' % (mail_message, recipients.ids))
         finally:
             self.assertNotSentEmail(recipients)
+
+    def assertNoMailWRecord(self, record, mail_message=None, author=None):
+        """ Check no mail.mail matching the parameter was generated during gateway mock. """
+        try:
+            self._find_mail_mail_wrecord(record, mail_message=mail_message, author=author)
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError(
+                'mail.mail exists for message %s / record %s but should not exist' % (mail_message, record.id))
 
     def assertNotSentEmail(self, recipients=None):
         """Check no email was generated during gateway mock.
@@ -776,6 +807,19 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 self.assertEqual(found, value,
                                  f'Header value for {key} invalid, found {found} instead of {value}')
         return sent_mail
+
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
+
+    def get_message_count_per_record(self, recordset):
+        if not recordset:
+            return []
+        count_by_res_id = dict(self.env['mail.message']._read_group(
+            [('model', '=', recordset[0]._name), ('res_id', 'in', recordset.ids)],
+            groupby=['res_id'], aggregates=['id:count'])
+        )
+        return [count_by_res_id.get(record.id, 0) for record in recordset]
 
 
 class MailCase(MockEmail):

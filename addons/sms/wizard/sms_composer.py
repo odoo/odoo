@@ -238,7 +238,7 @@ class SmsComposer(models.TransientModel):
     def _action_send_sms_mass(self, records=None):
         records = records if records is not None else self._get_records()
 
-        sms_record_values = self._prepare_mass_sms_values(records)
+        records, sms_record_values = self._prepare_mass_sms_values(records)
         sms_all = self._prepare_mass_sms(records, sms_record_values)
         if sms_all and self.mass_keep_log and records and isinstance(records, self.pool['mail.thread']):
             log_values = self._prepare_mass_log_values(records, sms_record_values)
@@ -290,6 +290,13 @@ class SmsComposer(models.TransientModel):
         return all_bodies
 
     def _prepare_mass_sms_values(self, records):
+        """ Prepare sms values for the given records.
+
+        :returns {tuple(recordset, dict)}:
+        - records for which sms values have been prepared. It may be a subset of
+        the given records as overrides can handle error directly for some records.
+        - prepared sms value by record id
+        """
         all_bodies = self._prepare_body_values(records)
         all_recipients = self._prepare_recipient_values(records)
         blacklist_ids = self._get_blacklist_record_ids(records, all_recipients)
@@ -324,7 +331,7 @@ class SmsComposer(models.TransientModel):
                 'state': state,
                 'uuid': uuid4().hex,
             }
-        return result
+        return records, result
 
     def _prepare_mass_sms(self, records, sms_record_values):
         sms_create_vals = [sms_record_values[record.id] for record in records]
