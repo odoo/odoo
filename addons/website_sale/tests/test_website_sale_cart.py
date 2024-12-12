@@ -9,6 +9,7 @@ from odoo.tests import tagged
 from odoo.addons.base.tests.common import BaseUsersCommon
 from odoo.addons.product.tests.common import ProductAttributesCommon
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.controllers.cart import Cart
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.payment import PaymentPortal
 from odoo.addons.website_sale.models.product_template import ProductTemplate
@@ -22,6 +23,7 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
     def setUpClass(cls):
         super().setUpClass()
         cls.WebsiteSaleController = WebsiteSale()
+        cls.WebsiteSaleCartController = Cart()
         cls.public_user = cls.env.ref('base.public_user')
         cls.product = cls.env['product.product'].create({
             'name': 'Test Product',
@@ -33,36 +35,65 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
 
     def test_add_cart_deleted_product(self):
         # Unlink published product.
+        product_template_id = self.product.product_tmpl_id
         product_id = self.product.id
         self.product.unlink()
 
         with self.assertRaises(UserError):
-            with MockRequest(self.product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
-                self.WebsiteSaleController.cart_update_json(product_id=product_id, add_qty=1)
+            with MockRequest(
+                self.product.with_user(self.public_user).env,
+                website=self.website.with_user(self.public_user)
+            ):
+                self.WebsiteSaleCartController.add_to_cart(
+                    product_template_id=product_template_id,
+                    product_id=product_id,
+                    quantity=1,
+                )
 
     def test_add_cart_unpublished_product(self):
         # Try to add an unpublished product
         self.product.website_published = False
 
         with self.assertRaises(UserError):
-            with MockRequest(self.product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
-                self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            with MockRequest(
+                self.product.with_user(self.public_user).env,
+                website=self.website.with_user(self.public_user)
+            ):
+                self.WebsiteSaleCartController.add_to_cart(
+                    product_template_id=self.product.product_tmpl_id,
+                    product_id=self.product.id,
+                    quantity=1,
+                )
 
         # public but remove sale_ok
         self.product.sale_ok = False
         self.product.website_published = True
 
         with self.assertRaises(UserError):
-            with MockRequest(self.product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
-                self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            with MockRequest(
+                self.product.with_user(self.public_user).env,
+                website=self.website.with_user(self.public_user)
+            ):
+                self.WebsiteSaleCartController.add_to_cart(
+                    product_template_id=self.product.product_tmpl_id,
+                    product_id=self.product.id,
+                    quantity=1,
+                )
 
     def test_add_cart_archived_product(self):
         # Try to add an archived product
         self.product.active = False
 
         with self.assertRaises(UserError):
-            with MockRequest(self.product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
-                self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            with MockRequest(
+                self.product.with_user(self.public_user).env,
+                website=self.website.with_user(self.public_user)
+            ):
+                self.WebsiteSaleCartController.add_to_cart(
+                    product_template_id=self.product.product_tmpl_id,
+                    product_id=self.product.id,
+                    quantity=1,
+                )
 
     def test_zero_price_product_rule(self):
         """
@@ -89,26 +120,49 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
             'website_published': True,
         })
 
-        with self.assertRaises(UserError, msg="'consu' product type is not allowed to have a 0 price sale"):
+        with self.assertRaises(
+            UserError,
+            msg="'consu' product type is not allowed to have a 0 price sale"
+        ):
             with MockRequest(self.env, website=website_prevent_zero_price):
-                self.WebsiteSaleController.cart_update_json(product_id=product_consu.id, add_qty=1)
+                self.WebsiteSaleCartController.add_to_cart(
+                    product_template_id=product_consu.product_tmpl_id,
+                    product_id=product_consu.id,
+                    quantity=1,
+                )
 
         with patch.object(ProductTemplate, '_get_product_types_allow_zero_price', lambda pt: ['no']):
             # service_tracking 'no' should not raise error
             with MockRequest(self.env, website=website_prevent_zero_price):
-                self.WebsiteSaleController.cart_update_json(product_id=product_service.id, add_qty=1)
+                self.WebsiteSaleCartController.add_to_cart(
+                    product_template_id=product_service.product_tmpl_id,
+                    product_id=product_service.id,
+                    quantity=1,
+                )
 
     def test_update_cart_before_payment(self):
         website = self.website.with_user(self.public_user)
         with MockRequest(self.product.with_user(self.public_user).env, website=website):
-            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
             sale_order = website.sale_get_order()
             sale_order.access_token = 'test_token'
             old_amount = sale_order.amount_total
-            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
             # Try processing payment with the old amount
             with self.assertRaises(UserError):
-                PaymentPortal().shop_payment_transaction(sale_order.id, sale_order.access_token, amount=old_amount)
+                PaymentPortal().shop_payment_transaction(
+                    sale_order.id,
+                    sale_order.access_token,
+                    amount=old_amount
+                )
 
     def test_check_order_delivery_before_payment(self):
         website = self.website.with_user(self.public_user)
@@ -131,20 +185,36 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
 
         with MockRequest(self.product.with_user(portal_user).env, website=website):
             # add the product to the cart
-            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
             sale_order = website.sale_get_order()
             self.assertEqual(sale_order.amount_untaxed, 1000.0)
 
             # remove the product from the cart
-            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, line_id=sale_order.order_line.id, set_qty=0)
+            self.WebsiteSaleCartController.update_cart(
+                line_id=sale_order.order_line.id,
+                product_id=self.product.id,
+                quantity=0
+            )
             self.assertEqual(sale_order.amount_total, 0.0)
             self.assertEqual(sale_order.order_line, SaleOrderLine)
 
             # removing the product again doesn't add a line with zero quantity
-            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, set_qty=0)
+            self.WebsiteSaleCartController.update_cart(
+                line_id=sale_order.order_line.id,
+                product_id=self.product.id,
+                quantity=0,
+            )
             self.assertEqual(sale_order.order_line, SaleOrderLine)
 
-            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=0)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=0,
+            )
             self.assertEqual(sale_order.order_line, SaleOrderLine)
 
     def test_unpublished_accessory_product_visibility(self):
@@ -157,8 +227,15 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
         self.product.accessory_product_ids = [Command.link(accessory_product.id)]
 
         website = self.website.with_user(self.public_user)
-        with MockRequest(self.product.with_user(self.public_user).env, website=self.website.with_user(self.public_user)):
-            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+        with MockRequest(
+            self.product.with_user(self.public_user).env,
+            website=self.website.with_user(self.public_user)
+        ):
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
             sale_order = website.sale_get_order()
             self.assertEqual(len(sale_order._cart_accessories()), 0)
 
@@ -172,7 +249,11 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
 
         website = self.website.with_user(self.public_user)
         with MockRequest(website.env, website=website, country_code='BE'):
-            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id,
+                product_id=self.product.id,
+                quantity=1,
+            )
             sale_order = website.sale_get_order()
             self.assertEqual(
                 sale_order.fiscal_position_id, fpos_be,
@@ -180,12 +261,22 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
             )
 
     def test_cart_update_with_fpos(self):
-        # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
+        # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken
+        # into account when updating the cart
         pricelist = self.pricelist
         # Add 10% tax on product
         tax10, tax6 = self.env['account.tax'].create([
-            {'name': "Test tax 10", 'amount': 10, 'price_include_override': 'tax_included', 'amount_type': 'percent'},
-            {'name': "Test tax 6", 'amount': 6, 'price_include_override': 'tax_included', 'amount_type': 'percent'},
+            {
+                'name': "Test tax 10",
+                'amount': 10,
+                'price_include_override': 'tax_included',
+                'amount_type': 'percent'
+            }, {
+                'name': "Test tax 6",
+                'amount': 6,
+                'price_include_override': 'tax_included',
+                'amount_type': 'percent'
+            },
         ])
 
         test_product = self.env['product.product'].create({
@@ -230,14 +321,28 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
         so.fiscal_position_id = fpos
         so._recompute_taxes()
         so._cart_update(product_id=test_product.id, line_id=sol.id, set_qty=2)
-        self.assertEqual(round(sol.price_total), 106, "2 units @ 100$ with 50% discount + 6% tax (mapped from fp 10% -> 6%)")
+        self.assertEqual(
+            round(sol.price_total),
+            106,
+            "2 units @ 100$ with 50% discount + 6% tax (mapped from fp 10% -> 6%)"
+        )
 
     def test_cart_update_with_fpos_no_variant_product(self):
-        # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product
+        # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken
+        # into account when updating the cart for no_variant product
         # Add 10% tax on product
         tax10, tax0 = self.env['account.tax'].create([
-            {'name': "Test tax 10", 'amount': 10, 'price_include_override': 'tax_included', 'amount_type': 'percent'},
-            {'name': "Test tax 0", 'amount': 0, 'price_include_override': 'tax_included', 'amount_type': 'percent'},
+            {
+                'name': "Test tax 10",
+                'amount': 10,
+                'price_include_override': 'tax_included',
+                'amount_type': 'percent'
+            }, {
+                'name': "Test tax 0",
+                'amount': 0,
+                'price_include_override': 'tax_included',
+                'amount_type': 'percent'
+            },
         ])
 
         # Create fiscal position mapping taxes 10% -> 0%
@@ -293,7 +398,11 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
         so.fiscal_position_id = fpos
         so._recompute_taxes()
         so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
-        self.assertEqual(round(sol.price_total), 200, "200$ with public price+ 0% tax (mapped from fp 10% -> 0%)")
+        self.assertEqual(
+            round(sol.price_total),
+            200,
+            "200$ with public price+ 0% tax (mapped from fp 10% -> 0%)"
+        )
 
     def test_cart_lines_aggregation(self):
         # Adding a product with the same no_variant attributes combination twice should create only
@@ -335,7 +444,11 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
             'website_published': True,
         })
         with MockRequest(self.env(user=user), website=website):
-            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=product.product_tmpl_id,
+                product_id=product.id,
+                quantity=1,
+            )
             order = website.sale_get_order()
 
             # pre-condition: the order contains an active product
@@ -346,7 +459,7 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
 
             # Act: archive the product and open the cart
             product.active = False
-            self.WebsiteSaleController.cart()
+            self.WebsiteSaleCartController.cart()
 
             # Assert: the line has been removed
             self.assertFalse(order.order_line)
@@ -372,7 +485,7 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
             }])
 
             # Act: open the cart
-            self.WebsiteSaleController.cart()
+            self.WebsiteSaleCartController.cart()
 
             # Assert: the line is still there
             self.assertRecordValues(order.order_line, [{

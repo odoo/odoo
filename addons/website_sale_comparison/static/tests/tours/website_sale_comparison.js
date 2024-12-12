@@ -1,4 +1,5 @@
-    import { registry } from "@web/core/registry";
+import { registry } from "@web/core/registry";
+import { clickOnElement } from '@website/js/tours/tour_utils';
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
     registry.category("web_tour.tours").add('product_comparison', {
@@ -166,6 +167,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         trigger: '.product_summary:contains("Color Pants") .a-submit:contains("Add to Cart")',
         run: "click",
     },
+        clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'),
         tourUtils.goToCart(),
     {
         content: "check product correctly added to cart",

@@ -1,7 +1,7 @@
-import VariantMixin from "@website_sale/js/sale_variant_mixin";
-import publicWidget from "@web/legacy/js/public/public_widget";
-import { renderToFragment } from "@web/core/utils/render";
 import { formatFloat } from "@web/core/utils/numbers";
+import { renderToFragment } from "@web/core/utils/render";
+import publicWidget from "@web/legacy/js/public/public_widget";
+import VariantMixin from "@website_sale/js/sale_variant_mixin";
 
 import "@website_sale/js/website_sale";
 
@@ -91,7 +91,7 @@ publicWidget.registry.WebsiteSale.include({
      * Recomputes the combination after adding a product to the cart
      * @override
      */
-    _onClickAdd(ev) {
+    async _onClickAdd(ev) {
         return this._super.apply(this, arguments).then(() => {
             if ($('div.availability_messages').length) {
                 this._getCombinationInfo(ev);

@@ -4,9 +4,9 @@ import hashlib
 import json
 
 import odoo
-from odoo import api, models, fields
-from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
-from odoo.tools import ormcache, config
+from odoo import api, fields, models
+from odoo.http import DEFAULT_MAX_CONTENT_LENGTH, request
+from odoo.tools import config, ormcache
 from odoo.tools.misc import str2bool
 
 
@@ -208,8 +208,13 @@ class IrHttp(models.AbstractModel):
     @ormcache()
     def get_currencies(self):
         Currency = self.env['res.currency']
-        currencies = Currency.search_fetch([], ['symbol', 'position', 'decimal_places'])
+        currencies = Currency.search_fetch([], ['decimal_places', 'name', 'position', 'symbol'])
         return {
-            c.id: {'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
+            c.id: {
+                'digits': [69, c.decimal_places],
+                'name': c.name,
+                'position': c.position,
+                'symbol': c.symbol,
+            }
             for c in currencies
         }
