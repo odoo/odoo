@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
+import { markup } from "@odoo/owl";
 
 /**
  * ProductProduct, shadow of product.product in python.
@@ -233,6 +234,10 @@ export class ProductTemplate extends Base {
             });
         });
         return isCombinationArchived;
+    }
+
+    get getMarkupPublicDescription() {
+        return this.public_description ? markup(this.public_description) : "";
     }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);
