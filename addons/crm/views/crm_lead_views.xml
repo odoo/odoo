@@ -808,24 +808,16 @@
             <field name="arch" type="xml">
                 <!-- we should not override the whole field but instead just set invisible attribute
                  to 0. but this approach is not working. the work around is temporary -->
-                <xpath expr="//filter[@name='activities_overdue']" position="replace">
-                    <filter string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                        help="Show all opportunities for which the next action date is before today"/>
+                <xpath expr="//filter[@name='activities_overdue']" position="attributes">
+                    <attribute name="invisible"/>
                 </xpath>
-                <xpath expr="//filter[@name='activities_today']" position="replace">
-                    <filter string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <xpath expr="//filter[@name='activities_today']" position="attributes">
+                    <attribute name="invisible"/>
                 </xpath>
-                <xpath expr="//filter[@name='activities_upcoming_all']" position="replace">
-                    <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <xpath expr="//filter[@name='activities_upcoming_all']" position="attributes">
+                    <attribute name="invisible"/>
                 </xpath>
-                <xpath expr="//filter[@name='assigned_to_me']" position="replace">
-                    <filter string="My Activities" name="assigned_to_me"
-                        domain="[('activity_user_id','=',uid)]"
-                        help="Opportunities that are assigned to me"/>
-                </xpath>
+                <xpath expr="//filter[@name='assigned_to_me']" position="replace"/>
             </field>
         </record>
 
@@ -1076,9 +1068,10 @@
             <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
             <field name="view_id" ref="crm_lead_view_list_activities"/>
             <!-- Ensure that only records with at least one activity, "done" (archived) or not, are fetched. -->
-            <field name="domain">[("activity_ids.active", "in", [True, False])]</field>
+            <field name="domain">[("activity_ids.active", "in", [True, False]), ('activity_user_id', '=', uid)]</field>
             <field name="search_view_id" ref="crm.view_crm_case_my_activities_filter"/>
             <field name="context">{'default_type': 'opportunity',
+                    'my_activities': 1,
                     'search_default_assigned_to_me': 1}
             </field>
             <field name="help" type="html">
