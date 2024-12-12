@@ -134,12 +134,12 @@ class L10nRoEdiDocument(models.Model):
 
         state_status = root.get('stare')
         if state_status in ('nok', 'ok'):
-            return {'key_download': root.get('id_descarcare')}
+            return {'key_download': root.get('id_descarcare'), 'state_status': state_status}
         else:
             return {}
 
     @api.model
-    def _request_ciusro_download_answer(self, company, key_download, session):
+    def _request_ciusro_download_answer(self, company, key_download, session, status):
         """
         This method makes a "Download Answer" (GET/descarcare) request to the Romanian SPV. It then processes the
         response by opening the received zip file and returns either:
@@ -164,12 +164,18 @@ class L10nRoEdiDocument(models.Model):
 
         # E-Factura gives download response in ZIP format
         zip_ref = zipfile.ZipFile(io.BytesIO(result['content']))
-        signature_file = next(file for file in zip_ref.namelist() if 'semnatura' in file)
-        xml_bytes = zip_ref.open(signature_file)
+        # The ZIP will contain two files, one with the original invoice or with the identified errors (as the case may be)
+        # and the other with the electronic signature (containing 'semnatura').
+        # If there is an error (status == 'nok') we want to provide the file with the errors.
+        if status == 'nok':
+            provided_file = next(file for file in zip_ref.namelist() if 'semnatura' not in file)
+        else:
+            provided_file = next(file for file in zip_ref.namelist() if 'semnatura' in file)
+        xml_bytes = zip_ref.open(provided_file)
         root = etree.parse(xml_bytes)
         error_element = root.find('.//ns:Error', namespaces=NS_HEADER)
         if error_element is not None:
-            return {'error': error_element.get('errorMessage')}
+            error_message = error_element.get('errorMessage')
 
         # Pretty-print the XML content of the signature file to be saved as attachment
         attachment_raw = etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8')
@@ -177,6 +183,7 @@ class L10nRoEdiDocument(models.Model):
             'attachment_raw': attachment_raw,
             'key_signature': root.findtext('.//ns:SignatureValue', namespaces=NS_SIGNATURE),
             'key_certificate': root.findtext('.//ns:X509Certificate', namespaces=NS_SIGNATURE),
+            'error': error_message,
         }
 
     def action_l10n_ro_edi_fetch_status(self):
