@@ -23,3 +23,7 @@ class ResPartner(models.Model):
         if self.env.company.country_id.code == "PE":
             fields += ["city_id", "l10n_latam_identification_type_id", "l10n_pe_district"]
         return fields
+
+    def _get_pos_required_partners(self, config_id):
+        partner_ids = super()._get_pos_required_partners(config_id)
+        return partner_ids.union({self.env.ref('l10n_pe_pos.partner_pe_cf').id})
