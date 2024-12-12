@@ -150,12 +150,13 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Heading  =================== -->
 <template id="post_heading">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}"
-       t-field="blog_post.name"
-       t-attf-class="d-block text-reset text-decoration-none o_blog_post_title my-0 #{'h3' if opt_blog_list_view else ('h5' if opt_blog_readable else 'h6')}">
-       Untitled Post
-   </a>
-
+    <h2>
+        <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}"
+        t-field="blog_post.name"
+        t-attf-class="d-block text-reset text-decoration-none o_blog_post_title my-0 #{'h3' if opt_blog_list_view else ('h5' if opt_blog_readable else 'h6')}">
+        Untitled Post
+        </a>
+    </h2>
     <div t-if="not opt_posts_loop_show_cover and is_view_active('website_blog.opt_posts_loop_show_author')" class="text-muted small mt-2">
         by <span t-field="blog_post.author_id"/>
     </div>
