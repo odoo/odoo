@@ -103,7 +103,7 @@ export class ChatBotService {
      * completed or the current step expects an answer from the user.
      */
     async _triggerNextStep() {
-        if (this.chatbot.completed) {
+        if (!this.chatbot || this.chatbot.completed) {
             return;
         }
         await this.chatbot.triggerNextStep();
