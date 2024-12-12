@@ -842,8 +842,8 @@ export class PosOrder extends Base {
         const dueAmount = this.getDue();
         const changeAmount = this.getChange();
         return (
-            floatIsZero(changeAmount, this.currency.rounding) &&
-            (floatIsZero(dueAmount, this.currency.rounding) || dueAmount > 0.0)
+            floatIsZero(changeAmount, this.currency.decimal_places) &&
+            (floatIsZero(dueAmount, this.currency.decimal_places) || dueAmount > 0.0)
         );
     }
 
