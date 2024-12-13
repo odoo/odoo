@@ -247,7 +247,7 @@
                 <we-select data-name="hidden_condition_opt" data-no-preview="true">
                     <!-- Load every existing form input -->
                 </we-select>
-                <we-select data-name="hidden_condition_no_text_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                <we-select data-name="hidden_condition_no_text_opt_1" data-attribute-name="visibilityComparator" data-no-preview="true">
                     <we-button data-select-data-attribute="selected">Is equal to</we-button>
                     <we-button data-select-data-attribute="!selected">Is not equal to</we-button>
                     <we-button data-select-data-attribute="contains">Contains</we-button>
@@ -296,9 +296,18 @@
                     <we-button data-select-data-attribute="!selected">Is not equal to</we-button>
                 </we-select>
             </we-row>
-            <we-select class="o_we_large" data-name="hidden_condition_no_text_opt" data-attribute-name="visibilityCondition" data-no-preview="true">
-                <!-- checkbox, select, radio possible values -->
+            <we-select class="o_we_large" data-name="hidden_condition_no_text_opt_2" data-attribute-name="visibilityCondition" data-no-preview="true">
+                <!-- checkbox, select, radio possible values - single select -->
             </we-select>
+            <we-list data-name="hidden_condition_no_text_multi_opt"
+                data-render-dependency-list-items=""
+                data-has-default="multiple"
+                data-unsortable="true"
+                data-not-editable="true"
+                data-no-add-item-option="true"
+                data-no-preview="true">
+                <!-- checkbox, select, radio possible values - multi select -->
+            </we-list>
             <we-select class="o_we_large" data-name="hidden_condition_record_opt" data-attribute-name="visibilityCondition" data-no-preview="true">
                 <!-- checkbox, select, radio possible values -->
             </we-select>

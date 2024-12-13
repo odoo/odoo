@@ -1106,3 +1106,59 @@ registerWebsitePreviewTour("website_form_special_characters", {
         trigger: ":iframe body:not(:has([data-snippet='s_website_form'])) .fa-paper-plane",
     },
 ]);
+
+// Check that multivalue condition visibility works as expected.
+registerWebsitePreviewTour("website_form_contains_conditional_visibility", {
+    url: "/",
+    edition: true,
+}, () => [
+    {
+        content: "Drop the form snippet",
+        trigger: "#oe_snippets .oe_snippet .oe_snippet_thumbnail[data-snippet=s_website_form]",
+        run: "drag_and_drop :iframe #wrap",
+    }, {
+        trigger: ":iframe .s_website_form_field",
+    },
+    ...addCustomField("one2many", "checkbox", "Products", true),
+    ...addCustomField("char", "text", "Conditional Visibility Check 1", false, {visibility: CONDITIONALVISIBILITY}),
+    ...selectButtonByData("data-set-visibility-dependency='Products'"),
+    ...selectButtonByText("Doesn't contain"),
+    {
+        content: "Tie the visibility with the option 'Option 2' of Products field.",
+        trigger: "[data-name='hidden_condition_no_text_multi_opt'] we-button:eq(1)",
+        run: "click",
+    },
+    ...clickOnSave(),
+    {
+        content: "Check 'Conditional Visibility Check 1' field is visible.",
+        trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("Conditional Visibility Check 1")}:visible)`,
+    }, {
+        content: "choose the option 'Option 1' of Products.",
+        trigger: ":iframe .checkbox:has(label:contains('Option 2')) input[type='checkbox']",
+        run: "click",
+    }, {
+        content: "Check 'Conditional Visibility Check 1' field is not visible.",
+        trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("Conditional Visibility Check 1")}:not(:visible))`,
+    },
+    ...clickOnEditAndWaitEditMode(),
+    ...addCustomField("char", "text", "Conditional Visibility Check 2", false, {visibility: CONDITIONALVISIBILITY}),
+    ...selectButtonByData("data-set-visibility-dependency='company'"),
+    ...selectButtonByText("contains"),
+    {
+        content: "Tie the visibility with Your Company field containing 'peek-a-boo'",
+        trigger: "we-input[data-name=hidden_condition_additional_text] input",
+        run: "edit odoo",
+    },
+    ...clickOnSave(),
+    {
+        content: "Check 'Conditional Visibility Check 2' field is not visible.",
+        trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("Conditional Visibility Check 2")}:not(:visible))`,
+    }, {
+        content: "Edit the Phone Number field",
+        trigger: ":iframe input[name='company']",
+        run: "edit odoo IN",
+    }, {
+        content: "Check 'Conditional Visibility Check 2' field is visible.",
+        trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("Conditional Visibility Check 2")}:visible)`,
+    },
+]);
