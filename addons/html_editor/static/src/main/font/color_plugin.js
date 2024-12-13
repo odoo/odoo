@@ -208,10 +208,17 @@ export class ColorPlugin extends Plugin {
             }
         }
 
-        const selectedNodes =
-            mode === "backgroundColor"
-                ? selectionNodes.filter((node) => !closestElement(node, "table.o_selected_table"))
-                : selectionNodes;
+        const hexColor = rgbToHex(color).toLowerCase();
+        const selectedNodes = selectionNodes.filter((node) => {
+            if (mode === "backgroundColor") {
+                return !closestElement(node, "table.o_selected_table");
+            }
+            const li = closestElement(node, "li");
+            if (li && color && this.dependencies.selection.isNodeContentsFullySelected(li)) {
+                return rgbToHex(li.style.color).toLowerCase() !== hexColor;
+            }
+            return true;
+        });
 
         const selectedFieldNodes = new Set(
             this.dependencies.selection
@@ -220,8 +227,8 @@ export class ColorPlugin extends Plugin {
                 .filter(Boolean)
         );
 
-        const getFonts = (selectedNodes) => {
-            return selectedNodes.flatMap((node) => {
+        const getFonts = (selectedNodes) =>
+            selectedNodes.flatMap((node) => {
                 let font = closestElement(node, "font") || closestElement(node, "span");
                 const children = font && descendants(font);
                 if (
@@ -278,7 +285,6 @@ export class ColorPlugin extends Plugin {
                 }
                 return font;
             });
-        };
 
         for (const fieldNode of selectedFieldNodes) {
             this.colorElement(fieldNode, color, mode);
@@ -295,6 +301,10 @@ export class ColorPlugin extends Plugin {
         // Color the selected <font>s and remove uncolored fonts.
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
+            const closestLI = closestElement(font, "li");
+            if (font && color === "" && closestLI?.style.color) {
+                color = "initial";
+            }
             this.colorElement(font, color, mode);
             if (
                 !hasColor(font, "color") &&
