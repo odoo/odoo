@@ -642,15 +642,46 @@ export class Form extends Interaction {
         // Value can be null when the compared field is supposed to be
         // visible, but is not yet retrievable from the FormData() because
         // the field was conditionally hidden. It can be considered empty.
-        if (value === null) {
-            value = "";
+        value = JSON.parse(value);
+        // Convert value and comparable to arrays if they are strings.
+        if (["contains", "!contains"].includes(comparator)) {
+            try {
+                comparable = JSON.parse(comparable);
+            } catch {
+                comparable = comparable;
+            }
         }
-
+        //  The cases to consider
+        // 1. string A inside string B
+        // 2. string A inside array B
+        // 3. some of element of Array A inside string B
         switch (comparator) {
-            case "contains":
-                return value.includes(comparable);
-            case "!contains":
-                return !value.includes(comparable);
+            case 'contains':
+                if (value) {
+                    if (Array.isArray(value)) {
+                        return comparable.some(comp => value.includes(comp));
+                    } else { // value is a string
+                        if (Array.isArray(comparable)) {
+                            return comparable.some(comp => value === comp);
+                        } else { // comparable is a string
+                            return value.includes(comparable);
+                        }
+                    }
+                }
+                return false;
+            case '!contains':
+                if (value) {
+                    if (Array.isArray(value)) {
+                        return !comparable.some(comp => value.includes(comp));
+                    } else {
+                        if (Array.isArray(comparable)) {
+                            return !comparable.some(comp => value === comp);
+                        } else {
+                            return !value.includes(comparable);
+                        }
+                    }
+                }
+                return true;
             case "equal":
             case "selected":
                 return value === comparable;
@@ -726,10 +757,11 @@ export class Form extends Interaction {
             }
 
             const formData = new FormData(this.el);
-            const currentValueOfDependency = ["contains", "!contains"].includes(comparator)
-                ? formData.getAll(dependencyName).join()
-                : formData.get(dependencyName);
-            return this.compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
+            const currentValueOfDependency =
+                (["contains", "!contains"].includes(comparator) && fieldEl.type === "checkbox") ?
+                formData.getAll(dependencyName):
+                formData.get(dependencyName);
+            return this.compareTo(comparator, JSON.stringify(currentValueOfDependency), visibilityCondition, between);
         };
     }
 

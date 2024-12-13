@@ -1218,6 +1218,14 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         await this._replaceField(field);
     },
     /**
+     * Apply the we-list on the target and rebuild the input(s)
+     */
+    renderDependencyListItems(previewMode, value, params) {
+        const values = JSON.parse(value);
+        const selectedList = values.filter(({ selected }) => selected).map(({ name }) => name);
+        this.$target[0].dataset.visibilityCondition = JSON.stringify(selectedList);
+    },
+    /**
      * Sets the visibility of the field.
      *
      * @see this.selectClass for parameters
@@ -1290,6 +1298,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return this.$target[0].classList.contains(params.activeValue) ? params.activeValue : 'false';
             case 'renderListItems':
                 return JSON.stringify(this._getListItems(true));
+            case "renderDependencyListItems":
+                return JSON.stringify(this._getDependencyListItem());
             case 'setVisibilityDependency':
                 return this.$target[0].dataset.visibilityDependency || '';
         }
@@ -1330,6 +1340,20 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                     || dependencyEl.nodeName === 'TEXTAREA') && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_no_text_opt':
                 return dependencyEl && (dependencyEl.type === 'checkbox' || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT');
+            case "hidden_condition_no_text_only_opt":
+                return (
+                    dependencyEl &&
+                    (dependencyEl.type === "checkbox" ||
+                        dependencyEl.type === "radio" ||
+                        dependencyEl.nodeName === "SELECT") &&
+                    ["selected", "!selected"].includes(this.$target[0].dataset.visibilityComparator));
+            case "hidden_condition_no_text_multi_opt":
+                return (
+                    dependencyEl &&
+                    (dependencyEl.type === "checkbox" ||
+                        dependencyEl.type === "radio" ||
+                        dependencyEl.nodeName === "SELECT") &&
+                    ["contains", "!contains"].includes(this.$target[0].dataset.visibilityComparator));
             case 'hidden_condition_num_opt':
                 return dependencyEl && dependencyEl.type === 'number';
             case 'hidden_condition_text_opt':
@@ -1485,13 +1509,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 fieldType === "record"
             ) {
                 // Update available visibility options
-                const selectOptName =
-                    fieldType === "record"
-                        ? "hidden_condition_record_opt"
-                        : "hidden_condition_no_text_opt";
-                const selectOptEl = uiFragment.querySelectorAll(
-                    `we-select[data-name="${selectOptName}"]`,
-                )[1];
+                const selectOptEl = fieldType === "record" ?
+                    uiFragment.querySelectorAll(`we-select[data-name="hidden_condition_record_opt"]`)[1] :
+                    uiFragment.querySelector(`we-select[data-name="hidden_condition_no_text_only_opt"]`);
                 const inputContainerEl = this.$target[0];
                 const dependencyEl = this._getDependencyEl();
                 if (dependencyEl.nodeName === 'SELECT') {
@@ -1694,6 +1714,33 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 selected: select ? opt.selected : opt.checked,
             };
         });
+    },
+    /**
+     *
+     * @private
+     * @returns {Array} List of values of dependency element
+     */
+    _getDependencyListItem() {
+        const dependencyEl = this._getDependencyEl();
+        if (!dependencyEl) {
+            return [];
+        }
+        const isSelect = dependencyEl.nodeName === "SELECT";
+        const isMultipleInputs = ["radio", "checkbox"].includes(dependencyEl.type);
+        const visibilityCondition = this.$target[0].dataset.visibilityCondition;
+        let optionEls = [];
+        if (isSelect) {
+            optionEls = dependencyEl.querySelectorAll("option");
+        } else if (isMultipleInputs) {
+            optionEls = dependencyEl.closest(".s_website_form_field")?.querySelectorAll(".s_website_form_input");
+        }
+        return Array.from(optionEls).map(el => ({
+            id: el.value,
+            name: el.value,
+            display_name: isSelect ? el.textContent : el.labels[0]?.textContent,
+            undeletable: true,
+            selected: visibilityCondition?.includes(el.value)
+        }));
     },
     /**
      * Returns the select element if it exist else null
