@@ -21,7 +21,7 @@ import {
     ControlButtons,
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
-import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
+import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 
 const { DateTime } = luxon;
 
@@ -36,7 +36,7 @@ export class ProductScreen extends Component {
         ControlButtons,
         OrderSummary,
         ProductCard,
-        CameraBarcodeScanner,
+        BarcodeVideoScanner,
     };
     static props = {};
 
@@ -83,6 +83,7 @@ export class ProductScreen extends Component {
         });
 
         this.barcodeReader = useService("barcode_reader");
+        this.sound = useService("mail.sound_effects");
 
         useBarcodeReader({
             product: this._barcodeProductAction,
@@ -168,6 +169,18 @@ export class ProductScreen extends Component {
     }
     getProductName(product) {
         return product.name;
+    }
+    get barcodeVideoScannerProps() {
+        return {
+            facingMode: "environment",
+            onResult: (result) => {
+                this.barcodeReader.scan(result);
+                this.sound.play("beep");
+            },
+            onError: console.error,
+            delayBetweenScan: 2000,
+            cssClass: "w-100 h-100",
+        };
     }
     async _getProductByBarcode(code) {
         let product = this.pos.models["product.product"].getBy("barcode", code.base_code);
