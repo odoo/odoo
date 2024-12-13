@@ -1165,7 +1165,11 @@ class MrpProduction(models.Model):
         for production in self:
             if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
                 raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
-            finished_move_values = production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id)
+            finished_move_values = production._get_move_finished_values(
+                production.product_id.id,
+                production.product_uom_qty,
+                production.product_id.uom_id.id
+            )
             finished_move_values['location_final_id'] = self.location_final_id.id
             moves.append(finished_move_values)
             for byproduct in production.bom_id.byproduct_ids:
@@ -1754,7 +1758,7 @@ class MrpProduction(models.Model):
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
                 move.quantity = float_round(
-                    order.qty_producing - order.qty_produced,
+                    order.product_uom_id._compute_quantity(order.qty_producing - order.qty_produced, move.product_uom),
                     precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'),
                     rounding_method='HALF-UP'
                 )

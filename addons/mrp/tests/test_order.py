@@ -2039,7 +2039,8 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_raw_ids.state, 'done')
         self.assertEqual(mo.move_raw_ids.quantity, 6)
         self.assertEqual(mo.move_finished_ids.state, 'done')
-        self.assertEqual(mo.move_finished_ids.quantity, 1)
+        self.assertEqual(mo.move_finished_ids.quantity, 6)
+        self.assertEqual(mo.move_finished_ids.product_uom, self.uom_unit)
         self.assertEqual(component.qty_available, 19)
 
     def test_immediate_validate_uom_2(self):

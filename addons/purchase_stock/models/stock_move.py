@@ -30,6 +30,13 @@ class StockMove(models.Model):
             excluded_fields += ['procure_method']
         return excluded_fields
 
+    @api.depends('purchase_line_id', 'purchase_line_id.product_uom_id')
+    def _compute_packaging_uom_id(self):
+        super()._compute_packaging_uom_id()
+        for move in self:
+            if move.purchase_line_id:
+                move.packaging_uom_id = move.purchase_line_id.product_uom_id
+
     def _compute_partner_id(self):
         # dropshipped moves should have their partner_ids directly set
         not_dropshipped_moves = self.filtered(lambda m: not m._is_dropshipped())

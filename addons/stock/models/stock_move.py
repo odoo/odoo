@@ -190,6 +190,8 @@ class StockMove(models.Model):
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
     lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
+    packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, recursive=True, store=True)
+    packaging_uom_qty = fields.Float('Packaging Quantity', help="Quantity in the packaging unit", compute='_compute_packaging_uom_qty', store=True)
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
@@ -589,6 +591,22 @@ Please change the quantity done or the rounding precision in your settings.""",
                     days = move.picking_type_id.reservation_days_before_priority
                 move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
 
+    @api.depends('product_uom', 'move_orig_ids', 'move_dest_ids', 'move_orig_ids.packaging_uom_id', 'move_dest_ids.packaging_uom_id')
+    def _compute_packaging_uom_id(self):
+        for move in self:
+            if move.move_orig_ids.packaging_uom_id:
+                move.packaging_uom_id = move.move_orig_ids[0].packaging_uom_id
+            elif move.move_dest_ids.packaging_uom_id:
+                move.packaging_uom_id = move.move_dest_ids[0].packaging_uom_id
+            else:
+                move.packaging_uom_id = move.product_uom
+
+    @api.depends('product_uom_qty', 'packaging_uom_id')
+    def _compute_packaging_uom_qty(self):
+        for move in self:
+            if move.packaging_uom_id:
+                move.packaging_uom_qty = move.product_uom._compute_quantity(move.product_uom_qty, move.packaging_uom_id)
+
     @api.depends(
         'has_tracking',
         'picking_type_id.use_create_lots',
@@ -987,14 +1005,14 @@ Please change the quantity done or the rounding precision in your settings.""",
                 warehouse_id = False
 
             rule = ProcurementGroup._get_push_rule(move.product_id, move.location_dest_id, {
-                'route_ids': move.route_ids, 'warehouse_id': warehouse_id,
+                'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'uom_id': move.packaging_uom_id,
             })
 
             excluded_rule_ids = []
             while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
                 excluded_rule_ids.append(rule.id)
                 rule = ProcurementGroup._get_push_rule(move.product_id, move.location_dest_id, {
-                    'route_ids': move.route_ids, 'warehouse_id': warehouse_id,
+                    'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'uom_id': move.packaging_uom_id,
                     'domain': [('id', 'not in', excluded_rule_ids)],
                 })
 
@@ -1548,7 +1566,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'warehouse_id': warehouse,
             'priority': self.priority,
             'orderpoint_id': self.orderpoint_id,
-            'uom_id': self.product_uom,
+            'uom_id': self.packaging_uom_id,
         }
 
     def _get_mto_procurement_date(self):
