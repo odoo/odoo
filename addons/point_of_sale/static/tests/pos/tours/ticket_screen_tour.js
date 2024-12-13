@@ -119,13 +119,13 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.selectOrder("005"),
             inLeftSide(Order.hasLine({ productName: "Desk Pad", withClass: ".selected" })),
             ProductScreen.clickNumpad("1"),
-            TicketScreen.toRefundTextContains("To Refund: 1.00"),
+            TicketScreen.toRefundTextContains("To Refund: 1"),
             TicketScreen.confirmRefund(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.isShown(),
             inLeftSide([
                 ...ProductScreen.clickLine("Desk Pad"),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-1.00"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-1"),
                 // Try changing the refund line to positive number.
                 // Error popup should show.
                 Numpad.click("2"),
@@ -136,7 +136,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
                 Dialog.confirm(),
                 // Change the refund line quantity to -2 -- allowed.
                 ...["+/-", "2"].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-2.00"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-2"),
             ]),
             // Check if the amount being refunded changed to 2.
             ...ProductScreen.clickRefund(),
@@ -190,7 +190,7 @@ registry.category("web_tour.tours").add("LotRefundTour", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLotNumber("123456789"),
-            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.selectedOrderlineHas("Product A", "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -199,7 +199,7 @@ registry.category("web_tour.tours").add("LotRefundTour", {
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("1"),
-            TicketScreen.toRefundTextContains("To Refund: 1.00"),
+            TicketScreen.toRefundTextContains("To Refund: 1"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
             ProductScreen.clickLotIcon(),
@@ -216,7 +216,7 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
             ProductScreen.clickDisplayedProduct("Sugar"),
             inLeftSide([
                 ...["0", "."].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0.00", "0.00"),
+                ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0", "0.00"),
                 ...["0", "2"].map(Numpad.click),
                 ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0.02", "0.06"),
             ]),
@@ -244,14 +244,14 @@ registry.category("web_tour.tours").add("LotTour", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLotNumber("1"),
-            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            ProductScreen.selectedOrderlineHas("Product A", "1"),
             inLeftSide(
                 [
                     ProductScreen.clickLotIcon(),
                     ProductScreen.enterLotNumber("2"),
                     Order.hasLine({
                         productName: "Product A",
-                        quantity: 1.0,
+                        quantity: 1,
                     }),
                     ProductScreen.clickLotIcon(),
                     ProductScreen.enterLastLotNumber("1"),
@@ -263,7 +263,7 @@ registry.category("web_tour.tours").add("LotTour", {
             ),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLastLotNumber("3"),
-            ProductScreen.selectedOrderlineHas("Product A", "3.00"),
+            ProductScreen.selectedOrderlineHas("Product A", "3"),
             inLeftSide({
                 trigger: ".info-list:contains('SN 3')",
             }),
