@@ -41,11 +41,68 @@ class ResCompanyInherited(models.Model):
 
             # Twilio client initialization
             client = Client(twilio_account.account_sid, twilio_account.auth_token)
-
             try:
                 # Fetch messages sent after the specified date
-                messages = client.messages.list(limit=20, date_sent_after=last_datetime)
-                _logger.info("Message List: %s", [str(msg) for msg in messages])  # Log message SIDs
+                messages = client.messages.list(date_sent_after=last_datetime)
+                for record in messages:
+                    if record.direction == 'inbound':
+                        active_id = self.env['res.partner'].sudo().search([('phone', '=', record.from_)], limit=1)
+                        if active_id:
+                            lead_id = self.env['crm.lead'].search([('partner_id','=',active_id.id),
+                                                                   ('type','=','opportunity')],
+                                                                   limit=1, order="write_date DESC")
+                            lead_id.message_post(
+                                body=f"Reply from {active_id.name}: {record.body}",
+                                message_type="notification",
+                                subtype_xmlid="mail.mt_note",
+                            )
+                            msg_dict = {
+                                "account_sid": record.account_sid,
+                                "body": record.body,
+                                "date_sent": datetime.now(),
+                                "direction": record.direction,
+                                "error_code": record.error_code,
+                                "error_message": record.error_message,
+                                "from_phone": record.from_,
+                                "messaging_service_sid": record.messaging_service_sid,
+                                "sid": record.sid,
+                                "status": record.status,
+                                "to_phone": record.to,
+                                "uri": record.uri,
+                                "res_model": 'crm.lead',
+                                "res_id": str(lead_id.id),
+                            }
+                            log_message = self.env['twilio.message.log'].sudo().create(msg_dict)
+                            _logger.info("Twilio SMS Reply - Pipeline (%s, %s) >> Log %s" %(str(lead_id.id), lead_id.name, log_message.id))
+                        # else:
+                        #     last_sent_message_log_id = self.env['twilio.message.log'].sudo().search([('to_phone', '=', record.from_)],
+                        #                                                                             order='date_sent desc',
+                        #                                                                             limit=1)
+                        #     if last_sent_message_log_id and last_sent_message_log_id.res_model and last_sent_message_log_id.res_id:
+                        #         active_id = self.env[last_sent_message_log_id.res_model].sudo().browse(int(last_sent_message_log_id.res_id))
+                        #         active_id.message_post(
+                        #             body=f"Reply from {record.from_}: {record.body}",
+                        #             message_type="notification",
+                        #             subtype_xmlid="mail.mt_note",
+                        #         )
+                        #         msg_dict = {
+                        #             "account_sid": record.account_sid,
+                        #             "body": record.body,
+                        #             "date_sent": datetime.now(),
+                        #             "direction": record.direction,
+                        #             "error_code": record.error_code,
+                        #             "error_message": record.error_message,
+                        #             "from_phone": record.from_,
+                        #             "messaging_service_sid": record.messaging_service_sid,
+                        #             "sid": record.sid,
+                        #             "status": record.status,
+                        #             "to_phone": record.to,
+                        #             "uri": record.uri,
+                        #             "res_model": last_sent_message_log_id.res_model,
+                        #             "res_id": last_sent_message_log_id.res_id,
+                        #         }
+                        #         log_message = self.env['twilio.message.log'].sudo().create(msg_dict)
+                _logger.info("Message List: %s", [str(msg) for msg in messages])
             except Exception as e:
                 _logger.error("Error fetching Twilio messages: %s", str(e))
         else:
