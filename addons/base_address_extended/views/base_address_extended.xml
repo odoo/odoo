@@ -62,7 +62,6 @@
         <field name="arch" type="xml">
             <field name="city" position="attributes">
                 <attribute name="invisible">country_enforce_cities and (city_id or city in ('', False))</attribute>
-                <attribute name="readonly">type == 'contact' and parent_id</attribute>
             </field>
             <field name="city" position="before">
                 <field name="country_enforce_cities" invisible="1"/>
@@ -71,7 +70,6 @@
                        class="o_address_city"
                        domain="[('country_id', '=', country_id)]"
                        invisible="not country_enforce_cities"
-                       readonly="type == 'contact' and parent_id"
                        context="{'default_country_id': country_id, 'default_state_id': state_id, 'default_zipcode': zip}"/>
             </field>
 
