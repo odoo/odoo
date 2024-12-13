@@ -121,6 +121,7 @@ function getUnselectedEdgeNodes(selection) {
  * @property { SelectionPlugin['modifySelection'] } modifySelection
  * @property { SelectionPlugin['preserveSelection'] } preserveSelection
  * @property { SelectionPlugin['rectifySelection'] } rectifySelection
+ * @property { SelectionPlugin['isNodeContentsFullySelected'] } isNodeContentsFullySelected
  * @property { SelectionPlugin['resetActiveSelection'] } resetActiveSelection
  * @property { SelectionPlugin['resetSelection'] } resetSelection
  * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
@@ -144,6 +145,7 @@ export class SelectionPlugin extends Plugin {
         "getTraversedBlocks",
         "modifySelection",
         "rectifySelection",
+        "isNodeContentsFullySelected",
         // todo: ideally, this should not be shared
         "resetActiveSelection",
         "focusEditable",
@@ -572,6 +574,20 @@ export class SelectionPlugin extends Plugin {
             // Default rule
             (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
         return this.getTraversedNodes().filter(isNodeFullySelected);
+    }
+
+    isNodeContentsFullySelected(node) {
+        const selection = this.getEditableSelection();
+        const range = new Range();
+        range.setStart(selection.startContainer, selection.startOffset);
+        range.setEnd(selection.endContainer, selection.endOffset);
+
+        const firstLeafNode = firstLeaf(node);
+        const lastLeafNode = lastLeaf(node);
+        return (
+            range.isPointInRange(firstLeafNode, 0) &&
+            range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode))
+        );
     }
 
     /**
