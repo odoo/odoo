@@ -77,6 +77,7 @@
                 <tfoot t-on-click="() => props.list.unselectRecord(true)" class="o_list_footer cursor-default" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
                         <td t-if="hasSelectors"/>
+                        <td />
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <t t-set="aggregate" t-value="aggregates[column.name]"/>
                             <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
@@ -98,7 +99,7 @@
             </t>
             <tr t-if="displayRowCreates">
                 <td t-if="withHandleColumn"/>
-                <td t-att-colspan="withHandleColumn ? nbCols - 1 : nbCols"
+                <td t-att-colspan="withHandleColumn ? nbCols : nbCols + 1"
                     class="o_field_x2many_list_row_add"
                     t-on-keydown="(ev) => this.onCellKeydown(ev, null)"
                 >
@@ -128,7 +129,7 @@
             </tr>
             <t t-if="!props.list.isGrouped">
                 <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
-                    <td t-att-colspan="nbCols">&#8203;</td>
+                    <td t-att-colspan="nbCols + 1">&#8203;</td>
                 </tr>
             </t>
         </t>
