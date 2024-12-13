@@ -396,6 +396,9 @@ class configmanager:
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=2,
                          help="Maximum number of threads processing concurrently cron jobs (default 2).",
                          type="int")
+        group.add_option("--limit-time-soft-cron", dest="limit_time_soft_cron", my_default=-1,
+                         help="Maximum allowed time per cron processing job.",
+                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Try to enable the unaccent extension when creating new databases.")
         group.add_option("--geoip-city-db", "--geoip-db", dest="geoip_city_db", type='path', my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
