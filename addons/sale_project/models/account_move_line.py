@@ -15,7 +15,8 @@ class AccountMoveLine(models.Model):
         project_id = self._context.get('project_id', False)
         if project_id:
             project = self.env['project.project'].browse(project_id)
-            self.analytic_distribution = project._get_analytic_distribution()
+            lines = self.filtered(lambda line: line.account_type not in ['asset_receivable', 'liability_payable'])
+            lines.analytic_distribution = project._get_analytic_distribution()
 
     def _get_so_mapping_domain(self):
         return OR([
