@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             // Check that the product has been added to the order with correct attributes and price
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair (Fabrics: Other: Custom Fabric, Metal, Red)",
-                "1.0",
+                "1",
                 "11.0"
             ),
 
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair (Fabrics: Other: Custom Fabric, Metal, Red)",
-                "2.0",
+                "2",
                 "22.0"
             ),
 
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
                 "Configurable Chair (Leather, Metal, Blue)",
-                "1.0",
+                "1",
                 "10.0"
             ),
 
@@ -84,10 +84,10 @@ registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
             ProductScreen.clickDisplayedProduct("Dynamic Product"),
             ProductConfigurator.pickRadio("Test 1"),
             Dialog.confirm(),
-            ProductScreen.selectedOrderlineHas("Dynamic Product (Test 1)", "1.0", "1.15"),
+            ProductScreen.selectedOrderlineHas("Dynamic Product (Test 1)", "1", "1.15"),
             ProductScreen.clickDisplayedProduct("Dynamic Product"),
             ProductConfigurator.pickRadio("Test 2"),
             Dialog.confirm(),
-            ProductScreen.selectedOrderlineHas("Dynamic Product (Test 2)", "1.0", "12.65"),
+            ProductScreen.selectedOrderlineHas("Dynamic Product (Test 2)", "1", "12.65"),
         ].flat(),
 });
