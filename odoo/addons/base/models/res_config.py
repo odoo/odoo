@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import re
@@ -8,25 +7,6 @@ from odoo import api, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 
 _logger = logging.getLogger(__name__)
-
-
-class ResConfigModuleInstallationMixin(object):
-    __slots__ = ()
-
-    @api.model
-    def _install_modules(self, modules):
-        """ Install the requested modules.
-
-        :param modules: a recordset of ir.module.module records
-        :return: the next action to execute
-        """
-        result = None
-
-        to_install_modules = modules.filtered(lambda module: module.state == 'uninstalled')
-        if to_install_modules:
-            result = to_install_modules.button_immediate_install()
-
-        return result
 
 
 class ResConfig(models.TransientModel):
@@ -115,7 +95,7 @@ class ResConfig(models.TransientModel):
         return self.cancel() or self.next()
 
 
-class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin):
+class ResConfigSettings(models.TransientModel):
     """ Base configuration wizard for application settings.  It provides support for setting
         default values, assigning groups to employee users, and installing modules.
         To make such a 'settings' wizard, define a model like::
@@ -201,6 +181,21 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             if name.startswith('module_'):
                 method = make_method(name)
                 self._onchange_methods[name].append(method)
+
+    @api.model
+    def _install_modules(self, modules):
+        """ Install the requested modules.
+
+        :param modules: a recordset of ir.module.module records
+        :return: the next action to execute
+        """
+        result = None
+
+        to_install_modules = modules.filtered(lambda module: module.state == 'uninstalled')
+        if to_install_modules:
+            result = to_install_modules.button_immediate_install()
+
+        return result
 
     @api.model
     def _get_classified_fields(self, fnames=None):
