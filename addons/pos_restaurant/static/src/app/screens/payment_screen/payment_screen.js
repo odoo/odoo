@@ -14,7 +14,7 @@ patch(PaymentScreen.prototype, {
         }
         return super.nextScreen;
     },
-    async afterOrderValidation(suggestToSync = true) {
+    async afterOrderValidation() {
         // Delete orders from the original table if it has been merged with another table
         const orderToDelete = [];
         const changedTables = [];
@@ -34,10 +34,9 @@ patch(PaymentScreen.prototype, {
 
         // After the order has been validated the tables have no reason to be merged anymore.
         if (changedTables?.length) {
-            for (const table of changedTables) {
-                this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
-            }
+            // TODO: can we update on a recordset or does it have to be 1 record at a time?
+            changedTables.update({ parent_id: null });
         }
-        return await super.afterOrderValidation(...arguments);
+        return await super.afterOrderValidation();
     },
 });

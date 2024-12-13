@@ -19,7 +19,7 @@ class PosOrder(models.Model):
 
     @api.model
     def sync_from_ui(self, orders):
-        results = super().sync_from_ui(orders)
+        results = super().create(orders)
         paid_orders = self.browse([order['id'] for order in results['pos.order'] if order['state'] in ['paid', 'done', 'invoiced']])
 
         if not paid_orders:

@@ -190,12 +190,6 @@ patch(PosStore.prototype, {
 
         return await super.afterProcessServerData(...arguments);
     },
-    //@override
-    addNewOrder(data = {}) {
-        const order = super.addNewOrder(...arguments);
-        this.addPendingOrder([order.id]);
-        return order;
-    },
     createOrderIfNeeded(data) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
             let order = this.models["pos.order"].find((order) => order.isDirectSale);
@@ -206,32 +200,11 @@ patch(PosStore.prototype, {
         }
         return super.createOrderIfNeeded(...arguments);
     },
-    getSyncAllOrdersContext(orders, options = {}) {
-        const context = super.getSyncAllOrdersContext(...arguments);
-        context["cancel_table_notification"] = options["cancel_table_notification"] || false;
-        if (this.config.module_pos_restaurant && this.selectedTable) {
-            context["table_ids"] = [this.selectedTable.id];
-            context["force"] = true;
-        }
-        return context;
-    },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
         if (this.config.module_pos_restaurant && !this.getOrder().uiState.booked) {
             this.getOrder().setBooked(true);
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
-    },
-    async getServerOrders() {
-        if (this.config.module_pos_restaurant) {
-            const tableIds = [].concat(
-                ...this.models["restaurant.floor"].map((floor) =>
-                    floor.table_ids.map((table) => table.id)
-                )
-            );
-            await this.syncAllOrders({ table_ids: tableIds });
-        }
-        //Need product details from backand to UI for urbanpiper
-        return await super.getServerOrders();
     },
     getDefaultSearchDetails() {
         if (this.selectedTable && this.selectedTable.id) {
@@ -243,8 +216,6 @@ patch(PosStore.prototype, {
         return super.getDefaultSearchDetails();
     },
     async setTable(table, orderUuid = null) {
-        this.loadingOrderState = true;
-
         let currentOrder = table
             .getOrders()
             .find((order) => (orderUuid ? order.uuid === orderUuid : !order.finalized));
@@ -263,22 +234,6 @@ patch(PosStore.prototype, {
             } else {
                 this.addNewOrder({ table_id: table });
             }
-        }
-        try {
-            this.loadingOrderState = true;
-            const orders = await this.syncAllOrders({ throw: true });
-            const orderUuids = orders.map((order) => order.uuid);
-            for (const order of table.getOrders()) {
-                if (
-                    !orderUuids.includes(order.uuid) &&
-                    typeof order.id === "number" &&
-                    order.uiState.screen_data?.value?.name !== "TipScreen"
-                ) {
-                    order.delete();
-                }
-            }
-        } finally {
-            this.loadingOrderState = false;
         }
     },
     editFloatingOrderName(order) {
@@ -364,14 +319,6 @@ patch(PosStore.prototype, {
         return this.getOpenOrders().filter((order) => order.table_id?.id === tableId);
     },
     async unsetTable() {
-        try {
-            await this.syncAllOrders();
-        } catch (e) {
-            if (!(e instanceof ConnectionLostError)) {
-                throw e;
-            }
-            Promise.reject(e);
-        }
         const order = this.getOrder();
         if (order && !order.isBooked) {
             this.removeOrder(order);
@@ -392,7 +339,6 @@ patch(PosStore.prototype, {
     },
     prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
-        this.loadingOrderState = false;
         this.alert.dismiss();
 
         if (destinationTable.id === originalTable?.id) {
@@ -405,7 +351,6 @@ patch(PosStore.prototype, {
             order.origin_table_id = originalTable?.id;
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.addPendingOrder([order.id]);
             return false;
         }
         return true;

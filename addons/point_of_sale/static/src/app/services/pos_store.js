@@ -1,6 +1,5 @@
 /* global waitForWebfonts */
 
-import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
 import { floatIsZero } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
@@ -37,6 +36,7 @@ import { user } from "@web/core/user";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
+import { omit } from "@web/core/utils/objects";
 
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
@@ -90,7 +90,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
         this.unwatched = markRaw({});
-        this.pushOrderMutex = new Mutex();
 
         // Business data; loaded from the server at launch
         this.company_logo = null;
@@ -111,17 +110,6 @@ export class PosStore extends WithLazyGetterTrap {
             totalCount: 0,
         };
 
-        this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
-
-        // Handle offline mode
-        // All of Set of ids
-        this.pendingOrder = {
-            write: new Set(),
-            delete: new Set(),
-            create: new Set(),
-        };
-
-        this.synch = { status: "connected", pending: 0 };
         this.hardwareProxy = hardware_proxy;
         this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
@@ -143,7 +131,6 @@ export class PosStore extends WithLazyGetterTrap {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
-        this.syncingOrders = new Set();
         await this.initServerData();
         if (this.useProxy()) {
             await this.connectToProxy();
@@ -348,7 +335,8 @@ export class PosStore extends WithLazyGetterTrap {
             const nbrProduct = products.length;
 
             for (let i = 0; i < nbrProduct - 1; i++) {
-                products[i].available_in_pos = false;
+                // FIXME
+                // products[i].available_in_pos = false;
                 this.mainProductVariant[products[i].id] = products[nbrProduct - 1];
             }
         }
@@ -392,7 +380,6 @@ export class PosStore extends WithLazyGetterTrap {
                 }
 
                 const cancelled = this.removeOrder(order, true);
-                this.removePendingOrder(order);
                 if (!cancelled) {
                     return false;
                 } else if (typeof order.id === "number") {
@@ -458,17 +445,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async afterProcessServerData() {
-        // Adding the not synced paid orders to the pending orders
-        const paidUnsyncedOrderIds = this.models["pos.order"]
-            .filter((order) => order.isUnsyncedPaid)
-            .map((order) => order.id);
-
-        if (paidUnsyncedOrderIds.length > 0) {
-            this.addPendingOrder(paidUnsyncedOrderIds);
-        }
-
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
-        this.syncAllOrders();
 
         if (!this.config.module_pos_restaurant) {
             this.selectedOrderUuid = openOrders.length
@@ -833,7 +810,10 @@ export class PosStore extends WithLazyGetterTrap {
             values.price_unit = price;
         }
 
-        const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
+        const line = this.data.models["pos.order.line"].create({
+            ...omit(values, "product_tmpl_id"),
+            order_id: order,
+        });
         line.setOptions(options);
         this.selectOrderLine(order, line);
         this.numberBuffer.reset();
@@ -876,7 +856,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.hasJustAddedProduct = false;
         }, 3000);
 
-        this.addPendingOrder([order.id]);
+        // FIXME: If merged with another line, this returned object is useless.
         return order.getSelectedOrderline();
     }
 
@@ -921,17 +901,6 @@ export class PosStore extends WithLazyGetterTrap {
      * @param order
      */
     removeOrder(order, removeFromServer = true) {
-        if (this.isOpenOrderShareable() || removeFromServer) {
-            if (typeof order.id === "number" && !order.finalized) {
-                this.addPendingOrder([order.id], true);
-            }
-        }
-
-        if (typeof order.id === "string" && order.finalized) {
-            this.addPendingOrder([order.id]);
-            return;
-        }
-
         return this.data.localDeleteCascade(order, removeFromServer);
     }
 
@@ -940,7 +909,6 @@ export class PosStore extends WithLazyGetterTrap {
      * @returns {name: string, id: int, role: string}
      */
     getCashier() {
-        this.user.role = this.user._raw.role;
         return this.user;
     }
     getCashierUserId() {
@@ -1051,162 +1019,18 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    addPendingOrder(orderIds, remove = false) {
-        if (remove) {
-            for (const id of orderIds) {
-                this.pendingOrder["create"].delete(id);
-                this.pendingOrder["write"].delete(id);
-            }
+    // TODO: what to do about rescue sessions
+    //     if (data["pos.session"].length > 0) {
+    //         // Replace the original session by the rescue one. And the rescue one will have
+    //         // a higher id than the original one since it's the last one created.
+    //         const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
+    //         session.delete();
+    //         this.models["pos.order"]
+    //             .getAll()
+    //             .filter((order) => order.state === "draft")
+    //             .forEach((order) => (order.session_id = this.session));
+    //     }
 
-            this.pendingOrder["delete"].add(...orderIds);
-            return true;
-        }
-
-        for (const id of orderIds) {
-            if (typeof id === "number") {
-                this.pendingOrder["write"].add(id);
-            } else {
-                this.pendingOrder["create"].add(id);
-            }
-        }
-
-        return true;
-    }
-
-    getPendingOrder() {
-        const orderToCreate = this.models["pos.order"].filter(
-            (order) =>
-                this.pendingOrder.create.has(order.id) &&
-                (order.lines.length > 0 ||
-                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
-        );
-        const orderToUpdate = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.write)
-        );
-        const orderToDelele = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.delete)
-        );
-
-        return {
-            orderToDelele,
-            orderToCreate,
-            orderToUpdate,
-        };
-    }
-
-    getOrderIdsToDelete() {
-        return [...this.pendingOrder.delete];
-    }
-
-    removePendingOrder(order) {
-        this.pendingOrder["create"].delete(order.id);
-        this.pendingOrder["write"].delete(order.id);
-        this.pendingOrder["delete"].delete(order.id);
-        return true;
-    }
-
-    clearPendingOrder() {
-        this.pendingOrder = {
-            create: new Set(),
-            write: new Set(),
-            delete: new Set(),
-        };
-    }
-
-    getSyncAllOrdersContext(orders, options = {}) {
-        return {
-            config_id: this.config.id,
-            login_number: odoo.login_number,
-        };
-    }
-
-    // There for override
-    preSyncAllOrders(orders) {}
-    postSyncAllOrders(orders) {}
-    async syncAllOrders(options = {}) {
-        const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-        let orders = [...orderToCreate, ...orderToUpdate];
-
-        // Filter out orders that are already being synced
-        orders = orders.filter((order) => !this.syncingOrders.has(order.id));
-
-        try {
-            const orderIdsToDelete = this.getOrderIdsToDelete();
-            if (orderIdsToDelete.length > 0) {
-                await this.deleteOrders([], orderIdsToDelete);
-            }
-
-            const context = this.getSyncAllOrdersContext(orders, options);
-            this.preSyncAllOrders(orders);
-
-            // Allow us to force the sync of the orders In the case of
-            // pos_restaurant is usefull to get unsynced orders
-            // for a specific table
-            if (orders.length === 0 && !context.force) {
-                return;
-            }
-
-            // Add order IDs to the syncing set
-            orders.forEach((order) => this.syncingOrders.add(order.id));
-
-            // Re-compute all taxes, prices and other information needed for the backend
-            for (const order of orders) {
-                order.recomputeOrderData();
-            }
-
-            const serializedOrder = orders.map((order) =>
-                order.serialize({ orm: true, clear: true })
-            );
-            const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
-                context,
-            });
-            const missingRecords = await this.data.missingRecursive(data);
-            const newData = this.models.loadData(this.models, missingRecords);
-
-            for (const line of newData["pos.order.line"]) {
-                const refundedOrderLine = line.refunded_orderline_id;
-
-                if (refundedOrderLine) {
-                    const order = refundedOrderLine.order_id;
-                    delete order.uiState.lineToRefund[refundedOrderLine.uuid];
-                    refundedOrderLine.refunded_qty += Math.abs(line.qty);
-                }
-            }
-
-            this.postSyncAllOrders(newData["pos.order"]);
-
-            if (data["pos.session"].length > 0) {
-                // Replace the original session by the rescue one. And the rescue one will have
-                // a higher id than the original one since it's the last one created.
-                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
-                this.models["pos.order"]
-                    .getAll()
-                    .filter((order) => order.state === "draft")
-                    .forEach((order) => (order.session_id = this.session));
-            }
-
-            this.clearPendingOrder();
-            return newData["pos.order"];
-        } catch (error) {
-            if (options.throw) {
-                throw error;
-            }
-
-            console.warn("Offline mode active, order will be synced later");
-            return error;
-        } finally {
-            orders.forEach((order) => this.syncingOrders.delete(order.id));
-        }
-    }
-
-    pushSingleOrder(order) {
-        return this.pushOrderMutex.exec(() => this.syncAllOrders(order));
-    }
-
-    setLoadingOrderState(bool) {
-        this.loadingOrderState = bool;
-    }
     async pay() {
         const currentOrder = this.getOrder();
 
@@ -1240,7 +1064,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async getServerOrders() {
-        await this.syncAllOrders();
         return await this.loadServerOrders([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
             ["state", "=", "draft"],
@@ -1303,7 +1126,8 @@ export class PosStore extends WithLazyGetterTrap {
             return undefined;
         }
 
-        return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
+        // return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
+        return this.models["pos.order"].find((order) => order.uuid === this.selectedOrderUuid);
     }
     get selectedOrder() {
         return this.getOrder();
@@ -1320,38 +1144,6 @@ export class PosStore extends WithLazyGetterTrap {
     // return the list of unpaid orders
     getOpenOrders() {
         return this.models["pos.order"].filter((o) => !o.finalized);
-    }
-
-    // To be used in the context of closing the POS
-    // Saves the order locally and try to send it to the backend.
-    // If there is an error show a popup
-    async pushOrdersWithClosingPopup(opts = {}) {
-        try {
-            await this.syncAllOrders(opts);
-            return true;
-        } catch (error) {
-            console.warn(error);
-            const reason = this.failed
-                ? _t(
-                      "Some orders could not be submitted to " +
-                          "the server due to configuration errors. " +
-                          "You can exit the Point of Sale, but do " +
-                          "not close the session before the issue " +
-                          "has been resolved."
-                  )
-                : _t(
-                      "Some orders could not be submitted to " +
-                          "the server due to internet connection issues. " +
-                          "You can exit the Point of Sale, but do " +
-                          "not close the session before the issue " +
-                          "has been resolved."
-                  );
-            await ask(this.dialog, {
-                title: _t("Offline Orders"),
-                body: reason,
-            });
-            return false;
-        }
     }
 
     getProducePriceDetails({ productTemplate, product, price }) {
@@ -1474,7 +1266,7 @@ export class PosStore extends WithLazyGetterTrap {
         );
         if (!printBillActionTriggered) {
             const nbrPrint = order.nb_print;
-            await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+            order.update({ nb_print: nbrPrint + 1 });
         }
         return true;
     }
@@ -1511,17 +1303,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
-        this.addPendingOrder([o.id]);
-        const uuid = o.uuid;
-        const orders = await this.syncAllOrders();
-        const order = orders.find((order) => order.uuid === uuid);
-
-        if (order) {
-            await this.sendOrderInPreparation(order, cancelled);
-            order.updateLastOrderChange();
-            this.addPendingOrder([order.id]);
-            await this.syncAllOrders();
-        }
+        // TODO
+        this.sendOrderInPreparation(o, cancelled);
     }
     closeScreen() {
         this.showOrderScreen(false);
@@ -1652,11 +1435,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        // If there are orders in the db left unsynced, we try to sync.
-        const syncSuccess = await this.pushOrdersWithClosingPopup();
-        if (syncSuccess) {
-            this.redirectToBackend();
-        }
+        this.redirectToBackend();
     }
     async selectPricelist(pricelist) {
         await this.getOrder().setPricelist(pricelist);
@@ -1922,10 +1701,8 @@ export class PosStore extends WithLazyGetterTrap {
         } else {
             if (this._shouldLoadOrders()) {
                 try {
-                    this.setLoadingOrderState(true);
                     await this.getServerOrders();
                 } finally {
-                    this.setLoadingOrderState(false);
                     this.showScreen("TicketScreen");
                 }
             } else {
@@ -1943,7 +1720,13 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     redirectToBackend() {
-        window.location = "/odoo/action-point_of_sale.action_client_pos_menu";
+        // TODO: what we have to do is that when the window.location changes or when the
+        // user tries to reload we automatically perform a flush
+        this.data.flush().then((successfulFlush) => {
+            if (successfulFlush) {
+                window.location = "/odoo/action-point_of_sale.action_client_pos_menu";
+            }
+        });
     }
 
     getDisplayDeviceIP() {

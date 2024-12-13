@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+import logging
 from uuid import uuid4
 import pytz
 import secrets
@@ -12,11 +13,57 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import convert, SQL
 
 
+_logger = logging.getLogger(__name__)
 class PosConfig(models.Model):
     _name = 'pos.config'
     _inherit = ['pos.bus.mixin', 'pos.load.mixin']
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
+
+    def sync_from_ui_2(self, queue):
+        get_record = lambda model, id: self.env[model].search([('uuid', '=', id)], limit=1) if type(id) == str else self.env[model].browse(id)
+        def replace_uuid_with_id(vals):
+            for key in vals:
+                if self.env[model]._fields[key].type == 'many2one':
+                    vals[key] = get_record(self.env[model]._fields[key].comodel_name, vals[key]).id
+                # We assume that m2m are only done with data that is already in the db
+            return vals
+
+        for [operation, *data] in queue:
+            # _logger.info('Processing operation %s with data %s', operation, data)
+            match operation:
+                case "CREATE":
+                    [model, vals] = data
+                    vals = self.update_vals(model, None, vals)
+                    vals = replace_uuid_with_id(vals)
+                    print('CREATE', model, vals)
+                    self.env[model].create([vals])
+                case "UPDATE":
+                    [model, id, vals] = data
+                    vals = self.update_vals(model, None, vals)
+                    vals = replace_uuid_with_id(vals)
+                    print('UPDATE', model, id, vals)
+                    record = get_record(model, id)
+                    print('RECORD', record)
+                    record.write(vals)
+
+                case "DELETE":
+                    [model, id] = data
+                    get_record(model, id).unlink()
+
+                case _:
+                    pass
+        return
+
+    def update_vals(self, model, id, vals):
+        match model:
+            case 'pos.order':
+                vals['session_id'] = self.current_session_id.id
+            case _:
+                pass
+        # for key in vals:
+
+        return vals
 
     def _default_warehouse_id(self):
         warehouse = self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id

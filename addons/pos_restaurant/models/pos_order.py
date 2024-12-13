@@ -19,7 +19,7 @@ class PosOrder(models.Model):
 
     @api.model
     def sync_from_ui(self, orders):
-        result = super().sync_from_ui(orders)
+        result = super().create(orders)
 
         if self.env.context.get('table_ids'):
             order_ids = [order['id'] for order in result['pos.order']]

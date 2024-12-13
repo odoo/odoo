@@ -9,7 +9,7 @@ patch(ProductInfoBanner.prototype, {
         }`;
     },
     async switchSelfAvailability() {
-        await this.pos.data.write("product.template", [this.props.productTemplate.id], {
+        this.props.productTemplate.update({
             self_order_available: !this.props.productTemplate.self_order_available,
         });
     },

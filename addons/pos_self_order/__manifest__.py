@@ -74,7 +74,6 @@
 
             # Related models from point_of_sale
             "point_of_sale/static/src/app/models/data_service_options.js",
-            "point_of_sale/static/src/app/models/utils/indexed_db.js",
             "point_of_sale/static/src/app/models/related_models.js",
             "point_of_sale/static/src/app/services/data_service.js",
             "point_of_sale/static/src/app/models/**/*",

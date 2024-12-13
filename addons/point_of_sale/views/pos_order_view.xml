@@ -154,6 +154,7 @@
                             <list string="Payments" create="1" editable="bottom">
                                 <field name="currency_id" column_invisible="True" />
                                 <field name="payment_date"/>
+                                <field name="payment_status" />
                                 <field name="payment_method_id" domain="[('id', 'in', parent.available_payment_method_ids)]" />
                                 <field name="amount"/>
                                 <field name="payment_method_payment_mode" optional="hide"/>

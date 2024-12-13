@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, useEffect, useState, onWillRender, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, useEffect, useState, onWillRender } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {
@@ -22,8 +22,6 @@ import {
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
-
-const { DateTime } = luxon;
 
 export class ProductScreen extends Component {
     static template = "point_of_sale.ProductScreen";
@@ -54,7 +52,6 @@ export class ProductScreen extends Component {
         });
         onMounted(() => {
             this.pos.openOpeningControl();
-            this.pos.addPendingOrder([this.currentOrder.id]);
             // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
             // We don't do this in the `mounted` lifecycle method because it is called before
             // the callbacks in `onMounted` hook.
@@ -65,21 +62,6 @@ export class ProductScreen extends Component {
             // If its a shared order it can be paid from another POS
             if (this.currentOrder?.state !== "draft") {
                 this.pos.addNewOrder();
-            }
-        });
-
-        onWillUnmount(async () => {
-            if (
-                this.pos.config.use_presets &&
-                this.currentOrder &&
-                this.currentOrder.preset_id &&
-                this.currentOrder.preset_time
-            ) {
-                const orderDateTime = DateTime.fromSQL(this.currentOrder.preset_time);
-                if (orderDateTime > DateTime.now()) {
-                    this.pos.addPendingOrder([this.currentOrder.id]);
-                    await this.pos.syncAllOrders();
-                }
             }
         });
 

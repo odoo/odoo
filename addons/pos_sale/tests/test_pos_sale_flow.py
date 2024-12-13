@@ -469,7 +469,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
            'user_id': self.env.uid,
             }
 
-        self.env['pos.order'].sync_from_ui([pos_order])
+        self.env['pos.order'].create([pos_order])
         self.assertEqual(sale_order.order_line[0].untaxed_amount_invoiced, 10, "Untaxed invoiced amount should be 10")
         self.assertEqual(sale_order.order_line[1].untaxed_amount_invoiced, 0, "Untaxed invoiced amount should be 0")
 

@@ -1328,10 +1328,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
         })
 
-        def sync_from_ui_patch(*_args, **_kwargs):
+        def create_patch(*_args, **_kwargs):
             raise UserError('Test Error')
 
-        with patch.object(self.env.registry.models['pos.order'], "sync_from_ui", sync_from_ui_patch):
+        with patch.object(self.env.registry.models['pos.order'], "create", create_patch):
             # If there is problem in the tour, remove the log catcher to debug.
             with self.assertLogs(level="WARNING") as log_catcher:
                 self.main_pos_config.with_user(self.pos_user).open_ui()
