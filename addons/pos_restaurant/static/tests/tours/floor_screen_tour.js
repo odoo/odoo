@@ -167,12 +167,12 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             // Check that tables are unlinked automatically when the order is done
             FloorScreen.clickTable("105"),
             Chrome.isTabActive("104 & 105"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.goTo("105"),
             Chrome.isTabActive("104 & 105"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -208,8 +208,8 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             // Check merged orders
             FloorScreen.clickTable("105"),
             Chrome.isTabActive("104 & 105"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
@@ -219,7 +219,7 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
 
             // Check original orders for table 104
             FloorScreen.clickTable("104"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -231,7 +231,7 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
 
             // Check original orders for table 105
             FloorScreen.clickTable("105"),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -265,12 +265,12 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
 
             // Verify orders after unlinking
             FloorScreen.clickTable("105"),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.clickTable("104"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1.0")),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1.0")),
+            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
         ].flat(),

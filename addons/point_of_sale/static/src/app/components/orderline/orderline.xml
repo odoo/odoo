@@ -11,7 +11,7 @@
             <div class="d-flex flex-column w-100 gap-1 p-1">
                 <div class="line-details d-flex justify-content-between">
                     <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
-                    <span class="qty px-1 fw-bolder me-1" t-esc="line.getQuantityStr()"/>
+                    <span class="qty px-1 fw-bolder me-1" t-esc="line.qty"/>
                         <span class="text-wrap" t-esc="line.getFullProductName()"/>
                         <t t-slot="product-name" />
                     </div>
