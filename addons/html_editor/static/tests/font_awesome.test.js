@@ -529,6 +529,61 @@ describe("FontAwesome insertion", () => {
             contentAfter: '<p><i class="fa fa-star"></i><i class="fa fa-glass"></i>[]</p>',
         });
     });
+    test("should insert strava icon between the text", async () => {
+        await testEditor({
+            contentBefore: "<p>ab[]cd</p>",
+            stepFunction: async (editor) => {
+                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-strava" });
+            },
+            contentAfterEdit:
+                '<p>ab<i class="fa fa-strava" contenteditable="false">\u200b</i>[]cd</p>',
+            contentAfter: '<p>ab<i class="fa fa-strava"></i>[]cd</p>',
+        });
+    });
+    test("should replace strava icon with google play icon", async () => {
+        await testEditor({
+            contentBefore: '<p>ab[<i class="fa fa-strava"></i>]cd</p>',
+            stepFunction: async (editor) => {
+                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-google-play" });
+            },
+            contentAfterEdit:
+                '<p>ab<i class="fa fa-google-play" contenteditable="false">\u200b</i>[]cd</p>',
+            contentAfter: '<p>ab<i class="fa fa-google-play"></i>[]cd</p>',
+        });
+    });
+    test("should replace google play icon with bluesky icon", async () => {
+        await testEditor({
+            contentBefore: '<p>ab[<i class="fa fa-google-play"></i>]cd</p>',
+            stepFunction: async (editor) => {
+                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-bluesky" });
+            },
+            contentAfterEdit:
+                '<p>ab<i class="fa fa-bluesky" contenteditable="false">\u200b</i>[]cd</p>',
+            contentAfter: '<p>ab<i class="fa fa-bluesky"></i>[]cd</p>',
+        });
+    });
+    test("should replace bluesky icon with threads", async () => {
+        await testEditor({
+            contentBefore: '<p>ab[<i class="fa fa-bluesky"></i>]cd</p>',
+            stepFunction: async (editor) => {
+                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-threads" });
+            },
+            contentAfterEdit:
+                '<p>ab<i class="fa fa-threads" contenteditable="false">\u200b</i>[]cd</p>',
+            contentAfter: '<p>ab<i class="fa fa-threads"></i>[]cd</p>',
+        });
+    });
+    test("should replace threads icon with kickstarter", async () => {
+        await testEditor({
+            contentBefore: '<p>ab[<i class="fa fa-threads"></i>]cd</p>',
+            stepFunction: async (editor) => {
+                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-kickstarter" });
+            },
+            contentAfterEdit:
+                '<p>ab<i class="fa fa-kickstarter" contenteditable="false">\u200b</i>[]cd</p>',
+            contentAfter: '<p>ab<i class="fa fa-kickstarter"></i>[]cd</p>',
+        });
+    });
 });
 
 describe("Text insertion", () => {
