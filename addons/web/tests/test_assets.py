@@ -159,7 +159,7 @@ class TestWebAssetsCursors(HttpCase):
             self.assertEqual(response.status_code, 200)
 
         # remove the check_signaling cursor
-        self.assertEqual(cursors[0][1], '(ro_requested)', "the first cursor used for match and check signaling should be ro")
+        self.assertEqual(cursors[0][1], '(rw_requested)', "the first cursor used for match and check signaling should be rw")
         return cursors[1:]
 
     def test_web_binary_keep_cursor_ro(self):
