@@ -153,53 +153,40 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="image_1920" widget='partner_image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
+                    <field name="image_1920" widget='partner_image' class="oe_avatar position-absolute top-0 end-0" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title mb24">
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
                             <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
                             <field id="individual" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact'"/>
                         </h1>
-                        <div class="o_row">
-                            <field name="parent_id"
-                                widget="res_partner_many2one"
-                                placeholder="Company Name..."
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
-                                invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
-                                <field name="company_name" invisible="not company_name or company_name == '' or is_company"/>
-                                <button name="create_company" icon="fa-plus-square" string="Create company"
-                                    type="object" class="oe_edit_only btn-link"
-                                    invisible="is_company or company_name == '' or not company_name"/>
-                        </div>
+                        <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
                     </div>
-
                     <group>
                         <group>
+                            <field name="parent_id" string="Company"
+                                widget="res_partner_many2one"
+                                placeholder="Company Name..."
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_user_id': user_id}"
+                                invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
                             <span class="o_form_label o_td_label o_address_type" name="address_name">
                                 <field name="type" invisible="is_company" readonly="user_ids" required="not is_company" class="fw-bold"/>
                                 <span invisible="not is_company">Address</span>
                             </span>
                             <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street"
-                                    readonly="type == 'contact' and parent_id"/>
-                                <field name="street2" placeholder="Street 2..." class="o_address_street"
-                                    readonly="type == 'contact' and parent_id"/>
-                                <field name="city" placeholder="City" class="o_address_city"
-                                    readonly="type == 'contact' and parent_id"/>
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
-                                    readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip"
-                                    readonly="type == 'contact' and parent_id"/>
+                                    context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <div name="partner_address_country" class="d-flex justify-content-between">
-                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
-                                        readonly="type == 'contact' and parent_id"/>
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701" readonly="parent_id"/>
                         </group>
                         <group>
-                            <field name="function" placeholder="e.g. Sales Director"
-                                invisible="is_company"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids"/>
@@ -213,17 +200,15 @@
                     </group>
 
                     <notebook colspan="4">
-                        <page string="Contacts &amp; Addresses" name="contact_addresses" autofocus="autofocus">
+                        <page string="Contacts" name="contact_addresses" autofocus="autofocus">
                             <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'other'}">
                                 <kanban color="color">
                                     <field name="color"/>
                                     <field name="type"/>
                                     <field name="is_company"/>
+                                    <field name="image_1920"/>
                                     <templates>
                                         <t t-name="card" class="flex-row">
-                                            <aside class="o_kanban_aside_full">
-                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-cover'}" alt="Contact image"/>
-                                            </aside>
                                             <main class="ps-2 ps-md-0">
                                                 <field name="name" invisible="not name" class="fw-bold"/>
                                                 <field name="type" invisible="name" class="fw-bold"/>
@@ -240,6 +225,9 @@
                                                 <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
                                                 <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
                                             </main>
+                                            <aside class="o_kanban_aside_full o_kanban_aside_left" invisible="not image_1920">
+                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-cover'}" alt="Contact image"/>
+                                            </aside>
                                         </t>
                                     </templates>
                                 </kanban>
@@ -312,7 +300,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page name='internal_notes' string="Internal Notes">
+                        <page name='internal_notes' string="Notes">
                             <field name="comment" placeholder="Internal notes..."/>
                         </page>
                     </notebook>
@@ -402,21 +390,10 @@
                     <field name="avatar_128"/>
                     <field name="is_company"/>
                     <field name="active"/>
+                    <field name="image_1920"/>
                     <templates>
                         <t t-name="card" class="flex-row">
                             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                            <aside class="o_kanban_aside_full">
-                                <t t-if="!record.is_company.raw_value">
-                                    <div class="o_kanban_image_fill position-relative w-100">
-                                        <field name="avatar_128" alt="Contact image" class="h-100" widget="image" options="{'img_class': 'object-fit-cover'}"/>
-                                        <field t-if="record.parent_id.raw_value and record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
-                                        <field t-elif="record.parent_id.raw_value and !record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'avatar_128', 'img_class': 'object-fit-contain'}"/>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <field name="avatar_128" class="w-100" widget="image" options="{'img_class': 'object-fit-contain w-100 h-100'}"/>
-                                </t>
-                            </aside>
                             <main class="ps-2 ps-md-0">
                                 <div class="mb-1">
                                     <field name="display_name" class="mb-0 fw-bold fs-5"/>
@@ -432,8 +409,20 @@
                                     <field name="country_id"/>
                                 </div>
                                 <field name="email" class="text-truncate"/>
-                                <footer><div/></footer>
+                                <footer class="o_kanban_partner_footer"><div/></footer>
                             </main>
+                            <aside class="o_kanban_aside_full o_kanban_aside_left" invisible="not image_1920">
+                                <t t-if="!record.is_company.raw_value">
+                                    <div class="position-relative w-100">
+                                        <field name="avatar_128" alt="Contact image" class="h-100" widget="image" options="{'img_class': 'object-fit-cover'}"/>
+                                        <field t-if="record.parent_id.raw_value and record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
+                                        <field t-elif="record.parent_id.raw_value and !record.parent_id.image_128" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'avatar_128', 'img_class': 'object-fit-contain'}"/>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <field name="avatar_128" class="w-100" widget="image" options="{'img_class': 'object-fit-cover'}"/>
+                                </t>
+                            </aside>
                         </t>
                     </templates>
                 </kanban>
