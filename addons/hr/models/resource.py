@@ -31,4 +31,4 @@ class ResourceResource(models.Model):
             if is_hr_user:
                 resource.avatar_128 = employee and employee[0].avatar_128
             else:
-                resource.avatar_128 = avatar_per_employee_id[employee[0].id]
+                resource.avatar_128 = avatar_per_employee_id[employee[0].id] if employee else False
