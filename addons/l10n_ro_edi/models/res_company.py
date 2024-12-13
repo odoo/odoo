@@ -23,7 +23,6 @@ class ResCompany(models.Model):
     l10n_ro_edi_refresh_expiry_date = fields.Date(string='Refresh Token Expiry Date')
     l10n_ro_edi_callback_url = fields.Char(compute='_compute_l10n_ro_edi_callback_url')
     l10n_ro_edi_test_env = fields.Boolean(string='Use Test Environment', default=True)
-    l10n_ro_edi_oauth_error = fields.Char()  # Error field to be shown in case of error from the authentication process
 
     @api.depends('country_code')
     def _compute_l10n_ro_edi_callback_url(self):
@@ -72,7 +71,6 @@ class ResCompany(models.Model):
             'l10n_ro_edi_refresh_token': response_json['refresh_token'],
             'l10n_ro_edi_access_expiry_date': access_expiry_date,
             'l10n_ro_edi_refresh_expiry_date': refresh_expiry_date,
-            'l10n_ro_edi_oauth_error': False,
         })
 
     def _l10n_ro_edi_refresh_access_token(self, session):
