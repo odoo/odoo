@@ -192,9 +192,11 @@ test("Message delete notification", async () => {
     await click("[title='Mark as Todo']");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
-    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
-        message_ids: [messageId],
+    // simulate deleted message
+    rpc("/mail/message/update_content", {
+        message_id: messageId,
+        body: "",
+        attachment_ids: [],
     });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
