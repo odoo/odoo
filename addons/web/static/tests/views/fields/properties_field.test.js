@@ -2506,6 +2506,67 @@ test("new property, change record, change property type", async () => {
     expect(".o_property_field .o_property_field_value input").toHaveValue("0");
 });
 
+test("property many2one, change proerty type from many2one to integer", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            company_id: 37,
+            display_name: "Pierre",
+            properties: {
+                many_2_one: false,
+            },
+        },
+    ];
+    ResCompany._records[0].definitions = [
+        {
+            name: "many_2_one",
+            string: "My Many-2-one",
+            type: "many2one",
+            comodel: "partner",
+            domain: false,
+        },
+    ];
+
+    onRpc(({ method, model, args }) => {
+        if (["has_access", "has_group"].includes(method)) {
+            return true;
+        } else if (method === "display_name_for" && model === "ir.model") {
+            return [{ model: "partner", display_name: "Partner" }];
+        } else if (method === "get_available_models" && model === "ir.model") {
+            return [{ model: "partner", display_name: "Partner" }];
+        } else if (method === "web_save") {
+            const { name, ...propertiesWithoutName } = args[1].properties[0];
+            expect(name).not.toEqual("many_2_one");
+            expect(propertiesWithoutName).toEqual({
+                string: "My Many-2-one",
+                type: "integer",
+                value: 0,
+                definition_changed: true,
+                default: 0,
+            });
+        }
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        resIds: [1, 2],
+        arch: `
+            <form>
+                <field name="company_id"/>
+                <field name="properties"/>
+            </form>`,
+        actionMenus: {},
+    });
+    // Change the record's property type
+    await contains(".o_property_field .o_field_property_open_popover", { visible: false }).click();
+    await changeType("integer");
+
+    // save
+    await clickSave();
+});
+
 test.tags("desktop");
 test("properties: moving single property to 2nd group in auto split mode", async () => {
     await makePropertiesGroupView([false]);
