@@ -133,6 +133,7 @@ class HrEmployee(models.Model):
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
         help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
 
+    activity_plans_ids = fields.Many2many('mail.activity.plan', string="Activity Plans", groups="hr.group_hr_user")
     job_id = fields.Many2one(tracking=True)
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')

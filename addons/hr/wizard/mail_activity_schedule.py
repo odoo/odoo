@@ -47,6 +47,15 @@ class MailActivitySchedule(models.TransientModel):
                     } for key, templates in templates_by_responsible_type.items()
                 )}
 
+    def action_schedule_plan(self):
+        result = super().action_schedule_plan()
+        if result.get('domain') and result['res_model'] == 'hr.employee':
+            del result['domain']
+            result['context'] = {
+                'search_default_group_activity_plans_ids': 1,
+            }
+        return result
+
     @api.depends('res_model_id', 'res_ids')
     def _compute_department_id(self):
         for wizard in self:
@@ -56,3 +65,12 @@ class MailActivitySchedule(models.TransientModel):
                 wizard.department_id = False if len(all_departments) > 1 else all_departments
             else:
                 wizard.department_id = False
+
+    def _create_activity(self, record, template, responsible, date_deadline):
+        if self.res_model == 'hr.employee' and template.plan_id:
+            record.activity_plans_ids |= template.plan_id
+            kwargs = {
+                'summary': f"{template.plan_id.name} - {template.summary}",
+            }
+            return super()._create_activity(record, template, responsible, date_deadline, **kwargs)
+        super()._create_activity(record, template, responsible, date_deadline)
