@@ -12,7 +12,6 @@ class ResConfigSettings(models.TransientModel):
     l10n_ro_edi_refresh_expiry_date = fields.Date(related='company_id.l10n_ro_edi_refresh_expiry_date', readonly=False)
     l10n_ro_edi_callback_url = fields.Char(related='company_id.l10n_ro_edi_callback_url')
     l10n_ro_edi_test_env = fields.Boolean(related='company_id.l10n_ro_edi_test_env', readonly=False)
-    l10n_ro_edi_oauth_error = fields.Char(related='company_id.l10n_ro_edi_oauth_error')
 
     def button_l10n_ro_edi_generate_token(self):
         """ Redirects to controllers/main.py ~ `authorize` method """
