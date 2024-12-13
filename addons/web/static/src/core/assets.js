@@ -9,14 +9,28 @@ import { registry } from "./registry";
  * }} BundleFileNames
  */
 
-const computeCacheMap = () => {
-    for (const script of document.head.querySelectorAll("script[src]")) {
+/** @type {WeakMap<Document, Map<string, Promise<BundleFileNames | void>>>} */
+export const cacheMapByDocument = new WeakMap();
+
+/** @returns {Map<string, Promise<BundleFileNames | void>>} */
+function getCacheMap(targetDoc) {
+    if (!cacheMapByDocument.has(targetDoc)) {
+        cacheMapByDocument.set(targetDoc, new Map());
+    }
+    return cacheMapByDocument.get(targetDoc);
+}
+
+export function computeBundleCacheMap(targetDoc) {
+    const cacheMap = getCacheMap(targetDoc);
+    for (const script of targetDoc.head.querySelectorAll("script[src]")) {
         cacheMap.set(script.src, Promise.resolve());
     }
-    for (const link of document.head.querySelectorAll("link[rel=stylesheet][href]")) {
+    for (const link of targetDoc.head.querySelectorAll("link[rel=stylesheet][href]")) {
         cacheMap.set(link.href, Promise.resolve());
     }
-};
+}
+
+whenReady(() => computeBundleCacheMap(document));
 
 /**
  * @param {HTMLLinkElement | HTMLScriptElement} el
@@ -42,11 +56,6 @@ const onLoadAndError = (el, onLoad, onError) => {
     el.addEventListener("load", onLoadListener);
     el.addEventListener("error", onErrorListener);
 };
-
-/** @type {Map<string, Promise<BundleFileNames | void>>} */
-const cacheMap = new Map();
-
-whenReady(computeCacheMap);
 
 /** @type {typeof assets["getBundle"]} */
 export function getBundle() {
@@ -104,9 +113,12 @@ export const assets = {
      * Get the files information as descriptor object from a public asset template.
      *
      * @param {string} bundleName Name of the bundle containing the list of files
+     * @param {Object} options
+     * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
      * @returns {Promise<BundleFileNames>}
      */
-    getBundle(bundleName) {
+    getBundle(bundleName, { targetDoc = document } = {}) {
+        const cacheMap = getCacheMap(targetDoc);
         if (cacheMap.has(bundleName)) {
             return cacheMap.get(bundleName);
         }
@@ -143,9 +155,13 @@ export const assets = {
      * asset will be loaded if it was already done before.
      *
      * @param {string} bundleName
+     * @param {Object} options
+     * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
+     * @param {Boolean} [options.css=true] apply bundle css on targetDoc
+     * @param {Boolean} [options.js=true] apply bundle js on targetDoc
      * @returns {Promise<void[]>}
      */
-    loadBundle(bundleName) {
+    loadBundle(bundleName, { targetDoc = document, css = true, js = true } = {}) {
         if (typeof bundleName !== "string") {
             throw new Error(
                 `loadBundle(bundleName:string) accepts only bundleName argument as a string ! Not ${JSON.stringify(
@@ -153,9 +169,16 @@ export const assets = {
                 )} as ${typeof bundleName}`
             );
         }
-        return getBundle(bundleName).then(({ cssLibs, jsLibs }) =>
-            Promise.all([...cssLibs.map(loadCSS), ...jsLibs.map(loadJS)])
-        );
+        return getBundle(bundleName, { targetDoc }).then(({ cssLibs, jsLibs }) => {
+            const promises = [];
+            if (css && cssLibs) {
+                promises.push(...cssLibs.map((url) => assets.loadCSS(url, { targetDoc })));
+            }
+            if (js && jsLibs) {
+                promises.push(...jsLibs.map((url) => assets.loadJS(url, { targetDoc })));
+            }
+            return Promise.all(promises);
+        });
     },
 
     /**
@@ -163,13 +186,17 @@ export const assets = {
      *
      * @param {string} url the url of the stylesheet
      * @param {number} [retryCount]
+     * @param {Object} options
+     * @param {number} [retryCount]
+     * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
      * @returns {Promise<void>} resolved when the stylesheet has been loaded
      */
-    loadCSS(url, retryCount = 0) {
+    loadCSS(url, { retryCount = 0, targetDoc = document } = {}) {
+        const cacheMap = getCacheMap(targetDoc);
         if (cacheMap.has(url)) {
             return cacheMap.get(url);
         }
-        const linkEl = document.createElement("link");
+        const linkEl = targetDoc.createElement("link");
         linkEl.type = "text/css";
         linkEl.rel = "stylesheet";
         linkEl.href = url;
@@ -180,7 +207,7 @@ export const assets = {
                     const delay = assets.retries.delay + assets.retries.extraDelay * retryCount;
                     await new Promise((res) => setTimeout(res, delay));
                     linkEl.remove();
-                    loadCSS(url, retryCount + 1)
+                    loadCSS(url, { retryCount: retryCount + 1, targetDoc })
                         .then(resolve)
                         .catch((reason) => {
                             cacheMap.delete(url);
@@ -192,7 +219,7 @@ export const assets = {
             })
         );
         cacheMap.set(url, promise);
-        document.head.appendChild(linkEl);
+        targetDoc.head.appendChild(linkEl);
         return promise;
     },
 
@@ -200,13 +227,15 @@ export const assets = {
      * Loads the given url inside a script tag.
      *
      * @param {string} url the url of the script
+     * @param {Document} targetDoc document to which the bundle will be applied (e.g. iframe document)
      * @returns {Promise<void>} resolved when the script has been loaded
      */
-    loadJS(url) {
+    loadJS(url, { targetDoc = document } = {}) {
+        const cacheMap = getCacheMap(targetDoc);
         if (cacheMap.has(url)) {
             return cacheMap.get(url);
         }
-        const scriptEl = document.createElement("script");
+        const scriptEl = targetDoc.createElement("script");
         scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
         scriptEl.src = url;
         const promise = new Promise((resolve, reject) =>
@@ -216,7 +245,7 @@ export const assets = {
             })
         );
         cacheMap.set(url, promise);
-        document.head.appendChild(scriptEl);
+        targetDoc.head.appendChild(scriptEl);
         return promise;
     },
 };
