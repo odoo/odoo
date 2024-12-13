@@ -1,6 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { pick } from "@web/core/utils/objects";
 import { formatFloat } from "@web/views/fields/formatters";
+import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
 import { ViewButton } from '@web/views/view_button/view_button';
 
 import { ProjectRightSidePanelSection } from './components/project_right_side_panel_section';
@@ -28,7 +30,9 @@ export class ProjectRightSidePanel extends Component {
         this.actionService = useService('action');
         this.dialog = useService('dialog');
         this.uiService = useService("ui");
-        useBus(this.uiService.bus, "resize", this.updateGridTemplateColumns)
+        useBus(this.uiService.bus, "resize", this.updateGridTemplateColumns);
+        this.projectUpdateDateFilter = useService("project_update_date_filter");
+        this.projectUpdateDateFilter.initializeDates(this.context.active_id);
         this.state = useState({
             data: {
                 milestones: {
@@ -42,6 +46,15 @@ export class ProjectRightSidePanel extends Component {
                 currency_id: false,
             },
             gridTemplateColumns: this._getGridTemplateColumns(),
+            ...this.projectUpdateDateFilter.dates,
+        });
+        useDateTimePicker({
+            pickerProps: {
+                type: "date",
+                range: true,
+                value: [this.state.startDate, this.state.endDate],
+            },
+            onApply: (args) => this._updateDates(args),
         });
 
         onWillStart(() => this.loadData());
@@ -124,7 +137,7 @@ export class ProjectRightSidePanel extends Component {
         const data = await this.orm.call(
             'project.project',
             'get_panel_data',
-            [[this.projectId]],
+            [[this.projectId], this.state.startDate, this.state.endDate],
             { context: this.context },
         );
         this.state.data = data;
@@ -173,5 +186,11 @@ export class ProjectRightSidePanel extends Component {
             context: this.context,
             resModel: 'project.project',
         };
+    }
+
+    async _updateDates(dates) {
+        [this.state.startDate, this.state.endDate] = dates;
+        this.projectUpdateDateFilter.dates = pick(this.state, "startDate", "endDate");
+        await this.loadData();
     }
 }

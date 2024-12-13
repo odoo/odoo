@@ -27,8 +27,8 @@ class ProjectProject(models.Model):
             [('category', '!=', 'manufacturing_order')],
         ])
 
-    def _get_profitability_items(self, with_action=True):
-        profitability_items = super()._get_profitability_items(with_action)
+    def _get_profitability_items(self, start_date, end_date, with_action=True):
+        profitability_items = super()._get_profitability_items(start_date, end_date, with_action)
         mrp_category = 'manufacturing_order'
         mrp_aal_read_group = self.env['account.analytic.line'].sudo()._read_group(
             [('auto_account_id', 'in', self.account_id.ids), ('category', '=', mrp_category)],

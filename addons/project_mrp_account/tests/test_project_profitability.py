@@ -37,7 +37,7 @@ class TestSaleProjectProfitabilityMrp(TestProjectProfitabilityCommon):
             'unit_amount': '1',
         }])
         # Ensures that if none of the mrp linked to the project have the same company as the current active company, the total is still converted into the current active company.
-        self.assertDictEqual(project._get_profitability_items(with_action=False), {
+        self.assertDictEqual(project._get_profitability_items(None, None, with_action=False), {
             'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
             'costs': {'data': [{'id': 'manufacturing_order', 'sequence': 12, 'billed': 120.0, 'to_bill': 0.0}], 'total': {'billed': 120.0, 'to_bill': 0.0}}
         })
@@ -57,7 +57,7 @@ class TestSaleProjectProfitabilityMrp(TestProjectProfitabilityCommon):
             'unit_amount': '1',
         }])
         # Adds mrp AAL with the default company
-        self.assertDictEqual(project._get_profitability_items(with_action=False), {
+        self.assertDictEqual(project._get_profitability_items(None, None, with_action=False), {
                 'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
                 'costs': {'data': [{'id': 'manufacturing_order', 'sequence': 12, 'billed': 820.0, 'to_bill': 0.0}], 'total': {'billed': 820.0, 'to_bill': 0.0}}
         })
