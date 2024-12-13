@@ -19,9 +19,9 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
 
             // Create first order and pay it
             FloorScreen.clickTable("102"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2.0"),
-            ProductScreen.clickDisplayedProduct("Water", true, "1.0"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2"),
+            ProductScreen.clickDisplayedProduct("Water", true, "1"),
             ProductScreen.totalAmountIs("6.60"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
                 productName: "Coca-Cola",
             }),
             ProductScreen.clickNumpad("2"),
-            TicketScreen.toRefundTextContains("To Refund: 2.00"),
+            TicketScreen.toRefundTextContains("To Refund: 2"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola")),

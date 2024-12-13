@@ -15,7 +15,7 @@ export function firstProductIsFavorite(name) {
     ];
 }
 
-export function clickLine(productName, quantity = "1.0") {
+export function clickLine(productName, quantity = "1") {
     return [
         ...Order.hasLine({
             withoutClass: ".selected",
@@ -26,7 +26,7 @@ export function clickLine(productName, quantity = "1.0") {
         ...Order.hasLine({ withClass: ".selected", productName, quantity }),
     ].flat();
 }
-export function clickSelectedLine(productName, quantity = "1.0") {
+export function clickSelectedLine(productName, quantity = "1") {
     return [
         ...Order.hasLine({
             withClass: ".selected",
@@ -102,7 +102,7 @@ export function clickInfoProduct(name) {
         },
     ];
 }
-export function clickOrderline(productName, quantity = "1.0") {
+export function clickOrderline(productName, quantity = "1") {
     return [
         ...clickLine(productName, quantity),
         {
@@ -530,7 +530,7 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
             .toString()
             .split("")
             .flatMap((key) => Numpad.click(mapKey(key)));
-    res.push(...selectedOrderlineHasDirect(productName, "1.00"));
+    res.push(...selectedOrderlineHasDirect(productName, "1"));
     if (unitPrice) {
         res.push(
             ...[

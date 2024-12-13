@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             // Test SplitBillButton
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
-            ProductScreen.clickLine("Water", "5.0"),
+            ProductScreen.clickLine("Water", "5"),
             ProductScreen.addInternalNote("test note", "Note"),
             Order.hasLine({
                 productName: "Water",
