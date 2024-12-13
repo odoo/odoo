@@ -85,7 +85,6 @@ ZoomOdoo.prototype._init = function () {
             attach = this.target.closest(this.opts.attach);
         }
         const attachParent = attach.parentNode;
-        // TODO: MSH: Can't we handle all these namespaced events like mousemove.zoomodoo with our new event delgation?
         attachParent.addEventListener("mousemove", this._onMove.bind(this));
         attachParent.addEventListener("touchmove", this._onMove.bind(this));
         attachParent.addEventListener("mouseleave", this._onLeave.bind(this));
@@ -94,14 +93,13 @@ ZoomOdoo.prototype._init = function () {
         this.target.addEventListener("touchstart", this._onEnter.bind(this));
 
         if (this.opts.preventClicks) {
-            this.target.addEventListener("click", function (e) {
+            this.target.addEventListener("click", (e) => {
                 e.preventDefault();
             });
         } else {
-            var self = this;
-            const handlerFunc = function () {
-                self.hide();
-                self.target.removeEventListener("click", handlerFunc);
+            const handlerFunc = () => {
+                this.hide();
+                this.target.removeEventListener("click", handlerFunc);
             };
             this.target.addEventListener("click", handlerFunc);
         }
@@ -115,14 +113,13 @@ ZoomOdoo.prototype._init = function () {
  */
 ZoomOdoo.prototype.show = function (e, testMouseOver) {
     var w1, h1, w2, h2;
-    var self = this;
 
     if (this.opts.beforeShow.call(this) === false) return;
 
     if (!this.isReady) {
-        return this._loadImage(this.link.getAttribute(this.opts.linkAttribute), function () {
-            if (self.isMouseOver || !testMouseOver) {
-                self.show(e);
+        return this._loadImage(this.link.getAttribute(this.opts.linkAttribute), () => {
+            if (this.isMouseOver || !testMouseOver) {
+                this.show(e);
             }
         });
     }
@@ -276,7 +273,7 @@ ZoomOdoo.prototype._onLoad = function (e) {
 
     this.isReady = true;
 
-    this.flyout.appendChild(this.zoom);
+    this.flyout.innerHTML = this.zoom;
 
     if (e.data?.call) {
         e.data();

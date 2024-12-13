@@ -103,7 +103,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
                 // and not correctly loaded from cache, we use a clone of the
                 // image to force the loading.
                 smallestColEl.append(imgEl.cloneNode(true));
-                await wUtils.onceAllImagesLoaded(this.$target);
+                await wUtils.onceAllImagesLoaded(this.$target[0]);
             }
             resolve();
         });
