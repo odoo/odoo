@@ -212,7 +212,8 @@ def load_module_graph(
 
         model_names = registry.load(env.cr, package)
 
-        mode = 'init' if package.state == 'to install' else 'update'
+        mode = ('init' if package.state == 'to install' or 
+                package.inherited_properties.get('load_data_init') else 'update')
 
         if needs_update:
             models_updated |= set(model_names)

@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 import typing
 
-from odoo.tools import lazy_property, OrderedSet
+from odoo.tools import lazy_property, OrderedSet, config
 from odoo.tools.sql import column_exists
 
 from .module import get_manifest
@@ -141,6 +141,11 @@ class Package:
         self.depends: OrderedSet[Package] = OrderedSet()
         self.package_graph: PackageGraph = package_graph
 
+        # properties
+        self._properties: dict = {}
+        if name in config['load_data_init']:
+            self._properties['load_data_init'] = True
+
     @lazy_property
     def depth(self) -> int:
         """ Return the longest distance from self to module 'base' along dependencies. """
@@ -161,6 +166,14 @@ class Package:
             dependency.phase + 1 if not_in_the_same_phase(self, dependency) else dependency.phase
             for dependency in self.depends
         )
+    
+    @lazy_property
+    def inherited_properties(self) -> dict:
+        properties = {}
+        for dependency in sorted(self.depends, key=lambda p: (p.phase, p.depth, p.name)):
+            properties.update(dependency.inherited_properties)
+        properties.update(self._properties)
+        return properties
 
     @property
     def demo_installable(self) -> bool:
