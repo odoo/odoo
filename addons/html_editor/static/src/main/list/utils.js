@@ -14,7 +14,12 @@ export function insertListAfter(document, afterNode, mode, content = []) {
     list.append(
         ...content.map((c) => {
             const li = document.createElement("LI");
-            li.append(...[].concat(c));
+            if (c.length === 1 && c[0].tagName === "FONT" && c[0].style.color) {
+                li.style.color = c[0].style.color;
+                li.append(...c[0].childNodes);
+            } else {
+                li.append(...[].concat(c));
+            }
             return li;
         })
     );
