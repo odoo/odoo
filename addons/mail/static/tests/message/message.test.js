@@ -1445,7 +1445,7 @@ test("data-oe-id & data-oe-model link redirection on click", async () => {
     await waitForSteps(["do-action:openFormView_some.model_250"]);
 });
 
-test("Chat with partner should be opened after clicking on their mention", async () => {
+test("Avatar card of the partner should be opened after clicking on their mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Test Partner",
@@ -1460,8 +1460,9 @@ test("Chat with partner should be opened after clicking on their mention", async
     await contains(".o-mail-Composer-input", { value: "@Test Partner " });
     await click(".o-mail-Composer-send:enabled");
     await click(".o_mail_redirect");
-    await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await contains(".o-mail-ChatWindow", { text: "Test Partner" });
+    await contains(".o_avatar_card");
+    await contains(".o_card_user_infos", { text: "Test Partner" });
+    await contains(".o_card_user_infos", { text: "testpartner@odoo.com" });
 });
 
 test("Channel should be opened after clicking on its mention", async () => {

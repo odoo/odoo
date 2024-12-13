@@ -598,22 +598,6 @@ test("activity with a link to a record", async () => {
     await contains(".o_form_view input", { value: "Partner 2" });
 });
 
-test("activity with a user mention", async () => {
-    const pyEnv = await startServer();
-    const partnerId1 = pyEnv["res.partner"].create({ name: "Partner 1" });
-    const partnerId2 = pyEnv["res.partner"].create({ name: "Partner 2" });
-    pyEnv["res.users"].create({ partner_id: partnerId2 });
-    pyEnv["mail.activity"].create({
-        note: `<p>How are you, <a class="o_mail_redirect" href="#" data-oe-model="res.partner" data-oe-id="${partnerId2}">@Partner 2</a>?</p>`,
-        res_id: partnerId1,
-        res_model: "res.partner",
-    });
-    await start();
-    await openFormView("res.partner", partnerId1);
-    await click(".o-mail-Activity-note a", { text: "@Partner 2" });
-    await contains(".o-mail-ChatWindow-header", { text: "Partner 2" });
-});
-
 test("activity with a channel mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner" });

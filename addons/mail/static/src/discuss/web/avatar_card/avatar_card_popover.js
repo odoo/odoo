@@ -8,6 +8,7 @@ export class AvatarCardPopover extends Component {
     static props = {
         id: { type: Number, required: true },
         close: { type: Function, required: true },
+        res_model: { type: String, optional: true },
     };
 
     setup() {
@@ -15,11 +16,20 @@ export class AvatarCardPopover extends Component {
         this.orm = useService("orm");
         this.openChat = useOpenChat("res.users");
         onWillStart(async () => {
-            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
+            [this.user] = await this.orm.read(
+                this.props.res_model,
+                [this.props.id],
+                this.fieldNames
+            );
         });
     }
 
+    static defaultProps = { res_model: "res.users" };
+
     get fieldNames() {
+        if (this.props.res_model == "res.partner") {
+            return ["name", "email", "phone", "im_status"];
+        }
         return ["name", "email", "phone", "im_status", "share", "partner_id"];
     }
 
@@ -37,7 +47,7 @@ export class AvatarCardPopover extends Component {
 
     async getProfileAction() {
         return {
-            res_id: this.user.partner_id[0],
+            res_id: this.props.res_model == "res.users" ? this.user.partner_id[0] : this.user.id,
             res_model: "res.partner",
             type: "ir.actions.act_window",
             views: [[false, "form"]],
