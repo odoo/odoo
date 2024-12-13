@@ -1107,7 +1107,7 @@ class AccountPaymentRegister(models.TransientModel):
                 if payment.currency_id != lines.currency_id:
                     liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
                     source_balance = abs(sum(lines.mapped('amount_residual')))
-                    if liquidity_lines[0].balance:
+                    if liquidity_lines and liquidity_lines[0].balance:
                         payment_rate = liquidity_lines[0].amount_currency / liquidity_lines[0].balance
                     else:
                         payment_rate = 0.0
