@@ -1918,9 +1918,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async onTicketButtonClick() {
-        if (this.isTicketScreenShown) {
-            this.closeScreen();
-        } else {
+        if (!this.isTicketScreenShown) {
             if (this._shouldLoadOrders()) {
                 try {
                     this.setLoadingOrderState(true);
