@@ -14,10 +14,6 @@
         ],
         'web.assets_unit_tests': [
             'resource_mail/static/tests/**/*',
-            ('remove', 'resource_mail/static/tests/legacy/**/*'),
-        ],
-        'web.qunit_suite_tests': [
-            'resource_mail/static/tests/legacy/**/*',
         ],
     },
     'license': 'LGPL-3',
