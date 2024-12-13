@@ -16,6 +16,7 @@
         'spreadsheet.dependencies': [
             'web/static/lib/Chart/Chart.js',
             'web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
+            'spreadsheet/static/lib/chart_js_treemap.js',
         ],
         'spreadsheet.o_spreadsheet': [
             'web/static/src/views/graph/graph_model.js',
