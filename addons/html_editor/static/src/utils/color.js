@@ -164,6 +164,7 @@ export function hasColor(element, mode) {
     return (
         (style[mode] &&
             style[mode] !== "inherit" &&
+            style[mode] !== "initial" &&
             (!parent || style[mode] !== parent.style[mode])) ||
         (classRegex.test(element.className) &&
             (!parent || getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode]))

@@ -33,7 +33,16 @@ function isListActive(listMode) {
 
 export class ListPlugin extends Plugin {
     static id = "list";
-    static dependencies = ["tabulation", "history", "input", "split", "selection", "delete", "dom"];
+    static dependencies = [
+        "tabulation",
+        "history",
+        "input",
+        "split",
+        "selection",
+        "delete",
+        "dom",
+        "color",
+    ];
     resources = {
         user_commands: [
             {
@@ -115,6 +124,7 @@ export class ListPlugin extends Plugin {
         tab_overrides: this.handleTab.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
+        color_apply_overrides: this.applyColorToListItem.bind(this),
     };
 
     setup() {
@@ -534,15 +544,19 @@ export class ListPlugin extends Plugin {
         const dir = li.getAttribute("dir") || ul.getAttribute("dir");
         let p;
         let toMove = li.lastChild;
+        const movedNodes = [];
+        const listColor = li.style.color;
         while (toMove) {
             if (isBlock(toMove)) {
                 if (p && isVisible(p)) {
                     cursors.update(callbacksForCursorUpdate.after(ul, p));
                     ul.after(p);
+                    movedNodes.push(p);
                 }
                 p = undefined;
                 cursors.update(callbacksForCursorUpdate.after(ul, toMove));
                 ul.after(toMove);
+                movedNodes.push(toMove);
             } else {
                 p = p || this.document.createElement("P");
                 if (dir) {
@@ -557,6 +571,16 @@ export class ListPlugin extends Plugin {
         if (p && isVisible(p)) {
             cursors.update(callbacksForCursorUpdate.after(ul, p));
             ul.after(p);
+            movedNodes.push(p);
+        }
+        for (const node of movedNodes) {
+            const childNodes = node.childNodes;
+            if (listColor) {
+                const font = document.createElement("font");
+                font.append(...childNodes);
+                node.replaceChildren(font);
+                this.dependencies.color.colorElement(font, listColor, "color");
+            }
         }
         cursors.update(callbacksForCursorUpdate.remove(li));
         li.remove();
@@ -788,5 +812,27 @@ export class ListPlugin extends Plugin {
             pointerOffsetY >= checkboxPosition.top &&
             pointerOffsetY <= checkboxPosition.bottom
         );
+    }
+
+    applyColorToListItem(color, mode) {
+        const selectedNodes = new Set(
+            this.dependencies.selection
+                .getSelectedNodes()
+                .map((n) => closestElement(n, "li"))
+                .filter(Boolean)
+        );
+        if (!selectedNodes.size || mode !== "color") {
+            return;
+        }
+        for (const list of selectedNodes) {
+            if (this.dependencies.selection.isNodeContentsFullySelected(list)) {
+                for (const node of descendants(list)) {
+                    if (node.nodeType === Node.ELEMENT_NODE && node.style.color) {
+                        node.style.color = "";
+                    }
+                }
+                this.dependencies.color.colorElement(list, color, mode);
+            }
+        }
     }
 }
