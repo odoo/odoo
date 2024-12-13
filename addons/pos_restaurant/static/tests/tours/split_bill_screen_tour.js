@@ -43,16 +43,16 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 
             // click pay to split, go back to check the lines
             SplitBillScreen.clickPay(),
-            ProductScreen.clickOrderline("Water", "3.0"),
-            ProductScreen.clickOrderline("Coca-Cola", "1.0"),
+            ProductScreen.clickOrderline("Water", "3"),
+            ProductScreen.clickOrderline("Coca-Cola", "1"),
 
             // go back to the original order and see if the order is changed
             Chrome.clickOrders(),
             TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
-            ProductScreen.clickOrderline("Water", "2.0"),
-            ProductScreen.clickOrderline("Minute Maid", "3.0"),
+            ProductScreen.clickOrderline("Water", "2"),
+            ProductScreen.clickOrderline("Minute Maid", "3"),
 
             // Split the order of table 2 again
             Chrome.clickPlanButton(),
@@ -73,8 +73,8 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
             TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
-            ProductScreen.clickOrderline("Water", "1.0"),
-            ProductScreen.clickOrderline("Minute Maid", "2.0"),
+            ProductScreen.clickOrderline("Water", "1"),
+            ProductScreen.clickOrderline("Minute Maid", "2"),
         ].flat(),
 });
 
@@ -99,13 +99,13 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             Chrome.clickOrders(),
             TicketScreen.selectOrder("002"),
             TicketScreen.loadSelectedOrder(),
-            Order.hasLine({ productName: "Coca-Cola", quantity: "1.0" }),
-            Order.hasLine({ productName: "Water", quantity: "1.0" }),
+            Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
+            Order.hasLine({ productName: "Water", quantity: "1" }),
             ProductScreen.totalAmountIs("4.00"),
             Chrome.clickOrders(),
             TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
-            Order.hasLine({ productName: "Minute Maid", quantity: "1.0" }),
+            Order.hasLine({ productName: "Minute Maid", quantity: "1" }),
             ProductScreen.totalAmountIs("2.00"),
         ].flat(),
 });
@@ -136,7 +136,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 
             // Check if there is still water in the order
 
-            ProductScreen.orderLineHas("Water", "1.0"),
+            ProductScreen.orderLineHas("Water", "1"),
             ProductScreen.clickPayButton(true),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -192,12 +192,12 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
 
             // Check if there is still Minute Maid in the order
             // now we check that all the lines that remained in the order are correct
-            ...ProductScreen.orderLineHas("Minute Maid", "1.0"),
+            ...ProductScreen.orderLineHas("Minute Maid", "1"),
             ...ProductScreen.clickOrderline("Office Combo"),
-            ...ProductScreen.selectedOrderlineHas("Office Combo", "1.0", "43.33"),
-            ...ProductScreen.orderLineHas("Combo Product 2", "1.0"),
-            ...ProductScreen.orderLineHas("Combo Product 4", "1.0"),
-            ...ProductScreen.orderLineHas("Combo Product 7", "1.0"),
+            ...ProductScreen.selectedOrderlineHas("Office Combo", "1", "43.33"),
+            ...ProductScreen.orderLineHas("Combo Product 2", "1"),
+            ...ProductScreen.orderLineHas("Combo Product 4", "1"),
+            ...ProductScreen.orderLineHas("Combo Product 7", "1"),
             ...ProductScreen.totalAmountIs("45.53"),
         ].flat(),
 });

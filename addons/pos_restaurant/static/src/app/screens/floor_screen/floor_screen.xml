@@ -13,7 +13,7 @@
                     </button>
                 </div>
                 <!-- Center Side Div -->
-                <div class="floor-selector d-flex gap-2 px-2 align-items-center overflow-auto">
+                <div class="floor-selector d-flex gap-1 py-2 align-items-center overflow-auto">
                     <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
                         <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
                             <t t-esc="floor.name" />
@@ -26,10 +26,10 @@
                     </button>
                 </div>
                 <!-- Right Side Div -->
-                <div t-if="pos.isEditMode" class="edit-buttons d-flex gap-2 m-2 px-2 px-sm-0 overflow-x-auto" t-att-class="{'mx-auto': ui.isSmall}">
+                <div t-if="pos.isEditMode" class="edit-buttons d-flex gap-2 m-2 px-1 px-sm-0 overflow-x-auto" t-att-class="{'mx-auto': ui.isSmall}">
                     <div class="d-flex gap-1 p-1 rounded-3 bg-200">
                         <t t-if="hasSelectedTable">
-                            <span class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-esc="firstSelectedTable.table_number" /></span>
+                            <span t-if="!ui.isSmall" class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-esc="firstSelectedTable.table_number" /></span>
                             <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="changeSeatsNum" t-att-disabled="!hasSelectedTable">
                                 <i class="fa fa-user fa-fw" role="img" aria-label="Seats" title="Seats" />
                             </button>
@@ -93,7 +93,7 @@
                         <i t-else="" class="fa fa-floppy-o" role="img" aria-label="Save" title="Save"/>
                     </button>
                 </div>
-                <div t-else="" class="right-buttons d-flex align-items-center gap-2 px-2">
+                <div t-else="" class="right-buttons d-flex gap-1 px-1 py-2" t-att-class="{'align-items-center gap-2 px-2': !this.ui.isSmall}">
                     <NumpadDropdown/>
                 </div>
             </div>
