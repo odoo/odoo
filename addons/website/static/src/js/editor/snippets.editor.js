@@ -122,14 +122,6 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         // grid padding option so it is not applied on inner rows.
         const $gridPaddingOptions = $html.find('[data-css-property="--grid-item-padding-y"], [data-css-property="--grid-item-padding-x"]');
         $gridPaddingOptions.attr("data-apply-to", ".row.o_grid_mode");
-        // TODO in 18.0: adapt _patchForComputeSnippetTemplates to add `data-oe-type`
-        // for stable version.
-        // TODO in master: instead of adding `data-oe-type` attribute add
-        // `oe_unbreakable` to XML snippet templates.
-        // const anchorButtonEls = Array.from($html).find(el => el.id === "o_scroll").querySelectorAll("a[role='tab'], a[role='button'], a.btn");
-        // anchorButtonEls.forEach(el => {
-        //     el.dataset.oeType = "button";
-        // });
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
