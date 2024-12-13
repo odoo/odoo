@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 
 from werkzeug.urls import url_encode
@@ -9,9 +7,7 @@ from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
-from odoo.addons.mail.controllers.discuss.public_page import PublicPageController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
@@ -203,17 +199,12 @@ class MailController(http.Controller):
         # sudo: public user can access some relational fields of mail.message
         if message.sudo()._filter_empty():
             raise NotFound()
+        return self._mail_thread_message_redirect(message)
+
+    def _mail_thread_message_redirect(self, message):
         if not request.env.user._is_internal():
             thread = request.env[message.model].search([('id', '=', message.res_id)])
-            if message.model == 'discuss.channel':
-                store = Store().add_global_values(isChannelTokenSecret=True)
-                store.add(thread, {"highlightMessage": message.id})
-                return PublicPageController()._response_discuss_channel_invitation(store, thread)
             if hasattr(thread, "_get_share_url"):
                 return request.redirect(thread._get_share_url(share_token=False))
             raise Unauthorized()
-        if message.model == 'discuss.channel':
-            url = f'/odoo/action-mail.action_discuss?active_id={message.res_id}&highlight_message_id={message_id}'
-        else:
-            url = f'/odoo/{message.model}/{message.res_id}?highlight_message_id={message_id}'
-        return request.redirect(url)
+        return request.redirect(f'/odoo/{message.model}/{message.res_id}?highlight_message_id={message.id}')

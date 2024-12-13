@@ -33,11 +33,12 @@ from odoo.exceptions import MissingError, AccessError
 from odoo.osv import expression
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext, parse_contact_from_email,
-    clean_context, split_every, Query, SQL, email_normalize_all,
+    clean_context, split_every, Query, SQL,
     ormcache, is_list_of,
 )
 from odoo.tools.mail import (
-    append_content_to_html, decode_message_header, email_normalize, email_split,
+    append_content_to_html, decode_message_header, email_normalize,
+    email_normalize_all, email_split,
     email_split_and_format, formataddr, html_sanitize,
     generate_tracking_message_id, mail_header_msgid_re,
 )
@@ -1299,7 +1300,7 @@ class MailThread(models.AbstractModel):
                 subtype_id = thread._creation_subtype().id
 
             # switch to odoobot for all incoming message creation
-            # to have a priviledged archived user so real_author_id is correctly computed
+            # to have a high-privilege archived user so real_author_id is correctly computed
             thread_root = thread.with_user(self.env.ref('base.user_root'))
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure they are notified of a private answer
@@ -1323,9 +1324,9 @@ class MailThread(models.AbstractModel):
             if thread_root._name == 'mail.thread':  # message with parent_id not linked to record
                 new_msg = thread_root.message_notify(**post_params)
             else:
-                # parsing should find an author independently of user running mail gateway, and ensure it is not odoobot
-                partner_from_found = message_dict.get('author_id') and message_dict['author_id'] != self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
-                thread_root = thread_root.with_context(from_alias=True, mail_create_nosubscribe=not partner_from_found)
+                # if no author, skip any author subscribe check; otherwise message_post
+                # checks anyway for real author and filters inactive (like odoobot)
+                thread_root = thread_root.with_context(from_alias=True, mail_create_nosubscribe=not message_dict.get('author_id'))
                 new_msg = thread_root.message_post(**post_params)
 
             if new_msg and original_partner_ids:
@@ -2227,12 +2228,12 @@ class MailThread(models.AbstractModel):
             # if current user is active, they are the one doing the action and should
             # be notified of answers. If they are inactive they are posting on behalf
             # of someone else (a custom, mailgateway, ...) and the real author is the
-            # message author
-            if self.env.user.active:
+            # message author. In any case avoid odoobot.
+            if self.env.user.active:  # note that odoobot is always inactive, there is a python check
                 real_author_id = self.env.user.partner_id.id
             elif msg_values['author_id']:
                 author = self.env['res.partner'].browse(msg_values['author_id'])
-                if author.active:
+                if author.active and author != self.env.ref('base.partner_root'):  # that happened :(
                     real_author_id = author.id
             if real_author_id:
                 self._message_subscribe(partner_ids=[real_author_id])
@@ -3177,7 +3178,7 @@ class MailThread(models.AbstractModel):
           skip message usage and spare some queries if given;
         """
         inbox_pids_uids = sorted(
-            [(r["id"], r["uid"]) for r in recipients_data if r["notif"] == "inbox"]
+            [(r["id"], r["uid"]) for r in recipients_data if r["id"] and r["notif"] == "inbox"]
         )
         if inbox_pids_uids:
             notif_create_values = [
@@ -3283,7 +3284,7 @@ class MailThread(models.AbstractModel):
                 msg_vals=msg_vals,
                 render_values=render_values,
             )
-            recipients_ids = recipients_group.get('recipients_ids')
+            recipients_ids = recipients_group['recipients_ids']
 
             # create email
             for recipients_ids_chunk in split_every(gen_batch_size, recipients_ids):
@@ -3422,6 +3423,12 @@ class MailThread(models.AbstractModel):
                 render_values['subtitles'] = subtitles
 
             for recipients_group in recipients_groups_list:
+                if not render_values['show_unfollow']:
+                    render_values['show_unfollow'] = any(
+                        r['is_follower']
+                        for r in recipients_group['recipients_data']
+                        if r['id'] and r['uid'] and not r['ushare']
+                    )
                 yield (lang, render_values, recipients_group)
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False,
@@ -3526,6 +3533,7 @@ class MailThread(models.AbstractModel):
             'company': company,
             'email_add_signature': email_add_signature,
             'lang': lang,
+            'show_unfollow': getattr(self, '_partner_unfollow_enabled', False),
             'signature': signature,
             'website_url': website_url,
             # tools
@@ -3790,8 +3798,10 @@ class MailThread(models.AbstractModel):
           like [
           {
             'active': partner.active;
+            'email_normalized': partner.email_normalized;
             'id': id of the res.partner being recipient to notify;
             'is_follower': follows the message related document;
+            'name': partner name;
             'lang': partner lang;
             'groups': res.group IDs if linked to a user;
             'notif': notification type, one of 'inbox', 'email', 'sms' (SMS App),
@@ -3835,7 +3845,7 @@ class MailThread(models.AbstractModel):
 
         # avoid double notification (on demand due to additional queries)
         if kwargs.pop('skip_existing', False):
-            pids = [r['id'] for r in recipients_data]
+            pids = [r['id'] for r in recipients_data if r['id']]
             if pids:
                 existing_notifications = self.env['mail.notification'].sudo().search([
                     ('res_partner_id', 'in', pids),
@@ -3881,7 +3891,7 @@ class MailThread(models.AbstractModel):
           * 'portal': recipients linked to a portal user;
           * 'follower': recipients (not internal/portal users) follower of the
             related record;
-          * 'customer': other recipients;
+          * 'customer': other recipients (always partners);
 
         When having to find a group for recipients, the first matching one
         when iterating on groups is used. Reordering those groups is doable
@@ -3926,7 +3936,7 @@ class MailThread(models.AbstractModel):
                     'active': True,
                     'has_button_access': False,
                 }
-            ]
+            ],
         ]
 
     def _notify_get_recipients_groups_fillup(self, groups, model_description, msg_vals=None):
@@ -4013,7 +4023,8 @@ class MailThread(models.AbstractModel):
             for _group_name, group_func, group_data in groups:
                 if group_data['active'] and group_func(recipient_data):
                     group_data['recipients_data'].append(recipient_data)
-                    group_data['recipients_ids'].append(recipient_data['id'])
+                    if recipient_data['id']:
+                        group_data['recipients_ids'].append(recipient_data['id'])
                     break
 
         # filter out groups without recipients
@@ -4089,7 +4100,7 @@ class MailThread(models.AbstractModel):
         notif_pids = []
         no_inbox_pids = []
         for recipient in recipients_data:
-            if recipient['active']:
+            if recipient['active'] and recipient['id']:
                 notif_pids.append(recipient['id'])
                 if recipient['notif'] != 'inbox':
                     no_inbox_pids.append(recipient['id'])

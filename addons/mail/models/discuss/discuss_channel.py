@@ -584,7 +584,9 @@ class DiscussChannel(models.Model):
             self.env['res.users'].flush_model(['notification_type', 'partner_id'])
             sql_query = """
                 SELECT DISTINCT ON (partner.id) partner.id,
+                       partner.email_normalized,
                        partner.lang,
+                       partner.name,
                        partner.partner_share,
                        users.id as uid,
                        COALESCE(users.notification_type, 'email') as notif,
@@ -598,14 +600,16 @@ class DiscussChannel(models.Model):
                 sql_query,
                 (email_from or '', list(pids), [author_id] if author_id else [], )
             )
-            for partner_id, lang, partner_share, uid, notif, ushare in self._cr.fetchall():
+            for partner_id, email_normalized, lang, name, partner_share, uid, notif, ushare in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
                 recipients_data.append({
                     'active': True,
+                    'email_normalized': email_normalized,
                     'id': partner_id,
                     'is_follower': False,
                     'groups': [],
                     'lang': lang,
+                    'name': name,
                     'notif': notif,
                     'share': partner_share,
                     'type': 'user' if not partner_share and notif else 'customer',

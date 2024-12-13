@@ -76,31 +76,34 @@ class MailFollowers(models.Model):
     # --------------------------------------------------
 
     @api.model
-    def _get_mail_recipients_follower_status(self, mail_ids):
+    def _get_mail_doc_to_followers(self, mail_ids):
         """ Get partner mail recipients that follows the related record of the mails.
 
-        Note that followers for message related to discuss.channel are not fetched.
-
         :param list mail_ids: mail_mail ids
-        :return: followers of the related record of the mails limited to the
-            recipients of the mails as a set of tuple (model, res_id, partner_id).
-        :rtype: set
+
+        :return: for each (model, document_id): list of partner ids that are followers
+        :rtype: dict
         """
-        self.env['mail.mail'].flush_model(['message_id', 'recipient_ids'])
+        if not mail_ids:
+            return {}
+        self.env['mail.mail'].flush_model(['mail_message_id', 'recipient_ids'])
         self.env['mail.followers'].flush_model(['partner_id', 'res_model', 'res_id'])
         self.env['mail.message'].flush_model(['model', 'res_id'])
         # mail_mail_res_partner_rel is the join table for the m2m recipient_ids field
         self.env.cr.execute("""
             SELECT message.model, message.res_id, mail_partner.res_partner_id
-              FROM mail_mail mail        
+              FROM mail_mail mail
               JOIN mail_mail_res_partner_rel mail_partner ON mail_partner.mail_mail_id = mail.id
-              JOIN mail_message message ON mail.mail_message_id = message.id AND message.model != 'discuss.channel'
-              JOIN mail_followers follower ON message.model = follower.res_model 
-               AND message.res_id = follower.res_id 
+              JOIN mail_message message ON mail.mail_message_id = message.id
+              JOIN mail_followers follower ON message.model = follower.res_model
+               AND message.res_id = follower.res_id
                AND mail_partner.res_partner_id = follower.partner_id
              WHERE mail.id IN %(mail_ids)s
         """, {'mail_ids': tuple(mail_ids)})
-        return set(self.env.cr.fetchall())
+        res = defaultdict(list)
+        for model, doc_id, partner_id in self.env.cr.fetchall():
+            res[(model, doc_id)].append(partner_id)
+        return res
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):
         """ Private method allowing to fetch recipients data based on a subtype.
@@ -122,10 +125,12 @@ class MailFollowers(models.Model):
         :return dict: recipients data based on record.ids if given, else a generic
           '0' key to keep a dict-like return format. Each item is a dict based on
           recipients partner ids formatted like {
-            'active': whether partner is active;
+            'active': partner.active;
+            'email_normalized': partner.email_normalized;
             'id': res.partner ID;
             'is_follower': True if linked to a record and if partner is a follower;
-            'lang': lang of the partner;
+            'lang': partner.lang;
+            'name': partner.name;
             'groups': groups of the partner's user (see 'uid'). If several users
                 of the same kind (e.g. several internal users) exist groups are
                 concatenated;
@@ -142,7 +147,7 @@ class MailFollowers(models.Model):
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
         self.env['mail.message.subtype'].flush_model(['internal'])
         self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'groups_id'])
-        self.env['res.partner'].flush_model(['active', 'partner_share'])
+        self.env['res.partner'].flush_model(['active', 'email_normalized', 'name', 'partner_share'])
         self.env['res.groups'].flush_model(['users'])
         # if we have records and a subtype: we have to fetch followers, unless being
         # in user notification mode (contact only pids)
@@ -179,7 +184,9 @@ class MailFollowers(models.Model):
     )
     SELECT partner.id as pid,
            partner.active as active,
+           partner.email_normalized AS email_normalized,
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
@@ -216,7 +223,9 @@ class MailFollowers(models.Model):
             query = """
     SELECT partner.id as pid,
            partner.active as active,
+           partner.email_normalized AS email_normalized,
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
@@ -268,7 +277,9 @@ class MailFollowers(models.Model):
             query = """
     SELECT partner.id as pid,
            partner.active as active,
+           partner.email_normalized AS email_normalized,
            partner.lang as lang,
+           partner.name as name,
            partner.partner_share as pshare,
            sub_user.uid as uid,
            COALESCE(sub_user.share, FALSE) as ushare,
@@ -307,7 +318,10 @@ class MailFollowers(models.Model):
 
         res_ids = records.ids if records else [0]
         doc_infos = dict((res_id, {}) for res_id in res_ids)
-        for (partner_id, is_active, lang, pshare, uid, ushare, notif, groups, res_id, is_follower) in res:
+        for (
+            partner_id, is_active, email_normalized, lang, name,
+            pshare, uid, ushare, notif, groups, res_id, is_follower
+        ) in res:
             to_update = [res_id] if res_id else res_ids
             for res_id_to_update in to_update:
                 # avoid updating already existing information, unnecessary dict update
@@ -315,9 +329,11 @@ class MailFollowers(models.Model):
                     continue
                 follower_data = {
                     'active': is_active,
+                    'email_normalized': email_normalized,
                     'id': partner_id,
                     'is_follower': is_follower,
                     'lang': lang,
+                    'name': name,
                     'groups': set(groups or []),
                     'notif': notif,
                     'share': pshare,
