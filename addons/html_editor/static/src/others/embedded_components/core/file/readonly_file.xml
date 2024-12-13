@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <!-- /file template -->
-    <t t-name="html_editor.ReadonlyEmbeddedFile">
-        <div class="d-flex justify-content-between flex-wrap w-100 alert alert-info">
-            <div class="d-flex flex-grow-1 align-items-center">
-                <div class="o_file_image d-flex">
-                    <a class="o_image" t-att-title="fileModel.filename" t-att-data-mimetype="fileModel.mimetype"
-                        t-att-href="fileModel.downloadUrl" t-on-click.prevent.stop="onClickFileImage"
-                    />
-                </div>
-                <div class="d-block ps-2 text-break flex-grow-1">
-                    <div class="o_embedded_file_name_container d-inline-flex">
-                        <span class="o_file_name" t-out="fileModel.filename"/>
-                    </div>
-                </div>
+    <t t-name="html_editor.ReadonlyEmbeddedFile" t-inherit="html_editor.staticFileBanner" t-inherit-mode="primary">
+        <xpath expr="//div[contains(@class, 'o_file_image')]" position="inside">
+            <a t-att-href="fileModel.downloadUrl" t-on-click.prevent.stop="onClickFileImage"/>
+        </xpath>
 
-                <div class="flex-grow-1 d-flex justify-content-end">
-                    <EmbeddedComponentToolbar>
-                        <t t-set-slot="buttons"/>
-                    </EmbeddedComponentToolbar>
-                </div>
+        <xpath expr="//div[contains(@class, 'o_embedded_file_name_container')]/a" position="replace">
+            <span class="o_file_name" t-out="fileModel.filename"/>
+        </xpath>
+
+    <!--Consider moving this to macros_file.xml instead -->
+        <xpath expr="//div[contains(@class, 'o_file_card_content')]" position="inside">
+            <div class="flex-grow-1 d-flex justify-content-end">
+                <EmbeddedComponentToolbar>
+                    <t t-set-slot="buttons"/>
+                </EmbeddedComponentToolbar>
             </div>
-        </div>
+        </xpath>
+       
     </t>
+
 </templates>
