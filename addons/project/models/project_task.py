@@ -122,7 +122,7 @@ class ProjectTask(models.Model):
 
     @api.model
     def _default_user_ids(self):
-        return self.env.context.keys() & {'default_personal_stage_type_ids', 'default_personal_stage_type_id'} and self.env.user
+        return self.env.user.ids if any(key in self.env.context for key in ('default_personal_stage_type_ids', 'default_personal_stage_type_id')) else ()
 
     @api.model
     def _default_company_id(self):
