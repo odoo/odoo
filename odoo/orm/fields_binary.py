@@ -69,7 +69,7 @@ class Binary(Field):
         }
         if isinstance(value, str):
             value = value.encode()
-        if value[:1] in magic_bytes:
+        if validate and value[:1] in magic_bytes:
             try:
                 decoded_value = base64.b64decode(value.translate(None, delete=b'\r\n'), validate=True)
             except binascii.Error:

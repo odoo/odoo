@@ -90,7 +90,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         else:
             s = str(value)
         value = s[:self.size]
-        if callable(self.translate):
+        if validate and callable(self.translate):
             # pylint: disable=not-callable
             value = self.translate(lambda t: None, value)
         return value
@@ -495,7 +495,7 @@ class Html(BaseString):
     _description_strip_classes = property(attrgetter('strip_classes'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        value = self._convert(value, record, validate=True)
+        value = self._convert(value, record, validate=validate)
         return super().convert_to_column(value, record, values, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
