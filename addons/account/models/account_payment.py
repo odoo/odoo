@@ -276,7 +276,7 @@ class AccountPayment(models.Model):
             ]
         """
         self.ensure_one()
-        label = self.payment_method_line_id.name if self.payment_method_line_id else _("No Payment Method")
+        label = (self.payment_method_line_id.name or '') if self.payment_method_line_id else _("No Payment Method")
 
         if self.memo:
             return [
