@@ -474,6 +474,61 @@ describe('FontAwesome', () => {
                     '<p>abs<i class="fa fa-star"></i>[]cd</p>',
             });
         });
+        it("should insert strava icon between the text", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[]cd</p>',
+                stepFunction: async editor => {
+                    editor.execCommand('insertFontAwesome', 'fa fa-strava');
+                },
+                contentAfterEdit:
+                    '<p>ab<i class="fa fa-strava" contenteditable="false">\u200b</i>[]cd</p>',
+                contentAfter: '<p>ab<i class="fa fa-strava"></i>[]cd</p>',
+            });
+        });
+        it("should replace strava icon google play icon", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[<i class="fab fa-strava"></i>]cd</p>',
+                stepFunction: async editor => {
+                    editor.execCommand('insertFontAwesome', 'fa fa-google-play');
+                },
+                contentAfterEdit:
+                    '<p>ab<i class="fa fa-google-play" contenteditable="false">\u200b</i>[]cd</p>',
+                contentAfter: '<p>ab<i class="fa fa-google-play"></i>[]cd</p>',
+            });
+        });
+        it("should replace google play icon with bluesky icon", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[<i class="fab fa-google-play"></i>]cd</p>',
+                stepFunction: async editor => {
+                    editor.execCommand('insertFontAwesome', 'fa fa-bluesky');
+                },
+                contentAfterEdit:
+                    '<p>ab<i class="fa fa-bluesky" contenteditable="false">\u200b</i>[]cd</p>',
+                contentAfter: '<p>ab<i class="fa fa-bluesky"></i>[]cd</p>',
+            });
+        });
+        it("should replace bluesky icon with threads", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[<i class="fab fa-bluesky"></i>]cd</p>',
+                stepFunction: async editor => {
+                    editor.execCommand('insertFontAwesome', 'fa fa-threads');
+                },
+                contentAfterEdit:
+                    '<p>ab<i class="fa fa-threads" contenteditable="false">\u200b</i>[]cd</p>',
+                contentAfter: '<p>ab<i class="fa fa-threads"></i>[]cd</p>',
+            });
+        });
+        it("should replace threads icon with kickstarter", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[<i class="fab fa-threads"></i>]cd</p>',
+                stepFunction: async editor => {
+                    editor.execCommand('insertFontAwesome', 'fa fa-kickstarter');
+                },
+                contentAfterEdit:
+                    '<p>ab<i class="fa fa-kickstarter" contenteditable="false">\u200b</i>[]cd</p>',
+                contentAfter: '<p>ab<i class="fa fa-kickstarter"></i>[]cd</p>',
+            });
+        });
     });
     describe('Text insertion', () => {
         it('should insert a character before', async () => {
