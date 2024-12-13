@@ -1121,9 +1121,11 @@ class MailComposeMessage(models.TransientModel):
                     message_inmem,
                     [{
                         'active': True,
+                        'email_normalized': False,  # not used in this flow anyway
                         'id': pid,
-                        'is_follower': True,
+                        'is_follower': False,
                         'lang': lang,
+                        'name': False,  # not used in this flow anyway
                         'groups': [],
                         'notif': 'email',
                         'share': True,
