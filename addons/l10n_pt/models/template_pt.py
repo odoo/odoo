@@ -26,6 +26,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'chart_6863',
                 'account_journal_early_pay_discount_loss_account_id': 'chart_682',
                 'account_journal_early_pay_discount_gain_account_id': 'chart_728',
+                'tax_calculation_rounding_method': 'round_globally',
                 'account_sale_tax_id': 'iva_pt_sale_normal',
                 'account_purchase_tax_id': 'iva_pt_purchase_normal',
                 'income_account_id': 'chart_711',
@@ -38,6 +39,15 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'sale': {
                 'refund_sequence': True,
-                'restrict_mode_hash_table': True,
             },
         }
+
+    def _load(self, template_code, company, install_demo):
+        """
+        Set tax calculation rounding method required in the Portuguese localization to
+        prevent rounding errors according to the requirements of the Autoridade Tributaria
+        """
+        res = super()._load(template_code, company, install_demo)
+        if company.account_fiscal_country_id.code == 'PT':
+            company.write({'tax_calculation_rounding_method': 'round_globally'})
+        return res

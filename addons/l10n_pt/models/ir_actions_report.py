@@ -20,3 +20,10 @@ class IrActionsReport(models.Model):
             if 'company_id' in doc
         )
         return data
+
+    def _pre_render_qweb_pdf(self, report_ref, res_ids=None, data=None):
+        # Overridden to compute the hash and QR code of moves being printed.
+        if self._get_report(report_ref).report_name in ['account.report_invoice_with_payments', 'account.report_invoice']:
+            self.env['account.move'].browse(res_ids)._l10n_pt_compute_missing_hashes()
+
+        return super()._pre_render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
