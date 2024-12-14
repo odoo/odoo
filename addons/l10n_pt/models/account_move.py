@@ -1,13 +1,35 @@
 import re
 import urllib.parse
-import stdnum.pt.nif
 
-from odoo import models, fields, api, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
-from odoo.tools import float_repr, format_date
+from odoo.tools import float_compare, float_repr, SQL
 
-from odoo.addons.l10n_pt.const import PT_CERTIFICATION_NUMBER
 from odoo.addons.l10n_pt.utils import hashing as pt_hash_utils
+from odoo.addons.l10n_pt.models.l10n_pt_at_series import AT_SERIES_ACCOUNTING_DOCUMENT_TYPES
+
+AT_SERIES_TYPE_SAFT_TYPE_MAP = {
+    'out_invoice': 'FT',
+    'out_receipt': 'FS',
+    'out_refund': 'NC',
+    'debit_note': 'ND',
+}
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    def _l10n_pt_get_line_vat_exemptions_reasons(self):
+        """
+        Returns a string with the VAT exemption reason codes per line. E.g: [M16]
+        It is added to the tax name in the invoice PDF to satisfy the following requirement by the PT tax authority:
+        "In case the reason for exemption is not presented on the correspondent line, any other type of reference
+        must be used allowing linking the exempted line to the correspondent reason."
+        """
+        self.ensure_one()
+        return ", ".join(f"[{reason}]" for reason in sorted(set(
+            self.tax_ids.filtered(lambda tax: tax.l10n_pt_tax_exemption_reason).mapped('l10n_pt_tax_exemption_reason')
+        )))
 
 
 class AccountMove(models.Model):
@@ -16,9 +38,38 @@ class AccountMove(models.Model):
     l10n_pt_qr_code_str = fields.Char(string='Portuguese QR Code', compute='_compute_l10n_pt_qr_code_str', store=True)
     l10n_pt_inalterable_hash_short = fields.Char(string='Short version of the Portuguese hash', compute='_compute_l10n_pt_inalterable_hash')
     l10n_pt_inalterable_hash_version = fields.Integer(string='Portuguese hash version', compute='_compute_l10n_pt_inalterable_hash')
-    l10n_pt_atcud = fields.Char(string='Portuguese ATCUD', compute='_compute_l10n_pt_atcud', store=True)
+    l10n_pt_atcud = fields.Char(
+        string='Portuguese ATCUD',
+        compute='_compute_l10n_pt_atcud', store=True,
+        help="Unique document code formed by the AT series validation code and the number of the document. "
+             "Only assigned once the document is secured.",
+    )
+    l10n_pt_document_number = fields.Char(
+        string="Unique Document Number",
+        compute='_compute_l10n_pt_document_number', store=True,
+        help="Unique identifier for Portuguese documents, made up of the internal document type code, the series name, "
+             "and the number of the document within the series.",
+    )
     l10n_pt_show_future_date_warning = fields.Boolean(compute='_compute_l10n_pt_show_future_date_warning')
     l10n_pt_hashed_on = fields.Datetime(string="Hashed On", readonly=True)
+    l10n_pt_at_series_id = fields.Many2one(
+        comodel_name="l10n_pt.at.series",
+        string="AT Series",
+        compute='_compute_l10n_pt_at_series_id',
+        readonly=False, store=True,
+    )
+    l10n_pt_at_series_line_id = fields.Many2one(
+        comodel_name="l10n_pt.at.series.line",
+        string="Document-specific AT Series",
+        compute='_compute_l10n_pt_at_series_line_id',
+    )
+    # Document type used in invoice template (when printed, documents have to present the document type on each page)
+    l10n_pt_document_type = fields.Selection(
+        selection=AT_SERIES_ACCOUNTING_DOCUMENT_TYPES,
+        string="Portuguese Document Type",
+        compute='_compute_l10n_pt_document_type',
+        store=True,
+    )
 
     ####################################
     # OVERRIDES
@@ -32,60 +83,60 @@ class AccountMove(models.Model):
 
     def action_post(self):
         for move in self.filtered(lambda m: m.company_id.account_fiscal_country_id.code == 'PT').sorted('invoice_date'):
-            move._l10n_pt_check_invoice_date()
+            move._check_l10n_pt_document_number()
+            move._check_l10n_pt_dates()
+            move._check_l10n_pt_move_lines()
         return super().action_post()
+
+    def write(self, vals):
+        for move in self:
+            if move.state in ('posted', 'cancel') and 'l10n_pt_at_series_id' in vals:
+                raise UserError(_("The AT Series of a posted account move cannot be changed."))
+        return super().write(vals)
 
     ####################################
     # MISC REQUIREMENTS
     ####################################
 
-    def _get_starting_sequence(self):
-        # EXTENDS account sequence.mixin
-        self.ensure_one()
-        if self.company_id.account_fiscal_country_id.code != 'PT':
-            return super()._get_starting_sequence()
-        if self.journal_id.type in ['sale', 'bank', 'cash']:
-            starting_sequence = "%s%04d/00000" % (self.journal_id.code, self.date.year)
-        else:
-            starting_sequence = "%s%04d-%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
-        if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
-            starting_sequence = "R" + starting_sequence
-        if self.journal_id.payment_sequence and self.payment_id:
-            starting_sequence = "P" + starting_sequence
-        return starting_sequence
-
-    @api.constrains('name')
-    def _check_name(self):
+    def _check_l10n_pt_document_number(self):
         for move in self.filtered(lambda m: (
             m.company_id.account_fiscal_country_id.code == 'PT'
-            and m.journal_id.restrict_mode_hash_table
-            and m.name
-            and m.name != '/'
+            and m.move_type in ('out_invoice', 'out_receipt', 'out_refund')
+            and m.l10n_pt_at_series_id
         )):
-            if not re.match(r'^[^/^ ]+/[0-9]+$', move.name):
+            if not move.l10n_pt_at_series_line_id:
+                action_error = {
+                    'view_mode': 'form',
+                    'name': _('AT Series'),
+                    'res_model': 'l10n_pt.at.series',
+                    'res_id': move.l10n_pt_at_series_id.id,
+                    'type': 'ir.actions.act_window',
+                    'views': [[self.env.ref('l10n_pt.view_l10n_pt_at_series_form').id, 'form']],
+                    'target': 'new',
+                }
+                raise RedirectWarning(
+                    _("There is no AT series for the document type %(move_type)s registered under the series name %(series_name)s. "
+                      "Create a new series or view existing series via the Accounting Settings.",
+                      move_type=dict(move._fields['l10n_pt_document_type'].selection).get(move.l10n_pt_document_type),
+                      series_name=move.l10n_pt_at_series_id.name),
+                    action_error,
+                    _('Add an AT Series'),
+                )
+            if move.l10n_pt_document_number and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', move.l10n_pt_document_number):
                 raise ValidationError(_(
-                    "The name of the document (%s) is invalid. It must start with the identifier "
-                    "of the series followed by a slash and the number of the document within the "
-                    "series (e.g. INV2024/1).", move.name
-                ))
-            prefix = move.name.split("/")[0]
-            at_series = self.env['l10n_pt.at.series'].search([('company_id', '=', move.company_id.id), ('prefix', '=', prefix)])
-            if not at_series:
-                raise ValidationError(_(
-                    "The series %s has not yet been registered with an official AT code. "
-                    "You can do so in the Accounting Settings.", prefix
-                ))
-            if at_series.type != move.move_type:
-                raise UserError(_(
-                    "The type of the series %(prefix)s (%(series_type)s) does not match the type of the document %(move_name)s (%(move_type)s).",
-                    prefix=at_series.prefix,
-                    series_type=dict(at_series._fields['type'].selection).get(at_series.type),
-                    move_name=move.name,
-                    move_type=dict(move._fields['move_type'].selection).get(move.move_type),
+                    "The document number (%s) is invalid. It must start with the internal "
+                    "of the document type, a space, the name of the series followed by a slash and the number of the "
+                    "document within the series (e.g. INV 2025A/1). Please check if the series selected fulfill these "
+                    "requirements.", move.l10n_pt_document_number
                 ))
 
     @api.depends('state', 'invoice_date', 'company_id.account_fiscal_country_id.code')
     def _compute_l10n_pt_show_future_date_warning(self):
+        """
+        No other documents may be issued with the current or previous date within the same series as
+        a document issued in the future. If user enters an invoice date ahead of current date,
+        a warning will be displayed.
+        """
         for move in self:
             move.l10n_pt_show_future_date_warning = (
                 move.company_id.account_fiscal_country_id.code == 'PT'
@@ -94,25 +145,54 @@ class AccountMove(models.Model):
                 and move.invoice_date > fields.Date.today()
             )
 
-    def _l10n_pt_check_invoice_date(self):
+    def _check_l10n_pt_dates(self):
         """
         According to the Portuguese tax authority:
         "When the document issuing date is later than the current date, or superior than the date on the system,
         no other document may be issued with the current or previous date within the same series"
         """
         self.ensure_one()
-        if not self.invoice_date:
-            return
-        self._cr.execute("""
-            SELECT MAX(invoice_date)
-              FROM account_move
-             WHERE journal_id = %s
-               AND move_type = %s
-               AND state = 'posted'
-        """, (self.journal_id.id, self.move_type))
-        max_invoice_date = self._cr.fetchone()
-        if max_invoice_date and max_invoice_date[0] and max_invoice_date[0] > fields.Date.today() and self.invoice_date < max_invoice_date[0]:
-            raise UserError(_("You cannot create an invoice with a date anterior to the last invoice issued within the same journal."))
+        self.env['account.move'].flush_model(['l10n_pt_hashed_on'])
+        self.env.cr.execute(SQL("""
+            SELECT
+                MAX(CASE WHEN l10n_pt_at_series_id IS NOT NULL AND l10n_pt_at_series_id = %s AND move_type = %s THEN invoice_date ELSE NULL END) AS max_invoice_date,
+                MAX(l10n_pt_hashed_on) AS max_hashed_on_date
+            FROM account_move
+            WHERE state = 'posted'
+        """, self.l10n_pt_at_series_id.id or SQL('NULL'), self.move_type))
+
+        max_invoice_date, max_hashed_on_date = self.env.cr.fetchone()
+
+        if (
+            max_invoice_date
+            and max_invoice_date > fields.Date.today()
+            and (self.invoice_date or fields.Date.context_today(self)) < max_invoice_date
+        ):
+            raise UserError(_("You cannot create an invoice with a date earlier than the date of the last invoice issued in this AT series."))
+
+        if max_hashed_on_date and max_hashed_on_date > fields.Datetime.now():
+            raise UserError(_("There exists secured invoices with a lock date ahead of the present time."))
+
+    def _check_l10n_pt_move_lines(self):
+        """
+        According to the Portuguese tax authority:
+        "The documents printed by the invoicing program must not present negative amounts."
+        Regarding taxes, "The printing of documents where the transmission of goods or services is VAT exempted,
+        must show the expression foreseen by law, granting exemption or the applicable legal cause." Therefore even
+        0% taxes should be added to a line, with its corresponding exemption reason.
+        The PT tax authority also requires that discounts must be in the range between 0% and 100%.
+        """
+        self.ensure_one()
+        if self.company_id.country_code == 'PT':
+            if self.move_type != 'entry' and not self.invoice_line_ids.tax_ids:
+                raise UserError(_("You cannot create an invoice without VAT tax."))
+            if (
+                self.move_type in ('out_invoice', 'out_refund', 'out_receipt')
+                and self.invoice_line_ids.filtered(lambda line: float_compare(line.price_total, 0.0, precision_rounding=self.currency_id.rounding) < 0)
+            ):
+                raise UserError(_("You cannot create an invoice with negative lines on it. Consider adding a discount percentage to the invoice line instead."))
+            if self.invoice_line_ids.filtered(lambda line:line.discount < 0 or line.discount > 100):
+                raise UserError(_("Discount amounts should be between 0% and 100%."))
 
     def _l10n_pt_get_vat_exemptions_reasons(self):
         self.ensure_one()
@@ -123,17 +203,109 @@ class AccountMove(models.Model):
         ))
 
     ####################################
-    # HASH
+    # PT FIELDS - ATCUD, AT SERIES
+    ####################################
+
+    @api.constrains('l10n_pt_at_series_id')
+    def _check_l10n_pt_at_series_id(self):
+        for move in self.filtered(lambda m: (
+                m.company_id.account_fiscal_country_id.code == 'PT'
+                and m.move_type in ('out_invoice', 'out_receipt', 'out_refund')
+        )):
+            if not move.l10n_pt_at_series_id:
+                raise UserError(_("Please select a series for this move."))
+            if not move.l10n_pt_at_series_id.active:
+                raise UserError(_("An inactive series cannot be used."))
+
+    @api.depends('move_type', 'company_id', 'date', 'journal_id')
+    def _compute_l10n_pt_at_series_id(self):
+        for move in self:
+            if move.l10n_pt_at_series_id and move.l10n_pt_at_series_id.sale_journal_id == move.journal_id:
+                continue
+            elif move.move_type in AT_SERIES_TYPE_SAFT_TYPE_MAP:
+                last_move = self.env['account.move'].search([
+                    ('company_id', '=', move.company_id.id),
+                    ('move_type', '=', move.move_type),
+                    ('journal_id', '=', move.journal_id.id)
+                ], order='id desc', limit=1)
+                if last_at_series := last_move.l10n_pt_at_series_id:
+                    move.l10n_pt_at_series_id = last_at_series
+                else:
+                    move.l10n_pt_at_series_id = self.env['l10n_pt.at.series'].search([
+                        ('company_id', '=', move.company_id.id),
+                        ('name', '=', (move.invoice_date or move.date).year),
+                        ('sale_journal_id', '=', move.journal_id.id),
+                    ])
+
+    @api.depends('l10n_pt_at_series_id')
+    def _compute_l10n_pt_at_series_line_id(self):
+        for move in self:
+            if move.l10n_pt_at_series_id:
+                move.l10n_pt_at_series_line_id = self.env['l10n_pt.at.series.line'].search([
+                    ('at_series_id', '=', move.l10n_pt_at_series_id.id),
+                    ('type', '=', move.l10n_pt_document_type)
+                ])
+            else:
+                move.l10n_pt_at_series_line_id = None
+
+    @api.depends('l10n_pt_at_series_id', 'l10n_pt_at_series_line_id', 'move_type', 'company_id', 'state')
+    def _compute_l10n_pt_document_number(self):
+        for move in self:
+            if (
+                move.company_id.account_fiscal_country_id.code == 'PT'
+                and move.move_type in ('out_invoice', 'out_receipt', 'out_refund')
+                and move.l10n_pt_at_series_line_id
+            ):
+                if move.state == 'draft' and move.l10n_pt_document_number:
+                    # Unassign the document number and unincrement the sequence
+                    move.l10n_pt_at_series_line_id._l10n_pt_get_document_number_sequence().number_next -= 1
+                    move.l10n_pt_document_number = False
+                elif move.state == 'posted' and not move.l10n_pt_document_number:
+                    move.l10n_pt_document_number = move.l10n_pt_at_series_line_id._l10n_pt_get_document_number_sequence().next_by_id()
+            else:
+                move.l10n_pt_document_number = False
+
+    @api.depends('move_type')
+    def _compute_l10n_pt_document_type(self):
+        for move in self:
+            if (
+                move.company_id.account_fiscal_country_id.code == 'PT'
+                and move.move_type in ('out_invoice', 'out_refund', 'out_receipt')
+            ):
+                if 'debit_origin_id' in self.env['account.move']._fields and move.debit_origin_id:
+                    move.l10n_pt_document_type = 'debit_note'
+                else:
+                    move.l10n_pt_document_type = move.move_type
+            else:
+                move.l10n_pt_document_type = False
+
+    @api.depends('l10n_pt_inalterable_hash_short', 'l10n_pt_document_number')
+    def _compute_l10n_pt_atcud(self):
+        for move in self:
+            if (
+                move.company_id.account_fiscal_country_id.code == 'PT'
+                and not move.l10n_pt_atcud
+                and move.inalterable_hash
+                and move.move_type in ('out_invoice', 'out_refund', 'out_receipt')
+            ):
+                current_seq_number = int(move.l10n_pt_document_number.split('/')[-1])
+                move.l10n_pt_atcud = f"{move.l10n_pt_at_series_line_id._get_at_code()}-{current_seq_number}"
+            else:
+                move.l10n_pt_atcud = move.l10n_pt_atcud or False
+
+    ####################################
+    # HASH AND QR CODE
     ####################################
 
     def _get_integrity_hash_fields(self):
         if self.company_id.account_fiscal_country_id.code != 'PT':
             return super()._get_integrity_hash_fields()
-        return ['invoice_date', 'l10n_pt_hashed_on', 'amount_total', 'move_type', 'sequence_prefix', 'sequence_number']
+        return ['invoice_date', 'l10n_pt_hashed_on', 'amount_total_signed', 'move_type', 'name', 'l10n_pt_document_number']
 
     def _get_l10n_pt_document_number(self):
+        """ Allows patching in tests """
         self.ensure_one()
-        return f"{self.move_type} {self.name}"
+        return self.l10n_pt_document_number
 
     def _calculate_hashes(self, previous_hash=None):
         if self.company_id.account_fiscal_country_id.code != 'PT':
@@ -146,25 +318,25 @@ class AccountMove(models.Model):
             'date': move.date.isoformat(),
             'system_entry_date': move.l10n_pt_hashed_on.isoformat(timespec='seconds'),
             'name': move._get_l10n_pt_document_number(),
-            'gross_total': float_repr(move.amount_total, 2),
+            # As per PT requirements for signature: "In case the document is issued in a foreign currency, the amount
+            # must be the counter value in EUR, once this will be the amount exported on the SAF-T (PT) file.
+            'gross_total': float_repr(abs(move.amount_total_signed), 2),
             'previous_signature': previous_hash,
         } for move in self]
-        return pt_hash_utils.sign_records(self.env, docs_to_sign)
+        return pt_hash_utils.sign_records(self.env, docs_to_sign, 'account.move')
 
     @api.model
     def _l10n_pt_compute_missing_hashes(self):
         """
         Compute the hash for all records that do not have one yet
         """
-        pt_companies = self.env['res.company'].sudo().search([('account_fiscal_country_id.code', '=', 'PT')])
-        for company in pt_companies:
-            all_moves = self.sudo().search([
-                ('restrict_mode_hash_table', '=', True),
-                ('state', '=', 'posted'),
-                ('inalterable_hash', '=', False),
-                ('company_id', '=', company.id),
-            ], order='sequence_prefix,sequence_number')
-            all_moves.button_hash()
+        all_moves = self.sudo().search([
+            ('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt')),
+            ('state', '=', 'posted'),
+            ('inalterable_hash', '=', False),
+            ('company_id', 'child_of', self.env.company.root_id.id),
+        ], order='sequence_prefix,sequence_number')
+        all_moves.button_hash()
 
     @api.depends('inalterable_hash')
     def _compute_l10n_pt_inalterable_hash(self):
@@ -175,24 +347,6 @@ class AccountMove(models.Model):
                 move.l10n_pt_inalterable_hash_short = hash_str[0] + hash_str[10] + hash_str[20] + hash_str[30]
             else:
                 move.l10n_pt_inalterable_hash_short = False
-
-    ####################################
-    # ATCUD - QR CODE
-    ####################################
-
-    @api.depends('l10n_pt_inalterable_hash_short')
-    def _compute_l10n_pt_atcud(self):
-        for move in self:
-            if (
-                move.company_id.account_fiscal_country_id.code == 'PT'
-                and not move.l10n_pt_atcud
-                and move.inalterable_hash
-                and move.is_sale_document()
-            ):
-                at_series = self.env['l10n_pt.at.series'].search([('company_id', '=', move.company_id.id), ('prefix', '=', move.sequence_prefix[:-1])])
-                move.l10n_pt_atcud = f"{at_series._get_at_code()}-{move.sequence_number}"
-            else:
-                move.l10n_pt_atcud = False
 
     @api.depends('l10n_pt_atcud')
     def _compute_l10n_pt_qr_code_str(self):
@@ -214,9 +368,10 @@ class AccountMove(models.Model):
             :return: {tax_category : {'base': base, 'vat': vat}}
             """
             res = {}
-            amount_by_group = account_move.tax_totals['groups_by_subtotal']['Untaxed Amount']
-            for group in amount_by_group:
-                tax_group = self.env['account.tax.group'].browse(group['tax_group_id'])
+            tax_groups = account_move.tax_totals['subtotals'][0]['tax_groups']
+
+            for group in tax_groups:
+                tax_group = self.env['account.tax.group'].browse(group['id'])
                 if (
                     tax_group.l10n_pt_tax_region == 'PT-ALL'  # I.e. tax is valid in all regions (PT, PT-AC, PT-MA)
                     or (
@@ -225,54 +380,34 @@ class AccountMove(models.Model):
                     )
                 ):
                     res[tax_group.l10n_pt_tax_category] = {
-                        'base': format_amount(account_move, group['tax_group_base_amount']),
-                        'vat': format_amount(account_move, group['tax_group_amount']),
+                        'base': format_amount(account_move, group['base_amount']),
+                        'vat': format_amount(account_move, group['tax_amount']),
                     }
             return res
 
-        INVOICE_TYPE_MAP = {
-            "out_invoice": "FT",
-            "out_refund": "NC",
-            "out_receipt": "FR",
-        }
-
         for move in self.filtered(lambda m: (
             m.company_id.account_fiscal_country_id.code == "PT"
-            and m.move_type in INVOICE_TYPE_MAP
+            and m.move_type in ('out_invoice', 'out_refund', 'out_receipt')
             and m.inalterable_hash
             and not m.l10n_pt_qr_code_str  # Skip if already computed
         )):
-            if not move.company_id.vat or not stdnum.pt.nif.is_valid(move.company_id.vat):
-                action = self.env.ref('base.action_res_company_form')
-                raise RedirectWarning(_('Please define the VAT on your company (e.g. PT123456789)'), action.id, _('Company Settings'))
-
-            company_vat = re.sub(r'\D', '', move.company_id.vat)
-            partner_vat = re.sub(r'\D', '', move.partner_id.vat or '999999990')
             details_by_tax_group = get_details_by_tax_category(move)
-            tax_letter = 'I'
-            if move.company_id.l10n_pt_region_code == 'PT-AC':
-                tax_letter = 'J'
-            elif move.company_id.l10n_pt_region_code == 'PT-MA':
-                tax_letter = 'K'
 
-            qr_code_str = ""
-            qr_code_str += f"A:{company_vat}*"
-            qr_code_str += f"B:{partner_vat}*"
-            qr_code_str += f"C:{move.partner_id.country_id.code if move.partner_id and move.partner_id.country_id else 'Desconhecido'}*"
-            qr_code_str += f"D:{INVOICE_TYPE_MAP[move.move_type]}*"
-            qr_code_str += "E:N*"
-            qr_code_str += f"F:{format_date(self.env, move.date, date_format='yyyyMMdd')}*"
-            qr_code_str += f"G:{move._get_l10n_pt_document_number()}*"
-            qr_code_str += f"H:{move.l10n_pt_atcud}*"
-            qr_code_str += f"{tax_letter}1:{move.company_id.l10n_pt_region_code}*"
+            pt_hash_utils.verify_prerequisites_qr_code(move, move.inalterable_hash, move.l10n_pt_atcud)
+            # Most of the values needed to create the QR code string are filled in pt_hash_utils, also used by pt_pos and pt_stock
+            qr_code_dict, tax_letter = pt_hash_utils.l10n_pt_common_qr_code_str(move, self.env, move.date)
+            qr_code_dict['D:'] = f"{AT_SERIES_TYPE_SAFT_TYPE_MAP[move.l10n_pt_document_type]}*"
+            qr_code_dict['G:'] = f"{move.l10n_pt_document_number}*"
+            qr_code_dict['H:'] = f"{move.l10n_pt_atcud}*"
             if details_by_tax_group.get('E'):
-                qr_code_str += f"{tax_letter}2:{details_by_tax_group.get('E')['base']}*"
+                qr_code_dict[f'{tax_letter}2:'] = f"{details_by_tax_group.get('E')['base']}*"
             for i, tax_category in enumerate(('R', 'I', 'N')):
                 if details_by_tax_group.get(tax_category):
-                    qr_code_str += f"{tax_letter}{i * 2 + 3}:{details_by_tax_group.get(tax_category)['base']}*"
-                    qr_code_str += f"{tax_letter}{i * 2 + 4}:{details_by_tax_group.get(tax_category)['vat']}*"
-            qr_code_str += f"N:{format_amount(move, move.tax_totals['amount_total'] - move.tax_totals['amount_untaxed'])}*"
-            qr_code_str += f"O:{format_amount(move, move.tax_totals['amount_total'])}*"
-            qr_code_str += f"Q:{move.l10n_pt_inalterable_hash_short}*"
-            qr_code_str += f"R:{PT_CERTIFICATION_NUMBER}"
+                    qr_code_dict[f'{tax_letter}{i * 2 + 3}:'] = f"{details_by_tax_group.get(tax_category)['base']}*"
+                    qr_code_dict[f'{tax_letter}{i * 2 + 4}:'] = f"{details_by_tax_group.get(tax_category)['vat']}*"
+            qr_code_dict['N:'] = f"{format_amount(move, move.tax_totals['tax_amount'])}*"
+            qr_code_dict['O:'] = f"{format_amount(move, move.tax_totals['total_amount'])}*"
+            qr_code_dict['Q:'] = f"{move.l10n_pt_inalterable_hash_short}*"
+            # Create QR code string from dictionary
+            qr_code_str = ''.join(f"{key}{value}" for key, value in sorted(qr_code_dict.items()))
             move.l10n_pt_qr_code_str = urllib.parse.quote_plus(qr_code_str)
