@@ -1,9 +1,16 @@
-from odoo import models, _
+from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+
+    @api.model_create_multi
+    def create(self, values):
+        for value in values:
+            if len(value.get('name', 0)) < 2:
+                raise UserError(_("Product names have to be at least 2 characters long."))
+        return super().create(values)
 
     def write(self, values):
         if not values.get('name'):
@@ -18,4 +25,6 @@ class ProductTemplate(models.Model):
                 ])
             ):
                 raise UserError(_("You cannot modify the name of a product that has been used in an accounting entry."))
+            if len(values['name']) < 2:
+                raise UserError(_("Product names have to be at least 2 characters long."))
         return super().write(values)

@@ -24,10 +24,13 @@
         'views/report_invoice.xml',
         'views/report_template.xml',
         'views/res_config_settings_views.xml',
+        'wizard/account_move_reversal_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
         'demo/ir_config_parameter_data.xml',
+        'demo/product_demo.xml',
     ],
+    'post_init_hook': '_post_init_hook',
     'license': 'LGPL-3',
 }

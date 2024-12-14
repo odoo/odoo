@@ -25,6 +25,10 @@
                     </setting>
                 </block>
             </xpath>
+            <!-- Disable editing the layout to ensure PT requirements are not removed -->
+            <xpath expr="//button[@name='edit_external_header']" position="attributes">
+                <attribute name="invisible">country_code == 'PT'</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>

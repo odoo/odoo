@@ -1,13 +1,15 @@
 import base64
 import binascii
+import re
 import requests
 import stdnum.pt.nif
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 
+from odoo.addons.l10n_pt.const import PT_CERTIFICATION_NUMBER
 from odoo.exceptions import UserError
-from odoo.tools import float_repr
+from odoo.tools import float_repr, format_date
 from odoo import _lt
 
 
@@ -46,11 +48,11 @@ def get_message_to_hash(date, l10n_pt_hashed_on, amount_total, l10n_pt_document_
     return f"{date};{system_entry_date};{l10n_pt_document_number};{gross_total};{previous_hash}"
 
 
-def sign_records(env, docs_to_sign):
+def sign_records(env, docs_to_sign, model):
     result = call_iap(env, "sign_documents", {"documents": docs_to_sign})
     res = {}
     for record_id, record_info in result.items():
-        res[int(record_id)] = f"${record_info['signature_version']}${record_info['signature']}"
+        res[env[model].browse(int(record_id))] = f"${record_info['signature_version']}${record_info['signature']}"
     return res
 
 
@@ -94,3 +96,34 @@ def verify_prerequisites_qr_code(record, hash_value, atcud):
         error_msg += _lt("- The `ATCUD` is not defined. Please verify the  AT series") if not atcud else ""
         error_msg += _lt("- The `hash` is not defined. You can contact the support.") if not hash_value else ""
         raise UserError(error_msg)
+
+
+def l10n_pt_common_qr_code_str(record, env, date):
+    """
+    Generate the partial values needed to construct the QR code for Portugal.
+    These are values that are common to l10n_pt, l10n_pt_pos and l10n_pt_stock.
+
+    :param record: The account_move, pos_order or stock_picking for which the QR code is generated
+    :param env: Environment
+    :param date: The date required in the QR code, can be move.date, pos.date_order or picking.date_done
+    :return: Dictionary containing some of the values needed for the QR code string, and the correct tax_letter per record
+    """
+    company_vat = re.sub(r'\D', '', record.company_id.vat)
+    partner_vat = re.sub(r'\D', '', record.partner_id.vat or '999999990')
+
+    tax_letter = 'I'
+    if record.company_id.l10n_pt_region_code == 'PT-AC':
+        tax_letter = 'J'
+    elif record.company_id.l10n_pt_region_code == 'PT-MA':
+        tax_letter = 'K'
+
+    qr_code_dict = {}
+    qr_code_dict['A:'] = f"{company_vat}*"
+    qr_code_dict['B:'] = f"{partner_vat}*"
+    qr_code_dict['C:'] = f"{record.partner_id.country_id.code if record.partner_id and record.partner_id.country_id else 'Desconhecido'}*"
+    qr_code_dict['E:'] = f"{'A' if record.state == 'cancel' else 'N'}*"
+    qr_code_dict['F:'] = f"{format_date(env, date, date_format='yyyyMMdd')}*"
+    qr_code_dict[f'{tax_letter}1:'] = f"{record.company_id.l10n_pt_region_code}*"
+    qr_code_dict['R:'] = f"{PT_CERTIFICATION_NUMBER}"
+
+    return qr_code_dict, tax_letter

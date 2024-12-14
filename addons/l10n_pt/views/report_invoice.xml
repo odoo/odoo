@@ -3,18 +3,24 @@
 <!--If the customer has no VAT, we must show 'Consumidor final'-->
     <template id="l10n_pt_partner_vat">
         <div t-if="o.company_id.account_fiscal_country_id.code == 'PT' and not o.partner_id.vat">
-            <t t-esc="'Consumidor final'"/>
+            <t t-out="'Consumidor final'"/>
         </div>
     </template>
 
 <!--    Add tax exemption reason-->
     <template id="l10n_pt_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//td[@name='td_taxes']" position="inside">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT'">
+                <t t-set="pt_line_tax_exemption_reasons" t-value="line._l10n_pt_get_line_vat_exemptions_reasons()"/>
+                <span t-out="pt_line_tax_exemption_reasons"/>
+            </t>
+        </xpath>
         <xpath expr="//p[@name='payment_communication']" position="before">
             <t t-set="pt_tax_exemption_reasons" t-value="o._l10n_pt_get_vat_exemptions_reasons()"/>
             <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and pt_tax_exemption_reasons">
                 <div><strong>Motivos de isenção de IVA:</strong></div>
                 <t t-foreach="pt_tax_exemption_reasons" t-as="reason">
-                    <div><t t-esc="reason"/></div>
+                    <div><t t-out="reason"/></div>
                 </t>
                 <br/>
             </t>
@@ -35,7 +41,7 @@
         <xpath expr="//div[@id='qrcode']" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_qr_code_str">
                 <div>
-                    ATCUD: <t t-esc="o.l10n_pt_atcud"/>
+                    ATCUD: <t t-out="o.l10n_pt_atcud"/>
                 </div>
                 <img style="margin: 0.25cm;"
                      t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_pt_qr_code_str, 150, 150)"
@@ -52,7 +58,7 @@
         <xpath expr="//td[@name='td_subtotal']" position="after">
             <td t-if="o.company_id.account_fiscal_country_id.code == 'PT' and len(o.invoice_line_ids) &gt; 5 and report_type == 'pdf'" name="th_subtotal_accumulated_tax" class="text-end">
                 <span class="text-nowrap"
-                      t-esc="current_subtotal"
+                      t-out="current_subtotal"
                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'
                 />
             </td>

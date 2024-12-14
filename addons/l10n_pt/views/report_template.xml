@@ -5,16 +5,14 @@
             <div class="row">
                 <div name="l10n_pt_certified_program_note" class="mx-auto text-center text-muted">
                     <t t-if="l10n_pt_training_mode">
-                        Documento emitido para fins de Formação
+                        Documento emitido para fins de Formação<br/>
+                    </t>
+                    <t t-if="o and o._name == 'account.move' and o.l10n_pt_inalterable_hash_short">
+                        <t t-out="o.l10n_pt_inalterable_hash_short"/> - Processado por programa certificado n.º <t t-out="l10n_pt_certification_number"/>/AT
                     </t>
                     <t t-else="">
-                        <t t-if="o and o._name == 'account.move' and o.l10n_pt_inalterable_hash_short">
-                            <t t-out="o.l10n_pt_inalterable_hash_short"/> - Processado por programa certificado n.º <t t-out="l10n_pt_certification_number"/>/AT
-                        </t>
-                        <t t-else="">
-                            Este documento não serve de fatura<br/>
-                            Emitido por programa certificado n.º <t t-out="l10n_pt_certification_number"/>/AT
-                        </t>
+                        Este documento não serve de fatura<br/>
+                        Emitido por programa certificado n.º <t t-out="l10n_pt_certification_number"/>/AT
                     </t>
                 </div>
             </div>
@@ -26,6 +24,15 @@
         <div>Chaussée de Namur 40</div>
         <div>1367 Ramillies</div>
         <div>Belgium</div>
+    </template>
+
+    <template id="l10n_pt_footer_name_page" inherit_id="web.footer_name_page">
+        <xpath expr="//div[@t-out='o.name']" position="before">
+            <div
+                t-if="o and report_type == 'pdf' and o._name in ('account.move', 'stock.picking') and res_company.account_fiscal_country_id.code == 'PT'"
+                t-out="o.l10n_pt_document_type"
+            />
+        </xpath>
     </template>
 
     <template id="l10n_pt_external_layout_standard" inherit_id="web.external_layout_standard">
@@ -52,6 +59,13 @@
             </t>
             <t t-else="">$0</t>
         </xpath>
+        <xpath expr="//span[@t-if=&quot;report_type == &apos;pdf&apos;&quot;]" position="before">
+            <span
+                t-if="o and report_type == 'pdf' and o._name in ('account.move', 'stock.picking') and res_company.account_fiscal_country_id.code == 'PT'"
+                class="text-muted"
+                t-out="o.l10n_pt_document_type"
+            />
+        </xpath>
     </template>
 
     <template id="l10n_pt_external_layout_boxed" inherit_id="web.external_layout_boxed">
@@ -65,6 +79,13 @@
             </t>
             <t t-else="">$0</t>
         </xpath>
+        <xpath expr="//span[@t-if=&quot;report_type == &apos;pdf&apos;&quot;]" position="before">
+            <span
+                t-if="o and report_type == 'pdf' and o._name in ('account.move', 'stock.picking') and res_company.account_fiscal_country_id.code == 'PT'"
+                class="text-muted"
+                t-out="o.l10n_pt_document_type"
+            />
+        </xpath>
     </template>
 
     <template id="l10n_pt_external_layout_striped" inherit_id="web.external_layout_striped">
@@ -77,6 +98,56 @@
                 <t t-call="l10n_pt.l10n_pt_report_template_address_training_mode"/>
             </t>
             <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//span[@t-if=&quot;report_type == &apos;pdf&apos;&quot;]" position="before">
+            <span
+                t-if="o and report_type == 'pdf' and o._name in ('account.move', 'stock.picking') and res_company.account_fiscal_country_id.code == 'PT'"
+                class="text-muted"
+                t-out="o.l10n_pt_document_type"
+            />
+        </xpath>
+    </template>
+
+    <template id="l10n_pt_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]/t" position="after">
+            <t t-call="l10n_pt.l10n_pt_report_template_note_certified_program"/>
+        </xpath>
+        <xpath expr="//ul[@name='company_address_list']" position="replace">
+            <t t-if="res_company.account_fiscal_country_id.code == 'PT'">
+                <t t-call="l10n_pt.l10n_pt_report_template_address_training_mode"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//span[@t-if=&quot;report_type == &apos;pdf&apos;&quot;]" position="before">
+            <span
+                t-if="o and report_type == 'pdf' and o._name in ('account.move', 'stock.picking') and res_company.account_fiscal_country_id.code == 'PT'"
+                class="text-muted"
+                t-out="o.l10n_pt_document_type"
+            />
         </xpath>
     </template>
 </odoo>

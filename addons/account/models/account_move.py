@@ -3994,8 +3994,8 @@ class AccountMove(models.Model):
                     values[k] = _getattrstring(line, fname)
             current_record = dumps(values, sort_keys=True, ensure_ascii=True, indent=None, separators=(',', ':'))
             hash_string = sha256((previous_hash + current_record).encode('utf-8')).hexdigest()
-            move2hash[move.id] = f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
-            previous_hash = move2hash[move.id]
+            move2hash[move] = f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
+            previous_hash = move2hash[move]
         return move2hash
 
     # -------------------------------------------------------------------------

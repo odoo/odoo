@@ -11,6 +11,7 @@
                         <field name='type'/>
                         <field name='prefix'/>
                         <field name='at_code'/>
+                        <field name='formation_series'/>
                         <field name='date_end'/>
                         <field name='active'/>
                     </group>
@@ -23,21 +24,22 @@
         <field name="name">at.series.tree</field>
         <field name="model">l10n_pt.at.series</field>
         <field name="arch" type="xml">
-            <tree string="Autoridade Tributária (AT) Series" editable="bottom">
+            <list string="Autoridade Tributária (AT) Series" editable="bottom">
                 <field name='type'/>
                 <field name='prefix'/>
                 <field name='at_code'/>
+                <field name='formation_series' widget="boolean_toggle"/>
                 <field name='date_end'/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="action_open_l10n_pt_at_series_series_list_view" model="ir.actions.act_window">
         <field name="name">Autoridade Tributária (AT) Series</field>
         <field name="res_model">l10n_pt.at.series</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="l10n_pt.view_l10n_pt_at_series_series_tree"/>
     </record>
 
