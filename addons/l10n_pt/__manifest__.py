@@ -18,6 +18,9 @@
         'data/account_tax_report.xml',
         'security/ir.model.access.csv',
         'security/l10n_pt_security.xml',
+        'wizard/account_move_reversal_views.xml',
+        'wizard/l10n_pt_cancel_wizard_views.xml',
+        'wizard/l10n_pt_reprint_reason_views.xml',
         'views/account_move_views.xml',
         'views/account_tax_views.xml',
         'views/l10n_pt_at_series_views.xml',
@@ -28,6 +31,8 @@
     'demo': [
         'demo/demo_company.xml',
         'demo/ir_config_parameter_data.xml',
+        'demo/product_demo.xml',
     ],
+    'post_init_hook': '_post_init_hook',
     'license': 'LGPL-3',
 }

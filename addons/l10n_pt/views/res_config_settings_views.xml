@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@id='quick_edit_mode']" position="after">
                 <block title="Portuguese Localization" id="portugal_localization" invisible="country_code != 'PT'">
-                    <setting string="Tax Authorities">
+                    <setting>
                         <div class="content-group">
                             <div class="mt16">
                                 <div class="d-flex mt4 align-items-center">
@@ -20,10 +20,11 @@
                             </div>
                         </div>
                     </setting>
-                    <setting string="Training Mode">
-                        <field name="l10n_pt_training_mode"/>
-                    </setting>
                 </block>
+            </xpath>
+            <!-- Disable editing the layout to ensure PT requirements are not removed -->
+            <xpath expr="//button[@name='edit_external_header']" position="attributes">
+                <attribute name="invisible">country_code == 'PT'</attribute>
             </xpath>
         </field>
     </record>

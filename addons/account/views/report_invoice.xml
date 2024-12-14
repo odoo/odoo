@@ -338,7 +338,7 @@
                             <td>
                                 <span class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</span>
                             </td>
-                            <td class="text-end o_price_total">
+                            <td name="td_subtotal" class="text-end o_price_total">
                                 <span class="text-nowrap"
                                       t-out="tax_group['tax_amount_currency']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
@@ -354,7 +354,7 @@
                                       t-options='{"widget": "monetary", "display_currency": currency}'
                                 >27.00</span>
                             </td>
-                            <td class="text-end o_price_total">
+                            <td name="td_subtotal" class="text-end o_price_total">
                                 <span class="text-nowrap"
                                       t-out="tax_group['tax_amount_currency']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
