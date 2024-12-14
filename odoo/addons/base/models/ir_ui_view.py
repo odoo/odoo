@@ -1314,10 +1314,10 @@ actual arch.
         # contain fields on the comodel
         name = node.get('name')
         field = name_manager.model._fields.get(name)
-        if not field or not field.comodel_name:
+        if self.env.context.get('no_nested_groupby') or not field or not field.comodel_name:
             return
         # post-process the node as a nested view, and associate it to the field
-        self._postprocess_view(node, field.comodel_name, editable=False, parent_name_manager=name_manager)
+        self.with_context(no_nested_groupby=True)._postprocess_view(node, field.comodel_name, editable=False, parent_name_manager=name_manager)
         name_manager.has_field(node, name)
 
     def _postprocess_tag_label(self, node, name_manager, node_info):
