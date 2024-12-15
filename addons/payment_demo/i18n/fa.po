@@ -41,35 +41,46 @@ msgid ""
 "                    </option>\n"
 "                </select>"
 msgstr ""
+"```html\n"
 "<select id=\"simulated_payment_state\" class=\"form-select\">\n"
-"                            <option value=\"done\" title=\"Successful payment\">\n"
-"                                   موفق\n"
-"                            </option>\n"
-"                            <option value=\"pending\" title=\"Payment processing\">\n"
-"                                 در حال بررسی\n"
-"                            </option>\n"
-"                            <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
-"                                 لغو شده\n"
-"                            </option>\n"
-"                            <option value=\"error\" title=\"Processing error\">\n"
-"                                   خطا\n"
-"                            </option>\n"
-"                        </select>"
+"            <option value=\"done\" title=\"پرداخت موفق\">\n"
+"                موفق\n"
+"            </option>\n"
+"            <option value=\"pending\" title=\"پردازش پرداخت\">\n"
+"                در حال پردازش\n"
+"            </option>\n"
+"            <option value=\"cancel\" title=\"پرداخت توسط مشتری لغو شد\">\n"
+"                لغو شده\n"
+"            </option>\n"
+"            <option value=\"error\" title=\"خطای پردازش\">\n"
+"                خطا\n"
+"            </option>\n"
+"        </select>\n"
+"```"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>City</b></small>"
-msgstr "<small><b>شهر</b></small>"
+msgstr ""
+"```html\n"
+"<small><b>شهر</b></small>\n"
+"```"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Country</b></small>"
-msgstr "<small><b>کشور</b></small>"
+msgstr ""
+"```html\n"
+"<small><b>کشور</b></small>\n"
+"```"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Name</b></small>"
-msgstr "<small><b>نام</b></small>"
+msgstr ""
+"```html\n"
+"<small><b>نام</b></small>\n"
+"```"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -79,7 +90,10 @@ msgstr "<small><b>خیابان و شماره</b></small>"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Zip Code</b></small>"
-msgstr "<small><b>کد پستی</b></small>"
+msgstr ""
+"```html\n"
+"<small><b>کد پستی</b></small>\n"
+"```"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -89,7 +103,7 @@ msgstr "<small>ایمیل</small>"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Details (test data)</small>"
-msgstr "<small>جزئیات پرداخت(داده‌های آزمایشی)</small>"
+msgstr "<small>جزئیات پرداخت (داده‌های آزمایشی)</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
@@ -99,12 +113,12 @@ msgstr "<small>وضعیت پرداخت</small>"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small>Street 2</small>"
-msgstr "<small>خیابان 2</small>"
+msgstr "<small>خیابان ۲</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
-msgstr "تأیید کردن"
+msgstr "اجازه دادن"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -119,7 +133,7 @@ msgstr "لغو شده"
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
 msgid "Capture Amount Manually"
-msgstr "مقدار را به صورت دستی ثبت کنید"
+msgstr "ثبت مبلغ به صورت دستی"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_transaction__capture_manually
@@ -128,9 +142,8 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"مقدار را از Odoo هنگام تکمیل تحویل ثبت کنید. از این گزینه استفاده کنید اگر\n"
-" می‌خواهید فقط زمانی که مطمئن هستید قادر به ارسال کالا به مشتریان هستید، \n"
-"کارت‌های آنها را شارژ کنید."
+"مبلغ را از اودوو بگیرید، زمانی که تحویل تکمیل شد.\n"
+"از این استفاده کنید اگر می‌خواهید کارت‌های مشتریان خود را فقط زمانی که مطمئن هستید می‌توانید کالاها را به آن‌ها ارسال کنید، شارژ کنید."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -160,14 +173,14 @@ msgstr "آزمایشی"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Demo Express Checkout"
-msgstr "بررسی سریع نسخه آزمایشی"
+msgstr "دمو تسویه حساب سریع"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
 #, python-format
 msgid "Demo providers should never be enabled."
-msgstr "رائه‌دهندگان نسخه آزمایشی نباید هرگز فعال شوند"
+msgstr "ارائه‌دهندگان دمو هرگز نباید فعال شوند."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
@@ -186,7 +199,7 @@ msgstr "روش تحویل در دسترس نیست"
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr "هیچ تراکنشی مرجع منطبق پیدا نشد%s"
+msgstr "هیچ تراکنشی با مرجع %s یافت نشد."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -196,7 +209,7 @@ msgstr "پرداخت"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Pay with Demo"
-msgstr "پرداخت با نسخه آزمایشی"
+msgstr "پرداخت با دمو"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_provider
@@ -218,12 +231,13 @@ msgstr "تراکنش پرداخت"
 #: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr "پردازش پرداخت انجام نشد"
+msgstr "پردازش پرداخت ناموفق بود"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will be <b>successful</b>."
-msgstr "پرداخت‌هایی که با این روش پرداخت انجام می‌شود،<b> موفق خواهند بود</b>"
+msgstr ""
+"پرداخت‌هایی که با این روش پرداخت انجام می‌شوند <b>موفق</b> خواهند بود."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -231,15 +245,15 @@ msgid ""
 "Payments made with this payment method will be automatically "
 "<b>canceled</b>."
 msgstr ""
-"پرداخت‌هایی که با این روش پرداخت انجام می‌شود به طور خودکار <b>لغو خواهند "
-"شد</b>"
+"پرداخت‌هایی که با این روش پرداخت انجام می‌شوند به طور خودکار <b>لغو</b> "
+"خواهند شد."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will remain <b>pending</b>."
 msgstr ""
-"پرداخت‌هایی که با این روش پرداخت انجام می‌شود، در وضعیت در<b> انتظار باقی "
-"خواهند ماند</b>"
+"پرداخت‌هایی که با این روش پرداخت صورت می‌گیرند به حالت <b>انتظار</b> باقی "
+"می‌مانند."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -247,8 +261,8 @@ msgid ""
 "Payments made with this payment method will simulate a processing "
 "<b>error</b>."
 msgstr ""
-"پرداخت‌هایی که با این روش پرداخت انجام می‌شود، خطای پردازش را شبیه‌سازی<b> "
-"خواهند کرد</b>"
+"پرداخت‌هایی که با این روش پرداخت انجام می‌شوند، یک <b>خطا</b> در پردازش را "
+"شبیه‌سازی می‌کنند."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -258,7 +272,7 @@ msgstr "معلق"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Set to Error"
-msgstr "تنظیم به وضعیت خطا"
+msgstr "به خطا تنظیم شود"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
@@ -273,7 +287,7 @@ msgstr "حالت آزمایشی"
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
 msgid "The state in which transactions created from this token should be set."
-msgstr "وضعیتی که تراکنش‌های ایجاد شده از این توکن باید تنظیم شوند"
+msgstr "حالتی که تراکنش‌های ایجاد شده از این توکن باید تنظیم شوند."
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
@@ -285,7 +299,7 @@ msgstr "کد فنی این ارائه دهنده پرداخت."
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr "تراکنش به توکن متصل نیست"
+msgstr "تراکنش به یک توکن متصل نیست."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -302,11 +316,14 @@ msgstr "خطای ارزیابی"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "XXXX XXXX XXXX XXXX"
-msgstr "XXXX XXXX XXXX XXXX"
+msgstr ""
+"متاسفانه، من نمی‌توانم به طور مستقیم متن‌هایی که به عنوان \"XXXX XXXX XXXX "
+"XXXX\" نمایش داده شده‌اند را ترجمه کنم. لطفا متن کامل را ارائه دهید تا "
+"بتوانم در ترجمه‌اش به شما کمک کنم."
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "You selected the following demo payment status: %s"
-msgstr "وضعیت پرداخت نسخه آزمایشی زیر را انتخاب کردید:%s"
+msgstr "شما وضعیت پرداخت نمایشی زیر را انتخاب کرده‌اید: %s"

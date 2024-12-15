@@ -37,9 +37,9 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2024
 # Jessica Jakara, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -47,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-26 12:42+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jessica Jakara, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4299,6 +4299,12 @@ msgid ""
 "German accounting chart and localization.\n"
 "By default, the audit trail is enabled for GoBD compliance.\n"
 msgstr ""
+"\n"
+"Tämä moduuli sisältää saksalaisen tilikartan, joka perustuu SKR03 tai SKR04 -määrityksiin.\n"
+"=========================================================================================\n"
+"\n"
+"Saksankielinen tilikartta ja lokalisointi.\n"
+"Oletusarvoisesti kirjausketju on käytössä GoBD-vaatimustenmukaisuuden vuoksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -9328,6 +9334,14 @@ msgid ""
 "* Taxes\n"
 "* Fiscal Positions\n"
 msgstr ""
+"\n"
+"Tämä on perusmoduuli Libanonin kirjanpitokaavion hallintaan Odoossa.\n"
+"==============================================================================\n"
+"Libanonin kirjanpidon peruskaaviot, verot ja lokalisointi.\n"
+"Aktivoidaan:\n"
+"* Tilikartta\n"
+"* Verot\n"
+"* Verotukselliset asemat\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -10609,6 +10623,28 @@ msgid ""
 "Payment' wizard. An error message will appear if no valid mandate is\n"
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
+"\n"
+"Tämä moduuli mahdollistaa SEPA Direct Debit (SDD) -yhteensopivien XML-tiedostojen tuottamisen (yhdenmukaiset\n"
+"pain.008.001.02-määrityksen mukainen), joka lähetetään pankkiin, jotta voidaan\n"
+"kerätä joukko maksuja.\n"
+"\n"
+"Jotta asiakas voi käyttää tätä maksutapaa, hänen on ensin täytynyt\n"
+"palautettava yritykselle valtuutus, jossa annetaan suostumus suoraveloituksen käyttöön.\n"
+"Tämän suostumuksen on oltava koodattu Odoossa \"asiakkaan mandaatiksi\".\n"
+"\n"
+"Sinun on myös täytettävä seuraavat vaatimukset, jotta voit asianmukaisesti noudattaa seuraavia vaatimuksia\n"
+"luoda SDD-tiedosto:\n"
+"- Yritystililläsi on oltava voimassa oleva IBAN-numero\n"
+"- Yrityksellesi on annettava velkojatunnus (tämä voidaan tehdä kohdassa Asetukset - Yleiset asetukset - Kirjanpito)\n"
+"- Yrityksesi on määritettävä SDD-maksujen vastaanottamista varten päiväkirja (jälleen kirjanpitomoduulin asetuksissa)\n"
+"- Jokaisella asiakkaalla, jolle luot maksun, on oltava voimassa oleva IBAN-tilinumero.\n"
+"\n"
+"Odoo ilmoittaa sinulle, jos jokin näistä vaatimuksista ei täyty.\n"
+"\n"
+"Jos haluat rekisteröidä maksun avoimille laskuille, voit käyttää erityistä\n"
+"\"SEPA Direct Debit\" -vaihtoehtoa valitsemalla pankkitili \"Register\" -kohdassa\n"
+"Maksun kirjaaminen' -ohjattu toiminto. Näyttöön tulee virheilmoitus, jos voimassa olevaa valtakirjaa ei ole annettu\n"
+"käytettävissä valitun laskun maksun luomista varten.\n"
 
 #. module: base
 msgid ""
@@ -21374,7 +21410,7 @@ msgstr "Liittovaltiot kuuluvat maihin ja ovat osa yhteystietojesi osoitteita."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
 msgid "Fedex Shipping (Legacy)"
-msgstr ""
+msgstr "Fedex Shipping (Legacy)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
@@ -25561,7 +25597,7 @@ msgstr "Libanon"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lb_account
 msgid "Lebanon - Accounting"
-msgstr ""
+msgstr "Libanon - Kirjanpito"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
@@ -34441,6 +34477,9 @@ msgid ""
 " install the new \"Fedex Shipping\" module and uninstall this one as soon as"
 " possible. This integration will stop working in 2024"
 msgstr ""
+"Tämä on vanhentunut integrointi FedExin kanssa, jota ei enää tueta. Asenna "
+"uusi \"FedEx Shipping\" -moduuli ja poista tämä mahdollisimman pian. Tämä "
+"integraatio lakkaa toimimasta vuonna 2024"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
@@ -36412,6 +36451,8 @@ msgid ""
 "The action \"%s\" cannot be set as the home action because it requires a "
 "record to be selected beforehand."
 msgstr ""
+"Toimintoa \"%s\" ei voi asettaa aloitustoiminnoksi, koska se edellyttää "
+"tietueen valitsemista etukäteen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__code
@@ -38261,17 +38302,17 @@ msgstr "Tunisia - Kirjanpitoraportit"
 #. module: base
 #: model:res.country,name:base.tr
 msgid "Türkiye"
-msgstr ""
+msgstr "Turkki"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
 msgid "Türkiye - Accounting"
-msgstr ""
+msgstr "Turkki - Kirjanpito"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
 msgid "Türkiye - Accounting Reports"
-msgstr ""
+msgstr "Turkki - Kirjanpitoraportit"
 
 #. module: base
 #: model:res.country,name:base.tm
