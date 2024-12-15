@@ -23,6 +23,7 @@
 # Martin Trigaux, 2024
 # Hamed Mohammadi <hamed@dehongi.com>, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Dynamic Business Group, 2024
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Dynamic Business Group, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +63,7 @@ msgstr "\"%s ارسال فرم\" <%s>"
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
-msgstr "\"آدرس اینترنتی از\" نمی‌تواند خالی باشد."
+msgstr "\"آدرس اینترنتی 'از' نمی‌تواند خالی باشد.\""
 
 #. module: website
 #. odoo-python
@@ -1571,10 +1572,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Email</span>\n"
 "                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"```html\n"
 "<span class=\"s_website_form_label_content\">ایمیل شما</span>\n"
-"                                <span class=\"s_website_form_mark\"> *</span>\n"
-"```"
+"                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
@@ -1582,10 +1581,8 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Name</span>\n"
 "                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"```html\n"
-"<span class=\"s_website_form_label_content\">نام شما</span>\n"
-"                                <span class=\"s_website_form_mark\"> *</span>\n"
-"```"
+"<span class=\"s_website_form_label_content\">نام شما</span> <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form
@@ -4034,7 +4031,7 @@ msgstr "کلید سفارشی"
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Custom Url"
-msgstr "آدرس اینترنتی سفارشی"
+msgstr "آدرس سفارشی"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__custom_code_footer
@@ -5370,7 +5367,7 @@ msgstr "ویژگی دو"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__feature_url
 msgid "Feature Url"
-msgstr "آدرس اینترنتی ویژگی‌ها"
+msgstr "ویژگی آدرس اینترنتی"
 
 #. module: website
 #. odoo-javascript
@@ -6395,13 +6392,13 @@ msgstr "صفحه اصلی"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Homepage URL"
-msgstr "آدرس اینترنتی صفحه اصلی"
+msgstr "<مسیری صفحه اصلی>"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_homepage_url
 #: model:ir.model.fields,field_description:website.field_website__homepage_url
 msgid "Homepage Url"
-msgstr "آدرس اینترنتی صفحه اصلی"
+msgstr "آدرس صفحه اصلی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -8521,7 +8518,7 @@ msgstr "بدون خط زیرین"
 #: code:addons/website/static/src/components/fields/widget_iframe.xml:0
 #, python-format
 msgid "No Url"
-msgstr "بدون آدرس اینترنتی"
+msgstr "بدون آدرس URL"
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
@@ -9220,7 +9217,7 @@ msgstr "نوع صفحه"
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Page URL"
-msgstr "آدرس اینترنتی صفحه"
+msgstr "آدرس صفحه"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__page_view_id
@@ -12431,13 +12428,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "URL"
-msgstr "آدرس اینترنتی"
+msgstr "URL"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_from
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "URL from"
-msgstr "آدرس اینترنتی از"
+msgstr "از URL"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
@@ -12556,12 +12553,12 @@ msgstr "فایل آپلود شده خیلی بزرگ است."
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Url"
-msgstr "آدرس اینترنتی"
+msgstr "آدرس وب"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__country_flag
 msgid "Url of static flag image"
-msgstr "آدرس اینترنتی تصویر پرچم ثابت"
+msgstr "نشانی اینترنتی تصویر پرچم ثابت"
 
 #. module: website
 #. odoo-javascript
@@ -13355,13 +13352,13 @@ msgstr "صفحه تم وبسایت"
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_url
 msgid "Website URL"
-msgstr "آدرس اینترنتی وبسایت"
+msgstr "URL وبسایت"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
-msgstr "آدرس اینترنتی وبسایت"
+msgstr "Url وبسایت"
 
 #. module: website
 #: model:ir.model,name:website.model_website_visitor
