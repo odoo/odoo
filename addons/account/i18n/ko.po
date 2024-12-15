@@ -6,8 +6,8 @@
 # JH CHOI <hwangtog@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Sarah Park, 2024
-# Daye Jeong, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -615,6 +615,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요,\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)님.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>님.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        다음 내용을 확인해 주시기 발바니다.\n"
+"        <t t-if=\"object.name\">\n"
+"            대변전표 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            대변전표\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        금액: <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        발행인: <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        궁금한 점이 있으시면 언제든지 연락주시기 바랍니다.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -669,6 +700,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요,\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)님.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>님.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        다음 청구서 내역을 확인해 주시기 바랍니다.\n"
+"        <t t-if=\"object.name\">\n"
+"            청구서:<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            청구서\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        금액: <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        발행인: <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            해당 청구서는 이미 지불이 완료되었습니다.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            빠른 시일 내에 결제를 부탁드립니다.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                결제 시 다음 내용을 참조용으로 기재해 주세요: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                     <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            참고 사항: 관련 기록은 <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">포털</a>에서 확인하실 수 있습니다.\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        궁금한 점이 있으시면 언제든지 연락주시기 바랍니다.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -690,6 +770,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요, <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>님.<br/><br/>\n"
+"        결제해 주셔서 감사합니다.\n"
+"        다음과 같이 영수증을 발급드리오며 <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> 총 금액은\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span>이고, 발행인은 <t t-out=\"object.company_id.name or ''\">YourCompany</t>입니다.\n"
+"        <br/><br/>\n"
+"        궁금한 점이 있으면 언제든 문의주시기 바랍니다.\n"
+"        <br/><br/>\n"
+"        감사합니다.\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -2282,6 +2378,12 @@ msgid ""
 msgstr "고객이 모바일 뱅킹으로 즉시 결제할 수 있도록 청구서에 QR 코드를 추가합니다."
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Add a description to your item."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Add a journal"
 msgstr "전표 추가"
@@ -2857,14 +2959,14 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
-msgstr ""
+msgstr "해당 날짜까지의 모든 항목은 분개 일정에 따라 나중에 연기됩니다. 이 잠금 날짜는 영구적이며 예외를 허용하지 않습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
 msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
-msgstr ""
+msgstr "이 날짜까지의 모든 항목은 분개 순서에 따라 나중에 연기됩니다. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -2873,6 +2975,7 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
+"해당 날짜까지의 세금 항목은 분개장 순서에 따라 나중에 처리됩니다. 세금 잠금 날짜는 세금 마감 항목이 게시될 때 자동으로 설정됩니다."
 
 #. module: account
 #. odoo-python
@@ -2894,14 +2997,14 @@ msgstr "미수금 계정 전표에는 마감일이 표시되어야 합니다. �
 msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
-msgstr ""
+msgstr "이 날짜 이전의 구매 항목은 분개 순서에 따라 나중에 처리됩니다. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
 msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
-msgstr ""
+msgstr "이 날짜 이전의 판매 항목은 분개 순서에 따라 나중에 연기됩니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -4249,6 +4352,12 @@ msgstr "클릭하세요:"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Click here to add a description to your product."
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Click or press enter to add a description"
 msgstr "클릭하거나 엔터키를 눌러 설명을 추가합니다."
@@ -4473,8 +4582,8 @@ msgstr "이 전표와 관련된 회사"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Complete the partner data with email"
-msgstr "이메일로 협력사 데이터 입력을 완료합니다."
+msgid "Complete the partner data with email."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -4511,12 +4620,6 @@ msgstr "환경 설정 검토"
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Configure"
 msgstr "설정"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Configure document layout."
-msgstr "문서 양식 설정"
 
 #. module: account
 #. odoo-python
@@ -4919,6 +5022,12 @@ msgstr "직접 생성하기"
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
 msgid "Create the first cash rounding"
 msgstr "첫 번째 현금 반올림 항목을 생성합니다."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Create the product."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -7012,8 +7121,8 @@ msgstr "기능 유형"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Fill in the details of the line."
-msgstr "줄에 세부 정보를 입력합니다."
+msgid "Fill in the details of the product or see the suggestion."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -10266,7 +10375,7 @@ msgstr "간편하게 보고서를 검토하고 수치가 의미하는 내용을 
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Nearest"
-msgstr ""
+msgstr "가장 가까운"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -13538,8 +13647,8 @@ msgstr "날짜를 설정하세요. 당일을 포함하여 이동 시 보안이 �
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Set a price"
-msgstr "가격을 설정하세요."
+msgid "Set a price."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13833,7 +13942,7 @@ msgstr "올림 정확도에 맞게 청구서 금액을 올림하는 데 사용�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Standard communication"
-msgstr ""
+msgstr "표준 커뮤니케이션"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -17005,6 +17114,12 @@ msgstr "공급업체:"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "공급업체"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Verify the price and update if necessary."
+msgstr ""
 
 #. module: account
 #. odoo-javascript

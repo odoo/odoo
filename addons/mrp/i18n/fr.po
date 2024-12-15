@@ -80,19 +80,19 @@ msgstr "# de Nomenclatures où utilisé"
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "%(name)s Sequence picking before manufacturing"
-msgstr ""
+msgstr "%(name)s Séquence transfert avant fabrication"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "%(name)s Sequence production"
-msgstr ""
+msgstr "%(name)s Séquence de production"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "%(name)s Sequence stock after manufacturing"
-msgstr ""
+msgstr "%(name)s Séquence stockage après fabrication"
 
 #. module: mrp
 #. odoo-python
@@ -104,7 +104,7 @@ msgstr "%(producible_qty)s Prête"
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 msgid "%(product)s: Insufficient Quantity To Unbuild"
-msgstr ""
+msgstr "%(product)s : Quantité de déconstruction insuffisante"
 
 #. module: mrp
 #. odoo-python
@@ -195,6 +195,9 @@ msgid ""
 "              2 Steps: Pick components from stock and then produce.\n"
 "              3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock."
 msgstr ""
+"1 étape : Consommer des composants du stock et produire.\n"
+"              2 étapes : Prélever des composants dans le stock, puis produire.\n"
+"              3 étapes : Prélever des composants dans le stock, produire, puis déplacer le(s) produit(s) final(aux) de la zone de fabrication vers le stock."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1228,7 +1231,7 @@ msgstr "Coût dans la nomenclature"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "BoM Costs"
-msgstr ""
+msgstr "Coûts Nomenclature"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -1657,13 +1660,13 @@ msgstr "Partage des coûts (%)"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost as it is currently accumulated"
-msgstr ""
+msgstr "Coût tel qu'il est actuellement accumulé"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on cost projection"
-msgstr ""
+msgstr "Coût basé sur la projection des coûts"
 
 #. module: mrp
 #. odoo-javascript
@@ -1677,7 +1680,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on the BoM"
-msgstr ""
+msgstr "Coût basé sur la nomenclature"
 
 #. module: mrp
 #. odoo-javascript
@@ -1902,7 +1905,7 @@ msgstr "Date"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__search_date_category
 msgid "Date Category"
-msgstr ""
+msgstr "Catégorie Date"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2771,6 +2774,8 @@ msgstr ""
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "Impossible to plan. Please check the workcenter availabilities."
 msgstr ""
+"Impossible de planifier Veuillez vérifier la disponibilité des postes de "
+"travail."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -2793,12 +2798,12 @@ msgstr "En transit"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
 msgid "In the BoM"
-msgstr ""
+msgstr "Dans la nomenclature"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
 msgid "In the MO"
-msgstr ""
+msgstr "Dans l'ordre de fabrication"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_deadline
@@ -3576,12 +3581,12 @@ msgstr "Échéance de mon activité"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "My MOs"
-msgstr ""
+msgstr "Mes ordres de fabrication"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
 msgid "Never attribute values"
-msgstr ""
+msgstr "Jamais de valeurs d'attributs"
 
 #. module: mrp
 #. odoo-python
@@ -3752,7 +3757,7 @@ msgstr "Nombre d'actions"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_in_progress
 msgid "Number of Manufacturing Orders In Progress"
-msgstr ""
+msgstr "Nombre d'ordres de fabrication en cours"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
@@ -3762,7 +3767,7 @@ msgstr "Nombre d'ordres de fabrication en retard"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_to_close
 msgid "Number of Manufacturing Orders To Close"
-msgstr ""
+msgstr "Nombre d'ordres de fabrication à clôturer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
@@ -4105,7 +4110,7 @@ msgstr "Prélever les composants et ensuite fabriquer"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
 msgid "Pick components then manufacture (2 steps)"
-msgstr ""
+msgstr "Prélever les composants puis fabriquer (2 étapes)"
 
 #. module: mrp
 #. odoo-python
@@ -4119,6 +4124,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 msgid "Pick components, manufacture, then store products (3 steps)"
 msgstr ""
+"Prélever les composants, fabriquer, puis stocker les produits (3 étapes)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -4428,12 +4434,12 @@ msgstr "Capacités par produit"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_bom
 msgid "Product Catalog Product Is In Bom"
-msgstr ""
+msgstr "Catalogue des produits Produit se trouve dans la nomenclature"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_mo
 msgid "Product Catalog Product Is In Mo"
-msgstr ""
+msgstr "Catalogue des produits Produit se trouve dans l'ordre de fabrication"
 
 #. module: mrp
 #. odoo-javascript
@@ -4703,7 +4709,7 @@ msgstr "Quantité en production"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Quantity Remaining"
-msgstr ""
+msgstr "Quantité restante"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -5574,7 +5580,7 @@ msgstr "Après-demain"
 #. odoo-python
 #: code:addons/mrp/models/stock_orderpoint.py:0
 msgid "The following replenishment order has been generated"
-msgstr "L'ordre de réapprovisionnement suivant a été généré"
+msgstr "L'ordre de réassort suivant a été généré"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -6295,6 +6301,9 @@ msgid ""
 "specified for a tracked product that is having its consumed amount "
 "increased:%(products)s"
 msgstr ""
+"Les valeurs ne peuvent pas être définies et validées parce qu'un numéro de "
+"lot/série doit être précisé pour un produit suivi dont la quantité consommée"
+" est augmentée : %(products)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6969,6 +6978,8 @@ msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: "
 "%(missing_products)s"
 msgstr ""
+"Vous devez fournir un lot/numéro de série pour les produits et les "
+"'consommer' : %(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

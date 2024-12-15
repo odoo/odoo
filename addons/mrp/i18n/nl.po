@@ -5,7 +5,6 @@
 # Translators:
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:17+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +63,7 @@ msgstr "# Stuklijst Waar gebruikt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Ready Work Orders"
-msgstr "# Werkorders die gereed zijn"
+msgstr "# Werkorders die gestart kunnen worden"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
@@ -150,7 +149,7 @@ msgstr "'Eindproducten - %s' % object.name"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
-msgstr "'Overzicht stuklijst - %s' % object.display_name"
+msgstr "'Porductieorderoverzicht - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -219,7 +218,7 @@ msgstr "18″ x 2½″ Vierkante poten"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "2023-09-15"
-msgstr "15-09-2023"
+msgstr "2023-09-15"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -704,7 +703,7 @@ msgstr "Alle verhuizingen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
 msgid "All Move Raw"
-msgstr "Alles Beweegt Rauw"
+msgstr "Alle grondstofverplaatsingen"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
@@ -1148,7 +1147,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "Blok"
+msgstr "Blokkeer"
 
 #. module: mrp
 #. odoo-javascript
@@ -1197,7 +1196,7 @@ msgstr "Blokkerende reden"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
 msgid "Blocks"
-msgstr "Blokken"
+msgstr "Blokerende"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -1219,13 +1218,13 @@ msgstr "Stuklijst onderdelen"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Cost"
-msgstr "Stuklijst kostprijs"
+msgstr "Kostprijs stuklijst"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "BoM Costs"
-msgstr "RvB Kosten"
+msgstr "Kostprijs stuklijst"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -1242,7 +1241,7 @@ msgstr "Stuklijstregels"
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Overview"
-msgstr "Overzicht van de stuklijst"
+msgstr "Stuklijstoverzicht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1671,7 +1670,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on the BoM"
-msgstr "Kosten gebaseerd op de RvB"
+msgstr "Kostprijs gebaseerd op de stuklijst"
 
 #. module: mrp
 #. odoo-javascript
@@ -2373,7 +2372,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Contacten)"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
@@ -3089,7 +3088,7 @@ msgstr "Blokkeren/Deblokkeren"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_id
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
-msgstr "Verliesreden"
+msgstr "Uitvaloorzaak"
 
 #. module: mrp
 #. odoo-python
@@ -3167,13 +3166,13 @@ msgstr "Productieorder bevestigd"
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "MO Cost"
-msgstr "Kostprijs stuklijst"
+msgstr "Productieorder kostprijs"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "MO Costs"
-msgstr "Kosten stuklijst"
+msgstr "Productieorder kostprijs"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_done
@@ -3191,12 +3190,12 @@ msgstr "Productieorder gegenereerd door %s"
 #: model:ir.actions.client,name:mrp.action_report_mo_overview
 #: model:ir.actions.report,name:mrp.action_report_mrp_mo_overview
 msgid "MO Overview"
-msgstr "Overzicht stuklijst"
+msgstr "Productieorderoverzicht"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr "Stuklijstoverzichtsrapport"
+msgstr "Productieorderoverzicht"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3703,7 +3702,7 @@ msgstr "Niet beschikbaar"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 msgid "Not Ready"
-msgstr "Niet klaar"
+msgstr "Niet beschikbaar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4751,7 +4750,7 @@ msgstr "Grondstofverplaatsingen"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Ready"
-msgstr "Gereed"
+msgstr "Startklaar"
 
 #. module: mrp
 #. odoo-javascript
@@ -5204,7 +5203,7 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Sommige werkorders zijn al gereed, dus je kan deze productieorder niet ongedaan maken. \n"
+"Sommige werkorders zijn al gereed, dus je kunt deze productieorder niet ongedaan maken. \n"
 "\n"
 "Het zou toch zonde zijn om al die vooruitgang te verspillen?"
 
@@ -5216,7 +5215,7 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Sommige werkorders zijn al begonnen, dus je kan deze productieorder niet ongedaan maken. \n"
+"Sommige werkorders zijn al begonnen, dus je kunt deze productieorder niet ongedaan maken. \n"
 "\n"
 "Het zou toch zonde zijn om al die vooruitgang te verspillen?"
 
@@ -5941,7 +5940,7 @@ msgstr "Toplaag van een houten paneel."
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "Total Cost of Components"
-msgstr "Totale kosten van de ondredelen"
+msgstr "Totale kosten van de onderdelen"
 
 #. module: mrp
 #. odoo-javascript

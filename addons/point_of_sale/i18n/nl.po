@@ -6,8 +6,8 @@
 # Martin Trigaux, 2024
 # Lukas Van Cauter <cvl@odoo.com>, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +80,7 @@ msgstr "%(old_pm)s veranderd in %(new_pm)s voor %(old_amount)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr "%(payment_method)s Kassabetaling van %(partner)s in %(session)s"
+msgstr "%(payment_method)s Kassabetaling van %(contact)s in %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1942,17 +1942,17 @@ msgstr "Combinatie"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_product_combo
 msgid "Combo Choices"
-msgstr "Combo-keuzes"
+msgstr "Combinatie-keuzes"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_item_id
 msgid "Combo Item"
-msgstr "Combo Artikel"
+msgstr "Combinatieproduct"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_line_ids
 msgid "Combo Lines"
-msgstr "Combo-regels"
+msgstr "Combinatieregels"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_parent_id
@@ -2814,7 +2814,7 @@ msgstr "Details bewerken"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
 msgid "Edit Partner"
-msgstr "Partner bewerken"
+msgstr "Contact bewerken"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action_edit_pos
@@ -3067,7 +3067,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_partner_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Contacten)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
@@ -4435,7 +4435,7 @@ msgstr "Aantal fouten"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_qty
 msgid "Number of items refunded in this orderline."
-msgstr "Aantal geretourneerde artikelen in deze orderregel."
+msgstr "Aantal geretourneerde producten in deze orderregel."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__message_needaction_counter
@@ -5278,7 +5278,7 @@ msgstr "Je dient de factuur via de backend af te drukken"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Please provide a partner for the sale."
-msgstr "Kies een partner voor deze verkoop."
+msgstr "Kies een contact voor deze verkoop."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5937,12 +5937,12 @@ msgstr "Productcategorie"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_combo
 msgid "Product Combo"
-msgstr "Product Combo"
+msgstr "Product Combinatie"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_combo_item
 msgid "Product Combo Item"
-msgstr "Product Combo Artikel"
+msgstr "Combinatieproduct"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__public_description
@@ -7293,7 +7293,7 @@ msgstr "T-shirt slim fit"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_t_shirt_pants_product_template
 msgid "T-shirt & Pants Combo"
-msgstr "Combo T-shirt & Broek"
+msgstr "Combinatie T-shirt & Broek"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8798,8 +8798,8 @@ msgid ""
 "You are currently offline. Reloading the page may cause you to lose unsaved "
 "data."
 msgstr ""
-"Je bent momenteel offline. Je kan niet-opgeslagen gegevens verliezen door de"
-" pagina opnieuw te laden."
+"Je bent momenteel offline. Je kunt niet-opgeslagen gegevens verliezen door "
+"de pagina opnieuw te laden."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8841,7 +8841,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "You can only refund products from the same order."
-msgstr "Je kan elke producten van dezelfde bestelling terugbetalen."
+msgstr "Je kunt elke producten van dezelfde bestelling terugbetalen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8850,7 +8850,7 @@ msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
 msgstr ""
-"Je kan enkel kassa-orderregels ontkoppelen die gerelateerd zijn aan orders "
+"Je kunt enkel kassa-orderregels ontkoppelen die gerelateerd zijn aan orders "
 "met status nieuw of geannuleerd."
 
 #. module: point_of_sale
@@ -8861,7 +8861,7 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
-"Je kan geen kassa-order aanmaken vanuit de back-end interface of de "
+"Je kunt geen kassa-order aanmaken vanuit de back-end interface of de "
 "prijslijst opheffen of een kassa-order aanmaken in een python testomgeving "
 "met de formulier tool of de formulierweergave in studio bewerken als er geen"
 " kassa-order bestaat."
@@ -8873,8 +8873,8 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration "
 "'%(config)s'."
 msgstr ""
-"Je kan '%(picking_type)s' niet archiveren omdat het wordt gebruikt door een "
-"kassa-configuratie '%(config)s'."
+"Je kunt '%(picking_type)s' niet archiveren omdat het wordt gebruikt door een"
+" kassa-configuratie '%(config)s'."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8938,7 +8938,7 @@ msgid ""
 "You cannot share open orders with configuration that does not use the same "
 "currency."
 msgstr ""
-"Je kan geen openstaande bestellingen delen waarvan de configuratie niet "
+"Je kunt geen openstaande bestellingen delen waarvan de configuratie niet "
 "dezelfde valuta gebruikt."
 
 #. module: point_of_sale
@@ -8946,7 +8946,8 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "You cannot use the same journal on multiples cash payment methods."
 msgstr ""
-"Je kan hetzelfde dagboek niet op meerdere contante betaalmethodes gebruiken."
+"Je kunt hetzelfde dagboek niet op meerdere contante betaalmethodes "
+"gebruiken."
 
 #. module: point_of_sale
 #. odoo-python

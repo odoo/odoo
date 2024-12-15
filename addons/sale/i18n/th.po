@@ -926,6 +926,8 @@ msgid ""
 "<span><b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>ขอแสดงความยินดี</b> ใบเสนอราคาแรกของคุณถูกส่งไปแล้ว!<br>ตรวจสอบอีเมลของคุณเพื่อยืนยันใบเสนอราคา\n"
+"        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1032,7 +1034,7 @@ msgstr "ใบสั่งขายที่ยืนยันแล้วต้
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "A line on these orders missing a product, you cannot confirm it."
-msgstr ""
+msgstr "หากรายการในคำสั่งซื้อของคุณขาดผลิตภัณฑ์ไป คุณไม่สามารถยืนยันได้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1046,12 +1048,13 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"รายการคอมโบของบรรทัดคำสั่งขายจะต้องอยู่ในรายการคอมโบที่พร้อมใช้งานของบรรทัดที่เชื่อมโยงอยู่"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
-msgstr ""
+msgstr "สินค้าในบรรทัดคำสั่งขายจะต้องตรงกับสินค้าในหมวดสินค้าคอมโบ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4742,6 +4745,8 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"มีการเลือกคำสั่งซื้อที่ได้รับการยืนยันบางรายการ เอกสารที่เกี่ยวข้อง\n"
+"                        อาจได้รับผลกระทบจากการยกเลิก"
 
 #. module: sale
 #. odoo-python
@@ -4972,6 +4977,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
 msgstr ""
+"ใบสั่งขาย %(order)s "
+"ที่จะออกใบแจ้งหนี้ใหม่จะต้องได้รับการตรวจสอบก่อนลงทะเบียนค่าใช้จ่าย"
 
 #. module: sale
 #. odoo-python
@@ -5050,7 +5057,7 @@ msgstr "ใบแจ้งหนี้ใหม่จะหักใบแจ้
 msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
-msgstr ""
+msgstr "จำนวนไอเทมคอมโบที่เลือกจะต้องตรงกับจำนวนตัวเลือกคอมโบที่มีให้เลือก"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

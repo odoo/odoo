@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_adyen
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:51+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pos_adyen
@@ -63,13 +65,18 @@ msgstr "Попросите клиентов дать вам совет"
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr "Аутентификация не удалась. Пожалуйста, проверьте свои учетные данные Adyen."
+msgstr ""
+"Аутентификация не удалась. Пожалуйста, проверьте свои учетные данные Adyen."
 
 #. module: pos_adyen
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
-msgid "Cancelling the payment failed. Please cancel it manually on the payment terminal."
-msgstr "Отмена платежа не удалась. Пожалуйста, отмените его вручную на платежном терминале."
+msgid ""
+"Cancelling the payment failed. Please cancel it manually on the payment "
+"terminal."
+msgstr ""
+"Отмена платежа не удалась. Пожалуйста, отмените его вручную на платежном "
+"терминале."
 
 #. module: pos_adyen
 #. odoo-javascript
@@ -85,8 +92,17 @@ msgstr "Параметры конфигурации"
 #. module: pos_adyen
 #. odoo-javascript
 #: code:addons/pos_adyen/static/src/app/payment_adyen.js:0
-msgid "Could not connect to the Odoo server, please check your internet connection and try again."
-msgstr "Не удалось подключиться к серверу Odoo, пожалуйста, проверьте подключение к Интернету и повторите попытку."
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+"Не удалось подключиться к серверу Odoo, пожалуйста, проверьте подключение к "
+"Интернету и повторите попытку."
+
+#. module: pos_adyen
+#: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_event_url
+msgid "Event URL"
+msgstr ""
 
 #. module: pos_adyen
 #. odoo-python
@@ -103,8 +119,11 @@ msgstr "Сообщение от Adyen: %s"
 #. module: pos_adyen
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_config.py:0
-msgid "Please configure a tip product for POS %s to support tipping with Adyen."
-msgstr "Пожалуйста, настройте продукт чаевых для POS %s, чтобы поддерживать чаевые с помощью Adyen."
+msgid ""
+"Please configure a tip product for POS %s to support tipping with Adyen."
+msgstr ""
+"Пожалуйста, настройте продукт чаевых для POS %s, чтобы поддерживать чаевые с"
+" помощью Adyen."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -115,11 +134,6 @@ msgstr "Конфигурация точки продаж"
 #: model:ir.model,name:pos_adyen.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "Способы оплаты в торговых точках"
-
-#. module: pos_adyen
-#: model:ir.model,name:pos_adyen.model_pos_session
-msgid "Point of Sale Session"
-msgstr "Сессия в торговой точке"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip
@@ -134,19 +148,31 @@ msgstr "Выполните транзакции в тестовой среде."
 #. module: pos_adyen
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
-msgid "Terminal %s is already used in company %s on payment method %s."
-msgstr "Терминал %s уже используется в компании %s для оплаты по методу %s."
+msgid ""
+"Terminal %(terminal)s is already used in company %(company)s on payment "
+"method %(payment_method)s."
+msgstr ""
 
 #. module: pos_adyen
 #. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
-msgid "Terminal %s is already used on payment method %s."
-msgstr "Терминал %s уже используется для способа оплаты %s."
+msgid ""
+"Terminal %(terminal)s is already used on payment method %(payment_method)s."
+msgstr ""
+
+#. module: pos_adyen
+#: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_event_url
+msgid "This URL needs to be pasted on Adyen's portal terminal settings."
+msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key
-msgid "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description"
-msgstr "Используется при подключении к Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description"
+msgid ""
+"Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
+"to-get-the-api-key/#description"
+msgstr ""
+"Используется при подключении к Adyen: https://docs.adyen.com/user-"
+"management/how-to-get-the-api-key/#description"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier

@@ -32,7 +32,6 @@
 # Malaz Abuidris <msea@odoo.com>, 2024
 # Melih Melik Sonmez, 2024
 # Murat Durmuş <muratd@projetgrup.com>, 2024
-# Levent Karakaş <levent@mektup.at>, 2024
 # Ömer ABA <omeraba93@gmail.com>, 2024
 # Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # Mehmet YAYLA, 2024
@@ -45,6 +44,7 @@
 # Martin Trigaux, 2024
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
 # Ediz Duman <neps1192@gmail.com>, 2024
+# Levent Karakaş <levent@mektup.at>, 2024
 # 
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2024\n"
+"Last-Translator: Levent Karakaş <levent@mektup.at>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -178,7 +178,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
-msgstr "taksit"
+msgstr "%(name)s taksit #%(number)s"
 
 #. module: account
 #. odoo-python
@@ -2298,6 +2298,12 @@ msgstr ""
 "için faturalarınıza bir QR kodu ekleyin."
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Add a description to your item."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Add a journal"
 msgstr "Yevmiye ekle"
@@ -4303,6 +4309,12 @@ msgstr "Tıkla"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Click here to add a description to your product."
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Click or press enter to add a description"
 msgstr ""
@@ -4531,8 +4543,8 @@ msgstr "Bu yevmiyeyle ilişkili şirket"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Complete the partner data with email"
-msgstr "İş ortağı verilerini e-postayla tamamlayın"
+msgid "Complete the partner data with email."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -4569,12 +4581,6 @@ msgstr "Yapılandırma incelemesi"
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Configure"
 msgstr "Yapılandır"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Configure document layout."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -4983,6 +4989,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
 msgid "Create the first cash rounding"
 msgstr "İlk nakit yuvarlamasını oluştur"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Create the product."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -7095,8 +7107,8 @@ msgstr "Şekil Türü"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Fill in the details of the line."
-msgstr "Çizginin ayrıntılarını doldurun."
+msgid "Fill in the details of the product or see the suggestion."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -13721,8 +13733,8 @@ msgstr ""
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Set a price"
-msgstr "Bir fiyat belirleyin"
+msgid "Set a price."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -17304,6 +17316,12 @@ msgstr "Tedarikçiler"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Verify the price and update if necessary."
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "View"
 msgstr "Görüntüle"
@@ -18386,7 +18404,7 @@ msgstr "faturanın para birimini etkinleştirme"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr ""
+msgstr "rumuz"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view

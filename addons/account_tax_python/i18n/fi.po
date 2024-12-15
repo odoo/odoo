@@ -6,6 +6,7 @@
 # Martin Trigaux, 2024
 # Mikko Salmela <salmemik@gmail.com>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Veroryhmä: Vero on joukko aliveroja.\n"
+"    - Kiinteä: Veron määrä pysyy samana hinnasta riippumatta.\n"
+"    - Prosenttiosuus: Veron määrä on % of hinnasta:\n"
+"        esim. 100 * (1 + 10 %) = 110 (ei sisällä hintaa)\n"
+"        esim. 110 / (1 + 10 %) = 100 (sisältyy hintaan)\n"
+"    - Prosenttiosuus sisältävä vero: Veron määrä on jaettuna hinnalla:\n"
+"        esim. 180 / (1 - 10%) = 200 (ei sisällä hintaa)\n"
+"        esim. 200 * (1 - 10 %) = 180 (sisältyy hintaan)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula

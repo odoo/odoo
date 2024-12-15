@@ -235,6 +235,12 @@ msgid ""
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            กฎ\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                            กฎ\n"
+"                                        </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -246,6 +252,12 @@ msgid ""
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        รายการราคา\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        รายการราคา\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -895,6 +907,8 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
+"คอมโบช่วยให้คุณสามารถเลือกผลิตภัณฑ์หนึ่งรายการจากตัวเลือกต่างๆ "
+"ในแต่ละหมวดหมู่"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1726,7 +1740,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "หากไม่เลือกไว้ คุณสามารถซ่อนแอตทริบิวต์ได้โดยไม่ต้องลบออก"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -3660,7 +3674,7 @@ msgstr "Url"
 msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
-msgstr ""
+msgstr "ใช้กฎส่วนลดและเปิดใช้งานการตั้งค่าส่วนลดเพื่อแสดงส่วนลดให้กับลูกค้า"
 
 #. module: product
 #. odoo-python
@@ -3951,12 +3965,13 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
+"คุณกำลังจะเพิ่มค่า \"%(attribute_value)s\" ให้กับผลิตภัณฑ์ %(product_count)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "คุณกำลังจะอัพเดทราคาพิเศษของผลิตภัณฑ์ %s"
 
 #. module: product
 #. odoo-python
@@ -4030,6 +4045,7 @@ msgstr "คุณไม่สามารถแก้ไขสินค้าน
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
+"คุณไม่สามารถเก็บคุณลักษณะนี้ถาวรได้ เนื่องจากยังมีผลิตภัณฑ์ที่เชื่อมโยงอยู่"
 
 #. module: product
 #. odoo-python
@@ -4103,6 +4119,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"คุณไม่สามารถลบรายการราคาได้:\n"
+"(%(pricelists)s)\n"
+"รายการราคาเหล่านี้ใช้ภายในรายการราคา:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -4127,6 +4147,8 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
+"คุณไม่สามารถลบค่า %(value)s ได้ เนื่องจากถูกใช้กับผลิตภัณฑ์ต่อไปนี้:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python

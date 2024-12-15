@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
-# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:48+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -267,18 +267,6 @@ msgstr "%s تم إنشائها"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 msgid "%s days overdue"
 msgstr "%s أيام متأخرة "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "%s has a request"
-msgstr "%s لديه طلب"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "%s has a suggestion"
-msgstr "%s لديه اقتراح "
 
 #. module: mail
 #. odoo-javascript
@@ -676,6 +664,13 @@ msgstr "الذكاء الاصطناعي "
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 msgid "Accept"
 msgstr "قبول"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Accept with camera"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -1247,6 +1242,12 @@ msgstr "يحتاج find_or_create إلى بريد إلكتروني حتى يعم
 #: code:addons/mail/static/src/core/common/failure_model.js:0
 msgid "An error occurred when sending an email"
 msgstr "حدث خطأ عند إرسال البريد الإلكتروني "
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/failure_model.js:0
+msgid "An error occurred when sending an email on “%(record_name)s”"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2269,8 +2270,8 @@ msgstr "قم بجمع الردود في عنوان بريد محدد "
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Come here often? Install Odoo on your device!"
-msgstr "تأتي هنا في كثير من الأحيان؟ قم بتثبيت Odoo على جهازك! "
+msgid "Come here often? Install the app for quick and easy access!"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3322,6 +3323,12 @@ msgid "Download:"
 msgstr "تنزيل: "
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/mail_attachment_dropzone.xml:0
+msgid "Drop Files here"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__date_deadline
 msgid "Due Date"
@@ -3503,6 +3510,12 @@ msgid "Email Domain"
 msgstr "نطاق البريد الإلكتروني "
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Email Failure: %(modelName)s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Header Color"
@@ -3672,15 +3685,15 @@ msgid "Employee Only"
 msgstr "للموظفين فقط "
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
+msgid "Enable"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
 msgstr "تمكين تتبع الطلبات "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Enable desktop notifications to chat"
-msgstr "تمكين إشعارات سطح المكتب للدردشة "
 
 #. module: mail
 #. odoo-javascript
@@ -3842,8 +3855,8 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s)"
-msgstr "فشل تكوين قالب inline_template: %(template_txt)s) "
+msgid "Failed to render inline_template template: %(template_txt)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -3878,6 +3891,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
 msgstr "نوع الفشل"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Failure: %(modelName)s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
@@ -4837,6 +4856,12 @@ msgid "Incoming Mail Servers"
 msgstr "خوادم البريد الوارد "
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Incoming Video Call..."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
@@ -4882,6 +4907,12 @@ msgstr "قم بإدراج قوالب "
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "Install"
 msgstr "تثبيت"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Install Odoo"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.discuss_channel_integrations_menu
@@ -7624,6 +7655,12 @@ msgid "Preview"
 msgstr "معاينة"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Preview my camera"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Preview of"
 msgstr "معاينة لـ"
@@ -8970,6 +9007,12 @@ msgstr "ابدأ محادثة "
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Start a Video Call"
+msgstr "بدء مكالمة فيديو "
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_app_model.js:0
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 msgid "Start a conversation"
@@ -8986,7 +9029,7 @@ msgstr "بدء اجتماع "
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_form
 msgid "State"
-msgstr "الولاية "
+msgstr "الحالة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__state
@@ -9023,6 +9066,12 @@ msgstr "وقت الحالة "
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 msgid "Status with time"
 msgstr "الحالة مع الوقت "
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Stay tuned! Enable push notifications to never miss a message."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -9769,7 +9818,7 @@ msgstr "صورة المناقشة "
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.xml:0
 msgid "Thread has unread messages"
-msgstr ""
+msgstr "توجد رسائل غير مقروءة في المحادثة "
 
 #. module: mail
 #. odoo-javascript
@@ -9980,6 +10029,12 @@ msgstr "حاول مجدداً "
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Turn camera on"
 msgstr "تشغيل الكاميرا "
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Turn on notifications"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
@@ -10295,12 +10350,6 @@ msgstr "تم الرفع "
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "Uploading"
 msgstr "جاري الرفع "
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/mail_composer_attachment_selector.js:0
-msgid "Uploading error"
-msgstr "خطأ في التحميل"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
@@ -11046,7 +11095,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
 msgid "You unpinned %(conversation_name)s"
-msgstr ""
+msgstr "لقد قمت بإلغاء تثبيت %(conversation_name)s "
 
 #. module: mail
 #. odoo-javascript
@@ -11433,7 +11482,7 @@ msgstr "مثال: \"info@mycompany.odoo.com\" "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 msgid "e.g: Send order confirmation"
-msgstr ""
+msgstr "مثال: إرسال تأكيد الطلب "
 
 #. module: mail
 #. odoo-javascript
@@ -11465,7 +11514,7 @@ msgstr "https://developers.google.com/tenor/guides/content-filtering"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/relative_time.js:0
 msgid "in a few seconds"
-msgstr ""
+msgstr "خلال ثوانٍ قليلة "
 
 #. module: mail
 #. odoo-python
@@ -11615,7 +11664,7 @@ msgstr "أو"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "or press %(send_keybind)s"
-msgstr ""
+msgstr "أو قم بالضغط على %(send_keybind)s "
 
 #. module: mail
 #. odoo-javascript

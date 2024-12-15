@@ -29,9 +29,9 @@
 # marcescu, 2024
 # Josep Anton Belchi, 2024
 # ericrolo, 2024
-# Quim - eccit <quim@eccit.com>, 2024
 # Pere Martínez, 2024
 # Martin Trigaux, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Quim - coopdevs <quim.rebull@coopdevs.org>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -467,6 +467,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        Estimat <t t-out=\"object.partner_id.name or ''\">usuari</t>,\n"
+"        <br><br>\n"
+"        T'informem que el teu\n"
+"        <t t-out=\"doc_name or ''\">pressupost</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (amb referència: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        ha estat cancel·lat. PEr tant no serà cobret per aquesta comanda.\n"
+"        Si cal algun reemborsament serà acordat amb vosté.\n"
+"        <br><br>\n"
+"        Contacti amb nosaltres per qualsevol dubte.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
