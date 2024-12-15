@@ -13,8 +13,7 @@ class ResPartner(models.Model):
                 values.get('name')
                 and partner.company_id and partner.company_id.account_fiscal_country_id.code == 'PT'
                 and partner.name
-                and values.get('name') != partner.name
-                and not partner.vat
+                and not (partner.vat or values.get('vat'))
             ):
                 raise UserError(_("You cannot change the name of a partner without a VAT number"))
             if (

@@ -10,6 +10,7 @@ patch(PosStore.prototype, {
         await super.setup(...args);
         const values = await this.data.call("pos.session", "l10n_pt_pos_get_software_info", [
             this.company.id,
+            this.config.id,
         ]);
         this.session.l10nPtCertificationNumber = values.l10n_pt_pos_certification_number;
         this.session.l10nPtTrainingMode = values.l10n_pt_training_mode;
@@ -54,10 +55,13 @@ patch(PosStore.prototype, {
             return super.printReceipt(...arguments);
         }
         const values = await this.l10nPtComputeMissingHashes();
-        this.get_order().name = values.name;
-        this.get_order().l10nPtPosAtcud = values.atcud;
-        this.get_order().l10nPtPosInalterableHashShort = values.hash_short;
-        this.get_order().l10nPtPosQrCodeStr = values.qr_code_str;
+        const order = this.get_order();
+
+        order.name = values.name;
+        order.l10nPtPosAtcud = values.atcud;
+        order.l10nPtPosIdentifier = values.document_identifier;
+        order.l10nPtPosInalterableHashShort = values.hash_short;
+        order.l10nPtPosQrCodeStr = values.qr_code_str;
         // Return super to allow printing even if the QR code could not be created
         return super.printReceipt(...arguments);
     },
