@@ -1,38 +1,48 @@
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import fields, Command
+from odoo.exceptions import UserError
 from odoo.models import Model
 from odoo.tests import tagged
-from odoo.exceptions import UserError
 
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
 class TestL10nPtPosCommon(TestPoSCommon):
-    def setUp(self):
+    def setUp(cls):
         super().setUp()
-        self.company_pt = self.company_data['company']
-        self.company_pt.vat = '999999990'
-        self.company_pt.write({
-            'country_id': self.env.ref('base.pt').id,
-            'account_fiscal_country_id': self.env.ref('base.pt').id,
+        cls.company_pt = cls.company_data['company']
+        cls.company_pt.vat = '999999990'
+        cls.company_pt.write({
+            'country_id': cls.env.ref('base.pt').id,
+            'account_fiscal_country_id': cls.env.ref('base.pt').id,
             'vat': 'PT123456789',
         })
 
-        self.config = self.basic_config
-        self.config.l10n_pt_pos_at_series_id = self.env['l10n_pt.at.series'].create({
-            'type': 'pos_order',
-            'prefix': 'POS-TEST',
-            'at_code': 'AT-POS-TEST',
+        cls.config = cls.basic_config
+        year = fields.Date.today().year
+        cls.config.l10n_pt_pos_at_series_id = cls.env['l10n_pt.at.series'].create({
+            'name': year,
+            'company_id': cls.company_pt.id,
+            'training_series': True,
+            'sale_journal_id': cls.company_data['default_journal_sale'].id,
+            'at_series_line_ids': [
+                    Command.create({
+                        'type': 'pos_order',
+                        'prefix': 'POS',
+                        'at_code': f'AT-TESTPOS{year}',
+                    }),
+                ],
         })
 
-        self.product1 = self.create_product('Product 1', self.categ_basic, 150, standard_price=50)
+        cls.product1 = cls.create_product('Product 1', cls.categ_basic, 150, 50)
 
         def _patched_l10n_pt_pos_verify_config(*args, **kwargs):
+            # We patch _l10n_pt_pos_verify_config to avoid errors due to missing default_code or tax on the product
             pass
 
         with patch('odoo.addons.l10n_pt_pos.models.pos_config.PosConfig._l10n_pt_pos_verify_config', new=_patched_l10n_pt_pos_verify_config):
-            self.open_new_session()
+            cls.open_new_session()
 
     def _create_pos_order(self, date_order="2024-01-01", product=None, partner=False):
         product = product or self.product1
@@ -52,12 +62,12 @@ class TestL10nPtPosCommon(TestPoSCommon):
         return order
 
 
-@tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
+@tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtPosHash(TestL10nPtPosCommon):
     def test_l10n_pt_pos_hash_inalterability(self):
         order = self._create_pos_order()
         self.assertEqual(order.l10n_pt_pos_inalterable_hash, False)
-        order.l10n_pt_pos_compute_missing_hashes(order.company_id.id)  # Called when printing the receipt
+        order.l10n_pt_pos_compute_missing_hashes(order.company_id.id, order.config_id.id)  # Called when printing the receipt
 
         expected_error_msg = "This document is protected by a hash. Therefore, you cannot edit the following fields:.*"
 
@@ -69,9 +79,11 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
             order.l10n_pt_hashed_on = fields.Datetime.now()
         with self.assertRaisesRegex(UserError, f"{expected_error_msg}Order Ref."):
             order.name = "New name"
+        with self.assertRaisesRegex(UserError, f"{expected_error_msg}Document Number."):
+            order.l10n_pt_document_number = "New number/0001"
 
         # The following field is not part of the hash so it can be modified
-        order.note = 'new note'
+        order.general_note = 'new note'
 
     def test_l10n_pt_pos_hash_integrity_report(self):
         """Test the hash integrity report"""
@@ -80,9 +92,9 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
         order3 = self._create_pos_order("2024-01-03")
         order4 = self._create_pos_order("2024-01-04")
         self.assertEqual(order1.l10n_pt_pos_inalterable_hash, False)
-        order1.l10n_pt_pos_compute_missing_hashes(order1.company_id.id)  # Called when printing the receipt in JS
+        order1.l10n_pt_pos_compute_missing_hashes(order1.company_id.id, order1.config_id.id)  # Called when printing the receipt in JS
 
-        integrity_check = next(filter(lambda r: r['config_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'verified')
         self.assertEqual(integrity_check['msg_cover'], 'Orders are correctly hashed')
         self.assertEqual(integrity_check['first_date'], order1.date_order)
@@ -91,14 +103,14 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
         # Let's change one of the fields used by the hash. It should be detected by the integrity report.
         # We need to bypass the write method of pos.order to do so.
         Model.write(order3, {'date_order': fields.Date.from_string('2024-01-07')})
-        integrity_check = next(filter(lambda r: r['config_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order3.id} ({order3.name}).')
 
         # Let's try with the l10n_pt_pos_inalterable_hash field itself
         Model.write(order3, {'date_order': fields.Date.from_string("2024-01-03")})  # Revert the previous change
         Model.write(order4, {'l10n_pt_pos_inalterable_hash': 'fake_hash'})
-        integrity_check = next(filter(lambda r: r['config_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(), self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order4.id} ({order4.name}).')
 

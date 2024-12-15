@@ -8,12 +8,24 @@
             <page name="extra" position="inside">
                 <field name="country_code" invisible="1"/>
                 <group string="Portugal" invisible="country_code != 'PT'">
-                    <field name="l10n_pt_pos_inalterable_hash"/>
+                    <field name="l10n_pt_document_number"/>
+                    <field name="l10n_pt_pos_inalterable_hash" groups="base.group_no_one"/>
                     <field name="l10n_pt_pos_atcud"/>
                 </group>
             </page>
         </field>
     </record>
+
+    <record id="view_pos_pos_list_pt" model="ir.ui.view">
+            <field name="name">pos.order.list.view.inherit.pt</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                   <field name="l10n_pt_document_number" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
 
     <record id="action_l10n_pt_pos_report_hash_integrity" model="ir.actions.report">
         <field name="name">Portuguese POS hash integrity result PDF</field>

@@ -1,4 +1,4 @@
-from odoo import fields, models, _, api
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 from odoo.tools.misc import format_date
@@ -21,16 +21,16 @@ class ResCompany(models.Model):
 
         results = []
 
-        pos_configs = self.env['pos.config'].search([
+        at_series = self.env['l10n_pt.at.series.line'].search([
             ('company_id', '=', self.id),
-            ('l10n_pt_pos_at_series_id', '!=', False),
+            ('type', '=', 'pos_order'),
         ])
 
-        for pos_config in pos_configs:
-            self.env['pos.order'].l10n_pt_pos_compute_missing_hashes(pos_config.company_id.id, pos_config.id)
+        for series in at_series:
+            self.env['pos.order'].l10n_pt_pos_compute_missing_hashes(self.id, at_series=series)
             query = self.env['pos.order'].sudo()._search(
                 domain=[
-                    ('config_id', '=', pos_config.id),
+                    ('l10n_pt_document_number', '=like', f'{series.document_identifier}%'),
                     ('l10n_pt_pos_inalterable_hash', '!=', False),
                 ],
                 order="name",
@@ -44,7 +44,7 @@ class ResCompany(models.Model):
                 orders = self.env['pos.order'].browse(order_id[0] for order_id in order_ids)
                 if not orders and not last_order:
                     results.append({
-                        'config_at_code': pos_config.l10n_pt_pos_at_series_id.code,
+                        'series_at_code': series.at_code,
                         'status': 'no_data',
                         'msg_cover': _('No POS orders found for this configuration.'),
                     })
@@ -64,8 +64,8 @@ class ResCompany(models.Model):
             self.env.execute_query(SQL("CLOSE hashed_orders"))
             if corrupted_order:
                 results.append({
-                    'config_prefix': pos_config.l10n_pt_pos_at_series_id.prefix,
-                    'config_at_code': pos_config.l10n_pt_pos_at_series_id._get_at_code(),
+                    'series_document_identifier': series.document_identifier,
+                    'series_at_code': series._get_at_code(),
                     'status': 'corrupted',
                     'msg_cover': _(
                         "Corrupted data on POS order with id %(id)s (%(name)s).",
@@ -75,17 +75,19 @@ class ResCompany(models.Model):
                 })
             else:
                 results.append({
-                    'config_prefix': pos_config.l10n_pt_pos_at_series_id.prefix,
-                    'config_at_code': pos_config.l10n_pt_pos_at_series_id._get_at_code(),
+                    'series_document_identifier': series.document_identifier,
+                    'series_at_code': series._get_at_code(),
                     'status': 'verified',
                     'msg_cover': _("Orders are correctly hashed"),
                     'first_order': first_order,
                     'last_order': last_order,
                     'first_hash': first_order.l10n_pt_pos_inalterable_hash,
                     'first_name': first_order.name,
+                    'first_document_number': first_order.l10n_pt_document_number,
                     'first_date': first_order.date_order,
                     'last_hash': last_order.l10n_pt_pos_inalterable_hash,
                     'last_name': last_order.name,
+                    'last_document_number': last_order.l10n_pt_document_number,
                     'last_date': last_order.date_order,
                 })
 
@@ -96,5 +98,5 @@ class ResCompany(models.Model):
 
     def _verify_hashed_order(self, order, previous_hash, versioning_list, current_versioning_index):
         previous_hash = previous_hash.split("$")[2] if previous_hash else ""
-        message = pt_hash_utils.get_message_to_hash(order.date_order, order.l10n_pt_hashed_on, order.amount_total, order._get_l10n_pt_pos_document_number(), previous_hash)
+        message = pt_hash_utils.get_message_to_hash(order.date_order, order.l10n_pt_hashed_on, order.l10n_pt_document_number, order.amount_total, previous_hash)
         return pt_hash_utils.verify_integrity(message, order.l10n_pt_pos_inalterable_hash, versioning_list[current_versioning_index])
