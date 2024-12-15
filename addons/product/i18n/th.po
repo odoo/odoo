@@ -221,6 +221,12 @@ msgid ""
 "                                            Rule\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                            กฎ\n"
+"                                        </span>\n"
+"                                        <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                            กฎ\n"
+"                                        </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -232,6 +238,12 @@ msgid ""
 "                                        Pricelist\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                        รายการราคา\n"
+"                                    </span>\n"
+"                                    <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                        รายการราคา\n"
+"                                    </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -3317,7 +3329,7 @@ msgstr "Url"
 msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
-msgstr ""
+msgstr "ใช้กฎส่วนลดและเปิดใช้งานการตั้งค่าส่วนลดเพื่อแสดงส่วนลดให้กับลูกค้า"
 
 #. module: product
 #. odoo-python
@@ -3742,6 +3754,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"คุณไม่สามารถลบรายการราคาได้:\n"
+"(%(pricelists)s)\n"
+"รายการราคาเหล่านี้ใช้ภายในรายการราคา:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -3766,6 +3782,8 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
+"คุณไม่สามารถลบค่า %(value)s ได้ เนื่องจากถูกใช้กับผลิตภัณฑ์ต่อไปนี้:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python

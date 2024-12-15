@@ -44,16 +44,18 @@ msgid ""
 "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
 "title=\"Clicks\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"คลิก\" role=\"img\" "
+"title=\"คลิก\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-share\" aria-label=\"แชร์\" role=\"img\" title=\"แชร์\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "<small>Where does this link to?</small>"
-msgstr ""
+msgstr "<small>ลิงค์นี้ไปที่ไหน?</small>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -62,6 +64,9 @@ msgid ""
 "                                Clicks\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                คลิก\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -70,6 +75,9 @@ msgid ""
 "                                Opened\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                เปิดแล้ว\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -86,6 +94,9 @@ msgid ""
 "                                Shared\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                แชร์แล้ว\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_needaction
@@ -180,17 +191,17 @@ msgstr "การ์ด"
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_campaign_action
 msgid "Card Campaign"
-msgstr ""
+msgstr "การ์ดแคมเปญ"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_click_count
 msgid "Card Click Count"
-msgstr ""
+msgstr "จำนวนการคลิกการ์ด"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_count
 msgid "Card Count"
-msgstr ""
+msgstr "จำนวนการ์ด"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_element_ids
@@ -215,18 +226,18 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_share_count
 msgid "Card Share Count"
-msgstr ""
+msgstr "จำนวนการ์ดที่แชร์"
 
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_template_action
 #: model:ir.ui.menu,name:marketing_card.cards_template_menu
 msgid "Card Template"
-msgstr ""
+msgstr "เทมเพลตการ์ด"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Click here for your reward!"
-msgstr ""
+msgstr "คลิกที่นี่เพื่อรับรางวัลของคุณ!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__color
@@ -236,17 +247,17 @@ msgstr "สี"
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.cards_card_action
 msgid "Create a Card Campaign to send cards to your partners"
-msgstr ""
+msgstr "สร้างแคมเปญการ์ดเพื่อส่งการ์ดให้กับพาร์ทเนอร์ของคุณ"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid "Create a Sharing Campaign!"
-msgstr ""
+msgstr "สร้างแคมเปญการแชร์!"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_template_action
 msgid "Create a design to use in Card Campaigns"
-msgstr ""
+msgstr "สร้างการออกแบบเพื่อใช้ในแคมเปญการ์ด"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__create_uid
@@ -271,12 +282,12 @@ msgstr "สร้างเมื่อ"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__default_background
 msgid "Default Background"
-msgstr ""
+msgstr "พื้นหลังค่าเริ่มต้น"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__post_suggestion
 msgid "Description below the card and default text when sharing on X"
-msgstr ""
+msgstr "คำอธิบายด้านล่างการ์ดและข้อความเริ่มต้นเมื่อแชร์บน X"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_template_id
@@ -311,7 +322,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_card_campaign_record_unique
 msgid "Each record should be unique for a campaign"
-msgstr ""
+msgstr "แต่ละรายการจะต้องไม่ซ้ำกันสำหรับแคมเปญ"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card_share
@@ -326,7 +337,7 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Filter By"
-msgstr ""
+msgstr "กรองตาม"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
@@ -374,7 +385,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.module.category,description:marketing_card.module_category_marketing_card
 msgid "Helps you manage marketing card campaigns."
-msgstr ""
+msgstr "ช่วยคุณจัดการแคมเปญการ์ดทางการตลาด"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
@@ -426,7 +437,7 @@ msgstr "รูปภาพ 2"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__image_preview
 msgid "Image Preview"
-msgstr ""
+msgstr "ตัวอย่างภาพ"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_is_follower
@@ -436,7 +447,7 @@ msgstr "เป็นผู้ติดตาม"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Join me at this event!"
-msgstr ""
+msgstr "เข้าร่วมกับฉันในกิจกรรมนี้!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__lang
@@ -485,7 +496,7 @@ msgstr "นามบัตร"
 #: model:ir.model,name:marketing_card.model_card_campaign
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__card_campaign_id
 msgid "Marketing Card Campaign"
-msgstr ""
+msgstr "แคมเปญการ์ดการตลาด"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_element
@@ -495,22 +506,22 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_tag
 msgid "Marketing Card Campaign Tag"
-msgstr ""
+msgstr "แท็กแคมเปญการ์ดการตลาด"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_manager
 msgid "Marketing Card Manager"
-msgstr ""
+msgstr "ผู้จัดการฝ่ายการตลาดของการ์ด"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_template
 msgid "Marketing Card Template"
-msgstr ""
+msgstr "เทมเพลตการ์ดการตลาด"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_user
 msgid "Marketing Card User"
-msgstr ""
+msgstr "ผู้ใช้การ์ดการตลาด"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__message
@@ -617,18 +628,18 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__post_suggestion
 msgid "Post Suggestion"
-msgstr ""
+msgstr "โพสต์ข้อเสนอแนะ"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Powered By"
-msgstr ""
+msgstr "สนับสนุนโดย"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid ""
 "Prepare a design and some content and let your community spread the word!"
-msgstr ""
+msgstr "เตรียมการออกแบบและเนื้อหาบางส่วน แล้วให้คอมมูนิตี้ของคุณบอกต่อ!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__preview_record_ref
@@ -653,7 +664,7 @@ msgstr "สีหลัก"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__primary_text_color
 msgid "Primary Text Color"
-msgstr ""
+msgstr "สีข้อความหลัก"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -662,7 +673,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_4
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_5
 msgid "Profile Picture"
-msgstr ""
+msgstr "รูปโปรไฟล์"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__rating_ids
@@ -708,7 +719,7 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_target_url
 msgid "Reward Link"
-msgstr ""
+msgstr "ลิงค์รางวัล"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_sms_error
@@ -718,12 +729,12 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Search Card"
-msgstr ""
+msgstr "ค้นหาการ์ด"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
 msgid "Search Share Campaign"
-msgstr ""
+msgstr "ค้นหาแคมเปญแชร์"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_color
@@ -733,7 +744,7 @@ msgstr "สีรอง"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_text_color
 msgid "Secondary Text Color"
-msgstr ""
+msgstr "สีข้อความรอง"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__section_1
@@ -748,7 +759,7 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Select where to share"
-msgstr ""
+msgstr "เลือกสถานที่ที่จะแชร์"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -764,12 +775,12 @@ msgstr "ส่ง & ปิด"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Send Cards"
-msgstr ""
+msgstr "ส่งการ์ด"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Share Campaign"
-msgstr ""
+msgstr "แชร์แคมเปญ"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_element_view_form
@@ -779,7 +790,7 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_list
 msgid "Share Card"
-msgstr ""
+msgstr "แชร์การ์ด"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_share_view_form
@@ -789,7 +800,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__share_status
 msgid "Share Status"
-msgstr ""
+msgstr "แชร์สถานะ"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_template_view_form
@@ -837,17 +848,17 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subheader
 msgid "Sub-Header"
-msgstr ""
+msgstr "ส่วนหัวย่อย"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_1
 msgid "Sub-Section 1"
-msgstr ""
+msgstr "ส่วนย่อย 1"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_2
 msgid "Sub-Section 2"
-msgstr ""
+msgstr "ส่วนย่อย 2"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__subject
@@ -869,7 +880,7 @@ msgstr "แท็ก"
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_campaign_tag_name_uniq
 msgid "Tags may not reuse existing names."
-msgstr ""
+msgstr "แท็กไม่อาจนำชื่อที่มีอยู่มาใช้ซ้ำได้"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_tree
@@ -889,12 +900,12 @@ msgstr "สีข้อความ"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Thanks for sharing, here is your reward!"
-msgstr ""
+msgstr "ขอบคุณสำหรับการแชร์ นี่คือรางวัลของคุณ!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
 msgid "Thanks to You Message"
-msgstr ""
+msgstr "ขอบคุณสำหรับข้อความของคุณ"
 
 #. module: marketing_card
 #. odoo-python
@@ -903,6 +914,8 @@ msgid ""
 "The UTM source '%s' cannot be deleted as it is used to promote marketing "
 "cards campaigns."
 msgstr ""
+"ไม่สามารถลบแหล่ง UTM '%s' ได้ "
+"เนื่องจากแหล่งนี้ถูกใช้เพื่อส่งเสริมแคมเปญการ์ดทางการตลาด"
 
 #. module: marketing_card
 #. odoo-python
@@ -931,6 +944,8 @@ msgid ""
 "User-agent: *\n"
 "                Allow: /cards/"
 msgstr ""
+"ตัวแทนผู้ใช้: *\n"
+"                อนุญาต: /cards/"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__value_type
@@ -961,7 +976,7 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Your Home Page"
-msgstr ""
+msgstr "หน้าแรกของคุณ"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -975,12 +990,12 @@ msgstr "ข้อความของปุ่ม"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. \"https://www.mycompany.com/reward\""
-msgstr ""
+msgstr "g=jo \"https://www.mycompany.com/reward\""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Odoo Experience Talks"
-msgstr ""
+msgstr "เช่น Odoo Experience Talks"
 
 #. module: marketing_card
 #. odoo-python

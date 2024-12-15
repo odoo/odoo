@@ -121,6 +121,12 @@ msgid ""
 "%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
 "message."
 msgstr ""
+"%(new_line)s%(new_line)sNhập %(bold_start)s@username%(bold_end)s để nhắc đến"
+" ai đó và thu hút sự chú ý của họ.%(new_line)sNhập "
+"%(bold_start)s#channel%(bold_end)s để nhắc đến một kênh.%(new_line)sNhập "
+"%(bold_start)s/command%(bold_end)s để thực thi một lệnh. %(new_line)sNhập "
+"%(bold_start)s:shortcut%(bold_end)s để chèn một câu trả lời soạn sẵn trong "
+"nội dung của bạn."
 
 #. module: mail
 #. odoo-javascript
@@ -1471,7 +1477,7 @@ msgstr "Hình đại diện 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__avatar_cache_key
 msgid "Avatar Cache Key"
-msgstr "Mã khoá cache avatar"
+msgstr "Khoá cache avatar"
 
 #. module: mail
 #. odoo-javascript
@@ -1677,7 +1683,7 @@ msgstr "Endpoint của trình duyệt"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__keys
 msgid "Browser keys"
-msgstr "Mã khoá trình duyệt"
+msgstr "Khoá trình duyệt"
 
 #. module: mail
 #. odoo-python
@@ -3630,6 +3636,12 @@ msgstr ""
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Failed to render inline_template template: %(template_txt)s)"
 msgstr "Không thể kết xuất mẫu inline_template: %(template_txt)s)"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Failed to render inline_template template: %(template_txt)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -5805,7 +5817,7 @@ msgstr "Dịch tin nhắn"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__google_translate_api_key
 msgid "Message Translation API Key"
-msgstr "Mã khoá API dịch tin nhắn"
+msgstr "Khoá API dịch tin nhắn"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__name
@@ -6981,7 +6993,7 @@ msgstr "Mật khẩu"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Paste your API key"
-msgstr "Dán mã khoá API của bạn"
+msgstr "Dán khoá API của bạn"
 
 #. module: mail
 #. odoo-javascript
@@ -7840,7 +7852,7 @@ msgstr "URL máy chủ SFU"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__sfu_server_key
 msgid "SFU Server key"
-msgstr "Mã khoá máy chủ SFU"
+msgstr "Khoá máy chủ SFU"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8882,7 +8894,7 @@ msgstr "Mã khóa API Tenor"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Tenor GIF API key"
-msgstr "Mã khoá API Tenor GIF"
+msgstr "Khoá API Tenor GIF"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

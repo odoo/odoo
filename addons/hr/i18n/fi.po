@@ -29,8 +29,8 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-15 18:10+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -380,6 +380,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Onboarding\", \"Offboarding\", ...)"
 msgstr ""
+"Toimintasuunnitelmien avulla voidaan määrittää luettelo toiminnoista vain muutamalla napsautuksella\n"
+"                    (esim. \"Onboarding\", \"Offboarding\", ...)"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_schedule
@@ -728,7 +730,7 @@ msgstr "Alaosastot"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Child departments"
-msgstr ""
+msgstr "Lastenosastot"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -932,7 +934,7 @@ msgstr "Luo uusi työskentelypaikka"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr ""
+msgstr "Luo toimintasuunnitelma"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1054,7 +1056,7 @@ msgstr "Osasto"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan__department_assignable
 msgid "Department Assignable"
-msgstr ""
+msgstr "Osasto on määritettävissä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -1290,7 +1292,7 @@ msgstr "Employee Name"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
 msgid "Employee Plans"
-msgstr ""
+msgstr "Työntekijöiden suunnitelmat"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__employee_properties_definition
@@ -1630,13 +1632,13 @@ msgstr "Etäisyys kotoa konttorille"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance in Km"
-msgstr ""
+msgstr "Etäisyys kotoa konttorille kilometreinä"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__distance_home_work_unit
 #: model:ir.model.fields,field_description:hr.field_res_users__distance_home_work_unit
 msgid "Home-Work Distance unit"
-msgstr ""
+msgstr "Mittayksikkö etäisyydelle kotoa konttorille"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -2253,7 +2255,7 @@ msgstr "Huollettavien lasten lukumäärä"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
 msgid "Number of Employees"
-msgstr ""
+msgstr "Työntekijöiden lukumäärä"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
@@ -2473,11 +2475,13 @@ msgid ""
 "Plan %(plan_names)s cannot use a department as it is used only for some HR "
 "plans."
 msgstr ""
+"Suunnitelmassa %(plan_names)s ei voida käyttää osastoa, koska sitä käytetään"
+" vain joissakin henkilöstösuunnitelmissa."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_schedule__plan_department_filterable
 msgid "Plan Department Filterable"
-msgstr ""
+msgstr "Suunnitteluosasto suodatettavissa"
 
 #. module: hr
 #. odoo-python
@@ -2673,6 +2677,8 @@ msgid ""
 "Quickly find all the information you need for your employees such as contact"
 " data, job position, availability, etc."
 msgstr ""
+"Löydät nopeasti kaikki tarvitsemasi tiedot työntekijöistäsi, kuten "
+"yhteystiedot, työtehtävät, saatavuus jne."
 
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_be
@@ -2741,7 +2747,7 @@ msgstr "Liittyvät työntekijät"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_partners_count
 msgid "Related Partners Count"
-msgstr ""
+msgstr "Liittyvien kumppanien määrä"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2950,7 +2956,7 @@ msgstr "Ohjelmistokehittäjä"
 #. odoo-python
 #: code:addons/hr/models/hr_employee_base.py:0
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "Joillakin työntekijöillä on jo työpaikan yhteyshenkilö"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3157,6 +3163,8 @@ msgid ""
 "The fields “%s”, which you are trying to read, are not available for "
 "employee public profiles."
 msgstr ""
+"Kentät \"%s\", joita yrität lukea, eivät ole käytettävissä työntekijöiden "
+"julkisissa profiileissa."
 
 #. module: hr
 #. odoo-python
@@ -3215,6 +3223,8 @@ msgid ""
 "This field is used in order to define in which timezone the employee will "
 "work."
 msgstr ""
+"Tätä kenttää käytetään määrittämään, missä aikavyöhykkeessä työntekijä "
+"työskentelee."
 
 #. module: hr
 #. odoo-python
@@ -3481,7 +3491,7 @@ msgstr "Työpaikan sijainti"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_name
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_name
 msgid "Work Location Name"
-msgstr ""
+msgstr "Työn sijainnin nimi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_type
@@ -3489,7 +3499,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_type
 #: model:ir.model.fields,field_description:hr.field_res_users__work_location_type
 msgid "Work Location Type"
-msgstr ""
+msgstr "Työn sijainnin tyyppi"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
@@ -3558,7 +3568,7 @@ msgstr "Työaikataulut"
 msgid ""
 "You are not allowed to create an employee because the user does not have "
 "access rights for %s"
-msgstr ""
+msgstr "Et voi luoda työntekijää, koska käyttäjällä ei ole käyttöoikeuksia %s"
 
 #. module: hr
 #. odoo-python

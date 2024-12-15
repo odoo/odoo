@@ -1757,6 +1757,8 @@ msgid ""
 "Changing the Lot/Serial number for move lines with different products is not"
 " allowed."
 msgstr ""
+"Erä-/sarjanumeron muuttaminen eri tuotteita sisältävien siirtorivien osalta "
+"ei ole sallittua."
 
 #. module: stock
 #. odoo-python
@@ -9044,7 +9046,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "Erä- tai sarjanumero (%s) liittyy toiseen tuotteeseen."
 
 #. module: stock
 #. odoo-python
@@ -10205,6 +10207,9 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
+"Tämän siirron sijainnin päivittäminen johtaa siihen, että tällä hetkellä osoitettujen kohteiden varaukset poistetaan. Kohteita yritetään varata uuteen sijaintiin, ja yhteys edellisiin siirtoihin poistetaan.\n"
+"\n"
+"Välttääksesi tämän, hävitä lähteen sijaintimuutos ennen tallentamista."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -10529,7 +10534,7 @@ msgstr "Varoitus!"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Warning: change source location"
-msgstr ""
+msgstr "Varoitus: muuta lähteen sijainti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11062,7 +11067,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot duplicate stock quants."
-msgstr ""
+msgstr "Varaston määrän asetuksen kirjauksia (quants) ei voi monistaa."
 
 #. module: stock
 #. odoo-python
