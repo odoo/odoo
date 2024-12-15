@@ -1,10 +1,7 @@
-import re
-
-from odoo import models, fields, _, api
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, format_date
+from odoo.tools import float_repr
 
-from odoo.addons.l10n_pt.const import PT_CERTIFICATION_NUMBER
 from odoo.addons.l10n_pt.utils import hashing as pt_hash_utils
 
 
@@ -20,16 +17,47 @@ class PosOrder(models.Model):
     l10n_pt_hashed_on = fields.Datetime(string="Hashed On", readonly=True)
 
     ####################################
+    # OVERRIDES
+    ####################################
+
+    def write(self, vals):
+        if not vals:
+            return True
+        for order in self:
+            violated_fields = set(vals).intersection(order._get_integrity_hash_fields() + ['l10n_pt_pos_inalterable_hash'])
+            if (
+                order.company_id.account_fiscal_country_id.code == 'PT'
+                and violated_fields
+                and order.l10n_pt_pos_inalterable_hash
+            ):
+                raise UserError(_(
+                    "This document is protected by a hash. "
+                    "Therefore, you cannot edit the following fields: %s.",
+                    ', '.join(f['string'] for f in order.fields_get(violated_fields).values())
+                ))
+        return super().write(vals)
+
+    ####################################
     # GENERAL
     ####################################
 
     def _get_l10n_pt_pos_document_number(self):
         self.ensure_one()
-        return f"pos_order {self.name}"
+        # FR = Fatura-Recibo (Invoice-Receipt)
+        return f"FR {self.name}"
+
+    def _l10n_pt_pos_get_vat_exemptions_reasons(self):
+        self.ensure_one()
+        return sorted(set(
+            self.line_ids.tax_ids
+                .filtered(lambda tax: tax.l10n_pt_tax_exemption_reason)
+                .mapped(lambda tax: dict(tax._fields['l10n_pt_tax_exemption_reason'].selection).get(tax.l10n_pt_tax_exemption_reason))
+        ))
 
     ####################################
     # HASH
     ####################################
+
     def _get_integrity_hash_fields(self):
         if self.company_id.account_fiscal_country_id.code != 'PT':
             return []
@@ -56,7 +84,7 @@ class PosOrder(models.Model):
             'gross_total': float_repr(order.amount_total, 2),
             'previous_signature': previous_hash,
         } for order in self]
-        return pt_hash_utils.sign_records(self.env, docs_to_sign)
+        return pt_hash_utils.sign_records(self.env, docs_to_sign, 'pos.order')
 
     @api.depends('l10n_pt_pos_inalterable_hash')
     def _compute_l10n_pt_pos_inalterable_hash_info(self):
@@ -90,15 +118,15 @@ class PosOrder(models.Model):
                 previous_hash = previous_order.l10n_pt_pos_inalterable_hash.split("$")[2] if previous_order.l10n_pt_pos_inalterable_hash else ""
             except IndexError:  # hash is not correctly formatted (it has been altered!)
                 previous_hash = "123"  # will never be a valid hash
-            current_atcud_number = int(previous_order.l10n_pt_pos_atcud.split("-")[-1]) + 1 if previous_order.l10n_pt_pos_atcud else 1
+            current_atcud_number = int(
+                previous_order.l10n_pt_pos_atcud.split("-")[-1]) + 1 if previous_order.l10n_pt_pos_atcud else 1
             for order in orders:
                 order.name = f"{order.config_id.l10n_pt_pos_at_series_id.prefix}/{str(current_atcud_number).zfill(5)}"
                 order.l10n_pt_pos_atcud = f"{order.config_id.l10n_pt_pos_at_series_id._get_at_code()}-{current_atcud_number}"
                 current_atcud_number += 1
 
             orders_hashes = orders._calculate_hashes(previous_hash)
-            for order_id, l10n_pt_pos_inalterable_hash in orders_hashes.items():
-                order = self.browse(order_id)
+            for order, l10n_pt_pos_inalterable_hash in orders_hashes.items():
                 order.l10n_pt_pos_inalterable_hash = l10n_pt_pos_inalterable_hash
             last_order = orders[-1:]
         return {
@@ -107,24 +135,24 @@ class PosOrder(models.Model):
             "hash_short": last_order.l10n_pt_pos_inalterable_hash_short,
             "atcud": last_order.l10n_pt_pos_atcud,
             "qr_code_str": last_order.l10n_pt_pos_qr_code_str,
+            "document_type": _("Invoice/Receipt"),
         }  # Send the last one that is being printed to the POS frontend
 
     ####################################
     # QR CODE
     ####################################
+    
     @api.depends('l10n_pt_pos_atcud')
     def _compute_l10n_pt_pos_qr_code_str(self):
         """ Generate the informational QR code for Portugal invoicing.
         E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
         """
-        EUR = self.env.ref('base.EUR')
-
         def format_amount(pos_order, amount):
             """
             Convert amount to EUR based on the rate of a given account_move's date
             Format amount to 2 decimals as per SAF-T (PT) requirements
             """
-            amount_eur = pos_order.currency_id._convert(amount, EUR, pos_order.company_id, pos_order.date_order)
+            amount_eur = pos_order.currency_id._convert(amount, self.env.ref('base.EUR'), pos_order.company_id, pos_order.date_order)
             return float_repr(amount_eur, 2)
 
         def get_details_by_tax_category(pos_order):
@@ -151,56 +179,23 @@ class PosOrder(models.Model):
                 order.l10n_pt_pos_qr_code_str = False
                 continue
 
-            pt_hash_utils.verify_prerequisites_qr_code(order, order.l10n_pt_pos_inalterable_hash, order.l10n_pt_pos_atcud)
-
-            company_vat = re.sub(r'\D', '', order.company_id.vat)
-            partner_vat = re.sub(r'\D', '', order.partner_id.vat or '999999990')
             details_by_tax_group = get_details_by_tax_category(order)
-            tax_letter = 'I'
-            if order.company_id.l10n_pt_region_code == 'PT-AC':
-                tax_letter = 'J'
-            elif order.company_id.l10n_pt_region_code == 'PT-MA':
-                tax_letter = 'K'
 
-            qr_code_str = ""
-            qr_code_str += f"A:{company_vat}*"
-            qr_code_str += f"B:{partner_vat}*"
-            qr_code_str += f"C:{order.partner_id.country_id.code if order.partner_id and order.partner_id.country_id else 'Desconhecido'}*"
-            qr_code_str += "D:FR*"
-            qr_code_str += "E:N*"
-            qr_code_str += f"F:{format_date(self.env, order.date_order, date_format='yyyyMMdd')}*"
-            qr_code_str += f"G:{order._get_l10n_pt_pos_document_number()}*"
-            qr_code_str += f"H:{order.l10n_pt_pos_atcud}*"
-            qr_code_str += f"{tax_letter}1:{order.company_id.l10n_pt_region_code}*"
+            pt_hash_utils.verify_prerequisites_qr_code(order, order.l10n_pt_pos_inalterable_hash, order.l10n_pt_pos_atcud)
+            # qr_code_dict contains most of the values needed for the qr code string
+            qr_code_dict, tax_letter = pt_hash_utils.l10n_pt_common_qr_code_str(order, self.env, order.date_order)
+            qr_code_dict['D:'] = "FR*"
+            qr_code_dict['G:'] = f"{order._get_l10n_pt_pos_document_number()}*"
+            qr_code_dict['H:'] = f"{order.l10n_pt_pos_atcud}*"
             if details_by_tax_group.get('E'):
-                qr_code_str += f"{tax_letter}2:{details_by_tax_group.get('E')['base']}*"
+                qr_code_dict[f'{tax_letter}2:'] = f"{details_by_tax_group.get('E')['base']}*"
             for i, tax_category in enumerate(('R', 'I', 'N')):
                 if details_by_tax_group.get(tax_category):
-                    qr_code_str += f"{tax_letter}{i * 2 + 3}:{details_by_tax_group.get(tax_category)['base']}*"
-                    qr_code_str += f"{tax_letter}{i * 2 + 4}:{details_by_tax_group.get(tax_category)['vat']}*"
-            qr_code_str += f"N:{format_amount(order, order.amount_tax)}*"
-            qr_code_str += f"O:{format_amount(order, order.amount_total)}*"
-            qr_code_str += f"Q:{order.l10n_pt_pos_inalterable_hash_short}*"
-            qr_code_str += f"R:{PT_CERTIFICATION_NUMBER}"
+                    qr_code_dict[f'{tax_letter}{i * 2 + 3}:'] = f"{details_by_tax_group.get(tax_category)['base']}*"
+                    qr_code_dict[f'{tax_letter}{i * 2 + 4}:'] = f"{details_by_tax_group.get(tax_category)['vat']}*"
+            qr_code_dict['N:'] = f"{format_amount(order, order.amount_tax)}*"
+            qr_code_dict['O:'] = f"{format_amount(order, order.amount_total)}*"
+            qr_code_dict['Q:'] = f"{order.l10n_pt_pos_inalterable_hash_short}*"
+            qr_code_str = ''.join(f"{key}{value}" for key, value in sorted(qr_code_dict.items()))
             order.l10n_pt_pos_qr_code_str = qr_code_str
 
-    ####################################
-    # OVERRIDES
-    ####################################
-
-    def write(self, vals):
-        if not vals:
-            return True
-        for order in self:
-            violated_fields = set(vals).intersection(order._get_integrity_hash_fields() + ['l10n_pt_pos_inalterable_hash'])
-            if (
-                order.company_id.account_fiscal_country_id.code == 'PT'
-                and violated_fields
-                and order.l10n_pt_pos_inalterable_hash
-            ):
-                raise UserError(_(
-                    "This document is protected by a hash. "
-                    "Therefore, you cannot edit the following fields: %s.",
-                    ', '.join(f['string'] for f in order.fields_get(violated_fields).values())
-                ))
-        return super().write(vals)

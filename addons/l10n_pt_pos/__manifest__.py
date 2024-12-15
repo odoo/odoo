@@ -16,15 +16,16 @@
     'data': [
         'views/pos_config_views.xml',
         'views/pos_order_views.xml',
+        'views/res_config_settings_views.xml',
         'report/l10n_pt_pos_hash_integrity_templates.xml',
     ],
     'demo': [
         'demo/demo_data.xml',
+        'demo/product_demo.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
-            'l10n_pt_pos/static/src/js/**/*',
-            'l10n_pt_pos/static/src/xml/**/*',
+            'l10n_pt_pos/static/src/app/**/*',
         ],
     },
     'license': 'LGPL-3',

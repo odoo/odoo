@@ -3,7 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { PosStore } from "@point_of_sale/app/services/pos_store";
 
 patch(PosStore.prototype, {
     async setup(...args) {
@@ -22,7 +22,7 @@ patch(PosStore.prototype, {
     async l10nPtComputeMissingHashes() {
         // Returns the last hash computed
         try {
-            const orderId = Number.isInteger(this.get_order().id) ? this.get_order().id : false;
+            const orderId = Number.isInteger(this.getOrder().id) ? this.getOrder().id : false;
             return await this.data.call("pos.order", "l10n_pt_pos_compute_missing_hashes", [
                 orderId,
                 this.company.id,
@@ -42,22 +42,17 @@ patch(PosStore.prototype, {
         }
     },
 
-    getReceiptHeaderData(order) {
-        const result = super.getReceiptHeaderData(...arguments);
-        result.isCountryPortugal = this.isPortugueseCompany();
-        result.l10nPtTrainingMode = this.session.l10nPtTrainingMode;
-        return result;
-    },
-
     async printReceipt() {
         if (!this.isPortugueseCompany()) {
             return super.printReceipt(...arguments);
         }
         const values = await this.l10nPtComputeMissingHashes();
-        this.get_order().name = values.name;
-        this.get_order().l10nPtPosAtcud = values.atcud;
-        this.get_order().l10nPtPosInalterableHashShort = values.hash_short;
-        this.get_order().l10nPtPosQrCodeStr = values.qr_code_str;
+        const order = this.getOrder();
+
+        order.name = values.name;
+        order.l10nPtPosAtcud = values.atcud;
+        order.l10nPtPosInalterableHashShort = values.hash_short;
+        order.l10nPtPosQrCodeStr = values.qr_code_str;
         // Return super to allow printing even if the QR code could not be created
         return super.printReceipt(...arguments);
     },

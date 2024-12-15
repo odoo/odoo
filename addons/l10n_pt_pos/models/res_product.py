@@ -12,6 +12,7 @@ class ProductTemplate(models.Model):
             if (
                 (not product_template.company_id or product_template.company_id.account_fiscal_country_id.code == 'PT')
                 and product_template.name
+                and product_template.name != values['name']
                 and self.env['pos.order.line'].search_count([
                     ('product_id.product_tmpl_id', '=', product_template.id),
                     ('order_id.state', 'in', ['paid', 'done', 'invoiced']),

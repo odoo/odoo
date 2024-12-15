@@ -1,5 +1,4 @@
-from odoo import models, fields, _
-
+from odoo import fields, models, _
 from odoo.exceptions import UserError, RedirectWarning
 
 
@@ -10,9 +9,9 @@ class PosConfig(models.Model):
     l10n_pt_pos_at_series_id = fields.Many2one("l10n_pt.at.series", string="Official Series of the Tax Authority")
 
     def _l10n_pt_pos_verify_config(self):
-        if not self.l10n_pt_pos_at_series_id or self.l10n_pt_pos_at_series_id.type != "pos_order":
+        if not self.l10n_pt_pos_at_series_id or self.l10n_pt_pos_at_series_id.type != 'out_receipt_fr':
             raise RedirectWarning(
-                _('You have to set an Official Series (of type POS order) for this POS configuration.'),
+                _('You have to set an Official Series of type Invoice/Receipt (FR) for this POS configuration.'),
                 {
                     "view_mode": "form",
                     "res_model": "pos.config",
@@ -22,10 +21,11 @@ class PosConfig(models.Model):
                 },
                 _("Go to the POS configuration")
             )
+
         if incorrect_products := self.env['product.product'].search([
-            ('default_code', '=', False),
             ('available_in_pos', '=', True),
-        ]).filtered(lambda p: len(p.taxes_id) != 1):
+            ('combo_ids', '=', False),
+        ]).filtered(lambda p: not p.default_code or not p.taxes_id):
             raise RedirectWarning(
                 _("All products should have one tax and an internal reference."),
                 {

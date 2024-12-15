@@ -1,38 +1,39 @@
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.models import Model
 from odoo.tests import tagged
-from odoo.exceptions import UserError
 
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
 class TestL10nPtPosCommon(TestPoSCommon):
-    def setUp(self):
+    def setUp(cls):
         super().setUp()
-        self.company_pt = self.company_data['company']
-        self.company_pt.vat = '999999990'
-        self.company_pt.write({
-            'country_id': self.env.ref('base.pt').id,
-            'account_fiscal_country_id': self.env.ref('base.pt').id,
+        cls.company_pt = cls.company_data['company']
+        cls.company_pt.vat = '999999990'
+        cls.company_pt.write({
+            'country_id': cls.env.ref('base.pt').id,
+            'account_fiscal_country_id': cls.env.ref('base.pt').id,
             'vat': 'PT123456789',
         })
 
-        self.config = self.basic_config
-        self.config.l10n_pt_pos_at_series_id = self.env['l10n_pt.at.series'].create({
-            'type': 'pos_order',
+        cls.config = cls.basic_config
+        cls.config.l10n_pt_pos_at_series_id = cls.env['l10n_pt.at.series'].create({
+            'type': 'out_receipt_fr',
             'prefix': 'POS-TEST',
             'at_code': 'AT-POS-TEST',
         })
 
-        self.product1 = self.create_product('Product 1', self.categ_basic, 150, standard_price=50)
+        cls.product1 = cls.create_product('Product 1', cls.categ_basic, 150, 50)
 
         def _patched_l10n_pt_pos_verify_config(*args, **kwargs):
+            # We patch _l10n_pt_pos_verify_config to avoid errors due to missing default_code or tax on the product
             pass
 
         with patch('odoo.addons.l10n_pt_pos.models.pos_config.PosConfig._l10n_pt_pos_verify_config', new=_patched_l10n_pt_pos_verify_config):
-            self.open_new_session()
+            cls.open_new_session()
 
     def _create_pos_order(self, date_order="2024-01-01", product=None, partner=False):
         product = product or self.product1
@@ -52,7 +53,7 @@ class TestL10nPtPosCommon(TestPoSCommon):
         return order
 
 
-@tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
+@tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtPosHash(TestL10nPtPosCommon):
     def test_l10n_pt_pos_hash_inalterability(self):
         order = self._create_pos_order()
@@ -71,7 +72,7 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
             order.name = "New name"
 
         # The following field is not part of the hash so it can be modified
-        order.note = 'new note'
+        order.internal_note = 'new note'
 
     def test_l10n_pt_pos_hash_integrity_report(self):
         """Test the hash integrity report"""

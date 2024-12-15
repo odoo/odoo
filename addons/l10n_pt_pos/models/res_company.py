@@ -1,4 +1,4 @@
-from odoo import fields, models, _, api
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 from odoo.tools.misc import format_date
