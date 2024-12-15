@@ -540,6 +540,49 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"```html\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">چیزی در سبد خرید شما هست.</h1>\n"
+"                    آیا مایلید خرید خود را کامل کنید؟<br><br>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                            <hr>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"تصویر محصول\">\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] ترکیب میز کار</strong><br><t t-out=\"line.name or ''\">[FURN_7800] ترکیب میز کار، قهوه ای سیاه: صندلی + میز + کشو.</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">واحد</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            ادامه سفارش\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
+"                    <div style=\"text-align: center;\"><strong>با تشکر از خرید شما از <t t-out=\"company.name or ''\">شرکت من (سان فرانسیسکو)</t>!</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"```"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -873,12 +916,12 @@ msgstr "هشیار باش!"
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
-msgstr ""
+msgstr "بنلوکس"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
 msgid "Benelux"
-msgstr ""
+msgstr "بنلوکس"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1447,6 +1490,19 @@ msgid ""
 "\n"
 "- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
 msgstr ""
+"برای ورود مشتری لازم است در سیستم وارد شده باشد وگرنه نشانی ایمیل او ناشناخته خواهد بود.\n"
+"\n"
+"- اگر مشتری احتمالی یک یا چند تسویه حساب ناتمام ایجاد کند و سپس قبل از ارسال ایمیل یادآوری خرید را کامل کند، آنگاه ایمیل ارسال نخواهد شد.\n"
+"\n"
+"- اگر کاربر به صورت دستی یک ایمیل بازیابی ارسال کرده باشد، ایمیل برای بار دوم ارسال نخواهد شد. \n"
+"\n"
+"- اگر خطایی در پردازش پرداخت زمانی که مشتری سعی در تکمیل تسویه حساب خود داشت رخ داده‌است، ایمیل ارسال نخواهد شد.\n"
+"\n"
+"- اگر فروشگاه شما از ارسال به نشانی مشتری پشتیبانی نمی‌کند، ایمیل ارسال نخواهد شد.\n"
+"\n"
+"- اگر هیچ‌یک از محصولات در تسویه حساب برای خرید در دسترس نباشند (مثلاً موجودی خالی)، ایمیل ارسال نخواهد شد.\n"
+"\n"
+"- اگر تمام محصولات در تسویه حساب رایگان باشند، و مشتری به صفحه حمل و نقل برای افزودن هزینه حمل و نقل نرود یا در صورتی که هزینه حمل و نقل نیز رایگان باشد، ایمیل ارسال نخواهد شد."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -2699,7 +2755,7 @@ msgstr "پاپ آپ روی کلیک کنید"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Portrait (4/5)"
-msgstr ""
+msgstr "پرتره (۴/۵)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2842,7 +2898,7 @@ msgstr "مشخصه محصول"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
 msgid "Product Carousel"
-msgstr ""
+msgstr "چرخ فلک محصول"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3049,6 +3105,8 @@ msgstr ""
 msgid ""
 "Provided video URL for '%s' is not valid. Please enter a valid video URL."
 msgstr ""
+"آدرس ویدئویی که برای '%s' ارائه شده معتبر نیست. لطفاً یک آدرس ویدئویی معتبر "
+"وارد کنید."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -3239,27 +3297,27 @@ msgstr "مرور سفارش"
 #: model:ir.model.fields,field_description:website_sale.field_product_tag__ribbon_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 msgid "Ribbon"
-msgstr ""
+msgstr "روبن"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Ribbon background color"
-msgstr ""
+msgstr "رنگ پس‌زمینه روبان"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html_class
 msgid "Ribbon class"
-msgstr ""
+msgstr "کلاس روبان"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html
 msgid "Ribbon html"
-msgstr ""
+msgstr "کد HTML برای نشان"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Ribbon text color"
-msgstr ""
+msgstr "رنگ متن روبان"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3731,7 +3789,7 @@ msgstr "از سفارش شما سپاس گذاریم."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "The #1"
-msgstr ""
+msgstr "شماره ۱"
 
 #. module: website_sale
 #. odoo-python
