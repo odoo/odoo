@@ -204,8 +204,8 @@ test("Message of type notification in chatter should not have inline display", a
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message-body");
-    expect(".o-mail-Message-body").not.toHaveStyle({ display: /inline/ });
+    await contains(".o-mail-Message-content");
+    expect(".o-mail-Message-content").not.toHaveStyle({ display: /inline/ });
 });
 
 test("Click on avatar opens its partner chat window", async () => {
