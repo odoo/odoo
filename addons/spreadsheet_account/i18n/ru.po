@@ -1,44 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* spreadsheet_account
-#
+# 
 # Translators:
+# Olga Gutorova, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: spreadsheet_account
 #. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_datasource.js:0
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "%s is not a valid year."
 msgstr "%s не является действительным годом."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "'%s' is not a valid period. Supported formats are \"21/12/2022\", \"Q1/2022\", \"12/2022\", and \"2022\"."
-msgstr "'%s' не является допустимым периодом. Поддерживаются следующие форматы: \"21/12/2022\", \"Q1/2022\", \"12/2022\" и \"2022\"."
+msgid ""
+"'%s' is not a valid period. Supported formats are \"21/12/2022\", "
+"\"Q1/2022\", \"12/2022\", and \"2022\"."
+msgstr ""
+"'%s' не является допустимым периодом. Поддерживаются следующие форматы: "
+"\"21/12/2022\", \"Q1/2022\", \"12/2022\" и \"2022\"."
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_account_account
 msgid "Account"
-msgstr "Аккаунт"
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Account type."
-msgstr "Тип счета."
+msgstr "Счёт"
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -72,26 +73,24 @@ msgstr "Статьи журнала для префикса счета %s"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Reference date."
-msgstr "Дата обращения."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "Returns the account ids of a given group."
 msgstr "Возвращает идентификаторы учетных записей заданной группы."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Returns the ending date of the fiscal year encompassing the provided date."
-msgstr "Возвращает дату окончания финансового года, охватывающего указанную дату."
+msgid ""
+"Returns the ending date of the fiscal year encompassing the provided date."
+msgstr ""
+"Возвращает дату окончания финансового года, охватывающего указанную дату."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Returns the starting date of the fiscal year encompassing the provided date."
-msgstr "Возвращает дату начала финансового года, охватывающего указанную дату."
+msgid ""
+"Returns the starting date of the fiscal year encompassing the provided date."
+msgstr ""
+"Возвращает дату начала финансового года, охватывающего указанную дату."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -107,7 +106,13 @@ msgstr "Установите значение TRUE, чтобы включить 
 
 #. module: spreadsheet_account
 #. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_datasource.js:0
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The account type (income, expense, asset_current,...)."
+msgstr "Тип счета (доход, расход, актив_оборотный,...)."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The company fiscal year could not be found."
 msgstr "Финансовый год компании найти не удалось."
 
@@ -126,8 +131,24 @@ msgstr "Компания."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "The date range. Supported formats are \"21/12/2022\", \"Q1/2022\", \"12/2022\", and \"2022\"."
-msgstr "Диапазон дат. Поддерживаются следующие форматы: \"21/12/2022\", \"Q1/2022\", \"12/2022\" и \"2022\"."
+msgid ""
+"The date range. Supported formats are \"21/12/2022\", \"Q1/2022\", "
+"\"12/2022\", and \"2022\"."
+msgstr ""
+"Диапазон дат. Поддерживаются следующие форматы: \"21/12/2022\", \"Q1/2022\","
+" \"12/2022\" и \"2022\"."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The day from which to extract the fiscal year end."
+msgstr "День, из которого следует извлечь конец финансового года."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The day from which to extract the fiscal year start."
+msgstr "День, с которого следует отсчитывать начало финансового года."
 
 #. module: spreadsheet_account
 #. odoo-javascript

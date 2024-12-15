@@ -9,10 +9,11 @@
 # Zhongbo Zhao, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Chloe Wang, 2024
 # Chill Liao <chill421@qq.com>, 2024
 # Raymond Yu <cl_yu@hotmail.com>, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
+# Dean Yue, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Dean Yue, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,9 +41,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"账项操作（%(move)s）导致账目未能平衡。\n"
-"借记总额为 %(debit_total)s；贷记总额为 %(credit_total)s。\n"
-"请考虑为日记账“%(journal)s” 设定预设记账账户，使账项操作能自动完成账目平衡。"
+"该分录（%(move)s）未平。\n"
+"借方总额为 %(debit_total)s；贷方总额为 %(credit_total)s。\n"
+"您可以考虑为日记账“%(journal)s” 设定默认科目，以便自动找平每一张分录。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -614,6 +615,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        这是您的\n"
+"        <t t-if=\"object.name\">\n"
+"            退货凭证 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            退货凭证\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (参考编号：<t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        金额为 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        退款方<t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        如有问题，请随时联系我们。\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -668,6 +700,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        这是您的\n"
+"        <t t-if=\"object.name\">\n"
+"            发票<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            发票\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (参考编号：<t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        金额为<span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        收款方 <t t-out=\"object.company_id.name or ''\">YourCompany</t>。\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            该发票已付款。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            请尽早付款。\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                请使用以下通讯方式付款：<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    账户<strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: 您可以查看您的工时表 <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">通过门户网站。\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        如有任何疑问，请随时联系我们。\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -689,6 +770,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的<t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        感谢您的支付。\n"
+"        附上您的付款收据  <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>，金额为 \n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span>，付款由<t t-out=\"object.company_id.name or ''\">YourCompany</t>作出。\n"
+"        <br/><br/>\n"
+"        如有任何疑问，请随时联系我们。\n"
+"        <br/><br/>\n"
+"        祝好，\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -2278,6 +2375,12 @@ msgid ""
 msgstr "为发票添加二维码，以便客户通过手机银行即时付款。"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Add a description to your item."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
 msgid "Add a journal"
 msgstr "添加日记账"
@@ -2849,14 +2952,14 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
-msgstr ""
+msgstr "在该日期及之前（包括该日期）的任何条目，都将根据其日记账顺序，推迟至较后的时间。 此锁定日期不可逆转，亦不允许任何例外。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
 msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
-msgstr ""
+msgstr "在该日期及之前（包括该日期）的任何条目，都将根据其日记账顺序，推迟至较后的时间。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -2864,7 +2967,7 @@ msgid ""
 "Any entry with taxes up to and including that date will be postponed to a "
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
-msgstr ""
+msgstr "在该日期及之前（包括该日期）的任何连税条目，都将根据其日记账顺序，推迟至较后的时间。 税务锁定日期会在税务结算记项过账时自动设定。"
 
 #. module: account
 #. odoo-python
@@ -2886,14 +2989,14 @@ msgstr "应收账款上的任何日记账项目都必须有到期日，反之亦
 msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
-msgstr ""
+msgstr "在此日期及之前（包括此日期）的任何采购条目，都将根据其日记账顺序，推迟至较后的日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
 msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
-msgstr ""
+msgstr "在此日期及之前（包括此日期）的任何销售条目，都将根据其日记账顺序，推迟至较后的日期。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -4236,6 +4339,12 @@ msgstr "点击"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Click here to add a description to your product."
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Click or press enter to add a description"
 msgstr "单击或按Enter键添加说明"
@@ -4458,8 +4567,8 @@ msgstr "与该日记账相关的公司"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Complete the partner data with email"
-msgstr "通过电子邮件填写合作伙伴数据"
+msgid "Complete the partner data with email."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -4496,12 +4605,6 @@ msgstr "配置审查"
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Configure"
 msgstr "配置"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Configure document layout."
-msgstr "配置文档布局。"
 
 #. module: account
 #. odoo-python
@@ -4904,6 +5007,12 @@ msgstr "手动创建"
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
 msgid "Create the first cash rounding"
 msgstr "创建首个现金舍入"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Create the product."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -6990,8 +7099,8 @@ msgstr "数字类型"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Fill in the details of the line."
-msgstr "填写该行详细信息。"
+msgid "Fill in the details of the product or see the suggestion."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -13482,8 +13591,8 @@ msgstr "设定一个日期。截至该日期，这些分录都将得到保证。
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Set a price"
-msgstr "设定价格"
+msgid "Set a price."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -16903,6 +17012,12 @@ msgstr "供应商："
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "供应商"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Verify the price and update if necessary."
+msgstr ""
 
 #. module: account
 #. odoo-javascript

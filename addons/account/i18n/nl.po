@@ -5,9 +5,9 @@
 # Translators:
 # Jolien De Paepe, 2024
 # Jordy Blankestijn <jblankestijn@erpopen.nl>, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -621,6 +621,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Hierbij vind je je\n"
+"        <t t-if=\"object.name\">\n"
+"            creditfactuur <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            creditfactuur\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (met referentie: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        voor het bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        van <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -675,6 +706,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Hierbij vind je je\n"
+"        <t t-if=\"object.name\">\n"
+"            factuur <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            factuur\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (met referentie: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        voor een totaalbedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        van <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            Deze factuur is reeds betaald.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Gelieve de betaling zo snel mogelijk in orde te brengen.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                PGebruik de volgende mededeling voor je betaling: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    op de bankrekening <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br/><br/>\n"
+"            PS: Je kunt je urenstaten nakijken <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">op het portaal.</a>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Aarzel niet om ons te contacteren als je nog vragen hebt.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -696,6 +776,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Bedankt voor je betaling.\n"
+"         Hierbij vind je je betalingsbewijs <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> voor een bedrag van\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> van <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        Aarzel niet om contact met ons op te nemen als je vragen hebt.\n"
+"        <br/><br/>\n"
+"        Vriendelijke groeten,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1651,7 +1747,7 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
-"Account %(account)s wordt opgesplitst in %(num_accounts)s, één voor elk "
+"Rekening %(account)s wordt opgesplitst in %(num_accounts)s, één voor elk "
 "bedrijf:\n"
 
 #. module: account
@@ -1780,7 +1876,7 @@ msgstr "Uitzondering rekeningvergrendeling"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_map
 msgid "Account Map"
-msgstr "Accountmap"
+msgstr "Map rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -1801,12 +1897,12 @@ msgstr "Boeking verzenden"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
 msgid "Account Move Send Batch Wizard"
-msgstr "Account verplaatsen verzend wizard"
+msgstr "Rekening verplaatsen verzend wizard"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
 msgid "Account Move Send Wizard"
-msgstr "Wizard account verplaatsen verzenden"
+msgstr "Wizard rekening verplaatsen verzenden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -1929,7 +2025,7 @@ msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate"
 " codes: %s"
 msgstr ""
-"Accountcodes moeten uniek zijn. Je kunt geen accounts aanmaken met deze "
+"Rekeningcodes moeten uniek zijn. Je kunt geen rekeningen aanmaken met deze "
 "dubbele codes: %s"
 
 #. module: account
@@ -1968,12 +2064,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
 msgid "Account merge wizard"
-msgstr "Wizard Account Samenvoegen"
+msgstr "Wizard rekening samenvoegen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
 msgid "Account merge wizard line"
-msgstr "Wizardregel Account Samenvoegen"
+msgstr "Wizardregel rekening samenvoegen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -2163,7 +2259,7 @@ msgstr "Rekeningen Voorvoegsels"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Accounts successfully merged!"
-msgstr "Accounts succesvol samengevoegd!"
+msgstr "Rekeningen succesvol samengevoegd!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
@@ -2341,6 +2437,12 @@ msgid ""
 msgstr ""
 "Voeg een QR-code toe aan je facturen zodat je klanten direct kunnen betalen "
 "met hun mobiel bankapplicatie."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Add a description to your item."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -2937,6 +3039,9 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
+"Elke invoer tot en met die datum wordt uitgesteld tot een later tijdstip, in"
+" overeenstemming met de volgorde van het dagboek. Deze blokeerdatum is "
+"onomkeerbaar en staat geen uitzondering toe."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -2944,6 +3049,8 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
+"Elke bijdrage tot en met die datum wordt uitgesteld tot een later tijdstip, "
+"in overeenstemming met de volgorde van het dagboek."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -2952,6 +3059,10 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
+"Elke boeking met belastingen tot en met die datum wordt uitgesteld tot een "
+"later tijdstip, in overeenstemming met de volgorde van het dagboek. De btw-"
+"blokkeerdatum wordt automatisch ingesteld wanneer de btw-afsluitingsboeking "
+"wordt geboekt."
 
 #. module: account
 #. odoo-python
@@ -2978,6 +3089,8 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Elke inkoop tot en met die datum wordt uitgesteld tot een later tijdstip, in"
+" overeenstemming met de volgorde van het dagboek."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
@@ -2985,6 +3098,8 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
+"Elke verkoop tot en met die datum wordt uitgesteld tot een later tijdstip, "
+"in overeenstemming met de volgorde van het dagboek."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -4371,6 +4486,12 @@ msgstr "Klik"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Click here to add a description to your product."
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Click or press enter to add a description"
 msgstr "Klik of druk op enter om een beschrijving toe te voegen"
@@ -4599,8 +4720,8 @@ msgstr "Bedrijf gerelateerd aan dit dagboek"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Complete the partner data with email"
-msgstr "Vul de contactgegevens in met e-mail"
+msgid "Complete the partner data with email."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -4637,12 +4758,6 @@ msgstr "Configuratie controle"
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_fiscal_year
 msgid "Configure"
 msgstr "Configureren"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Configure document layout."
-msgstr "Configureer documentlay-out."
 
 #. module: account
 #. odoo-python
@@ -5054,6 +5169,12 @@ msgstr "Handmatig aanmaken"
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
 msgid "Create the first cash rounding"
 msgstr "Maak de eerste kasafronding"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Create the product."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -6376,7 +6497,7 @@ msgstr "Distributie"
 #: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Distributie analytisch account"
+msgstr "Distributie analytisch rekening"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -6680,12 +6801,12 @@ msgstr "Vroegbetalingskorting"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Early Discount Gain"
-msgstr "Vroegbetalingskortingswinst"
+msgstr "Vroegbet.kortingswinst"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Early Discount Loss"
-msgstr "Vroegbetalingskortingsverlies"
+msgstr "Vroegbet.kortingsverlies"
 
 #. module: account
 #. odoo-python
@@ -7187,8 +7308,8 @@ msgstr "Figuurtype"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Fill in the details of the line."
-msgstr "Vul de details van de regel in."
+msgid "Fill in the details of the product or see the suggestion."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_fiscal_position
@@ -7712,7 +7833,7 @@ msgstr "Ga terug"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "Go to the accounting settings"
-msgstr "Ga naar de accountinstellingen"
+msgstr "Ga naar de instellingen van de boekhouding"
 
 #. module: account
 #. odoo-python
@@ -10115,7 +10236,7 @@ msgstr "Toewijzen"
 #. module: account
 #: model:ir.model,name:account.model_account_code_mapping
 msgid "Mapping of account codes per company"
-msgstr "In kaart brengen van accountcodes per bedrijf"
+msgstr "Mappen van rekeningen per bedrijf"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -10283,7 +10404,7 @@ msgstr "Samenvoegen"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Merge Accounts"
-msgstr "Accounts samenvoegen"
+msgstr "Rekeningen samenvoegen"
 
 #. module: account
 #: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
@@ -10763,8 +10884,8 @@ msgid ""
 "No users can edit accounts prior to and inclusive of this date. Use it for "
 "fiscal year locking for example."
 msgstr ""
-"Gebruikers kunnen geen accounts bewerken vóór en na deze datum. Gebruik het "
-"bijvoorbeeld voor het blokkeren van het fiscale jaar."
+"Gebruikers kunnen geen rekeningen bewerken vóór en na deze datum. Gebruik "
+"het bijvoorbeeld voor het blokkeren van het fiscale jaar."
 
 #. module: account
 msgid ""
@@ -12353,7 +12474,7 @@ msgid ""
 "Prevents creation and modification of entries in purchase journals up to the"
 " defined date inclusive."
 msgstr ""
-"Voorkomt het aanmaken en wijzigen van boekingen in inkoopjournaals tot en "
+"Voorkomt het aanmaken en wijzigen van boekingen in inkoopdagboeken tot en "
 "met de gedefinieerde datum."
 
 #. module: account
@@ -12361,7 +12482,7 @@ msgid ""
 "Prevents creation and modification of entries in sales journals up to the "
 "defined date inclusive."
 msgstr ""
-"Voorkomt het maken en wijzigen van boekingen in verkoopjournaals tot en met "
+"Voorkomt het maken en wijzigen van boekingen in verkoopdagboeken tot en met "
 "de gedefinieerde datum."
 
 #. module: account
@@ -13917,8 +14038,8 @@ msgstr ""
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Set a price"
-msgstr "Stel een prijs in"
+msgid "Set a price."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -15244,7 +15365,8 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 msgid "The code must be set for every company to which this account belongs."
 msgstr ""
-"De code moet worden ingesteld voor elk bedrijf waartoe deze account behoort."
+"De code moet worden ingesteld voor elk bedrijf waartoe deze rekening "
+"behoort."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
@@ -15481,7 +15603,7 @@ msgstr "De volgende boekingen worden gegenereerd"
 #: code:addons/account/models/account_account.py:0
 msgid "The following accounts must be assigned to at least one company:"
 msgstr ""
-"De volgende accounts moeten aan minstens één bedrijf worden toegewezen:"
+"De volgende rekeningen moeten aan minstens één bedrijf worden toegewezen:"
 
 #. module: account
 #. odoo-python
@@ -16140,8 +16262,8 @@ msgid ""
 "%(prefix_info)s"
 msgstr ""
 "Er zijn nog niet-afgeletterde bankafschriftregels voor de geselecteerde "
-"datum. De boekingen van journaalprefixen die deze bevatten zullen niet "
-"worden beveiligd: %(prefix_info)s"
+"datum. De boekingen van dagboekprefixen die deze bevatten zullen niet worden"
+" beveiligd: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -16310,7 +16432,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "This can only be used on accounts."
-msgstr "Dit kan alleen worden gebruikt op accounts."
+msgstr "Dit kan alleen worden gebruikt op rekeningen."
 
 #. module: account
 #. odoo-python
@@ -16595,7 +16717,7 @@ msgstr ""
 msgid ""
 "Tick this checkbox if you want accounts to be grouped by name for merging."
 msgstr ""
-"Vink dit selectievakje aan als je wilt dat accounts op naam worden "
+"Vink dit selectievakje aan als je wilt dat rekeningen op naam worden "
 "gegroepeerd voor het samenvoegen."
 
 #. module: account
@@ -17622,6 +17744,12 @@ msgstr "Leveranciers"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Verify the price and update if necessary."
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "View"
 msgstr "Bekijk"
@@ -18159,7 +18287,7 @@ msgid ""
 "You can't unlink this company from this account since there are some journal"
 " items linked to it."
 msgstr ""
-"Je kunt dit bedrijf niet loskoppelen van deze account omdat er een aantal "
+"Je kunt dit bedrijf niet loskoppelen van deze rekening omdat er een aantal "
 "boekingen aan gekoppeld zijn."
 
 #. module: account
@@ -18668,7 +18796,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr "Je moet minstens 2 accounts selecteren."
+msgstr "Je moet minstens 2 rekeningen selecteren."
 
 #. module: account
 #. odoo-python

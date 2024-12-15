@@ -235,18 +235,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "%s has a request"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "%s has a suggestion"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/typing/common/typing.js:0
 msgid "%s is typing..."
 msgstr "%s piše..."
@@ -610,6 +598,13 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 msgid "Accept"
 msgstr "Sprejmi"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Accept with camera"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -1163,6 +1158,12 @@ msgstr "Za delovanje funkcije find_or_create je potreben e-poštni naslov"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/failure_model.js:0
 msgid "An error occurred when sending an email"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/failure_model.js:0
+msgid "An error occurred when sending an email on “%(record_name)s”"
 msgstr ""
 
 #. module: mail
@@ -2158,7 +2159,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Come here often? Install Odoo on your device!"
+msgid "Come here often? Install the app for quick and easy access!"
 msgstr ""
 
 #. module: mail
@@ -3196,6 +3197,12 @@ msgid "Download:"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/mail_attachment_dropzone.xml:0
+msgid "Drop Files here"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__date_deadline
 msgid "Due Date"
@@ -3377,6 +3384,12 @@ msgid "Email Domain"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Email Failure: %(modelName)s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Header Color"
@@ -3535,15 +3548,15 @@ msgid "Employee Only"
 msgstr "Samo za zaposlene"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
+msgid "Enable"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
 msgstr "Omogočanje sledenja naročenim izdelkom"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Enable desktop notifications to chat"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3700,7 +3713,7 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s)"
+msgid "Failed to render inline_template template: %(template_txt)s"
 msgstr ""
 
 #. module: mail
@@ -3734,6 +3747,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
 msgstr "Vrsta neuspeha"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Failure: %(modelName)s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
@@ -4663,6 +4682,12 @@ msgid "Incoming Mail Servers"
 msgstr "Vhodni poštni strežniki"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Incoming Video Call..."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
@@ -4708,6 +4733,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "Install"
 msgstr "Namesti"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Install Odoo"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.discuss_channel_integrations_menu
@@ -7388,6 +7419,12 @@ msgid "Preview"
 msgstr "Predogled"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Preview my camera"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Preview of"
 msgstr "Predogled"
@@ -8727,6 +8764,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Start a Video Call"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_app_model.js:0
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 msgid "Start a conversation"
@@ -8779,6 +8822,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 msgid "Status with time"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Stay tuned! Enable push notifications to never miss a message."
 msgstr ""
 
 #. module: mail
@@ -9702,6 +9751,12 @@ msgid "Turn camera on"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Turn on notifications"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 msgid "Twilio Account Auth Token"
 msgstr ""
@@ -10006,12 +10061,6 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "Uploading"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/mail_composer_attachment_selector.js:0
-msgid "Uploading error"
-msgstr "Napaka pri nalaganju"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type

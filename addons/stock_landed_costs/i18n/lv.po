@@ -1,33 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_landed_costs
-#
+# 
 # Translators:
-# Arnis Putniņš <arnis@allegro.lv>, 2022
-# ievaputnina <ievai.putninai@gmail.com>, 2022
-# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2022
-# Anzelika Adejanova, 2022
-# Martin Trigaux, 2022
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
-#
+# Konstantins Zabogonskis <inculin4ik@gmail.com>, 2024
+# Anzelika Adejanova, 2024
+# Arnis Putniņš <arnis@allegro.lv>, 2024
+# Will Sensors, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# ievaputnina <ievai.putninai@gmail.com>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
-"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: lv\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid " already out"
+msgid "%(product)s: %(quantity)s already out"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -39,17 +40,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
 msgstr ""
-
-#. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
-msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
-"A consumable product is a product for which stock is not managed.\n"
-"A service is a non-material product you provide."
-msgstr ""
-"Uzglabājams produkts ir produkts, kuram Jūs pārvaldat krājumus. Jābūt instalētam \"Inventory\" modulim.\n"
-"Palīgmateriāls ir produkts, kuram krājumi netiek pārvaldīti.\n"
-"Pakalpojums ir nemateriāls produkts, ko jūs sniedzat."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -84,7 +74,7 @@ msgstr "Aktivitātes stāvoklis"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitātes veida ikona"
+msgstr "Aktivitātes tipa ikona"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -99,7 +89,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
 msgid "Apply On"
-msgstr "Lietot"
+msgstr "Pielietot"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
@@ -151,14 +141,9 @@ msgid "Company"
 msgstr "Uzņēmums"
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__company_id
-msgid "Company related to this journal"
-msgstr "Reģistra uzņēmums"
-
-#. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Compute"
-msgstr "Compute"
+msgstr "Aprēķināt"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_res_config_settings
@@ -184,7 +169,9 @@ msgstr ""
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "Cost and adjustments lines do not match. You should maybe recompute the landed costs."
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -253,7 +240,7 @@ msgstr "Apraksts"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
 msgid "Display Name"
-msgstr "Parādīt vārdu"
+msgstr "Nosaukums"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
@@ -296,12 +283,19 @@ msgstr "Sekotāji (Partneri)"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Fonts awesome icon piem. fa-tasks"
+msgstr "Fonts awesome ikona, piem., fa-tasks"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Future Activities"
 msgstr "Nākotnes aktivitātes"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
+msgid ""
+"Goods are tangible materials and merchandise you provide.\n"
+"A service is a non-material product you provide."
+msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -311,7 +305,7 @@ msgstr "Grupēt pēc"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__has_message
 msgid "Has Message"
-msgstr "ir ziņojums"
+msgstr "Ir ziņojums"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
@@ -339,12 +333,14 @@ msgstr "Ja atzīmēts, jums jāpievērš uzmanība jauniem ziņojumiem."
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Ja atzīmēts, dažiem ziņojumiem ir piegādes kļūda."
+msgstr "Ja atzīmēts, daži ziņojumi satur piegādes kļūdu."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
-msgid "Indicates whether the product is a landed cost: when receiving a vendor bill, you can allocate this cost on preceding receipts."
+msgid ""
+"Indicates whether the product is a landed cost: when receiving a vendor "
+"bill, you can allocate this cost on preceding receipts."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -366,23 +362,23 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
 msgid "Item Description"
-msgstr ""
+msgstr "Pozīcijas apraksts"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Journal"
-msgstr "Reģistrs"
+msgstr "Žurnāls"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_account_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_move_id
 msgid "Journal Entry"
-msgstr "Grāmatojumi"
+msgstr "Grāmatojums"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_account_move_line
 msgid "Journal Item"
-msgstr "Kontējums"
+msgstr "Žurnāla ieraksts"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
@@ -396,7 +392,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_ids
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_ids
-#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_ids
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -409,7 +404,6 @@ msgstr "Landed Costs"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
-#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
 msgid "Landed Costs Visible"
 msgstr ""
 
@@ -420,7 +414,9 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
-msgid "Landed costs allow you to include additional costs (shipment, insurance, customs duties, etc) into the cost of the product."
+msgid ""
+"Landed costs allow you to include additional costs (shipment, insurance, "
+"customs duties, etc) into the cost of the product."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -428,14 +424,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_uid
 msgid "Last Updated by"
-msgstr "Pēdējoreiz atjaunoja"
+msgstr "Pēdējo reizi atjaunoja"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_date
 msgid "Last Updated on"
-msgstr "Pēdējoreiz atjaunots"
+msgstr "Pēdējās izmaiņas"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -482,12 +478,12 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nākamais aktivitāšu kalendāra pasākums"
+msgstr "Nākamās darbības kalendāra pasākums"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Nākamās darbības beigu termiņš"
+msgstr "Nākamās aktivitātes beigu termiņš"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
@@ -511,7 +507,7 @@ msgstr "Kļūdu skaits"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Ziņojumu, kuriem nepieciešama darbība, skaits"
 
 #. module: stock_landed_costs
@@ -557,12 +553,12 @@ msgstr "Grāmatots"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__product_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__product_id
 msgid "Product"
-msgstr "Produkts"
+msgstr "Prece"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
 msgid "Product Type"
-msgstr "Produkta Tips"
+msgstr "Preces tips"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_purchase_order_line
@@ -577,7 +573,7 @@ msgstr "Daudzums"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Reitingi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
@@ -587,12 +583,13 @@ msgstr "Atbildīgie lietotāji"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS piegādes kļūda"
+msgstr "Īsziņas piegādes kļūda"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Show all records which has next action date is before today"
-msgstr "Rādīt visus ierakstus, kuriem  nākamais darbības datums ir pirms šodienas"
+msgstr ""
+"Rādīt visus ierakstus, kuriem nākamais darbības datums ir pirms šodienas"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
@@ -602,7 +599,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
 msgid "State"
-msgstr "Posmi"
+msgstr "Stāvoklis"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -617,9 +614,9 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Statuss, kas balstās uz aktivitātēm\n"
-"Nokavēts: izpildes termiņš jau ir pagājis\n"
-"Šodien: aktivitātes izpildes datums ir šodien\n"
+"Statuss balstīts uz darbībām\n"
+"Kavēts: termiņš jauy ir pagājis\n"
+"Šodien: darbības datums ir šodien\n"
 "Plānots: nākotnes aktivitātes."
 
 #. module: stock_landed_costs
@@ -633,15 +630,16 @@ msgid "Stock Landed Cost Line"
 msgstr ""
 
 #. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
-msgstr "Krājumu kustība"
+msgstr "Preču kustība Noliktavā"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Noliktavas vērtēšanas slānis"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -651,7 +649,7 @@ msgstr "Šodienas aktivitātes"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
 msgid "Total"
-msgstr "Summa"
+msgstr "Kopā"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__picking_ids
@@ -662,7 +660,7 @@ msgstr "Pārvedumi"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Reģistrētās izņēmuma aktivitātes veids."
+msgstr "Reģistrētās izņēmuma aktivitātes tips."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -672,7 +670,9 @@ msgstr "Pārbaudīt"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them"
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -689,22 +689,22 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Piegādātāja rēķins"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__volume
 msgid "Volume"
-msgstr "Apjoms"
+msgstr "Tilpums"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__website_message_ids
 msgid "Website Messages"
-msgstr "Tīmekļa vietnes ziņojumi"
+msgstr "Tīmekļa lapas ziņojumi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__website_message_ids
 msgid "Website communication history"
-msgstr "Tīmekļa vietnes saziņas vēsture"
+msgstr "Tīmekļa lapas komunikācijas vēsture"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight
@@ -714,11 +714,15 @@ msgstr "Svars"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
-msgid "You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method."
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
 msgstr ""
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
-msgid "You cannot change the product type or disable landed cost option because the product is used in an account move line."
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
 msgstr ""

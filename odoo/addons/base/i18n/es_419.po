@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Javier Alejandro Sánchez Torres, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -9543,6 +9544,14 @@ msgid ""
 "* Taxes\n"
 "* Fiscal Positions\n"
 msgstr ""
+"\n"
+"Módulo base para gestionar el plan de cuentas del Líbano en Odoo.\n"
+"==============================================================================\n"
+"Plan de cuentas, impuestos y localización para Líbano.\n"
+"Activa:\n"
+"* Plan de cuentas\n"
+"* Impuestos\n"
+"* Posiciones fiscales\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -16450,7 +16459,7 @@ msgid ""
 "Amounts in this currency are rounded off to the nearest multiple of the "
 "rounding factor."
 msgstr ""
-"Los importes en esta divisa se redondean al múltiplo más cercano del factor "
+"Los importes en esta moneda se redondean al múltiplo más cercano del factor "
 "de redondeo."
 
 #. module: base
@@ -20252,7 +20261,7 @@ msgid ""
 "Company used for the original currency (only used for t-esc). By default use"
 " the user company"
 msgstr ""
-"Empresa usada para la divisa original (se usa solo para t-esc). Usa el "
+"Empresa usada para la moneda original (se usa solo para t-esc). Utiliza el "
 "usuario de la empresa de forma predeterminada."
 
 #. module: base
@@ -21317,31 +21326,31 @@ msgstr "Campo de moneda"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Currency field does not have type many2one"
-msgstr "El campo de la divisa no tiene el tipo many2one"
+msgstr "El campo de la moneda no tiene el tipo many2one"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Currency field is empty and there is no fallback field in the model"
 msgstr ""
-"El campo de la divisa está vacío y no existe un campo alternativo en el "
+"El campo de la moneda está vacío y no existe un campo alternativo en el "
 "modelo"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Currency field should have a res.currency relation"
-msgstr "El campo de la divisa debe tener una relación res.currency"
+msgstr "El campo de la moneda debe tener una relación res.currency"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__iso_numeric
 msgid "Currency numeric code."
-msgstr "Código numérico de divisa."
+msgstr "Código numérico de la moneda."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr "Símbolo de la divisa, se utiliza cuando se imprimen importes."
+msgstr "Símbolo de la moneda, se utiliza al imprimir importes."
 
 #. module: base
 #. odoo-python
@@ -21680,7 +21689,7 @@ msgid ""
 "Date used for the original currency (only used for t-esc). by default use "
 "the current date."
 msgstr ""
-"Fecha utilizada para la divisa original (solo se usa para t-esc), la fecha "
+"Fecha utilizada para la moneda original (solo se usa para t-esc), la fecha "
 "actual se usa de forma predeterminada."
 
 #. module: base
@@ -21740,7 +21749,7 @@ msgid ""
 "currency. It is determined by the rounding factor."
 msgstr ""
 "Los lugares decimales que se toman en cuenta para las operaciones en "
-"cantidades de esta divisa. Se determina por el factor de redondeo."
+"cantidades de esta moneda. Se determina por el factor de redondeo."
 
 #. module: base
 #. odoo-python
@@ -22103,8 +22112,7 @@ msgid ""
 "Determines where the currency symbol should be placed after or before the "
 "amount."
 msgstr ""
-"Determina si el símbolo de divisa debe colocarse antes o después del "
-"importe."
+"Determina si el símbolo de la moneda debe estar antes o después del importe."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__name_position
@@ -28181,7 +28189,7 @@ msgstr "¿Los detalles de la empresa están vacíos?"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__is_current_company_currency
 msgid "Is Current Company Currency"
-msgstr "¿Es la divisa actual de la empresa?"
+msgstr "¿Es la moneda actual de la empresa?"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__is_deletable
@@ -29061,7 +29069,7 @@ msgstr "Líbano"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lb_account
 msgid "Lebanon - Accounting"
-msgstr ""
+msgstr "Líbano - Contabilidad"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__ledger
@@ -39146,12 +39154,12 @@ msgstr "Mostrar tasas de cambio"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 msgid "Show active currencies"
-msgstr "Mostrar divisas activas"
+msgstr "Mostrar monedas activas"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
 msgid "Show inactive currencies"
-msgstr "Mostrar divisas inactivas"
+msgstr "Mostrar monedas inactivas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_google_map
@@ -41424,7 +41432,7 @@ msgid ""
 msgstr ""
 "No se pudo completar la operación:\n"
 "- Crear/actualizar: no configuró un campo obligatorio.\n"
-"- Eliminar: otro modelo necesita que elimine el registro. Si es posible, archívelo.\n"
+"- Eliminar: otro modelo necesita el registro que está siendo eliminado. Si es posible, mejor archívelo.\n"
 "\n"
 "Modelo: %(model_name)s (%(model_tech_name)s)\n"
 "Campo: %(field_name)s (%(field_tech_name)s)\n"
@@ -41444,7 +41452,7 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Constraint: %(constraint)s\n"
 msgstr ""
-"No se pudo completar la operación: otro modelo necesita que elimine el registro. Si es posible, archívelo.\n"
+"No se pudo completar la operación: otro modelo necesita el registro que está siendo eliminado. Si es posible, mejor archívelo.\n"
 "\n"
 "Modelo: %(model_name)s (%(model_tech_name)s)\n"
 "Limitación: %(constraint)s\n"
@@ -41787,7 +41795,7 @@ msgstr "¡Esta columna contiene datos del módulo y no se puede eliminar!"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "This currency is set on a company and therefore cannot be deactivated."
-msgstr "Esta divisa está establecida en una empresa, no puede desactivarla."
+msgstr "Esta moneda está configurada en una empresa, no puede desactivarla."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
@@ -45269,8 +45277,8 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency already used on"
 " an accounting entry."
 msgstr ""
-"No puede reducir el número de lugares decimales de una divisa que ya se está"
-" usando en un asiento contable."
+"No puede reducir el número de lugares decimales de una moneda que ya se usa "
+"en un asiento contable."
 
 #. module: base
 #. odoo-python

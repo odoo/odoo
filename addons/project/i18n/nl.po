@@ -5,7 +5,6 @@
 # Translators:
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -390,12 +389,12 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
+"    <t t-set=\"contact\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"           <t t-if=\"partner.name\">\n"
-"                Hallo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"           <t t-if=\"contact.name\">\n"
+"                Hallo <t t-out=\"contact.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "           </t>\n"
 "           <t t-else=\"\">\n"
 "                Hallo,<br><br>\n"
@@ -598,7 +597,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Contact\" title=\"Contact\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -1750,7 +1749,7 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
-"Klanten stellen feedback voor per e-mail; Odoo maakt automatisch taken aan en je kan\n"
+"Klanten stellen feedback voor per e-mail; Odoo maakt automatisch taken aan en je kunt\n"
 "direct op de taak communiceren."
 
 #. module: project
@@ -2261,7 +2260,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Contacten)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_type_icon
@@ -3457,21 +3456,21 @@ msgstr ""
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
 msgstr ""
-"Het partnerbedrijf mag niet anders zijn dan het bedrijf van de toegewezen "
-"projecten"
+"Het bedrijf van het contact mag niet anders zijn dan het bedrijf van de "
+"toegewezen projecten"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "Partner company cannot be different from its assigned tasks' company"
 msgstr ""
-"Het partnerbedrijf mag niet anders zijn dan het bedrijf van de toegewezen "
-"taken"
+"Het bedrijf van het contact mag niet anders zijn dan het bedrijf van de "
+"toegewezen taken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr "Taken van partners"
+msgstr "Taken van contacten"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3571,7 +3570,7 @@ msgid ""
 msgstr ""
 "Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
 "-iedereen: iedereen mag posten\n"
-"-partners: alleen geautoriseerde partners\n"
+"-contacten: alleen geautoriseerde contacten\n"
 "-volgers: alleen volgers van een bijbehorend document of leden van gevolgde kanalen\n"
 
 #. module: project
@@ -4917,7 +4916,7 @@ msgstr ""
 msgid ""
 "The project and the associated partner must be linked to the same company."
 msgstr ""
-"Het project en de partner moeten aan hetzelfde bedrijf zijn gerelateerd."
+"Het project en het contact moeten aan hetzelfde bedrijf zijn gerelateerd."
 
 #. module: project
 #. odoo-python
@@ -4960,7 +4959,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "The task and the associated partner must be linked to the same company."
-msgstr "De taak en de partner moeten aan hetzelfde bedrijf zijn gerelateerd."
+msgstr "De taak en het contact moeten aan hetzelfde bedrijf zijn gerelateerd."
 
 #. module: project
 #. odoo-python
@@ -5097,7 +5096,7 @@ msgid ""
 msgstr ""
 "Dit project is geassocieerd met %(project_company)s, terwijl de "
 "geselecteerde fase tot %(stage_company)s behoort. Er zijn een paar opties om"
-" te overwegen: verwijder het bedrijf van het projet of van de fase. Je kan "
+" te overwegen: verwijder het bedrijf van het projet of van de fase. Je kunt "
 "ook de bedrijfsgegevens van deze records aanpassen zodat ze onder hetzelfde "
 "bedrijf vallen."
 
@@ -5244,7 +5243,7 @@ msgid ""
 "task."
 msgstr ""
 "Om een taak in een subtaak om te zetten, selecteer een bovenliggende taak. "
-"Je kan ook het veld van de bovenliggende taak leeg laten om een subtaak in "
+"Je kunt ook het veld van de bovenliggende taak leeg laten om een subtaak in "
 "een zelfstandige taak om te zetten."
 
 #. module: project
@@ -5665,7 +5664,7 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
-"Je kan het bedrijf van deze fase niet wijzigen naar %(company_name)s omdat "
+"Je kunt het bedrijf van deze fase niet wijzigen naar %(company_name)s omdat "
 "het momenteel projecten bevat die zijn gekoppeld aan "
 "%(project_company_name)s. Zorg ervoor dat deze fase uitsluitend bestaat uit "
 "projecten gekoppeld aan %(company_name)s."
@@ -5674,7 +5673,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can change the sub-task state here!"
-msgstr "Je kan de status van de subtaak hier wijzigen!"
+msgstr "Je kunt de status van de subtaak hier wijzigen!"
 
 #. module: project
 #. odoo-python
@@ -5686,7 +5685,7 @@ msgstr "Je kunt alleen een persoonlijk fase instellen op een privétaak."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can open sub-tasks from the kanban card!"
-msgstr "Je kan subtaken openen vanuit de kanban-kaart!"
+msgstr "Je kunt subtaken openen vanuit de kanban-kaart!"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5694,8 +5693,8 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
 msgstr ""
-"Je kan geen fases met projecten verwijderen. Je kan ze archiveren of eerste "
-"alle projecten verwijderen."
+"Je kunt geen fases met projecten verwijderen. Je kunt ze archiveren of "
+"eerste alle projecten verwijderen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5703,7 +5702,7 @@ msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
 msgstr ""
-"Je kan geen fases met projecten verwijderen. Je moet eerst alle projecten "
+"Je kunt geen fases met projecten verwijderen. Je moet eerst alle projecten "
 "verwijderen."
 
 #. module: project
@@ -5728,13 +5727,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot read the following fields on tasks: %(field_list)s"
-msgstr "Je kan de volgende velden in taken niet lezen: %(field_list)s"
+msgstr "Je kunt de volgende velden in taken niet lezen: %(field_list)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot write on the following fields on tasks: %(field_list)s"
-msgstr "Je kan niet schrijven op de volgende velden in taken: %(field_list)s"
+msgstr "Je kunt niet schrijven op de volgende velden in taken: %(field_list)s"
 
 #. module: project
 #. odoo-python

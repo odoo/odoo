@@ -1,28 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-#
+# 
 # Translators:
-# Kisrobert <kisrobi@gmail.com>, 2022
-# Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# Tamás Németh <ntomasz81@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
-# krnkris, 2022
-#
+# Tamás Dombos, 2024
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Ákos Nagy <akos.nagy@oregional.hu>, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# krnkris, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: krnkris, 2022\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: krnkris, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
-"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -38,7 +37,7 @@ msgstr ""
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Visszavonás"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
@@ -86,19 +85,20 @@ msgid "Do not link to a customer"
 msgstr "Ne kapcsolja ügyfélhez"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
-msgstr "Számlázva a vevői rendelésen"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Számlázva a vevői rendelés célon"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -108,7 +108,7 @@ msgstr "Frissítette"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_date
 msgid "Last Updated on"
-msgstr "Frissítve ekkor"
+msgstr "Frissítve"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -121,14 +121,9 @@ msgid "Link to an existing customer"
 msgstr "Összekapcsolás egy meglévő ügyféllel"
 
 #. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Csevegésben naplózva, mely lehetőségből a vásárlói megrendelés ered."
-
-#. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "My Quotations"
-msgstr "Árajánlataim"
+msgstr "Ajánlataim"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.crm_quotation_partner_action
@@ -140,7 +135,7 @@ msgstr "Új ajánlat"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__quotation_count
 msgid "Number of Quotations"
-msgstr "Árajánlatok száma"
+msgstr "Ajánlatok száma"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
@@ -160,7 +155,7 @@ msgstr "Rendelések"
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
 msgid "Quotation"
-msgstr "Árajánlat"
+msgstr "Ajánlat"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__action
@@ -170,22 +165,23 @@ msgstr ""
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "Quotations"
-msgstr "Árajánlatok"
+msgstr "Ajánlatok"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_lead_merge_summary_inherit_sale_crm
 msgid "Sale Orders"
-msgstr "Értékesítési rendelések"
+msgstr "Vevői rendelések"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
-msgstr "Értékesítési elemzés"
+msgstr "Értékesítés elemzés"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 msgid "Sales Order"
-msgstr "Vevői rendelések"
+msgstr "Vevői rendelés"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
@@ -193,6 +189,7 @@ msgid "Sales Team"
 msgstr "Értékesítési csapat"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
 msgstr "Értékesítés: nettó összesen"
@@ -200,7 +197,7 @@ msgstr "Értékesítés: nettó összesen"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
-msgstr "Értékesítések összege"
+msgstr "Rendelések összege"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
@@ -213,6 +210,7 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr ""

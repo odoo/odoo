@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_customer
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_customer
@@ -23,9 +25,20 @@ msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to references"
 msgstr "<i class=\"fa fa-chevron-left me-2\"/>Назад к ссылкам"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                        There are no matching customers found for the selected country. Displaying results across all countries instead."
+msgstr ""
+
+#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
-msgid "<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" title=\"Open map\"/>"
-msgstr "<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" title=\"Open map\"/>"
+msgid ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Open map\"/>"
+msgstr ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Open map\"/>"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -117,6 +130,11 @@ msgid "Created on"
 msgstr "Создано"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
@@ -140,6 +158,12 @@ msgstr "Фильтр по отраслям"
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Filter by Tags"
 msgstr "Фильтр по тегам"
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,help:website_customer.field_res_users__website_tag_ids
+msgid "Filter published customers on the .../customers website page"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -178,8 +202,12 @@ msgstr "Последнее обновление"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Manage contact tags to better classify them for tracking and analysis purposes."
-msgstr "Управляйте тегами контактов, чтобы лучше классифицировать их для целей отслеживания и анализа."
+msgid ""
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
+msgstr ""
+"Управляйте тегами контактов, чтобы лучше классифицировать их для целей "
+"отслеживания и анализа."
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -208,8 +236,12 @@ msgstr "Тэг Партнера"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner_tag
-msgid "Partner Tags - These tags can be used on website to find customers by sector, or ..."
-msgstr "Теги партнеров - Эти теги можно использовать на сайте для поиска клиентов по секторам или ..."
+msgid ""
+"Partner Tags - These tags can be used on website to find customers by "
+"sector, or ..."
+msgstr ""
+"Теги партнеров - Эти теги можно использовать на сайте для поиска клиентов по"
+" секторам или ..."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids

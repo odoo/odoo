@@ -342,6 +342,8 @@ msgid ""
 "             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
 "</p>"
 msgstr ""
+"<p>เรียนคุณ %(client_name)s <br/>นี่คือใบเสร็จรับเงิน %(is_invoiced)s สำหรับ"
+" %(pos_name)s ซึ่งมีจำนวนเงิน %(amount)s จาก %(company_name)s</p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -608,6 +610,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records"
 " for bank payments."
 msgstr ""
+"บัญชีที่ใช้เป็นบัญชีค้างชำระเมื่อสร้างบันทึกรายการชำระเงินทางบัญชีสำหรับการชำระเงินผ่านธนาคาร"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1723,7 +1726,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 msgid "Choose how the URL to the portal will be print on the receipt."
-msgstr ""
+msgstr "เลือกวิธีพิมพ์ URL ไปยังพอร์ทัลลงบนใบเสร็จ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2089,6 +2092,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"ข้อผิดพลาดในการแปลง: "
+"การแปลงหน่วยวัดต่อไปนี้ส่งผลให้ปริมาณเป็นศูนย์เนื่องจากการปัดเศษ:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -2706,6 +2711,7 @@ msgid ""
 "Display the breakdown of sales lines by product in the automatically "
 "generated closing entry."
 msgstr ""
+"แสดงการแยกรายละเอียดยอดขายตามผลิตภัณฑ์ในรายการปิดบัญชีที่สร้างอัตโนมัติ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pricer
@@ -3643,7 +3649,7 @@ msgstr "คุณสามารถพิมพ์ทิกเก็ตของ
 msgid ""
 "It seems like you don't have enough rights to create point of sale "
 "configurations."
-msgstr ""
+msgstr "ดูเหมือนว่าคุณไม่มีสิทธิ์เพียงพอในการสร้างการกำหนดค่ระบบขายหน้าร้าน"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -7550,7 +7556,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The paid amount is different from the total amount of the order."
-msgstr ""
+msgstr "จำนวนเงินที่ชำระไม่ตรงกับยอดรวมของการสั่งซื้อ"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7753,7 +7759,7 @@ msgstr "ธุรกรรมได้รับการประมวลผล
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_type
 msgid "The type of the payment card (e.g. CREDIT CARD OR DEBIT CARD)"
-msgstr ""
+msgstr "ประเภทของบัตรชำระเงิน (เช่น บัตรเครดิต หรือ บัตรเดบิต)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -8098,6 +8104,8 @@ msgid ""
 "To ensure due balance follow-up, generate an invoice or download the "
 "accounting application. "
 msgstr ""
+"เพื่อให้แน่ใจว่ามีการติดตามยอดคงเหลือ "
+"ให้สร้างใบแจ้งหนี้หรือดาวน์โหลดแอประบบบัญชี"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8490,7 +8498,7 @@ msgstr "ตรวจสอบ"
 msgid ""
 "Versatile cotton hoodie with an adjustable drawstring hood and front zipper "
 "closure."
-msgstr ""
+msgstr "เสื้อฮู้ดผ้าฝ้ายอเนกประสงค์พร้อมเชือกผูกปรับได้และซิปด้านหน้า"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_ui_view
@@ -8552,7 +8560,7 @@ msgstr "คำเตือน"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "Warning, the paid amount is higher than the total amount. (Difference: %s)"
-msgstr ""
+msgstr "คำเตือน ยอดเงินที่ชำระมากกว่ายอดเงินรวม (ส่วนต่าง : %s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8708,6 +8716,7 @@ msgid ""
 "You can only cancel a session that is in opening control state and has no "
 "orders."
 msgstr ""
+"คุณสามารถยกเลิกเซสชันที่อยู่ในสถานะควบคุมการเปิดและไม่มีคำสั่งซื้อได้เท่านั้น"
 
 #. module: point_of_sale
 #. odoo-python

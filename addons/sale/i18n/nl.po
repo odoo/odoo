@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +75,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "2023-12-31"
-msgstr "31-12-2023"
+msgstr "2023-12-31"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1056,8 +1056,8 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
-"Het combo-item van een verkooporderregel moet een van de beschikbare combo-"
-"items van de gekoppelde regel zijn."
+"Het combinatieproduct van een verkooporderregel moet een van de beschikbare "
+"combinatieproducten van de gekoppelde regel zijn."
 
 #. module: sale
 #. odoo-python
@@ -1662,12 +1662,12 @@ msgstr "Afsluiten"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
 msgid "Combo Choices"
-msgstr "Combo-keuzes"
+msgstr "Combinatiekeuzes"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
 msgid "Combo Item"
-msgstr "Combo Artikel"
+msgstr "Combinatieproduct"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -1991,7 +1991,7 @@ msgstr "Klant entiteit"
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr "Industrie klant"
+msgstr "Branche van klant"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -2508,7 +2508,7 @@ msgstr "Volgers"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Contacten)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
@@ -3671,7 +3671,7 @@ msgstr "Verpakkingshoeveelheid"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "Kredietwaarschuwing partner"
+msgstr "Kredietwaarschuwing contact"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4590,7 +4590,7 @@ msgstr "Selecteer een product, of maak direct een nieuw product aan."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr "Geselecteerde Combo Artikelen"
+msgstr "Geselecteerde combinatieproducten"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -5116,8 +5116,8 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
-"Het aantal geselecteerde combo-items moet overeenkomen met het aantal "
-"beschikbare combo-keuzes."
+"Het aantal geselecteerde combinatieproducten moet overeenkomen met het "
+"aantal beschikbare combinatiekeuzes."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5308,7 +5308,7 @@ msgid ""
 msgstr ""
 "Dit overzicht voert een analyse uit op je offertes en verkooporders. "
 "Analyseer je omzet en sorteer het op verschillende groepeer criteria "
-"(verkoper, partner, product, etc.) Gebruik dit overzicht op nog niet "
+"(verkoper, contact, product, etc.) Gebruik dit overzicht op nog niet "
 "gefactureerde verkopen. Als je je omzet wilt analyseren, moet je de "
 "factuuranalyse gebruiken in de financiële applicatie."
 
@@ -5322,7 +5322,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Dit overzicht voert een analyse uit op je offertes. Analyseer je omzet en "
-"sorteer het op verschillende groepeer criteria (verkoper, partner, product, "
+"sorteer het op verschillende groepeer criteria (verkoper, contact, product, "
 "etc.) Gebruik dit overzicht op nog niet gefactureerde verkopen. Als je je "
 "omzet wilt analyseren, moet je de factuuranalyse gebruiken in de financiële "
 "applicatie."
@@ -5337,7 +5337,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "Dit overzicht voert een analyse uit op je verkooporders. Analyseer je omzet "
-"en sorteer het op verschillende groepeer criteria (verkoper, partner, "
+"en sorteer het op verschillende groepeer criteria (verkoper, contact, "
 "product, etc.) Gebruik dit overzicht op nog niet gefactureerde verkopen. Als"
 " je je omzet wilt analyseren, moet je de factuuranalyse gebruiken in de "
 "financiële applicatie."
@@ -5742,7 +5742,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr "Je kan een geblokkeerde order niet annuleren. Deblokkeer het eerst."
+msgstr "Je kunt een geblokkeerde order niet annuleren. Deblokkeer het eerst."
 
 #. module: sale
 #. odoo-python
@@ -5777,7 +5777,7 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
-"Je kan geen negatif getal instellen voor de standaard offertegeldigheid. "
+"Je kunt geen negatif getal instellen voor de standaard offertegeldigheid. "
 "Laat leeg (of 0) om het automatisch verstrijken van offertes uit te "
 "schakelen."
 
