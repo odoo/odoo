@@ -1928,14 +1928,6 @@
         </t>
     </template>
 
-    <!-- Encapsulate the content in a `a` tag with a link to the product page. Override this
-         template to change or remove the product link. Called in `website_sale.cart_lines`. -->
-    <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
-        <a t-att-href="line.product_id.website_url">
-            <t t-out="0"/>
-        </a>
-    </template>
-
     <!-- This template displays all the lines following the first one on the description of the sale
          order line, with a muted style. For typical products this content will be the product
          description_sale. Called in `website_sale.cart_lines`. -->
@@ -1972,32 +1964,35 @@
                     t-attf-class="o_cart_product d-flex gap-3 py-4 #{not line_last and 'border-bottom'}"
                     t-attf-data-product-id="#{line.product_id and line.product_id.id}"
                 >
-                    <div style="width: 64px">
+                    <div class="o_cart_product_image">
                         <!--
                             Unsellable lines can have unpublished products, but portal users have no
                             access to unpublished product images. To ensure product images are
                             always shown for unsellable lines, we use the raw image data as src
                             (which doesn't require access, unlike the image URL).
                         -->
-                        <img
-                            t-if="line._is_not_sellable_line() and line.product_id.image_128"
-                            t-att-src="image_data_uri(line.product_id.image_128)"
-                            class="o_image_64_max img rounded"
-                            t-att-alt="line.name_short"
-                        />
-                        <t
-                            t-elif="line.product_id.image_128"
-                            t-call="website_sale.cart_line_product_link"
-                        >
+                        <a t-att-href="line.product_id.website_url" class="text-reset">
+                            <img
+                                t-if="line._is_not_sellable_line() and line.product_id.image_128"
+                                t-att-src="image_data_uri(line.product_id.image_128)"
+                                class="o_image_64_max img border rounded"
+                                t-att-alt="line.name_short"
+                            />
                             <div
+                                t-elif="line.product_id.image_128"
                                 t-field="line.product_id.image_128"
                                 t-options="{
                                     'widget': 'image',
                                     'qweb_img_responsive': False,
-                                    'class': 'o_image_64_max rounded',
+                                    'class': 'o_image_64_max border rounded',
                                 }"
                             />
-                        </t>
+                            <div
+                                t-else=""
+                                t-field="line.product_id.image_128"
+                                t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max border rounded'}"
+                            />
+                        </a>
                     </div>
                     <div
                         t-if="line.product_id"
@@ -2241,7 +2236,7 @@
                     t-attf-class="d-flex gap-3 py-4 #{not product_last and 'border-bottom'}"
                     t-att-data-publish="product.website_published and 'on' or 'off'"
                 >
-                    <div style="width: 64px">
+                    <div class="o_cart_product_image">
                         <a t-att-href="product.website_url">
                             <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max border rounded'}"/>
                         </a>
