@@ -9,6 +9,19 @@ class CoreBuilderActionPlugin extends Plugin {
 }
 registry.category("website-plugins").add(CoreBuilderActionPlugin.id, CoreBuilderActionPlugin);
 
+function getNumericStyle(styleName) {
+    return {
+        getValue: (editingElement) => {
+            return parseInt(
+                getComputedStyle(editingElement).getPropertyValue(styleName)
+            ).toString();
+        },
+        apply: (editingElement, value) => {
+            editingElement.style.setProperty(styleName, `${parseInt(value)}px`, "important");
+        },
+    };
+}
+
 const styleMap = {
     borderWidth: {
         getValue: (editingElement) => {
@@ -31,6 +44,7 @@ const styleMap = {
             editingElement.style.setProperty("border-width", `${parsedValue}px`, "important");
         },
     },
+    padding: getNumericStyle("padding"),
 };
 
 const actions = {
