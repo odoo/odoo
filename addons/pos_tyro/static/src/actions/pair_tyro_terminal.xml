@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="pos_tyro.PairTyroTerminal">
+        <div class="d-flex flex-column align-items-center m-4">
+            <h2 t-out="state.message"/>
+            <div style="height: 10px">
+                <i t-if="state.status == 'inProgress'" class="fa fa-spinner fa-spin"></i>
+            </div>
+        </div>
+    </t>
+
+</templates>

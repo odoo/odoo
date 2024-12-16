@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="pos_tyro.QuestionDialog">
+        <Dialog size="'md'" title.translate="Tyro">
+            <p t-out="props.question.text" class="text-prewrap"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-foreach="props.question.options" t-as="option" t-key="option" t-out="option" t-on-click="() => this.onClickOption(option)"/>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
