@@ -335,6 +335,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('product_blue_denim_jeans_slim'),
                         'extra_price': 0,
@@ -352,6 +353,7 @@
             <field
                 name="combo_item_ids"
                 eval="[
+                    Command.clear(),
                     Command.create({
                         'product_id': ref('casual_t_shirt'),
                         'extra_price': 0,
