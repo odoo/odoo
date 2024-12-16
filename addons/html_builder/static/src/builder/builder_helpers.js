@@ -137,6 +137,7 @@ export function useClickableWeWidget() {
     const comp = useComponent();
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
+    const shouldToggle = !comp.env.actionBus;
 
     const operation = {
         commit: () => {
@@ -217,6 +218,7 @@ export function useClickableWeWidget() {
                     actionParam,
                     actionValue,
                     apply: action.apply,
+                    clean: action.clean,
                     load: action.load,
                 });
             }
@@ -226,12 +228,20 @@ export function useClickableWeWidget() {
     function callApply(applySpecs) {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
         for (const applySpec of applySpecs) {
-            applySpec.apply({
-                editingElement: applySpec.editingElement,
-                param: applySpec.actionParam,
-                value: applySpec.actionValue,
-                loadResult: applySpec.loadResult,
-            });
+            if (shouldToggle && isActive()) {
+                applySpec.clean({
+                    editingElement: applySpec.editingElement,
+                    param: applySpec.actionParam,
+                    value: applySpec.actionValue,
+                });
+            } else {
+                applySpec.apply({
+                    editingElement: applySpec.editingElement,
+                    param: applySpec.actionParam,
+                    value: applySpec.actionValue,
+                    loadResult: applySpec.loadResult,
+                });
+            }
         }
     }
 

@@ -35,5 +35,28 @@ describe("builder shorthand actions", () => {
             expect("[data-class-action='x']").toHaveClass("active");
             expect("[data-class-action='x y z']").not.toHaveClass("active");
         });
+        test("toggle class when not inside a WeButtonGroup", async () => {
+            addOption({
+                selector: ".test-options-target",
+                template: xml`
+                    <WeButton classAction="'x'"/>
+                    <WeButtonGroup>
+                        <WeButton classAction="'y'"/>
+                    </WeButtonGroup>
+                `,
+            });
+            await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
+            await contains(":iframe .test-options-target").click();
+            expect(".options-container").toBeDisplayed();
+
+            await contains("[data-class-action='x']").click();
+            expect(":iframe .test-options-target").toHaveClass("x");
+            await contains("[data-class-action='x']").click();
+            expect(":iframe .test-options-target").not.toHaveClass("x");
+            await contains("[data-class-action='y']").click();
+            expect(":iframe .test-options-target").toHaveClass("y");
+            await contains("[data-class-action='y']").click();
+            expect(":iframe .test-options-target").toHaveClass("y");
+        });
     });
 });
