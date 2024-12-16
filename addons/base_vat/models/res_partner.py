@@ -53,6 +53,7 @@ _ref_vat = {
     'in': "12AAAAA1234AAZA",
     'is': 'IS062199',
     'it': 'IT12345670017',
+    'jp': 'T1010401114875',
     'kr': '123-45-67890 or 1234567890',
     'lt': 'LT123456715',
     'lu': 'LU12345613',
@@ -160,6 +161,7 @@ class ResPartner(models.Model):
                 and self.env.company.vat_check_vies
             )
 
+
     @api.model
     def fix_eu_vat_number(self, country_id, vat):
         europe = self.env.ref('base.europe')
@@ -234,7 +236,7 @@ class ResPartner(models.Model):
 
         country_code_to_check = default_country and default_country.code.lower()
         vat_number_split = vat_number
-        if default_country and default_country in self.env.ref('base.europe').country_ids | self.env.ref('base.jp'):
+        if default_country and default_country in self.env.ref('base.europe').country_ids:
             # First check with country code as prefix of the TIN
             vat_country_code, vat_number_split_maybe = self._split_vat(vat_number)
             vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())],
@@ -268,26 +270,28 @@ class ResPartner(models.Model):
         if country_code and company.country_id and country_code == company.country_id.code.lower() and company.country_id.vat_label:
             vat_label = company.country_id.vat_label
 
-        expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
+        expected_format = _ref_vat.get(country_code)
+        expected_note = ""
+        if expected_format:
+            expected_note = _(' \nNote: the expected format is %(expected_format)s',
+                 expected_format=expected_format)
 
-        print(country_code)
         # Catch use case where the record label is about the public user (name: False)
         if 'False' not in record_label:
             return '\n' + _(
-                'The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \nNote: the expected format is %(expected_format)s',
+                'The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. %(expected_note)s',
                 vat_label=vat_label,
                 wrong_vat=wrong_vat,
                 record_label=record_label,
-                expected_format=expected_format,
+                expected_note=expected_note
             )
         else:
             return '\n' + _(
-                'The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \nNote: the expected format is %(expected_format)s',
+                'The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %(expected_note)s',
                 vat_label=vat_label,
                 wrong_vat=wrong_vat,
-                expected_format=expected_format,
+                expected_note=expected_note,
             )
-
 
     __check_vat_al_re = re.compile(r'^[JKLM][0-9]{8}[A-Z]$')
 
@@ -299,8 +303,14 @@ class ResPartner(models.Model):
             return True
         return False
 
+    def check_vat_jp(self, vat):
+        if vat and vat[0] == 'T':
+            vat = vat[1:]
+        return stdnum.util.get_cc_module('jp', 'vat').is_valid(vat)
+
     __check_tin1_ro_natural_persons = re.compile(r'[1-9]\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{6}')
     __check_tin2_ro_natural_persons = re.compile(r'9000\d{9}')
+
     def check_vat_ro(self, vat):
         """
             Check Romanian VAT number that can be for example 'RO1234567897 or 'xyyzzaabbxxxx' or '9000xxxxxxxx'.
@@ -611,10 +621,6 @@ class ResPartner(models.Model):
             ]
             return any(re.compile(rx).match(vat) for rx in all_gstin_re)
         return False
-
-    def check_vat_t(self, vat):
-        if self.country_id.code == 'JP':
-            return self.simple_vat_check('jp', vat)
 
     def check_vat_br(self, vat):
         is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
