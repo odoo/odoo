@@ -8,7 +8,8 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
-
+from pprint import pformat
+import unittest.mock
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSBasicConfig(TestPoSCommon):
@@ -821,7 +822,20 @@ class TestPoSBasicConfig(TestPoSCommon):
         session = self.pos_session
         order_data = self.create_ui_order_data([(self.product3, 1)])
         amount_paid = order_data['amount_paid']
-        self.env['pos.order'].sync_from_ui([order_data])
+        with (
+            self.assertLogs('odoo.addons.point_of_sale.models.pos_order', level='DEBUG') as cm,
+            unittest.mock.patch('odoo.addons.point_of_sale.models.pos_order.randrange', return_value=1996)
+        ):
+            res = self.env['pos.order'].sync_from_ui([order_data])
+            # Basic check for logs on order synchronization
+            order_log_str = self.env['pos.order']._get_order_log_representation(order_data)
+            odoo_order_id = res['pos.order'][0]['id']
+            self.assertEqual(len(cm.output), 4)
+            self.assertEqual(cm.output[0], f"INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 started for PoS orders references: [{order_log_str}]")
+            self.assertTrue(cm.output[1].startswith(f'DEBUG:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 processing order {order_log_str} order full data: '))
+            self.assertEqual(cm.output[2], f'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 order {order_log_str} created pos.order #{odoo_order_id}')
+            self.assertEqual(cm.output[3], 'INFO:odoo.addons.point_of_sale.models.pos_order:PoS synchronisation #1996 finished')
+            
         session.post_closing_cash_details(amount_paid)
         session.close_session_from_ui()
 
