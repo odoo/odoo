@@ -103,14 +103,7 @@ class ResPartner(models.Model):
     vies_vat_to_check = fields.Char(compute='_compute_vies_vat_to_check')
 
     def _split_vat(self, vat):
-        '''
-        Splits the VAT Number to get the country code in a first place and the code itself in a second place.
-        This has to be done because some countries' code are one character long instead of two (i.e. "T" for Japan)
-        '''
-        if len(vat) > 1 and vat[1].isalpha():
-            vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
-        else:
-            vat_country, vat_number = vat[:1].lower(), vat[1:].replace(' ', '')
+        vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
         return vat_country, vat_number
 
     @api.model
@@ -136,7 +129,7 @@ class ResPartner(models.Model):
         for partner in self:
             # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
             # a partner for which they haven't yet input VAT, and one not subject to VAT
-            if not partner.vat or len(partner.vat) == 1:
+            if not partner.vat or len(partner.vat) == 1 or not partner.country_id or partner.country_id not in self.env.ref('base.europe').country_ids:
                 partner.vies_vat_to_check = ''
                 continue
             country_code, number = partner._split_vat(partner.vat)
@@ -160,7 +153,6 @@ class ResPartner(models.Model):
                 and not to_check[:2].upper() == company_code
                 and self.env.company.vat_check_vies
             )
-
 
     @api.model
     def fix_eu_vat_number(self, country_id, vat):
@@ -715,7 +707,7 @@ class ResPartner(models.Model):
             split_self = self.grouped(grouping_key)
             res = True
             for ss, partners in split_self.items():
-                country_id = ss.id if grouping_key == 'country' and not values.get('country_id') else values.get('country_id')
+                country_id = ss.id if grouping_key == 'country_id' and not values.get('country_id') else values.get('country_id')
                 vat = ss if grouping_key == 'vat' and not values.get('vat') else values.get('vat')
                 values['vat'] = partners._fix_vat_number(vat, country_id)
                 res = res and super(ResPartner, partners).write(values)
