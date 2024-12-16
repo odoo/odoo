@@ -7,9 +7,11 @@ patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
         this.onNotified("VIVA_WALLET_LATEST_RESPONSE", () => {
-            this.getPendingPaymentLine(
-                "viva_wallet"
-            ).payment_method.payment_terminal.handleVivaWalletStatusResponse();
+            const pendingLine = this.pos.getPendingPaymentLine("viva_wallet");
+
+            if (pendingLine) {
+                pendingLine.payment_method.payment_terminal.handleVivaWalletStatusResponse();
+            }
         });
     },
 });
