@@ -275,6 +275,18 @@ def get_ip():
             if addr != '127.0.0.1':
                 return addr
 
+
+def get_domain():
+    """IoT Box subsciption provides a https certificate to enable
+    secure communication with the Odoo server.
+    This certificate is generated based on the domain name of the server:
+    <ip_address>.<domain_name>.com (ip_address is local ip with dots replaced by dashes)
+    This method returns this domain name.
+    """
+    subject = get_conf('subject')
+    return get_ip().replace('.', '-') + subject.strip('*') if subject else get_ip()
+
+
 def get_mac_address():
     interfaces = netifaces.interfaces()
     for interface in interfaces:

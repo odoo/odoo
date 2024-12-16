@@ -36,15 +36,10 @@ class Manager(Thread):
         This method send IoT Box and devices information to Odoo database
         """
         if self.server_url:
-            subject = helpers.get_conf('subject')
-            if subject:
-                domain = helpers.get_ip().replace('.', '-') + subject.strip('*')
-            else:
-                domain = helpers.get_ip()
             iot_box = {
                 'name': helpers.get_hostname(),
                 'identifier': helpers.get_mac_address(),
-                'ip': domain,
+                'ip': helpers.get_domain(),
                 'token': helpers.get_token(),
                 'version': helpers.get_version(detailed_version=True),
             }
