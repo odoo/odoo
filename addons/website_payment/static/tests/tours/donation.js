@@ -4,12 +4,15 @@ import {
     clickOnSave,
     registerWebsitePreviewTour,
     insertSnippet,
-} from '@website/js/tours/tour_utils';
+} from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour('donation_snippet_edition', {
-    url: '/',
-    edition: true,
-}, () => [
+registerWebsitePreviewTour(
+    "donation_snippet_edition",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
         ...insertSnippet({
             id: "s_donation",
             name: "Donation",
@@ -66,12 +69,7 @@ registerWebsitePreviewTour('donation_snippet_edition', {
         {
             content: "Change custom amount to 67",
             trigger: ":iframe input[name='o_donation_amount'][type='number']",
-            run: function(action) {
-                const input = action.anchor;
-                input.value = "67";
-                input.dispatchEvent(new Event("input", { bubbles: true }));
-                input.dispatchEvent(new Event("change", { bubbles: true }));
-            }
+            run: "edit 67",
         },
         {
             content: "Select the custom amount radio button",
@@ -87,6 +85,9 @@ registerWebsitePreviewTour('donation_snippet_edition', {
             content: "Verify that the amount displayed is 67",
             trigger: ':iframe span.oe_currency_value:contains("67.00")',
             timeout: 10000, // Make sure the payment process animation is finished
+        },
+        {
+            trigger: ":iframe [name=o_payment_status_alert]:contains(thank you!)",
         },
     ]
 );
