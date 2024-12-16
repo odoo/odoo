@@ -68,10 +68,12 @@ class StockMoveLine(models.Model):
     @api.depends('quantity', 'product_uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom_id')
     def _compute_sale_price(self):
         for move_line in self:
-            if move_line.move_id.sale_line_id:
-                unit_price = move_line.move_id.sale_line_id.price_reduce_taxinc
-                qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.move_id.sale_line_id.product_uom_id)
+            sale_line_id = move_line.move_id.sale_line_id
+            if sale_line_id and sale_line_id.product_id == move_line.product_id:
+                unit_price = sale_line_id.price_reduce_taxinc
+                qty = move_line.product_uom_id._compute_quantity(move_line.quantity, sale_line_id.product_uom_id)
             else:
+                # For kits, use the regular unit price
                 unit_price = move_line.product_id.list_price
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.product_id.uom_id)
             move_line.sale_price = unit_price * qty
