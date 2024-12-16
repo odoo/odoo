@@ -28,7 +28,7 @@ class HrExpenseSplit(models.TransientModel):
     name = fields.Char(string='Description', required=True)
     wizard_id = fields.Many2one(comodel_name='hr.expense.split.wizard')
     expense_id = fields.Many2one(comodel_name='hr.expense', string='Expense')
-    product_id = fields.Many2one(comodel_name='product.product', string='Product', required=True, check_company=True)
+    product_id = fields.Many2one(comodel_name='product.product', string='Product', required=True, check_company=True, domain=[('can_be_expensed', '=', True)],)
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
         check_company=True,
