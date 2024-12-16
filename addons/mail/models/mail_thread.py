@@ -1332,7 +1332,13 @@ class MailThread(models.AbstractModel):
             post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
             # remove computational values not stored on mail.message and avoid warnings when creating it
             for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'x_odoo_message_id',
+<<<<<<< 17.0
                       'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner'):
+||||||| 573cbe3b19e91a134ee65168b3021437a39b6093
+            for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'bounced_email', 'bounced_message', 'bounced_msg_id', 'bounced_partner'):
+=======
+                      'bounced_email', 'bounced_message', 'bounced_msg_id', 'bounced_partner'):
+>>>>>>> 579fa149840798262077b54eab818d3055680334
                 post_params.pop(x, None)
             new_msg = False
             if thread_root._name == 'mail.thread':  # message with parent_id not linked to record
