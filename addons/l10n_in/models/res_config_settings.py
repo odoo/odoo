@@ -18,6 +18,7 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_in_edi = fields.Boolean('Indian Electronic Invoicing')
     module_l10n_in_ewaybill = fields.Boolean('Indian Electronic Waybill')
     module_l10n_in_gstin_status = fields.Boolean('Check GST Number Status')
+    module_l10n_in_website_sale = fields.Boolean('Auto Check on Website')
     module_l10n_in_withholding = fields.Boolean('Indian TDS and TCS')
     l10n_in_hsn_code_digit = fields.Selection(related='company_id.l10n_in_hsn_code_digit', readonly=False)
     module_l10n_in_enet_batch_payment = fields.Boolean(string="Vendor Payment")
