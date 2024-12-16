@@ -91,14 +91,14 @@
             <field name="name">mail.compose.message.view.form.template.save</field>
             <field name="model">mail.compose.message</field>
             <field name="arch" type="xml">
-                <form string="Templates">
+                <form js_class="mail_composer_save_template_form" string="Templates">
                     <group>
-                        <field name="template_name" placeholder="e.g: Send order confirmation"/>
+                        <field name="template_name" placeholder="e.g: Send order confirmation" required="1"/>
                         <field name="model" invisible="1"/>
                     </group>
                     <footer>
-                        <button name="create_mail_template" type="object" class="btn btn-primary" string="Save"/>
-                        <button name="cancel_save_template" type="object" class="btn btn-secondary" string="Cancel"/>
+                        <button name="create_mail_template" type="object" class="btn btn-primary" string="Save Template"/>
+                        <button class="btn btn-secondary" string="Cancel" special="cancel"/>
                     </footer>
                 </form>
             </field>
