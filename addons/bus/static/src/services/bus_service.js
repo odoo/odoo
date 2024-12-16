@@ -15,6 +15,9 @@ const INTERNAL_EVENTS = new Set([
     "notification",
     "update_state",
 ]);
+// Slightly delay the reconnection when coming back online as the network is not
+// ready yet and the exponential backoff would delay the reconnection by a lot.
+const BACK_ONLINE_RECONNECT_DELAY = 5000;
 /**
  * Communicate with a SharedWorker in order to provide a single websocket
  * connection shared across multiple tabs.
@@ -40,6 +43,7 @@ export const busService = {
         let isActive = false;
         let isInitialized = false;
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
+        let backOnlineTimeout;
         const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
         const connectionInitializedDeferred = new Deferred();
 
@@ -199,11 +203,16 @@ export const busService = {
             }
         });
         browser.addEventListener("online", () => {
-            if (isActive) {
-                send("start");
-            }
+            backOnlineTimeout = browser.setTimeout(() => {
+                if (this.isActive) {
+                    send("start");
+                }
+            }, BACK_ONLINE_RECONNECT_DELAY);
         });
-        browser.addEventListener("offline", () => send("stop"));
+        browser.addEventListener("offline", () => {
+            clearTimeout(backOnlineTimeout);
+            send("stop");
+        });
 
         return {
             addEventListener: bus.addEventListener.bind(bus),
