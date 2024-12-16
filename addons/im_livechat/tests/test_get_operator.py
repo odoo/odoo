@@ -8,8 +8,9 @@ from unittest.mock import patch
 
 @odoo.tests.tagged("-at_install", "post_install")
 class TestGetOperator(HttpCase):
-    def _create_operator(self, lang_code=None, country_code=None):
+    def _create_operator(self, lang_code=None, country_code=None, expertises=None):
         operator = new_test_user(self.env, login=f"operator_{lang_code or country_code}_{self.operator_id}")
+        operator.res_users_settings_id.livechat_expertise_ids = expertises
         operator.partner_id = self.env["res.partner"].create(
             {
                 "name": f"Operator {lang_code or country_code}",
@@ -221,3 +222,46 @@ class TestGetOperator(HttpCase):
         self._create_chat(livechat_channel, second_operator)
         self._create_chat(livechat_channel, second_operator)
         self.assertEqual(first_operator, livechat_channel._get_operator())
+
+    def test_get_by_expertise(self):
+        dog_expert = self.env["im_livechat.expertise"].create({"name": "dog"})
+        cat_expert = self.env["im_livechat.expertise"].create({"name": "cat"})
+        operator_dog = self._create_operator(expertises=dog_expert)
+        operator_car = self._create_operator(expertises=cat_expert)
+        all_operators = operator_dog + operator_car
+        pets_support = self.env["im_livechat.channel"].create(
+            {"name": "Pets", "user_ids": all_operators.ids}
+        )
+        self.assertEqual(operator_dog, pets_support._get_operator(expertises=dog_expert))
+        self.assertEqual(operator_car, pets_support._get_operator(expertises=cat_expert))
+
+    def test_get_by_expertise_amongst_same_language(self):
+        dog_expert = self.env["im_livechat.expertise"].create({"name": "dog"})
+        cat_expert = self.env["im_livechat.expertise"].create({"name": "cat"})
+        operator_fr_dog = self._create_operator("fr_FR", expertises=dog_expert)
+        operator_fr_cat = self._create_operator("fr_FR", expertises=cat_expert)
+        operator_fr_dog_cat = self._create_operator("fr_FR", expertises=dog_expert + cat_expert)
+        operator_en_dog = self._create_operator("en_US", expertises=dog_expert)
+        operator_en_cat = self._create_operator("en_US", expertises=cat_expert)
+        all_operators = (
+            operator_fr_dog
+            + operator_fr_cat
+            + operator_fr_dog_cat
+            + operator_en_dog
+            + operator_en_cat
+        )
+        pets_support = self.env["im_livechat.channel"].create(
+            {"name": "Pets", "user_ids": all_operators.ids}
+        )
+        self.assertEqual(
+            operator_fr_dog, pets_support._get_operator(lang="fr_FR", expertises=dog_expert)
+        )
+        self.assertEqual(
+            operator_en_cat, pets_support._get_operator(lang="en_US", expertises=cat_expert)
+        )
+        self.assertEqual(
+            operator_fr_dog_cat, pets_support._get_operator(lang="fr_FR", expertises=dog_expert + cat_expert)
+        )
+        self.assertEqual(
+            operator_en_dog, pets_support._get_operator(lang="en_US", expertises=dog_expert + cat_expert)
+        )
