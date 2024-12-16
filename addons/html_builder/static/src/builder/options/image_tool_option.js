@@ -16,10 +16,17 @@ class ImageToolOptionPlugin extends Plugin {
     static id = "ImageToolOption";
     static dependencies = ["history", "userCommand"];
     resources = {
-        builder_options: {
-            OptionComponent: ImageToolOption,
-            selector: "img",
-        },
+        builder_options: [
+            {
+                OptionComponent: ImageToolOption,
+                selector: "img",
+            },
+            {
+                template: "html_builder.ImageAndFaOption",
+                selector: "span.fa, i.fa, img",
+                exclude: "[data-oe-type='image'] > img, [data-oe-xpath]",
+            },
+        ],
         builder_actions: this.getActions(),
     };
     getActions() {

@@ -35,14 +35,20 @@ const styleMap = {
 
 const actions = {
     classAction: {
-        isActive: ({ editingElement, param: className }) => {
-            return editingElement.classList.contains(className);
+        isActive: ({ editingElement, param: classNames }) => {
+            return classNames.split(" ").every((className) => {
+                return editingElement.classList.contains(className);
+            });
         },
-        apply: ({ editingElement, param: className, value }) => {
-            editingElement.classList.add(className);
+        apply: ({ editingElement, param: classNames }) => {
+            for (const className of classNames.split(" ")) {
+                editingElement.classList.add(className);
+            }
         },
-        clean: ({ editingElement, param: className, value }) => {
-            editingElement.classList.remove(className);
+        clean: ({ editingElement, param: classNames }) => {
+            for (const className of classNames.split(" ")) {
+                editingElement.classList.remove(className);
+            }
         },
     },
     styleAction: {
