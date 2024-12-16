@@ -98,7 +98,6 @@ class PrinterDriver(Driver):
                 and device['device-make-and-model'] != 'Unknown'
                 or (
                 'direct' in device['device-class']
-                and 'serial=' in device['url']
         )
         ):
             model = cls.get_device_model(device)
