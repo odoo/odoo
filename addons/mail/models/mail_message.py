@@ -163,6 +163,7 @@ class Message(models.Model):
         'No threading for answers',
         help='If true, answers do not go in the original document discussion thread. Instead, it will check for the reply_to in tracking message-id and redirected accordingly. This has an impact on the generated message-id.')
     message_id = fields.Char('Message-Id', help='Message unique identifier', index='btree', readonly=1, copy=False)
+    x_odoo_message_id = fields.Char('X-Odoo-Message-Id', help='Odoo message unique identifier', index='btree', readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     # keep notification layout informations to be able to generate mail again
