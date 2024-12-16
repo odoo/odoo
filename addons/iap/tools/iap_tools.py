@@ -154,6 +154,10 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
             e.data = response['error']['data']
             raise e
         return response.get('result')
+    except (InsufficientCreditError):
+        raise exceptions.UserError(
+            _("It appears that your IAP (In-App Purchase) account does not have enough credit to complete this action. This may be due to an unregistered account or insufficient funds.")
+        )
     except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError):
         _logger.exception("iap jsonrpc %s failed", url)
         raise exceptions.AccessError(
