@@ -12,7 +12,7 @@
                         </div>
                         <button class="btn btn-outline-secondary px-2 py-1" aria-label="Search button" t-on-click="search">
                             <i t-if="!state.loading" class="o_searchview_icon oi oi-search" role="img" aria-label="Search Sub Channels" title="Search Sub Channels"/>
-                            <i t-else="" class="fa fa-spin fa-spinner" aria-label="Search in progress" title="Search in progress"/>
+                            <i t-else="" class="fa fa-circle-o-notch fa-spin" aria-label="Search in progress" title="Search in progress"/>
                         </button>
                         <button t-if="store.self.isInternalUser" class="ms-1 btn btn-primary smaller" aria-label="Create Thread" t-on-click="onClickCreate">Create</button>
                     </div>

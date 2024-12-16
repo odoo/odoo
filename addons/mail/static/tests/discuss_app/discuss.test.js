@@ -1775,7 +1775,7 @@ test("warning on send with shortcut when attempting to post message with still-u
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
     await contains(".o-mail-AttachmentCard");
-    await contains(".o-mail-AttachmentCard .fa.fa-spinner");
+    await contains(".o-mail-AttachmentCard .fa.fa-circle-o-notch");
     await press("Enter"); // Try to send message
     await contains(".o_notification", { text: "Please wait while the file is uploading." });
 });

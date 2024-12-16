@@ -6,7 +6,7 @@
                     <path fill="#000" d="M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z"></path>
                 </svg>
             </button>
-            <i t-if="!state.showInstallUI" class="fa fa-spinner fa-spin fa-2x text-primary position-absolute"/>
+            <i t-if="!state.showInstallUI" class="fa fa-circle-o-notch fa-spin fa-2x text-primary position-absolute"/>
             <div t-attf-class="h-100 w-100 d-flex align-items-center justify-content-center flex-column fade {{state.showInstallUI ? 'show': ''}}">
                 <div class="d-flex align-items-center justify-content-center flex-wrap gap-3 m-4 mw-75 mw-md-50">
                     <img style="height:100px;width:100px;" class="rounded-4 p-4 bg-white shadow" t-att-src="state.manifest.icons?.[0]?.src"/>
