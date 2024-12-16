@@ -169,7 +169,7 @@ export class Record extends Component {
     setup() {
         const { activeFields, fieldNames, fields, resModel } = this.props;
         if (!activeFields && !fieldNames) {
-            throw Error(`Record props should have either a "resModel" key or a "fieldNames" key`);
+            throw Error(`Record props should have either a "activeFields" key or a "fieldNames" key`);
         }
         if (!fields && (!fieldNames || !resModel)) {
             throw Error(
