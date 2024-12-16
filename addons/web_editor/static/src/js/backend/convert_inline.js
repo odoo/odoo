@@ -266,8 +266,10 @@ function bootstrapToTable(editable) {
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     currentCol = grid[gridIndex];
-                    _applyColspan(currentCol, columnSize, containerWidth);
-                    currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
+                    if (currentCol) {
+                        _applyColspan(currentCol, columnSize, containerWidth);
+                    }
+                    currentRow.append(...grid.filter(td => td.getAttribute('colspan')));    
                     if (columnIndex !== bootstrapColumns.length - 1) {
                         // The row was filled before we handled all of its
                         // columns. Create a new one and start again from there.
