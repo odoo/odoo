@@ -36,7 +36,7 @@ import re
 import uuid
 import warnings
 from collections import defaultdict, deque
-from collections.abc import MutableMapping, Callable
+from collections.abc import Callable, Mapping
 from inspect import getmembers
 from operator import attrgetter, itemgetter
 
@@ -7103,8 +7103,8 @@ collections.abc.Set.register(BaseModel)
 collections.abc.Sequence.register(BaseModel)
 
 
-class RecordCache(MutableMapping):
-    """ A mapping from field names to values, to read and update the cache of a record. """
+class RecordCache(Mapping[str, typing.Any]):
+    """ A mapping from field names to values, to read the cache of a record. """
     __slots__ = ['_record']
 
     def __init__(self, record):
@@ -7120,16 +7120,6 @@ class RecordCache(MutableMapping):
         """ Return the cached value of field ``name`` for `record`. """
         field = self._record._fields[name]
         return self._record.env.cache.get(self._record, field)
-
-    def __setitem__(self, name, value):
-        """ Assign the cached value of field ``name`` for ``record``. """
-        field = self._record._fields[name]
-        self._record.env.cache.set(self._record, field, value)
-
-    def __delitem__(self, name):
-        """ Remove the cached value of field ``name`` for ``record``. """
-        field = self._record._fields[name]
-        self._record.env.cache.remove(self._record, field)
 
     def __iter__(self):
         """ Iterate over the field names with a cached value. """
