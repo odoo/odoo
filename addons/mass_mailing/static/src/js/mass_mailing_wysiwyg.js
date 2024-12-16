@@ -200,7 +200,7 @@ export class MassMailingWysiwyg extends Wysiwyg {
      */
     _getEditorOptions() {
         const options = super._getEditorOptions(...arguments);
-        const finalOptions = { autoActivateContentEditable: false, ...options };
+        const finalOptions = { ...options, autoActivateContentEditable: false, allowCommandVideo: false };
         return finalOptions;
     }
 }
