@@ -124,33 +124,31 @@ class HrContract(models.Model):
                 return
             self.resource_calendar_id = default_calendar
 
-    @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
+    @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end', 'resource_calendar_id')
     def _check_current_contract(self):
-        """ Two contracts in state [incoming | open | close] cannot overlap """
+        """ Ensure contract creation adheres to the following rules:
+            1) If an employee has multiple running contracts, they cannot create a flexible contract.
+            2) If an employee has a running flexible contract, they cannot have another open contract.
+        """
         for contract in self.filtered(lambda c: (c.state not in ['draft', 'cancel'] or c.state == 'draft' and c.kanban_state == 'done') and c.employee_id):
-            domain = [
-                ('id', '!=', contract.id),
-                ('employee_id', '=', contract.employee_id.id),
-                ('company_id', '=', contract.company_id.id),
-                '|',
-                    ('state', 'in', ['open', 'close']),
-                    '&',
-                        ('state', '=', 'draft'),
-                        ('kanban_state', '=', 'done') # replaces incoming
-            ]
 
-            if not contract.date_end:
-                start_domain = []
-                end_domain = ['|', ('date_end', '>=', contract.date_start), ('date_end', '=', False)]
-            else:
-                start_domain = [('date_start', '<=', contract.date_end)]
-                end_domain = ['|', ('date_end', '>', contract.date_start), ('date_end', '=', False)]
+            running_contracts = self._get_contracts_to_validate(contract)
+            has_flexible_contract = running_contracts.filtered(lambda c: not c.resource_calendar_id or c.resource_calendar_id.flexible_hours)
 
-            domain = expression.AND([domain, start_domain, end_domain])
-            if self.search_count(domain):
+            # Rule 1: If the employee has multiple running contracts, no flexible contract can be created
+            if running_contracts and (not contract.resource_calendar_id or contract.resource_calendar_id.flexible_hours):
                 raise ValidationError(
                     _(
-                        'An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n\nEmployee: %(employee_name)s',
+                        'An employee with multiple running contracts cannot have a flexible contract.\n\nEmployee: %(employee_name)s',
+                        employee_name=contract.employee_id.name
+                    )
+                )
+
+            # Rule 2: If the employee has a running flexible contract, they cannot create any new contract
+            if has_flexible_contract:
+                raise ValidationError(
+                    _(
+                        'An employee with a running flexible contract cannot have another open contract.\n\nEmployee: %(employee_name)s',
                         employee_name=contract.employee_id.name
                     )
                 )
@@ -163,6 +161,30 @@ class HrContract(models.Model):
                     'Contract %(contract)s: start date (%(start)s) must be earlier than contract end date (%(end)s).',
                     contract=contract.name, start=contract.date_start, end=contract.date_end,
                 ))
+
+    def _get_contracts_to_validate(self, contract):
+        domain = [
+            ('id', '!=', contract.id),
+            ('employee_id', '=', contract.employee_id.id),
+            ('company_id', '=', contract.company_id.id),
+            '|',
+                ('state', 'in', ['open', 'close']),
+                '&',
+                    ('state', '=', 'draft'),
+                    ('kanban_state', '=', 'done')  # replaces incoming
+        ]
+
+        # Date-based domain for overlapping contracts
+        if not contract.date_end:
+            start_domain = []
+            end_domain = ['|', ('date_end', '>=', contract.date_start), ('date_end', '=', False)]
+        else:
+            start_domain = [('date_start', '<=', contract.date_end)]
+            end_domain = ['|', ('date_end', '>', contract.date_start), ('date_end', '=', False)]
+
+        domain = expression.AND([domain, start_domain, end_domain])
+
+        return self.search(domain)
 
     @api.model
     def update_state(self):

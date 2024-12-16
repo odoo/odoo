@@ -43,32 +43,73 @@ class TestHrContracts(TestContractCommon):
             'date_end': end,
         })
 
-    def test_incoming_overlapping_contract(self):
+    def test_flexible_contract_with_multiple_running_contracts(self):
+        """ Test that creating a flexible contract when multiple running contracts exist raises a ValidationError. """
         start = datetime.strptime('2015-11-01', '%Y-%m-%d').date()
         end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
         self.create_contract('open', 'normal', start, end)
 
-        # Incoming contract
-        with self.assertRaises(ValidationError, msg="It should not create two contract in state open or incoming"):
+        # Attempt to create a flexible contract -> should raise ValidationError
+        with self.assertRaises(ValidationError, msg="It should not allow creating a flexible contract when multiple running contracts exist"):
             start = datetime.strptime('2015-11-15', '%Y-%m-%d').date()
             end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
-            self.create_contract('draft', 'done', start, end)
+            flexible_contract = self.create_contract('open', 'normal', start, end)
+            flexible_contract.resource_calendar_id = False
 
-    def test_pending_overlapping_contract(self):
-        start = datetime.strptime('2015-11-01', '%Y-%m-%d').date()
-        end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
-        self.create_contract('open', 'normal', start, end)
-
-        # Pending contract
-        with self.assertRaises(ValidationError, msg="It should not create two contract in state open or pending"):
-            start = datetime.strptime('2015-11-15', '%Y-%m-%d').date()
-            end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
-            self.create_contract('open', 'blocked', start, end)
-
-        # Draft contract -> should not raise
+        # resource calender contract -> should not raise
         start = datetime.strptime('2015-11-15', '%Y-%m-%d').date()
         end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
-        self.create_contract('draft', 'normal', start, end)
+        self.create_contract('open', 'normal', start, end)
+
+    def test_flexible_contract_blocking_new_contracts(self):
+        """ Test that creating any contract when a running flexible contract exists raises a ValidationError. """
+        start = datetime.strptime('2015-11-01', '%Y-%m-%d').date()
+        end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
+        flexible_contract = self.create_contract('open', 'normal', start, end)
+        flexible_contract.resource_calendar_id = False
+
+        # Attempt to create any new contract -> should raise ValidationError
+        with self.assertRaises(ValidationError, msg="It should not allow creating another contract when a flexible contract exists"):
+            start = datetime.strptime('2015-11-15', '%Y-%m-%d').date()
+            end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
+            self.create_contract('open', 'normal', start, end)
+
+    def test_no_running_contract_allows_any_contract(self):
+        """ Test that any contract can be created if no running contracts exist. """
+        start = datetime.strptime('2015-12-01', '%Y-%m-%d').date()
+        end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
+
+        # flexible contract -> should not raise
+        flexible_contract = self.create_contract('open', 'normal', start, end)
+        flexible_contract.resource_calendar_id = False
+
+        flexible_contract.state = 'cancel'
+        # open contract -> should not raise
+        self.create_contract('open', 'normal', start, end)
+
+    def test_overlapping_contract_no_end_flexible(self):
+        """ Test creating a flexible contract when existing contract has no end date """
+        self.create_contract('open', 'normal', datetime.strptime('2015-11-01', '%Y-%m-%d').date())
+
+        # Attempt to create a flexible contract
+        with self.assertRaises(ValidationError, msg="Cannot create a flexible contract when a normal contract is running with no end date"):
+            start = datetime.strptime('2015-11-15', '%Y-%m-%d').date()
+            flexible_contract = self.create_contract('open', 'normal', start)
+            flexible_contract.resource_calendar_id = False
+
+    def test_flexible_contract_cannot_overlap(self):
+        """ Test that two flexible contracts cannot exist at the same time """
+        start = datetime.strptime('2015-11-01', '%Y-%m-%d').date()
+        end = datetime.strptime('2015-11-30', '%Y-%m-%d').date()
+        flexible_contract = self.create_contract('open', 'normal', start, end)
+        flexible_contract.resource_calendar_id = False
+
+        # Attempt to create another flexible contract
+        with self.assertRaises(ValidationError, msg="Cannot create overlapping flexible contracts"):
+            start = datetime.strptime('2015-11-15', '%Y-%m-%d').date()
+            end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
+            flexible_contract = self.create_contract('open', 'normal', start, end)
+            flexible_contract.resource_calendar_id = False
 
     def test_draft_overlapping_contract(self):
         start = datetime.strptime('2015-11-01', '%Y-%m-%d').date()
@@ -85,10 +126,9 @@ class TestHrContracts(TestContractCommon):
         # No end date
         self.create_contract('open', 'normal', datetime.strptime('2015-11-01', '%Y-%m-%d').date())
 
-        with self.assertRaises(ValidationError):
-            start = datetime.strptime('2015-11-15', '%Y-%m-%d').date()
-            end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
-            self.create_contract('draft', 'done', start, end)
+        start = datetime.strptime('2015-11-15', '%Y-%m-%d').date()
+        end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
+        self.create_contract('draft', 'done', start, end)
 
     def test_overlapping_contract_no_end2(self):
 
@@ -96,9 +136,8 @@ class TestHrContracts(TestContractCommon):
         end = datetime.strptime('2015-12-30', '%Y-%m-%d').date()
         self.create_contract('open', 'normal', start, end)
 
-        with self.assertRaises(ValidationError):
-            # No end
-            self.create_contract('draft', 'done', datetime.strptime('2015-01-01', '%Y-%m-%d').date())
+        # No end
+        self.create_contract('draft', 'done', datetime.strptime('2015-01-01', '%Y-%m-%d').date())
 
     def test_set_employee_contract_create(self):
         contract = self.create_contract('open', 'normal', date(2018, 1, 1), date(2018, 1, 2))

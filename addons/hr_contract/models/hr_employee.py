@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from collections import defaultdict
 from pytz import timezone, UTC
 from datetime import date, datetime, time
@@ -316,6 +317,18 @@ class HrEmployee(models.Model):
                 'from_action_open_contract': True,
             }
             action['target'] = 'current'
+            return action
+
+        open_contracts = self.contract_ids.filtered(lambda c: c.state == 'open')
+        if len(open_contracts) > 1:
+            action.update({
+                'views': [(False, 'list'), (False, 'form')],
+                'context': {'search_default_running': True},
+                'domain': expression.AND([
+                    ast.literal_eval(action.get('domain', '[]')),
+                    [('id', 'in', self.contract_ids.ids)]
+                ]),
+            })
             return action
 
         target_contract = self.contract_id
