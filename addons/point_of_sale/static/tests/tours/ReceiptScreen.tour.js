@@ -109,6 +109,15 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             Order.hasLine({ oldPrice: "7" }),
+
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.addOrderline("Test Product", "1"),
+            ProductScreen.pressNumpad("Price"),
+            ProductScreen.pressNumpad("9"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.noDiscountAmount(),
         ].flat(),
 });
 
