@@ -2,15 +2,21 @@
 <odoo>
     <data noupdate="1">
         <record id="demo_stock_at_series_out" model="l10n_pt.at.series">
-            <field name="type">stock_picking</field>
+            <field name="type">outgoing_gt</field>
             <field name="prefix">STOCKOUT</field>
             <field name="at_code">AT-STOCKOUT</field>
             <field name="company_id" ref="base.demo_company_pt"/>
         </record>
         <record id="demo_stock_at_series_pos" model="l10n_pt.at.series">
-            <field name="type">stock_picking</field>
+            <field name="type">outgoing_gt</field>
             <field name="prefix">STOCKPOS</field>
             <field name="at_code">AT-STOCKPOS</field>
+            <field name="company_id" ref="base.demo_company_pt"/>
+        </record>
+        <record id="demo_stock_at_series_internal" model="l10n_pt.at.series">
+            <field name="type">internal_ga</field>
+            <field name="prefix">STOCKINT</field>
+            <field name="at_code">AT-STOCKINT</field>
             <field name="company_id" ref="base.demo_company_pt"/>
         </record>
     </data>

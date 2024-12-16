@@ -9,7 +9,7 @@
                 <field name="country_code" invisible="1"/>
                 <page string="Portugal" invisible="country_code != 'PT'">
                     <label for="l10n_pt_stock_at_series_id" class="col-lg-3 o_light_label"/>
-                    <field name="l10n_pt_stock_at_series_id" domain="[('type', '=', 'stock_picking')]"/>
+                    <field name="l10n_pt_stock_at_series_id" domain="l10n_pt_stock_at_series_domain"/>
                 </page>
             </xpath>
         </field>

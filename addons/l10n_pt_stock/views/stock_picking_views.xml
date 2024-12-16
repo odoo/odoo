@@ -5,9 +5,14 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning oe_edit_only" role="alert" name="warning_at_series" invisible="l10n_pt_at_series_id or l10n_pt_stock_atcud">
+                  The selected Operation Type (<field name="picking_type_id"/>) does not have an AT Series associated to it. This stock picking will not be hashed.
+                </div>
+            </xpath>
             <xpath expr="//group[@name='other_infos']" position="after">
                 <field name="country_code" invisible="1"/>
-                <group string="Portugal" invisible="country_code != 'PT'">
+                <group name="other_infos_portugal" string="Portugal" invisible="country_code != 'PT'">
                     <field name="l10n_pt_stock_inalterable_hash"/>
                     <field name="l10n_pt_stock_atcud"/>
                 </group>

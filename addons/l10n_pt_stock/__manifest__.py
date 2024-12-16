@@ -15,8 +15,10 @@
     'data': [
         'data/data.xml',
         'data/ir_cron.xml',
+        'views/l10n_pt_at_series_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_picking_type_views.xml',
+        'views/res_config_settings_views.xml',
         'report/l10n_pt_stock_hash_integrity_templates.xml',
         'report/report_deliveryslip.xml',
     ],

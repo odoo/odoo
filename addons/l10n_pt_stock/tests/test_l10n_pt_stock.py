@@ -54,17 +54,28 @@ class TestL10nPtStockCommon(TestStockCommon):
             'default_location_src_id': cls.location.id,
             'default_location_dest_id': cls.location2.id,
         })
+        cls.picking_type_internal = cls.env['stock.picking.type'].create({
+            'name': 'Picking Internal',
+            'sequence_code': 'PT_INT',
+            'code': 'internal',
+            'reservation_method': 'at_confirm',
+            'company_id': cls.company_pt.id,
+            'warehouse_id': False,
+            'default_location_src_id': cls.location.id,
+            'default_location_dest_id': cls.location2.id,
+        })
+
         cls.partner_a = cls.env['res.partner'].create({
             'name': 'Partner A',
             'vat': 'PT123456789',
         })
         for picking_type in cls.env['stock.picking.type'].search([
             ('company_id', '=', cls.company_pt.id),
-            ('code', '=', 'outgoing'),
+            ('code', 'in', ('outgoing', 'internal')),
         ]):
             picking_type.l10n_pt_stock_at_series_id = cls.env['l10n_pt.at.series'].create({
                 'company_id': cls.company_pt.id,
-                'type': 'stock_picking',
+                'type': 'outgoing_gt' if picking_type.code == 'outgoing' else 'internal_ga',
                 'prefix': f"{picking_type.sequence_code}-TEST",
                 'at_code': f"AT-{picking_type.sequence_code}-TEST",
             })
@@ -105,7 +116,7 @@ class TestL10nPtStockCommon(TestStockCommon):
         return picking
 
 
-@tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
+@tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtStockHashing(TestL10nPtStockCommon):
     def test_l10n_pt_stock_hash_sequence(self):
         """
@@ -116,8 +127,8 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         is the same as the one given in the link (using the same sample keys).
         """
 
-        # The 1st patch is necessary because we use the move type in l10n_pt_stock_document_number, but our type
-        # (stock_picking) is different from the one used in the link (GR)
+        # The 1st patch is necessary because we use the move name in l10n_pt_stock_document_number and our move
+        # name sequence is different from the one used in the link (1G 5A/1, 1G 5A/2...)
         # The 2nd is necessary because the example uses a real amount for the computation of the hash,
         # however in our case this amount is set to 0.0, so we need to patch it to get the same result.
         l10n_pt_stock_document_number = ''
@@ -152,7 +163,7 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         expected_error_msg = "This document is protected by a hash. Therefore, you cannot edit the following fields:*"
 
         with self.assertRaisesRegex(UserError, f"{expected_error_msg} Inalterability Hash."):
-            picking.l10n_pt_stock_inalterable_hash = '$1$fake_hash'
+            picking.l10n_pt_stock_inalterable_hash = 'fake_hash'
         with self.assertRaisesRegex(UserError, f"{expected_error_msg} Date of Transfer"):
             picking.date_done = fields.Date.from_string('2000-01-01')
         with self.assertRaisesRegex(UserError, expected_error_msg):
@@ -239,3 +250,25 @@ class TestL10nPtStockMiscRequirements(TestL10nPtStockCommon):
 
         with self.assertRaisesRegex(UserError, "You cannot modify the name of a product that has been used in a stock picking."):
             product.name = "Product A3"
+
+    def test_l10n_pt_stock_at_series(self):
+        """
+        Test that we do not allow changing the AT Series of a picking type already hashed,
+        and that AT Series cannot be used in more than one picking type.
+        """
+        # Get an already used AT Series to check it can't be added to a second picking type
+        at_series_used = self.env['l10n_pt.at.series'].search([('type', '=', 'outgoing_gt'), ('prefix', '=', 'PT_OUT-TEST')])
+        # Create a new outgoing AT Series to add to an already hashed picking type
+        at_series_out = self.env['l10n_pt.at.series'].create({
+            'company_id': self.company_pt.id,
+            'type': 'outgoing_gt',
+            'prefix': "STOCKOUT2-TEST",
+            'at_code': "AT-STOCKOUT2-TEST",
+        })
+        picking = self.create_picking(self.picking_type_out, l10n_pt_hashed_on="2023-01-01", validate=True)
+        picking._l10n_pt_stock_compute_missing_hashes()
+
+        with self.assertRaisesRegex(UserError, "You cannot change the AT series of a Picking Type once it has been used."):
+            self.picking_type_out.l10n_pt_stock_at_series_id = at_series_out
+        with self.assertRaisesRegex(UserError, "You cannot use the same AT series for more than one Picking Type."):
+            self.picking_type_internal.l10n_pt_stock_at_series_id = at_series_used

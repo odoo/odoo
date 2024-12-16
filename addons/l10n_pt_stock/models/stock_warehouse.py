@@ -1,4 +1,4 @@
-from odoo import models, api, _
+from odoo import api, models, _
 
 
 class Warehouse(models.Model):
@@ -8,10 +8,11 @@ class Warehouse(models.Model):
         sequence_values = super()._get_sequence_values(name=name, code=code)
         if self.company_id.country_id.code != 'PT':
             return sequence_values
-        sequence_values.get("out_type_id").update({
-            'prefix': _("TMP/"),
-            'suffix': _(" (temporary name)"),
-        })
+        for sequence_type in ('out_type_id', 'int_type_id'):
+            sequence_values.get(sequence_type).update({
+                'prefix': _("TMP/"),
+                'suffix': _(" (temporary name)"),
+            })
         return sequence_values
 
     @api.model
