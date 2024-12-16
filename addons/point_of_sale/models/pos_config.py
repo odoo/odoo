@@ -63,7 +63,7 @@ class PosConfig(models.Model):
 
     def _get_default_tip_product(self):
         tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
-        if not tip_product_id:
+        if not tip_product_id or (tip_product_id.sudo().company_id and tip_product_id.sudo().company_id != self.env.company):
             tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
         return tip_product_id
 
@@ -766,7 +766,11 @@ class PosConfig(models.Model):
             self.get_limited_product_count(),
         )
         product_ids = [r[0] for r in self.env.execute_query(sql)]
-        product_ids.extend(self._get_special_products().ids)
+        special_products = self._get_special_products().filtered(
+            lambda product: not product.sudo().company_id
+                            or product.sudo().company_id == self.company_id
+        )
+        product_ids.extend(special_products.ids)
         products = self.env['product.product'].browse(product_ids)
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
