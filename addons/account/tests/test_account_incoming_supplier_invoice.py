@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo import Command
 
 from contextlib import contextmanager
 from unittest.mock import patch
+import base64
+import textwrap
 
 
 @tagged('post_install', '-at_install')
@@ -317,3 +320,42 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({docx: 1}, new=True, from_alias=True)
             self.assertEqual(decoded_files, {docx.name})
+
+    def test_multicompany_bill_creation(self):
+        """Test users from company 2 can send email to alias of company 1
+        """
+        company_2_user = self.env['res.users'].create({
+            'name': 'Internal User Company 2',
+            'login': 'someone@some.company.com',
+            'email': 'someone@some.company.com',
+            'company_id': self.company_data_2['company'].id,
+            'company_ids': [Command.set(self.company_data_2['company'].ids)],
+        })
+
+        attach_content_type = 'application/octet-stream'
+        message_id = 'some_msg_id'
+        sender = company_2_user.email
+        attachment = base64.b64encode(b'Attachment').decode()
+        alias = self.env['account.journal'].search(
+            [('company_id', '=', self.env.user.company_id.id), ('type', '=', 'purchase')],
+            limit=1,
+        ).alias_id
+        mail_data = textwrap.dedent(f'''\
+            MIME-Version: 1.0
+            Date: Fri, 26 Nov 2021 16:27:45 +0100
+            Message-ID: {message_id}
+            Subject: Incoming bill
+            From:  {sender}
+            To: {alias.display_name}
+            Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
+            --000000000000a47519057e029630
+            Content-Type: text/plain; charset=\"UTF-8\"
+            --000000000000a47519057e029630
+            Content-Type: {attach_content_type}
+            Content-Transfer-Encoding: base64
+            {attachment}
+            --000000000000a47519057e029630--
+        ''')
+
+        invoice_id = self.env['mail.thread'].message_process('account.move', mail_data)
+        self.assertTrue(invoice_id)
