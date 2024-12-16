@@ -26,6 +26,15 @@ class MailTestSimple(models.Model):
         headers['X-Custom'] = 'Done'
         return headers
 
+class MailTestSimpleUnnamed(models.Model):
+    """ A very simple model only inheriting from mail.thread when only
+    communication history is necessary, and has no 'name' field """
+    _description = 'Simple Chatter Model without "name" field'
+    _name = 'mail.test.simple.unnamed'
+    _inherit = ['mail.thread']
+    _rec_name = "description"
+
+    description = fields.Char()
 
 class MailTestSimpleMainAttachment(models.Model):
     _description = 'Simple Chatter Model With Main Attachment Management'
