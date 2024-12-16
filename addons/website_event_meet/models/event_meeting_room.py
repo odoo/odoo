@@ -32,8 +32,7 @@ class EventMeetingRoom(models.Model):
         super(EventMeetingRoom, self)._compute_website_url()
         for meeting_room in self:
             if meeting_room.id:
-                base_url = meeting_room.event_id.get_base_url()
-                meeting_room.website_url = '%s/event/%s/meeting_room/%s' % (base_url, self.env["ir.http"]._slug(meeting_room.event_id), self.env["ir.http"]._slug(meeting_room))
+                meeting_room.website_url = f'/event/{self.env["ir.http"]._slug(meeting_room.event_id)}/meeting_room/{self.env["ir.http"]._slug(meeting_room)}'
 
     @api.model_create_multi
     def create(self, values_list):
@@ -52,8 +51,6 @@ class EventMeetingRoom(models.Model):
             ("room_last_activity", "<", fields.Datetime.now() - self._DELAY_CLEAN),
         ]).active = False
 
-    def open_website_url(self):
-        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
-        if self.event_id.website_id:
-            return super().open_website_url()
-        return self.env['website'].get_client_action(f'/event/{self.env["ir.http"]._slug(self.event_id)}/meeting_room/{self.env["ir.http"]._slug(self)}')
+    def get_base_url(self):
+        """ As website_id is not defined on this record, we rely on event website_id for base URL. """
+        return self.event_id.get_base_url()
