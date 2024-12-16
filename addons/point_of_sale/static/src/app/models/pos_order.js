@@ -667,7 +667,10 @@ export class PosOrder extends Base {
                         orderLine.getUnitDisplayPriceBeforeDiscount() *
                         (orderLine.getDiscount() / 100) *
                         orderLine.getQuantity();
-                    if (orderLine.displayDiscountPolicy() === "without_discount") {
+                    if (
+                        orderLine.displayDiscountPolicy() === "without_discount" &&
+                        !(orderLine.price_type === "manual")
+                    ) {
                         sum +=
                             (orderLine.getTaxedlstUnitPrice() -
                                 orderLine.getUnitDisplayPriceBeforeDiscount()) *
