@@ -84,5 +84,8 @@ registerWebsitePreviewTour(
             trigger: ':iframe span.oe_currency_value:contains("67.00")',
             timeout: 10000, // Make sure the payment process animation is finished
         },
+        {
+            trigger: ":iframe [name=o_payment_status_alert]:contains(thank you!)",
+        },
     ]
 );
