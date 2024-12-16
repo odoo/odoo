@@ -7,6 +7,25 @@ defineWebsiteModels();
 
 describe("builder shorthand actions", () => {
     describe("classAction", () => {
+        test("should reset when cliking on an empty classAction", async () => {
+            addOption({
+                selector: ".test-options-target",
+                template: xml`
+                    <WeButtonGroup>
+                        <WeButton classAction="''"/>
+                        <WeButton classAction="'x'"/>
+                    </WeButtonGroup>
+                `,
+            });
+            await setupWebsiteBuilder(`<div class="test-options-target x">a</div>`);
+            await contains(":iframe .test-options-target").click();
+            expect(".options-container").toBeDisplayed();
+
+            expect("[data-class-action='x']").toHaveClass("active");
+
+            await contains("[data-class-action='']").click();
+            expect(":iframe .test-options-target").not.toHaveClass("x");
+        });
         test("set multiples classes", async () => {
             addOption({
                 selector: ".test-options-target",
