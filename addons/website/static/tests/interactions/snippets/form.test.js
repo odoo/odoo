@@ -7,7 +7,7 @@ import {
     setupInteractionWhiteList,
 } from "@web/../tests/public/helpers";
 
-setupInteractionWhiteList("website.form", "website.post_link");
+setupInteractionWhiteList(["website.form", "website.post_link"]);
 describe.current.tags("interaction_dev");
 
 function field(inputEl) {
