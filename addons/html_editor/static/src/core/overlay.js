@@ -39,9 +39,6 @@ export class EditorOverlay extends Component {
         if (this.props.target) {
             getTarget = () => this.props.target;
         } else {
-            useExternalListener(this.props.bus, "updatePosition", () => {
-                position.unlock();
-            });
             const editable = this.props.editable;
             this.rangeElement = editable.ownerDocument.createElement("range-el");
             editable.after(this.rangeElement);
@@ -50,6 +47,10 @@ export class EditorOverlay extends Component {
             });
             getTarget = this.getSelectionTarget.bind(this);
         }
+
+        useExternalListener(this.props.bus, "updatePosition", () => {
+            position.unlock();
+        });
 
         const rootRef = useRef("root");
 
