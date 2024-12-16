@@ -4149,9 +4149,8 @@ QUnit.module("Views", (hooks) => {
         const tbodySelectors = target.querySelectorAll("tbody .o_list_record_selector input");
         const theadSelector = target.querySelector("thead .o_list_record_selector input");
 
-        const getFooterTextArray = () => {
-            return [...target.querySelectorAll("tfoot td")].map((td) => td.innerText);
-        };
+        const getFooterTextArray = () =>
+            [...target.querySelectorAll("tfoot td")].map((td) => td.innerText);
 
         assert.deepEqual(getFooterTextArray(), ["", "", "32", "1.50"]);
 
@@ -6797,6 +6796,17 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "web_search_read") {
                     assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
                 }
+                if (args.method === "search_count") {
+                    assert.deepEqual(args.kwargs.context, {
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                        xyz: "abc",
+                    });
+                }
+            },
+            context: {
+                xyz: "abc",
             },
         });
 
