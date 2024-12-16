@@ -85,7 +85,7 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
 def publish(args, pub_type, extensions):
     """Publish builded package (move builded files and generate a symlink to the latests)
     :args: parsed program args
-    :pub_type: one of [deb, rpm, src, exe]
+    :pub_type: one of [deb, rpm, src, exe, iot]
     :extensions: list of extensions to publish
     :returns: published files
     """
@@ -401,23 +401,39 @@ class DockerWine(Docker):
 
     arch = 'win'
 
-    def build_image(self):
-        shutil.copy(os.path.join(self.args.build_dir, 'addons/iot_box_image/configuration/requirements.txt'), self.docker_dir)
-        super().build_image()
+    def __init__(self, args):
+        super().__init__(args)
+        self.package_name = "windows"
+        self.nsi_filepath = r"c:\odoobuild\server\setup\win32\setup.nsi"
+        self.nt_service_name = nt_service_name
 
     def build(self):
-        logging.info('Start building windows package')
+        logging.info('Start building %s package', self.package_name)
         winver = "%s.%s" % (VERSION.replace('~', '_').replace('+', ''), TSTAMP)
         container_python = '/var/lib/odoo/.wine/drive_c/odoobuild/WinPy64/python-3.12.3.amd64/python.exe'
-        nsis_args = f'/DVERSION={winver} /DMAJOR_VERSION={version_info[0]} /DMINOR_VERSION={version_info[1]} /DSERVICENAME={nt_service_name} /DPYTHONVERSION=3.12.3'
+        nsis_args = f'/DVERSION={winver} /DMAJOR_VERSION={version_info[0]} /DMINOR_VERSION={version_info[1]} /DSERVICENAME={self.nt_service_name} /DPYTHONVERSION=3.12.3'
         cmds = [
-            rf'wine {container_python} -m pip install --upgrade pip',
-            rf'cat /data/src/requirements*.txt  | while read PACKAGE; do wine {container_python} -m pip install "${{PACKAGE%%#*}}" ; done',
-            rf'wine "c:\nsis-3.10\makensis.exe" {nsis_args} "c:\odoobuild\server\setup\win32\setup.nsi"',
-            rf'wine {container_python} -m pip list'
+            rf'wine {container_python} -m pip list',
+            rf'wine "c:\nsis-3.10\makensis.exe" {nsis_args} "{self.nsi_filepath}"'
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-win-build-%s' % TSTAMP)
-        logging.info('Finished building Windows package')
+        logging.info('Finished building %s package', self.package_name)
+
+
+class DockerIot(DockerWine):
+    """Docker class to build windows IOT package"""
+
+    def __init__(self, args):
+        super().__init__(args)
+        self.package_name = "IOT"
+        self.nsi_filepath = r"c:\odoobuild\server\setup\win32\setup-iot.nsi"
+        self.nt_service_name = "odoo-iot"
+
+    def build_image(self):
+        shutil.copy(os.path.join(self.args.build_dir, 'setup/win32/requirements-local-proxy.txt'), self.docker_dir)
+        self.tag = f'{self.tag}-iot'
+        super().build_image()
+
 
 def parse_args():
     ap = argparse.ArgumentParser()
@@ -431,6 +447,7 @@ def parse_args():
     ap.add_argument("--build-rpm", action="store_true")
     ap.add_argument("--build-tgz", action="store_true")
     ap.add_argument("--build-win", action="store_true")
+    ap.add_argument("--build-iot", action="store_true")
 
     ap.add_argument("-t", "--test", action="store_true", default=False, help="Test built packages")
     ap.add_argument("-s", "--sign", action="store_true", default=False, help="Sign Debian package / generate Rpm repo")
@@ -486,6 +503,14 @@ def main(args):
                 published_files = publish(args, 'windows', ['exe'])
             except Exception as e:
                 logging.error("Won't publish the exe release.\n Exception: %s" % str(e))
+        if args.build_iot:
+            _prepare_build_dir(args, win32=True)
+            docker_iot = DockerIot(args)
+            docker_iot.build()
+            try:
+                published_files = publish(args, 'iot', ['exe'])
+            except Exception as e:
+                logging.error("Won't publish the iot release.\n Exception: %s" % str(e))
     except Exception as e:
         logging.error('Something bad happened ! : {}'.format(e))
         traceback.print_exc()
