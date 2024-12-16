@@ -19,13 +19,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_im_status (_read_format/_to_store)
     #       - _get_on_leave_ids (_compute_im_status override)
     #       - fetch res_users (_to_store)
-    #   5: settings:
+    #   6: settings:
     #       - search (_find_or_create_for_user)
     #       - fetch res_partner (_format_settings: display_name of user_id because classic load)
     #       - fetch res_users_settings (_format_settings)
     #       - search res_users_settings_volumes (_format_settings)
     #       - search res_lang_res_users_settings_rel (_format_settings)
-    _query_count_init_store = 11
+    #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
+    _query_count_init_store = 12
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   1: fetch res_users (for current user, first occurence _get_channels_as_member of _init_messaging)
@@ -397,6 +398,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
                     "is_discuss_sidebar_category_channel_open": True,
                     "is_discuss_sidebar_category_chat_open": True,
+                    "livechat_expertise_ids": [],
                     "livechat_lang_ids": [],
                     "livechat_username": False,
                     "push_to_talk_key": False,
