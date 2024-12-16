@@ -99,9 +99,15 @@ class ProductTemplate(models.Model):
         data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
 
-        products += config._get_special_products().product_tmpl_id
+        special_products = config._get_special_products().filtered(
+                    lambda product: not product.sudo().company_id
+                                    or product.sudo().company_id == self.company_id
+                )
+        products += special_products.product_tmpl_id
         if config.tip_product_id:
-            products += config.tip_product_id.product_tmpl_id
+            tip_company_id = config.tip_product_id.sudo().company_id
+            if not tip_company_id or tip_company_id == self.env.company:
+                products += config.tip_product_id.product_tmpl_id
 
         fields = self._load_pos_data_fields(config.id)
         available_products = products.read(fields, load=False)
