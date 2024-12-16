@@ -40,11 +40,11 @@
         },
         {
             trigger:
-                ".modal:contains(configure your product) table.o_sale_product_configurator_table",
+                ".modal:contains(Item(s) added to your cart) table.o_sale_product_configurator_table",
         },
         {
             content: "Go through the modal window of the product configurator",
-            trigger: ".modal:contains(configure your product) button:contains(Proceed to Checkout)",
+            trigger: ".modal:contains(Item(s) added to your cart) button:contains(Proceed to Checkout)",
             run: "click",
         },
         {
