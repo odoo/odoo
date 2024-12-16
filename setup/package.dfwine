@@ -75,11 +75,10 @@ ADD --chown=odoo:odoo \
     ${ODOO_BUILD_DIR}/vcredist/
 
 # Pre install requirements
-ADD --chown=odoo:odoo requirements.txt ${DRIVE_C_DIR}
-ADD --chown=odoo:odoo requirements-local-proxy.txt ${DRIVE_C_DIR}
+ADD --chown=odoo:odoo requirements*.txt ${DRIVE_C_DIR}
 ADD --chown=odoo:odoo https://nightly.odoo.com/wheels/netifaces-0.11.0-cp312-cp312-win_amd64.whl ${DRIVE_C_DIR}
 RUN wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install --upgrade pip \
     && wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install "c:\netifaces-0.11.0-cp312-cp312-win_amd64.whl" \
-    && cat ${DRIVE_C_DIR}/requirements*.txt | while read PACKAGE ; do \
-    echo "${PACKAGE%%#*}" ; wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install "${PACKAGE%%#*}" ; \
+    && cat ${DRIVE_C_DIR}/requirements*.txt | awk -F '#' '{if ($1) print $1}' | while read PACKAGE ; do \
+    echo "${PACKAGE}" ; wine ${ODOO_BUILD_DIR}/WinPy64/python-3.12.3.amd64/python.exe -m pip install "${PACKAGE}" ; \
     done
