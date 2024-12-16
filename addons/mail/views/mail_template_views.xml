@@ -13,22 +13,24 @@
                         <button string="Preview"
                                 name="%(mail_template_preview_action)d" type="action"
                                 class="btn-primary" target="new"/>
-                        <button string="Reset Template"
-                                name="%(mail_template_reset_action)d" type="action"
-                                groups="mail.group_mail_template_editor"
-                                invisible="not template_fs"/>
-                        <button string="Add Context Action"
-                                class="btn btn-secondary"
-                                name="create_action" type="object"
-                                groups="base.group_system"
-                                invisible="ref_ir_act_window"
-                                help="Display an option on related documents to open a composition wizard with this template"/>
-                        <button string="Remove Context Action"
-                                class="btn btn-secondary"
-                                name="unlink_action" type="object"
-                                groups="base.group_no_one"
-                                invisible="not ref_ir_act_window"
-                                help="Remove the contextual action to use this template on related documents"/>
+                        <t groups="base.group_no_one">
+                            <button string="Reset Template"
+                                    name="%(mail_template_reset_action)d" type="action"
+                                    groups="mail.group_mail_template_editor"
+                                    invisible="not template_fs"/>
+                            <button string="Add Context Action"
+                                    class="btn btn-secondary"
+                                    name="create_action" type="object"
+                                    groups="base.group_system"
+                                    invisible="ref_ir_act_window"
+                                    help="Display an option on related documents to open a composition wizard with this template"/>
+                            <button string="Remove Context Action"
+                                    class="btn btn-secondary"
+                                    name="unlink_action" type="object"
+                                    groups="base.group_no_one"
+                                    invisible="not ref_ir_act_window"
+                                    help="Remove the contextual action to use this template on related documents"/>
+                        </t>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -36,7 +38,7 @@
                             <h1><field name="name" class="w-100"
                                 required="1" placeholder='e.g. "Welcome email"'/></h1>
                             <group>
-                                <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
+                                <field name="model_id" placeholder="e.g. Contact" groups="base.group_no_one" required="1" options="{'no_create': True}"/>
                                 <field name="subject" options="{'dynamic_placeholder': true}"
                                        placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
                                 <field name="model" invisible="1"/>
@@ -53,7 +55,7 @@
                                     <div class="text-muted">Write /field to insert dynamic content</div>
                                 </div>
                             </page>
-                            <page string="Email Configuration" name="email_configuration">
+                            <page string="Email Configuration" name="email_configuration" groups="base.group_no_one">
                                 <group>
                                     <field name="email_from"
                                             placeholder="Override author's email"/>
@@ -73,11 +75,12 @@
                                 <group col="2">
                                     <group>
                                         <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
-                                        <field name="mail_server_id"/>
-                                        <field name="auto_delete"/>
+                                        <field name="mail_server_id" groups="base.group_no_one"/>
+                                        <field name="auto_delete" groups="base.group_no_one"/>
                                         <field name="report_template_ids" domain="[('model','=',model)]"
                                             widget="many2many_tags"
-                                            options="{'no_create': True}"/>
+                                            options="{'no_create': True}"
+                                            groups="base.group_no_one"/>
                                     </group>
                                     <group>
                                         <field name="user_id" widget="many2one_avatar_user"
@@ -86,7 +89,7 @@
                                             placeholder="Shared with all users."
                                             help="If set, will restrict the template to this specific user.
                                                   If not set, shared with all users."/>
-                                        <field name="description"/>
+                                        <field name="description" groups="base.group_no_one"/>
                                     </group>
                                 </group>
                             </page>
