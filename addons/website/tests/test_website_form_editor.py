@@ -67,6 +67,9 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
 
     def test_website_form_nested_forms(self):
         self.start_tour('/my/account', 'website_form_nested_forms', login='admin')
+        
+    def test_website_form_send_a_copy_option(self):
+        self.start_tour("/", "website_form_send_a_copy_option", login="admin")
 
 @tagged('post_install', '-at_install')
 class TestWebsiteForm(TransactionCase):

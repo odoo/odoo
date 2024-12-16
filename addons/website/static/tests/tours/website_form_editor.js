@@ -1106,3 +1106,61 @@ registerWebsitePreviewTour("website_form_special_characters", {
         trigger: ":iframe body:not(:has([data-snippet='s_website_form'])) .fa-paper-plane",
     },
 ]);
+
+registerWebsitePreviewTour(
+    "website_form_send_a_copy_option",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({
+            id: "s_title_form",
+            name: "Title - Form",
+            groupName: "Contact & Forms",
+        }),
+        {
+            trigger: ":iframe input[name=email_from]",
+            run: "click",
+        },
+        {
+            trigger: "we-button[data-select-class=o_send_a_copy] we-checkbox",
+            run: function () {
+                // to check whether the option is active by default or not.
+                this.anchor.closest("we-button").classList.contains("active");
+            },
+        },
+        {
+            trigger: "we-toggler:contains('Send an E-mail')",
+            run: "click",
+        },
+        {
+            trigger: "we-button.o_we_user_value_widget div:contains('Apply for a Job')",
+            run: "click",
+        },
+        {
+            trigger: ":iframe input[name=email_from]",
+            run: "click",
+        },
+        {
+            trigger: ":iframe button.oe_snippet_remove",
+            run: "click",
+        },
+        {
+            trigger:
+                ":iframe section[data-snippet=s_website_form] form:not(input[name=email_from])",
+        },
+        {
+            trigger: "we-button[data-select-class=o_send_a_copy] we-checkbox",
+            run: "click",
+        },
+        {
+            trigger: ":iframe input[name=email_from]",
+            run: "click",
+        },
+        {
+            trigger:
+                "we-alert span:contains('The field “email_from” is mandatory for the action “Send a Copy”.')",
+        },
+    ]
+);
