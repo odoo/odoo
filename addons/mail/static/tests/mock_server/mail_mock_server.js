@@ -269,7 +269,7 @@ async function discuss_get_or_create_chat(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._get_or_create_chat(partners_to)
+    return DiscussChannel._get_or_create_chat(partners_to);
 }
 
 registerRoute("/discuss/channel/create_channel", discuss_create_channel);
@@ -279,7 +279,7 @@ async function discuss_create_channel(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_channel(name, group_id)
+    return DiscussChannel._create_channel(name, group_id);
 }
 
 registerRoute("/discuss/channel/create_group", discuss_create_group);
@@ -291,7 +291,7 @@ async function discuss_create_group(request) {
 
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_group(partners_to, name)
+    return DiscussChannel._create_group(partners_to, name);
 }
 
 registerRoute("/discuss/channel/fold", discuss_channel_fold);
@@ -967,6 +967,30 @@ async function search(request) {
     store.add(channels);
     ResPartner._search_for_channel_invite(store, term, undefined, limit);
     return store.get_result();
+}
+
+registerRoute("/mail/thread/unsubscribe", mail_thread_unsubscribe);
+/** @type {RouteCallback} */
+async function mail_thread_unsubscribe(request) {
+    const { res_model, res_id, partner_ids } = await parseRequestParams(request);
+    const thread = this.env[res_model].browse(res_id);
+    this.env["mail.thread"].message_unsubscribe.call(thread, [res_id], partner_ids);
+    return new mailDataHelpers.Store(
+        thread,
+        makeKwArgs({ as_thread: true, request_list: ["followers", "suggestedRecipients"] })
+    ).get_result();
+}
+
+registerRoute("/mail/thread/subscribe", mail_thread_subscribe);
+/** @type {RouteCallback} */
+async function mail_thread_subscribe(request) {
+    const { res_model, res_id, partner_ids } = await parseRequestParams(request);
+    const thread = this.env[res_model].browse(res_id);
+    this.env["mail.thread"].message_subscribe.call(thread, [res_id], partner_ids);
+    return new mailDataHelpers.Store(
+        thread,
+        makeKwArgs({ as_thread: true, request_list: ["followers", "suggestedRecipients"] })
+    ).get_result();
 }
 
 /** @type {RouteCallback} */

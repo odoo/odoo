@@ -9,13 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import {
-    asyncStep,
-    mockService,
-    onRpc,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -108,17 +102,11 @@ test("click on remove follower", async () => {
         res_id: partnerId_1,
         res_model: "res.partner",
     });
-    onRpc("res.partner", "message_unsubscribe", ({ args, method }) => {
-        asyncStep(method);
-        expect(args).toEqual([[partnerId_1], [partnerId_2]]);
-    });
     await start();
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
     await contains(".o-mail-Follower");
-    await contains("button[title='Remove this follower']");
     await click("button[title='Remove this follower']");
-    await waitForSteps(["message_unsubscribe"]);
     await contains(".o-mail-Follower", { count: 0 });
 });
 
@@ -163,14 +151,12 @@ test("Load 100 followers at once", async () => {
         [...Array(210).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => {
-            return {
-                is_active: true,
-                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-                res_id: partnerIds[0],
-                res_model: "res.partner",
-            };
-        })
+        [...Array(210).keys()].map((i) => ({
+            is_active: true,
+            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
@@ -197,14 +183,12 @@ test("Load 100 recipients at once", async () => {
         }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => {
-            return {
-                is_active: true,
-                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-                res_id: partnerIds[0],
-                res_model: "res.partner",
-            };
-        })
+        [...Array(210).keys()].map((i) => ({
+            is_active: true,
+            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
