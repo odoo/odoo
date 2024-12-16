@@ -255,3 +255,24 @@ And a last, with question mark: {self.base_url}/r/(\w+)"""
         )
         expected = re.compile(rf'Reusing this old link {created_short_url} with a new one, {self.base_url}/r/\w+')
         self.assertRegex(new_content, expected)
+
+    def test_shorten_blacklisted_links(self):
+        test_links = [
+            ('This link should not be shortened: <a href="https://www.example.com/page/blacklist">text</a>', 'blacklist', False),
+            ('Neither should this link: <a href="https://www.example.com/page/view?param=true">text</a>', 'view', False),
+            ('But this link should be shortened: <a href="https://www.example.com/page/viewform">text</a>', 'view', True),
+            ('This link should not be shortened: <a href="https://www.example.com/page/blacklist/">text</a>', 'blacklist', False),
+            ('This link should not get shortened: <a href="https://example.com/blacklist/somepage">text</a>', 'blacklist', False),
+        ]
+        blacklist = ['/blacklist', '/view']
+
+        for (link, keyword, should_shorten) in test_links:
+            with self.subTest(msg=link, link=link):
+                shorten_html = self.env['mail.render.mixin']._shorten_links(link, {}, blacklist=blacklist)
+                shorten_text = self.env['mail.render.mixin']._shorten_links(link, {}, blacklist=blacklist)
+                if should_shorten:
+                    self.assertNotIn(keyword, shorten_html)
+                    self.assertNotIn(keyword, shorten_text)
+                else:
+                    self.assertIn(keyword, shorten_html)
+                    self.assertIn(keyword, shorten_text)
