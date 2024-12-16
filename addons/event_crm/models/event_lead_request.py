@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import threading
-
-from odoo import api, fields, models
+from odoo import api, fields, models, modules
 
 
 class EventLeadRequest(models.Model):
@@ -41,7 +39,7 @@ class EventLeadRequest(models.Model):
           Defaults to event.lead.request._REGISTRATIONS_BATCH_SIZE """
 
         # auto-commit except in testing mode
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
 
         registrations_batch_size = registrations_batch_size or self._REGISTRATIONS_BATCH_SIZE
         generate_requests = self.env['event.lead.request'].search([], limit=job_limit)

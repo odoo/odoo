@@ -933,7 +933,7 @@ class AccountJournal(models.Model):
             ],
         })
         # In case of test environment, don't create the pdf
-        if tools.config['test_enable'] or tools.config['test_file']:
+        if tools.config.is_testing:
             bill.with_context(no_new_invoice=True).message_post()
         else:
             addr = [x for x in [

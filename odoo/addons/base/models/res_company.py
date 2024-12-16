@@ -228,7 +228,7 @@ class ResCompany(models.Model):
     def install_l10n_modules(self):
         uninstalled_modules = self.uninstalled_l10n_module_ids
         is_ready_and_not_test = (
-            not tools.config['test_enable']
+            not tools.config.is_testing
             and (self.env.registry.ready or not self.env.registry._init)
             and not getattr(threading.current_thread(), 'testing', False)
         )

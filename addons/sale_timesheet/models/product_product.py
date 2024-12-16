@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import threading
-
-from odoo import api, models, tools, _
+from odoo import api, models, modules, tools, _
 from odoo.exceptions import ValidationError
 
 
@@ -44,7 +42,7 @@ class ProductProduct(models.Model):
 
     def write(self, vals):
         # timesheet product can't be archived
-        test_mode = getattr(threading.current_thread(), 'testing', False) or self.env.registry.in_test_mode()
+        test_mode = modules.module.current_test
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product in self:
