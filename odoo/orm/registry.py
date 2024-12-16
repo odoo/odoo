@@ -873,7 +873,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
             _logger.debug("Multiprocess load registry signaling: [Registry: %s] %s",
                           self.registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
 
+<<<<<<< master:odoo/orm/registry.py
     def get_sequences(self, cr: BaseCursor) -> tuple[int, dict[str, int]]:
+||||||| 18889fe8d30cef89d5edd16da39c5f521c7c5c24:odoo/modules/registry.py
+    def get_sequences(self, cr):
+=======
+    def get_sequences(self, cr):
+        assert cr.readonly is False, "can't use replica, sequence data is not replicated"
+
+>>>>>>> 980157e918b7313ef8c856e21d89649d694e8e35:odoo/modules/registry.py
         cache_sequences_query = ', '.join([f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY])
         cache_sequences_values_query = ',\n'.join([f'base_cache_signaling_{cache_name}.last_value' for cache_name in _CACHES_BY_KEY])
         cr.execute(f"""
