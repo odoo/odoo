@@ -441,6 +441,13 @@ export class WebsocketWorker {
         }
     }
 
+    _removeWebsocketListeners() {
+        this.websocket?.removeEventListener("open", this._onWebsocketOpen);
+        this.websocket?.removeEventListener("message", this._onWebsocketMessage);
+        this.websocket?.removeEventListener("error", this._onWebsocketError);
+        this.websocket?.removeEventListener("close", this._onWebsocketClose);
+    }
+
     /**
      * Start the worker by opening a websocket connection.
      */
@@ -449,12 +456,7 @@ export class WebsocketWorker {
         if (!this.active || this._isWebsocketConnected() || this._isWebsocketConnecting()) {
             return;
         }
-        if (this.websocket) {
-            this.websocket.removeEventListener("open", this._onWebsocketOpen);
-            this.websocket.removeEventListener("message", this._onWebsocketMessage);
-            this.websocket.removeEventListener("error", this._onWebsocketError);
-            this.websocket.removeEventListener("close", this._onWebsocketClose);
-        }
+        this._removeWebsocketListeners();
         if (this._isWebsocketClosing()) {
             // close event was not triggered and will never be, broadcast the
             // disconnect event for consistency sake.
@@ -478,9 +480,8 @@ export class WebsocketWorker {
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
-        if (this.websocket) {
-            this.websocket.close();
-        }
+        this.websocket?.close();
+        this._removeWebsocketListeners();
     }
 
     /**
