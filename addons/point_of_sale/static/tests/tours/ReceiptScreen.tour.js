@@ -79,6 +79,15 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.discountAmountIs('0.7');
 
+    ReceiptScreen.do.clickNextOrder();
+    ProductScreen.exec.addOrderline('Test Product', '1');
+    ProductScreen.do.pressNumpad('Price');
+    ProductScreen.do.pressNumpad('9');
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Cash');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.noDiscountAmount();
+
     Tour.register('ReceiptScreenDiscountWithPricelistTour', { test: true, url: '/pos/ui' }, getSteps());
 
     startSteps();
