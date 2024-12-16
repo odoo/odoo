@@ -10,7 +10,6 @@ import {
     useSubEnv,
     xml,
 } from "@odoo/owl";
-import { zip } from "@web/core/utils/arrays";
 import { useBus } from "@web/core/utils/hooks";
 
 export function useDomState(getState) {
