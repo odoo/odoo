@@ -1362,6 +1362,15 @@
                                         </div>
                                         <div id="product_option_block" class="d-flex flex-wrap w-100"/>
                                     </div>
+                                    <t
+                                        t-if="is_view_active('website_sale.product_tags')"
+                                        t-call="website_sale.product_tags"
+                                    >
+                                      <t
+                                            t-set="all_product_tags"
+                                            t-value="product_variant.all_product_tag_ids"
+                                        />
+                                    </t>
                                 </div>
                             </form>
                             <p t-elif="not product.active" class="alert alert-warning">
@@ -1390,15 +1399,6 @@
                                     </div>
                                 </section>
                             </div>
-                            <t
-                                t-if="is_view_active('website_sale.product_tags')"
-                                t-call="website_sale.product_tags"
-                            >
-                                <t
-                                    t-set="all_product_tags"
-                                    t-value="product_variant.all_product_tag_ids"
-                                />
-                            </t>
                             <div
                                 t-if="not is_view_active('website_sale_comparison.accordion_specs_item')"
                                 id="product_attributes_simple"
