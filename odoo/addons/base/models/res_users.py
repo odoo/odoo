@@ -183,9 +183,7 @@ class ResGroups(models.Model):
 
     name = fields.Char(required=True, translate=True)
     users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
-    model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
-    rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
-        'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
+    access_ids = fields.One2many('ir.access', 'group_id', string="Access Rules", copy=True)
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
     comment = fields.Text(translate=True)
@@ -276,7 +274,7 @@ class ResGroups(models.Model):
         # field 'share' depends on method has_group()
         # DLE P139
         if self.ids:
-            self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['ir.access']._clear_caches()
         return super().write(vals)
 
     def _ensure_xml_id(self):
@@ -410,8 +408,6 @@ class ResUsers(models.Model):
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)
-    rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
-                                 compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
 
@@ -576,8 +572,7 @@ class ResUsers(models.Model):
     def _compute_accesses_count(self):
         for user in self:
             groups = user.groups_id
-            user.accesses_count = len(groups.model_access)
-            user.rules_count = len(groups.rule_groups)
+            user.accesses_count = len(groups.access_ids)
             user.groups_count = len(groups)
 
     @api.depends('res_users_settings_ids')
@@ -830,7 +825,7 @@ class ResUsers(models.Model):
                 super(ResUsers, users).write(vals)
             # clear caches linked to the users
             if self.ids:
-                self.env['ir.model.access'].call_cache_clearing_methods()
+                self.env['ir.access']._clear_caches()
 
         # per-method / per-model caches have been removed so the various
         # clear_cache/clear_caches methods pretty much just end up calling
@@ -1302,22 +1297,10 @@ class ResUsers(models.Model):
         return {
             'name': _('Access Rights'),
             'view_mode': 'list,form',
-            'res_model': 'ir.model.access',
+            'res_model': 'ir.access',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.groups_id.model_access.ids)],
-            'target': 'current',
-        }
-
-    def action_show_rules(self):
-        self.ensure_one()
-        return {
-            'name': _('Record Rules'),
-            'view_mode': 'list,form',
-            'res_model': 'ir.rule',
-            'type': 'ir.actions.act_window',
-            'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.groups_id.rule_groups.ids)],
+            'domain': [('group_id', 'in', self.groups_id.ids)],
             'target': 'current',
         }
 

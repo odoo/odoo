@@ -370,7 +370,7 @@ class ProjectCustomerPortal(CustomerPortal):
         if not domain:
             domain = []
         if not su and Task.has_access('read'):
-            domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
+            domain = AND([domain, request.env['ir.access']._get_access_domain(Task._name, 'read')])
         Task_sudo = Task.sudo()
         milestone_domain = AND([domain, [('allow_milestones', '=', True)], [('milestone_id', '!=', False)]])
         milestones_allowed = Task_sudo.search_count(milestone_domain, limit=1) == 1

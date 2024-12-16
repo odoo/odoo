@@ -1,0 +1,16 @@
+id,model_id,group_id/id,operation,domain,name
+access_test_access_right_some_obj_group_user,test_access_right.some_obj,base.group_user,rwcd,,access_test_access_right_some_obj
+access_test_access_right_some_obj_group_public,test_access_right.some_obj,base.group_public,rwcd,,access_test_access_right_some_obj
+access_test_access_right_container_group_user,test_access_right.container,base.group_user,rwcd,,access_test_access_right_container
+access_test_access_right_container_group_public,test_access_right.container,base.group_public,rwcd,,access_test_access_right_container
+access_test_access_right_inherits_group_public,test_access_right.inherits,base.group_public,rwcd,,access_test_access_right_inherits
+access_test_access_right_inherits_group_user,test_access_right.inherits,base.group_user,rwcd,,access_test_access_right_inherits
+access_test_access_right_child_group_public,test_access_right.child,base.group_public,rwcd,,access_test_access_right_child
+access_test_access_right_child_group_user,test_access_right.child,base.group_user,rwcd,,access_test_access_right_child
+access_test_access_right_obj_categ_group_user,test_access_right.obj_categ,base.group_user,rwcd,,access_test_access_right_obj_categ
+access_test_access_right_ticket_group_portal,test_access_right.ticket,base.group_portal,r,"[
+                '|',
+                    ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]",Fake Ticket: portal or following
+access_test_access_right_ticket_group_user,test_access_right.ticket,base.group_user,rwcd,,access_test_ticket_user

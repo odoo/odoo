@@ -1,0 +1,18 @@
+<odoo noupdate="1">
+
+    <!--
+        Multi-company/Multi-website compliant:
+        We can't add a condition on domain_force without losing `product`
+        ir.rule domain_force. It is better to disabled them to be able to
+        reenable them on `website_sale` uninstall.
+        Don't override domain_force or we will need to hardcode the original
+        domain in `uninstall_hook` rather than just reenabling records.
+    -->
+    <record id="product.access_product_pricelist_global" model="ir.access">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="product.access_product_pricelist_item_global" model="ir.access">
+        <field name="active" eval="False"/>
+    </record>
+
+</odoo>
