@@ -227,7 +227,7 @@ export function useClickableWeWidget() {
     function callApply(applySpecs) {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
         for (const applySpec of applySpecs) {
-            getAction(applySpec.actionId).apply({
+            applySpec.apply({
                 editingElement: applySpec.editingElement,
                 param: applySpec.actionParam,
                 value: applySpec.actionValue,
