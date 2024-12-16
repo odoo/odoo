@@ -24,7 +24,7 @@ _eu_country_vat_inverse = {v: k for k, v in _eu_country_vat.items()}
 
 _ref_vat = {
     'al': 'ALJ91402501L',
-    'ar': _lt('AR200-5536168-2 or 20055361682'),
+    'ar': _lt('20055361682'),
     'at': 'ATU12345675',
     'au': '83 914 571 673',
     'be': 'BE0477472701',
@@ -32,13 +32,13 @@ _ref_vat = {
     'br': _lt('either 11 digits for CPF or 14 digits for CNPJ'),
     'cr': _lt('3101012009'),
     'ch': _lt('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
-    'cl': 'CL76086428-5',
-    'co': _lt('CO213123432-1 or CO213.123.432-1'),
+    'cl': '76086428-5',
+    'co': _lt('213123432-1 or 213.123.432-1'),
     'cy': 'CY10259033P',
     'cz': 'CZ12345679',
     'de': _lt('DE123456788 or 12/345/67890'),
     'dk': 'DK12345674',
-    'do': _lt('DO1-01-85004-3 or 101850043'),
+    'do': _lt('1-01-85004-3 or 101850043'),
     'ec': _lt('1792060346001 or 1792060346'),
     'ee': 'EE123456780',
     'es': 'ESA12345674',
@@ -70,7 +70,7 @@ _ref_vat = {
     'pt': 'PT123456789',
     'ro': 'RO1234567897 or 8001011234567 or 9000123456789',
     'rs': 'RS101134702',
-    'ru': 'RU123456789047',
+    'ru': '123456789047',
     'se': 'SE123456789701',
     'si': 'SI12345679',
     'sk': 'SK2022749619',
@@ -105,6 +105,16 @@ class ResPartner(models.Model):
     def _split_vat(self, vat):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
         return vat_country, vat_number
+
+    @api.model
+    def _get_eu_prefixed_countries(self):
+        return (
+            self.env.ref('base.europe').country_ids
+                + self.env.ref('base.ch')
+                + self.env.ref('base.no')
+                + self.env.ref('base.uk')
+                + self.env.ref('base.sm')
+        )
 
     @api.model
     def simple_vat_check(self, country_code, vat_number):
@@ -156,11 +166,8 @@ class ResPartner(models.Model):
 
     @api.model
     def fix_eu_vat_number(self, country_id, vat):
-        europe = self.env.ref('base.europe')
         country = self.env["res.country"].browse(country_id)
-        if not europe:
-            europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
-        if europe and country and country.id in europe.country_ids.ids:
+        if country and country in self._get_eu_prefixed_countries():
             vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
             country_code = _eu_country_vat.get(country.code, country.code).upper()
             if vat[:2] != country_code:
@@ -175,11 +182,11 @@ class ResPartner(models.Model):
             return
 
         for partner in self:
-
             # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
             # A partner for which they didn't input VAT, and the one not subject to VAT
             if not partner.vat or len(partner.vat) == 1:
                 continue
+
             country = partner.commercial_partner_id.country_id
             if self._run_vat_test(partner.vat, country, partner.is_company) is False:
                 partner_label = _("partner [%s]", partner.name)
@@ -228,7 +235,7 @@ class ResPartner(models.Model):
 
         country_code_to_check = default_country and default_country.code.lower()
         vat_number_split = vat_number
-        if default_country and default_country in self.env.ref('base.europe').country_ids:
+        if default_country and default_country in self._get_eu_prefixed_countries():
             # First check with country code as prefix of the TIN
             vat_country_code, vat_number_split_maybe = self._split_vat(vat_number)
             vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())],
@@ -672,7 +679,7 @@ class ResPartner(models.Model):
             return vat
         country = self.env['res.country'].browse(country_id)
         vat_country = False
-        if country in self.env.ref('base.europe').country_ids:
+        if country in self._get_eu_prefixed_countries():
             vat_country, vat_number = self._split_vat(vat)
             if not vat_country.isalpha():
                 vat_country = False
