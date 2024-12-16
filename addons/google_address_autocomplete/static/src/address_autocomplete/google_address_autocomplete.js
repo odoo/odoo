@@ -6,9 +6,48 @@ import { googlePlacesSession } from "../google_places_session";
 import { useChildRef } from "@web/core/utils/hooks";
 import { useInputField } from "@web/views/fields/input_field_hook";
 
+const standardAddressFields = {
+    street: {
+        label: _t("Street field"),
+        type: ["char"]
+    },
+    street2: {
+        label: _t("Additional street field"),
+        type: ["char"]
+    },
+    city: {
+        label: _t("City field"),
+        type: ["char"]
+    },
+    state_id: {
+        label: _t("State field"),
+        type: ["char", "many2one"]
+    },
+    zip: {
+        label: _t("Zip field"),
+        type: ["char"]
+    },
+    country_id: {
+        label: _t("Country field"),
+        type: ["char", "many2one"]
+    }
+}
+
 export class AddressAutoComplete extends CharField {
     static template = "google_address_autocomplete.AddressAutoCompleteTemplate";
     static components = { AutoComplete, ...CharField.components };
+
+    static props = {...CharField.props,
+        addressFieldMap: {
+            type: Object,
+            optional: true,
+        }
+    }
+
+    static defaultProps = {
+        ...CharField.defaultProps,
+        addressFieldMap: {},
+    }
 
     setup() {
         super.setup();
@@ -61,24 +100,30 @@ export class AddressAutoComplete extends CharField {
             country_id: "country",
             state_id: "state",
         };
-        const fieldsToUpdate = ["street", "street2", "city", "state_id", "zip", "country_id"];
+        const fieldsToUpdate = Object.keys(standardAddressFields);
 
         const activeFields = this.props.record.activeFields;
         const fields = this.props.record.fields;
+        const addressFieldMap = this.props.addressFieldMap;
 
         const valuesToUpdate = {};
         const rest = [];
         fieldsToUpdate.forEach((fieldName) => {
             const addressField = fieldToDetail[fieldName] || fieldName;
             let value = address[addressField];
-            if (fieldName in activeFields) {
-                valuesToUpdate[fieldName] = value || false;
-            } else if (!(fieldName in fields)) {
+
+            const recordFieldName = addressFieldMap[fieldName] || fieldName;
+            if (recordFieldName in activeFields) {
+                if (Array.isArray(value) && fields[recordFieldName].type !== "many2one") {
+                    value = value[1];
+                }
+                valuesToUpdate[recordFieldName] = value || false;
+            } else if (!(recordFieldName in fields)) {
                 value = Array.isArray(value) ? value[1] : value;
                 rest.push(value);
             }
         });
-        if (!fieldsToUpdate.includes(this.props.name) && rest.length) {
+        if (!(this.props.name in valuesToUpdate) && rest.length) {
             valuesToUpdate[this.props.name] = rest.join(" ");
         }
         this.props.record.update(valuesToUpdate);
@@ -90,5 +135,29 @@ export const addressAutoComplete = {
     component: AddressAutoComplete,
     displayName: _t("Address AutoComplete"),
     supportedTypes: ["char"],
+    supportedOptions: [
+        ...charField.supportedOptions,
+        ...Object.entries(standardAddressFields).map(([fname, data]) => {
+            return {
+                label: data.label,
+                placeholder: fname,
+                type : "field",
+                name: fname,
+                availableTypes: data.type,
+            }
+        })
+    ],
+    extractProps: ({ attrs, options }) => {
+        const props = charField.extractProps({attrs, options});
+        const addressFieldMap = {};
+        Object.keys(standardAddressFields).forEach((fname) => {
+            const optionValue = options[fname];
+            if (optionValue) {
+                addressFieldMap[fname] = optionValue;
+            }
+        });
+        props.addressFieldMap = addressFieldMap;
+        return props;
+    }
 };
 registry.category("fields").add("google_address_autocomplete", addressAutoComplete);
