@@ -227,18 +227,22 @@ class Website(models.Model):
             menus = self.env['website.menu'].browse(website._get_menu_ids())
 
             # use field parent_id (1 query) to determine field child_id (2 queries by level)"
-            for menu in menus:
-                menu._cache['child_id'] = ()
+            children = dict.fromkeys(menus, ())
             for menu in menus:
                 # don't add child menu if parent is forbidden
                 if menu.parent_id and menu.parent_id in menus:
-                    menu.parent_id._cache['child_id'] += (menu.id,)
+                    children[menu.parent_id] += (menu.id,)
+            menus.env.cache.update(
+                menus.browse(child.id for child in children),
+                menus._fields['child_id'],
+                children.values(),
+            )
 
             # prefetch every website.page and ir.ui.view at once
             menus.mapped('is_visible')
 
             top_menus = menus.filtered(lambda m: not m.parent_id)
-            website.menu_id = top_menus and top_menus[0].id or False
+            website.menu_id = top_menus[:1].id
 
     @api.depends('custom_blocked_third_party_domains')
     def _compute_blocked_third_party_domains(self):
