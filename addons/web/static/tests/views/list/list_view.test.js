@@ -5035,11 +5035,15 @@ test(`pager, ungrouped, with count limit reached`, async () => {
     onRpc("web_search_read", ({ kwargs }) => {
         expect(kwargs.count_limit).toBe(expectedCountLimit);
     });
+    onRpc("search_count", ({ kwargs }) => {
+        expect(kwargs.context.xyz).toBe("abc");
+    });
 
     await mountView({
         resModel: "foo",
         type: "list",
         arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
+        context: { xyz: "abc" },
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
