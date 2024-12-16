@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_event_form" model="ir.ui.view">
+        <field name="name">event.event.form.inherit</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+           <field name="address_id" position="after">
+                <label for="l10n_in_state_id" invisible="country_code != 'IN'" />
+                <div class="o_field_highlight" invisible="country_code != 'IN'">
+                    <field name="l10n_in_state_id" class="w-50" domain="[('country_id.code', '=', 'IN')]"
+                                    options="{'no_create': True, 'no_open': True}"
+                                    required="country_code == 'IN'"/>
+                    <field name="l10n_in_pos_treatment" class="w-50" />
+                </div>
+           </field>
+        </field>
+    </record>
+
+</odoo>
