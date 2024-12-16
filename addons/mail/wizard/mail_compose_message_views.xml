@@ -67,6 +67,7 @@
                                 <field name="reply_to" string="Reply-to Address" placeholder='e.g: "info@mycompany.odoo.com"'
                                     invisible="reply_to_mode == 'update' or composition_mode != 'mass_mail'"
                                     required="reply_to_mode != 'update' and composition_mode == 'mass_mail'"/>
+                                <field name="use_exclusion_list" invisible="1"/>
                             </group>
                         </page>
                     </notebook>

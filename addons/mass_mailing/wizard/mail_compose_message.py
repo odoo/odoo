@@ -107,4 +107,5 @@ class MailComposeMessage(models.TransientModel):
             'sent_date': now,
             'state': 'done',
             'subject': self.subject,
+            'use_exclusion_list': self.use_exclusion_list,
         }
