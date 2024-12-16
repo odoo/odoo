@@ -8,8 +8,8 @@
             <group name="container_row_2" position="inside">
                 <field name="l10n_my_tin_validation_state" invisible="1"/>
                 <field name="l10n_my_edi_display_tin_warning" invisible="1"/>
-                <!-- I believe the customer must be registered for TIN in malaysia, and thus it makes sense to limit this to malaysian customer -->
-                <group name="l10n_my_edi" string="MyInvois Information" invisible="country_code != 'MY'">
+                <!-- Foreigner with a tax number registered in Malaysia could be customer of an e-invoice. -->
+                <group name="l10n_my_edi" string="MyInvois Information">
                     <group colspan="2">
                         <label for="l10n_my_identification_type" string="Identification"/>
                         <div class="d-flex gap-2" invisible="'MY' not in fiscal_country_codes">

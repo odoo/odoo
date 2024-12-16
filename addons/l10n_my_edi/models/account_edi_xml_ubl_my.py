@@ -299,6 +299,12 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
             if not partner.state_id:
                 self._l10n_my_edi_make_validation_error(constraints, 'no_state', partner_type, partner.display_name)
+            if not partner.city:
+                self._l10n_my_edi_make_validation_error(constraints, 'no_city', partner_type, partner.display_name)
+            if not partner.country_id:
+                self._l10n_my_edi_make_validation_error(constraints, 'no_country', partner_type, partner.display_name)
+            if not partner.street:
+                self._l10n_my_edi_make_validation_error(constraints, 'no_street', partner_type, partner.display_name)
 
             if partner.sst_registration_number and len(partner.sst_registration_number.split(';')) > 2:
                 self._l10n_my_edi_make_validation_error(constraints, 'too_many_sst', partner_type, partner.display_name)
@@ -437,6 +443,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     def _l10n_my_edi_get_formatted_phone_number(self, number):
         # the phone number MUST follow the E.164 format.
         # Don't try to reformat too much, we don't want to risk messing it up
+        if not number:
+            return ''  # This wouldn't happen in the file as it's caught in the validation errors, but the vals are exported before these checks are done.
         return number.replace(' ', '').replace('(', '').replace(')', '').replace('-', '')
 
     @api.model
@@ -463,6 +471,18 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             ),
             'no_state': _(
                 "The following partner's state is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_city': _(
+                "The following partner's city is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_country': _(
+                "The following partner's country is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_street': _(
+                "The following partner's street is missing: %(partner_name)s",
                 partner_name=record_name
             ),
             'class_code_required': _(
