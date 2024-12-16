@@ -110,8 +110,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 }
                 self._addNewProducts(productId).then(function () {
                     website_sale_utils.animateClone(
-                        $('#comparelist .o_product_panel_header'),
-                        $elem.closest('form'),
+                        document.querySelector('#comparelist .o_product_panel_header'),
+                        $elem[0].closest('form'),
                         -50,
                         10
                     );
