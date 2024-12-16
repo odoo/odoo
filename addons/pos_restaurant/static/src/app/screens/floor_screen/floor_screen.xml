@@ -5,11 +5,17 @@
             <t t-set="editButtonClass" t-value="'btn btn-lg'" />
             <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
             <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
-            <div class="d-flex flex-row flex-wrap justify-content-between border-bottom bg-light" t-att-class="{'navbar-height': !this.ui.isSmall}">
+            <div class="d-flex flex-row flex-wrap justify-content-between p-2 gap-1 border-bottom bg-view">
                 <!-- Left Side Div -->
-                <div class="left-buttons d-flex align-items-center gap-2 p-2">
-                    <button class="new-order btn btn-secondary lh-lg" t-on-click="() => this.clickNewOrder()" >
-                        <span>New Order</span>
+                <div class="left-buttons d-flex align-items-center gap-3">
+                    <button class="new-order btn btn-secondary btn-lg lh-lg" t-on-click="() => this.clickNewOrder()">
+                        <t t-if="ui.isSmall">
+                            <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"></i>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-plus fa-fw me-1" role="img" aria-label="New Order" title="New Order"></i>
+                            New Order
+                        </t>
                     </button>
                 </div>
                 <!-- Center Side Div -->
@@ -93,7 +99,7 @@
                         <i t-else="" class="fa fa-floppy-o" role="img" aria-label="Save" title="Save"/>
                     </button>
                 </div>
-                <div t-else="" class="right-buttons d-flex align-items-center gap-2 px-2">
+                <div t-else="" class="right-buttons d-flex align-items-center gap-2">
                     <NumpadDropdown/>
                 </div>
             </div>
@@ -114,7 +120,7 @@
                         <div t-if="!activeTables?.length" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
                             <span>Oops! No tables available.<br/>Add a new table to get started.</span>
                         </div>
-                        <div t-else="" t-ref="map" t-att-class="{'floor-kanban d-grid gap-3 p-3': isKanban, 'h-100': !isKanban}">
+                        <div t-else="" t-ref="map" t-att-class="{'floor-kanban d-grid gap-1 p-2': isKanban, 'h-100': !isKanban, 'h-50 h-sm-auto overflow-y-auto': isKanban and this.pos.tableSelectorState}">
                            <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
                                 <t t-set="isOccupied" t-value="pos.tableHasOrders(table)"/>
                                 <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
@@ -164,8 +170,7 @@
                                             'text-bg-danger': data.changes,
                                             'text-bg-info'  : !data.changes and data.skip,
                                         }"
-                                        class="order-count d-flex align-items-center justify-content-center position-absolute top-0 start-100 translate-middle rounded-circle smaller fw-bolder z-2"
-                                        t-attf-style="width: 2rem; height: 2rem;"
+                                        class="order-count d-flex align-items-center justify-content-center position-absolute top-0 end-0 rounded-3 smaller fw-bolder z-2 badge"
                                     />
                                     <t t-if="state.selectedTableIds.includes(table.id)">
                                         <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute top left" t-attf-style="top: {{offset}}px; left: {{offset}}px"/>

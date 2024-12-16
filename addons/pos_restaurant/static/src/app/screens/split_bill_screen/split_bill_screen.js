@@ -152,7 +152,7 @@ export class SplitBillScreen extends Component {
 
     setLineQtyStr(line) {
         const splitQty = this.qtyTracker[line.uuid];
-        line.uiState.splitQty = `${splitQty} / ${line.getQuantityStr()}`;
+        line.uiState.splitQty = `${splitQty} / ${line.getQuantityStr().qtyStr}`;
     }
 
     back() {

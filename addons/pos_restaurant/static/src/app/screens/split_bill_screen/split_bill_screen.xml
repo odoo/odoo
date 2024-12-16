@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.SplitBillScreen">
-        <div class="splitbill-screen screen h-100 bg-200">
+        <div class="splitbill-screen screen h-100">
             <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view">
                     <button  t-if="!this.ui.isSmall" class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
@@ -13,8 +13,8 @@
                     </div>
                 </div>
 
-                <div class="main d-flex flex-column flex-lg-row flex-grow-1 gap-2 p-2 overflow-hidden">
-                    <div class="flex-grow-1 w-100 w-lg-50 me-0 me-lg-2 rounded-3 bg-view overflow-auto">
+                <div class="main d-flex flex-column flex-lg-row flex-grow-1 gap-2 overflow-hidden">
+                    <div class="flex-grow-1 w-100 w-lg-50 me-0 me-lg-2 border-end border-bottom bg-view overflow-auto">
                         <OrderDisplay mode="'receipt'" order="currentOrder" t-slot-scope="scope">
                             <t t-set="line" t-value="scope.line" />
                              <Orderline line="line"
@@ -23,8 +23,8 @@
                                 class="{'selected active': qtyTracker[line.uuid] and qtyTracker[line.uuid] !== 0}" />
                         </OrderDisplay>
                     </div>
-                    <div class="controls flex-column flex-nowrap w-100 w-lg-50">
-                        <div class="order-info mb-2 mt-2 mt-lg-0 py-3 py-lg-4 rounded-3 text-center bg-view">
+                    <div class="controls flex-column flex-nowrap w-100 w-lg-50 pe-lg-3">
+                        <div class="order-info mb-2 mt-2 mt-lg-0 py-3 py-lg-4 rounded-3 text-center">
                             <div class="d-flex flex-row justify-content-center align-items-baseline fs-1">
                                 <span class="subtotal text-success">
                                     <t t-esc="env.utils.formatCurrency(newOrderPrice)" />
@@ -38,7 +38,7 @@
                             </div>
                         </div>
 
-                        <div class="pay-button" t-att-class="{'d-flex flex-row bg-white p-2 gap-2 rounded-3':this.ui.isSmall}">
+                        <div class="pay-button" t-att-class="{'d-flex flex-row p-2 gap-2 rounded-3':this.ui.isSmall}">
                             <button class="button btn btn-lg btn-primary py-3 py-lg-5 w-100"
                                 t-att-disabled="!this.getNumberOfProducts()"
                                 t-on-click="createSplittedOrder">

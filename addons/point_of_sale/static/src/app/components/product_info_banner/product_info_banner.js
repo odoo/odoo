@@ -13,6 +13,12 @@ export class ProductInfoBanner extends Component {
         productTemplate: Object,
         product: { type: Object | null, optional: true },
         info: { type: Object, optional: true },
+        showProductName: { type: Boolean, optional: true },
+        showSelfOrder: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        showProductName: true,
+        showSelfOrder: false,
     };
 
     setup() {

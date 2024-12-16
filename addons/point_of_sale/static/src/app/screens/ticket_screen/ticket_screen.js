@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
+import { formatDate, parseDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -24,6 +24,7 @@ import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 
 const NBR_BY_PAGE = 30;
+const { DateTime } = luxon;
 
 export class TicketScreen extends Component {
     static storeOnOrder = false;
@@ -379,7 +380,15 @@ export class TicketScreen extends Component {
         }
     }
     getDate(order) {
-        return formatDateTime(order.date_order);
+        const todayTs = DateTime.now().startOf("day").ts;
+        if (order.date_order.startOf("day").ts === todayTs) {
+            return _t("Today");
+        } else {
+            return formatDate(order.date_order);
+        }
+    }
+    getTime(order) {
+        return order.date_order.toFormat("hh:mm");
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.getTotalWithTax());
@@ -657,10 +666,10 @@ export class TicketScreen extends Component {
         // We need the items to be ordered, therefore, Map is used instead of normal object.
         const states = new Map();
         states.set("ACTIVE_ORDERS", {
-            text: _t("All active orders"),
+            text: _t("Active"),
         });
         // The spaces are important to make sure the following states
-        // are under the category of `All active orders`.
+        // are under the category of `Active`.
         states.set("ONGOING", {
             text: _t("Ongoing"),
             indented: true,

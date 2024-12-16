@@ -4,7 +4,10 @@
         <div t-attf-class="{{props.class}} d-flex">
             <button t-if="props.isSmall"
                 class="p-2 rounded btn btn-secondary"
-                t-on-click="() => state.isOpen = !state.isOpen">
+                t-on-click="() => {
+                    state.isOpen = !state.isOpen;
+                    props.isOpenCallback?.(state.isOpen);
+                }">
                 <i t-if="state.isOpen" class="fa fa-arrow-right"/>
                 <t t-else="props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
             </button>

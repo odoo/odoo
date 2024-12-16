@@ -66,6 +66,7 @@ export class PosOrderline extends Base {
 
     get quantityStr() {
         let qtyStr = "";
+        let decimalPart = "";
         const unit = this.product_id.uom_id;
 
         if (unit) {
@@ -73,17 +74,25 @@ export class PosOrderline extends Base {
                 const decimals = this.models["decimal.precision"].find(
                     (dp) => dp.name === "Product Unit of Measure"
                 ).digits;
-                qtyStr = formatFloat(this.qty, {
-                    digits: [69, decimals],
-                });
+
+                if (this.qty % 1 === 0) {
+                    qtyStr = this.qty.toFixed(0);
+                } else {
+                    const formatted = formatFloat(this.qty, { digits: [69, decimals] });
+                    const parts = formatted.split(".");
+                    qtyStr = parts[0] + ".";
+                    decimalPart = parts[1] || "";
+                }
             } else {
                 qtyStr = this.qty.toFixed(0);
             }
         } else {
             qtyStr = "" + this.qty;
         }
-
-        return qtyStr;
+        return {
+            qtyStr: qtyStr,
+            decimalPart: decimalPart,
+        };
     }
 
     get company() {

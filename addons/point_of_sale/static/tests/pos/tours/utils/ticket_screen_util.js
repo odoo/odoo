@@ -12,7 +12,7 @@ export function clickDiscard() {
 export function selectOrder(orderName) {
     return [
         {
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}")`,
+            trigger: `.ticket-screen .order-row:contains("${orderName}")`,
             run: "click",
         },
     ];
@@ -20,7 +20,7 @@ export function selectOrder(orderName) {
 export function selectOrderByPrice(price) {
     return [
         {
-            trigger: `.ticket-screen .order-row > .col:contains("${price}")`,
+            trigger: `.ticket-screen .order-row:contains("${price}")`,
             run: "click",
         },
     ];
@@ -46,17 +46,17 @@ export function deleteOrder(orderName) {
     return [
         {
             isActive: ["mobile"],
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}")`,
+            trigger: `.ticket-screen .order-row > div:contains("${orderName}")`,
             run: "click",
         },
         {
             isActive: ["mobile"],
-            trigger: `.ticket-screen .order-row:has(.col:contains("${orderName}")) .delete-button`,
+            trigger: `.ticket-screen .order-row:has(div:contains("${orderName}")) .btn-danger`,
             run: "click",
         },
         {
             isActive: ["desktop"],
-            trigger: `.ticket-screen .orders > .order-row > .col:contains("${orderName}") ~ .col[name="delete"]`,
+            trigger: `.ticket-screen .orders .order-row > td:contains("${orderName}") ~ td.text-end button.text-danger`,
             run: "click",
         },
     ];
@@ -119,11 +119,11 @@ export function checkStatus(orderName, status) {
     return [
         {
             isActive: ["desktop"],
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .orderStatus:contains(${status})`,
+            trigger: `.ticket-screen tbody tr > td:contains("${orderName}") ~ td .badge:contains(${status})`,
         },
         {
             isActive: ["mobile"],
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col .orderStatus:contains(${status})`,
+            trigger: `.ticket-screen .order-row > div:contains("${orderName}") ~ div .badge:contains(${status})`,
         },
     ];
 }
@@ -136,7 +136,7 @@ export function nthRowContains(n, string, viewMode) {
     return [
         {
             isActive: [viewMode ? "mobile" : "desktop"],
-            trigger: `.ticket-screen .orders > .order-row:nth-child(${n}):contains("${string}")`,
+            trigger: `.ticket-screen .orders tbody .order-row:nth-child(${n}):contains("${string}")`,
         },
     ];
 }

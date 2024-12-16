@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.PartnerLine">
         <t t-if="ui.isSmall">
-            <div class="partner-info d-flex flex-column p-1 border-bottom" t-att-class="{'bg-primary-subtle': props.isSelected}" t-att-data-id="props.partner.id"
+            <div class="partner-info d-flex flex-column p-1 border-bottom" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
                 t-on-click="() => this.props.onClickPartner(props.partner)">
                 <div class="d-flex justify-content-between align-items-center p-1">
                     <div>
@@ -22,7 +22,7 @@
                         </t>
                     </Dropdown>
                 </div>
-                <div class="partner-line-adress p-1" t-if="props.partner.contact_address" t-esc="props.partner.contact_address" />
+                <div class="partner-line-adress p-1" t-if="props.partner.pos_contact_address" t-esc="props.partner.pos_contact_address" />
                 <div class="partner-line-email p-1">
                     <div class="mb-1" t-if="props.partner.phone">
                         <i class="fa fa-fw fa-phone me-2" /><t t-esc="props.partner.phone" />
@@ -34,8 +34,8 @@
                         <i class="fa fa-fw fa-paper-plane-o me-2" /><t t-esc="props.partner.email" />
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center p-1">
-                    <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag-mobile d-inline-block d-lg-none btn btn-light border ms-2">
+                <div class="p-1">
+                    <button t-if="props.isSelected" t-on-click.stop="props.onClickUnselect" class="unselect-tag-mobile d-inline-block d-lg-none btn btn-light border">
                         <i class="fa fa-times me-1"></i>
                         <span>UNSELECT</span>
                     </button>
@@ -50,7 +50,7 @@
                     <div class="company-field text-bg-muted" t-esc="props.partner.parent_name or ''" />
                 </td>
                 <td>
-                    <div class="partner-line-adress" t-if="props.partner.contact_address" t-esc="props.partner.contact_address" />
+                    <div class="partner-line-adress" t-if="props.partner.pos_contact_address" t-esc="props.partner.pos_contact_address" />
                 </td>
                 <td class="partner-line-email ">
                     <div t-if="props.partner.phone">

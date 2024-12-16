@@ -98,7 +98,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.numpadMode = "quantity";
         this.mobile_pane = "right";
         this.ticket_screen_mobile_pane = "left";
-        this.productListView = window.localStorage.getItem("productListView") || "grid";
 
         this.ticketScreenState = {
             offsetByDomain: {},
@@ -481,7 +480,7 @@ export class PosStore extends WithLazyGetterTrap {
     get productListViewMode() {
         const viewMode = this.productListView && this.ui.isSmall ? this.productListView : "grid";
         if (viewMode === "grid") {
-            return "d-grid gap-2";
+            return "d-grid gap-1 gap-lg-2";
         } else {
             return "";
         }
@@ -492,6 +491,17 @@ export class PosStore extends WithLazyGetterTrap {
             return "flex-column";
         } else {
             return "flex-row-reverse justify-content-between m-1";
+        }
+    }
+    getProductPriceFormatted(productTemplate) {
+        const formattedUnitPrice = this.env.utils.formatCurrency(
+            this.getProductPrice({ productTemplate })
+        );
+
+        if (productTemplate.to_weight) {
+            return `${formattedUnitPrice}/${productTemplate.uom_id.name}`;
+        } else {
+            return formattedUnitPrice;
         }
     }
     async openConfigurator(pTemplate) {
@@ -1242,6 +1252,16 @@ export class PosStore extends WithLazyGetterTrap {
         const orderPriceWithoutTax = order.getTotalWithoutTax();
         const orderCost = order.getTotalCost();
         const orderMargin = orderPriceWithoutTax - orderCost;
+        const orderTaxTotalCurrency = this.env.utils.formatCurrency(
+            order.taxTotals.order_sign * order.taxTotals.tax_amount_currency
+        );
+        const orderPriceWithTaxCurrency = this.env.utils.formatCurrency(
+            order.taxTotals.order_sign * order.taxTotals.total_amount_currency
+        );
+        const taxAmount = this.env.utils.formatCurrency(
+            productInfo.all_prices.tax_details[0]?.amount || 0
+        );
+        const taxName = productInfo.all_prices.tax_details[0]?.name || "";
 
         const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
         const marginCurrency = this.env.utils.formatCurrency(margin);
@@ -1258,10 +1278,14 @@ export class PosStore extends WithLazyGetterTrap {
             costCurrency,
             marginCurrency,
             marginPercent,
+            taxAmount,
+            taxName,
             orderPriceWithoutTaxCurrency,
             orderCostCurrency,
             orderMarginCurrency,
             orderMarginPercent,
+            orderTaxTotalCurrency,
+            orderPriceWithTaxCurrency,
             productInfo,
         };
     }

@@ -1,6 +1,6 @@
 .orderline {
-    border: $border-width solid transparent;
-    border-radius: $border-radius-lg;
+    border-top: $border-width solid transparent;
+    border-bottom: $border-width solid transparent;
     transition: $transition-base;
 
     &:hover {
@@ -15,16 +15,14 @@
 
     &.selected {
         background-color: $o-component-active-bg;
-        border: $border-width solid $o-component-active-border;
     }
 
     &::before {
         content: "";
         position: absolute;
         top: 50%;
-        left: -10px;
         width: 6px;
-        height: 85%;
+        height: 66%;
         transform: translateY(-50%);
         border-top-right-radius: $border-radius-lg;
         border-bottom-right-radius: $border-radius-lg;
@@ -36,6 +34,10 @@
 
     &.has-change::before {
         background-color: $o-success;
+    }
+
+    .info-list {
+        margin-left: 3rem;
     }
 }
 

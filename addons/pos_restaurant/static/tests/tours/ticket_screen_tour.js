@@ -43,9 +43,9 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
             ProductScreen.addOrderline("Coca-Cola", "1", "3"),
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(2, "Self-Order"),
-            TicketScreen.nthRowContains(2, "T 101"),
-            TicketScreen.nthRowContains(3, "Order"),
-            TicketScreen.nthRowContains(3, "T 103"),
+            TicketScreen.nthRowContains(1, "Self-Order"),
+            TicketScreen.nthRowContains(1, "T 101"),
+            TicketScreen.nthRowContains(2, "Order"),
+            TicketScreen.nthRowContains(2, "T 103"),
         ].flat(),
 });

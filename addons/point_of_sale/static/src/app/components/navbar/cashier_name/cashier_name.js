@@ -11,10 +11,6 @@ export class CashierName extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
     }
-    get username() {
-        const cashier = this.pos.getCashier();
-        return cashier ? cashier.name : "";
-    }
     get avatar() {
         const user_id = this.pos.getCashierUserId();
         const id = user_id ? user_id : -1;
