@@ -337,7 +337,11 @@ class TestStockValuationStandard(TestStockValuationCommon):
             self.env.user.company_id = old_company
 
     def test_change_qty_and_locations_of_done_sml(self):
-        sub_stock_loc = self.stock_location.child_ids[0]
+        sub_stock_loc = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
 
         move_in = self._make_in_move(self.product1, 25)
         self.assertEqual(self.product1.value_svl, 250)
