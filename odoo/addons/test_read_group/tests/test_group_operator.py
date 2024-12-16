@@ -280,3 +280,38 @@ class TestAggregate(common.TransactionCase):
             'key_count': 4,
             '__domain': [('key', '=', 1)],
         }])
+
+
+class TestAggregateMonetary(common.TransactionCase):
+    def setUp(self):
+        super(TestAggregateMonetary, self).setUp()
+
+        self.Model = self.env['test_read_group.aggregate.monetary']
+
+        cur1 = self.env['res.currency'].create({'name': 'XXX', 'symbol': 'X'})
+        cur2 = self.env['res.currency'].create({'name': 'TTT', 'symbol': 'T'})
+
+        self.Model.create({'key': 1, 'amount': 1, 'currency_id': cur1.id})
+        self.Model.create({'key': 1, 'amount': 2, 'currency_id': cur2.id})
+        self.Model.create({'key': 2, 'amount': 3, 'currency_id': cur1.id})
+        self.Model.create({'key': 2, 'amount': 4, 'currency_id': cur1.id})
+
+    def test_agg_monetary_do_not_sum(self):
+        fields = ['key', 'amount']
+        group_key_1 = self.Model.read_group([('key', '=', 1)], fields, ['key'])
+        self.assertEqual(group_key_1, [{
+            'key': 1,
+            'amount': False,
+            'key_count': 2,
+            '__domain': ['&', ('key', '=', 1), ('key', '=', 1)],
+        }])
+
+    def test_agg_monetary_do_sum(self):
+        fields = ['key', 'amount']
+        group_key_2 = self.Model.read_group([('key', '=', 2)], fields, ['key'])
+        self.assertEqual(group_key_2, [{
+            'key': 2,
+            'amount': 7,
+            'key_count': 2,
+            '__domain': ['&', ('key', '=', 2), ('key', '=', 2)],
+        }])

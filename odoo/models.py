@@ -290,6 +290,7 @@ MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 VALID_AGGREGATE_FUNCTIONS = {
     'array_agg', 'count', 'count_distinct',
     'bool_and', 'bool_or', 'max', 'min', 'avg', 'sum',
+    'monetary',
 }
 
 
@@ -2317,6 +2318,13 @@ class BaseModel(metaclass=MetaModel):
             expr = self._inherits_join_calc(self._table, fname, query)
             if func.lower() == 'count_distinct':
                 term = 'COUNT(DISTINCT %s) AS "%s"' % (expr, name)
+            elif func.lower() == 'monetary':
+                currency_field_name = self._fields.get(name).get_currency_field(self)
+                if currency_field_name and self._fields.get(currency_field_name).base_field.store:
+                    currency_field_expr = self._inherits_join_calc(self._table, currency_field_name, query)
+                    term = "CASE WHEN COUNT(DISTINCT(%s)) <= 1 THEN SUM(%s) ELSE NULL END AS %s" % (currency_field_expr, expr, name)
+                else:
+                    term = 'SUM(%s) AS "%s"' % (expr, name)
             else:
                 term = '%s(%s) AS "%s"' % (func, expr, name)
             select_terms.append(term)

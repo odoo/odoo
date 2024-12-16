@@ -30,6 +30,13 @@ class Aggregate(models.Model):
     value = fields.Integer("Value")
     partner_id = fields.Many2one('res.partner')
 
+class MonetaryAggregate(models.Model):
+    _name = 'test_read_group.aggregate.monetary'
+    _description = 'Group Test Aggregate for Monetary Field'
+
+    currency_id = fields.Many2one('res.currency')
+    key = fields.Integer()
+    amount = fields.Monetary()
 
 # we use a selection that is in reverse lexical order, in order to check the
 # possible reordering made by read_group on selection fields

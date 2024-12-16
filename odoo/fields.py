@@ -1569,7 +1569,7 @@ class Monetary(Field):
     column_type = ('numeric', 'numeric')
 
     currency_field = None
-    group_operator = 'sum'
+    group_operator = 'monetary'
 
     def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
