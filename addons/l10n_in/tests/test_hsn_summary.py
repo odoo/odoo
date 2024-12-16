@@ -617,17 +617,17 @@ class TestHSNsummary(TestTaxCommon):
         self.assert_l10n_in_hsn_summary(
             base_lines,
             {
-                'has_igst': True,
+                'has_igst': False,
                 'has_gst': False,
                 'has_cess': False,
-                'nb_columns': 6,
+                'nb_columns': 5,
                 'display_uom': False,
                 'items': [
                     {
                         'l10n_in_hsn_code': self.test_hsn_code_1,
                         'quantity': 1.0,
                         'uom_name': self.uom_unit.name,
-                        'rate': 18.0,
+                        'rate': 0.0,
                         'amount_untaxed': 100.0,
                         'tax_amount_igst': 0.0,
                         'tax_amount_cgst': 0.0,
