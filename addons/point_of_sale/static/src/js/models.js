@@ -3185,7 +3185,7 @@ class Order extends PosModel {
         return round_pr(this.orderlines.reduce((sum, orderLine) => {
             if (!ignored_product_ids.includes(orderLine.product.id)) {
                 sum += (orderLine.getUnitDisplayPriceBeforeDiscount() * (orderLine.get_discount()/100) * orderLine.get_quantity());
-                if (orderLine.display_discount_policy() === 'without_discount'){
+                if (orderLine.display_discount_policy() === 'without_discount' && !orderLine.price_manually_set){
                     sum += ((orderLine.get_taxed_lst_unit_price() - orderLine.getUnitDisplayPriceBeforeDiscount()) * orderLine.get_quantity());
                 }
             }
