@@ -42,6 +42,11 @@ class ChatbotScriptStep(models.Model):
         string='Only If', help='Show this step only if all of these answers have been selected.')
     # forward-operator specifics
     is_forward_operator_child = fields.Boolean(compute='_compute_is_forward_operator_child')
+    operator_expertise_ids = fields.Many2many(
+        "im_livechat.expertise",
+        string="Operator Expertise",
+        help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
+    )
 
     @api.depends('sequence')
     def _compute_triggering_answer_ids(self):
@@ -335,8 +340,11 @@ class ChatbotScriptStep(models.Model):
             # sudo: res.users - visitor can access operator of their channel
             # sudo: res.lang - visitor can access their own lang
             human_operator = discuss_channel.livechat_channel_id.sudo()._get_operator(
-                lang=discuss_channel.livechat_visitor_id.sudo().lang_id.code if hasattr(discuss_channel, "livechat_visitor_id") else None,
-                country_id=discuss_channel.country_id.id
+                lang=discuss_channel.livechat_visitor_id.sudo().lang_id.code
+                if hasattr(discuss_channel, "livechat_visitor_id")
+                else None,
+                country_id=discuss_channel.country_id.id,
+                expertises=self.operator_expertise_ids,
             )
 
         # handle edge case where we found yourself as available operator -> don't do anything

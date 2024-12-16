@@ -224,14 +224,14 @@ class Im_LivechatChannel(models.Model):
         candidates = operators.filtered(lambda o: o.partner_id.id in best_status_op_partner_ids)
         return random.choice(candidates)
 
-    def _get_operator(self, previous_operator_id=None, lang=None, country_id=None):
+    def _get_operator(self, previous_operator_id=None, lang=None, country_id=None, expertises=None):
         """ Return an operator for a livechat. Try to return the previous
         operator if available. If not, one of the most available operators be
         returned.
 
         A livechat is considered 'active' if it has at least one message within
-        the 30 minutes. This method will try to match the given lang and
-        country_id.
+        the 30 minutes. This method will try to match the given lang, expertises
+        and country_id.
 
         (Some annoying conversions have to be made on the fly because this model
         holds 'res.users' as available operators and the discuss_channel model
@@ -241,11 +241,14 @@ class Im_LivechatChannel(models.Model):
             visitor was chatting.
         :param lang: code of the preferred lang of the visitor.
         :param country_id: id of the country of the visitor.
+        :param expertises: preferred expertises for filtering operators.
         :return : user
         :rtype : res.users
         """
         if not self.available_operator_ids:
-            return False
+            return self.env["res.users"]
+        if expertises is None:
+            expertises = self.env["im_livechat.expertise"]
         self.env.cr.execute("""
             WITH operator_rtc_session AS (
                 SELECT COUNT(DISTINCT s.id) as nbr, member.partner_id as partner_id
@@ -268,7 +271,6 @@ class Im_LivechatChannel(models.Model):
             (tuple(self.available_operator_ids.partner_id.ids),)
         )
         operator_statuses = self.env.cr.dictfetchall()
-        operator = None
         # Try to match the previous operator
         if previous_operator_id in self.available_operator_ids.partner_id.ids:
             previous_operator_status = next(
@@ -282,25 +284,38 @@ class Im_LivechatChannel(models.Model):
                     if available_user.partner_id.id == previous_operator_id
                 )
                 return previous_operator_user
-        # Try to match an operator with the same main lang as the visitor
-        # If no operator with the same lang, try to match an operator with the addition lang
-        if lang:
-            same_lang_operator_ids = self.available_operator_ids.filtered(lambda operator: operator.partner_id.lang == lang)
-            if same_lang_operator_ids:
-                operator = self._get_less_active_operator(operator_statuses, same_lang_operator_ids)
-            else:
-                addition_lang_operator_ids = self.available_operator_ids.filtered(lambda operator: lang in operator.res_users_settings_id.livechat_lang_ids.mapped('code'))
-                if addition_lang_operator_ids:
-                    operator = self._get_less_active_operator(operator_statuses, addition_lang_operator_ids)
-        # Try to match an operator with the same country as the visitor
-        if country_id and not operator:
-            same_country_operator_ids = self.available_operator_ids.filtered(lambda operator: operator.partner_id.country_id.id == country_id)
-            if same_country_operator_ids:
-                operator = self._get_less_active_operator(operator_statuses, same_country_operator_ids)
-        # Try to get a random operator, regardless of the lang or the country
-        if not operator:
-            operator = self._get_less_active_operator(operator_statuses, self.available_operator_ids)
-        return operator
+
+        def same_language(operator):
+            return operator.partner_id.lang == lang or lang in operator.livechat_lang_ids.mapped("code")
+
+        def all_expertises(operator):
+            return operator.livechat_expertise_ids >= expertises
+
+        def one_expertise(operator):
+            return operator.livechat_expertise_ids & expertises
+
+        def same_country(operator):
+            return operator.partner_id.country_id.id == country_id
+
+        # List from most important to least important. Order on each line is irrelevant, all
+        # elements of a line must be satisfied together or the next line is checked.
+        preferences_list = [
+            [same_language, all_expertises],
+            [same_language, one_expertise],
+            [same_language],
+            [same_country, all_expertises],
+            [same_country, one_expertise],
+            [same_country],
+            [all_expertises],
+            [one_expertise],
+        ]
+        for preferences in preferences_list:
+            operators = self.available_operator_ids
+            for preference in preferences:
+                operators = operators.filtered(preference)
+            if operators:
+                return self._get_less_active_operator(operator_statuses, operators)
+        return self._get_less_active_operator(operator_statuses, self.available_operator_ids)
 
     def _get_channel_infos(self):
         self.ensure_one()
