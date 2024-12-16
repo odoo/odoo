@@ -1381,13 +1381,13 @@ class PosOrderLine(models.Model):
         return super().write(values)
 
     @api.model
-    def get_existing_lots(self, company_id, product_id):
+    def get_existing_lots(self, company_id, config_id, product_id):
         """
         Return the lots that are still available in the given company.
         The lot is available if its quantity in the corresponding stock_quant and pos stock location is > 0.
         """
         self.check_access('read')
-        pos_config = self.env['pos.config'].browse(self._context.get('config_id'))
+        pos_config = self.env['pos.config'].browse(config_id)
         if not pos_config:
             raise UserError(_('No PoS configuration found'))
 
