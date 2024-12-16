@@ -36,13 +36,18 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             'l10n_my_identification_type': 'BRN',
             'l10n_my_identification_number': '202001234567',
             'state_id': cls.env.ref('base.state_my_jhr').id,
+            'street': 'that one street, 5',
+            'city': 'Main city',
             'phone': '+60123456789',
         })
         cls.partner_a.write({
             'vat': 'C2584563201',
             'l10n_my_identification_type': 'BRN',
             'l10n_my_identification_number': '202001234568',
+            'country_id': cls.env.ref('base.my').id,
             'state_id': cls.env.ref('base.state_my_jhr').id,
+            'street': 'that other street, 3',
+            'city': 'Main city',
             'phone': '+60123456786',
         })
 
@@ -59,7 +64,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         """
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_01_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
         # Now that the invoice has been sent successfully, we assert that some info have been saved correctly.
         self.assertRecordValues(
@@ -85,7 +93,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_02_mock):
             with self.assertRaises(UserError, msg='Server error; If the problem persists, please contact the Odoo support.'):
-                send_and_print.action_send_and_print()
+                send_and_print._generate_and_send_invoices(
+                    self.basic_invoice,
+                    invoice_edi_format='my_myinvois',
+                )
 
     def test_03_failed_document_submission(self):
         """
@@ -99,7 +110,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             # We want to assert that some values are saved during the commit, which won't happen during a test if we raise all the way.
             # So instead of doing an assertRaises, we will catch the error (ensuring that it does happen) then continue.
             try:
-                send_and_print.action_send_and_print()
+                send_and_print._generate_and_send_invoices(
+                    self.basic_invoice,
+                    invoice_edi_format='my_myinvois',
+                )
             except UserError:
                 pass  # We expect a user error to be raised here.
             else:
@@ -123,7 +137,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         """
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_04_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             # Open the wizard successfully, 72h did not pass
             action = self.basic_invoice.button_request_cancel()
@@ -147,7 +164,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         """
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_05_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             self.basic_invoice.l10n_my_edi_validation_time = datetime.strptime('2024-07-12 10:00:00', '%Y-%m-%d %H:%M:%S')
 
@@ -174,7 +194,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             # We want to assert that some values are saved during the commit, which won't happen during a test if we raise all the way.
             # So instead of doing an assertRaises, we will catch the error (ensuring that it does happen) then continue.
             try:
-                send_and_print.action_send_and_print()
+                send_and_print._generate_and_send_invoices(
+                    self.basic_invoice,
+                    invoice_edi_format='my_myinvois',
+                )
             except UserError:
                 pass  # We expect a user error to be raised here.
             else:
@@ -200,7 +223,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             self.basic_invoice.action_post()
 
             send_and_print = self.create_send_and_print(self.basic_invoice)
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -217,7 +243,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         self.get_submission_status_count = 0  # Needed for the mock; we get it twice. Once during submission and once from the cron.
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_07_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -256,7 +285,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         send_and_print = self.create_send_and_print(self.submission_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_08_mock), \
              patch('odoo.addons.l10n_my_edi.models.account_move.SUBMISSION_MAX_SIZE', 2):
-            send_and_print.action_send_and_print(force_synchronous=True)
+            send_and_print._generate_and_send_invoices(
+                self.submission_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
         # we have 10 invoices, with a max size of 2 we expect 5 different submissions.
         self.assertEqual(self.submission_count, 5)
@@ -265,7 +297,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         """ After pushing an invoice, we can optionally fetch the status manually if needed. """
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_09_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -320,7 +355,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_11_mock):
             # Issue the invoice, and get a valid status.
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
             # Update the status, and receive a rejection request.
             self.basic_invoice.action_l10n_my_edi_update_status()
             self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'rejected')
