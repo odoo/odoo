@@ -538,16 +538,18 @@ export function extractInfoFromGroupData(groupData, groupBy, fields) {
     const info = {};
     const groupByField = fields[groupBy[0].split(":")[0]];
     info.count = groupData.__count;
+    info.length = info.count; // TODO: remove but still used in DynamicRecordList._updateCount
     info.domain = groupData.__domain;
     info.rawValue = groupData[groupBy[0]];
     info.value = getValueFromGroupData(groupByField, info.rawValue);
-    info.range = null
     if (["date", "datetime"].includes(groupByField.type) && info.value) {
         const granularity = groupBy[0].split(":")[1]
         info.range = {
             from: info.value,
             to: info.value.plus(granularityToInterval[granularity]),
         }
+    } else {
+        info.range = null; // FIXME: remove ?
     }
     info.displayName = getDisplayNameFromGroupData(groupByField, info.rawValue);
     info.serverValue = getGroupServerValue(groupByField, info.value);
