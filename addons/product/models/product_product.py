@@ -376,25 +376,32 @@ class ProductProduct(models.Model):
         return res
 
     def unlink(self):
-        unlink_products = self.env['product.product']
-        unlink_templates = self.env['product.template']
-        for product in self:
+        unlink_products_ids = set()
+        unlink_templates_ids = set()
+
+        # Check if products still exists, in case they've been unlinked by unlinking their template
+        existing_products = self.exists()
+        product_ids_by_template_id = {template.id: set(ids) for template, ids in self._read_group(
+            domain=[('product_tmpl_id', 'in', existing_products.product_tmpl_id.ids)],
+            groupby=['product_tmpl_id'],
+            aggregates=['id:array_agg'],
+        )}
+        for product in existing_products:
             # If there is an image set on the variant and no image set on the
             # template, move the image to the template.
             if product.image_variant_1920 and not product.product_tmpl_id.image_1920:
                 product.product_tmpl_id.image_1920 = product.image_variant_1920
-            # Check if product still exists, in case it has been unlinked by unlinking its template
-            if not product.exists():
-                continue
             # Check if the product is last product of this template...
-            other_products = self.search([('product_tmpl_id', '=', product.product_tmpl_id.id), ('id', '!=', product.id)])
+            has_other_products = product_ids_by_template_id[product.product_tmpl_id.id] - {product.id}
             # ... and do not delete product template if it's configured to be created "on demand"
-            if not other_products and not product.product_tmpl_id.has_dynamic_attributes():
-                unlink_templates |= product.product_tmpl_id
-            unlink_products |= product
+            if not has_other_products and not product.product_tmpl_id.has_dynamic_attributes():
+                unlink_templates_ids.add(product.product_tmpl_id.id)
+            unlink_products_ids.add(product.id)
+        unlink_products = self.env['product.product'].browse(unlink_products_ids)
         res = super(ProductProduct, unlink_products).unlink()
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
+        unlink_templates = self.env['product.template'].browse(unlink_templates_ids)
         unlink_templates.unlink()
         # `_get_variant_id_for_combination` depends on existing variants
         self.env.registry.clear_cache()
