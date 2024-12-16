@@ -4,7 +4,7 @@
     <div class="o_menu_systray_item o_edit_website_container d-none d-md-flex">
         <a t-if="!translatable and !this.websiteService.is404" href="#" class="o-website-btn-custo-primary btn position-relative d-flex align-items-center rounded-0 border-0 px-3" accesskey="a" t-on-click="startEdit">
             <span t-if="this.state.isLoading" class="position-absolute top-50 start-50 translate-middle">
-                <i class="fa fa-refresh fa-spin"/>
+                <i class="fa fa-circle-o-notch fa-spin"/>
             </span>
             <span t-out="label" t-attf-class="{{ this.state.isLoading ? 'opacity-0' : 'opacity-100' }}"/>
         </a>

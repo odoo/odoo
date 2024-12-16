@@ -183,7 +183,7 @@ export function addLoadingEffect(btnEl) {
     btnEl.classList.add("o_btn_loading", "disabled", "pe-none");
     btnEl.disabled = true;
     const loaderEl = document.createElement("span");
-    loaderEl.classList.add("fa", "fa-refresh", "fa-spin", "me-2");
+    loaderEl.classList.add("fa", "fa-circle-o-notch", "fa-spin", "me-2");
     btnEl.prepend(loaderEl);
     return () => {
         btnEl.classList.remove("o_btn_loading", "disabled", "pe-none");
