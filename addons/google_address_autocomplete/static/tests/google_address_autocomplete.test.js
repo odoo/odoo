@@ -39,7 +39,15 @@ class ResPartner extends webModels.ResPartner {
     state_id = fields.Many2one({ relation: "res.country.state" });
 }
 
-defineModels([ResPartner, ResCountryState, ResCountry]);
+class OtherModel extends Model {
+    _name = "other.model";
+    city = fields.Char();
+    some_char = fields.Char();
+    some_char2 = fields.Char();
+    some_char3 = fields.Char();
+    m2o = fields.Many2one({ relation: "res.country.state" });
+}
+defineModels([ResPartner, ResCountryState, ResCountry, OtherModel]);
 
 onRpc("/autocomplete/address", () => ({
     results: [{ formatted_address: "rue des Bourlottes 9, 1367 Ramillies", google_place_id: "1" }],
@@ -134,13 +142,6 @@ test("correctly fill all standard fields", async () => {
 });
 
 test("fills current field with values of unknown ones", async () => {
-    class OtherModel extends Model {
-        _name = "other.model";
-        city = fields.Char();
-        some_char = fields.Char();
-    }
-    defineModels([OtherModel]);
-
     await mountView({
         type: "form",
         resModel: "other.model",
@@ -183,4 +184,36 @@ test("typing in input should make form dirty", async () => {
     await contains(".o_field_widget[name='street'] input").edit("odoo farm 3", { confirm: false });
     await contains(".o_form_button_save:visible").click();
     expect.verifySteps([{street: 'odoo farm 3'}]);
+});
+
+test("support field mapping in options", async () => {
+    await mountView({
+        type: "form",
+        resModel: "other.model",
+        arch: `<form>
+            <field name="some_char" widget="google_address_autocomplete" options="{'state_id': 'm2o', 'zip': 'some_char2', 'city': 'some_char3'}"/>
+            <field name="some_char2" />
+            <field name="some_char3" />
+            <field name="m2o" />
+            <field name="city" />
+        </form>`,
+    });
+
+    await contains(".o_field_widget[name='some_char'] input").edit("odoo farm 2", {
+        confirm: false,
+    });
+    await runAllTimers();
+    await contains(
+        ".o_field_widget[name='some_char'] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
+    ).click();
+
+    const expectedFields = {
+        some_char: "rue des Bourlottes 9 Ferme 2 Belgium",
+        some_char2: "1367",
+        some_char3: "Ramillies",
+        m2o: "Brabant Wallon",
+    };
+    for (const [field, value] of Object.entries(expectedFields)) {
+        expect(`.o_field_widget[name='${field}'] input`).toHaveValue(value);
+    }
 });
