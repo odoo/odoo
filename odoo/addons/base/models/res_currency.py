@@ -4,11 +4,9 @@
 import logging
 import math
 
-from lxml import etree
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import parse_date
+from odoo.tools import ormcache, parse_date
 
 _logger = logging.getLogger(__name__)
 
@@ -61,24 +59,21 @@ class ResCurrency(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         self._toggle_group_multi_currency()
-        # Currency info is cached to reduce the number of SQL queries when building the session
-        # info. See `ir_http.get_currencies`.
+        # invalidate cache for get_all_currencies
         self.env.registry.clear_cache()
         return res
 
     def unlink(self):
         res = super().unlink()
         self._toggle_group_multi_currency()
-        # Currency info is cached to reduce the number of SQL queries when building the session
-        # info. See `ir_http.get_currencies`.
+        # invalidate cache for get_all_currencies
         self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
         res = super().write(vals)
         if vals.keys() & {'active', 'digits', 'position', 'symbol'}:
-            # Currency info is cached to reduce the number of SQL queries when building the session
-            # info. See `ir_http.get_currencies`.
+            # invalidate cache for get_all_currencies
             self.env.registry.clear_cache()
         if 'active' not in vals:
             return res
@@ -259,6 +254,15 @@ class ResCurrency(models.Model):
         """
         self.ensure_one()
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
+
+    @ormcache()
+    @api.model
+    def get_all_currencies(self):
+        currencies = self.sudo().search_fetch([('active', '=', True)], ['symbol', 'position', 'decimal_places'])
+        return {
+            c.id: {'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
+            for c in currencies
+        }
 
     @api.model
     def _get_conversion_rate(self, from_currency, to_currency, company=None, date=None):

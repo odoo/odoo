@@ -14,7 +14,7 @@ class PosSelfKiosk(http.Controller):
                 {
                     'session_info': {
                         **request.env["ir.http"].get_frontend_session_info(),
-                        'currencies': request.env["ir.http"].get_currencies(),
+                        'currencies': request.env["res.currency"].get_all_currencies(),
                         'data': {
                             'config_id': pos_config.id,
                             'access_token': config_access_token,

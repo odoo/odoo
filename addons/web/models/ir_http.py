@@ -2,11 +2,12 @@
 
 import hashlib
 import json
+import warnings
 
 import odoo
 from odoo import api, models, fields
 from odoo.http import request, DEFAULT_MAX_CONTENT_LENGTH
-from odoo.tools import ormcache, config
+from odoo.tools import config
 from odoo.tools.misc import str2bool
 
 
@@ -121,7 +122,7 @@ class IrHttp(models.AbstractModel):
                     mods, request.session.context['lang']
                 ) if session_uid else None,
             },
-            "currencies": self.sudo().get_currencies(),
+            "currencies": self.env['res.currency'].get_all_currencies(),
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
@@ -172,7 +173,7 @@ class IrHttp(models.AbstractModel):
             'profile_collectors': request.session.get('profile_collectors'),
             'profile_params': request.session.get('profile_params'),
             'show_effect': bool(request.env['ir.config_parameter'].sudo().get_param('base_setup.show_effect')),
-            'currencies': self.get_currencies(),
+            'currencies': self.env['res.currency'].get_all_currencies(),
             'bundle_params': {
                 'lang': request.session.context['lang'],
             },
@@ -188,11 +189,6 @@ class IrHttp(models.AbstractModel):
             })
         return session_info
 
-    @ormcache()
     def get_currencies(self):
-        Currency = self.env['res.currency']
-        currencies = Currency.search_fetch([], ['symbol', 'position', 'decimal_places'])
-        return {
-            c.id: {'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
-            for c in currencies
-        }
+        warnings.warn("Deprecated since 19.0, use get_all_currencies on 'res.currency'", DeprecationWarning)
+        return self.env['res.currency'].get_all_currencies()
