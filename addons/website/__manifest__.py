@@ -147,6 +147,7 @@
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
             'website/static/src/js/content/adapt_content.js',
+            'website/static/src/js/content/generate_video_iframe.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
@@ -154,6 +155,7 @@
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
+            ('remove', 'website/static/src/js/content/generate_video_iframe.js'),
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',

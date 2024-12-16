@@ -452,6 +452,21 @@ const WebsiteWysiwyg = Wysiwyg.extend({
             Dropdown.getOrCreateInstance(toggleEl).hide();
         }
     },
+    /**
+     * @override
+     */
+    _onMediaDialogSave(params, element) {
+        this._super(...arguments);
+        // This wasn't needed before activating the "iframe video" public widget
+        // in the edit mode. It should allow destroying newly added iframes and
+        // prevent saving them in the DOM.
+        if (element.classList.contains("media_iframe_video")) {
+            this.trigger_up("widgets_start_request", {
+                editableMode: true,
+                $target: $(element),
+            });
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
