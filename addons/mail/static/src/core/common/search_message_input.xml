@@ -10,7 +10,7 @@
                 </div>
                 <button class="btn" t-att-class="state.searchedTerm === state.searchTerm ? 'btn-outline-secondary' : 'btn-secondary'" t-on-click="() => this.search()" aria-label="Search button">
                     <i t-if="!props.messageSearch.searching" class="o_searchview_icon oi oi-search" role="img" aria-label="Search Messages" title="Search Messages"/>
-                    <i t-else="" class="fa fa-spin fa-spinner" aria-label="Search in progress" title="Search in progress"/>
+                    <i t-else="" class="fa fa-circle-o-notch fa-spin" aria-label="Search in progress" title="Search in progress"/>
                 </button>
             </div>
             <button t-if="env.inChatter" class="btn btn-outline-secondary ms-3" t-on-click="() => this.clear()" aria-label="Close button">

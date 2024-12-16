@@ -32,7 +32,7 @@
                         t-on-load="onImageLoaded"
                     />
                     <div t-if="attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
-                        <i class="fa fa-spin fa-spinner"/>
+                        <i class="fa fa-circle-o-notch fa-spin"/>
                     </div>
                     <ImageActions actions="getActions(attachment)" imagesHeight="props.imagesHeight"/>
                 </div>
@@ -63,7 +63,7 @@
                     <div class="flex-grow-1"/>
                     <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden d-flex" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': showDelete and !env.inComposer }">
                         <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
-                            <i class="fa fa-spin fa-spinner"/>
+                            <i class="fa fa-circle-o-notch fa-spin"/>
                         </div>
                         <div t-if="!attachment.uploading and env.inComposer" class="d-flex justify-content-center me-2 align-items-center w-100 h-100 text-primary" title="Uploaded">
                             <i class="fa fa-check"/>
