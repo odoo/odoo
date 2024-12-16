@@ -3707,13 +3707,13 @@ test("quick create record in empty grouped kanban", async () => {
         return {
             groups: [
                 {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 3]],
+                    __count: 0,
                     product_id: [3, "xplone"],
                 },
                 {
-                    __domain: [["product_id", "=", 5]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 5]],
+                    __count: 0,
                     product_id: [5, "xplan"],
                 },
             ],
@@ -5718,9 +5718,9 @@ test("delete an empty column, then a column with records.", async () => {
         const result = parent();
         if (firstLoad) {
             result.groups.unshift({
-                __domain: [["product_id", "=", 7]],
+                __domain_part: [["product_id", "=", 7]],
                 product_id: [7, "empty group"],
-                product_id_count: 0,
+                __count: 0,
             });
             result.length = 3;
             firstLoad = false;
@@ -6116,13 +6116,13 @@ test("count of folded groups in empty kanban with sample data", async () => {
             groups: [
                 {
                     product_id: [1, "New"],
-                    product_id_count: 0,
-                    __domain: [],
+                    __count: 0,
+                    __domain_part: [],
                 },
                 {
                     product_id: [2, "In Progress"],
-                    product_id_count: 0,
-                    __domain: [],
+                    __count: 0,
+                    __domain_part: [],
                     __fold: true,
                 },
             ],
@@ -6347,8 +6347,8 @@ test("nocontent helper after adding a record (kanban with progressbar)", async (
         return {
             groups: [
                 {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 3]],
+                    __count: 0,
                     product_id: [3, "hello"],
                 },
             ],
@@ -6510,7 +6510,7 @@ test("no nocontent helper for grouped kanban with empty groups", async () => {
         // by stage_id)
         const result = parent();
         for (const group of result.groups) {
-            group[kwargs.groupby[0] + "_count"] = 0;
+            group['__count'] = 0;
         }
         return result;
     });
@@ -6606,8 +6606,8 @@ test("no nocontent helper is hidden when quick creating a column", async () => {
         return {
             groups: [
                 {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 3]],
+                    __count: 0,
                     product_id: [3, "hello"],
                 },
             ],
@@ -6646,8 +6646,8 @@ test("remove nocontent helper after adding a record", async () => {
         return {
             groups: [
                 {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 3]],
+                    __count: 0,
                     product_id: [3, "hello"],
                 },
             ],
@@ -6688,8 +6688,8 @@ test("remove nocontent helper when adding a record", async () => {
         return {
             groups: [
                 {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 3]],
+                    __count: 0,
                     product_id: [3, "hello"],
                 },
             ],
@@ -6729,8 +6729,8 @@ test("nocontent helper is displayed again after canceling quick create", async (
         return {
             groups: [
                 {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 3]],
+                    __count: 0,
                     product_id: [3, "hello"],
                 },
             ],
@@ -6846,16 +6846,10 @@ test("empty kanban with sample data grouped by date range (fill temporal)", asyn
         return {
             groups: [
                 {
-                    date_count: 0,
+                    __count: 0,
                     state: false,
-                    "date:month": "December 2022",
-                    __range: {
-                        "date:month": {
-                            from: "2022-12-01",
-                            to: "2023-01-01",
-                        },
-                    },
-                    __domain: [
+                    "date:month": ["2022-12-01", "December 2022"],
+                    __domain_part: [
                         ["date", ">=", "2022-12-01"],
                         ["date", "<", "2023-01-01"],
                     ],
@@ -6894,7 +6888,7 @@ test("empty grouped kanban with sample data and click quick create", async () =>
         // by stage_id)
         const result = parent();
         result.groups.forEach((group) => {
-            group[`${kwargs.groupby[0]}_count`] = 0;
+            group['__count'] = 0;
         });
         return result;
     });
@@ -6946,7 +6940,7 @@ test("quick create record in grouped kanban with sample data", async () => {
         // by stage_id)
         const result = parent();
         result.groups.forEach((group) => {
-            group[`${kwargs.groupby[0]}_count`] = 0;
+            group['__count'] = 0;
         });
         return result;
     });
@@ -6988,7 +6982,7 @@ test("empty grouped kanban with sample data and cancel quick create", async () =
         // by stage_id)
         const result = parent();
         result.groups.forEach((group) => {
-            group[`${kwargs.groupby[0]}_count`] = 0;
+            group['__count'] = 0;
         });
         return result;
     });
@@ -7031,7 +7025,7 @@ test.tags("desktop");
 test("empty grouped kanban with sample data: keynav", async () => {
     onRpc("web_read_group", function ({ parent }) {
         const result = parent();
-        result.groups.forEach((g) => (g.product_id_count = 0));
+        result.groups.forEach((g) => (g.__count = 0));
         return result;
     });
 
@@ -7102,7 +7096,7 @@ test("empty grouped kanban with sample data and many2many_tags", async () => {
         // the case for several models (e.g. project.task grouped
         // by stage_id)
         result.groups.forEach((group) => {
-            group[`${kwargs.groupby[0]}_count`] = 0;
+            group['__count'] = 0;
         });
         return result;
     });
@@ -7160,7 +7154,7 @@ test("sample data does not change after reload with sample data", async () => {
         // the case for several models (e.g. project.task grouped
         // by stage_id)
         result.groups.forEach((group) => {
-            group[`${kwargs.groupby[0]}_count`] = 0;
+            group['__count'] = 0;
         });
         return result;
     });
@@ -7226,8 +7220,8 @@ test("empty grouped kanban with sample data: add a column", async () => {
         result.groups = Product._records.map((r) => {
             return {
                 product_id: [r.id, r.display_name],
-                product_id_count: 0,
-                __domain: [["product_id", "=", r.id]],
+                __count: 0,
+                __domain_part: [["product_id", "=", r.id]],
             };
         });
         result.length = result.groups.length;
@@ -7272,7 +7266,7 @@ test("empty grouped kanban with sample data: cannot fold a column", async () => 
         const result = parent();
         // override web_read_group to return a single, empty group
         result.groups = result.groups.slice(0, 1);
-        result.groups[0][`${kwargs.groupby[0]}_count`] = 0;
+        result.groups[0]['__count'] = 0;
         result.length = 1;
         return result;
     });
@@ -7310,8 +7304,8 @@ test("empty grouped kanban with sample data: delete a column", async () => {
     let groups = [
         {
             product_id: [1, "New"],
-            product_id_count: 0,
-            __domain: [],
+            __count: 0,
+            __domain_part: [],
         },
     ];
 
@@ -7359,8 +7353,8 @@ test("empty grouped kanban with sample data: add a column and delete it right aw
         result.groups = Product._records.map((r) => {
             return {
                 product_id: [r.id, r.display_name],
-                product_id_count: 0,
-                __domain: [["product_id", "=", r.id]],
+                __count: 0,
+                __domain_part: [["product_id", "=", r.id]],
             };
         });
         result.length = result.groups.length;
@@ -7461,9 +7455,9 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
         return {
             groups: [
                 {
-                    product_id_count: 0,
+                    __count: 0,
                     product_id: [3, "hello"],
-                    __domain: [["product_id", "=", "3"]],
+                    __domain_part: [["product_id", "=", "3"]],
                 },
             ],
             length: 2,
@@ -10011,25 +10005,25 @@ test("keynav: grouped kanban with empty columns", async () => {
         const result = parent();
         // add 2 empty columns in the middle
         result.groups.splice(1, 0, {
-            state_count: 0,
+            __count: 0,
             state: "md1",
-            __domain: [["state", "=", "md1"]],
+            __domain_part: [["state", "=", "md1"]],
         });
         result.groups.splice(1, 0, {
-            state_count: 0,
+            __count: 0,
             state: "md2",
-            __domain: [["state", "=", "md2"]],
+            __domain_part: [["state", "=", "md2"]],
         });
         // add 1 empty column in the beginning and the end
         result.groups.unshift({
-            state_count: 0,
+            __count: 0,
             state: "beg",
-            __domain: [["state", "=", "beg"]],
+            __domain_part: [["state", "=", "beg"]],
         });
         result.groups.push({
-            state_count: 0,
+            __count: 0,
             state: "end",
-            __domain: [["state", "=", "end"]],
+            __domain_part: [["state", "=", "end"]],
         });
         return result;
     });
@@ -11391,7 +11385,7 @@ test("basic rendering with a date groupby with a granularity", async () => {
 
     stepAllNetworkCalls();
     onRpc("web_read_group", ({ method, kwargs }) => {
-        expect(kwargs.fields).toEqual([]);
+        expect(kwargs.aggregates).toEqual(['__count']);
         expect(kwargs.groupby).toEqual(["date:day"]);
     });
 
@@ -12696,7 +12690,7 @@ test("sample server: _mockWebReadGroup API", async () => {
         async _mockWebReadGroup() {
             const result = await super._mockWebReadGroup(...arguments);
             const { "date:month": dateValue } = result.groups[0];
-            expect(dateValue).toBe("December 2022");
+            expect(dateValue[1]).toBe("December 2022");
             return result;
         },
     });
@@ -12705,16 +12699,10 @@ test("sample server: _mockWebReadGroup API", async () => {
         return {
             groups: [
                 {
-                    date_count: 0,
+                    __count: 0,
                     state: false,
-                    "date:month": "December 2022",
-                    __range: {
-                        "date:month": {
-                            from: "2022-12-01",
-                            to: "2023-01-01",
-                        },
-                    },
-                    __domain: [
+                    "date:month": ["2022-12-01", "December 2022"],
+                    __domain_part: [
                         ["date", ">=", "2022-12-01"],
                         ["date", "<", "2023-01-01"],
                     ],
@@ -13072,18 +13060,18 @@ test("group by properties and drag and drop", async () => {
             groups: [
                 {
                     "properties.my_char": false,
-                    __domain: [["properties.my_char", "=", false]],
-                    "properties.my_char_count": 2,
+                    __domain_part: [["properties.my_char", "=", false]],
+                    __count: 2,
                 },
                 {
                     "properties.my_char": "aaa",
-                    __domain: [["properties.my_char", "=", "aaa"]],
-                    "properties.my_char_count": 1,
+                    __domain_part: [["properties.my_char", "=", "aaa"]],
+                    __count: 1,
                 },
                 {
                     "properties.my_char": "bbb",
-                    __domain: [["properties.my_char", "=", "bbb"]],
-                    "properties.my_char_count": 1,
+                    __domain_part: [["properties.my_char", "=", "bbb"]],
+                    __count: 1,
                 },
             ],
             length: 3,
@@ -13372,13 +13360,13 @@ test("click on empty kanban must shake the NEW button", async () => {
         return {
             groups: [
                 {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 3]],
+                    __count: 0,
                     product_id: [3, "xplone"],
                 },
                 {
-                    __domain: [["product_id", "=", 5]],
-                    product_id_count: 0,
+                    __domain_part: [["product_id", "=", 5]],
+                    __count: 0,
                     product_id: [5, "xplan"],
                 },
             ],

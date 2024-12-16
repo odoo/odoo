@@ -1321,7 +1321,6 @@ export class MockServer {
             modelName, { domain, groupby: [groupBy, progressBar.field], aggregates: ['__count']}
         );
 
-        // Find group by field
         const data = {};
         for (const group of groups) {
             let groupByValue = group[groupBy]; // always technical value here

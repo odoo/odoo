@@ -519,17 +519,21 @@ export class SampleServer {
      * @return {Object}
      */
     _mockReadProgressBar(params) {
-        const groupBy = params.group_by.split(":")[0];
-        const progress_bar = params.progress_bar;
-        const groupByField = this.data[params.model].fields[groupBy];
+        const groupBy = params.group_by;
+        const progressBar = params.progress_bar;
+        const groups = this._mockBaseReadGroup({
+            model: params.model,
+            domain: params.domain,
+            groupBy: [groupBy, progressBar.field],
+            aggregates: ['__count'],
+        });
         const data = {};
-        for (const record of this.data[params.model].records) {
-            let groupByValue = record[groupBy];
-            if (groupByField.type === "many2one") {
-                const relatedRecords = this.data[groupByField.relation].records;
-                const relatedRecord = relatedRecords.find((r) => r.id === groupByValue);
-                groupByValue = relatedRecord.display_name;
+        for (const group of groups) {
+            let groupByValue = group[groupBy]; // always technical value here
+            if (Array.isArray(groupByValue)) {
+                groupByValue = groupByValue[0];
             }
+
             // special case for bool values: rpc call response with capitalized strings
             if (!(groupByValue in data)) {
                 if (groupByValue === true) {
@@ -538,16 +542,14 @@ export class SampleServer {
                     groupByValue = "False";
                 }
             }
+
             if (!(groupByValue in data)) {
                 data[groupByValue] = {};
-                for (const key in progress_bar.colors) {
+                for (const key in progressBar.colors) {
                     data[groupByValue][key] = 0;
                 }
             }
-            const fieldValue = record[progress_bar.field];
-            if (fieldValue in data[groupByValue]) {
-                data[groupByValue][fieldValue]++;
-            }
+            data[groupByValue][group[progressBar.field]] += group.__count;
         }
         return data;
     }
