@@ -11,6 +11,11 @@ const threadPatch = {
     setup() {
         super.setup();
         this.recipients = Record.many("mail.followers");
+        this.otherRecipients = Record.many("mail.followers", {
+            compute() {
+                return this.recipients.filter((f) => f.partner.notEq(this.store.self));
+            },
+        });
         this.activities = Record.many("mail.activity", {
             sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
             onDelete(r) {
@@ -19,7 +24,7 @@ const threadPatch = {
         });
     },
     get recipientsFullyLoaded() {
-        return this.recipientsCount === this.recipients.length;
+        return this.recipientsCount === this.otherRecipients.length;
     },
     closeChatWindow() {
         const chatWindow = this.store.ChatWindow.get({ thread: this });

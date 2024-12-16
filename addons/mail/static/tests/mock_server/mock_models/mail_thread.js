@@ -63,7 +63,6 @@ export class MailThread extends models.ServerModel {
         const domain = [
             ["res_id", "=", ids[0]],
             ["res_model", "=", this._name],
-            ["partner_id", "!=", this.env.user.partner_id],
         ];
         if (after) {
             domain.push(["id", ">", after]);
@@ -593,8 +592,6 @@ export class MailThread extends models.ServerModel {
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailActivity} */
         const MailActivity = this.env["mail.activity"];
-        /** @type {import("mock_models").MailFollowers} */
-        const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").MailScheduledMessage} */
@@ -640,15 +637,6 @@ export class MailThread extends models.ServerModel {
                 ["res_id", "=", thread.id],
                 ["res_model", "=", this._name],
             ]);
-            res["selfFollower"] = mailDataHelpers.Store.one(
-                MailFollowers.browse(
-                    MailFollowers.search([
-                        ["res_id", "=", thread.id],
-                        ["res_model", "=", this._name],
-                        ["partner_id", "=", this.env.user.partner_id],
-                    ])
-                )
-            );
             MailThread._message_followers_to_store.call(
                 this,
                 [id],

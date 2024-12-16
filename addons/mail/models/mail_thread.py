@@ -4394,7 +4394,6 @@ class MailThread(models.AbstractModel):
         domain = [
             ("res_id", "=", self.id),
             ("res_model", "=", self._name),
-            ("partner_id", "!=", self.env.user.partner_id.id),
         ]
         if filter_recipients:
             subtype_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
@@ -4572,14 +4571,6 @@ class MailThread(models.AbstractModel):
                 res["followersCount"] = self.env["mail.followers"].search_count(
                     [("res_id", "=", thread.id), ("res_model", "=", self._name)]
                 )
-                self_follower = self.env["mail.followers"].search(
-                    [
-                        ("res_id", "=", thread.id),
-                        ("res_model", "=", self._name),
-                        ["partner_id", "=", self.env.user.partner_id.id],
-                    ]
-                )
-                res["selfFollower"] = Store.One(self_follower)
                 thread._message_followers_to_store(store, reset=True)
                 subtype_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
                 res["recipientsCount"] = self.env["mail.followers"].search_count(
