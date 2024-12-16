@@ -16,7 +16,7 @@
         'views/res_partner_views.xml',
     ],
     'demo': [
-        'data/l10n_fr_demo.xml',
+        'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
 }
