@@ -107,9 +107,6 @@ export function clickSubcategory(name) {
 }
 /**
  * Press the numpad in sequence based on the given space-separated keys.
- * NOTE: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
- * fast inputs. Fast inputs is the case in tours.
- *
  * @param {...String} keys space-separated numpad keys
  */
 export function clickNumpad(...keys) {

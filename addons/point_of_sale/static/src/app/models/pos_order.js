@@ -113,6 +113,8 @@ export class PosOrder extends Base {
         const company = this.company;
         const extraValues = { currency_id: currency };
         const orderLines = this.lines;
+        const isRefund = this._isRefundOrder();
+        const documentSign = isRefund ? -1 : 1;
 
         const baseLines = [];
         for (const line of orderLines) {
@@ -123,7 +125,7 @@ export class PosOrder extends Base {
             baseLines.push(
                 accountTaxHelpers.prepare_base_line_for_taxes_computation(line, {
                     ...extraValues,
-                    quantity: line.qty,
+                    quantity: documentSign * line.qty,
                     tax_ids: taxes,
                 })
             );
@@ -142,6 +144,7 @@ export class PosOrder extends Base {
         });
 
         cashRounding = this.config.rounding_method;
+        taxTotals.order_sign = documentSign;
         taxTotals.order_total =
             taxTotals.total_amount_currency - (taxTotals.cash_rounding_base_amount_currency || 0.0);
         taxTotals.order_rounding = taxTotals.cash_rounding_base_amount_currency || 0.0;
@@ -151,7 +154,7 @@ export class PosOrder extends Base {
         let amountPaid = 0.0;
         for (const payment of this.payment_ids) {
             if (payment.is_done() && !payment.is_change) {
-                amountPaid += payment.get_amount();
+                amountPaid += documentSign * payment.get_amount();
             }
         }
 
@@ -218,6 +221,7 @@ export class PosOrder extends Base {
         let totalAmountDue = this.get_due();
         if (paymentMethod.is_cash_count && this.config.cash_rounding) {
             const cashRounding = this.config.rounding_method;
+            const taxTotals = this.taxTotals;
 
             // Suppose you have a cash rounding 0.05 DOWN on the whole pos order.
             // Your pos order has a total amount of 15.72.
@@ -230,7 +234,8 @@ export class PosOrder extends Base {
             // To avoid that, we add the collected rounding so far to compute the suggested amount.
             // That way, the suggested cash amount will be computed on 15.05 and not 15.03.
             totalAmountDue = roundPrecision(
-                totalAmountDue - (this.taxTotals.cash_rounding_base_amount_currency || 0.0),
+                totalAmountDue -
+                    (taxTotals.order_sign * taxTotals.cash_rounding_base_amount_currency || 0.0),
                 cashRounding.rounding,
                 cashRounding.rounding_method
             );
@@ -702,11 +707,11 @@ export class PosOrder extends Base {
     }
 
     get_total_with_tax() {
-        return this.taxTotals.total_amount_currency;
+        return this.taxTotals.order_sign * this.taxTotals.total_amount_currency;
     }
 
     get_total_without_tax() {
-        return this.taxTotals.base_amount_currency;
+        return this.taxTotals.order_sign * this.taxTotals.base_amount_currency;
     }
 
     _get_ignored_product_ids_total_discount() {
@@ -746,7 +751,7 @@ export class PosOrder extends Base {
     }
 
     get_total_tax() {
-        return this.taxTotals.tax_amount_currency;
+        return this.taxTotals.order_sign * this.taxTotals.tax_amount_currency;
     }
 
     // TODO: This won't work with round globally. Remove the usage of this because it's the wrong way to do that.
@@ -855,14 +860,15 @@ export class PosOrder extends Base {
     hasRemainingAmount() {
         const dueAmount = this.get_due();
         const changeAmount = this.get_change();
+        const orderSign = this.taxTotals.order_sign;
         return (
             floatIsZero(changeAmount, this.currency.decimal_places) &&
-            (floatIsZero(dueAmount, this.currency.decimal_places) || dueAmount > 0.0)
+            (floatIsZero(dueAmount, this.currency.decimal_places) || orderSign * dueAmount > 0.0)
         );
     }
 
     get_change() {
-        return this.taxTotals.order_change || 0.0;
+        return this.taxTotals.order_sign * (this.taxTotals.order_change || 0.0);
     }
 
     get_due() {
@@ -871,7 +877,10 @@ export class PosOrder extends Base {
     }
 
     get_rounding_applied() {
-        return this.taxTotals.payment_cash_rounding_amount_currency || 0.0;
+        return (
+            this.taxTotals.order_sign *
+            (this.taxTotals.payment_cash_rounding_amount_currency || 0.0)
+        );
     }
 
     is_paid() {

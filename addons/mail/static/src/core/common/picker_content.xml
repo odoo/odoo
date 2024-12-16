@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.PickerContent">
-    <div class="o-mail-PickerContent d-flex flex-column flex-grow-1 o-min-height-0" t-on-click="onClick">
+    <div class="o-mail-PickerContent d-flex flex-column flex-grow-1 o-min-height-0 bg-100" t-on-click="onClick">
         <div class="o-mail-PickerContent-picker d-flex flex-grow-1 rounded overflow-auto">
             <div t-if="props.state.picker === props.PICKERS.EMOJI" class="o-mail-PickerContent-emojiPicker d-flex flex-grow-1 mw-100">
                 <EmojiPicker close="props.close" onSelect="props.pickers.emoji" state="props.state" storeScroll="props.storeScroll"/>
