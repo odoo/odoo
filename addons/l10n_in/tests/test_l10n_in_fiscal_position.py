@@ -132,3 +132,20 @@ class TestFiscal(L10nInTestInvoicingCommon):
             out_invoice.fiscal_position_id,
             self.env['account.chart.template'].ref('fiscal_position_in_export_sez_in')
         )
+
+    def test_l10n_in_auto_apply_fiscal_partner(self):
+        # For overseas gst treatment
+        self.partner_a.write({
+            'country_id': self.country_us.id,
+            'l10n_in_gst_treatment': 'overseas'
+        })
+        self.partner_a._onchange_l10n_in_gst_treatment()
+        self.assertEqual(self.partner_a.property_account_position_id, self.env['account.chart.template'].ref('fiscal_position_in_export_sez_in'))
+
+        # For regular gst treatment
+        self.partner_a.write({
+            'country_id': self.country_in.id,
+            'l10n_in_gst_treatment': 'regular'
+        })
+        self.partner_a._onchange_l10n_in_gst_treatment()
+        self.assertFalse(self.partner_a.property_account_position_id)
