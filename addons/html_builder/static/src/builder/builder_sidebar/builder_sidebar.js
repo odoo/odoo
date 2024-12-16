@@ -14,6 +14,9 @@ import {
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
 import { BuilderOverlayPlugin } from "../plugins/builder_overlay/builder_overlay_plugin";
+import { OverlayButtonsPlugin } from "../plugins/overlay_buttons/overlay_buttons_plugin";
+import { MovePlugin } from "../plugins/move/move_plugin";
+import { GridLayoutPlugin } from "../plugins/grid_layout/grid_layout_plugin";
 import { DropZonePlugin } from "../plugins/drop_zone_plugin";
 import { BuilderOptionsPlugin } from "../plugins/builder_options_plugin";
 import { HandleDirtyElementPlugin } from "../plugins/handle_dirty_element_plugin";
@@ -37,6 +40,9 @@ const BUILDER_PLUGIN = [
     BuilderActionsPlugin,
     OperationPlugin,
     BuilderOverlayPlugin,
+    OverlayButtonsPlugin,
+    MovePlugin,
+    GridLayoutPlugin,
     DropZonePlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,

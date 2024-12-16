@@ -7,16 +7,17 @@ import {
     resizeGrid,
 } from "@html_builder/builder/utils/grid_layout_utils";
 
-const sizingY = {
+// TODO move them elsewhere.
+export const sizingY = {
     selector: "section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating",
     exclude:
         "section:has(> .carousel), .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize",
 };
-const sizingX = {
+export const sizingX = {
     selector: ".row > div",
     exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
 };
-const sizingGrid = {
+export const sizingGrid = {
     selector: ".row > div",
     exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
 };

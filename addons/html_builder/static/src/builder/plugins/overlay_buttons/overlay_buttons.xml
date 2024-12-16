@@ -1,0 +1,13 @@
+<templates xml:space="preserve">
+
+<t t-name="html_builder.OverlayButtons">
+    <div t-if="state.isVisible" class="o_overlay_options">
+        <t t-foreach="state.buttons" t-as="button" t-key="button_index">
+                <button class="btn btn-primary" t-att-class="button.class" t-on-click="button.handler"/>
+        </t>
+    </div>
+</t>
+</templates>
+<!-- <div class="o_move_handle fa fa-arrows" />
+<button class="o_snippet_replace o_we_bg_warning fa fa-refresh d-none" />
+<button class="oe_snippet_remove o_we_bg_danger fa fa-trash" /> -->
