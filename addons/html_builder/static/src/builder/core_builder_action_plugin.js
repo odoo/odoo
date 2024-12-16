@@ -44,6 +44,7 @@ const styleMap = {
             editingElement.style.setProperty("border-width", `${parsedValue}px`, "important");
         },
     },
+    // todo: handle all the other styles
     padding: getNumericStyle("padding"),
 };
 
