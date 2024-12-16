@@ -1127,7 +1127,7 @@ class Message(models.Model):
                     Store.one(
                         self.env[message.model].browse(message.res_id) if message.model else False,
                         as_thread=True,
-                        fields=["modelName", "name"],
+                        fields=["modelName", "name" if message.model == "discuss.channel" else "display_name"],
                     )
                 ),
             }

@@ -2,7 +2,7 @@
 
 from markupsafe import Markup
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged, users, HttpCase
@@ -373,3 +373,24 @@ class TestMessageLinks(MailCommon, HttpCase):
             self.assertEqual(res.url, expected_url)
         with self.subTest(deleted_message=deleted_message):
             res = self.url_open(f'/mail/message/{deleted_message.id}')
+
+@tagged("mail_message", "mail_store", "post_install", "-at_install")
+class TestMessageStore(MailCommon, HttpCase):
+
+    def test_store_data_use_display_name(self):
+        test_record = self.env['mail.test.simple.unnamed'].create({'description': 'Some description'})
+        user_invalid = mail_new_test_user(self.env, login='invalid', groups='base.group_portal', name='Invalid User', email='invalid email', notification_type='email')
+        test_record.message_subscribe(partner_ids=user_invalid.partner_id.ids)
+        self.authenticate(self.user_employee.login, self.user_employee.password)
+        msg = test_record.message_post(body='Some body', author_id=self.partner_employee.id)
+        # simulate failure
+        self.env['mail.notification'].create({
+            'author_id': msg.author_id.id,
+            'mail_message_id': msg.id,
+            'res_partner_id': user_invalid.partner_id.id,
+            'notification_type': 'email',
+            'notification_status': 'exception',
+            'failure_type': 'mail_email_invalid',
+        })
+        res = self.make_jsonrpc_request("/mail/data", {"failures": True})
+        self.assertEqual([t["name"] for t in res["mail.thread"]], ['Some description'])
