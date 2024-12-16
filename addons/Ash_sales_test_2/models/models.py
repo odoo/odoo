@@ -116,11 +116,11 @@ class SaleOrder(models.Model):
                         product_available_in_source = True
                         break
 
-                if not product_available_in_source:
-                    logger.warning(
-                        f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}.")
-                    all_products_available = False
-                    break
+                # if not product_available_in_source:
+                #     logger.warning(
+                #         f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}.")
+                #     all_products_available = False
+                #     break
 
                 # Collect pickings that include the product
                 product_pickings = pick_only_picking_records.filtered(
@@ -140,8 +140,9 @@ class SaleOrder(models.Model):
                     'default_code': product_default_code,
                     'product_name': product.name,
                     'quantity': product_qty,
-                    'location': f"{location_name} (Automation)" if not manual_location_names else
-                                f"{location_name} (Manual), {', '.join(manual_location_names)} (Manual)",
+                    # 'location': f"{location_name} (Automation)" if not manual_location_names else
+                    #             f"{location_name} (Manual), {', '.join(manual_location_names)} (Manual)",
+                    'location': 'Automation',
                     'system': location_system,
                     'product_class': product.automation_manual_product,
                     'picklist': product_pickings[0] if product_pickings else "No picklist",
