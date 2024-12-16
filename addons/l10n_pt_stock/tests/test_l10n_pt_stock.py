@@ -1,7 +1,7 @@
 import freezegun
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.models import Model
 from odoo.tests import tagged
 from odoo.exceptions import UserError
@@ -12,6 +12,25 @@ from odoo.addons.stock.tests.common import TestStockCommon
 class TestL10nPtStockCommon(TestStockCommon):
     @classmethod
     def setUpClass(cls):
+        def create_at_series(year, picking_types):
+            series = cls.env['l10n_pt.at.series'].create({
+                'name': year,
+                'company_id': cls.company_pt.id,
+                'training_series': True,
+                'sale_journal_id': cls.sale_journal.id,
+            })
+            series.write({
+                'at_series_line_ids': [
+                    Command.create({
+                        'type': picking_type.code,
+                        'prefix': picking_type.sequence_code,
+                        'at_code': f'AT-{picking_type.sequence_code}{year}-TEST',
+                    })
+                    for picking_type in picking_types
+                ]
+            })
+            return series
+
         super().setUpClass()
         cls.company_pt = cls.env['res.company'].create({
             'name': 'Company PT',
@@ -36,7 +55,7 @@ class TestL10nPtStockCommon(TestStockCommon):
         })
         cls.picking_type_out = cls.env['stock.picking.type'].create({
             'name': 'Picking Out',
-            'sequence_code': 'PT_OUT',
+            'sequence_code': 'PTOUT',
             'code': 'outgoing',
             'reservation_method': 'at_confirm',
             'company_id': cls.company_pt.id,
@@ -46,7 +65,7 @@ class TestL10nPtStockCommon(TestStockCommon):
         })
         cls.picking_type_in = cls.env['stock.picking.type'].create({
             'name': 'Picking In',
-            'sequence_code': 'PT_IN',
+            'sequence_code': 'PTIN',
             'code': 'incoming',
             'reservation_method': 'at_confirm',
             'company_id': cls.company_pt.id,
@@ -54,20 +73,37 @@ class TestL10nPtStockCommon(TestStockCommon):
             'default_location_src_id': cls.location.id,
             'default_location_dest_id': cls.location2.id,
         })
+        cls.picking_type_internal = cls.env['stock.picking.type'].create({
+            'name': 'Picking Internal',
+            'sequence_code': 'PTINT',
+            'code': 'internal',
+            'reservation_method': 'at_confirm',
+            'company_id': cls.company_pt.id,
+            'warehouse_id': False,
+            'default_location_src_id': cls.location.id,
+            'default_location_dest_id': cls.location2.id,
+        })
+        cls.sale_journal = cls.env['account.journal'].create({
+            'name': 'Sales Journal A',
+            'code': 'refA',
+            'type': 'sale',
+            'company_id': cls.company_pt.id,
+            # 'default_account_id': cls.account_sale_a.id,
+        })
         cls.partner_a = cls.env['res.partner'].create({
             'name': 'Partner A',
             'vat': 'PT123456789',
         })
-        for picking_type in cls.env['stock.picking.type'].search([
+
+        picking_types = cls.env['stock.picking.type'].search([
             ('company_id', '=', cls.company_pt.id),
-            ('code', '=', 'outgoing'),
-        ]):
-            picking_type.l10n_pt_stock_at_series_id = cls.env['l10n_pt.at.series'].create({
-                'company_id': cls.company_pt.id,
-                'type': 'stock_picking',
-                'prefix': f"{picking_type.sequence_code}-TEST",
-                'at_code': f"AT-{picking_type.sequence_code}-TEST",
-            })
+            ('code', 'in', ('outgoing', 'internal')),
+            ('warehouse_id', '=', False),
+        ])
+        cls.series_2017 = create_at_series('2017', picking_types)
+        cls.series_2023 = create_at_series('2023', picking_types)
+
+        cls.picking_type_out.l10n_pt_stock_at_series_id = cls.series_2023
 
     def create_picking(self, picking_type, l10n_pt_hashed_on="2023-01-01", partner=False, product=False, validate=False):
         product = product or self.productA
@@ -105,7 +141,7 @@ class TestL10nPtStockCommon(TestStockCommon):
         return picking
 
 
-@tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
+@tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtStockHashing(TestL10nPtStockCommon):
     def test_l10n_pt_stock_hash_sequence(self):
         """
@@ -116,8 +152,8 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         is the same as the one given in the link (using the same sample keys).
         """
 
-        # The 1st patch is necessary because we use the move type in l10n_pt_stock_document_number, but our type
-        # (stock_picking) is different from the one used in the link (GR)
+        # The 1st patch is necessary because we use the move name in l10n_pt_document_number and our move
+        # name sequence is different from the one used in the link (1G 5A/1, 1G 5A/2...)
         # The 2nd is necessary because the example uses a real amount for the computation of the hash,
         # however in our case this amount is set to 0.0, so we need to patch it to get the same result.
         l10n_pt_stock_document_number = ''
@@ -128,6 +164,8 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
 
         def _get_l10n_pt_stock_gross_total_patched(stock_picking):
             return amount
+
+        self.picking_type_out.l10n_pt_stock_at_series_id = self.series_2017
 
         for (l10n_pt_stock_document_number, picking_type, amount, l10n_pt_hashed_on, expected_hash) in [
             ('1G 5A/1', self.picking_type_out, 679.61, '2017-09-15T15:58:01', "fGqopcOBeYlO9s2yVg92WfVZW5S+2UpjLM0w19zt/2ns8YQX1lNGR80XhT89LyP2bc0GZoBWQBXILbKUMtpm6tI8L+DpI+pPbktPAWG3FCy53/b784TNzQEQvklYNV/b6fqeVnoh8eVZ24V/IFuSslIfLKfrys/ymyER9+0tEcY="),
@@ -152,7 +190,7 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         expected_error_msg = "This document is protected by a hash. Therefore, you cannot edit the following fields:*"
 
         with self.assertRaisesRegex(UserError, f"{expected_error_msg} Inalterability Hash."):
-            picking.l10n_pt_stock_inalterable_hash = '$1$fake_hash'
+            picking.l10n_pt_stock_inalterable_hash = 'fake_hash'
         with self.assertRaisesRegex(UserError, f"{expected_error_msg} Date of Transfer"):
             picking.date_done = fields.Date.from_string('2000-01-01')
         with self.assertRaisesRegex(UserError, expected_error_msg):
@@ -170,7 +208,8 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         picking3 = self.create_picking(self.picking_type_out, l10n_pt_hashed_on='2023-01-03', validate=True)
         picking4 = self.create_picking(self.picking_type_out, l10n_pt_hashed_on='2023-01-04', validate=True)
 
-        integrity_check = next(filter(lambda r: r['picking_type_at_code'] == self.picking_type_out.l10n_pt_stock_at_series_id._get_at_code(), self.company_pt._l10n_pt_stock_check_hash_integrity()['results']))
+        at_series_out = self.picking_type_out.l10n_pt_stock_at_series_id.at_series_line_ids.filtered(lambda s: s.type == 'outgoing')
+        integrity_check = next(filter(lambda r: r['series_at_code'] == at_series_out._get_at_code(), self.company_pt._l10n_pt_stock_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'verified')
         self.assertRegex(integrity_check['msg_cover'], 'Delivery orders are correctly hashed')
         self.assertEqual(integrity_check['first_date'], picking1.date_done)
@@ -179,14 +218,14 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         # Let's change one of the fields used by the hash. It should be detected by the integrity report.
         # We need to bypass the write method of stock.picking to do so.
         Model.write(picking3, {'date_done': fields.Date.from_string('2022-01-07')})
-        integrity_check = next(filter(lambda r: r['picking_type_at_code'] == self.picking_type_out.l10n_pt_stock_at_series_id._get_at_code(), self.company_pt._l10n_pt_stock_check_hash_integrity()['results']))
+        integrity_check = next(filter(lambda r: r['series_at_code'] == at_series_out._get_at_code(), self.company_pt._l10n_pt_stock_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on delivery order with id {picking3.id} ({picking3.name}).')
 
         # Let's try with the l10n_pt_stock_inalterable_hash field itself
         Model.write(picking3, {'date_done': fields.Date.from_string("2023-01-03")})  # Revert the previous change
         Model.write(picking4, {'l10n_pt_stock_inalterable_hash': 'fake_hash'})
-        integrity_check = next(filter(lambda r: r['picking_type_at_code'] == self.picking_type_out.l10n_pt_stock_at_series_id._get_at_code(), self.company_pt._l10n_pt_stock_check_hash_integrity()['results']))
+        integrity_check = next(filter(lambda r: r['series_at_code'] == at_series_out._get_at_code(), self.company_pt._l10n_pt_stock_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on delivery order with id {picking4.id} ({picking4.name}).')
 

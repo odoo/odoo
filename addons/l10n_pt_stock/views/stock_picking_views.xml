@@ -5,12 +5,29 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning oe_edit_only" role="alert" name="warning_at_series" invisible="picking_type_id.l10n_pt_stock_at_series_line_id or l10n_pt_document_number">
+                  The selected Operation Type (<field name="picking_type_id" readonly="1"/>) does not have an AT Series associated to it. This stock picking will not be hashed.
+                </div>
+            </xpath>
             <xpath expr="//group[@name='other_infos']" position="after">
                 <field name="country_code" invisible="1"/>
-                <group string="Portugal" invisible="country_code != 'PT'">
-                    <field name="l10n_pt_stock_inalterable_hash"/>
-                    <field name="l10n_pt_stock_atcud"/>
+                <group name="other_infos_portugal" string="Portugal" invisible="country_code != 'PT'">
+                    <field name="l10n_pt_document_number"/>
+                    <field name="l10n_pt_stock_inalterable_hash" groups="base.group_no_one"/>
+                    <field name="l10n_pt_stock_atcud" help="Unique document code formed by the AT series validation code and the number of the document. Only assigned once the document is secured."/>
                 </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_stock_tree_pt" model="ir.ui.view">
+        <field name="name">stock.picking.tree.view.inherit.pt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+               <field name="l10n_pt_document_number" optional="hide"/>
             </xpath>
         </field>
     </record>
