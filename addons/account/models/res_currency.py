@@ -225,7 +225,7 @@ class ResCurrency(models.Model):
     def _get_currency_table_fiscal_year_bounds(self, main_company):
         today_fiscal_year = main_company.compute_fiscalyear_dates(fields.Date.today())
         first_rate = self.env['res.currency.rate'].search(self.env['res.currency.rate']._check_company_domain(main_company), order="name ASC", limit=1)
-
+        fiscal_year_bounds = []
         if first_rate:
             first_rate_fiscal_year = main_company.compute_fiscalyear_dates(first_rate.name)
             fiscal_year_bounds = [(None, first_rate_fiscal_year['date_from'] - relativedelta(days=1))]  # Initialized to have a value for everything before the first rate
