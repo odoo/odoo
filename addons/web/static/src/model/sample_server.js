@@ -710,7 +710,7 @@ export class SampleServer {
      * @param {Object[]} groups empty groups returned by the server
      * @param {Object} params
      * @param {string} params.model
-     * @param {string[]} params.fields
+     * @param {string[]} params.aggregates
      * @param {string[]} params.groupBy
      * @returns {Object[]} groups with count and aggregate values updated
      *

@@ -696,13 +696,13 @@ export class RelationalModel extends Model {
                 pick(config.fields, ...Object.keys(config.activeFields))
             ),
         ];
-        const groupBy = [config.groupBy[0]];
+        const groupBy = config.groupBy[0];
         const orderBy = [];
         let groupByInsideOrder = false;
         for (const {name, asc} of config.orderBy) {
-            if (name === config.groupBy[0].split(':')[0]) {
+            if (name === groupBy.split(':')[0]) {
                 groupByInsideOrder = true
-                orderBy.push({name: config.groupBy[0], asc: asc})
+                orderBy.push({name: groupBy, asc: asc})
             } else {
                 for (const agg of aggregates) {
                     if (agg.split(':')[0] === name) {
@@ -712,18 +712,18 @@ export class RelationalModel extends Model {
                 }
             }
         }
-        if (!groupByInsideOrder) {
-            // To always have a complete order
-            orderBy.push({name: config.groupBy[0], asc: true})
+        // To always have a complete order, if a order is specify
+        if (orderBy.length > 0 && !groupByInsideOrder) {
+            orderBy.push({name: groupBy, asc: true})
         }
 
         return this.orm.webReadGroup(
             config.resModel,
             config.domain,
-            groupBy,
+            [groupBy],
             aggregates,
             {
-                order: orderByToString(orderBy),  // TODO: make orderBy compatible
+                order: orderByToString(orderBy),
                 offset: config.offset,
                 limit: config.limit !== Number.MAX_SAFE_INTEGER ? config.limit : undefined,
                 context: config.context,
