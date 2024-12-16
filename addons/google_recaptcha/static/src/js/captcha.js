@@ -22,7 +22,7 @@ publicWidget.registry.reCaptcha = publicWidget.Widget.extend({
         const btn = this.$('button[type="submit"]');
         if (!btn.prop("disabled")) {
             btn.attr("disabled", "disabled");
-            btn.prepend('<i class="fa fa-refresh fa-spin"/> ');
+            btn.prepend('<i class="fa fa-circle-o-notch fa-spin"/> ');
         }
         if (!this.$el.find("input[name='recaptcha_token_response']")[0]) {
             event.preventDefault();

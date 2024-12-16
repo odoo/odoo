@@ -81,7 +81,7 @@
                     </div>
                     <button t-attf-class="btn btn-outline-secondary btn-lg d-flex align-items-center justify-content-center gap-2 lh-lg" t-on-click.stop="doCreateTable.call" t-att-disabled="doCreateTable.status === 'loading'">
                         <t t-if="doCreateTable.status === 'loading'">
-                            <i class="fa fa-spinner fa-spin icon-button" role="img" aria-label="Loading" title="Loading"></i>
+                            <i class="fa fa-circle-o-notch fa-spin icon-button" role="img" aria-label="Loading" title="Loading"></i>
                         </t>
                         <t t-else="">
                             <i class="fa fa-plus-circle" role="img" aria-label="Add Table" title="Add Table"/>

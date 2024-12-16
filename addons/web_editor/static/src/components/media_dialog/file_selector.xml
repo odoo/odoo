@@ -22,7 +22,7 @@
                     <t t-esc="props.addText"/>
             </button>
             <div class="d-flex align-items-center">
-                <span t-if="state.urlInput and state.isValidatingUrl" class="o_we_url_loading mx-2 fa fa-lg fa-spinner" title="Loading..."/>
+                <span t-if="state.urlInput and state.isValidatingUrl" class="o_we_url_loading mx-2 fa fa-lg fa-circle-o-notch fa-spin" title="Loading..."/>
                 <span t-elif="state.urlInput and state.isValidUrl and state.isValidFileFormat" class="o_we_url_success text-success mx-2 fa fa-lg fa-check" title="The URL seems valid."/>
                 <span t-elif="state.urlInput and !state.isValidUrl" class="o_we_url_error text-danger mx-2 fa fa-lg fa-times" title="The URL does not seem to work."/>
                 <span t-elif="props.urlWarningTitle and state.urlInput and state.isValidUrl and !state.isValidFileFormat" class="o_we_url_warning text-warning mx-2 fa fa-lg fa-warning" t-att-title="props.urlWarningTitle"/>
