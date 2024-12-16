@@ -944,6 +944,7 @@ class ChromeBrowser:
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
+        self._websocket_send('Emulation.setFocusEmulationEnabled', params={'enabled': True})
         emulated_device = {
             'mobile': False,
             'width': None,
