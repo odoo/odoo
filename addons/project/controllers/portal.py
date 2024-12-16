@@ -156,7 +156,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 },
             },
             # FIXME: See if we prefer to give only the currency that the portal user just need to see the correct information in project sharing
-            currencies=request.env['ir.http'].get_currencies(),
+            currencies=request.env['res.currency'].get_all_currencies(),
         )
         session_info['user_context']['allow_milestones'] = project.allow_milestones
         return session_info
