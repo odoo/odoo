@@ -30,7 +30,9 @@ export class AutoComplete extends Component {
         onChange: { type: Function, optional: true },
         onBlur: { type: Function, optional: true },
         onFocus: { type: Function, optional: true },
+        searchOnInputClick: { type: Boolean, optional: true },
         input: { type: Function, optional: true },
+        inputDebounceDelay: { type: Number, optional: true },
         dropdown: { type: Boolean, optional: true },
         autofocus: { type: Boolean, optional: true },
         class: { type: String, optional: true },
@@ -45,14 +47,19 @@ export class AutoComplete extends Component {
         onChange: () => {},
         onBlur: () => {},
         onFocus: () => {},
+        searchOnInputClick: true,
+        inputDebounceDelay: 250,
     };
+
+    get timeout() {
+        return this.props.inputDebounceDelay;
+    }
 
     setup() {
         this.nextSourceId = 0;
         this.nextOptionId = 0;
         this.sources = [];
         this.inEdition = false;
-        this.timeout = 250;
 
         this.state = useState({
             navigationRev: 0,
@@ -304,7 +311,7 @@ export class AutoComplete extends Component {
         this.inEdition = false;
     }
     onInputClick() {
-        if (!this.isOpened) {
+        if (!this.isOpened && this.props.searchOnInputClick) {
             this.open(this.inputRef.el.value.trim() !== this.props.value.trim());
         } else {
             this.close();
