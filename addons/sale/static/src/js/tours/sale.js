@@ -103,6 +103,16 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
+            content: _t("Fill the email input"),
+            trigger: ".modal input[type=email][id^=email]",
+            run: "edit agro@lait.be",
+        },
+        {
+            content: _t("Save the record and close the modal"),
+            trigger: ".modal button:contains(save & close)",
+            run: "click",
+        },
+        {
             trigger: ".modal-footer button.o_mail_send",
             content: _t("Go ahead and send the quotation."),
             tooltipPosition: "bottom",
