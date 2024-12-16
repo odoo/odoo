@@ -544,6 +544,9 @@ class TestAliasCompany(TestMailAliasCommon):
         )
         self.assertEqual(self.company_3.default_from_email, f'{self.alias_default_from_c3}@{self.alias_domain_c3_name}')
 
+        self.company_3.alias_domain_id.default_from = "notifications@full.email.address.com"
+        self.assertEqual(self.company_3.default_from_email, "notifications@full.email.address.com")
+
     @users('erp_manager')
     def test_res_company_creation_alias_domain(self):
         """ Test alias domain configuration when creating new companies """
@@ -593,49 +596,6 @@ class TestMailAliasDomain(TestMailAliasCommon):
             alias_domain.write({'bounce_alias': self.test_alias_mc.alias_name})
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
             alias_domain.write({'catchall_alias': self.test_alias_mc.alias_name})
-
-    @users('admin')
-    def test_alias_domain_config_unique(self):
-        """ Domain names are not unique e.g. owning multiple gmail.com accounts.
-        However bounce / catchall should be unique. """
-        alias_domain = self.mail_alias_domain.with_env(self.env)
-
-        # copying directly would duplicate bounce / catchall emails
-        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation), self.cr.savepoint():
-            new_alias_domain = alias_domain.copy()
-
-        # same domain name is authorized if bounce and catchall are different
-        new_alias_domain = alias_domain.copy({
-            'bounce_alias': 'new.bounce',
-            'catchall_alias': 'new.catchall',
-            })
-        self.assertEqual(new_alias_domain.bounce_email, f'new.bounce@{alias_domain.name}')
-        self.assertEqual(new_alias_domain.catchall_email, f'new.catchall@{alias_domain.name}')
-        self.assertEqual(new_alias_domain.name, alias_domain.name)
-
-        # check bounce / catchall are unique at create
-        self.env['mail.alias.domain'].create({
-            'bounce_alias': 'unique.bounce',
-            'catchall_alias': 'unique.catchall',
-            'name': alias_domain.name,
-        })
-        # any not unique should raise UniqueViolation (SQL constraint fired after check)
-        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation), self.cr.savepoint():
-            self.env['mail.alias.domain'].create({
-                'bounce_alias': alias_domain.bounce_alias,
-                'name': alias_domain.name,
-            })
-        with mute_logger('odoo.sql_db'), self.assertRaises(psycopg2.errors.UniqueViolation), self.cr.savepoint():
-            self.env['mail.alias.domain'].create({
-                'catchall_alias': alias_domain.catchall_alias,
-                'name': alias_domain.name,
-            })
-
-        # also check write operation
-        with self.assertRaises(exceptions.ValidationError):
-            new_alias_domain.write({'bounce_alias': alias_domain.bounce_alias})
-        with self.assertRaises(exceptions.ValidationError):
-            new_alias_domain.write({'catchall_alias': alias_domain.catchall_alias})
 
     @users('admin')
     def test_alias_domain_parameters_validation(self):

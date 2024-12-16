@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="ir_mail_server_view_list" model="ir.ui.view">
+        <field name="name">ir.mail_server.view.list</field>
+        <field name="model">ir.mail_server</field>
+        <field name="inherit_id" ref="base.ir_mail_server_list"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="js_class">ir_mail_server_list</attribute>
+            </list>
+        </field>
+    </record>
+
+    <record id="base.action_ir_mail_server_list" model="ir.actions.act_window">
+        <field name="help" type="html">
+            <div>
+                <b class="o_view_nocontent_smiling_face">
+                    No Outgoing Servers yet
+                </b>
+                <br/>
+                <a type="action" name="%(mail.mail_server_configurator_action)d"
+                    class="btn btn-link p-0 align-baseline" role="button">
+                    Configure
+                </a>
+                a Server to send emails with your own account.
+            </div>
+        </field>
+    </record>
+</odoo>

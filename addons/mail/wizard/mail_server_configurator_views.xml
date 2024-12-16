@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mail_server_configurator_view_form" model="ir.ui.view">
+        <field name="name">mail.server.configurator.form</field>
+        <field name="model">mail.server.configurator</field>
+        <field name="arch" type="xml">
+            <form js_class="mail_server_configurator_form">
+                <h5> Select your Service Provider </h5>
+                <field name="server_type" widget="selection_mail_provider"
+                    nolabel="1" colspan="2" class="w-100 mt-2"/>
+                <group class="oe_title">
+                    <field name="is_imap_supported" invisible="1"/>
+                    <field name="is_login_editable" invisible="1"/>
+                    <div class="alert alert-warning" role="alert" colspan="2"
+                        invisible="not is_default_warning">
+                        <field name="is_default_warning"/>
+                    </div>
+                    <field name="email" placeholder="contact@domain.com"/>
+                    <field name="login" invisible="not is_login_editable"
+                        required="is_login_editable"
+                        placeholder="3ee56025e7ff8be0d58fe65b3a027824"/>
+                    <field name="is_password_required" invisible="1"/>
+                    <field name="password"
+                        password="True"
+                        invisible="not is_password_required"
+                        required="is_password_required"
+                        string="App Password"/>
+                    <field name="is_only_outgoing" widget="boolean_toggle"
+                        invisible="not is_imap_supported"/>
+                    <field name="is_default" widget="boolean_toggle"/>
+                    <field name="company_id" invisible="not is_default" groups="base.group_multi_company"/>
+                    <field name="catchall_domain" invisible="not is_default"/>
+                    <field name="need_module_install" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_setup" string="Setup" type="object"
+                        class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary"
+                        special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_server_configurator_action" model="ir.actions.act_window">
+        <field name="name">Mail Server Configurator</field>
+        <field name="res_model">mail.server.configurator</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mail_server_configurator_view_form"/>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+</odoo>

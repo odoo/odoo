@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.SelectionMailProviderField" owl="1">
+        <div class="o_selection_mail_provider d-flex flex-wrap w-100 justify-content-around">
+            <t t-set="currentValue" t-value="this.props.record.data[this.props.name]"/>
+            <div
+                t-foreach="options" t-as="option" t-key="option[0]"
+                class="card text-center justify-content-center align-items-center me-3 mb-3 p-3"
+                t-att-class="{'selected': option[0] === currentValue}"
+                t-on-click="() => this.props.record.update({[this.props.name]: option[0]})">
+                <img width="48" height="48" t-att-src="getIcon(option[0])"/>
+                <span t-out="option[1]" class="pt-2"/>
+            </div>
+        </div>
+    </t>
+</templates>
