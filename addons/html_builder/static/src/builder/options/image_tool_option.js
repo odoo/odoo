@@ -127,8 +127,6 @@ class ImageToolOption extends Component {
     static props = {};
 }
 
-// const getActions = (plugin) => ();
-
 /**
  * @private
  * @param {HTMLImageElement} img
