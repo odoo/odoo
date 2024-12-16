@@ -149,4 +149,60 @@
             }),
         ]"/>
     </record>
+    <record id="tax_ST3" model="account.tax.template">
+        <field name="description">ST3</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="type_tax_use">sale</field>
+        <field name="name">12%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.0</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('ppn_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221020'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('ppn_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221020'),
+            }),
+        ]"/>
+    </record>
+    <record id="tax_PT3" model="account.tax.template">
+        <field name="description">PT3</field>
+        <field name="chart_template_id" ref="l10n_id_chart"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">12%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">12.0</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('ppn_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221010'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'tag_ids': [(4, ref('ppn_tag'))],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_id_21221010'),
+            }),
+        ]"/>
+    </record>
 </odoo>
