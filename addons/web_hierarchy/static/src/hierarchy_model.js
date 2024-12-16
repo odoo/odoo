@@ -993,9 +993,9 @@ export class HierarchyModel extends Model {
                     context: this.context || {},
                     order: orderByToString(this.config.orderBy),
                 },
-            ).groups;
+            );
             const childIdsPerId = Object.fromEntries(
-                fetchChildren.map((r) => [r[this.parentFieldName][0], r.id])
+                fetchChildren.groups.map((g) => [g[this.parentFieldName][0], g['id:array_agg']])
             );
             for (const d of childrenData) {
                 if (d.id.toString() in childIdsPerId) {
