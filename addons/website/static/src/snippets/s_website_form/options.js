@@ -751,6 +751,9 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                     case 'char':
                         option = this._buildInput(field);
                         break;
+                    case 'binary':
+                        option = this._buildButton(field);
+                        break;
                 }
                 if (field.required) {
                     // Try to retrieve hidden value in form, else,
@@ -809,6 +812,45 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         inputEl.dataset.addActionField = '';
         inputEl.setAttribute('string', field.string);
         inputEl.classList.add('o_we_large');
+        return inputEl;
+    },
+    /**
+     * Returns a we-checkbox element from the field
+     *
+     * @private
+     * @param {Object} field
+     * @returns {HTMLElement}
+     */
+    _buildButton: function (field) {
+        const inputEl = document.createElement('we-checkbox');
+        inputEl.dataset.noPreview = 'true';
+        inputEl.dataset.fieldName = field.name;
+        inputEl.dataset.addActionField = 1;
+        inputEl.setAttribute('string', field.string);
+        inputEl.setAttribute('checked', true);
+        inputEl.classList.add('o_we_sublevel_1');
+        // return inputEl;
+        
+        // const buttonEl = document.createElement('we-button');
+        // buttonEl.classList.add('o_we_user_value_widget', 'o_we_checkbox_wrapper');
+        // // const toggleName = field.name.replace(/_/g, '-').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(); 
+        // // buttonEl.dataset[`toggle-${toggleName}`] = 'true';
+        // buttonEl.dataset.noPreview = 'true';
+        // buttonEl.dataset.fieldName = field.name;
+
+        // const titleEl = document.createElement('we-title');
+        // titleEl.setAttribute('string', field.string);
+        // titleEl.textContent = field.string;
+        // titleEl.dataset.fieldName = field.name;
+        // buttonEl.appendChild(titleEl);
+    
+        // const divEl = document.createElement('div');
+        // const checkboxEl = document.createElement('we-checkbox');
+        // divEl.appendChild(checkboxEl);
+    
+        // buttonEl.appendChild(divEl);
+        debugger
+        // return buttonEl;
         return inputEl;
     },
     /**
