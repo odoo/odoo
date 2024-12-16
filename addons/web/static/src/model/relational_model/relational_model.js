@@ -662,7 +662,9 @@ export class RelationalModel extends Model {
      * @returns {Promise<number>}
      */
     async _updateCount(config) {
-        const count = await this.keepLast.add(this.orm.searchCount(config.resModel, config.domain));
+        const count = await this.keepLast.add(
+            this.orm.searchCount(config.resModel, config.domain, { context: config.context })
+        );
         config.countLimit = Number.MAX_SAFE_INTEGER;
         return count;
     }
