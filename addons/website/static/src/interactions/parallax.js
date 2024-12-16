@@ -44,9 +44,7 @@ class Parallax extends Interaction {
     }
 
     updateBgCSS(options) {
-        // this.options.wysiwyg?.odooEditor.observerUnactive('updateBgCSS');
         Object.assign(this.bgEl.style, options);
-        // this.options.wysiwyg?.odooEditor.observerActive('updateBgCSS');
     }
 
     rebuild() {
@@ -92,3 +90,9 @@ class Parallax extends Interaction {
 registry
     .category("public.interactions")
     .add("website.parallax", Parallax);
+
+registry
+    .category("public.interactions.edit")
+    .add("website.parallax", {
+        Interaction: Parallax,
+    });
