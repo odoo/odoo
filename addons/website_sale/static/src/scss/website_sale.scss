@@ -837,6 +837,23 @@ a.no-decoration {
 
 .o_website_sale_checkout {
     #cart_products {
+        @include media-breakpoint-down(md) {
+            --cart-product-image-size-sm: 3rem;
+
+            .o_cart_product_image {
+                width: var(--cart-product-image-size-sm);
+            }
+
+            .o_image_64_max {
+                max-width: var(--cart-product-image-size-sm);
+                max-height: var(--cart-product-image-size-sm);
+            }
+        }
+
+        .o_cart_product_image {
+            width: 4rem;
+        }
+
         .o_description_line {
             @include o-line-clamp(2);
         }
