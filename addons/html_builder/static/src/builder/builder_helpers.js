@@ -78,12 +78,8 @@ export function useWeComponent() {
         useBus(oldEnv.editorBus, "UPDATE_EDITING_ELEMENT", () => {
             editingElements = querySelectorAll(oldEnv.getEditingElements(), comp.props.applyTo);
         });
-        newEnv.getEditingElements = () => {
-            return editingElements;
-        };
-        newEnv.getEditingElement = () => {
-            return editingElements[0];
-        };
+        newEnv.getEditingElements = () => editingElements;
+        newEnv.getEditingElement = () => editingElements[0];
     }
     const weContext = {};
     const contextKeys = [
@@ -188,8 +184,8 @@ export function useClickableWeWidget() {
                 fn(actionsSpecs);
             },
             {
-                load: async () => {
-                    return Promise.all(
+                load: async () =>
+                    Promise.all(
                         actionsSpecs.map(async (applySpec) => {
                             if (!applySpec.load) {
                                 return;
@@ -199,10 +195,9 @@ export function useClickableWeWidget() {
                                 param: applySpec.actionParam,
                                 value: applySpec.actionValue,
                             });
-                            result.loadResult = result;
+                            applySpec.loadResult = result;
                         })
-                    );
-                },
+                    ),
                 ...operationParams,
             }
         );
@@ -227,8 +222,9 @@ export function useClickableWeWidget() {
     }
     function callApply(applySpecs) {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
+        const shouldClean = shouldToggle && isActive();
         for (const applySpec of applySpecs) {
-            if (shouldToggle && isActive()) {
+            if (shouldClean) {
                 applySpec.clean({
                     editingElement: applySpec.editingElement,
                     param: applySpec.actionParam,
