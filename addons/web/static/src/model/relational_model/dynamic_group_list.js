@@ -221,6 +221,7 @@ export class DynamicGroupList extends DynamicList {
             resModel: this.config.resModel,
             fields: this.config.fields,
             activeFields: this.config.activeFields,
+            companies: this.config.companies,
         };
         const context = {
             ...this.context,
