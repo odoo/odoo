@@ -871,6 +871,7 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.quantity = 1
+            ml.picked = True
         details_operation_form.save()
         # Won't accept to be done, instead return a wizard
         mo.button_mark_done()
@@ -909,6 +910,7 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.new() as ml:
             ml.quantity = 1
+            ml.picked = True
         details_operation_form.save()
 
         # Won't accept to be done, instead return a wizard
