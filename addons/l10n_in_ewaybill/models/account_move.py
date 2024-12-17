@@ -21,7 +21,7 @@ class AccountMove(models.Model):
 
     def _get_l10n_in_seller_buyer_party(self):
         res = super()._get_l10n_in_seller_buyer_party()
-        if self.is_purchase_document(include_receipts=True):
+        if self.is_outbound():
             res = {
                 'seller_details':  self.partner_id,
                 'dispatch_details': self.partner_shipping_id or self.partner_id,
