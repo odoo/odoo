@@ -70,7 +70,8 @@
         <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
 
         <t t-if="props.delete and displayDeleteButton">
-            <button class="btn btn-secondary o_btn_remove" t-on-click="remove" data-hotkey="k">
+            <button class="btn btn-secondary d-flex flex-nowrap align-items-center justify-content-center gap-1 ms-md-auto o_btn_remove" t-on-click="remove" data-hotkey="k">
+                <i class="fa fa-trash"/>
                 <t t-if="props.deleteButtonLabel" t-out="props.deleteButtonLabel"/>
                 <t t-else="">Remove</t>
             </button>
