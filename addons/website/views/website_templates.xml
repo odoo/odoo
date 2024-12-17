@@ -287,7 +287,7 @@
 
     <!-- Breadcrumb -->
     <xpath expr="//main/*[1]" position="before">
-        <t t-if="'parent_id' in main_object and main_object['parent_id']">
+        <t t-if="'parent_id' in main_object and main_object['parent_id'] and main_object['parent_id'].url">
             <div class="page_breadcrumb " data-name="Breadcrumb">
                 <nav aria-label="breadcrumb">
                     <t t-set="parent_page" t-value="main_object.parent_id"/>
@@ -295,10 +295,14 @@
                         <li>
                             <t t-if="parent_page.parent_id and parent_page.parent_id.url">
                                 <a t-att-href="parent_page.parent_id.url" t-out="parent_page.parent_id.name"/>
-                                <span> / </span>
+                                <span class="pe-1"> / </span>
                             </t>
+                        </li>
+                        <li>
                             <a t-att-href="parent_page.url" t-out="parent_page.name"/>
                             <span> / </span>
+                        </li>
+                        <li class="px-1">
                             <span t-out="main_object.name"/>
                         </li>
                     </ul>

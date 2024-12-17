@@ -89,14 +89,6 @@ class WebsitePage(models.Model):
             previous_page = page
         return self.browse(ids)
 
-    # @api.constrains('parent_id')
-    # def _check_parent_id(self):
-    #     for page in self:
-    #         if page.parent_id.id == page.id:
-    #             raise ValidationError(_("Page '%s' cannot be parent of itself") % page.name)
-    #         if page.is_homepage and page.parent_id:
-    #             raise ValidationError(_("Homepage '%s' cannot have a parent page") % page.name)
-
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
         if not default:

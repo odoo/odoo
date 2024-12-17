@@ -224,10 +224,11 @@ class WebsitePageProperties(models.TransientModel):
 
         return write_result
     
-    @api.constrains('parent_id')
-    def _check_parent_page_id(self):
-        for page in self:
-            if page.is_homepage and page.parent_id:
-                raise ValidationError(_("Homepage '%s' cannot have a parent page") % page.name)
-            if page.parent_id.id == page.id:
-                raise ValidationError(_("Page '%s' cannot be parent of itself") % page.name)
+    # @api.constrains('parent_id')
+    # def _check_parent_page_id(self):
+    #     for page in self:
+    #         breakpoint()
+    #         if page.is_homepage and page.parent_id:
+    #             raise ValidationError(_("Homepage '%s' cannot have a parent page") % page.name)
+    #         if page.parent_id.id == page.id:
+    #             raise ValidationError(_("Page '%s' cannot be parent of itself") % page.name)
