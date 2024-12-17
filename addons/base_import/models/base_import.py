@@ -511,7 +511,7 @@ class Base_ImportImport(models.TransientModel):
         for rowx, row in enumerate(sheet.rows, 1):
             values = []
             for colx, cell in enumerate(row, 1):
-                if cell.data_type is types.TYPE_ERROR:
+                if cell.data_type == types.TYPE_ERROR:
                     raise ValueError(
                         _("Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s", row=rowx, col=colx, cell_value=cell.value)
                     )
