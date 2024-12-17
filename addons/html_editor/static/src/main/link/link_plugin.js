@@ -1,17 +1,22 @@
 import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import {
+    closestElement,
+    findMatchingElement,
+    getCommonAncestor,
+} from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
-import { isVisible } from "@html_editor/utils/dom_info";
+import { isVisible, isContentEditable, isSelfClosingElement } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
+import { isBlock } from "@html_editor/utils/blocks";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -31,6 +36,43 @@ function isLinkActive(selection) {
     }
 
     return false;
+}
+
+/**
+ * @param {EditorSelection} selection
+ */
+function isLinkDisabled(selection) {
+    const childNodes = Array.from(selection.commonAncestorContainer.childNodes);
+    const blockElements = childNodes.filter((el) => isBlock(el) && el.isContentEditable);
+    if (blockElements.length !== 1) {
+        return blockElements.length > 1;
+    }
+    const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
+    if (anchorOffset === 0 && focusOffset === nodeSize(focusNode)) {
+        // special case for `ctrl+a`
+        const isValidNode = (node) =>
+            isVisible(node) &&
+            isContentEditable(node) &&
+            !isBlock(node) &&
+            !isSelfClosingElement(node);
+        const validAnchorNode =
+            findMatchingElement(
+                anchorNode.nodeType === Node.TEXT_NODE ? anchorNode.parentNode : anchorNode,
+                isValidNode
+            ) ?? anchorNode;
+        const validFocusNode =
+            findMatchingElement(
+                focusNode.nodeType === Node.TEXT_NODE ? focusNode.parentNode : focusNode,
+                isValidNode,
+                true
+            ) ?? focusNode;
+        const commonAncestorChildren = Array.from(
+            getCommonAncestor([validAnchorNode, validFocusNode]).childNodes
+        );
+        return commonAncestorChildren.some((el) => isBlock(el) && el.isContentEditable);
+    }
+    // manually create a selection like `a[<div>b</div>]c` is not possible imo so in this case we just disable the link button.
+    return true;
 }
 
 function isSelectionHasLink(selection) {
@@ -162,6 +204,7 @@ export class LinkPlugin extends Plugin {
                 groupId: "link",
                 commandId: "toggleLinkTools",
                 isActive: isLinkActive,
+                isDisabled: isLinkDisabled,
             },
             {
                 id: "unlink",

@@ -200,6 +200,25 @@ test("toolbar link buttons react to selection change", async () => {
     expect(".btn[name='unlink']").toHaveCount(1);
 });
 
+test("toolbar hide link button when invalid selection", async () => {
+    const { el } = await setupEditor("<p>t[es]t</p>");
+
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='link']").not.toHaveClass("disabled");
+
+    setContent(el, "<div>[<div>a<p>b</p></div>]</div>");
+    await tick(); // selectionChange
+    await animationFrame();
+    expect(".btn[name='link']").toHaveClass("disabled");
+});
+
+test("toolbar enable link button when deep selection is text", async () => {
+    await setupEditor("[<ul><li>test</li></ul>]");
+
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='link']").not.toHaveClass("disabled");
+});
+
 test("toolbar works: can select font", async () => {
     const { el } = await setupEditor("<p>test</p>");
     expect(getContent(el)).toBe("<p>test</p>");
