@@ -660,6 +660,12 @@ class ResPartner(models.Model):
                 onchange_vals = self.onchange_parent_id().get('value', {})
                 self.update_address(onchange_vals)
 
+        # Sync address field of parent and its all childs
+        address_fields = self._address_fields()
+        if (parent := self.parent_id) and self.type == 'contact' and any(field in values for field in address_fields):
+            parent.update_address(values)
+            (parent.child_ids - self).update_address(values)
+
         # 2. To DOWNSTREAM: sync children
         self._children_sync(values)
 

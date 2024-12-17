@@ -576,7 +576,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         # find partners with children in state_us_1
         domain = init_domain + [("child_ids.state_id", "=", state_us_1.id)]
         result = self._search(Partner, domain, init_domain)
-        self.assertEqual(result, partner_a + partner_b)
+        self.assertEqual(result, partner_b)
 
         # find partners with children in other states than state_us_1
         domain = init_domain + [("child_ids.state_id", "!=", state_us_1.id)]
@@ -1506,7 +1506,6 @@ class TestAutoJoin(TransactionExpressionCase):
             "_auto_join off: ('state_id.country_id.code', 'like', '..') incorrect result")
 
         partners = self._search(partner_obj, ['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
-        self.assertIn(p_a, partners, '_auto_join off: disjunction incorrect result')
         self.assertIn(p_c, partners, '_auto_join off: disjunction incorrect result')
 
         # Do: many2one with 1 _auto_join on the first many2one
@@ -1516,7 +1515,6 @@ class TestAutoJoin(TransactionExpressionCase):
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') incorrect result")
 
         partners = self._search(partner_obj, ['|', ('state_id.code', '=', states[0].code), ('name', 'like', 'C')])
-        self.assertIn(p_a, partners, '_auto_join: disjunction incorrect result')
         self.assertIn(p_c, partners, '_auto_join: disjunction incorrect result')
 
         # Do: many2one with 1 _auto_join on the second many2one
