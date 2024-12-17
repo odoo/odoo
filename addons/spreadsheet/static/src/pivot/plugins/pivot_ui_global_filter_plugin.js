@@ -128,6 +128,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
                 break;
+            case "UPDATE_PIVOT":
+            case "UPDATE_ODOO_PIVOT_DOMAIN":
+                this._addDomain(cmd.pivotId);
+                break;
             case "UNDO":
             case "REDO": {
                 if (
@@ -136,6 +140,8 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                             "ADD_GLOBAL_FILTER",
                             "EDIT_GLOBAL_FILTER",
                             "REMOVE_GLOBAL_FILTER",
+                            "UPDATE_ODOO_PIVOT_DOMAIN",
+                            "UPDATE_PIVOT",
                         ].includes(command.type)
                     )
                 ) {
