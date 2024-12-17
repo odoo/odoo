@@ -17,6 +17,13 @@ class SaleOrder(models.Model):
     is_all_service = fields.Boolean("Service Product", compute="_compute_is_service_products")
     shipping_weight = fields.Float("Shipping Weight", compute="_compute_shipping_weight", store=True, readonly=False)
 
+    def _compute_partner_shipping_id(self):
+        """ Override to avoid presetting pickup locations as delivery addresses. """
+        super()._compute_partner_shipping_id()
+        for order in self:
+            if order.partner_shipping_id.is_pickup_location:
+                order.partner_shipping_id = order.partner_id
+
     @api.depends('order_line')
     def _compute_is_service_products(self):
         for so in self:
@@ -186,6 +193,7 @@ class SaleOrder(models.Model):
                 'country_id': country,
                 'email': email,
                 'phone': phone,
+                'is_pickup_location': True,
             })
             order.with_context(update_delivery_shipping_partner=True).write({'partner_shipping_id': shipping_partner})
         return super()._action_confirm()

@@ -1040,6 +1040,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             '|',
             ('type', 'in', ['delivery', 'other']),
             ('id', '=', commercial_partner_sudo.id),
+            ('is_pickup_location', '=', False),
         ], order='id desc') | order_sudo.partner_id
 
         if order_sudo.partner_id != commercial_partner_sudo:  # Child of the commercial partner.
