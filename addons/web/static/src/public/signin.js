@@ -1,15 +1,14 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
-import { addLoadingEffect } from '@web/core/utils/ui';
+import { addLoadingEffect } from "@web/core/utils/ui";
+import { Interaction } from "./interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.login = publicWidget.Widget.extend({
-    selector: '.oe_login_form',
-    events: {
-        'submit': '_onSubmit',
-    },
-
-    //-------------------------------------------------------------------------
-    // Handlers
-    //-------------------------------------------------------------------------
+class Signin extends Interaction {
+    static selector = ".oe_login_form";
+    dynamicContent = {
+        _root: {
+            "t-on-submit": this.onSubmit,
+        },
+    };
 
     /**
      * Prevents the user from crazy clicking:
@@ -21,7 +20,7 @@ publicWidget.registry.login = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onSubmit(ev) {
+    onSubmit(ev) {
         if (!ev.defaultPrevented) {
             const btnEl = ev.currentTarget.querySelector('button[type="submit"]');
             const removeLoadingEffect = addLoadingEffect(btnEl);
@@ -31,5 +30,7 @@ publicWidget.registry.login = publicWidget.Widget.extend({
                 oldPreventDefault();
             };
         }
-    },
-});
+    }
+}
+
+registry.category("public.interactions").add("public.signin", Signin);
