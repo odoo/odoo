@@ -2,20 +2,16 @@
 <templates>
     <!-- /file template -->
     <t t-name="html_editor.staticFileBanner">
-        <div class="d-flex justify-content-between flex-wrap w-100 alert alert-info">
-            <div class="d-flex flex-grow-1 align-items-center o_file_card_content">
-                <!-- mimetype image -->
-                <div class="o_file_image d-flex o_image user-select-none"
-                    t-att-title="fileModel.filename" t-att-data-mimetype="fileModel.mimetype"/>
-                <!-- file name -->
-                <div class="d-block ps-2 text-break flex-grow-1">
-                    <div class="o_embedded_file_name_container d-inline-flex">
-                        <a t-att-href="fileModel.downloadUrl"
-                            t-out="fileModel.filename"
-                            contenteditable="true"/>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <span class="d-flex flex-grow-1 align-items-center alert alert-info">
+            <!-- mimetype image -->
+            <span class="o_file_image d-flex o_image user-select-none"
+                t-att-title="fileModel.filename" t-att-data-mimetype="fileModel.mimetype"/>
+            <!-- file name -->
+            <span class="o_embedded_file_name_container m-1">
+                <a t-att-href="fileModel.downloadUrl"
+                    t-out="fileModel.filename"
+                    contenteditable="true"/>
+            </span>
+        </span>
     </t>
 </templates>
