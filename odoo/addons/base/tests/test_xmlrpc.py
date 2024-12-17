@@ -223,6 +223,19 @@ class TestAPIKeys(common.HttpCase):
         ])
         self.assertEqual(ctx['tz'], 'Australia/Eucla')
 
+        api_key_ids = call_kw(
+            model=self.env['res.users.apikeys.description'],
+            name='create',
+            args=[
+                [
+                    {'name': 'Name of the key A'},
+                    {'name': 'Name of the key B'},
+                ],
+            ],
+            kwargs={}
+        )
+        self.assertTrue(isinstance(api_key_ids, list))
+
     def test_delete(self):
         env = self.env(user=self._user)
         env['res.users.apikeys.description'].create({'name': 'b',}).make_key()

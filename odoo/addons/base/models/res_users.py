@@ -2493,7 +2493,8 @@ class APIKeyDescription(models.TransientModel):
 
     def create(self, vals_list):
         res = super().create(vals_list)
-        self.env['res.users.apikeys']._check_expiration_date(res.expiration_date)
+        for apikey_description in res:
+            self.env['res.users.apikeys']._check_expiration_date(apikey_description.expiration_date)
         return res
 
     @check_identity
