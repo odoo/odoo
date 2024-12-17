@@ -56,7 +56,7 @@ export const PublicRoot = publicWidget.Widget.extend({
     start: function () {
         var defs = [
             this._super.apply(this, arguments),
-            this._startWidgets()
+            this._startWidgets(undefined, { starting: true })
         ];
 
         // Display image thumbnail
@@ -113,6 +113,18 @@ export const PublicRoot = publicWidget.Widget.extend({
         return publicWidget.registry;
     },
     /**
+     * Restarts interactions from the specified targetEl, or from #wrapwrap.
+     *
+     * @private
+     * @param {HTMLElement} targetEl
+     * @param {Object} [options]
+     */
+    _restartInteractions(targetEl, options) {
+        const publicInteractions = this.bindService("public.interactions");
+        publicInteractions.stopInteractions(targetEl);
+        publicInteractions.startInteractions(targetEl);
+    },
+    /**
      * Creates an PublicWidget instance for each DOM element which matches the
      * `selector` key of one of the registered widgets
      * (@see PublicWidget.selector).
@@ -141,6 +153,10 @@ export const PublicRoot = publicWidget.Widget.extend({
         });
 
         this._stopWidgets($from);
+        if (!options?.starting) {
+            const targetEl = $from ? $from[0] : undefined;
+            this._restartInteractions(targetEl, options);
+        }
 
         var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {
             const selector = PublicWidget.prototype.selector;
@@ -270,6 +286,10 @@ export const PublicRoot = publicWidget.Widget.extend({
      */
     _onWidgetsStopRequest: function (ev) {
         this._stopWidgets(ev.data.$target);
+        // also stops interactions
+        const targetEl = ev.data.$target ? ev.data.$target[0] : undefined;
+        const publicInteractions = this.bindService("public.interactions");
+        publicInteractions.stopInteractions(targetEl);
     },
     /**
      * @todo review
