@@ -1,15 +1,22 @@
-import odoo
-from odoo import Command
-from odoo.tests import HttpCase
-from odoo.tests.common import new_test_user
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from unittest.mock import patch
+
+import odoo
+from odoo import Command, fields
+from odoo.tests import HttpCase
+from odoo.tests.common import new_test_user, users
+from odoo.addons.mail.tests.common import MailCommon
+
 
 
 @odoo.tests.tagged("-at_install", "post_install")
-class TestGetOperator(HttpCase):
+class TestGetOperator(MailCommon, HttpCase):
     def _create_operator(self, lang_code=None, country_code=None, expertises=None):
-        operator = new_test_user(self.env, login=f"operator_{lang_code or country_code}_{self.operator_id}")
+        operator = new_test_user(
+            self.env(su=True), login=f"operator_{lang_code or country_code}_{self.operator_id}"
+        )
         operator.res_users_settings_id.livechat_expertise_ids = expertises
         operator.partner_id = self.env["res.partner"].create(
             {
@@ -33,16 +40,15 @@ class TestGetOperator(HttpCase):
                 "livechat_channel_id": livechat.id,
                 "livechat_operator_id": operator.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
+                "last_interest_dt": fields.Datetime.now(),
             }
         )
         if in_call:
-            self.env["discuss.channel.rtc.session"].create(
-                {
-                    "channel_id": channel.id,
-                    "channel_member_id": self.env["discuss.channel.member"]
-                    .search([["partner_id", "=", operator.partner_id.id], ["channel_id", "=", channel.id]])
-                    .id,
-                }
+            member = self.env["discuss.channel.member"].search(
+                [("partner_id", "=", operator.partner_id.id), ("channel_id", "=", channel.id)]
+            )
+            self.env["discuss.channel.rtc.session"].sudo().create(
+                {"channel_id": channel.id, "channel_member_id": member.id}
             )
         return channel
 
@@ -265,3 +271,122 @@ class TestGetOperator(HttpCase):
         self.assertEqual(
             operator_en_dog, pets_support._get_operator(lang="en_US", expertises=dog_expert + cat_expert)
         )
+
+    @users("employee")
+    def test_max_sessions_mode_limited(self):
+        """Test operator is not available when they reached the livechat channel limit."""
+        operator = self._create_operator()
+        livechat_channel_data = {
+            "name": "Livechat Channel",
+            "user_ids": operator,
+            "max_sessions_mode": "limited",
+            "max_sessions": 2,
+        }
+        livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
+        self.assertEqual(livechat_channel.available_operator_ids, operator)
+        self._create_chat(livechat_channel, operator)
+        self.assertEqual(livechat_channel.available_operator_ids, operator)
+        self._create_chat(livechat_channel, operator)
+        self.assertFalse(livechat_channel.available_operator_ids)
+
+    @users("employee")
+    def test_max_sessions_mode_limited_multi_operators(self):
+        """Test second operator is available when first operator reached the livechat channel
+        limit."""
+        operator_1 = self._create_operator()
+        operator_2 = self._create_operator()
+        livechat_channel_data = {
+            "name": "Livechat Channel",
+            "user_ids": operator_1 + operator_2,
+            "max_sessions_mode": "limited",
+            "max_sessions": 2,
+        }
+        livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
+        self._create_chat(livechat_channel, operator_1)
+        self.assertEqual(livechat_channel.available_operator_ids, operator_1 + operator_2)
+        self._create_chat(livechat_channel, operator_1)
+        self.assertEqual(livechat_channel.available_operator_ids, operator_2)
+        self._create_chat(livechat_channel, operator_2)
+        self.assertEqual(livechat_channel.available_operator_ids, operator_2)
+
+    @users("employee")
+    def test_max_sessions_mode_limited_operator_in_call_no_new_sessions(self):
+        """Test operator is not available when they are in call, even below the livechat channel
+        limit."""
+        operator = self._create_operator()
+        livechat_channel_data = {
+            "name": "Livechat Channel",
+            "user_ids": operator,
+            "max_sessions_mode": "limited",
+            "max_sessions": 2,
+        }
+        livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
+        self._create_chat(livechat_channel, operator, in_call=True)
+        self.assertFalse(livechat_channel.available_operator_ids)
+
+    @users("employee")
+    def test_max_sessions_mode_multi_channel(self):
+        """Test operator is available in second channel even when they reached the livechat channel
+        limit on the first channel."""
+        operator = self._create_operator()
+        livechat_channels_data = [
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator.id],
+                "max_sessions_mode": "limited",
+                "max_sessions": 2,
+            },
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator.id],
+            },
+        ]
+        livechat_channels = self.env["im_livechat.channel"].sudo().create(livechat_channels_data)
+        self._create_chat(livechat_channels[0], operator)
+        self._create_chat(livechat_channels[0], operator)
+        self.assertFalse(livechat_channels[0].available_operator_ids)
+        self.assertEqual(livechat_channels[1].available_operator_ids, operator)
+
+    @users("employee")
+    def test_operator_max(self):
+        operator = self._create_operator()
+        livechat_channels_data = [
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator.id],
+                "max_sessions_mode": "limited",
+                "max_sessions": 2,
+            },
+            {
+                "name": "Livechat Channel",
+                "user_ids": [operator.id],
+            },
+        ]
+        livechat_channels = self.env["im_livechat.channel"].sudo().create(livechat_channels_data)
+        self._create_chat(livechat_channels[1], operator)
+        self._create_chat(livechat_channels[1], operator)
+        self.assertEqual(livechat_channels[0].available_operator_ids, operator)
+
+    @users("employee")
+    def test_operator_expired_channel(self):
+        operator = self._create_operator()
+        livechat_channel_data = {
+            "name": "Livechat Channel",
+            "user_ids": [operator.id],
+            "max_sessions_mode": "limited",
+            "max_sessions": 1,
+        }
+        livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
+        channel_data = {
+            "name": "Visitor 1",
+            "channel_type": "livechat",
+            "livechat_active": True,
+            "livechat_channel_id": livechat_channel.id,
+            "livechat_operator_id": operator.partner_id.id,
+            "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
+            "last_interest_dt": fields.Datetime.now() - timedelta(minutes=4),
+        }
+        channel = self.env["discuss.channel"].create(channel_data)
+        self.assertFalse(livechat_channel.available_operator_ids)
+        channel.write({"last_interest_dt": fields.Datetime.now() - timedelta(minutes=20)})
+        self.assertEqual(livechat_channel.available_operator_ids, operator)

@@ -17,6 +17,7 @@ class ResPartner(models.Model):
         string="Channels",
         copy=False,
     )
+    channel_member_ids = fields.One2many("discuss.channel.member", "partner_id")
 
     @api.readonly
     @api.model

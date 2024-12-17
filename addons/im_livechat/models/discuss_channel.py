@@ -30,6 +30,8 @@ class DiscussChannel(models.Model):
         'Livechat Operator ID is required for a channel of type livechat.',
     )
 
+    _livechat_active_idx = models.Index("(livechat_active) WHERE livechat_active IS TRUE")
+
     @api.depends('message_ids')
     def _compute_duration(self):
         for record in self:
