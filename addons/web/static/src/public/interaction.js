@@ -46,9 +46,9 @@ export class Interaction {
      *
      * Its syntax looks like the following:
      * dynamicContent = {
-     *      ".some-selector:t-on-click": (ev) => this.onClick(ev),
-     *      ".some-other-selector:t-att-class": () => ({ "some-class": true}),
-     *      "_root:t-component": () => [Component, { someProp: "value" }],
+     *      ".some-selector": { "t-on-click": (ev) => this.onClick(ev) },
+     *      ".some-other-selector": { "t-att-class": () => ({ "some-class": true}) },
+     *      _root: { "t-component": () => [Component, { someProp: "value" }] },
      * }
      *
      * A selector is either a standard css selector, or a special keyword
