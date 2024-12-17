@@ -3,8 +3,8 @@
 
     <t t-name="account.BatchSendingSummary">
         <p>You are about to send</p>
-        <ul t-foreach="this.data" t-as="summary_entry" t-key="summary_entry">
-            <li>
+        <ul>
+            <li t-foreach="this.data" t-as="summary_entry" t-key="summary_entry">
                 <t t-out="summary_entry_value.count"/> invoice(s)
                 <t t-out="summary_entry_value.label"/>
                 <t t-if="summary_entry_value.extra" t-out="summary_entry_value.extra"/>

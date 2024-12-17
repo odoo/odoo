@@ -30,7 +30,7 @@ class TestMembership(TestMembershipCommon):
             'membership_date_to': datetime.date.today() + relativedelta(years=-1),
         })
 
-        self.partner_1.create_membership_invoice(self.membership_1, 75.0)
+        invoice = self.partner_1.create_membership_invoice(self.membership_1, 75.0)
         self.assertEqual(
             self.partner_1.membership_state, 'none',
             'membership: outdated non paid subscription should keep in non-member state')
@@ -39,7 +39,6 @@ class TestMembership(TestMembershipCommon):
         self.partner_1.create_membership_invoice(self.membership_1, 75.0)
 
         # checks for invoices
-        invoice = self.env['account.move'].search([('partner_id', '=', self.partner_1.id)], limit=1)
         self.assertEqual(
             invoice.state, 'draft',
             'membership: new subscription should create a draft invoice')
