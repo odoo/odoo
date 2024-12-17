@@ -371,7 +371,7 @@ class AccountEdiFormat(models.Model):
 
     def _get_l10n_in_edi_saler_buyer_party(self, move):
         res = super()._get_l10n_in_edi_saler_buyer_party(move)
-        if move.is_purchase_document(include_receipts=True):
+        if move.is_outbound():
             res = {
                 "seller_details":  move.partner_id,
                 "dispatch_details": move.partner_shipping_id or move.partner_id,
@@ -408,7 +408,10 @@ class AccountEdiFormat(models.Model):
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
         json_payload = {
-            "supplyType": invoices.is_purchase_document(include_receipts=True) and "I" or "O",
+            # Note:
+            # Customer Invoice, Sales Receipt and Vendor Credit Note are Outgoing
+            # Vendor Bill, Purchase Receipt, and Customer Credit Note are Incoming
+            "supplyType": invoices.is_outbound() and "I" or "O",
             "subSupplyType": invoices.l10n_in_type_id.sub_type_code,
             "docType": invoices.l10n_in_type_id.code,
             "transactionType": get_transaction_type(seller_details, dispatch_details, buyer_details, ship_to_details),
@@ -447,7 +450,7 @@ class AccountEdiFormat(models.Model):
             "totInvValue": self._l10n_in_round_value((tax_details.get("base_amount") + tax_details.get("tax_amount"))),
         }
         is_overseas = invoices.l10n_in_gst_treatment in ("overseas", "special_economic_zone")
-        if invoices.is_purchase_document(include_receipts=True):
+        if invoices.is_outbound():
             if is_overseas:
                 json_payload.update({"fromStateCode": 99})
             if is_overseas and dispatch_details.state_id.country_id.code != "IN":
