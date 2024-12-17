@@ -874,7 +874,7 @@ class UnfollowLinkTest(MailCommon, HttpCase):
             with self.subTest(f'Tampered {param}'):
                 tampered_unfollow_url = self._url_update_query_parameters(unfollow_url, **{param: value})
                 response = self.url_open(tampered_unfollow_url)
-                self.assertEqual(response.status_code, 403)
+                self.assertEqual(response.status_code, 404)
                 self.assertIn(partner, record.message_partner_ids)
 
     def _test_unfollow_url(self, record, unfollow_url, partner):
