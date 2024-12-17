@@ -422,6 +422,7 @@ export class LinkPlugin extends Plugin {
                 },
                 fileUploadEnabled: !this.config.disableFile,
                 uploadFile: this.uploadFile.bind(this),
+                readOnly: this.linkElement.classList.contains("o_link_readonly"),
             };
 
             if (linkEl.isConnected) {
