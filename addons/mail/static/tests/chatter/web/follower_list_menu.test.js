@@ -163,24 +163,22 @@ test("Load 100 followers at once", async () => {
         [...Array(210).keys()].map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => {
-            return {
-                is_active: true,
-                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-                res_id: partnerIds[0],
-                res_model: "res.partner",
-            };
-        })
+        [...Array(210).keys()].map((i) => ({
+            is_active: true,
+            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
     await contains("button[title='Show Followers']", { text: "210" });
     await click("button[title='Show Followers']");
     await contains(".o-mail-Follower", { text: "Mitchell Admin" });
-    await contains(".o-mail-Follower", { count: 101 }); // 100 more followers + self follower (Mitchell Admin)
+    await contains(".o-mail-Follower", { count: 100 }); // 100 more followers + self follower (Mitchell Admin)
     await contains(".o-mail-Followers-dropdown", { text: "Load more" });
     await scroll(".o-mail-Followers-dropdown", "bottom");
-    await contains(".o-mail-Follower", { count: 201 });
+    await contains(".o-mail-Follower", { count: 200 });
     await tick(); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-Followers-dropdown", "bottom");
     await contains(".o-mail-Follower", { count: 210 });
@@ -197,14 +195,12 @@ test("Load 100 recipients at once", async () => {
         }))
     );
     pyEnv["mail.followers"].create(
-        [...Array(210).keys()].map((i) => {
-            return {
-                is_active: true,
-                partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-                res_id: partnerIds[0],
-                res_model: "res.partner",
-            };
-        })
+        [...Array(210).keys()].map((i) => ({
+            is_active: true,
+            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
@@ -215,10 +211,10 @@ test("Load 100 recipients at once", async () => {
     });
     await contains("button[title='Show all recipients']");
     await click("button[title='Show all recipients']");
-    await contains(".o-mail-RecipientList li", { count: 100 });
+    await contains(".o-mail-RecipientList li", { count: 99 });
     await contains(".o-mail-RecipientList", { text: "Load more" });
     await scroll(".o-mail-RecipientList", "bottom");
-    await contains(".o-mail-RecipientList li", { count: 200 });
+    await contains(".o-mail-RecipientList li", { count: 199 });
     await tick(); // give enough time for the useVisible hook to register load more as hidden
     await scroll(".o-mail-RecipientList", "bottom");
     await contains(".o-mail-RecipientList li", { count: 209 });

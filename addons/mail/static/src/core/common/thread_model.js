@@ -129,21 +129,21 @@ export class Thread extends Record {
         },
     });
     followers = Record.many("mail.followers", {
-        /** @this {import("models").Thread} */
-        onAdd(r) {
-            r.thread = this;
-        },
         onDelete: (r) => r.delete(),
     });
     selfFollower = Record.one("mail.followers", {
-        /** @this {import("models").Thread} */
-        onAdd(r) {
-            r.thread = this;
+        compute() {
+            return this.followers.filter((f) => f.partner.eq(this.store.self))[0];
         },
         onDelete: (r) => r.delete(),
     });
-    /** @type {integer|undefined} */
+    /** @type {number|undefined} */
     followersCount;
+    otherFollowers = Record.attr(undefined, {
+        compute() {
+            return this.followers.filter((f) => f.notEq(this.selfFollower));
+        },
+    });
     loadOlder = false;
     loadNewer = false;
     get importantCounter() {
@@ -282,10 +282,7 @@ export class Thread extends Record {
     }
 
     get followersFullyLoaded() {
-        return (
-            this.followersCount ===
-            (this.selfFollower ? this.followers.length + 1 : this.followers.length)
-        );
+        return this.followersCount === this.followers.length;
     }
 
     get attachmentsInWebClientView() {
