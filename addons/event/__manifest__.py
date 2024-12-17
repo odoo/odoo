@@ -54,6 +54,7 @@ Key Features
         'web.assets_backend': [
             'event/static/src/client_action/**/*',
             'event/static/src/scss/event.scss',
+            'event/static/src/many2many_slot_tags_field/many2many_slot_tags_field.js',
             'event/static/src/icon_selection_field/icon_selection_field.js',
             'event/static/src/icon_selection_field/icon_selection_field.xml',
             'event/static/src/template_reference_field/*',

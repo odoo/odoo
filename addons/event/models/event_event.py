@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.addons.event.models.event_slot import float_to_time, time_to_float
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_date, format_datetime, format_time, frozendict
@@ -153,6 +154,11 @@ class EventEvent(models.Model):
     tag_ids = fields.Many2many(
         'event.tag', string="Tags", readonly=False,
         store=True, compute="_compute_tag_ids")
+    # Multiple slots
+    multi_slots = fields.Boolean("Multiple Slots", default=False, help="Allow multiple time slots.")
+    slot_date_ids = fields.One2many("event.slot.date", "event_id", "Slots Dates",
+                                    compute="_compute_slot_dates", store=True, readonly=False, copy=True)
+    slot_ids = fields.One2many("event.slot", "event_id", "Slots", compute="_compute_slots")
     # properties
     registration_properties_definition = fields.PropertiesDefinition('Registration Properties')
     # Kanban fields
@@ -433,9 +439,12 @@ class EventEvent(models.Model):
             # Need to localize because it could begin late and finish early in
             # another timezone
             event = event._set_tz_context()
-            begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
-            end_tz = fields.Datetime.context_timestamp(event, event.date_end)
-            event.is_one_day = (begin_tz.date() == end_tz.date())
+            if event.date_begin and event.date_end:
+                begin_tz = fields.Datetime.context_timestamp(event, event.date_begin)
+                end_tz = fields.Datetime.context_timestamp(event, event.date_end)
+                event.is_one_day = (begin_tz.date() == end_tz.date())
+            else:
+                event.is_one_day = False
 
     @api.depends('date_end')
     def _compute_is_finished(self):
@@ -467,6 +476,26 @@ class EventEvent(models.Model):
                 event.date_tz = event.event_type_id.default_timezone
             if not event.date_tz:
                 event.date_tz = self.env.user.tz or 'UTC'
+
+    @api.depends("slot_date_ids.slot_ids")
+    def _compute_slots(self):
+        for event in self:
+            event.slot_ids = event.slot_date_ids.mapped("slot_ids")
+
+    @api.depends("multi_slots")
+    def _compute_slot_dates(self):
+        for event in self:
+            if event.multi_slots:
+                event.slot_date_ids = [Command.create({
+                    'date': event.date_begin,
+                    'slot_tag_ids': [Command.create({
+                        'name': 'test',
+                        'start_time': time_to_float(event.date_begin),
+                        'end_time': time_to_float(event.date_begin + timedelta(hours=4)),
+                    })]
+                })]
+            else:
+                event.slot_date_ids = False
 
     @api.depends('address_id')
     def _compute_address_search(self):
@@ -631,6 +660,22 @@ class EventEvent(models.Model):
         for event in self:
             if event.date_end < event.date_begin:
                 raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
+
+    # TODO: start AND end
+
+    # @api.constrains('date_begin', 'date_end')
+    # def _check_slots_datetimes(self):
+    #     for event in self:
+    #         wrong_slots_datetimes = [
+    #             format_datetime(self.env, slot_datetime, dt_format='short', tz=event.date_tz)
+    #             for slot_datetime in event.slot_datetime_ids.mapped('slot_datetime')
+    #             if slot_datetime < event.date_begin or slot_datetime > event.date_end
+    #         ]
+    #         if wrong_slots_datetimes:
+    #             raise ValidationError(_(
+    #                 'You cannot schedule slots outside of their event time range:\n%s',
+    #                 '\n'.join(f'- {dt}' for dt in wrong_slots_datetimes)
+    #             ))
 
     @api.model_create_multi
     def create(self, vals_list):
