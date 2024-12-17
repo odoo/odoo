@@ -17,15 +17,15 @@ class AccountTax(models.Model):
         in_taxes = self.filtered(lambda tax: tax.country_code == 'IN')
         if in_taxes:
             tags_mapping = {
-                'igst': self.env.ref('l10n_in.tax_tag_igst'),
-                'cgst': self.env.ref('l10n_in.tax_tag_cgst'),
-                'sgst': self.env.ref('l10n_in.tax_tag_sgst'),
-                'cess': self.env.ref('l10n_in.tax_tag_cess'),
+                'igst': [self.env.ref('l10n_in.tax_tag_igst'), self.env.ref('l10n_in.tax_tag_igst_rc')],
+                'cgst': [self.env.ref('l10n_in.tax_tag_cgst'), self.env.ref('l10n_in.tax_tag_cgst_rc')],
+                'sgst': [self.env.ref('l10n_in.tax_tag_sgst'), self.env.ref('l10n_in.tax_tag_sgst_rc')],
+                'cess': [self.env.ref('l10n_in.tax_tag_cess'), self.env.ref('l10n_in.tax_tag_cess_rc')],
             }
             for tax in in_taxes:
-                tags = tax.invoice_repartition_line_ids.tag_ids
-                for tag_code, tag in tags_mapping.items():
-                    if tag in tags:
+                tax_tags = tax.invoice_repartition_line_ids.tag_ids
+                for tag_code, tags in tags_mapping.items():
+                    if any(tag in tax_tags for tag in tags):
                         tax.l10n_in_tax_type = tag_code
                         break
 
