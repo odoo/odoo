@@ -762,6 +762,8 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # end session
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update status call message
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -847,6 +849,22 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel.id,
                                 "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                            },
+                        ],
+                    },
+                },
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "mail.message": [
+                            {
+                                "attachment_ids": [],
+                                "body": '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                "id": channel.last_call_message_id.id,
+                                "pinned_at": False,
+                                "recipients":[],
+                                "translationValue": False,
+                                "write_date": channel.last_call_message_id.write_date
                             },
                         ],
                     },
@@ -1062,6 +1080,8 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "discuss.channel", channel.id),
                 # end session
                 (self.cr.dbname, "res.partner", self.user_employee.partner_id.id),
+                # update status call message
+                (self.cr.dbname, "discuss.channel", channel.id),
             ],
             [
                 {
@@ -1075,6 +1095,22 @@ class TestChannelRTC(MailCommon):
                             {
                                 "id": channel.id,
                                 "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                            },
+                        ],
+                    },
+                },
+                {
+                    "type": "mail.record/insert",
+                    "payload": {
+                        "mail.message": [
+                            {
+                                "attachment_ids": [],
+                                "body": '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                "id": channel.last_call_message_id.id,
+                                "pinned_at": False,
+                                "recipients":[],
+                                "translationValue": False,
+                                "write_date": channel.last_call_message_id.write_date
                             },
                         ],
                     },
