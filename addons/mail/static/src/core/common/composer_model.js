@@ -13,12 +13,7 @@ export class Composer extends Record {
 
     clear() {
         this.attachments.length = 0;
-        this.text = "";
-        Object.assign(this.selection, {
-            start: 0,
-            end: 0,
-            direction: "none",
-        });
+        this.text = "<p><br></p>";
     }
 
     attachments = Record.many("ir.attachment");
@@ -30,12 +25,6 @@ export class Composer extends Record {
     cannedResponses = Record.many("mail.canned.response");
     text = "";
     thread = Record.one("Thread");
-    /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
-    selection = {
-        start: 0,
-        end: 0,
-        direction: "none",
-    };
     /** @type {boolean} */
     forceCursorMove;
     isFocused = false;

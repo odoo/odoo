@@ -94,7 +94,7 @@ messageActionsRegistry
         title: _t("Edit"),
         onClick: (component) => {
             const message = toRaw(component.props.message);
-            const text = convertBrToLineBreak(message.body);
+            const text = message.body;
             message.composer = {
                 mentionedPartners: message.recipients,
                 text,

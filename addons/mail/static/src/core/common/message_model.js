@@ -383,7 +383,7 @@ export class Message extends Record {
     }
 
     async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
-        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+        if (this.body === body && attachments.length === 0) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
@@ -397,7 +397,7 @@ export class Message extends Record {
             attachment_tokens: attachments
                 .concat(this.attachment_ids)
                 .map((attachment) => attachment.access_token),
-            body: await prettifyMessageContent(body, validMentions),
+            body,
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             ...this.thread.rpcParams,

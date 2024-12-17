@@ -1,0 +1,35 @@
+<templates xml:space="preserve">
+    <t t-name="mail.SuggestionList">
+        <div t-ref="root" class="o-mail-SuggestionList py-2 bg-white overflow-auto my-1" style="width:300px;max-height:40vh;" t-on-mousedown.stop="" t-on-scroll="onScroll" >
+            <t t-foreach="suggestions" t-as="suggestion" t-key="suggestion_index">
+                <!-- <t t-if="showCategories and command.categoryId !== lastCategory">
+                    <div class="o-we-category mx-3 my-1 text-uppercase"><t t-esc="command.categoryName"/></div></t>
+                    <t t-set="lastCategory" t-value="command.categoryId">
+                </t> -->
+                <div class="o-mail-Suggestion d-flex align-items-center px-3 py-2 cursor-pointer"
+                    t-att-class="{active: suggestion_index === currentIndex}"
+                    t-on-mouseenter="() => this.onMouseEnter(suggestion_index)"
+                    t-on-click="() => this.props.applySuggestion(suggestion)">
+                    <div class="">
+                        <!-- <i class="o-mail-Suggestion-img rounded d-flex align-items-center justify-content-center fa fa-check-square-o"/> -->
+                        <img t-if="suggestion.partner?.avatarUrl" class="o-mail-Suggestion-img rounded d-flex align-items-center justify-content-center" t-att-src="suggestion.partner.avatarUrl"/>
+                        <img t-if="suggestion.thread?.avatarUrl" class="o-mail-Suggestion-img rounded d-flex align-items-center justify-content-center" t-att-src="suggestion.thread.avatarUrl"/>
+                    </div>
+                    <ImStatus t-if="suggestion.partner" className="'ms-1'" persona="suggestion.partner"/>
+                    <div class="overflow-hidden" t-att-class="{'ms-3': suggestion.thread, 'ms-2': suggestion.partner}">
+                        <div class="o-mail-Suggestion-title text-truncate" t-esc="suggestion.title"/>
+                        <div class="o-mail-Suggestion-description text-truncate" t-esc="suggestion.description" t-att-class="{'invisible': !suggestion.description}" />
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+    <t t-name="mail.Suggestion.Partner">
+        <a t-att-href="href" t-att-data-oe-id="partnerId" data-oe-model="res.partner" target="_blank" contenteditable="false" draggable="false"
+           class="o_mail_redirect" t-out="displayName"/>
+    </t>
+
+    <t t-name="mail.Suggestion.Thread">
+    <a t-att-href="href" t-att-class="className" t-att-data-oe-id="threadId" data-oe-model="discuss.channel" target="_blank" contenteditable="false" draggable="false" t-out="displayName"/>
+    </t>
+</templates>
