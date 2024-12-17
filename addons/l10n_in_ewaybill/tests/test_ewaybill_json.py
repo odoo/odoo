@@ -54,7 +54,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "transMode": "1",
             "vehicleNo": "GJ11AA1234",
             "vehicleType": "R",
-            "docNo": "INV/18-19/0002",
+            "docNo": "INV/18-19/0001",
             "docDate": "01/01/2019",
             "fromGstin": "24AAGCC7144L6ZE",
             "fromTrdName": "Default Company",
@@ -109,7 +109,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         # =================================== Full discount test =====================================
         json_value = ewaybill_invoice_full_discount._ewaybill_generate_direct_json()
         expected.update({
-            "docNo": "INV/18-19/0003",
+            "docNo": "INV/18-19/0002",
             "itemList": [{
                 "productName": "product_a", "hsnCode": "111111", "productDesc": "product_a", "quantity": 1.0,
                 "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0, 'igstRate': 0.0,
@@ -128,7 +128,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         # =================================== Zero quantity test =============================================
         json_value = ewaybill_invoice_zero_qty._ewaybill_generate_direct_json()
         expected.update({
-            "docNo": "INV/18-19/0004",
+            "docNo": "INV/18-19/0003",
             "itemList": [{
                 "productName": "product_a", "hsnCode": "111111", "productDesc": "product_a", "quantity": 0.0,
                 "qtyUnit": "UNT", "taxableAmount": 0.0, "cgstRate": 0.0, "sgstRate": 0.0, 'igstRate': 0.0,

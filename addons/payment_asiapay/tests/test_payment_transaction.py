@@ -27,7 +27,17 @@ class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
         """ Test the computation of reference prefixes based on the provided invoice. """
         self._skip_if_account_payment_is_not_installed()
 
-        invoice = self.env['account.move'].create({})
+        invoice = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2011-11-02',
+            'line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        })
+        invoice.action_post()
         reference = self.env['payment.transaction']._compute_reference(
             self.asiapay.code, invoice_ids=[Command.set([invoice.id])]
         )
