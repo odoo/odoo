@@ -39,32 +39,35 @@
                         <field name="sanitized_numbers" invisible="1"/>
                         <field name="template_id" invisible="1"/>
 
-                        <label for="recipient_single_description" string="Recipient"
+                        <label for="recipient_single_description" string="To"
                             class="fw-bold"
                             invisible="not comment_single_recipient"/>
                         <div invisible="not comment_single_recipient">
-                            <field name="recipient_single_description" class="oe_inline" invisible="not recipient_single_description"/>
-                            <field name="recipient_single_number_itf" class="oe_inline" nolabel="1" onchange_on_keydown="True" placeholder="e.g. +1 415 555 0100"/>
+                            <field name="recipient_single_description" class="w-auto text-muted me-2" invisible="not recipient_single_description"/>
+                            <field name="recipient_single_number_itf" class="oe_inline border-bottom" nolabel="1" onchange_on_keydown="True" placeholder="e.g. +1 415 555 0100"/>
                         </div>
-                        <field name="body" widget="sms_widget" invisible="comment_single_recipient or recipient_single_valid"
-                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'res_model'}"/>
-                        <field name="body" widget="sms_widget" invisible="comment_single_recipient or not recipient_single_valid" default_focus="1"
-                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'res_model'}"/>
-                        <field name="body" widget="sms_widget" invisible="not comment_single_recipient"/>
-                        <field name="mass_keep_log" invisible="1"/>
                     </group>
+                        <field name="body" widget="sms_widget" invisible="comment_single_recipient or recipient_single_valid"
+                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'res_model'}"
+                            placeholder="Write a message..."/>
+                        <field name="body" widget="sms_widget" invisible="comment_single_recipient or not recipient_single_valid" default_focus="1"
+                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'res_model'}"
+                            placeholder="Write a message..."/>
+                        <field name="body" widget="sms_widget" invisible="not comment_single_recipient"
+                        placeholder="Write a message..."/>
+                        <field name="mass_keep_log" invisible="1"/>
                 </sheet>
                 <footer>
                     <!-- attrs doesn't work for 'disabled'-->
-                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                    <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                             invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid"/>
-                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                    <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                             invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid" disabled='1'/>
                     <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                         invisible="composition_mode != 'mass'"/>
-                    <button string="Send Now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
+                    <button string="Send now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
                         invisible="composition_mode != 'mass'"/>
-                    <button string="Close" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>
