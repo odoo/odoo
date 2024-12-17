@@ -81,7 +81,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.action_post()
-        messages.append("Updated\nFalse ⇨ True (Checked)\nDraft ⇨ Posted (Status)")
+        messages.append("Updated\nFalse ⇨ True (Checked)\nFalse ⇨ MISC/2021/04/0001 (Number)\nDraft ⇨ Posted (Status)")
         self.assertTrail(self.get_trail(self.move), messages)
 
         self.move.button_draft()

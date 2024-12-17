@@ -932,18 +932,20 @@ class TestExpenses(TestExpenseCommon):
         expense_sheet.action_approve_expense_sheets()
         expense_sheet.action_sheet_move_post()
 
-        self.assertRecordValues(expense_sheet.account_move_ids[0].attachment_ids, [{
+        expense_move = expense_sheet.account_move_ids.filtered(lambda am: am.invoice_line_ids[0].ref == 'Company expense')
+        expense_2_move = expense_sheet.account_move_ids.filtered(lambda am: am.invoice_line_ids[0].ref == 'Company expense 2')
+        self.assertRecordValues(expense_move.attachment_ids, [{
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
             'name': 'file1.png',
             'res_model': 'account.move',
-            'res_id': expense_sheet.account_move_ids[0].id
+            'res_id': expense_move.id
         }])
 
-        self.assertRecordValues(expense_sheet.account_move_ids[1].attachment_ids, [{
+        self.assertRecordValues(expense_2_move.attachment_ids, [{
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
             'name': 'file2.png',
             'res_model': 'account.move',
-            'res_id': expense_sheet.account_move_ids[1].id
+            'res_id': expense_2_move.id
         }])
 
     def test_expense_payment_method(self):
