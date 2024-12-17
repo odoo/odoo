@@ -556,7 +556,10 @@ export function getDeepestPosition(node, offset) {
     let direction = DIRECTIONS.RIGHT;
     let next = node;
     while (next) {
-        if (isTangible(next) || (isZWS(next) && isContentEditable(next))) {
+        if (
+            (isTangible(next) && !isSelfClosingElement(next)) ||
+            (isZWS(next) && isContentEditable(next))
+        ) {
             // Valid node: update position then try to go deeper.
             if (next !== node) {
                 [node, offset] = [next, direction ? 0 : nodeSize(next)];
@@ -572,8 +575,11 @@ export function getDeepestPosition(node, offset) {
             direction = DIRECTIONS.LEFT;
             next = closestBlock(node).contains(next.previousSibling) && next.previousSibling;
         }
-        // Avoid too-deep ranges inside self-closing elements like [BR, 0].
-        next = !isSelfClosingElement(next) && next;
+        // Avoid too-deep ranges inside self-closing elements like [BR, 0]
+        // and contentedtiable=true
+        if (next && isSelfClosingElement(next) && isContentEditable(next)) {
+            next = null;
+        }
     }
     return [node, offset];
 }

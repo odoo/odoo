@@ -8,6 +8,18 @@ import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
 
+/**
+ * @param {EditorSelection} selection
+ */
+function isTranslationDisabled(selection) {
+    const isEmpty = !selection.textContent().replace(/\s+/g, "");
+    const commonAncestorContainer = selection.commonAncestorContainer;
+    const tableCells =
+        commonAncestorContainer.nodeType === Node.ELEMENT_NODE &&
+        commonAncestorContainer.querySelector("TR, TD, TBODY, TABLE");
+    return tableCells || isEmpty;
+}
+
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
     static dependencies = ["selection", "history", "dom", "sanitize", "dialog"];
@@ -32,12 +44,14 @@ export class ChatGPTPlugin extends Plugin {
                 isAvailable: (selection) => {
                     return !selection.isCollapsed && user.userId;
                 },
+                isDisabled: isTranslationDisabled,
                 Component: LanguageSelector,
                 props: {
                     onSelected: (language) => this.openDialog({ language }),
                     isDisabled: () => {
-                        const sel = this.document.getSelection();
-                        return !sel.toString().replace(/\s+/g, "");
+                        return isTranslationDisabled(
+                            this.dependencies.selection.getEditableSelection()
+                        );
                     },
                 },
             },
@@ -46,7 +60,7 @@ export class ChatGPTPlugin extends Plugin {
                 groupId: "ai",
                 commandId: "openChatGPTDialog",
                 text: "AI",
-                isDisabled: (sel) => !sel.textContent().replace(/\s+/g, ""),
+                isDisabled: isTranslationDisabled,
             },
         ],
 
