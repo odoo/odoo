@@ -50,6 +50,9 @@ const styleMap = {
 
 const actions = {
     classAction: {
+        getPriority: ({ param: classNames = "" }) => {
+            return classNames?.trim().split(/\s+/).filter(Boolean).length || 0;
+        },
         isActive: ({ editingElement, param: classNames }) => {
             return classNames.split(" ").every((className) => {
                 return editingElement.classList.contains(className);

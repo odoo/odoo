@@ -1,11 +1,10 @@
-import { Component, onMounted, useRef } from "@odoo/owl";
+import { Component, onWillDestroy, useRef } from "@odoo/owl";
 import {
     clickableWeWidgetProps,
     useClickableWeWidget,
-    WeComponent,
     useDependecyDefinition,
+    WeComponent,
 } from "../builder_helpers";
-import { useBus } from "@web/core/utils/hooks";
 
 export class WeSelectItem extends Component {
     static template = "html_builder.WeSelectItem";
@@ -18,30 +17,30 @@ export class WeSelectItem extends Component {
     static components = { WeComponent };
 
     setup() {
+        if (!this.env.weSelectContext) {
+            throw new Error("WeSelectItem must be used inside a WeSelect component.");
+        }
         const item = useRef("item");
-        const { state, operation, isActive } = useClickableWeWidget();
+        const { state, operation, isActive, priority } = useClickableWeWidget();
         if (this.props.id) {
             useDependecyDefinition({ id: this.props.id, isActive });
         }
 
-        const setSelectLabel = () => {
-            if (isActive()) {
-                this.env.weSetSelectLabel?.(item.el.innerHTML);
-            }
+        const selectableItem = {
+            isActive,
+            priority,
+            getLabel: () => item.el.innerHTML,
         };
-        useBus(this.env.editorBus, "STEP_ADDED", (ev) => {
-            if (ev.detail.isPreviewing) {
-                return;
-            }
-            return setSelectLabel();
+
+        this.env.weSelectContext.addSelectableItem?.(selectableItem);
+        onWillDestroy(() => {
+            this.env.weSelectContext.removeSelectableItem?.(selectableItem);
         });
-        onMounted(setSelectLabel);
 
         this.state = state;
         this.onClick = () => {
             operation.commit();
-            setSelectLabel();
-            this.env.weSelectBus?.trigger("select-item");
+            this.env.weSelectContext.bus.trigger("select-item");
         };
         this.onMouseenter = operation.preview;
         this.onMouseleave = operation.revert;

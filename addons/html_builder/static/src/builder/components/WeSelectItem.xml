@@ -7,6 +7,7 @@
             class="d-flex flex-column cursor-pointer"
             t-att-class="{'active': this.state.isActive}"
             t-att-data-action-id="props.action"
+            t-att-data-class-action="this.props.classAction"
             t-att-data-attribute-action-id="props.attributeAction || this.env.weContext.attributeAction"
             t-att-data-attribute-action-value-id="props.attributeActionValue"
             t-att-title="props.title"

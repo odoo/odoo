@@ -1,4 +1,4 @@
-import { Component, EventBus, useRef, useSubEnv } from "@odoo/owl";
+import { Component, EventBus, onMounted, useRef, useSubEnv } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import {
     basicContainerWeWidgetProps,
@@ -26,14 +26,43 @@ export class WeSelect extends Component {
         useWeComponent();
         useVisibilityObserver("content", useApplyVisibility("root"));
         this.dropdown = useDropdownState();
+        const selectableItems = [];
         useSubEnv({
             actionBus: new EventBus(),
-            weSelectBus: new EventBus(),
-            weSetSelectLabel: (labelHtml) => {
-                button.el.innerHTML = labelHtml;
+            weSelectContext: {
+                bus: new EventBus(),
+                addSelectableItem: (item) => {
+                    selectableItems.push(item);
+                },
+                removeSelectableItem: (item) => {
+                    const index = selectableItems.indexOf(item);
+                    if (index !== -1) {
+                        selectableItems.splice(index, 1);
+                    }
+                },
             },
         });
-        useBus(this.env.weSelectBus, "select-item", (item) => {
+        function setLabel() {
+            let item;
+            let itemPriority = 0;
+            for (const selectableItem of selectableItems) {
+                if (selectableItem.isActive() && selectableItem.priority >= itemPriority) {
+                    item = selectableItem;
+                    itemPriority = selectableItem.priority;
+                }
+            }
+            if (item) {
+                button.el.innerHTML = item.getLabel();
+            }
+        }
+        onMounted(setLabel);
+        useBus(this.env.editorBus, "STEP_ADDED", (ev) => {
+            if (ev.detail.isPreviewing) {
+                return;
+            }
+            setLabel();
+        });
+        useBus(this.env.weSelectContext.bus, "select-item", (item) => {
             this.dropdown.close();
         });
     }

@@ -750,6 +750,30 @@ describe("WeSelectItem", () => {
         await contains(".o-snippets-top-actions .fa-repeat").click();
         expect(".we-bg-options-container .dropdown").toHaveText("B");
     });
+    test("consider the priority of the select item", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                    <WeSelect>
+                        <WeSelectItem classAction="''">None</WeSelectItem>
+                        <WeSelectItem classAction="'a'">A</WeSelectItem>
+                        <WeSelectItem classAction="'a b'">A B</WeSelectItem>
+                    </WeSelect>`,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target a">x</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+
+        expect(".we-bg-options-container .dropdown").toHaveText("A");
+        await contains(".we-bg-options-container .dropdown").click();
+
+        await contains(".o-overlay-item [data-class-action='']").click();
+        expect(".we-bg-options-container .dropdown").toHaveText("None");
+        await contains(".we-bg-options-container .dropdown").click();
+
+        await contains(".o-overlay-item [data-class-action='a b']").click();
+        expect(".we-bg-options-container .dropdown").toHaveText("A B");
+    });
     test("hide/display WeSelect base on applyTo", async () => {
         addOption({
             selector: ".parent-target",

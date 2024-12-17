@@ -292,11 +292,25 @@ export function useClickableWeWidget() {
             });
         });
     }
+    function getPriority() {
+        return (
+            getAllActions()
+                .map(
+                    (a) =>
+                        getAction(a.actionId).getPriority?.({
+                            param: a.actionParam,
+                            value: a.actionValue,
+                        }) || 0
+                )
+                .find((x) => x !== 0) || 0
+        );
+    }
 
     return {
         state,
         operation,
         isActive,
+        priority: getPriority(),
     };
 }
 export function useInputWeWidget() {
