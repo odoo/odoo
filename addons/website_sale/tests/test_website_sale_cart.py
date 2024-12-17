@@ -7,7 +7,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.base.tests.common import BaseUsersCommon
 from odoo.addons.product.tests.common import ProductAttributesCommon
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.combo_configurator import (
@@ -20,13 +19,13 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleCommon):
+class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.user_portal = cls._create_new_portal_user()
         cls.WebsiteSaleController = WebsiteSale()
-        cls.public_user = cls.env.ref('base.public_user')
         cls.product = cls.env['product.product'].create({
             'name': 'Test Product',
             'sale_ok': True,
