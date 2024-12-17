@@ -49,12 +49,11 @@
                 <field name="l10n_latam_document_number"
                     invisible="(not l10n_latam_use_documents or not l10n_latam_manual_document_number) and (not l10n_latam_use_documents or highest_name or state != 'draft')"
                     readonly="posted_before and state != 'draft'"
-                    required="partner_id and l10n_latam_use_documents and (l10n_latam_manual_document_number or not highest_name)"/>
+                    required="partner_id and l10n_latam_use_documents and l10n_latam_manual_document_number"/>
             </xpath>
 
             <!-- on latam_documents we use document_number to set name -->
             <field name="name" position="attributes">
-                <attribute name="invisible">name == '/' and not posted_before and not quick_edit_mode</attribute>
                 <attribute name="readonly">state != 'draft' or l10n_latam_use_documents</attribute>
                 <attribute name="force_save">1</attribute>
             </field>
