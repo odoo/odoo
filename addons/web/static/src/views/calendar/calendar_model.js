@@ -483,10 +483,10 @@ export class CalendarModel extends Model {
      * @protected
      */
     fetchRecords(data) {
-        const { fieldNames, resModel } = this.meta;
+        const { context, fieldNames, resModel } = this.meta;
         return this.orm.searchRead(resModel, this.computeDomain(data), [
             ...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)]),
-        ]);
+        ], { context });
     }
     /**
      * @protected
