@@ -881,6 +881,7 @@ class TestMailMailServer(MailCommon):
             [['test.cc.1@test.example.com', 'test.cc.2@test.example.com'], [], []],
         )
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_values_headers(self):
         """ Test headers content, notably X-Odoo-Message-Id added to keep context
         when going through exotic mail providers that change our message IDs. """
@@ -915,6 +916,7 @@ class TestMailMailServer(MailCommon):
         self.assertEqual(self._mails[0]['email_to'], ['test.😊@example.com'])
 
     @users('admin')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_values_email_uppercase(self):
         """ Test uppercase support when comparing emails, notably due to
         'send_validated_to' introduction that checks emails before sending them. """
