@@ -157,6 +157,14 @@ describe('Editor', () => {
                 });
             });
         });
+        describe('Sanitize ZWS', () => {
+            it('should remove zws while preserving the selection', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">&ZeroWidthSpace;a[]</font></p>',
+                    contentAfter: '<p><font style="color: rgb(255, 0, 0);">a[]</font></p>',
+                })
+            })
+        })
     });
     describe('deleteForward', () => {
         describe('Selection collapsed', () => {
