@@ -2420,3 +2420,181 @@ test("Modifying fixedPeriod date filter disabled periods remove invalid filter v
     });
     expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
 });
+<<<<<<< 18.0
+||||||| fe95f7fa64d6c2694980b4d9f6d03dc744ddaf19
+
+test("Updating the pivot domain should keep the global filter domain", async () => {
+    mockDate("2022-04-16 00:00:00");
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const filter = {
+        id: "43",
+        type: "date",
+        label: "This Year",
+        rangeType: "fixedPeriod",
+        defaultValue: "this_year",
+        defaultsToCurrentPeriod: true,
+    };
+    await addGlobalFilter(model, filter, {
+        pivot: { [pivotId]: { chain: "date", type: "date", offset: 0 } },
+    });
+    let computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("UPDATE_ODOO_PIVOT_DOMAIN", {
+        pivotId,
+        domain: [["foo", "in", [55]]],
+    });
+    computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("foo", "in", [55]), "&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("REQUEST_UNDO");
+    computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+});
+
+test("Updating the pivot should keep the global filter domain", async function (assert) {
+    mockDate("2022-04-16 00:00:00");
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const filter = {
+        id: "43",
+        type: "date",
+        label: "This Year",
+        rangeType: "fixedPeriod",
+        defaultValue: "this_year",
+        defaultsToCurrentPeriod: true,
+    };
+    await addGlobalFilter(model, filter, {
+        pivot: { [pivotId]: { chain: "date", type: "date", offset: 0 } },
+    });
+    let computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            colGroupBys: [],
+            rowGroupBys: [],
+        },
+    });
+    computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("REQUEST_UNDO");
+    computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+});
+=======
+
+test("Updating the pivot domain should keep the global filter domain", async () => {
+    mockDate("2022-04-16 00:00:00");
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const filter = {
+        id: "43",
+        type: "date",
+        label: "This Year",
+        rangeType: "fixedPeriod",
+        defaultValue: "this_year",
+        defaultsToCurrentPeriod: true,
+    };
+    await addGlobalFilter(model, filter, {
+        pivot: { [pivotId]: { chain: "date", type: "date", offset: 0 } },
+    });
+    let computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("UPDATE_ODOO_PIVOT_DOMAIN", {
+        pivotId,
+        domain: [["foo", "in", [55]]],
+    });
+    computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("foo", "in", [55]), "&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("REQUEST_UNDO");
+    computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+});
+
+test("Updating the pivot should keep the global filter domain", async function (assert) {
+    mockDate("2022-04-16 00:00:00");
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const filter = {
+        id: "43",
+        type: "date",
+        label: "This Year",
+        rangeType: "fixedPeriod",
+        defaultValue: "this_year",
+        defaultsToCurrentPeriod: true,
+    };
+    await addGlobalFilter(model, filter, {
+        pivot: { [pivotId]: { chain: "date", type: "date", offset: 0 } },
+    });
+    let computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            colGroupBys: [],
+            rowGroupBys: [],
+        },
+    });
+    computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("REQUEST_UNDO");
+    computedDomain = new Domain(model.getters.getPivotComputedDomain(pivotId));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+});
+
+test("Updating the list domain should keep the global filter domain", async () => {
+    mockDate("2022-04-16 00:00:00");
+    const { model } = await createSpreadsheetWithList();
+    const filter = {
+        id: "43",
+        type: "date",
+        label: "This Year",
+        rangeType: "fixedPeriod",
+        defaultValue: "this_year",
+        defaultsToCurrentPeriod: true,
+    };
+    await addGlobalFilter(model, filter, {
+        list: { 1: { chain: "date", type: "date", offset: 0 } },
+    });
+    let computedDomain = new Domain(model.getters.getListComputedDomain("1"));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    const [listId] = model.getters.getListIds();
+    model.dispatch("UPDATE_ODOO_LIST_DOMAIN", {
+        listId,
+        domain: [["foo", "in", [55]]],
+    });
+    computedDomain = new Domain(model.getters.getListComputedDomain("1"));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("foo", "in", [55]), "&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+    model.dispatch("REQUEST_UNDO");
+    computedDomain = new Domain(model.getters.getListComputedDomain("1"));
+    expect(computedDomain.toString()).toBe(
+        `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+    );
+});
+>>>>>>> 7b1afd65bfbb7df20a35a87d925c6e087a71fb60
