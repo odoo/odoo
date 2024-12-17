@@ -161,6 +161,11 @@ class StockScrap(models.Model):
             scrap.date_done = fields.Datetime.now()
             if scrap.should_replenish:
                 scrap.do_replenish()
+        if self.env.context.get('from_shop_floor'):
+            self.env.user._bus_send('simple_notification', {
+                'type': 'success',
+                'message': _("The scrap order has successfully been registered."),
+            })
         return True
 
     def do_replenish(self, values=False):

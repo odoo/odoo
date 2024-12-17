@@ -754,7 +754,9 @@ class MrpWorkorder(models.Model):
             'context': {'default_company_id': self.production_id.company_id.id,
                         'default_workorder_id': self.id,
                         'default_production_id': self.production_id.id,
-                        'product_ids': (self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.production_id.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids},
+                        'product_ids': (self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.production_id.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids,
+                        'from_shop_floor': self.env.context.get('from_shop_floor'),
+                        },
             'target': 'new',
         }
 
