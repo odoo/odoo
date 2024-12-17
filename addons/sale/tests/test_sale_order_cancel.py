@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import users
+from odoo.tests import tagged, users
 
 from odoo.addons.sale.tests.common import SaleCommon
-from odoo.addons.sales_team.tests.common import TestSalesCommon
 
 
-class TestSaleOrderCancel(SaleCommon, TestSalesCommon):
+@tagged('post_install', '-at_install')
+class TestSaleOrderCancel(SaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -19,13 +19,13 @@ class TestSaleOrderCancel(SaleCommon, TestSalesCommon):
         cls.partner = cls.env['res.partner'].create({'name': 'foo'})
 
         cls.manager_order, cls.salesman_order = cls.env['sale.order'].create([
-            {'partner_id': cls.partner.id, 'user_id': cls.user_sales_manager.id},
-            {'partner_id': cls.partner.id, 'user_id': cls.user_sales_salesman.id}
+            {'partner_id': cls.partner.id, 'user_id': cls.sale_manager.id},
+            {'partner_id': cls.partner.id, 'user_id': cls.sale_user.id}
         ])
         # Invalidate the cache, e.g. to clear the computation of partner.sale_order_ids
         cls.env.invalidate_all()
 
-    @users('user_sales_salesman')
+    @users('salesman')
     def test_salesman_record_rules(self):
         cancel = self.env['sale.order.cancel'].create({
             'template_id': self.template.id,
@@ -35,7 +35,7 @@ class TestSaleOrderCancel(SaleCommon, TestSalesCommon):
         self.assertEqual(cancel.subject, 'I can see 1 order(s)')
         self.assertEqual(cancel.body, '<p>I can see 1 order(s)</p>')
 
-    @users('user_sales_manager')
+    @users('salesmanager')
     def test_manager_record_rules(self):
         cancel = self.env['sale.order.cancel'].create({
             'template_id': self.template.id,

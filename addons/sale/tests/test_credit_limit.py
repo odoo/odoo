@@ -57,7 +57,6 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data_2['default_pricelist'].id,
             'order_line': [Command.create({
                 'product_id': self.company_data_2['product_order_no'].id,
                 'price_unit': 1000.0,
@@ -81,7 +80,6 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         # Create and confirm a SO to reach (but not exceed) partner_a's credit limit.
         sale_order = self.empty_order
         sale_order.write({
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'order_line': [Command.create({
                 'name': self.company_data['product_order_no'].name,
                 'product_id': self.company_data['product_order_no'].id,
@@ -219,7 +217,6 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         # Create and confirm a SO to reach (but not exceed) partner_a's credit limit.
         sale_order = self.empty_order
         sale_order.write({
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'order_line': [Command.create({
                 'product_id': self.company_data['product_order_no'].id,
                 'price_unit': 1000.0,
@@ -282,7 +279,6 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         # Create 2 SOs
         self.empty_order.write({
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'order_line': [Command.create({
                 'product_id': self.company_data['product_order_no'].id,
                 'price_unit': 1000.0,

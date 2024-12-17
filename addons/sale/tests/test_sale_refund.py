@@ -18,7 +18,6 @@ class TestSaleRefund(TestSaleCommon):
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
-            'pricelist_id': cls.company_data['default_pricelist'].id,
             'order_line': [
                 Command.create({
                     'product_id': cls.company_data['product_order_no'].id,
@@ -256,7 +255,6 @@ class TestSaleRefund(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         sol_product = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_no'].id,
