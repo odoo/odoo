@@ -10,7 +10,8 @@ class PurchaseOrderLine(models.Model):
         return res
 
     def _get_po_line_invoice_lines_su(self):
-        return (
-            super()._get_po_line_invoice_lines_su() |
-            self.sudo().invoice_lines.move_id.line_ids.filtered('is_landed_costs_line')
-        )
+        po_line_invoices_lines = super()._get_po_line_invoice_lines_su()
+        move = self.sudo().invoice_lines.move_id
+        if move.landed_costs_ids.filtered(lambda lc: lc.state == 'done'):
+            return po_line_invoices_lines | move.line_ids.filtered('is_landed_costs_line')
+        return po_line_invoices_lines
