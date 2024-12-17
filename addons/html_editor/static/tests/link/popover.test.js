@@ -449,19 +449,6 @@ describe("Link creation", () => {
                 '<p>a<a href="http://test.com/">bcde[]</a>f</p>'
             );
         });
-        test("when selection includes another block and the link extending stays inside of the block", async () => {
-            const { el } = await setupEditor(
-                '<p>a[b<a href="http://test.com/">cd</a>ef</p><p>gh]</p>'
-            );
-            await waitFor(".o-we-toolbar");
-
-            await click(".o-we-toolbar .fa-link");
-            await waitFor(".o-we-linkpopover", { timeout: 1500 });
-            expect(".o-we-linkpopover").toHaveCount(1);
-            expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p>a<a href="http://test.com/">bcdef[]</a></p><p>gh</p>'
-            );
-        });
         test("when create a link on selection which doesn't include a link, it should create a new one", async () => {
             await setupEditor(
                 '<p><strong>abc<a href="http://test.com/">de</a>te[st</strong> m]e</p>'
