@@ -164,7 +164,7 @@ class L10nInEwaybill(models.Model):
         self.ensure_one()
         move = self.account_move_id
         return {
-            'document_number':  self._is_incoming() and move.ref or move.name,
+            'document_number':  move.is_purchase_document(True) and move.ref or move.name,
             'document_date': move.date
         }
 
@@ -178,7 +178,7 @@ class L10nInEwaybill(models.Model):
 
     def _is_incoming(self):
         self.ensure_one()
-        return self.account_move_id.is_purchase_document(include_receipts=True)
+        return self.account_move_id.is_outbound()
 
     # -------------- Compute Methods ----------------
 
