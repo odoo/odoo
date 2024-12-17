@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tr_nilvera_trailer_plate_view_tree" model="ir.ui.view">
+        <field name="name">l10n_tr.nilvera.trailer.plate.tree</field>
+        <field name="model">l10n_tr.nilvera.trailer.plate</field>
+        <field name="arch" type="xml">
+            <tree string="Trailer Plates" create="True" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_l10n_tr_nilvera_trailer_plate" model="ir.actions.act_window">
+        <field name="name">Trailer Plate</field>
+        <field name="res_model">l10n_tr.nilvera.trailer.plate</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="l10n_tr_nilvera_trailer_plate_view_tree"/>
+    </record>
+
+    <menuitem
+        id="menu_l10n_tr_nilvera"
+        name="GİB e-Dispatch"
+        parent="stock.menu_stock_config_settings"
+        sequence="100"
+    />
+    <menuitem
+        id="menu_l10n_tr_nilvera_trailer_plate"
+        name="Trailer Plates"
+        parent="menu_l10n_tr_nilvera"
+        action="action_l10n_tr_nilvera_trailer_plate"
+        sequence="200"
+    />
+</odoo>
