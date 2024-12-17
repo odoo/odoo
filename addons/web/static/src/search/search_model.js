@@ -1069,13 +1069,11 @@ export class SearchModel extends EventBus {
             domain
         );
         const result = groupBy(Object.values(definitions), (definition) => definition.record_id);
-        return Object.entries(result).map(([recordId, definitions]) => {
-            return {
-                definitionRecordId: parseInt(recordId),
-                definitionRecordName: definitions[0]?.record_name,
-                definitions,
-            };
-        });
+        return Object.entries(result).map(([recordId, definitions]) => ({
+            definitionRecordId: parseInt(recordId),
+            definitionRecordName: definitions[0]?.record_name,
+            definitions,
+        }));
     }
 
     /**
@@ -1222,15 +1220,13 @@ export class SearchModel extends EventBus {
      * Add filters of type 'filter' determined by the key array dynamicFilters.
      */
     _createGroupOfDynamicFilters(dynamicFilters) {
-        const pregroup = dynamicFilters.map((filter) => {
-            return {
-                groupNumber: this.nextGroupNumber,
-                description: filter.description,
-                domain: filter.domain,
-                isDefault: "is_default" in filter ? filter.is_default : true,
-                type: "filter",
-            };
-        });
+        const pregroup = dynamicFilters.map((filter) => ({
+            groupNumber: this.nextGroupNumber,
+            description: filter.description,
+            domain: filter.domain,
+            isDefault: "is_default" in filter ? filter.is_default : true,
+            type: "filter",
+        }));
         this.nextGroupNumber++;
         this._createGroupOfSearchItems(pregroup);
     }
@@ -1496,14 +1492,13 @@ export class SearchModel extends EventBus {
      */
     _getDisplay(display = {}) {
         const { viewTypes } = this.searchPanelInfo;
-        const { bannerRoute, viewType } = this.env.config;
+        const { viewType } = this.env.config;
         return {
             controlPanel: "controlPanel" in display ? display.controlPanel : {},
             searchPanel:
                 this.sections.size &&
                 (!viewType || viewTypes.includes(viewType)) &&
                 ("searchPanel" in display ? display.searchPanel : true),
-            banner: Boolean(bannerRoute),
         };
     }
 

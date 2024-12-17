@@ -16,7 +16,6 @@ export const standardViewProps = {
     },
     resModel: String,
     arch: { type: Element },
-    bannerRoute: { type: String, optional: true },
     className: { type: String, optional: true },
     context: { type: Object },
     createRecord: { type: Function, optional: true },
