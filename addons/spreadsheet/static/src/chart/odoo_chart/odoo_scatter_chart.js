@@ -1,6 +1,7 @@
 import { registries, chartHelpers } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
+import { onOdooChartItemHover, onOdooChartItemClick } from "./odoo_chart_helpers";
 
 const { chartRegistry } = registries;
 
@@ -83,7 +84,8 @@ function createOdooChartRuntime(chart, getters) {
                 tooltip: getLineChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
             },
-            ...getters.getChartDatasetActionCallbacks(chart),
+            onHover: onOdooChartItemHover(),
+            onClick: onOdooChartItemClick(getters, chart),
         },
     };
 
