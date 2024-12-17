@@ -38,14 +38,11 @@
             </t>
         </xpath>
         <xpath expr="//span[@t-field='o.name']/.." position="after">
-            <div id="informations" class="row mt16 mb16">
-                <div t-if="o.incoterm_id" class="col-3 bm-2">
-                    <strong>Incoterm:</strong>
-                    <p t-if="o.incoterm_location">
-                        <span t-field="o.incoterm_id.code"/> <br/>
-                        <span t-field="o.incoterm_location"/>
-                    </p>
-                    <p t-else="" t-field="o.incoterm_id.code" class="m-0"/>
+            <div id="informations" class="row mt2 mb16">
+                <div t-if="o.incoterm_id" class="col-3 bm-2" style="font-size: 20px;">
+                <strong>Incoterm:</strong>
+                <span t-field="o.incoterm_id.code"/>
+                <span t-if="o.incoterm_location" t-field="o.incoterm_location"/>
                 </div>
             </div>
         </xpath>
