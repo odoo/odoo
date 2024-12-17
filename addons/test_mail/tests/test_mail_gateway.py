@@ -1957,7 +1957,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
             }
         ])
 
-    @mute_logger('odoo.addons.mail.models.mail_thread')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 10, 0, 0))
     def test_routing_loop_alias_create(self):
         """Test the limit on the number of record we can create by alias."""
@@ -2046,7 +2046,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
         records = self.env['mail.test.ticket'].search([('name', 'ilike', 'Whitelist test alias loop %')])
         self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
 
-    @mute_logger('odoo.addons.mail.models.mail_thread')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     def test_routing_loop_follower_alias(self):
         """ Use case: managing follower that are aliases. """
         with self.mock_mail_gateway():
@@ -2095,7 +2095,7 @@ class TestMailGatewayLoops(MailGatewayCommon):
         self.assertFalse(bool(self._new_msgs))
         self.assertNotSentEmail()
 
-    @mute_logger('odoo.addons.mail.models.mail_thread')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     def test_routing_loop_forward_catchall(self):
         """ Use case: broad email forward to catchall. Example: customer sends an
         email to catchall. It bounces: to=customer, return-path=bounce. Autoreply
