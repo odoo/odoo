@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_picking_internal_search_inherit_l10n_tr_nilvera_edispatch" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.inherit.l10n.tr.nilvera.edispatch</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter 
+                    string="GİB e-Dispatch State"
+                    name="l10n_tr_nilvera_dispatch_state"
+                    context="{'group_by': 'l10n_tr_nilvera_dispatch_state'}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_form_inherit_l10n_tr_nilvera_edispatch" model="ir.ui.view">
+        <field name="name">view.picking.form.inherit.l10n.tr.nilvera.edispatch</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_generate_l10n_tr_edispatch_xml" type="object" invisible="state != 'done' or country_code != 'TR' or picking_type_code != 'outgoing'" string="Generate GİB e-Dispatch (XML)" />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="l10n_tr_edispatch" string="e-Dispatch" invisible="country_code != 'TR' or picking_type_code != 'outgoing'">
+                    <group>
+                        <group name="l10n_tr_delivery_details" string="General Information">
+                            <field name="l10n_tr_nilvera_dispatch_type"  required="country_code == 'TR'"/>
+                            <field name="l10n_tr_nilvera_carrier_id" string="Carrier" domain="[('is_company', '=', True)]"/>
+                            <field name="l10n_tr_nilvera_delivery_printed_number" invisible="l10n_tr_nilvera_dispatch_type != 'MATBUDAN'"/>
+                            <field name="l10n_tr_nilvera_delivery_date" invisible="l10n_tr_nilvera_dispatch_type != 'MATBUDAN'"/>
+                        </group>
+                        <group name="l10n_tr_additionals" string="Additional Information">
+                            <field name="l10n_tr_nilvera_buyer_id"/>
+                            <field name="l10n_tr_nilvera_seller_supplier_id"/>
+                            <field name="l10n_tr_nilvera_buyer_originator_id"/>
+                            <field name="l10n_tr_nilvera_delivery_notes"/>
+                            <field name="l10n_tr_nilvera_dispatch_state"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="l10n_tr_vehicle_details" string="Vehicle Information">
+                            <field name="l10n_tr_vehicle_plate" context="{'default_plate_number_type': 'vehicle'}"/>
+                            <field name="l10n_tr_nilvera_trailer_plate_ids" widget="many2many_tags" context="{'default_plate_number_type': 'trailer'}"/>
+                        </group>
+                        <group name="l10n_tr_driver_details" string="Driver Information">
+                            <field name="l10n_tr_nilvera_driver_ids" widget="many2many_tags" create="0" group_create="0" domain="[('is_company', '=', False)]"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="l10n_tr_nilvera_edispatch_warnings" invisible="1"/>
+                <div class="m-0" name="warnings" invisible="not l10n_tr_nilvera_edispatch_warnings">
+                    <field name="l10n_tr_nilvera_edispatch_warnings" class="o_field_html" widget="actionable_errors"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_export_l10n_tr_nilvera_edispatch_list">
+        <field name="name">Generate GİB e-Dispatch (XML)</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="binding_model_id" ref="model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+records.action_generate_l10n_tr_edispatch_xml(is_list=True)
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_mark_l10n_tr_nilvera_edispatch_status">
+        <field name="name">Mark as sent (GİB e-Dispatch)</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="binding_model_id" ref="model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+records.action_mark_l10n_tr_edispatch_status()
+        </field>
+    </record>
+</odoo>
