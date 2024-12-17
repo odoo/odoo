@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { unwrapContents } from "@html_editor/utils/dom";
+import { cleanTrailingBR, unwrapContents } from "@html_editor/utils/dom";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
@@ -12,7 +12,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
-import { isBlock } from "@html_editor/utils/blocks";
+import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -460,6 +460,7 @@ export class LinkPlugin extends Plugin {
                     } else {
                         this.linkElement.removeAttribute("class");
                     }
+                    cleanTrailingBR(closestBlock(this.linkElement));
                     this.dependencies.selection.focusEditable();
                     this.removeCurrentLinkIfEmtpy();
                     this.dependencies.history.addStep();
