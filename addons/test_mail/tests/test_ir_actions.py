@@ -78,7 +78,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         with self.assertSinglePostNotifications(
                 [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
                 message_info={'content': 'Hello %s' % self.test_partner.name,
-                              'fields_values': {
+                              'mail_mail_values': {
                                 'author_id': self.env.user.partner_id,
                               },
                               'message_type': 'notification',
