@@ -4,22 +4,51 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-26 08:49+0000\n"
-"PO-Revision-Date: 2023-01-31 08:09+0000\n"
+"POT-Creation-Date: 2024-09-02 08:10+0000\n"
+"PO-Revision-Date: 2024-09-02 08:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
 #. module: l10n_cn
+#: model:ir.actions.report,print_report_name:l10n_cn.account_tax_invoice_cn
+msgid "'Tax_Invoice_%s' % (object.name)"
+msgstr "'增值稅电子普通发票_%s' % (object.name)"
+
+#. module: l10n_cn
 #: model:ir.actions.report,print_report_name:l10n_cn.account_voucher_cn
 msgid "'Voucher_%s' % (object.name)"
 msgstr "'结算单 - %s' % (object.name)"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span class=\"cn-verticaltext\">Buyer</span>"
+msgstr "<span class=\"cn-verticaltext\">购买方</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span class=\"cn-verticaltext\">Narration</span>"
+msgstr "<span class=\"cn-verticaltext\">备注</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span class=\"cn-verticaltext\">Password</span>"
+msgstr "<span class=\"cn-verticaltext\">密码区</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span class=\"cn-verticaltext\">Seller</span>"
+msgstr "<span class=\"cn-verticaltext\">销售方</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>(Small Capital)</span>"
+msgstr "<span>(小写)</span>"
 
 #. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
@@ -32,9 +61,29 @@ msgid "<span>Accounting Voucher</span>"
 msgstr "<span>记账凭证</span>"
 
 #. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Address, Phone No:</span>"
+msgstr "<span>地址，电话:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Approver:</span>"
+msgstr "<span>复核:</span>"
+
+#. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
 msgid "<span>Balance</span>"
 msgstr "<span>摘要</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Bank Name and account:</span>"
+msgstr "<span>开户行及账号:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Company Chop:</span>"
+msgstr "<span>销售方（章）:</span>"
 
 #. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
@@ -42,14 +91,62 @@ msgid "<span>Credit</span>"
 msgstr "<span>贷方</span>"
 
 #. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Customer:</span>"
+msgstr "<span>收款人:</span>"
+
+#. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
 msgid "<span>Debit</span>"
 msgstr "<span>借方</span>"
 
 #. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Invoice Code:</span>"
+msgstr "<span>发票代码:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Invoice Creator:</span>"
+msgstr "<span>发票人:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Invoice Date:</span>"
+msgstr "<span>开票日期:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Invoice No:</span>"
+msgstr "<span>发票号码:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Name:</span>"
+msgstr "<span>名称:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Taxpayer identification No:</span>"
+msgstr "<span>纳税人识别号:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "<span>Total (Big Capital)</span>"
+msgstr "<span>价税合计（大写）</span>"
+
+#. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
 msgid "<span>Total:</span>"
 msgstr "<span>合计:</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid ""
+"<strong class=\"text-center cn-fs-25 cn-double-underline\">Electronic Tax "
+"Invoice</strong>"
+msgstr "<strong class=\"text-center cn-fs-25 cn-double-underline\">增值稅电子普通 "
+"发票</strong>"
 
 #. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
@@ -87,6 +184,31 @@ msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_cn
+#: model:ir.model.fields,field_description:l10n_cn.field_account_bank_statement_line__approver_id
+#: model:ir.model.fields,field_description:l10n_cn.field_account_move__approver_id
+#: model:ir.model.fields,field_description:l10n_cn.field_account_payment__approver_id
+msgid "Approver"
+msgstr "复核人"
+
+#. module: l10n_cn
+#. odoo-python
+#: code:addons/l10n_cn/models/template_cn_common.py:0
+#, python-format
+msgid "Common"
+msgstr "共同会计科目"
+
+#. module: l10n_cn
+#: model:ir.model,name:l10n_cn.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: l10n_cn
+#: model:ir.model.fields,field_description:l10n_cn.field_res_company__company_chop
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Company Chop"
+msgstr "销售方（章）"
+
+#. module: l10n_cn
 #: model:ir.model.fields,field_description:l10n_cn.field_account_bank_statement_line__fapiao
 #: model:ir.model.fields,field_description:l10n_cn.field_account_move__fapiao
 #: model:ir.model.fields,field_description:l10n_cn.field_account_payment__fapiao
@@ -106,9 +228,68 @@ msgid "Journal Entry"
 msgstr "会计凭证"
 
 #. module: l10n_cn
+#. odoo-python
+#: code:addons/l10n_cn/models/template_cn_large_bis.py:0
+#, python-format
+msgid "Large Business"
+msgstr "大型公司"
+
+#. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.external_layout_boxed
 msgid "Logo"
-msgstr ""
+msgstr "标识"
+
+#. module: l10n_cn
+#: model:ir.model.fields,field_description:l10n_cn.field_account_bank_statement_line__machine_number
+#: model:ir.model.fields,field_description:l10n_cn.field_account_move__machine_number
+#: model:ir.model.fields,field_description:l10n_cn.field_account_payment__machine_number
+msgid "Machine Number"
+msgstr "机器编号"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Price"
+msgstr "单价(不含税）"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Product Code"
+msgstr "规格列号"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Product Name"
+msgstr "项目名称"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Quantity"
+msgstr "数量"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Subtotal"
+msgstr "金额(不含税）"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Tax Amount"
+msgstr "税额"
+
+#. module: l10n_cn
+#: model:ir.actions.report,name:l10n_cn.account_tax_invoice_cn
+msgid "Tax Invoice"
+msgstr "增值稅电子普通发票"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Taxes"
+msgstr "税率"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_tax_invoice_document
+msgid "Unit of Measure"
+msgstr "单位"
 
 #. module: l10n_cn
 #: model:ir.actions.report,name:l10n_cn.account_voucher_cn
