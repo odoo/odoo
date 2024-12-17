@@ -1,20 +1,34 @@
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
-class LineOpenMoveWidget extends Many2OneField {
-    async openAction() {
-        this.action.doActionButton({
+class LineOpenMoveWidget extends Component {
+    static template = "account.LineOpenMoveWidget";
+    static components = { Many2One };
+    static props = { ...Many2OneField.props };
+
+    setup() {
+        this.m2o = useMany2One(() => this.props);
+    }
+
+    get m2oProps() {
+        return {
+            ...this.m2o.computeProps(),
+            openRecordAction: () => this.openAction(),
+        };
+    }
+
+    openAction() {
+        return this.action.doActionButton({
             type: "object",
-            resId: this.props.record.data[this.props.name][0],
+            resId: this.m2o.resId,
             name: "action_open_business_doc",
             resModel: "account.move.line",
         });
     }
 }
 
-export const lineOpenMoveWidget = {
-    ...many2OneField,
-    component: LineOpenMoveWidget,
-};
-
-registry.category("fields").add("line_open_move_widget", lineOpenMoveWidget);
+registry.category("fields").add("line_open_move_widget", {
+    ...buildM2OFieldDescription(LineOpenMoveWidget),
+});

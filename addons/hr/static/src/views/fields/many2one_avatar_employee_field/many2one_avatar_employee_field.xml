@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.Many2OneAvatarEmployeeField">
+        <Many2One t-props="m2oProps">
+            <t t-set-slot="start">
+                <AvatarEmployee resModel="relation" resId="m2o.value[0]" noSpacing="true"/>
+            </t>
+            <t t-set-slot="items" t-slot-scope="itemsScope">
+                <span class="o_avatar o_m2o_avatar">
+                    <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{itemsScope.record.id}}/avatar_128"/>
+                    <t t-esc="itemsScope.record.display_name"/>
+                </span>
+            </t>
+        </Many2One>
+    </t>
+
+</templates>

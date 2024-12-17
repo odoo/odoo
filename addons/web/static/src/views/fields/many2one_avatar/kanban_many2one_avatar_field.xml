@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanMany2OneAvatarFieldAssignPopover">
+        <Many2One t-props="many2oneProps">
+            <t t-set-slot="item" t-slot-scope="itemScope">
+                <t t-if="itemScope.record">
+                    <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                        <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{itemScope.record.id}}/avatar_128"/>
+                        <t t-esc="itemScope.record.display_name"/>
+                    </span>
+                </t>
+            </t>
+        </Many2One>
+    </t>
+
+    <t t-name="web.KanbanMany2OneAvatarField">
+        <!-- <div class="o-kanban-many2one">
+            <span class="o_avatar o_m2o_avatar">
+                <t t-if="props.record.data[props.name] !== false">
+                    <img t-attf-src="/web/image/{{relation}}/{{props.record.data[props.name][0]}}/avatar_128" class="rounded"/>
+                </t>
+                <t t-elif="props.isEditable">
+                    <a class="o_quick_assign btn-link d-flex align-items-center text-dark" href="#" role="button" tabIndex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
+                        <i class="fa fa-user-plus"/>
+                    </a>
+                </t>
+            </span>
+        </div> -->
+        <KanbanMany2One>
+            <t t-set-slot="decoration">
+            </t>
+        </KanbanMany2One>
+    </t>
+
+</templates>

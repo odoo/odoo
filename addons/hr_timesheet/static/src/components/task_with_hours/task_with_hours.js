@@ -1,60 +1,34 @@
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { onWillStart } from "@odoo/owl";
+import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
-export class TaskWithHours extends Many2OneField {
+export class TaskWithHours extends Component {
+    static template = "hr_timesheet.TaskWithHours";
+    static components = { Many2One };
+    static props = { ...Many2OneField.props };
+
     setup() {
-        super.setup();
-        onWillStart(this.onWillStart);
+        this.m2o = useMany2One(() => this.props);
     }
 
-    async onWillStart() { }
-
-    canCreate() {
-        return Boolean(this.context.default_project_id);
+    get canCreateTask() {
+        return Boolean(this.props.context.default_project_id);
     }
 
-    /**
-     * @override
-     */
-    get displayName() {
-        const displayName = super.displayName;
-        return displayName ? displayName.split('\u00A0')[0] : displayName;
+    get m2oProps() {
+        const props = this.m2o.computeProps();
+        return {
+            ...props,
+            canCreate: props.canCreate && this.canCreateTask,
+            canCreateEdit: props.canCreateEdit && this.canCreateTask,
+            canQuickCreate: props.canQuickCreate && this.canCreateTask,
+            context: { ...props.context, hr_timesheet_display_remaining_hours: true },
+            value: props.value && [props.value[0], props.value[1]?.split("\u00A0")[0]],
+        };
     }
-
-    /**
-     * @override
-     */
-    get context() {
-        return { ...super.context, hr_timesheet_display_remaining_hours: true };
-    }
-
-    /**
-     * @override
-     */
-    get Many2XAutocompleteProps() {
-        const props = super.Many2XAutocompleteProps;
-        if (!this.canCreate()) {
-            props.quickCreate = null;
-        }
-        return props;
-    }
-
-    /**
-     * @override
-     */
-    computeActiveActions(props) {
-        super.computeActiveActions(props);
-        const activeActions = this.state.activeActions;
-        activeActions.create = activeActions.create && this.canCreate(props);
-        activeActions.createEdit = activeActions.createEdit && this.canCreate(props);
-    }
-
 }
 
-export const taskWithHours = {
-    ...many2OneField,
-    component: TaskWithHours,
-};
-
-registry.category("fields").add("task_with_hours", taskWithHours);
+registry.category("fields").add("task_with_hours", {
+    ...buildM2OFieldDescription(TaskWithHours),
+});

@@ -1,54 +1,42 @@
-import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
-import {
-    Many2OneAvatarUserField,
-    many2OneAvatarUserField,
-} from "@mail/views/web/fields/many2one_avatar_user_field/many2one_avatar_user_field";
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
+import { Component } from "@odoo/owl";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
-import { AvatarResourceMany2XAutocomplete } from "@resource_mail/views/fields/many2many_avatar_resource/many2many_avatar_resource_field";
+import { registry } from "@web/core/registry";
+import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
+class AvatarResource extends Avatar {
+    static components = { ...Avatar.components, Popover: AvatarCardResourcePopover };
+}
 
-const ExtendMany2OneAvatarToResource = (T) => class extends T {
-    // We choose to extend Many2One_avatar_user instead of patching it as field dependencies need to be added on the widget to manage resources
-    setup() {
-        super.setup();
-        this.avatarCard = usePopover(AvatarCardResourcePopover);
-    }
-
-    get displayAvatarCard() {
-        return !this.env.isSmall && this.relation === "resource.resource" && this.props.record.data.resource_type === "user";
-    }
-};
-
-
-export class Many2OneAvatarResourceField extends ExtendMany2OneAvatarToResource(Many2OneAvatarUserField) {
+class Many2OneAvatarResourceField extends Component {
     static template = "resource_mail.Many2OneAvatarResourceField";
-    static components = {
-        ...super.components,
-        Many2XAutocomplete: AvatarResourceMany2XAutocomplete,
-    };
+    static components = { Many2One, AvatarResource };
+    static props = { ...Many2OneField.props };
+
+    setup() {
+        this.m2o = useMany2One(() => this.props);
+    }
+
+    get m2oProps() {
+        return {
+            ...this.m2o.computeProps(),
+            specification: {
+                resource_type: {},
+            },
+        };
+    }
+
+    get resourceType() {
+        return this.props.record.data.resource_type;
+    }
 }
 
-export const many2OneAvatarResourceField = {
-    ...many2OneAvatarUserField,
-    component: Many2OneAvatarResourceField,
+registry.category("fields").add("many2one_avatar_resource", {
+    ...buildM2OFieldDescription(Many2OneAvatarResourceField),
     fieldDependencies: [
-        {
-            name: "resource_type", //to add in model that will use this widget for m2o field related to resource.resource record (as related field is only supported for x2m)
-            type: "selection",
-        },
+        { name: "display_name", type: "char" },
+        // to add in model that will use this widget for m2o field related to resource.resource record (as related field is only supported for x2m)
+        { name: "resource_type", type: "selection" },
     ],
-};
-
-registry.category("fields").add("many2one_avatar_resource", many2OneAvatarResourceField);
-
-export class KanbanMany2OneAvatarResourceField extends ExtendMany2OneAvatarToResource(Many2OneAvatarResourceField) {
-    static template = "resource_mail.KanbanMany2OneAvatarResourceField";
-}
-
-export const kanbanMany2OneAvatarResourceField = {
-    ...many2OneAvatarResourceField,
-    component: KanbanMany2OneAvatarResourceField,
-};
-
-registry.category("fields").add("kanban.many2one_avatar_resource", kanbanMany2OneAvatarResourceField);
+});

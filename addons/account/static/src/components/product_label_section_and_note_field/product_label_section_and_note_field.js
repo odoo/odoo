@@ -237,6 +237,6 @@ export const productLabelSectionAndNoteField = {
     listViewWidth: [240, 400],
     component: ProductLabelSectionAndNoteField,
 };
-registry
-    .category("fields")
-    .add("product_label_section_and_note_field", productLabelSectionAndNoteField);
+// registry
+//     .category("fields")
+//     .add("product_label_section_and_note_field", productLabelSectionAndNoteField);

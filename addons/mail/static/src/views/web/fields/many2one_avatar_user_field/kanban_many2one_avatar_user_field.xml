@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="mail.KanbanMany2OneAvatarUserField">
+        <t t-if="controller.value === false">
+            ??
+        </t>
+        <t t-else="">
+            <Avatar resModel="controller.relation" resId="controller.value[0]" noSpacing="true"/>
+        </t>
+    </t>
+
+</templates>

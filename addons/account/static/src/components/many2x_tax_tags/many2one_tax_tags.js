@@ -1,0 +1,45 @@
+import { Component, onWillStart } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+
+export class Many2OneTaxTagsField extends Component {
+    static template = "account.Many2OneTaxTagsField";
+    static components = { Many2One };
+    static props = { ...Many2OneField.props };
+
+    setup() {
+        this.m2o = useMany2One(() => this.props);
+        this.fieldService = useService("field");
+
+        this.taxLabels = {};
+        onWillStart(async () => {
+            const taxModelFields = await this.fieldService.loadFields("account.tax");
+            for (const [taxKey, taxLabel] of taxModelFields.tax_scope.selection) {
+                this.taxLabels[taxKey] = taxLabel;
+            }
+        });
+    }
+
+    get m2oProps() {
+        return {
+            ...this.m2o.computeProps(),
+            mapLoadedOptionToRecord: ({ record }) => ({
+                value: record.id,
+                label: record.name ? record.name.split("\n")[0] : _t("Unnamed"),
+                tax_scope: this.taxLabels[record.tax_scope],
+            }),
+            searchMoreLabel: _t("Not sure... Help me!"),
+            specification: {
+                name: {},
+                tax_scope: {},
+            },
+        };
+    }
+}
+
+registry.category("fields").add("many2one_tax_tags", {
+    ...buildM2OFieldDescription(Many2OneTaxTagsField),
+});
