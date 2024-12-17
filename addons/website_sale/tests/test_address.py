@@ -8,14 +8,13 @@ from odoo import api
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.base.tests.common import BaseUsersCommon
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
+class TestCheckoutAddress(WebsiteSaleCommon):
     """Test the address management part of the checkout process:
 
     * address creation (/shop/address)
@@ -27,6 +26,8 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.country_id = cls.country_be.id
+        cls.user_portal = cls._create_new_portal_user()
+        cls.user_internal = cls._create_new_internal_user()
         cls.user_internal.partner_id.company_id = cls.env.company
 
     def setUp(self):

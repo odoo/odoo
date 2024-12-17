@@ -1,15 +1,16 @@
 from odoo.fields import Command
 from odoo.tests.common import tagged
+
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
-from odoo.addons.base.tests.common import BaseUsersCommon
 
 
 @tagged('post_install', '-at_install')
-class TestPortalInvoice(BaseUsersCommon, AccountTestInvoicingHttpCommon):
+class TestPortalInvoice(AccountTestInvoicingHttpCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.user_portal = cls._create_new_portal_user()
         cls.portal_partner = cls.user_portal.partner_id
 
     def test_portal_my_invoice_detail_not_his_invoice(self):

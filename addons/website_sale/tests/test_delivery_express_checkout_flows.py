@@ -7,15 +7,12 @@ from werkzeug import urls
 from odoo.http import root
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.base.tests.common import BaseUsersCommon
-from odoo.addons.website_sale.controllers.delivery import (
-    Delivery as WebsiteSaleDeliveryController,
-)
+from odoo.addons.website_sale.controllers.delivery import Delivery as WebsiteSaleDeliveryController
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCommon, HttpCase):
+class TestWebsiteSaleDeliveryExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
     """ The goal of this method class is to test the address management on
         express checkout.
     """
@@ -66,7 +63,7 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(BaseUsersCommon, WebsiteSaleCo
             'state': 'AL',
         }
 
-        cls.user_demo = cls.user_internal
+        cls.user_demo = cls._create_new_internal_user()
 
         cls.express_checkout_demo_shipping_values = {
             'name': cls.user_demo.partner_id.name,

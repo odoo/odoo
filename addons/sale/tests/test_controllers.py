@@ -3,12 +3,18 @@
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.base.tests.common import BaseUsersCommon, HttpCaseWithUserPortal
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
+class TestAccessRightsControllers(HttpCase, SaleCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.user_portal = cls._create_new_portal_user()
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_access_controller(self):

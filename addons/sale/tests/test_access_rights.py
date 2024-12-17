@@ -4,16 +4,18 @@ from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.base.tests.common import BaseUsersCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAccessRights(BaseUsersCommon, SaleCommon):
+class TestAccessRights(SaleCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.user_portal = cls._create_new_portal_user()
+        cls.user_internal = cls._create_new_internal_user()
 
         cls.sale_user2 = cls.env['res.users'].create({
             'name': 'salesman_2',
