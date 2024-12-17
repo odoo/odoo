@@ -549,7 +549,7 @@ export class Record extends DataPoint {
             resIds: data.map((r) => r.id),
             orderBy: orderBys?.[fieldName] || defaultOrderBy || [],
             limit: limit || Number.MAX_SAFE_INTEGER,
-            currentCompanyId: this.currentCompanyId,
+            companies: this.companies,
             context: {}, // will be set afterwards, see "_updateContext" in "_setEvalContext"
         };
         const options = {

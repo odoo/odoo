@@ -743,7 +743,7 @@ export class StaticList extends DataPoint {
             resIds: resId ? [resId] : [],
             mode: params.mode || "readonly",
             isMonoRecord: true,
-            currentCompanyId: this.currentCompanyId,
+            companies: this.companies,
         };
         const { CREATE, UPDATE } = x2ManyCommands;
         const options = {

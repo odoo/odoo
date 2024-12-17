@@ -6,6 +6,7 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
 import { cookie } from "@web/core/browser/cookie";
 import { user } from "@web/core/user";
 import { router } from "@web/core/browser/router";
+import { allowedFns } from "@web/core/py_js/py_interpreter";
 
 const CIDS_SEPARATOR = "-";
 
@@ -52,8 +53,8 @@ function getCompanyIds() {
 }
 
 export const companyService = {
-    dependencies: ["action", "orm"],
-    start(env, { action, orm }) {
+    dependencies: ["action"],
+    start(env, { action }) {
         const allowedCompanies = session.user_companies.allowed_companies;
         const disallowedAncestorCompanies = session.user_companies.disallowed_ancestor_companies;
         const allowedCompaniesWithAncestors = {
@@ -76,6 +77,51 @@ export const companyService = {
                 }
             }
         });
+
+        const evalContext = {
+            /**
+             * @type {boolean}
+             * A boolean indicating whether the user has access to multiple companies.
+             */
+            multi_company: Object.values(allowedCompanies).length > 1,
+
+            /**
+             * @type {Array.<number>}
+             * The list of company IDs the user is allowed to connect to.
+             */
+            allowed_ids: Object.values(allowedCompanies).map((c) => c.id),
+
+            /**
+             * @type {Array.<number>}
+             * The list of company IDs the user is connected to (selected in the company
+             * switcher dropdown).
+             */
+            active_ids: activeCompanyIds,
+
+            /**
+             * @type {number}
+             * The ID of the main company selected (the one highlighted in the company switcher
+             * dropdown and displayed in the navbar of the webclient).
+             */
+            active_id: activeCompanyIds[0],
+
+            /**
+             * @param {(Array.<number>|number)} ids - id or ids of companies
+             * @param {string} field - property of the company. Note that the properties of the
+             *                          companies are those sent by the server in the session info.
+             * @param {*} value - specified value
+             * @returns {boolean}
+             * returns a boolean indicating whether there's a company with id in `ids` for which
+             * `field` matches the given `value`.
+             */
+            has: (ids, field, value) => {
+                ids = typeof ids === "number" ? [ids] : ids || [];
+                return Object.values(allowedCompanies).some(
+                    (c) => ids.includes(c.id) && c[field] === value
+                );
+            },
+        };
+        allowedFns.add(evalContext.has);
 
         return {
             allowedCompanies,
@@ -138,6 +184,7 @@ export const companyService = {
 
                 router.pushState(state, options);
             },
+            evalContext,
         };
     },
 };

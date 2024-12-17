@@ -24,6 +24,7 @@ IGNORED_IN_EXPRESSION = {
     'self',
     'uid',
     'context',
+    'companies',
     'context_today',
     'allowed_company_ids',
     'current_company_id',
