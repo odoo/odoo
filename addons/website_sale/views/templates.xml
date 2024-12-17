@@ -2231,49 +2231,66 @@
     <!-- Deactivatable through the website editor. -->
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
         <xpath expr="//div[@id='cart_products']" position="inside">
-            <h5 t-attf-class="mt32 mb-3" t-if="suggested_products">Suggested accessories</h5>
+            <h5 t-attf-class="mt-3 mb-0" t-if="suggested_products">Suggested accessories</h5>
             <div t-if="suggested_products"
                  id="suggested_products"
-                 class="d-flex flex-column align-items-stretch mb32">
-                <div t-foreach="suggested_products"
-                     t-as="product"
-                     t-attf-class="d-flex gap-3 #{not product_last and 'border-bottom pb-4'} #{product_index &gt; 0 and 'pt-4'}"
-                     t-att-data-publish="product.website_published and 'on' or 'off'">
+                 class="d-flex flex-column align-items-stretch">
+                <div
+                    t-foreach="suggested_products"
+                    t-as="product"
+                    t-attf-class="d-flex gap-3 py-4 #{not product_last and 'border-bottom'}"
+                    t-att-data-publish="product.website_published and 'on' or 'off'"
+                >
                     <div style="width: 64px">
                         <a t-att-href="product.website_url">
-                            <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"/>
+                            <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max border rounded'}"/>
                         </a>
                     </div>
                     <div class="o_cart_suggested_product_name flex-grow-1">
-                        <div>
-                            <a t-att-href="product.website_url">
-                                <strong t-out="product.with_context(display_default_code=False).display_name"/>
-                            </a>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <a t-att-href="product.website_url">
+                                    <h6
+                                        class="align-top small fw-bold text-wrap"
+                                        t-out="product.with_context(display_default_code=False).display_name"
+                                    />
+                                </a>
+                                <div
+                                    class="text-truncate small text-muted"
+                                    t-field="product.description_sale"
+                                />
+                            </div>
+                            <h6
+                                class="d-flex mb-0 small text-end fw-bold"
+                                name="website_sale_suggested_product_price"
+                            >
+                                <t
+                                    t-set="combination_info"
+                                    t-value="product._get_combination_info_variant()"
+                                />
+                                <del
+                                    t-attf-class="me-2 text-nowrap text-muted {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                    t-esc="combination_info['list_price']"
+                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                                />
+                                <span
+                                    class="text-nowrap"
+                                    t-esc="combination_info['price']"
+                                    t-options="{'widget': 'monetary','display_currency': website.currency_id}"
+                                />
+                            </h6>
                         </div>
-                        <div class="d-none d-md-block text-muted" t-field="product.description_sale"/>
-                    </div>
-                    <div class="d-flex flex-column align-items-end">
-                        <a
-                            role="button"
-                            class="js_add_suggested_products btn btn-md btn-outline-primary text-nowrap"
-                            t-att-data-product-id="product.id"
-                            t-att-data-product-template-id="product.product_tmpl_id.id"
-                            t-att-data-product-type="product.type"
-                        >
-                            <span class="d-md-none fa fa-shopping-cart"/>
-                            <span class="d-none d-md-inline">Add to cart</span>
-                        </a>
-                        <div class="mb-0 h-6 fw-bold text-end d-flex"
-                             name="website_sale_suggested_product_price">
-                            <t t-set="combination_info"
-                               t-value="product._get_combination_info_variant()"/>
-                            <del t-attf-class="text-muted mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                                 t-esc="combination_info['list_price']"
-                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                                 style="white-space: nowrap;"/>
-                            <span t-esc="combination_info['price']"
-                                  t-options="{'widget': 'monetary','display_currency': website.currency_id}"
-                                  style="white-space: nowrap;"/>
+                        <div class="d-flex justify-content-md-end">
+                            <button
+                                role="button"
+                                class="js_add_suggested_products btn btn-primary text-nowrap"
+                                t-att-data-product-id="product.id"
+                                t-att-data-product-template-id="product.product_tmpl_id.id"
+                                t-att-data-product-type="product.type"
+                            >
+                                <i class="d-md-none fa fa-shopping-cart" role="presentation"/>
+                                <span>Add to cart</span>
+                            </button>
                         </div>
                     </div>
                 </div>
