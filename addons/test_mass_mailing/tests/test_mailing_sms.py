@@ -91,6 +91,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
             'customer_id': False,
             'phone_nbr': '0456110011',
         })
+        records = self.records + new_record_1 + void_record + falsy_record_1 + falsy_record_2 + bl_record_1
         self.env['phone.blacklist'].sudo().create({'number': '0456110011'})
         # new customer, number already on record -> should be ignored
         country_be_id = self.env.ref('base.be').id
@@ -107,7 +108,11 @@ class TestMassSMSInternals(TestMassSMSCommon):
         records_numbers = self.records_numbers + ['+32456999999']
 
         mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
-        mailing.write({'sms_force_send': False})  # force outgoing sms, not sent
+        mailing.write({
+            'sms_force_send': False,  # force outgoing sms, not sent
+            'keep_archives': True,  # keep a note on document (mass_keep_log)
+        })
+        init_message_counts = self.get_message_count_per_record(records)
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
                 mailing.action_send_sms()
@@ -147,12 +152,19 @@ class TestMassSMSInternals(TestMassSMSCommon):
              for record in falsy_record_1 + falsy_record_2],
             mailing, falsy_record_1 + falsy_record_2,
         )
+        # check note posted on records
+        expected_message_counts = [1] * 10 + [1, 0, 0, 0, 0]
+        self.assertMessageRecordsCount(records, expected_message_counts, init_message_counts)
 
     @users('user_marketing')
     def test_mass_sms_internals_done_ids(self):
         mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
-        mailing.write({'sms_force_send': False})  # check with outgoing traces, not already pending
+        mailing.write({
+            'sms_force_send': False,  # check with outgoing traces, not already pending
+            'keep_archives': True,  # keep a note on document (mass_keep_log)
+        })
 
+        init_message_counts = self.get_message_count_per_record(self.records[:5])
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
                 mailing.action_send_sms(res_ids=self.records[:5].ids)
@@ -166,7 +178,11 @@ class TestMassSMSInternals(TestMassSMSCommon):
              for i, record in enumerate(self.records[:5])],
             mailing, self.records[:5],
         )
+        # check note posted on records
+        expected_message_counts = [1] * 5
+        self.assertMessageRecordsCount(self.records[:5], expected_message_counts, init_message_counts)
 
+        init_message_counts = self.get_message_count_per_record(self.records)
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
                 mailing.action_send_sms(res_ids=self.records.ids)
@@ -188,6 +204,9 @@ class TestMassSMSInternals(TestMassSMSCommon):
              for i, record in enumerate(self.records[5:])],
             mailing, self.records[5:],
         )
+        # check note posted on records
+        expected_message_counts = [0] * 5 + [1] * 5
+        self.assertMessageRecordsCount(self.records, expected_message_counts, init_message_counts)
 
     @users('user_marketing')
     def test_mass_sms_processing_with_force_send(self):
@@ -410,17 +429,20 @@ class TestMassSMS(TestMassSMSCommon):
         mailing.write({
             'mailing_model_id': self.env['ir.model']._get('mail.test.sms.bl.optout'),
             'mailing_domain': [('id', 'in', recipients.ids)],
+            'keep_archives': True,  # keep a note on document (mass_keep_log)
         })
 
+        init_message_counts = self.get_message_count_per_record(recipients)
         with self.mockSMSGateway():
             mailing.action_send_sms()
 
-        self.assertSMSTraces(
-            [{'number': '+32456000000', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
+        expected_traces = [{'number': '+32456000000', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
              {'number': '+32456000101', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
              {'number': '+32456000202', 'trace_status': 'pending'},
              {'number': '+32456000303', 'trace_status': 'pending'},
-             {'number': '+32456000404', 'trace_status': 'cancel', 'failure_type': 'sms_blacklist'}],
-            mailing, recipients
-        )
+             {'number': '+32456000404', 'trace_status': 'cancel', 'failure_type': 'sms_blacklist'}]
+        self.assertSMSTraces(expected_traces, mailing, recipients)
         self.assertEqual(mailing.canceled, 3)
+
+        expected_message_counts = [0 if t['trace_status'] == 'cancel' else 1 for t in expected_traces]
+        self.assertMessageRecordsCount(recipients, expected_message_counts, init_message_counts)
