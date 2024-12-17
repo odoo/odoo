@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { nextTick, patchDate } from "@web/../tests/helpers/utils";
+import { Domain } from "@web/core/domain";
 import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 import {
@@ -1951,4 +1952,46 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const result = await addGlobalFilter(model, filter);
         assert.ok(result.isSuccessful);
     });
+
+    QUnit.test(
+        "Updating the pivot domain should keep the global filter domain",
+        async function (assert) {
+            patchDate(2022, 4, 16, 0, 0, 0);
+            const { model } = await createSpreadsheetWithPivot();
+            const filter = {
+                id: "43",
+                type: "date",
+                label: "This Year",
+                rangeType: "year",
+                defaultValue: {},
+                defaultsToCurrentPeriod: true,
+            };
+            await addGlobalFilter(
+                model,
+                { filter },
+                { pivot: { 1: { chain: "date", type: "date", offset: 0 } } }
+            );
+            let computedDomain = new Domain(model.getters.getPivotComputedDomain("1"));
+            assert.strictEqual(
+                computedDomain.toString(),
+                `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+            );
+            const [pivotId] = model.getters.getPivotIds();
+            model.dispatch("UPDATE_ODOO_PIVOT_DOMAIN", {
+                pivotId,
+                domain: [["foo", "in", [55]]],
+            });
+            computedDomain = new Domain(model.getters.getPivotComputedDomain("1"));
+            assert.strictEqual(
+                computedDomain.toString(),
+                `["&", ("foo", "in", [55]), "&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+            );
+            model.dispatch("REQUEST_UNDO");
+            computedDomain = new Domain(model.getters.getPivotComputedDomain("1"));
+            assert.strictEqual(
+                computedDomain.toString(),
+                `["&", ("date", ">=", "2022-01-01"), ("date", "<=", "2022-12-31")]`
+            );
+        }
+    );
 });
