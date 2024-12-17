@@ -4328,7 +4328,7 @@ class BaseModel(metaclass=MetaModel):
         with self.env.protecting(self._fields.values(), self):
             self.modified(self._fields, before=True)
 
-        for sub_ids in cr.split_for_in_conditions(self.ids):
+        for sub_ids in split_every(cr.IN_MAX, self.ids):
             records = self.browse(sub_ids)
 
             cr.execute(SQL(
@@ -6713,7 +6713,7 @@ class BaseModel(metaclass=MetaModel):
     def __iter__(self) -> typing.Iterator[Self]:
         """ Return an iterator over ``self``. """
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
-            for ids in self.env.cr.split_for_in_conditions(self._ids):
+            for ids in split_every(PREFETCH_MAX, self._ids):
                 for id_ in ids:
                     yield self.__class__(self.env, (id_,), ids)
         else:
@@ -6723,7 +6723,7 @@ class BaseModel(metaclass=MetaModel):
     def __reversed__(self) -> typing.Iterator[Self]:
         """ Return an reversed iterator over ``self``. """
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
-            for ids in self.env.cr.split_for_in_conditions(reversed(self._ids)):
+            for ids in split_every(PREFETCH_MAX, reversed(self._ids)):
                 for id_ in ids:
                     yield self.__class__(self.env, (id_,), ids)
         elif self._ids:
