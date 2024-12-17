@@ -116,13 +116,13 @@ export class PosData extends Reactive {
         const dataToDelete = {};
 
         for (const model of this.opts.databaseTable) {
-            const nbrRecords = Object.values(records[model.name]).length;
+            const modelRecords = Object.values(records[model.name]);
 
-            if (!nbrRecords) {
+            if (!modelRecords.length) {
                 continue;
             }
 
-            const data = dataSorter(this.models[model.name].getAll(), model.condition, model.key);
+            const data = dataSorter(modelRecords, model.condition, model.key);
             this.indexedDB.create(model.name, data.put);
             dataToDelete[model.name] = data.remove;
         }
