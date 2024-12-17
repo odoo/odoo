@@ -24,7 +24,7 @@ export class WebsiteSwitcherSystray extends Component {
             dataset: Object.assign({
                 websiteId: website.id,
             }, website.domain ? {} : {
-                tooltipValue: _t('This website does not have a domain configured'),
+                tooltip: _t('This website does not have a domain configured.'),
                 tooltipPosition: 'left',
             }),
             callback: () => {
