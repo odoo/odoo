@@ -1842,7 +1842,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                     self.assertTrue(customer, 'Template usage should have created a contact based on record email')
                 self.assertEqual(customer.lang, exp_notif_lang)
 
-                customer_email = self._find_sent_mail_wemail(customer.email_formatted)
+                customer_email = self._find_sent_email_wemail(customer.email_formatted)
                 self.assertTrue(customer_email)
                 body = customer_email['body']
                 # check content: depends on object.lang / object.customer_id.lang
@@ -1899,7 +1899,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
         self.assertTrue(record0_customer, 'Template usage should have created a contact based on record email')
 
         for record, customer in zip(test_records, record0_customer + self.partner_2):
-            customer_email = self._find_sent_mail_wemail(customer.email_formatted)
+            customer_email = self._find_sent_email_wemail(customer.email_formatted)
             self.assertTrue(customer_email)
             body = customer_email['body']
             # check content
@@ -1924,7 +1924,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                 subtype_xmlid='mail.mt_comment',
             )
 
-        customer_email = self._find_sent_mail_wemail(self.partner_2.email_formatted)
+        customer_email = self._find_sent_email_wemail(self.partner_2.email_formatted)
         self.assertTrue(customer_email)
         body = customer_email['body']
         # check content
@@ -1966,7 +1966,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
             record0_customer + self.partner_2,
             ('en_US', 'es_ES')  # new customer is en_US, partner_2 is es_ES
         ):
-            customer_email = self._find_sent_mail_wemail(customer.email_formatted)
+            customer_email = self._find_sent_email_wemail(customer.email_formatted)
             self.assertTrue(customer_email)
 
             # body and layouting are translated partly based on template. Bits
