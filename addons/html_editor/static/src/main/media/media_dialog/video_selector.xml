@@ -1,7 +1,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="html_editor.VideoOption">
-    <div class="mb-1">
+    <div class="mb-1" t-attf-class="{{ props.name === 'start_from' ? 'd-flex align-items-start gap-2 cursor-pointer' : ''}}">
         <label class="d-flex align-items-start gap-2 cursor-pointer" t-on-change="props.onChangeOption">
             <div class="o_switch flex-shrink-0">
                 <input type="checkbox" t-att-checked="props.value"/>
@@ -10,6 +10,9 @@
             <span t-esc="props.label"/>
             <span t-if="props.description" class="text-muted" t-esc="props.description"/>
         </label>
+        <t t-if="props.name === 'start_from'">
+            <input type="text" placeholder="MM:SS" class="o_input w-lg-auto" t-att-value="props.value" t-on-input="props.onChangeStartAt"/>
+        </t>
     </div>
 </t>
 
@@ -34,8 +37,10 @@
             </div>
             <div t-if="shownOptions.length" class="o_video_dialog_options">
                 <VideoOption t-foreach="shownOptions" t-as="option" t-key="option.id"
+                    name="option.id"
                     value="option.value"
                     onChangeOption="() => this.onChangeOption(option.id)"
+                    onChangeStartAt="(ev) => this.onChangeStartAt(ev, option.id)"
                     label="option.label"
                     description="option.description"/>
             </div>

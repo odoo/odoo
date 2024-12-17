@@ -16,7 +16,7 @@ valid_url_regex = r'^(http://|https://|//)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{
 player_regexes = {
     'youtube': r'^(?:(?:https?:)?//)?(?:www\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$',
     'vimeo': r'//(player.)?vimeo.com/([a-z]*/)*([0-9]{6,11})[?]?.*',
-    'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
+    'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|geo\.dailymotion\.com\/player\.html\?video=|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
     'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
     'youku': r'(?:(https?:\/\/)?(v\.youku\.com/v_show/id_|player\.youku\.com/player\.php/sid/|player\.youku\.com/embed/|cloud\.youku\.com/services/sharev\?vid=|video\.tudou\.com/v/)|youku:)(?P<id>[A-Za-z0-9]+)(?:\.html|/v\.swf|)',
 }
@@ -48,7 +48,10 @@ def get_video_source_data(video_url):
     return None
 
 
-def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_dm_logo=False, hide_dm_share=False):
+def get_video_url_data(video_url, autoplay=False, loop=False,
+                       hide_controls=False, hide_fullscreen=False,
+                       hide_dm_logo=False, hide_dm_share=False,
+                       start_from=False):
     """ Computes the platform name, the embed_url, the video id and the video params of the given URL
         (or error message in case of invalid URL).
     """
@@ -64,6 +67,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
     if platform == 'youtube':
         params['rel'] = 0
         params['autoplay'] = autoplay and 1 or 0
+        if start_from:
+            params["start"] = start_from.rstrip("s")
         if autoplay:
             params['mute'] = 1
             # The youtube js api is needed for autoplay on mobile. Note: this
@@ -80,7 +85,7 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         if hide_fullscreen:
             params['fs'] = 0
         yt_extra = platform_match[1] or ''
-        embed_url = f'//www.youtube{yt_extra}.com/embed/{video_id}'
+        embed_url = f"//www.youtube{yt_extra}.com/embed/{video_id}?{url_encode(params)}"
     elif platform == 'vimeo':
         params['autoplay'] = autoplay and 1 or 0
         if autoplay:
@@ -90,25 +95,17 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
             params['controls'] = 0
         if loop:
             params['loop'] = 1
-        embed_url = f'//player.vimeo.com/video/{video_id}'
+        embed_url = f"//player.vimeo.com/video/{video_id}?{url_encode(params)}"
+        if start_from:
+            embed_url = f"{embed_url}#t={start_from}"
     elif platform == 'dailymotion':
-        params['autoplay'] = autoplay and 1 or 0
-        if autoplay:
-            params['mute'] = 1
-        if hide_controls:
-            params['controls'] = 0
-        if hide_dm_logo:
-            params['ui-logo'] = 0
-        if hide_dm_share:
-            params['sharing-enable'] = 0
-        embed_url = f'//www.dailymotion.com/embed/video/{video_id}'
+        if start_from:
+            params["startTime"] = start_from.rstrip("s")
+        embed_url = f"//geo.dailymotion.com/player.html?video={video_id}&{url_encode(params)}"
     elif platform == 'instagram':
         embed_url = f'//www.instagram.com/p/{video_id}/embed/'
     elif platform == 'youku':
         embed_url = f'//player.youku.com/embed/{video_id}'
-
-    if params:
-        embed_url = f'{embed_url}?{url_encode(params)}'
 
     return {
         'platform': platform,
