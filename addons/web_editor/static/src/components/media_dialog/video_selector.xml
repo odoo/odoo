@@ -50,6 +50,19 @@
                     </t>
                 </div>
             </t>
+            <t t-if="shownOptions.length">
+                <div class="mb-1">
+                    <label class="d-flex align-items-start gap-2 cursor-pointer">
+                        <div class="o_switch flex-shrink-0">
+                            <input type="checkbox" t-model="state.timestamp.isActive" t-att-checked="state.timestamp.isActive" t-on-change="this.onChangeIsActive"/>
+                            <span/>
+                        </div>
+                        <span>Start At:</span>
+                        <input type="text" class="o_input w-lg-auto" t-model="state.timestamp.startAt" t-on-input="this.onChangeStartAt"/>
+                        <span class="text-muted">Start at given timestamp(seconds)</span>
+                    </label>
+                </div>
+            </t>
         </div>
         <div class="col-md-6">
             <div class="o_video_preview position-relative border-0 p-3">

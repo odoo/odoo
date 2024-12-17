@@ -48,7 +48,7 @@ def get_video_source_data(video_url):
     return None
 
 
-def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_dm_logo=False, hide_dm_share=False):
+def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=False, hide_fullscreen=False, hide_dm_logo=False, hide_dm_share=False, timestamp=False, startAt=0):
     """ Computes the platform name, the embed_url, the video id and the video params of the given URL
         (or error message in case of invalid URL).
     """
@@ -64,6 +64,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
     if platform == 'youtube':
         params['rel'] = 0
         params['autoplay'] = autoplay and 1 or 0
+        if timestamp:
+            params['start'] = startAt.rstrip("s")
         if autoplay:
             params['mute'] = 1
             # The youtube js api is needed for autoplay on mobile. Note: this
