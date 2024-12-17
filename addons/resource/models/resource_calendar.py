@@ -103,17 +103,223 @@ class ResourceCalendar(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
-    flexible_hours = fields.Boolean(string="Flexible Hours",
+    flexible_hours = fields.Boolean(string="Flexible Hours", compute="_compute_flexible_hours", inverse="_inverse_flexible_hours", store=True,
                                     help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
     full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
+
+    schedule_type = fields.Selection(
+        [
+            ('fully_flexible', 'Fully Flexible'),
+            ('flexible', 'Flexible'),
+            ('fixed_time', 'Fixed Time'),
+            ('fully_fixed', 'Fully Fixed'),
+        ],
+        string='Schedule Type',
+        required=True,
+        default='fully_fixed',
+        help="Choose which level of definition you want to define on your Schedule\n"
+            "- Fully Flexible : Nothing is defined, working schedule can vary every week\n"
+            "- Flexible : Define an amount of hours to work on the week\n"
+            "- Fixed Time : In addition to Flexible, define the days (and hours if needed) you're working on the week\n"
+            "- Fully Fixed : In addition to Fixed Hours, define the start & end time for each day of the week"
+    )
+
+    attendance_ids_1st_week = fields.One2many(
+        'resource.calendar.attendance', 'calendar_id', 'Working Time 1st Week', compute="_compute_two_weeks_attendance",
+        inverse="_inverse_two_weeks_calendar")
+
+    attendance_ids_2nd_week = fields.One2many(
+        'resource.calendar.attendance', 'calendar_id', 'Working Time 2nd Week', compute="_compute_two_weeks_attendance",
+        inverse="_inverse_two_weeks_calendar")
+
+    fixed_time_with_hours = fields.Boolean(default=False)
+    monday = fields.Boolean(default=True)
+    monday_hours = fields.Float(default=8)
+    tuesday = fields.Boolean(default=True)
+    tuesday_hours = fields.Float(default=8)
+    wednesday = fields.Boolean(default=True)
+    wednesday_hours = fields.Float(default=8)
+    thursday = fields.Boolean(default=True)
+    thursday_hours = fields.Float(default=8)
+    friday = fields.Boolean(default=True)
+    friday_hours = fields.Float(default=8)
+    saturday = fields.Boolean(default=False)
+    saturday_hours = fields.Float(default=8)
+    sunday = fields.Boolean(default=False)
+    sunday_hours = fields.Float(default=8)
+
+    @api.depends('attendance_ids', 'two_weeks_calendar')
+    def _compute_two_weeks_attendance(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar:
+                continue
+            calendar.attendance_ids_1st_week = calendar.attendance_ids.filtered(lambda a: a.week_type == '0')
+            calendar.attendance_ids_2nd_week = calendar.attendance_ids.filtered(lambda a: a.week_type == '1')
+
+    def _inverse_two_weeks_calendar(self):
+        for calendar in self:
+            if not calendar.two_weeks_calendar:
+                continue
+            calendar.attendance_ids = calendar.attendance_ids_1st_week + calendar.attendance_ids_2nd_week
+
+    # region ToggleDays
+    def toggle_monday(self):
+        if self.monday:
+            self.attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek != '0')
+            self.monday = False
+        else:
+            self.env['resource.calendar.attendance'].create({
+                'name': 'Monday', 'dayofweek': '0', 'calendar_id': self._origin.id,
+                'hour_from': 8, 'hour_to': 8 + self.monday_hours, 'day_period': 'full_day'
+            })
+            self.monday = True
+
+    def toggle_tuesday(self):
+        if self.tuesday:
+            self.attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek != '1')
+            self.tuesday = False
+        else:
+            self.env['resource.calendar.attendance'].create({
+                'name': 'Tuesday', 'dayofweek': '1', 'calendar_id': self._origin.id,
+                'hour_from': 8, 'hour_to': 8 + self.tuesday_hours, 'day_period': 'full_day'
+            })
+            self.tuesday = True
+
+    def toggle_wednesday(self):
+        if self.wednesday:
+            self.attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek != '2')
+            self.wednesday = False
+        else:
+            self.env['resource.calendar.attendance'].create({
+                'name': 'Wednesday', 'dayofweek': '2', 'calendar_id': self._origin.id,
+                'hour_from': 8, 'hour_to': 8 + self.wednesday_hours, 'day_period': 'full_day'
+            })
+            self.wednesday = True
+
+    def toggle_thursday(self):
+        if self.thursday:
+            self.attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek != '3')
+            self.thursday = False
+        else:
+            self.env['resource.calendar.attendance'].create({
+                'name': 'Thursday', 'dayofweek': '3', 'calendar_id': self._origin.id,
+                'hour_from': 8, 'hour_to': 8 + self.thursday_hours, 'day_period': 'full_day'
+            })
+            self.thursday = True
+
+    def toggle_friday(self):
+        if self.friday:
+            self.attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek != '4')
+            self.friday = False
+        else:
+            self.env['resource.calendar.attendance'].create({
+                'name': 'Friday', 'dayofweek': '4', 'calendar_id': self._origin.id,
+                'hour_from': 8, 'hour_to': 8 + self.friday_hours, 'day_period': 'full_day'
+            })
+            self.friday = True
+
+    def toggle_saturday(self):
+        if self.saturday:
+            self.attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek != '5')
+            self.saturday = False
+        else:
+            self.env['resource.calendar.attendance'].create({
+                'name': 'Saturday', 'dayofweek': '5', 'calendar_id': self._origin.id,
+                'hour_from': 8, 'hour_to': 8 + self.saturday_hours, 'day_period': 'full_day'
+            })
+            self.saturday = True
+
+    def toggle_sunday(self):
+        if self.sunday:
+            self.attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek != '6')
+            self.sunday = False
+        else:
+            self.env['resource.calendar.attendance'].create({
+                'name': 'Sunday', 'dayofweek': '6', 'calendar_id': self._origin.id,
+                'hour_from': 8, 'hour_to': 8 + self.sunday_hours, 'day_period': 'full_day'
+            })
+            self.sunday = True
+    # endregion
+
+    # region DaysHours
+    @api.onchange("monday_hours")
+    def _onchange_monday_hours(self):
+        if self.monday:
+            attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek == '0')
+            for att_id in attendance_ids:
+                att_id.hour_to = att_id.hour_from + self.monday_hours
+
+    @api.onchange("tuesday_hours")
+    def _onchange_tuesday_hours(self):
+        if self.tuesday:
+            attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek == '1')
+            for att_id in attendance_ids:
+                att_id.hour_to = att_id.hour_from + self.tuesday_hours
+
+    @api.onchange("wednesday_hours")
+    def _onchange_wednesday_hours(self):
+        if self.wednesday:
+            attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek == '2')
+            for att_id in attendance_ids:
+                att_id.hour_to = att_id.hour_from + self.wednesday_hours
+
+    @api.onchange("thursday_hours")
+    def _onchange_thursday_hours(self):
+        if self.thursday:
+            attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek == '3')
+            for att_id in attendance_ids:
+                att_id.hour_to = att_id.hour_from + self.thursday_hours
+
+    @api.onchange("friday_hours")
+    def _onchange_friday_hours(self):
+        if self.friday:
+            attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek == '4')
+            for att_id in attendance_ids:
+                att_id.hour_to = att_id.hour_from + self.friday_hours
+
+    @api.onchange("saturday_hours")
+    def _onchange_saturday_hours(self):
+        if self.saturday:
+            attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek == '5')
+            for att_id in attendance_ids:
+                att_id.hour_to = att_id.hour_from + self.saturday_hours
+
+    @api.onchange("sunday_hours")
+    def _onchange_sunday_hours(self):
+        if self.sunday:
+            attendance_ids = self._origin.attendance_ids.filtered(lambda a: a.dayofweek == '6')
+            for att_id in attendance_ids:
+                att_id.hour_to = att_id.hour_from + self.sunday_hours
+    # endregion
+
+    @api.depends("schedule_type")
+    def _compute_flexible_hours(self):
+        for calendar in self:
+            calendar.flexible_hours = calendar.schedule_type in ('fully_flexible', 'flexible')
+
+    def _inverse_flexible_hours(self):
+        for calendar in self:
+            calendar.schedule_type = 'flexible' if calendar.flexible_hours else 'fully_fixed'
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'flexible_hours')
     def _compute_hours_per_day(self):
         for calendar in self:
             if calendar.flexible_hours:
                 continue
+
+            if calendar.schedule_type == 'fixed_time' and not calendar.fixed_time_with_hours and calendar.hours_per_day:
+                continue
+
             attendances = calendar._get_global_attendances()
             calendar.hours_per_day = calendar._get_hours_per_day(attendances)
+
+    @api.onchange('flexible_hours')
+    def onchange_flexible_hours(self):
+        if self.flexible_hours:
+            self.two_weeks_calendar = False
+            self.attendance_ids = [(5, 0, 0)]
+        elif not self.attendance_ids:
+            self.attendance_ids = self.default_get(['attendance_ids'])['attendance_ids']
 
     @api.depends('company_id')
     def _compute_attendance_ids(self):
@@ -195,43 +401,23 @@ class ResourceCalendar(models.Model):
 
     def switch_calendar_type(self):
         if not self.two_weeks_calendar:
-            self.attendance_ids.unlink()
-            self.attendance_ids = [
-                (0, 0, {
-                    'name': 'First week',
-                    'dayofweek': '0',
-                    'sequence': '0',
-                    'hour_from': 0,
-                    'day_period': 'morning',
-                    'week_type': '0',
-                    'hour_to': 0,
-                    'display_type':
-                    'line_section'}),
-                (0, 0, {
-                    'name': 'Second week',
-                    'dayofweek': '0',
-                    'sequence': '25',
-                    'hour_from': 0,
-                    'day_period': 'morning',
-                    'week_type': '1',
-                    'hour_to': 0,
-                    'display_type': 'line_section'}),
-            ]
-
             self.two_weeks_calendar = True
-            default_attendance = self.default_get(['attendance_ids'])['attendance_ids']
-            for idx, att in enumerate(default_attendance):
-                att[2]["week_type"] = '0'
-                att[2]["sequence"] = idx + 1
-            self.attendance_ids = default_attendance
-            for idx, att in enumerate(default_attendance):
-                att[2]["week_type"] = '1'
-                att[2]["sequence"] = idx + 26
-            self.attendance_ids = default_attendance
+            default_attendance = self.attendance_ids.copy()
+            final_list = self.env['resource.calendar.attendance']
+            for att in default_attendance:
+                week0, week1 = att.copy(), att.copy()
+                week0.write({'week_type': '0'})
+                week1.write({'week_type': '1'})
+                final_list |= week0
+                final_list |= week1
+            self.attendance_ids = final_list
         else:
             self.two_weeks_calendar = False
-            self.attendance_ids.unlink()
-            self.attendance_ids = self.default_get(['attendance_ids'])['attendance_ids']
+            default_attendance = self.attendance_ids.copy()
+            final_list = default_attendance.filtered(lambda att: att.week_type == '0')
+            for att in final_list:
+                att.week_type = False
+            self.attendance_ids = final_list
 
     @api.onchange('attendance_ids')
     def _onchange_attendance_ids(self):
