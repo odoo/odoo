@@ -48,7 +48,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         cls.company_data.update({
             'service_order_sales_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
                 'name': 'service_order_sales_price',
-                'categ_id': cls.company_data['product_category'].id,
+                'categ_id': cls.product_category.id,
                 'standard_price': 0.,
                 'list_price': 280.39,
                 'type': 'service',
@@ -64,7 +64,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             }),
             'service_delivery_sales_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
                 'name': 'service_order_sales_price',
-                'categ_id': cls.company_data['product_category'].id,
+                'categ_id': cls.product_category.id,
                 'standard_price': 0.,
                 'list_price': 280.39,
                 'type': 'service',
@@ -80,7 +80,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             }),
             'service_delivery_cost_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
                 'name': 'service_delivery_cost_price',
-                'categ_id': cls.company_data['product_category'].id,
+                'categ_id': cls.product_category.id,
                 'standard_price': 235.28,
                 'list_price': 280.39,
                 'type': 'service',
@@ -96,7 +96,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             }),
             'service_order_cost_price': cls.env['product.product'].with_company(cls.company_data['company']).create({
                 'name': 'service_order_cost_price',
-                'categ_id': cls.company_data['product_category'].id,
+                'categ_id': cls.product_category.id,
                 'standard_price': 235.28,
                 'list_price': 280.39,
                 'type': 'service',

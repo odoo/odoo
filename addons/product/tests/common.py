@@ -2,19 +2,16 @@
 
 from odoo.fields import Command
 
-from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.uom.tests.common import UomCommon
 
 
-class ProductCommon(
-    BaseCommon,  # enforce constant test currency (USD)
-    UomCommon,
-):
+class ProductCommon(UomCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.group_product_pricelist = cls.quick_ref('product.group_product_pricelist')
         cls.product_category = cls.env['product.category'].create({
             'name': 'Test Category',
         })
@@ -32,18 +29,19 @@ class ProductCommon(
         cls.pricelist = cls.env['product.pricelist'].create({
             'name': 'Test Pricelist',
         })
-        cls._archive_other_pricelists()
+        # Archive all existing pricelists
+        cls.env['product.pricelist'].search([
+            ('id', '!=', cls.pricelist.id),
+        ]).action_archive()
 
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
-        return groups | cls.env.ref('base.group_system')  # For the management/creation of products
+        return groups | cls.quick_ref('base.group_system')
 
     @classmethod
-    def _archive_other_pricelists(cls):
-        cls.env['product.pricelist'].search([
-            ('id', '!=', cls.pricelist.id),
-        ]).action_archive()
+    def _enable_pricelists(cls):
+        cls.env.user.groups_id += cls.group_product_pricelist
 
     @classmethod
     def _create_pricelist(cls, **create_vals):
@@ -59,6 +57,8 @@ class ProductCommon(
             'type': 'consu',
             'list_price': 100.0,
             'standard_price': 50.0,
+            'uom_id': cls.uom_unit.id,
+            'uom_po_id': cls.uom_unit.id,
             'categ_id': cls.product_category.id,
             **create_vals,
         })

@@ -19,12 +19,6 @@ class TestSaleFlow(TestSaleCommon):
         cls.env = cls.env(user=user)
         cls.cr = cls.env.cr
 
-        cls.company = cls.env['res.company'].create({
-            'name': 'Test Company',
-            'currency_id': cls.env.ref('base.USD').id,
-        })
-        cls.company_data = cls.setup_sale_configuration_for_company(cls.company)
-
         cls.partner_a = cls.env['res.partner'].create({
             'name': 'partner_a',
             'company_id': False,
@@ -52,7 +46,6 @@ class TestSaleFlow(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'order_line': [
                 (0, 0, {
                     'name': self.company_data['product_order_cost'].name,

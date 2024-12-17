@@ -23,7 +23,6 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
-            'pricelist_id': cls.company_data['default_pricelist'].id,
             'order_line': [
                 Command.create({
                     'product_id': cls.company_data['product_order_no'].id,
@@ -159,7 +158,6 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'order_line': [Command.create({
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 5,
@@ -199,7 +197,6 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'order_line': [Command.create({
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 5,
@@ -240,7 +237,6 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'order_line': [Command.create({
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 5,
@@ -493,7 +489,6 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
 
         SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
@@ -538,7 +533,6 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
 
         SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
@@ -1026,7 +1020,6 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
 
         sol_prod_deliver = self.env['sale.order.line'].create({
