@@ -4,7 +4,19 @@
 <!-- Snippet template -->
 <template id="s_facebook_page" name="Facebook">
     <div class="o_facebook_page">
-        <iframe class="mw-100 o_facebook_page_preview" src="https://www.facebook.com/plugins/page.php?height=70&amp;hide_cover=true&amp;href=https%3A%2F%2Fwww.facebook.com%2FOdoo&amp;show_facepile=false&amp;small_header=true&amp;tabs=&amp;width=500" style="width: 500px; height: 70px; border: medium none; overflow: hidden;" aria-label="Facebook"/>
+        <div class="fb-page"
+             data-href="https://www.facebook.com/Odoo"
+             data-tabs="timeline"
+             data-width="500"
+             data-height="700"
+             data-small-header="false"
+             data-adapt-container-width="true"
+             data-hide-cover="false"
+             data-show-facepile="true">
+            <blockquote cite="https://www.facebook.com/Odoo" class="fb-xfbml-parse-ignore">
+            <a href="https://www.facebook.com/Odoo">Facebook</a>
+            </blockquote>
+        </div>
     </div>
 </template>
 
@@ -18,6 +30,8 @@
             <we-checkbox string="Events" data-option-name="tab.events" data-toggle-option="true" data-no-preview="true"/>
             <we-checkbox string="Messages" data-option-name="tab.messages" data-toggle-option="true" data-no-preview="true"/>
             <we-checkbox string="Small Header" data-option-name="small_header" data-toggle-option="true" data-no-preview="true"/>
+            <we-input class="o_we_large" string="Height" data-set-height="" data-no-preview="true"/>
+            <we-input class="o_we_large" string="Width" data-set-width="" data-no-preview="true"/>
         </div>
     </xpath>
 </template>
@@ -28,5 +42,12 @@
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_facebook_page/000.js</field>
 </record>
+
+<!-- Facebook SDK -->
+<template id="assets_frontend" inherit_id="website.layout">
+    <xpath expr="//head" position="inside">
+        <script async="async" defer="defer" crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v10.0"></script>
+    </xpath>
+</template>
 
 </odoo>
