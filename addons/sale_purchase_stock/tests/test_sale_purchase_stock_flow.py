@@ -226,3 +226,44 @@ class TestSalePurchaseStockFlow(TransactionCase):
             {'product_id': product_1.id, 'product_uom_qty': 1.0},
             {'product_id': product_2.id, 'product_uom_qty': 0.0},
         ])
+
+    def test_mto_cancel_reset_to_quotation_and_update(self):
+        """
+        Confirm a SO with an MTO + Buy routes line. Cancel the SO,
+        reset it to quotation confirm it and decrease the quantity.
+
+        The quantity of the second delivery should be updated accordingly.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'name': self.mto_product.name,
+                    'product_id': self.mto_product.id,
+                    'product_uom_qty': 2,
+                    'product_uom_id': self.mto_product.uom_id.id,
+                    'price_unit': 10,
+                }),
+            ],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.mto_product.id, 'product_uom_qty': 2.0},
+        ])
+        so.with_context(disable_cancel_warning=True).action_cancel()
+        self.assertEqual(delivery.state, 'cancel')
+        so.action_draft()
+        so.action_confirm()
+        new_delivery = so.picking_ids - delivery
+        self.assertEqual(len(new_delivery), 1)
+        self.assertRecordValues(new_delivery.move_ids, [
+            {'product_id': self.mto_product.id, 'product_uom_qty': 2.0},
+        ])
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 1
+        self.assertEqual(so.picking_ids, delivery | new_delivery)
+        self.assertRecordValues(new_delivery.move_ids, [
+            {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
+        ])
