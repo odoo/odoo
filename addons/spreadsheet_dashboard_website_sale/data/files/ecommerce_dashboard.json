@@ -603,7 +603,7 @@
       "context": {},
       "domain": [["website_id", "!=", false]],
       "id": "2",
-      "measures": [{ "id": "order_reference", "fieldName": "order_reference" }],
+      "measures": [{ "id": "order_reference", "fieldName": "order_reference" }, { "id": "price_subtotal", "fieldName": "price_subtotal" }],
       "model": "sale.report",
       "name": "Sales Analysis by Abandoned Cart",
       "sortedColumn": {
@@ -647,7 +647,7 @@
       "context": { "search_default_confirmed": 1 },
       "domain": [["website_id", "!=", false]],
       "id": "3",
-      "measures": [{ "id": "order_reference", "fieldName": "order_reference" }],
+      "measures": [{ "id": "order_reference", "fieldName": "order_reference" }, { "id": "price_subtotal", "fieldName": "price_subtotal" }],
       "model": "sale.report",
       "name": "Sales Analysis by Abandoned Cart",
       "sortedColumn": {
