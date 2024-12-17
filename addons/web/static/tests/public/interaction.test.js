@@ -731,6 +731,27 @@ describe("using qualifiers", () => {
         core.interactions[0].interaction.updateContent();
         expect("span").toHaveClass("a");
     });
+
+    test("add a listener does not lose 'this' with qualifiers", async () => {
+        let clicked = false;
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-on-click.noupdate.stop.prevent": this.doSomething,
+                },
+            };
+            doSomething(ev) {
+                clicked = true;
+                expect(this).not.toBe(undefined);
+                expect(this.doSomething).not.toBe(undefined);
+            }
+        }
+        await startInteraction(Test, TemplateTest);
+        expect(clicked).toBe(false);
+        await click("span");
+        expect(clicked).toBe(true);
+    });
 });
 
 describe("lifecycle", () => {

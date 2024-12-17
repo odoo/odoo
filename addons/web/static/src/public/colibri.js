@@ -53,11 +53,11 @@ export class Colibri {
             fn = {
                 prevent: (f) => (ev) => {
                     ev.preventDefault();
-                    return f(ev);
+                    return f.call(this.interaction, ev);
                 },
                 stop: (f) => (ev) => {
                     ev.stopPropagation();
-                    return f(ev);
+                    return f.call(this.interaction, ev);
                 },
                 capture: (f) => {
                     options ||= {};
@@ -65,7 +65,7 @@ export class Colibri {
                     return f;
                 },
                 noupdate: (f) => (ev) => {
-                    f(ev);
+                    f.call(this.interaction, ev);
                     return SKIP_IMPLICIT_UPDATE;
                 },
             }[groups.suffix](fn);
