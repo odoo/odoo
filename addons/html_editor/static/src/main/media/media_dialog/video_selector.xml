@@ -1,11 +1,14 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="html_editor.VideoOption">
-    <div class="mb-1">
-        <Switch value="props.value" onChange="props.onChangeOption"
+    <div class="mb-1" t-attf-class="{{ showStartAtInput ? 'd-flex align-items-start gap-2 cursor-pointer' : ''}}">
+        <Switch value="!!props.value" onChange="props.onChangeOption"
             label="props.label" description="props.description"
             extraClasses="'d-flex align-items-start cursor-pointer flex-shrink-0'"
         />
+        <t t-if="showStartAtInput">
+            <input type="text" placeholder="MM:SS" class="o_input w-lg-auto" t-att-value="props.value" t-on-input="props.onChangeStartAt"/>
+        </t>
     </div>
 </t>
 
@@ -30,8 +33,10 @@
             </div>
             <div t-if="shownOptions.length" class="o_video_dialog_options">
                 <VideoOption t-foreach="shownOptions" t-as="option" t-key="option.id"
-                    value="option.value"
+                    name="option.id"
+                    value="value"
                     onChangeOption="() => this.onChangeOption(option.id)"
+                    onChangeStartAt="(ev) => this.onChangeStartAt(ev, option.id)"
                     label="option.label"
                     description="option.description"/>
             </div>
