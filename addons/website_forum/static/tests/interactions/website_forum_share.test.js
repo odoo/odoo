@@ -6,11 +6,8 @@ import { defineStyle } from "@web/../tests/web_test_helpers";
 setupInteractionWhiteList(["website_forum.website_forum_share", "website.share"]);
 describe.current.tags("interaction_dev");
 
-function removeTransitions() {
-    defineStyle(`* { transition: none !important; }`);
-}
 
-beforeEach(removeTransitions);
+beforeEach(() => defineStyle(`* { transition: none !important; }`));
 afterEach(() => {
     document.body.querySelector("#oe_social_share_modal")?.remove();
 });
@@ -20,13 +17,12 @@ test("sessionStorage social_share is cleared after start", async () => {
         targetType: "answer",
     }));
     expect(sessionStorage.getItem("social_share")).toEqual('{"targetType":"answer"}');
-    const { core } = await startInteractions(`
+    await startInteractions(`
          <div id="wrapwrap" class="website_forum">
             <div class="o_wforum_question" data-state="active"></div>
          </div>
     `);
     expect(sessionStorage.getItem("social_share")).toBe(null);
-    core.stopInteractions();
 });
 
 
@@ -47,7 +43,7 @@ describe("target types", () => {
         expect(el.ownerDocument.body.querySelector(".modal p")).toHaveText(/^By sharing you answer, you will get additional/);
     });
 
-    test("target type answer shows modal with website_forum.social_message_question", async () => {
+    test("target type question shows modal with website_forum.social_message_question", async () => {
         sessionStorage.setItem("social_share", JSON.stringify({
             targetType: "question",
         }));
@@ -63,7 +59,7 @@ describe("target types", () => {
         expect(el.ownerDocument.body.querySelector(".modal p")).toHaveText(/^On average,/);
     });
 
-    test("target type answer shows modal with website_forum.social_message_default", async () => {
+    test("target type default shows modal with website_forum.social_message_default", async () => {
         sessionStorage.setItem("social_share", JSON.stringify({
             targetType: "default",
         }));
