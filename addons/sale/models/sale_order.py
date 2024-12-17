@@ -1749,10 +1749,6 @@ class SaleOrder(models.Model):
                 format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
             )
 
-        if self.validity_date and self.state in ['draft', 'sent']:
-            formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
-            subtitles.append(_("Expires on %(date)s", date=formatted_date))
-
         render_context['subtitles'] = subtitles
         return render_context
 
