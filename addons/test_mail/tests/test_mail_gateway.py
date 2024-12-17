@@ -2229,12 +2229,12 @@ class TestMailGatewayLoops(MailGatewayCommon):
         original_mail = self._mails
 
         # auto-reply: write to bounce = no more bounce
-        self.gateway_mail_reply_last_email(MAIL_TEMPLATE, force_to=f'{self.alias_bounce}@{self.alias_domain}')
+        self.gateway_mail_reply_last_email(MAIL_TEMPLATE, force_email_to=f'{self.alias_bounce}@{self.alias_domain}')
         self.assertNotSentEmail()
 
         # auto-reply but forwarded to catchall -> should not bounce again
         self._mails = original_mail  # just to revert state prior to auto reply
-        self.gateway_mail_reply_last_email(MAIL_TEMPLATE, force_to=f'{self.alias_catchall}@{self.alias_domain}')
+        self.gateway_mail_reply_last_email(MAIL_TEMPLATE, force_email_to=f'{self.alias_catchall}@{self.alias_domain}')
         # TDE FIXME: this should not bounce again
         # self.assertNotSentEmail()
         self.assertSentEmail(
