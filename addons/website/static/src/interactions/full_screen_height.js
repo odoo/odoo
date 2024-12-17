@@ -22,7 +22,7 @@ export class FullScreenHeight extends Interaction {
         // Only initialize if taller than the ideal height as some extra css
         // rules may alter the full-screen-height class behavior in some
         // cases (blog...).
-        this.isActive = !isVisible(this.el) ||  (currentHeight > idealHeight);
+        this.isActive = !isVisible(this.el) || (currentHeight > idealHeight + 1);
     }
 
     computeIdealHeight() {
