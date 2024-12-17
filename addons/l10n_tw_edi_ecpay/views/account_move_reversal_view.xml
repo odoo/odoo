@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_reversal_inherit_ecpay" model="ir.ui.view">
+            <field name="name">ec_account_invoice_refund_form_inherit</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reason']" position="attributes">
+                    <attribute name="required">l10n_tw_edi_ecpay_invoice_id</attribute>
+                </xpath>
+                <xpath expr="//field[@name='reason']" position="after">
+                    <field name="l10n_tw_edi_refund_agreement_type" invisible="not l10n_tw_edi_ecpay_invoice_id or l10n_tw_edi_is_b2b" required="l10n_tw_edi_ecpay_invoice_id"/>
+                    <field name="l10n_tw_edi_allowance_notify_way" invisible="not l10n_tw_edi_ecpay_invoice_id or l10n_tw_edi_is_b2b" required="l10n_tw_edi_ecpay_invoice_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
