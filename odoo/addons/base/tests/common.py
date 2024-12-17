@@ -146,16 +146,6 @@ class BaseCommon(TransactionCase):
         )
 
 
-class BaseUsersCommon(BaseCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls.user_portal = cls._create_new_portal_user()
-        cls.user_internal = cls._create_new_internal_user()
-
-
 class TransactionCaseWithUserDemo(TransactionCase):
 
     @classmethod
