@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="used_gift_card">
-        <div class="text-muted d-md-block small"
+        <div class="d-md-block mb-2 small text-muted"
             t-if="line.coupon_id and line.order_id != line.coupon_id.order_id and not line.coupon_id.program_id.is_nominative">
             <span>
                 Code:
