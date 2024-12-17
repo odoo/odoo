@@ -158,7 +158,7 @@ export class DebugWidget extends Component {
                 for (const rel of manyRel) {
                     const model = this.pos.models[rel.relation];
 
-                    if (!model) {
+                    if (!model || !order[rel.name] || !order[rel.name].length) {
                         continue;
                     }
 
