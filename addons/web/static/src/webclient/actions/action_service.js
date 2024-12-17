@@ -1270,7 +1270,7 @@ export function makeActionManager(env, router = _router) {
             controller.displayName ||= clientAction.displayName?.toString() || "";
             return _updateUI(controller, options);
         } else {
-            const next = await clientAction(env, action);
+            const next = await clientAction(env, action, options);
             if (next) {
                 return doAction(next, options);
             }
