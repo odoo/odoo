@@ -150,6 +150,10 @@
                                         </div>
                                     </group>
                                     <group id="right column" class="col-6">
+                                        <field name="match_transaction_details"/>
+                                        <field name="match_transaction_details_param"
+                                               invisible="not match_transaction_details"
+                                               required="match_transaction_details"/>
                                         <field name="match_partner"/>
                                         <label for="match_partner_ids" class="ml16"
                                                invisible="not match_partner"/>

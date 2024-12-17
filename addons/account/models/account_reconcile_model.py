@@ -60,6 +60,7 @@ class AccountReconcileModelLine(models.Model):
             ('percentage', 'Percentage of balance'),
             ('percentage_st_line', 'Percentage of statement line'),
             ('regex', 'From label'),
+            ('from_transaction_details', 'From Transaction Details'),
         ],
         required=True,
         store=True,
@@ -132,7 +133,7 @@ class AccountReconcileModelLine(models.Model):
                 raise UserError(_("Balance percentage can't be 0"))
             if record.amount_type == 'percentage' and record.amount == 0:
                 raise UserError(_("Statement line percentage can't be 0"))
-            if record.amount_type == 'regex':
+            if record.amount_type in {'regex', 'from_transaction_details'}:
                 try:
                     re.compile(record.amount_string)
                 except re.error:
@@ -232,6 +233,15 @@ class AccountReconcileModel(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter', tracking=True)
+    match_transaction_details = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Transaction details', tracking=True, help='''The reconciliation model will only be applied when the transaction details:
+            * Contains: The proposition label must contains this string (case insensitive).
+            * Not Contains: Negation of "Contains".
+            * Match Regex: Define your own regular expression. (Care that it's a jsonfield)''')
+    match_transaction_details_param = fields.Char(string='Transaction Details Parameter', tracking=True)
     match_note = fields.Selection(selection=[
         ('contains', 'Contains'),
         ('not_contains', 'Not Contains'),
@@ -318,7 +328,7 @@ class AccountReconcileModel(models.Model):
     @api.depends('line_ids.amount_type')
     def _compute_show_decimal_separator(self):
         for record in self:
-            record.show_decimal_separator = any(l.amount_type == 'regex' for l in record.line_ids)
+            record.show_decimal_separator = any(l.amount_type in {'regex', 'from_transaction_details'} for l in record.line_ids)
 
     @api.depends('payment_tolerance_param', 'payment_tolerance_type')
     def _compute_payment_tolerance_param(self):
