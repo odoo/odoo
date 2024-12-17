@@ -116,7 +116,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
     def test_media_dialog_undraw(self):
         BASE_URL = self.base_url()
-        banner = '/website/static/src/img/snippets_demo/s_banner.jpg'
+        banner = '/website/static/src/img/snippets_demo/s_banner.webp'
 
         def mock_media_library_search(self, **params):
             return {
