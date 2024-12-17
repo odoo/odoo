@@ -1,12 +1,11 @@
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 
 export class ImagePadding extends Component {
     static components = { Dropdown, DropdownItem };
     static props = {
-        ...toolbarButtonProps,
+        title: String,
         onSelected: Function,
     };
     static template = "html_editor.ImagePadding";

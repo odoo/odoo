@@ -1,7 +1,8 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ColorSelector">
         <Dropdown state="dropdown">
-            <button class="btn btn-light" t-attf-class="o-select-color-{{props.type}} {{dropdown.isOpen ? 'active' : ''}}" t-att-title="props.title">
+            <t t-if="this.props.slots?.default"><t t-slot="default" /></t>
+            <button t-else="" class="btn btn-light" t-attf-class="o-select-color-{{props.type}} {{dropdown.isOpen ? 'active' : ''}}" t-att-title="props.title">
                 <t t-if="mode === 'color'">
                     <i class="fa fa-fw fa-font py-1" t-att-style="this.getSelectedColorStyle()"/>
                 </t>
@@ -16,18 +17,18 @@
                             t-att-class="{active: state.activeTab === 'solid'}"
                             t-on-click="() => this.setTab('solid')">
                             Solid
-                        </button> 
+                        </button>
                         <button class="btn btn-sm btn-light"
                             t-att-class="{active: state.activeTab === 'custom'}"
                             t-on-click="() => this.setTab('custom')">
                             Custom
-                        </button> 
+                        </button>
                         <button class="btn btn-sm btn-light"
                             t-att-class="{active: state.activeTab === 'gradient'}"
                             t-on-click="() => this.setTab('gradient')">
                             Gradient
-                        </button> 
-                        <button class="btn btn-sm btn-light fa fa-trash me-1" 
+                        </button>
+                        <button class="btn btn-sm btn-light fa fa-trash me-1"
                                 title="Reset"
                                 t-on-click="onColorApply"
                                 t-on-mouseover="onColorHover"

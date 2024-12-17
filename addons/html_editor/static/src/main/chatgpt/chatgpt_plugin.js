@@ -28,12 +28,12 @@ export class ChatGPTPlugin extends Plugin {
             {
                 id: "translate",
                 groupId: "ai",
-                title: _t("Translate with AI"),
                 isAvailable: (selection) => {
                     return !selection.isCollapsed && user.userId;
                 },
                 Component: LanguageSelector,
                 props: {
+                    title: _t("Translate with AI"),
                     onSelected: (language) => this.openDialog({ language }),
                 },
             },
