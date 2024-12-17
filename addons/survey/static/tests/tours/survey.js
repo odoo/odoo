@@ -1,8 +1,7 @@
 import { registry } from "@web/core/registry";
+import { contains } from "@web/../tests/utils";
 
-registry.category("web_tour.tours").add('test_survey', {
-    url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae',
-    steps: () => [
+const survey_steps = [
     // Page-1
     {
         content: 'Click on Start',
@@ -76,4 +75,53 @@ registry.category("web_tour.tours").add('test_survey', {
         content: 'Thank you',
         trigger: 'h1:contains("Thank you!")',
     }
-]});
+];
+
+const survey_multilang_steps = [
+    {
+        content: "Select French",
+        trigger: "select[name='lang_code']",
+        run() {
+            const langSelect = document.querySelector("select[name='lang_code']");
+            langSelect.value = "fr_BE";
+            langSelect.dispatchEvent(new Event("change", { bubbles: true }));
+        },
+    },
+    {
+        content: "Check French translation",
+        trigger: "h1.o_survey_main_title:contains('Enquête de satisfaction')",
+    },
+    {
+        content: "Select English",
+        trigger: "select[name='lang_code']",
+        run() {
+            const langSelect = document.querySelector("select[name='lang_code']");
+            langSelect.value = "en_US";
+            langSelect.dispatchEvent(new Event("change", { bubbles: true }));
+        },
+    },
+    {
+        content: "Check English translation",
+        trigger: "h1.o_survey_main_title:contains('User Feedback Form')",
+    },
+];
+
+registry.category("web_tour.tours").add("test_survey", {
+    url: "/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae",
+    steps: () => [
+        {
+            content: "Check that there are no language selector",
+            trigger: "h1.o_survey_main_title:contains('User Feedback Form')",
+            async run() {
+                await contains("h1.o_survey_main_title", { text: "User Feedback Form" });
+                await contains("select[name='lang_code']", { count: 0 });
+            },
+        },
+        ...survey_steps,
+    ],
+});
+
+registry.category("web_tour.tours").add("test_survey_multilang", {
+    url: "/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae",
+    steps: () => [...survey_multilang_steps, ...survey_steps],
+});
