@@ -224,6 +224,104 @@
                 records="state.valueList.availableRecords" />
         </div>
     </BuilderRow>
+    <BuilderRow
+        label.translate="Requirement"
+        t-if="domStateCurrentFieldInput.hasDateTimePicker or domStateCurrentFieldInput.isTextArea or domStateCurrentFieldInput.canHaveTextValidationCondition.includes(domStateCurrentFieldInput.type)"
+    >
+        <BuilderSelect
+            t-if="!domStateCurrentFieldInput.hasDateTimePicker and (domStateCurrentFieldInput.isTextArea || ['text', 'email', 'tel', 'url', 'search', 'password'].includes(domStateCurrentFieldInput.type))"
+            id="'require_condition_text_opt'"
+            preview="false"
+            dataAttributeAction="'requirementComparator'"
+            action="'setRequirementComparator'"
+        >
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'substring'">Contains</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'!substring'">Doesn't contain</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderSelect
+            t-if="domStateCurrentFieldInput.type === 'number'"
+            id="'require_condition_num_opt'"
+            preview="false"
+            dataAttributeAction="'requirementComparator'"
+            action="'setRequirementComparator'"
+        >
+            <!-- number comparator possibilities -->
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'greater'">Is number greater than</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'less'">Is number less than</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'greater or equal'">Is number greater than or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'less or equal'">Is number less than or equal to</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderSelect
+            t-if="domStateCurrentFieldInput.hasDateTimePicker"
+            id="'require_condition_time_comparators_opt'"
+            preview="false"
+            dataAttributeAction="'requirementComparator'"
+            action="'setRequirementComparator'"
+        >
+            <!-- date & datetime comparator possibilities -->
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'after'">Is date after</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'before'">Is date before</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'equal or after'">Is date after or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'equal or before'">Is date before or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'between'">Is date between (included)</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'!between'">Is date not between (excluded)</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderButton
+            id="'error_message_opt'"
+            title.translate="Add predefined error message"
+            action="'setCustomErrorMessage'"
+            t-if="!isActiveItem('no_requirement_opt')">
+                <i class="fa fa-eye" t-att-class="{'fa-eye-slash': !isActiveItem('error_message_opt')}"/>
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="isTextConditionForRequirementOptionVisible">
+        <BuilderTextInput
+            placeholder.translate="Enter requirement conditions"
+            id="'require_condition_additional_text'"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="domStateCurrentFieldInput.isFormDateTime and domState.elDataset.requirementComparator">
+        <BuilderDateTimePicker
+            placeholder.translate="Enter requirement conditions"
+            id="'require_condition_additional_datetime_1'"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"
+            type="'datetime'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="domStateCurrentFieldInput.isFormDate and domState.elDataset.requirementComparator">
+        <BuilderDateTimePicker
+            placeholder.translate="Enter requirement conditions"
+            id="'require_condition_additional_date'"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"
+            type="'date'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="domStateCurrentFieldInput.isFormDateTime and ['between', '!between'].includes(domState.elDataset.requirementComparator)">
+        <BuilderDateTimePicker
+            placeholder.translate="Enter requirement conditions"
+            id="'require_condition_additional_datetime_2'"
+            dataAttributeAction="'requirementBetween'"
+            action="'setDefaultErrorMessage'"
+            type="'datetime'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="domStateCurrentFieldInput.isFormDate and ['between', '!between'].includes(domState.elDataset.requirementComparator)">
+        <BuilderDateTimePicker
+            placeholder.translate="Enter requirement conditions"
+            id="'require_condition_additional_date_end'"
+            dataAttributeAction="'requirementBetween'"
+            action="'setDefaultErrorMessage'"
+            type="'date'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Error Message" level="1" t-if="isActiveItem('error_message_opt')">
+        <BuilderTextInput placeholder.translate="Write custom error message" id="'error_message_input_opt'" dataAttributeAction="'errorMessage'"/>
+    </BuilderRow>
     <BuilderRow label.translate="Visibility">
         <BuilderSelect preview="false" action="'setVisibility'">
             <BuilderSelectItem actionValue="'visible'" classAction="''">Always Visible</BuilderSelectItem>
@@ -287,6 +385,7 @@
                 <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'between'">Is between (included)</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'!between'">Is not between (excluded)</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'lessyears'">Is within the last X years</BuilderSelectItem>
             </BuilderSelect>
             <BuilderSelect t-if="domStateDependency.type === 'file'"
                 id="'hidden_condition_file_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
@@ -324,10 +423,10 @@
             <BuilderTextInput t-if="isTextConditionValueVisible"
                 id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
             />
-            <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set','lessyears'].includes(domState.elDataset.visibilityComparator)"
                 id="'hidden_condition_additional_datetime'" dataAttributeAction="'visibilityCondition'" type="'datetime'"
             />
-            <BuilderDateTimePicker t-if="domStateDependency.isFormDate and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDate and !['set', '!set', 'lessyears'].includes(domState.elDataset.visibilityComparator)"
                 id="'hidden_condition_additional_date'" dataAttributeAction="'visibilityCondition'" type="'date'"
             />
             <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"

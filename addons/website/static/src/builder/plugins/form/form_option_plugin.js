@@ -40,6 +40,10 @@ import { renderToElement } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { FormOption } from "./form_option";
+import { localization } from "@web/core/l10n/localization";
+import { formatDate } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 const DEFAULT_EMAIL_TO_VALUE = "info@yourcompany.example.com";
 export class FormOptionPlugin extends Plugin {
@@ -56,6 +60,8 @@ export class FormOptionPlugin extends Plugin {
         "replaceField",
         "prepareConditionInputs",
         "setLabelsMark",
+        "clearFieldDatasetValues",
+        "defaultMessage",
     ];
     resources = {
         builder_header_middle_buttons: [
@@ -157,6 +163,9 @@ export class FormOptionPlugin extends Plugin {
             SetVisibilityDependencyAction,
             SetFormCustomFieldValueListAction,
             PropertyAction,
+            SetCustomErrorMessageAction,
+            SetDefaultErrorMessageAction,
+            SetRequirementComparatorAction,
         },
         force_not_editable_selector: ".s_website_form form",
         force_editable_selector: [
@@ -775,6 +784,90 @@ export class FormOptionPlugin extends Plugin {
         const toCleanEls = rootEl.querySelectorAll(".o_show_form_success_message");
         toCleanEls.forEach((el) => el.classList.remove("o_show_form_success_message"));
     }
+    /**
+     * Clear the dataset of the field to avoid keeping old values.
+     *
+     * @params {HTMLElement} fieldEl - The field element to clear.
+     */
+    clearFieldDatasetValues(fieldEl) {
+        delete fieldEl.dataset.customError;
+        delete fieldEl.dataset.errorMessage;
+        delete fieldEl.dataset.requirementBetween;
+        delete fieldEl.dataset.requirementCondition;
+    }
+
+    /**
+     * Generates an error message for requirement set on field if validation fails.
+     *
+     * @param {string} [comparator] The method used to form the error message.
+     * @param {string} [condition] The expected value of the field.
+     * @param {string} [between] The maximum date value if the comparator is
+     *      'between' or '!between'.
+     * @returns {string} The default error message.
+     */
+    defaultMessage(comparator, condition, between, type) {
+        const textMessages = {
+            contains: _t("This field must include keyword %s.", condition),
+            "!contains": _t("This field must not include keyword %s.", condition),
+            substring: _t("This field must include keyword %s.", condition),
+            "!substring": _t("This field must not include keyword %s.", condition),
+            greater: _t("Invalid: field is not greater than %s.", condition),
+            less: _t("Invalid: field is not less than %s.", condition),
+            "greater or equal": _t("Invalid: field is not greater than or equal to %s.", condition),
+            "less or equal": _t("Invalid: field is not less than or equal to %s.", condition),
+        };
+
+        if (condition && textMessages[comparator]) {
+            return textMessages[comparator];
+        }
+
+        if (["date", "datetime"].includes(type)) {
+            const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
+            const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
+            const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
+
+            const dateMessages = {
+                dateEqual: _t(
+                    "Entered date or time is not correct! It must be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "date!equal": _t(
+                    "Entered date or time is not correct! It must not be %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                before: _t(
+                    "Entered date or time is not correct! It must be before %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                after: _t(
+                    "Entered date or time is not correct! It must be after %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or before": _t(
+                    "Entered date or time is not correct! It must be before or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                "equal or after": _t(
+                    "Entered date or time is not correct! It must be after or equal to %(start)s (%(format)s).",
+                    { start, format }
+                ),
+                between: _t(
+                    "Entered date or time is not correct! It must be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+                "!between": _t(
+                    "Entered date or time is not correct! It must not be within %(start)s and %(end)s (%(format)s).",
+                    { start, end, format }
+                ),
+            };
+
+            if (condition && dateMessages[comparator]) {
+                return dateMessages[comparator];
+            }
+        }
+
+        return _t("An error has occurred, the form has not been sent.");
+    }
 }
 
 // Form actions
@@ -985,6 +1078,8 @@ export class CustomFieldAction extends BuilderAction {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
     apply({ editingElement: fieldEl, value, loadResult: fields }) {
+        this.dependencies.websiteFormOption.clearFieldDatasetValues(fieldEl);
+        delete fieldEl.dataset.requirementComparator;
         const oldLabelText = fieldEl.querySelector(".s_website_form_label_content").textContent;
         const field = getCustomField(value, oldLabelText);
         setActiveProperties(fieldEl, field);
@@ -1182,6 +1277,57 @@ export class ToggleRequiredAction extends BuilderAction {
         return fieldEl.classList.contains(activeValue);
     }
 }
+
+/**
+ * Custom error message should be visible or not.
+ */
+export class SetRequirementComparatorAction extends BuilderAction {
+    static id = "setRequirementComparator";
+    static dependencies = ["websiteFormOption"];
+    apply({ editingElement: fieldEl }) {
+        this.dependencies.websiteFormOption.clearFieldDatasetValues(fieldEl);
+    }
+}
+/**
+ * Sets the dataset value of custom-error attribute which is further used to
+ * determine if the input for custom error message should be visible or not.
+ */
+export class SetCustomErrorMessageAction extends BuilderAction {
+    static id = "setCustomErrorMessage";
+    apply({ editingElement: fieldEl }) {
+        if (!fieldEl.dataset.customError) {
+            fieldEl.dataset.customError = true;
+        } else {
+            delete fieldEl.dataset.customError;
+        }
+    }
+    isApplied({ editingElement: fieldEl }) {
+        return fieldEl.dataset.customError;
+    }
+}
+/**
+ * Sets the default error message based on the requirement comparator,
+ * condition and type of form fields.
+ */
+export class SetDefaultErrorMessageAction extends BuilderAction {
+    static id = "setDefaultErrorMessage";
+    static dependencies = ["websiteFormOption"];
+    apply({ editingElement: fieldEl }) {
+        const {
+            requirementComparator: comparator,
+            requirementCondition: condition,
+            requirementBetween: between,
+            type,
+        } = fieldEl.dataset;
+        fieldEl.dataset.errorMessage = this.dependencies.websiteFormOption.defaultMessage(
+            comparator,
+            condition,
+            between,
+            type
+        );
+    }
+}
+
 export class SetVisibilityAction extends BuilderAction {
     static id = "setVisibility";
     static dependencies = ["websiteFormOption"];
