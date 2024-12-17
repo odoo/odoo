@@ -231,8 +231,8 @@ export class Interaction {
      * Throttles a function for animation and makes sure it is cancelled upon destroy.
      */
     throttledForAnimation(fn) {
-        const throttledFn = throttleForAnimation(() => {
-            fn.call(this);
+        const throttledFn = throttleForAnimation((...args) => {
+            fn.apply(this, args);
             if (this.isReady) {
                 this.updateContent();
             }
@@ -242,8 +242,8 @@ export class Interaction {
         });
         return Object.assign(
             {
-                [throttledFn.name]: () => {
-                    throttledFn();
+                [throttledFn.name]: (...args) => {
+                    throttledFn(...args);
                     return SKIP_IMPLICIT_UPDATE;
                 },
             }[throttledFn.name],

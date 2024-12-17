@@ -2053,4 +2053,17 @@ describe("throttled_for_animation (2)", () => {
         await advanceTime(150);
         expect.verifySteps(["updatecontent", "start"]);
     });
+
+    test("throttled_for_animation forwards arguments", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                _root: { "t-on-click": this.throttledForAnimation((ev) => expect.step(ev.type)) },
+            };
+        }
+        await startInteraction(Test, TemplateTest);
+        expect.verifySteps([]);
+        await click(".test");
+        expect.verifySteps(["click"]);
+    });
 });
