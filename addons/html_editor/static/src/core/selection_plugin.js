@@ -1,10 +1,13 @@
-import { closestBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestPosition,
+    isIconElement,
     isMediaElement,
     isProtected,
     isProtecting,
+    isTextNode,
     isUnprotecting,
+    isVisibleTextNode,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
 import {
@@ -169,7 +172,9 @@ export class SelectionPlugin extends Plugin {
                 "shift+arrowright",
                 "arrowleft",
                 "shift+arrowleft",
+                "arrowup",
                 "shift+arrowup",
+                "arrowdown",
                 "shift+arrowdown",
             ];
             if (handled.includes(getActiveHotkey(ev))) {
@@ -765,7 +770,11 @@ export class SelectionPlugin extends Plugin {
             const shouldSkipCallbacks = this.getResource(
                 "intangible_char_for_keyboard_navigation_predicates"
             );
-            let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+            let adjacentCharacter = getAdjacentCharacter(
+                this.getSelectionData().deepEditableSelection,
+                domDirection,
+                this.editable
+            );
             let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
             while (shouldSkip) {
@@ -776,11 +785,81 @@ export class SelectionPlugin extends Plugin {
                 const hasSelectionChanged =
                     nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
                 const lastSkippedChar = adjacentCharacter;
-                adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+                adjacentCharacter = getAdjacentCharacter(
+                    this.getSelectionData().deepEditableSelection,
+                    domDirection,
+                    this.editable
+                );
 
                 shouldSkip =
                     hasSelectionChanged &&
                     shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+            }
+        } else if (["ArrowUp", "ArrowDown"].includes(ev.key)) {
+            const { anchorNode, anchorOffset } = this.getSelectionData().deepEditableSelection;
+            const block = closestBlock(anchorNode);
+            const isArrowUp = ev.key === "ArrowUp";
+            const currentNode = anchorNode === block ? block.childNodes[anchorOffset] : anchorNode;
+
+            // Check if all child or sibling nodes are icons or non-visible text
+            const isIconLine = (element) => {
+                if (!element) {
+                    return false;
+                }
+                let node;
+                if (isBlock(element)) {
+                    node = isArrowUp ? element.lastChild : element.firstChild;
+                } else if (element.nodeName === "BR") {
+                    node = isArrowUp ? element.previousSibling : element.nextSibling;
+                }
+                let foundIcon = false;
+                while (node) {
+                    if (isIconElement(node) || (isTextNode(node) && !isVisibleTextNode(node))) {
+                        foundIcon = true;
+                    } else if (foundIcon && node.nodeName === "BR") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                    node = isArrowUp ? node.previousSibling : node.nextSibling;
+                }
+                return foundIcon;
+            };
+
+            // Find the nearest <br> element
+            const findLineBreak = (element = currentNode) => {
+                let node = element;
+                while (node && node.nodeName !== "BR") {
+                    node = isArrowUp ? node.previousSibling : node.nextSibling;
+                }
+                return node;
+            };
+
+            let lineBreakNode = findLineBreak();
+            if (isArrowUp) {
+                if (currentNode.nodeName === "BR") {
+                    lineBreakNode = findLineBreak(lineBreakNode?.previousElementSibling);
+                }
+                if (lineBreakNode && isIconElement(currentNode)) {
+                    ev.preventDefault();
+                    this.setCursorStart(lineBreakNode?.previousSibling || block);
+                } else if (!lineBreakNode && isIconLine(block.previousElementSibling)) {
+                    ev.preventDefault();
+                    this.setCursorEnd(block.previousElementSibling);
+                }
+            } else {
+                if (lineBreakNode && (isIconElement(currentNode) || isIconLine(lineBreakNode))) {
+                    const nextLineBreak = findLineBreak(lineBreakNode?.nextSibling);
+                    ev.preventDefault();
+                    this.setCursorEnd(nextLineBreak?.previousSibling || block);
+                } else if (
+                    (!lineBreakNode || !lineBreakNode.nextSibling) &&
+                    isIconLine(block.nextElementSibling)
+                ) {
+                    const nextLineBreak = findLineBreak(block.nextElementSibling?.firstChild);
+                    ev.preventDefault();
+                    this.setCursorEnd(nextLineBreak?.previousSibling || block.nextElementSibling);
+                }
             }
         }
 
