@@ -884,3 +884,15 @@ describe("links with inline image", () => {
         );
     });
 });
+
+describe("readonly mode", () => {
+    test("popover should not display edit buttons in readonly mode", async () => {
+        await setupEditor('<p><a class="o_link_readonly" href="#">link[]</a></p>');
+        await waitFor(".o-we-linkpopover");
+        // Copy link button should be available
+        expect(".o-we-linkpopover .o_we_copy_link").toHaveCount(1);
+        // Edit and unlink buttons should not be available
+        expect(".o-we-linkpopover .o_we_edit_link").toHaveCount(0);
+        expect(".o-we-linkpopover .o_we_remove_link").toHaveCount(0);
+    });
+});
