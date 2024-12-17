@@ -9,6 +9,7 @@ import {
 } from "../builder_helpers";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useBus } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class WeSelect extends Component {
     static template = "html_builder.WeSelect";
@@ -27,6 +28,7 @@ export class WeSelect extends Component {
         useVisibilityObserver("content", useApplyVisibility("root"));
         this.dropdown = useDropdownState();
         const selectableItems = [];
+        const setLabelDebounced = useDebounced(setLabel, 0);
         useSubEnv({
             actionBus: new EventBus(),
             weSelectContext: {
@@ -40,6 +42,7 @@ export class WeSelect extends Component {
                         selectableItems.splice(index, 1);
                     }
                 },
+                update: setLabelDebounced,
             },
         });
         function setLabel() {

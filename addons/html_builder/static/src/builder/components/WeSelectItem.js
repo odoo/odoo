@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useRef } from "@odoo/owl";
 import {
     clickableWeWidgetProps,
     useClickableWeWidget,
@@ -33,6 +33,7 @@ export class WeSelectItem extends Component {
         };
 
         this.env.weSelectContext.addSelectableItem?.(selectableItem);
+        onMounted(this.env.weSelectContext.update);
         onWillDestroy(() => {
             this.env.weSelectContext.removeSelectableItem?.(selectableItem);
         });

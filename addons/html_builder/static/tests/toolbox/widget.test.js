@@ -774,7 +774,7 @@ describe("WeSelectItem", () => {
         await contains(".o-overlay-item [data-class-action='a b']").click();
         expect(".we-bg-options-container .dropdown").toHaveText("A B");
     });
-    test("hide/display WeSelect base on applyTo", async () => {
+    test("hide/display WeSelect based on applyTo", async () => {
         addOption({
             selector: ".parent-target",
             template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
@@ -804,6 +804,7 @@ describe("WeSelectItem", () => {
         );
         expect("[data-class-action='my-custom-class']").toHaveClass("active");
         expect(".options-container button.dropdown-toggle").toHaveCount(1);
+        await runAllTimers();
         expect(".options-container button.dropdown-toggle").toHaveText("B");
     });
 
