@@ -1911,7 +1911,7 @@ class BaseModel(metaclass=MetaModel):
 
         if field.relational:
             # groups is a recordset; determine order on groups's model
-            groups = self.env[field.comodel_name].browse([value.id for value in values])
+            groups = self.env[field.comodel_name].browse(value.id for value in values)
             values = group_expand(self, groups, domain).sudo()
             if read_group_order == groupby + ' desc':
                 values.browse(reversed(values._ids))
@@ -1953,7 +1953,7 @@ class BaseModel(metaclass=MetaModel):
         # add folding information if present
         if field.relational and groups._fold_name in groups._fields:
             fold = {group.id: group[groups._fold_name]
-                    for group in groups.browse([key for key in result if key])}
+                    for group in groups.browse(key for key in result if key)}
             for key, line in result.items():
                 line['__fold'] = fold.get(key, False)
 
@@ -6203,7 +6203,7 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} - {other}")
             other_ids = set(other._ids)
-            return self.browse([id for id in self._ids if id not in other_ids])
+            return self.browse(id_ for id_ in self._ids if id_ not in other_ids)
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
@@ -6215,7 +6215,7 @@ class BaseModel(metaclass=MetaModel):
             if self._name != other._name:
                 raise TypeError(f"inconsistent models in: {self} & {other}")
             other_ids = set(other._ids)
-            return self.browse(OrderedSet(id for id in self._ids if id in other_ids))
+            return self.browse(OrderedSet(id_ for id_ in self._ids if id_ in other_ids))
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
