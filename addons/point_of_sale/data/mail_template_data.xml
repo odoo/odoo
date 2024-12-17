@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_pos_receipt" model="mail.template">
+            <field name="name">Point of Sale: Receipt</field>
+            <field name="description">Sent to customers with the receipt in attachment</field>
+            <field name="model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="subject">Your {{ object.config_id.name }} receipt</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or object.user_id.email_formatted)}}</field>
+            <field name="email_to" eval="False"/>
+            <field name="partner_to" eval="False"/>
+             <field name="use_default_to" eval="False"/>
+            <field name="lang">{{ object.partner_id.lang or user.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html" type="html">
+                <div style="margin: 0; padding: 0; font-size: 14px;">
+                    <t t-set="client_name" t-value="object.partner_id.name"/>
+                    <t t-set="store_name" t-value="object.config_id.name"/>
+                    <t t-set="tz" t-value="object.env.user.tz"/>
+                    <t t-set="lg" t-value="object.partner_id.lang or user.lang"/>
+                    <div>
+                        <t t-if="client_name">Hello <t t-out="client_name">Client name</t>,</t>
+                        <t t-else="">Hello,</t>
+                    </div>
+                    <br/>
+                    <div>Thank you for purchasing from <t t-out="store_name">Store name</t>!</div>
+                    <div>Attached, you will find your receipt for the purchase of <span><t
+                            t-out="format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,
+                         lang_code=lg) or ''">date</t> <t t-out="format_time(time=object.date_order, tz=tz, time_format='short',
+                         lang_code=lg)">time</t>.</span>
+                    </div>
+                    <br/>
+                    <div>With kind regards,</div>
+                    <br/>
+                    <t t-out="store_name">Store name</t>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

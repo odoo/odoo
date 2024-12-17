@@ -1198,49 +1198,53 @@ class PosOrder(models.Model):
             'target': 'new'
         }
 
-    def _add_mail_attachment(self, name, ticket, basic_ticket):
-        attachment = []
-        filename = 'Receipt-' + name + '.jpg'
+    def action_send_receipt(self, email, ticket_image, basic_image):
+        self.ensure_one()
+        self.email = email
+        mail_template_id = 'point_of_sale.email_template_pos_receipt'
+        mail_template = self.env.ref(mail_template_id, raise_if_not_found=False)
+        if not mail_template:
+            raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
+        mail_template.send_mail(self.id, force_send=True, email_values={'email_to': email,
+                                                                        'attachment_ids': self._get_mail_attachments(self.name, ticket_image, basic_image)})
+
+    def _get_mail_attachments(self, name, ticket, basic_ticket):
+        attachments = []
         receipt = self.env['ir.attachment'].create({
-            'name': filename,
+            'name': 'Receipt-' + name + '.jpg',
             'type': 'binary',
             'datas': ticket,
             'res_model': 'pos.order',
             'res_id': self.ids[0],
             'mimetype': 'image/jpeg',
         })
-        attachment += [(4, receipt.id)]
+        attachments += [(4, receipt.id)]
+
         if basic_ticket:
-            filename = 'Receipt-' + name + '-1' + '.jpg'
             basic_receipt = self.env['ir.attachment'].create({
-                'name': filename,
+                'name': 'Receipt-' + name + '-1' + '.jpg',
                 'type': 'binary',
                 'datas': basic_ticket,
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'image/jpeg',
             })
-            attachment += [(4, basic_receipt.id)]
-
+            attachments += [(4, basic_receipt.id)]
 
         if self.mapped('account_move'):
             report = self.env['ir.actions.report']._render_qweb_pdf("account.account_invoices", self.account_move.ids[0])
-            filename = name + '.pdf'
             invoice = self.env['ir.attachment'].create({
-                'name': filename,
+                'name': name + '.pdf',
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
-                'mimetype': 'application/x-pdf'
+                'mimetype': 'application/pdf'
             })
-            attachment += [(4, invoice.id)]
+            attachments += [(4, invoice.id)]
 
-        return attachment
+        return attachments
 
-    def action_send_receipt(self, email, ticket_image, basic_image):
-        self.env['mail.mail'].sudo().create(self._prepare_mail_values(email, ticket_image, basic_image)).send()
-        self.email = email
 
     @api.model
     def remove_from_ui(self, server_ids):
