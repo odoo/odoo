@@ -93,6 +93,7 @@ export class ListUIPlugin extends OdooUIPlugin {
                 const listDefinition = this.getters.getListModelDefinition(cmd.listId);
                 const dataSourceId = this._getListDataSourceId(cmd.listId);
                 this.lists[dataSourceId] = new ListDataSource(this.custom, listDefinition);
+                this._addDomain(cmd.listId);
                 break;
             }
             case "DELETE_SHEET":
@@ -135,6 +136,7 @@ export class ListUIPlugin extends OdooUIPlugin {
                     const listDefinition = this.getters.getListModelDefinition(cmd.listId);
                     const dataSourceId = this._getListDataSourceId(cmd.listId);
                     this.lists[dataSourceId] = new ListDataSource(this.custom, listDefinition);
+                    this._addDomain(cmd.listId);
                 }
                 break;
             }
