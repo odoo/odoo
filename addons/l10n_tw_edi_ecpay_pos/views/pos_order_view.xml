@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_pos_order_form_inherit_ecpay" model="ir.ui.view">
+            <field name="name">pos_order_ecpay_view_form</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Ecpay" invisible="country_code != 'TW' or refunded_order_id">
+                        <group>
+                            <group>
+                                <field name="l10n_tw_edi_is_print"  readonly="account_move" invisible="l10n_tw_edi_is_b2b"/>
+                                <field name="l10n_tw_edi_love_code" readonly="account_move" invisible="l10n_tw_edi_is_print or l10n_tw_edi_is_b2b or l10n_tw_edi_carrier_type"/>
+                                <field name="l10n_tw_edi_carrier_type" readonly="account_move" invisible="l10n_tw_edi_is_print or l10n_tw_edi_is_b2b or l10n_tw_edi_love_code"/>
+                                <field name="l10n_tw_edi_carrier_number" readonly="account_move" invisible="l10n_tw_edi_carrier_type not in ['2', '3', '4', '5'] or l10n_tw_edi_is_print or l10n_tw_edi_is_b2b or l10n_tw_edi_love_code" required="l10n_tw_edi_carrier_type in ['2', '3', '4', '5'] and not l10n_tw_edi_is_print and not l10n_tw_edi_is_b2b"/>
+                                <field name="l10n_tw_edi_carrier_number_2" readonly="account_move" invisible="l10n_tw_edi_carrier_type not in ['4', '5'] or l10n_tw_edi_is_print or l10n_tw_edi_is_b2b or l10n_tw_edi_love_code" required="l10n_tw_edi_carrier_type in ['4', '5'] and not l10n_tw_edi_is_print and not l10n_tw_edi_is_b2b"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

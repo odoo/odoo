@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt')]" position="attributes">
+            <attribute name="class" add="pos-receipt-ecpay-width ms-2" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='order-date']" position="replace">
+            <div id="order-date" t-if="props.data.is_print_ecpay_invoice and !props.data.ecpay_error" t-out="props.data.date" />
+        </xpath>
+
+        <xpath expr="//div[hasclass('pos-receipt')]" position="inside">
+            <div t-if="props.data.is_print_ecpay_invoice and !props.data.ecpay_error" class="d-flex flex-column p-2">
+                <hr />
+                <div style="height: 295mm;">
+                    <t t-if="props.data.company_logo_exist">
+                        <img t-attf-src="/web/image/res.company/{{ props.data.headerData.company.id }}/logo" alt="Company Logo" class="pos-receipt-logo"/>
+                        <br/>
+                    </t>
+                    <t t-else="">
+                        <h1 class="display-5 pos-receipt-center-align" t-out="props.data.company_name"/>
+                    </t>
+                    <h1 class="display-5 pos-receipt-center-align">E-invoice certificate</h1>
+                    <h1 class="display-5 pos-receipt-center-align" t-out="props.data.invoice_month"/>
+                    <h1 class="display-5 pos-receipt-center-align" t-out="props.data.iis_number"/>
+                    <div class="d-flex justify-content-between fs-1">
+                        <span><t t-out="props.data.iis_create_date" /></span>
+                        <span t-if="props.data.iis_category == 'B2B'">Format 25</span>
+                    </div>
+                    <div class="d-flex justify-content-between fs-1">
+                        <span>Random Number:<t t-out="props.data.iis_random_number"/></span>
+                        <span>Total:<t t-out="props.data.l10n_tw_edi_invoice_amount"/></span>
+                    </div>
+                    <div class="d-flex justify-content-between fs-1">
+                        <span t-if="props.data.l10n_tw_edi_ecpay_seller_identifier != ''" >Seller: <t t-out="props.data.l10n_tw_edi_ecpay_seller_identifier"/></span>
+                        <span t-if="props.data.iis_category == 'B2B'" >Buyer: <t t-out="props.data.iis_identifier"/></span>
+                    </div>
+                    <t t-if="props.data.pos_barcode">
+                        <div class="d-flex flex-column align-items-center mt-1">
+                            <img t-att-src="'/report/barcode/Code128/' + props.data.pos_barcode" width="480" height="95"/>
+                        </div>
+                    </t>
+                    <div class="d-flex align-items-center mt-1 w-100">
+                        <img width="175" height="175" t-att-src="props.data.qrcode_left"/>
+                        <img width="205" height="205" t-att-src="props.data.qrcode_right"/>
+                    </div>
+                </div>
+                <hr />
+                <div>
+                    <h1 class="display-5 pos-receipt-center-align">Transaction Detail</h1>
+                    <div class="fs-2">
+                        <span>Order number:</span>
+                        <t t-out="props.data.name"/>
+                    </div>
+                    <div class="fs-2">
+                        <span>Invoice Number:</span>
+                        <t t-out="props.data.iis_number"/>
+                    </div>
+                    <div class="fs-2">
+                        <span t-if="props.data.iis_carrier_num != '' and (props.data.iis_carrier_type == '' or props.data.iis_carrier_type == '1')">ECPay E-Invoice carrier: </span>
+                        <span t-if="props.data.iis_carrier_type == '2'">Citizen digital certificate: </span>
+                        <span t-if="props.data.iis_carrier_type == '3'">E-Invoice cellphone carrier: </span>
+                        <span><t t-out="props.data.iis_carrier_num"/></span>
+                    </div>
+                    <div t-if="props.data.iis_category == 'B2B'" class="fs-2">
+                        <span>Invoice identifier:</span>
+                        <t t-out="props.data.iis_identifier"/>
+                    </div>
+                    <div class="fs-2">
+                        <span>Checkout time:</span>
+                        <t t-out="props.data.iis_create_date"/>
+                    </div>
+                    <br/>
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr class="pos-receipt-center-align">
+                                <th><span>Item</span></th>
+                                <th><span>Unit*Price</span></th>
+                                <th><span>Amount</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_quantity" t-value="0"/>
+                            <t t-foreach="props.data.orderlines" t-as="line" t-key="line_index">
+                                <tr class="pos-receipt-left-align">
+                                    <td width="40%">
+                                        <t t-out="line.productName"/>
+                                    </td>
+                                    <td width="30%">
+                                        <t t-out="line.unitPrice"/>
+                                        *
+                                        <t t-out="Math.round(line.qty)"/>
+                                    </td>
+                                    <td width="30%">
+                                        <t t-out="line.price"/>
+                                        <span>TX</span>
+                                    </td>
+                                </tr>
+                                <t t-set="total_quantity" t-value="total_quantity + Math.round(line.qty)"/>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div>
+                        <div class="fs-1">
+                            <span>Total</span>
+                            <t t-out="total_quantity"/>
+                            <span> items</span>
+                        </div>
+                        <div class="fs-1">
+                            <span>Subtotal </span>
+                            <t t-out="props.formatCurrency(props.data.l10n_tw_edi_invoice_amount-props.data.iis_tax_amount)" />
+                        </div>
+                        <div t-if="props.data.iis_category == 'B2B'" class="fs-1">
+                            <span>Tax amount </span>
+                            <t t-out="props.formatCurrency(props.data.iis_tax_amount)" />
+                        </div>
+                        <div class="fs-1">
+                            <span>Total amount </span>
+                            <t t-out="props.formatCurrency(props.data.l10n_tw_edi_invoice_amount)" />
+                        </div>
+                        <t t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
+                            <div class="fs-1">
+                                <t t-out="line.name" /> <t t-out="line.amount" />
+                            </div>
+                        </t>
+                        <div class="fs-1">
+                            <span>Change </span>
+                            <t t-out="props.data.change" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
