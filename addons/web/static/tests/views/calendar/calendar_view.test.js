@@ -5383,3 +5383,20 @@ test("calendar (year): tap on date switch to day scale", async () => {
     // should open a Quick create modal view in mobile on short tap on date in monthly view
     expect(".modal").toHaveCount(1);
 });
+
+test("calendar: check context is correclty sent to fetch data", async () => {
+    expect.assertions(1);
+    onRpc("event", "search_read", ({ kwargs }) => {
+        const { active_test } = kwargs.context;
+        expect(active_test).toBe(true);
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop">
+                <field name="name"/>
+            </calendar>`,
+        context: { active_test: true },
+    });
+});
