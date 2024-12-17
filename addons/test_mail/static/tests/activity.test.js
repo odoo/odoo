@@ -1186,3 +1186,20 @@ test("update activity view after creating multiple activities", async () => {
     await waitFor(".o_activity_summary_cell:not(.o_activity_empty_cell)");
     expect(".o_activity_summary_cell:not(.o_activity_empty_cell)").toHaveCount(1);
 });
+
+test("Activity view: context given to the rpc to fetch data", async () => {
+    registerArchs(archs);
+    const context = { custom_context: true };
+    onRpc("get_activity_data", ({ kwargs }) => {
+        const customContext = kwargs.context?.custom_context;
+        expect(customContext).toBe(true);
+        asyncStep("get_activity_data");
+    });
+    await start();
+    await openView({
+        res_model: "mail.test.activity",
+        views: [[false, "activity"]],
+        context,
+    });
+    await waitForSteps(["get_activity_data"]);
+});
