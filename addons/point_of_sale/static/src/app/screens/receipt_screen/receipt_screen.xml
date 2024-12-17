@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="d-flex flex-column gap-2">
                                     <div class="d-flex">
-                                        <input type="text" class="flex-grow-1 border p-3 bg-view pe-5 border-end-0 rounded-start-2 position-relative send-receipt-email-input" t-attf-placeholder="e.g. john.doe@mail.com" t-model="state.email" />
+                                        <input type="text" class="flex-grow-1 border p-3 bg-view border-end-0 rounded-start-2 position-relative send-receipt-email-input" t-attf-placeholder="e.g. john.doe@mail.com" t-model="state.email" />
                                         <div>
                                             <button t-att-style="`width: ${this.ui.isSmall ? '4rem' : '8rem'}`" class="btn btn-primary btn-lg lh-lg rounded-start-0 h-100" t-att-disabled="!isValidEmail" t-on-click="() => this.actionSendReceiptOnEmail()">
                                                 <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-paper-plane'}}" />
@@ -44,7 +44,9 @@
                                 <div class="notice text-center">
                                     <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
                                     <div t-if="sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
-                                    <div t-if="sendReceipt.status === 'success'" class="text-success"><t t-esc="usedMethod"/> is sent successfully</div>
+                                    <div t-if="sendReceipt.status === 'success'" class="text-success">
+                                        <t t-if="this.currentOrder.is_invoiced">Receipt and invoice sent successfully</t>
+                                        <t t-else="">Receipt sent successfully</t></div>
                                     <div t-if="sendReceipt.status === 'error'" class="text-danger">Sending <t t-esc="usedMethod"/> failed. Please try again</div>
                                 </div>
                             </div>
