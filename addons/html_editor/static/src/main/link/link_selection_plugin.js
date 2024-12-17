@@ -87,6 +87,7 @@ export class LinkSelectionPlugin extends Plugin {
     isLinkEligibleForZwnbsp(link) {
         return (
             link.isContentEditable &&
+            link.parentElement.isContentEditable &&
             this.editable.contains(link) &&
             !isProtected(link) &&
             !isProtecting(link) &&
