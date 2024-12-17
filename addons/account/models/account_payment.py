@@ -396,18 +396,18 @@ class AccountPayment(models.Model):
 
     @api.depends('invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
-        accounting_installed = self.env['account.move']._get_invoice_in_payment_state() == 'in_payment'
         for payment in self:
             if not payment.state:
                 payment.state = 'draft'
-            if payment.state == 'in_process':  # in_process --> paid
-                if payment.outstanding_account_id and accounting_installed:
-                    move = payment.move_id
-                    liquidity, _counterpart, _writeoff = payment._seek_for_lines()
-                    if move and move.currency_id.is_zero(sum(liquidity.mapped('amount_residual'))):
-                        payment.state = 'paid'
-                elif payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
+            # in_process --> paid
+            if payment.state == 'in_process' and payment.outstanding_account_id:
+                move = payment.move_id
+                liquidity, _counterpart, _writeoff = payment._seek_for_lines()
+                if move and move.currency_id.is_zero(sum(liquidity.mapped('amount_residual'))):
                     payment.state = 'paid'
+                    continue
+            if payment.state == 'in_process' and payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
+                payment.state = 'paid'
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
     def _compute_reconciliation_status(self):
