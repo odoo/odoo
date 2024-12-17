@@ -45,7 +45,7 @@ import { FetchRecordError } from "./errors";
  * @property {Object} activeFields
  * @property {object} context
  * @property {boolean} isMonoRecord
- * @property {number} currentCompanyId
+ * @property {object} companies
  * @property {boolean} isRoot
  * @property {Array} [domain]
  * @property {Array} [groupBy]
@@ -120,7 +120,7 @@ export class RelationalModel extends Model {
         /** @type {Config} */
         this.config = {
             isMonoRecord: false,
-            currentCompanyId: company.currentCompany.id,
+            companies: company.evalContext,
             context: {},
             ...params.config,
             isRoot: true,
@@ -329,7 +329,7 @@ export class RelationalModel extends Model {
             ...config,
             context: {
                 ...config.context,
-                current_company_id: config.currentCompanyId,
+                current_company_id: config.companies.active_id,
             },
         });
         if (config.offset && !records.length) {
@@ -377,6 +377,7 @@ export class RelationalModel extends Model {
             resModel: config.resModel,
             fields: config.fields,
             activeFields: config.activeFields,
+            companies: config.companies,
         };
         let groupRecordConfig;
         const groupRecordResIds = [];
@@ -385,6 +386,7 @@ export class RelationalModel extends Model {
                 ...this.groupByInfo[firstGroupByName],
                 resModel: config.fields[firstGroupByName].relation,
                 context: {},
+                companies: config.companies,
             };
         }
         const proms = [];
@@ -547,9 +549,7 @@ export class RelationalModel extends Model {
 
             return records;
         } else {
-            return resIds.map((resId) => {
-                return { id: resId };
-            });
+            return resIds.map((resId) => ({ id: resId }));
         }
     }
 
