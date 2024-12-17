@@ -10,7 +10,7 @@
                 </group>
                 <group string="Assign this opportunity to">
                     <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                    <field name="team_id" options="{'no_open': True, 'no_create': True}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                    <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                 </group>
                 <group string="Opportunities" invisible="name != 'merge'">
                     <field name="lead_id" invisible="1"/>
