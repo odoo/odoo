@@ -69,6 +69,7 @@ class AccountReconcileModelLine(models.Model):
             ('percentage', 'Percentage of balance'),
             ('percentage_st_line', 'Percentage of statement line'),
             ('regex', 'From label'),
+            ('from_transaction_details', "From Transaction Details"),
         ],
         required=True,
         store=True,
@@ -164,7 +165,7 @@ class AccountReconcileModelLine(models.Model):
                 raise UserError(_("Balance percentage can't be 0"))
             if record.amount_type == 'percentage' and record.amount == 0:
                 raise UserError(_("Statement line percentage can't be 0"))
-            if record.amount_type == 'regex':
+            if record.amount_type in {'regex', 'from_transaction_details'}:
                 try:
                     re.compile(record.amount_string)
                 except re.error:
@@ -359,7 +360,7 @@ class AccountReconcileModel(models.Model):
     @api.depends('line_ids.amount_type')
     def _compute_show_decimal_separator(self):
         for record in self:
-            record.show_decimal_separator = any(l.amount_type == 'regex' for l in record.line_ids)
+            record.show_decimal_separator = any(l.amount_type in {'regex', 'from_transaction_details'} for l in record.line_ids)
 
     @api.depends('payment_tolerance_param', 'payment_tolerance_type')
     def _compute_payment_tolerance_param(self):
