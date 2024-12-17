@@ -3,7 +3,7 @@ import { WebsiteBuilder } from "@html_builder/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { after } from "@odoo/hoot";
+import { after, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
 import {
     defineModels,
@@ -42,6 +42,7 @@ export const invisiblePopup =
 export const wrapExample = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${exampleWebsiteContent}</div>`;
 
 export function defineWebsiteModels() {
+    describe.current.tags("desktop");
     defineMailModels();
     defineModels([Website, IrUiView]);
 }
