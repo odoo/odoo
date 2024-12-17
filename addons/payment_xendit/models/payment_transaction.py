@@ -12,7 +12,6 @@ from odoo.tools import float_round
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_xendit import const
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -172,6 +171,18 @@ class PaymentTransaction(models.Model):
                 "Xendit: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Xendit data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        amount = notification_data.get('amount')
+        currency_code = notification_data.get('currency')
+        self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on Xendit data.

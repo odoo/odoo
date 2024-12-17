@@ -4,9 +4,11 @@ import logging
 import pprint
 import re
 import unicodedata
+
 from datetime import datetime
 
 import psycopg2
+
 from dateutil import relativedelta
 from markupsafe import Markup
 
@@ -15,7 +17,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
-
 
 _logger = logging.getLogger(__name__)
 
@@ -631,6 +632,7 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         tx = self._get_tx_from_notification_data(provider_code, notification_data)
+        tx._compare_notification_data(notification_data)
         tx._process_notification_data(notification_data)
         return tx
 
@@ -647,6 +649,26 @@ class PaymentTransaction(models.Model):
         """
         return self
 
+    def _compare_notification_data(self, notification_data):
+        """ Compare the transaction's amount and currency with the notification data.
+
+        This method should usually not be called directly. The correct method to call upon receiving
+        notification data is :meth:`_handle_notification_data`.
+
+        For a provider to handle transaction comparison, it must override this method (without
+        calling super) and raise if the transaction's amount and currency don't match the
+        notification data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        raise NotImplementedError(_(
+            "No override of _compare_notification_data found for provider %s",
+            self.provider_id.name,
+        ))
+
     def _process_notification_data(self, notification_data):
         """ Update the transaction state and the provider reference based on the notification data.
 
@@ -662,6 +684,23 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
+
+    def _validate_amount_and_currency(self, amount, currency_code):
+        """ Ensure that the transaction's amount and currency match the provided ones.
+
+        :param str|float amount: The expected amount.
+        :param str currency_code: The expected currency_code.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the provided
+            ones.
+        """
+        self.ensure_one()
+        if not amount or not currency_code:
+            raise ValidationError(_("%s: missing amount or currency", self.provider_id.name))
+        if self.currency_id.compare_amounts(float(amount), self.amount) != 0:
+            raise ValidationError(_("%s: mismatching amounts", self.provider_id.name))
+        if currency_code != self.currency_id.name:
+            raise ValidationError(_("%s: mismatching currencies", self.provider_id.name))
 
     def _set_pending(self, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `pending`.

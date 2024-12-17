@@ -5,7 +5,6 @@ import logging
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -144,6 +143,16 @@ class PaymentTransaction(models.Model):
                 "Demo: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on dummy data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        return
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on dummy data.
