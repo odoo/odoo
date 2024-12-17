@@ -418,6 +418,9 @@ class StockMove(models.Model):
             self.filtered(lambda m: m.raw_material_production_id.state == 'confirmed')._run_procurement(old_demand)
         return res
 
+    def _update_quantity(self, new_qty):
+        self.quantity = new_qty
+
     def _run_procurement(self, old_qties=False):
         procurements = []
         old_qties = old_qties or {}
