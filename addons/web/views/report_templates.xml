@@ -544,7 +544,6 @@
                         <path d="M5.70364 48H0V0.00100806H73.5404L80 0C74.2028 0.665869 68.7417 3.06684 64.332 6.88852L25.3513 40.6709C19.8969 45.3979 12.9212 48 5.70364 48Z"/>
                     </svg>
                     <h2 t-attf-class="{{layout_document_title and 'o_folder_title mt-2 text-nowrap' or 'w-25'}}">
-                        <t t-out="layout_document_title"/>
                     </h2>
                 </div>
             </div>
@@ -591,6 +590,7 @@
                 <t t-set="custom_layout_address" t-value="true"/>
                 <t t-call="web.address_layout"/>
             </div>
+            <h2><t t-out="layout_document_title"/></h2>
             <t t-out="0"/>
         </div>
 
