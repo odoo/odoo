@@ -1,7 +1,7 @@
-from odoo.addons.sale.tests.common import TestSaleCommonBase
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-class TestSaleFlow(TestSaleCommonBase):
+class TestSaleFlow(TestSaleCommon):
     ''' Test running at-install to test flows independently to other modules, e.g. 'sale_stock'. '''
 
     @classmethod

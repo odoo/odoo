@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import TransactionCase
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.product.tests.common import ProductCommon
@@ -52,8 +51,7 @@ class SaleCommon(
         cls.env.user.groups_id += cls.group_discount_per_so_line
 
 
-class TestSaleCommonBase(TransactionCase):
-    ''' Setup with sale test configuration. '''
+class TestSaleCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def setup_sale_configuration_for_company(cls, company):
@@ -237,10 +235,6 @@ class TestSaleCommonBase(TransactionCase):
         })
 
         return company_data
-
-
-class TestSaleCommon(AccountTestInvoicingCommon, TestSaleCommonBase):
-    ''' Setup to be used post-install with sale and accounting test configuration.'''
 
     @classmethod
     def collect_company_accounting_data(cls, company):
