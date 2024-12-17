@@ -7,6 +7,7 @@ import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
+import { doesSelectionExcludeBlockElements } from "@html_editor/utils/selection";
 
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
@@ -30,7 +31,11 @@ export class ChatGPTPlugin extends Plugin {
                 groupId: "ai",
                 title: _t("Translate with AI"),
                 isAvailable: (selection) => {
-                    return !selection.isCollapsed && user.userId;
+                    return (
+                        !selection.isCollapsed &&
+                        user.userId &&
+                        doesSelectionExcludeBlockElements(selection)
+                    );
                 },
                 Component: LanguageSelector,
                 props: {
@@ -42,6 +47,7 @@ export class ChatGPTPlugin extends Plugin {
                 groupId: "ai",
                 commandId: "openChatGPTDialog",
                 text: "AI",
+                isAvailable: doesSelectionExcludeBlockElements,
             },
         ],
 

@@ -1,7 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import {
+    findInSelection,
+    callbacksForCursorUpdate,
+    doesSelectionExcludeBlockElements,
+} from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
@@ -119,6 +123,7 @@ export class LinkPlugin extends Plugin {
                 title: _t("Link"),
                 description: _t("Add a link"),
                 icon: "fa-link",
+                isAvailable: doesSelectionExcludeBlockElements,
                 run: this.toggleLinkTools.bind(this),
             },
             {
