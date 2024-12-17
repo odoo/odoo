@@ -143,34 +143,18 @@ class IrHttp(models.AbstractModel):
             })
             # We need sudo since a user may not have access to ancestor companies
             # We use `_get_company_ids` because it is cached and we sudo it because env.user return a sudo user.
-            user_company_ids = self.env['res.company'].browse(user._get_company_ids()).sudo()
-            disallowed_ancestor_companies_sudo = user_company_ids.parent_ids - user_company_ids
-            all_companies_in_hierarchy_sudo = disallowed_ancestor_companies_sudo + user_company_ids
+            user_companies = self.env['res.company'].browse(user._get_company_ids()).sudo()
+            disallowed_ancestor_companies_sudo = user_companies.parent_ids - user_companies
+            all_companies_in_hierarchy_sudo = disallowed_ancestor_companies_sudo + user_companies
             session_info.update({
                 # current_company should be default_company
                 "user_companies": {
                     'current_company': user.company_id.id,
-                    'allowed_companies': {
-                        comp.id: {
-                            'id': comp.id,
-                            'name': comp.name,
-                            'sequence': comp.sequence,
-                            'child_ids': (comp.child_ids & user_company_ids).ids,
-                            'parent_id': comp.parent_id.id,
-                        } for comp in user_company_ids
-                    },
-                    'disallowed_ancestor_companies': {
-                        comp.id: {
-                            'id': comp.id,
-                            'name': comp.name,
-                            'sequence': comp.sequence,
-                            'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
-                            'parent_id': comp.parent_id.id,
-                        } for comp in disallowed_ancestor_companies_sudo
-                    },
+                    'allowed_companies': {comp.id: comp._get_session_info(user_companies) for comp in user_companies},
+                    'disallowed_ancestor_companies': {comp.id: comp._get_session_info(all_companies_in_hierarchy_sudo) for comp in disallowed_ancestor_companies_sudo},
                 },
                 "show_effect": True,
-                "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user_company_ids) > 1,
+                "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user_companies) > 1,
             })
         return session_info
 
