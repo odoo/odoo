@@ -21,15 +21,15 @@ export class WeSelectItem extends Component {
             throw new Error("WeSelectItem must be used inside a WeSelect component.");
         }
         const item = useRef("item");
-        const { state, operation, isActive, priority } = useClickableWeWidget();
+        const { state, operation, isActive, getActions, priority } = useClickableWeWidget();
         if (this.props.id) {
-            useDependecyDefinition({ id: this.props.id, isActive });
+            useDependecyDefinition({ id: this.props.id, isActive, getActions });
         }
 
         const selectableItem = {
             isActive,
             priority,
-            getLabel: () => item.el.innerHTML,
+            getLabel: () => item.el?.innerHTML || "",
         };
 
         this.env.weSelectContext.addSelectableItem?.(selectableItem);

@@ -101,9 +101,9 @@ export function useWeComponent() {
     }
     useSubEnv(newEnv);
 }
-export function useDependecyDefinition({ id, isActive }) {
+export function useDependecyDefinition({ id, isActive, getActions, bus }) {
     const comp = useComponent();
-    comp.env.dependencyManager.add(id, isActive);
+    comp.env.dependencyManager.add(id, { isActive, getActions, bus });
     onWillDestroy(() => {
         comp.env.dependencyManager.removeByValue(isActive);
     });
@@ -117,7 +117,7 @@ export function useDependencies(dependencies) {
             const match = dependencyId.match(/(!)?(.*)/);
             const inverse = !!match[1];
             const id = match[2];
-            const isActiveFn = env.dependencyManager.get(id);
+            const isActiveFn = env.dependencyManager.get(id)?.isActive;
             if (!isActiveFn) {
                 return false;
             }
@@ -222,6 +222,11 @@ export function useClickableWeWidget() {
     }
     function callApply(applySpecs) {
         comp.env.actionBus?.trigger("BEFORE_CALL_ACTIONS");
+        if (comp.props.inheritedActions) {
+            comp.env.dependencyManager
+                .get(comp.props.inheritedActions)
+                .bus?.trigger("BEFORE_CALL_ACTIONS");
+        }
         const shouldClean = shouldToggle && isActive();
         for (const applySpec of applySpecs) {
             if (shouldClean) {
@@ -231,7 +236,7 @@ export function useClickableWeWidget() {
                     value: applySpec.actionValue,
                 });
             } else {
-                applySpec.apply({
+                applySpec.apply?.({
                     editingElement: applySpec.editingElement,
                     param: applySpec.actionParam,
                     value: applySpec.actionValue,
@@ -274,7 +279,12 @@ export function useClickableWeWidget() {
         if (actionId) {
             actions.push({ actionId, actionParam, actionValue });
         }
-        return actions;
+        const inheritedActions =
+            (comp.props.inheritedActions &&
+                comp.env.dependencyManager.get(comp.props.inheritedActions)?.getActions?.()) ||
+            [];
+
+        return actions.concat(inheritedActions);
     }
     function isActive() {
         const editingElements = comp.env.getEditingElements();
@@ -321,6 +331,7 @@ export function useClickableWeWidget() {
         operation,
         isActive,
         priority: getPriority(),
+        getActions: getAllActions,
     };
 }
 export function useInputWeWidget() {
@@ -457,4 +468,6 @@ export const clickableWeWidgetProps = {
     attributeActionValue: { type: [String, Array, validateIsNull], optional: true },
     dataAttributeActionValue: { type: [String, Array, validateIsNull], optional: true },
     styleActionValue: { type: [String, Array, validateIsNull], optional: true },
+
+    inheritedActions: { type: String, optional: true },
 };

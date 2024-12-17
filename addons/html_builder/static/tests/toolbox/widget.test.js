@@ -275,6 +275,44 @@ describe("WeButton", () => {
         expect("[data-class-action='test']").toHaveCount(1);
         expect("[data-class-action='test']").not.toHaveClass("active");
     });
+    test("inherit actions for another button", async () => {
+        function makeAction(n) {
+            return {
+                clean({ param, value }) {
+                    expect.step(`customAction${n} clean ${param} ${value}`);
+                },
+                apply: ({ param, value }) => {
+                    expect.step(`customAction${n} apply ${param} ${value}`);
+                },
+            };
+        }
+        addActionOption({
+            customAction1: makeAction(1),
+            customAction2: makeAction(2),
+            customAction3: makeAction(3),
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <WeButtonGroup>
+                    <WeButton action="'customAction1'" actionParam="'myParam1'" actionValue="'myValue1'"  id="'c1'">MyAction1</WeButton>
+                    <WeButton action="'customAction2'" actionParam="'myParam2'" actionValue="'myValue2'">MyAction2</WeButton>
+                </WeButtonGroup>
+                <WeButton action="'customAction3'" actionParam="'myParam3'" actionValue="'myValue3'" inheritedActions="'c1'" >MyAction2</WeButton>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
+        await contains(":iframe .test-options-target").click();
+
+        await contains("[data-action-id='customAction3']").hover();
+        expect.verifySteps([
+            "customAction2 clean myParam2 myValue2",
+            "customAction1 clean myParam1 myValue1",
+
+            "customAction3 apply myParam3 myValue3",
+            "customAction1 apply myParam1 myValue1",
+        ]);
+    });
     describe("Operation", () => {
         function makeAsyncActionItem(actionName) {
             const item = {};
