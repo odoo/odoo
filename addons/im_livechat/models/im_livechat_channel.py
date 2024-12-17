@@ -5,7 +5,6 @@ import random
 import re
 
 from odoo import api, Command, fields, models, _
-from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
@@ -40,6 +39,17 @@ class Im_LivechatChannel(models.Model):
     title_color = fields.Char(default="#FFFFFF", help="Default title color of the channel once open")
     button_background_color = fields.Char(default="#875A7B", help="Default background color of the Livechat button")
     button_text_color = fields.Char(default="#FFFFFF", help="Default text color of the Livechat button")
+    max_sessions_mode = fields.Selection(
+        [("unlimited", "Unlimited"), ("limited", "Limited")],
+        default="unlimited",
+        string="Sessions per Operator",
+        help="If limited, operators will only handle the selected number of sessions at a time. While on a call, they will not receive new conversations.",
+    )
+    max_sessions = fields.Integer(
+        default=10,
+        string="Maximum Sessions",
+        help="Maximum number of concurrent sessions per operator.",
+    )
 
     # computed fields
     web_page = fields.Char('Web Page', compute='_compute_web_page_link', store=False, readonly=True,
@@ -58,14 +68,54 @@ class Im_LivechatChannel(models.Model):
     chatbot_script_count = fields.Integer(string='Number of Chatbot', compute='_compute_chatbot_script_count')
     rule_ids = fields.One2many('im_livechat.channel.rule', 'channel_id', 'Rules')
 
+    _max_sessions_mode_greater_than_zero = models.Constraint(
+        "CHECK(max_sessions > 0)", "Concurrent session number should be greater than zero."
+    )
+
     def _are_you_inside(self):
         for channel in self:
             channel.are_you_inside = self.env.user in channel.user_ids
 
-    @api.depends('user_ids.im_status')
+    @api.depends(
+        "user_ids.channel_ids.last_interest_dt",
+        "user_ids.channel_ids.livechat_active",
+        "user_ids.channel_ids.livechat_channel_id",
+        "user_ids.channel_ids.livechat_operator_id",
+        "user_ids.im_status",
+        "user_ids.is_in_call",
+    )
     def _compute_available_operator_ids(self):
-        for record in self:
-            record.available_operator_ids = record.user_ids.filtered(lambda user: user._is_user_available())
+        counts = {}
+        if livechat_channels := self.filtered(lambda c: c.max_sessions_mode == "limited"):
+            users = livechat_channels.user_ids.filtered(lambda user: user._is_user_available())
+            counts = dict(
+                ((partner, livechat_channels), count)
+                for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
+                    [
+                        ("livechat_operator_id", "in", users.partner_id.ids),
+                        ("livechat_active", "=", True),
+                        ("last_interest_dt", ">=", fields.Datetime.now() - timedelta(minutes=15)),
+                    ],
+                    groupby=["livechat_operator_id", "livechat_channel_id"],
+                    aggregates=["__count"],
+                )
+            )
+
+        def is_available(user, livechat_channel):
+            partner = user.partner_id
+            return user._is_user_available() and (
+                livechat_channel.max_sessions_mode == "unlimited"
+                or (
+                    counts.get((partner, livechat_channel), 0) < livechat_channel.max_sessions
+                    # sudo: res.users - it's acceptable to check if the user is in call
+                    and not user.sudo().is_in_call
+                )
+            )
+
+        for livechat_channel in self:
+            livechat_channel.available_operator_ids = livechat_channel.user_ids.filtered(
+                lambda user, livechat_channel=livechat_channel: is_available(user, livechat_channel)
+            )
 
     @api.depends('rule_ids.chatbot_script_id')
     def _compute_chatbot_script_count(self):
