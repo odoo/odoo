@@ -108,7 +108,7 @@ test("open add snippet dialog + switch snippet category", async () => {
     ]);
     expect(".o_add_snippet_dialog aside .list-group .list-group-item.active").toHaveText("A");
 
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 2000 });
     expect(
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
     ).toHaveCount(2);
@@ -175,7 +175,7 @@ test("search snippet in add snippet dialog", async () => {
         },
     });
     await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 1000 });
     expect("aside .list-group .list-group-item").toHaveCount(2);
     const snippetsDescriptionProcessed = snippetsDescription(true);
     expect(

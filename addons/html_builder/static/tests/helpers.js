@@ -182,6 +182,7 @@ export function addActionOption(actions = {}) {
 
 export async function modifyText(editor) {
     setContent(editor.editable, getEditable('<h1 class="title">H[]ello</h1>'));
+    editor.shared.history.addStep();
     await insertText(editor, "1");
 }
 
