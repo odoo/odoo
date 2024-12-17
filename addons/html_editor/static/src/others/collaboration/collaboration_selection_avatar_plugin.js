@@ -153,17 +153,17 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
         this.enableAvatars();
         for (const info of this.selectionInfos.values()) {
             if (info.avatarTargetElement === element) {
-                if (!info.avatarElement.classList.contains("opacity-0")) {
-                    info.avatarElement.classList.add("opacity-0");
+                if (!info.avatarElement.classList.contains("invisible")) {
+                    info.avatarElement.classList.add("invisible");
                 }
             }
         }
     }
     enableAvatars() {
         for (const element of this.avatarOverlay.querySelectorAll(
-            ".oe-collaboration-caret-avatar.opacity-0"
+            ".oe-collaboration-caret-avatar.invisible"
         )) {
-            element.classList.remove("opacity-0");
+            element.classList.remove("invisible");
         }
     }
 }
