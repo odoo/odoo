@@ -217,6 +217,19 @@ test("toolbar format buttons should react to format change", async () => {
     expect(".btn[name='bold']").toHaveClass("active");
 });
 
+test("toolbar disable link button when selection cross blocks", async () => {
+    await setupEditor("<div>[<div>a<p>b</p></div>]</div>");
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='link']").toHaveClass("disabled");
+});
+
+test("toolbar enable link button when selection has only link", async () => {
+    await setupEditor(`<p>[<a href="test.com">test.com</a>]</p>`);
+
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='link']").not.toHaveClass("disabled");
+});
+
 test("toolbar works: can select font", async () => {
     const { el } = await setupEditor("<p>test</p>");
     expect(getContent(el)).toBe("<p>test</p>");
