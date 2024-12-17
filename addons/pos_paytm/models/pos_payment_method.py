@@ -21,13 +21,9 @@ iv = b'@@@@&&&&####$$$$'
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
-    paytm_tid = fields.Char(string='PayTM Terminal ID', help="Terminal model or Activation code \n ex: 70000123")
     channel_id = fields.Char(string='PayTM Channel ID', default='EDC')
     accept_payment = fields.Selection(selection=[('auto', 'Automatically'), ('manual', 'Manually')], default='auto', help="Choose accept payment mode: \n Manually or Automatically")
     allowed_payment_modes = fields.Selection(selection=[('all', 'All'), ('card', 'Card'), ('qr', 'QR')], default='all', help="Choose allow payment mode: \n All/Card or QR")
-    paytm_mid = fields.Char(string="PayTM Merchant ID", help="Go to https://business.paytm.com/ and create the merchant account")
-    paytm_merchant_key = fields.Char(string="PayTM Merchant API Key", help="Merchant/AES key \n ex: B1o6Ivjy8L1@abc9")
-    paytm_test_mode = fields.Boolean(string="PayTM Test Mode", default=False, help="Turn it on when in Test Mode")
 
     def _get_payment_terminal_selection(self):
         return super()._get_payment_terminal_selection() + [('paytm', 'PayTM')]
@@ -41,7 +37,7 @@ class PosPaymentMethod(models.Model):
         :rtype: dict
         """
         try:
-            if self.paytm_test_mode:
+            if self.test_mode:
                 api_url = 'https://securegw-stage.paytm.in/ecr/'
             else:
                 api_url = 'https://securegw-edc.paytm.in/ecr/'
@@ -142,15 +138,15 @@ class PosPaymentMethod(models.Model):
 
         time = datetime.fromtimestamp(timestamp).astimezone(tz=tz.gettz('Asia/Kolkata')).strftime("%Y-%m-%d %H:%M:%S")
         return {
-            'paytmMid': self.paytm_mid,
-            'paytmTid': self.paytm_tid,
+            'paytmMid': self.terminal_merchant_key,
+            'paytmTid': self.terminal_identifier,
             'transactionDateTime': time,
             'merchantTransactionId': transaction_id,
             'merchantReferenceNo': reference_id,
         }
 
     def _paytm_get_request_head(self, body):
-        paytm_signature = self._paytm_generate_signature(body, self.paytm_merchant_key)
+        paytm_signature = self._paytm_generate_signature(body, self.terminal_api_key)
         error = isinstance(paytm_signature, dict) and paytm_signature.get('error')
         if error:
             return {'error': '%s' % error}

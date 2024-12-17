@@ -84,7 +84,7 @@ export class PaymentVivaWallet extends PaymentInterface {
         line.sessionId = order.uuid + " - " + uuidv4();
         var data = {
             sessionId: line.sessionId,
-            terminalId: line.payment_method_id.viva_wallet_terminal_id,
+            terminalId: line.payment_method_id.terminal_identifier,
             cashRegisterId: this.pos.getCashier().name,
             amount: roundPrecision(line.amount * 100),
             currencyCode: this.pos.currency.iso_numeric.toString(),
