@@ -22,6 +22,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { HtmlViewer } from "./html_viewer";
 import { withSequence } from "@html_editor/utils/resource";
+import { DocumentPlugin } from "@html_editor/others/document_plugin";
 
 /**
  * Check whether the current value contains nodes that would break
@@ -209,6 +210,7 @@ export class HtmlField extends Component {
                 ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
                 ...(this.props.dynamicPlaceholder ? DYNAMIC_PLACEHOLDER_PLUGINS : []),
                 ...(this.props.embeddedComponents ? EMBEDDED_COMPONENT_PLUGINS : []),
+                DocumentPlugin,
             ],
             classList: this.classList,
             onChange: this.onChange.bind(this),

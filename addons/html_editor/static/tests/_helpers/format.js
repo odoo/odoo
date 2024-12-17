@@ -14,6 +14,14 @@ export function unformat(html) {
  * @param {string} html
  */
 export function cleanLinkArtifacts(html) {
-    // Multiple classes not supported (not needed for now)
-    return html.replaceAll("\uFEFF", "").replace(/ class="o_link_in_selection"/g, "");
+    return (
+        html
+            .replaceAll("\uFEFF", "")
+            // o_link_in_selection as single class
+            .replace(/ class="o_link_in_selection"/g, "")
+            // o_link_in_selection among other classes (except if last one)
+            .replace(/o_link_in_selection /g, "")
+            // o_link_in_selection as last class
+            .replace(/ o_link_in_selection/g, "")
+    );
 }
