@@ -551,7 +551,7 @@ export class ListPlugin extends Plugin {
             }
             toMove = li.lastChild;
         }
-        if (p && isVisible(p)) {
+        if (p && p.hasChildNodes()) {
             cursors.update(callbacksForCursorUpdate.after(ul, p));
             ul.after(p);
         }

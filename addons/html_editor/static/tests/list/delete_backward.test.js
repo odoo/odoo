@@ -1,7 +1,8 @@
 import { test, describe } from "@odoo/hoot";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { deleteBackward } from "../_helpers/user_actions";
+import { deleteBackward, insertText } from "../_helpers/user_actions";
+import { execCommand } from "../_helpers/userCommands";
 
 describe("Selection collapsed", () => {
     // Note: All tests on ordered lists should be duplicated
@@ -323,6 +324,18 @@ describe("Selection collapsed", () => {
                     contentBefore: "<p><br></p><ol><li>[]<br></li></ol>",
                     stepFunction: deleteBackward,
                     contentAfter: "<p><br></p><p>[]<br></p>",
+                });
+            });
+
+            test("should outdent list item with strong tag", async () => {
+                await testEditor({
+                    contentBefore: `<ol><li>abcd</li><li>[]<br></li></ol>`,
+                    stepFunction: async (editor) => {
+                        execCommand(editor, "formatBold");
+                        deleteBackward(editor);
+                        await insertText(editor, "abcd");
+                    },
+                    contentAfter: `<ol><li>abcd</li></ol><p><strong>abcd[]</strong></p>`,
                 });
             });
         });
