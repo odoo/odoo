@@ -1192,7 +1192,7 @@ class MailThread(models.AbstractModel):
                 self._routing_create_bounce_email(
                     email_from, body, message,
                     # add a reference with a tag, to be able to ignore response to this email
-                    references=f'{message_id} {tools.generate_tracking_message_id("loop-detection-bounce-email")}',
+                    references=f'{message_id} {generate_tracking_message_id("loop-detection-bounce-email")}',
                     reply_to=self.env.company.email)
                 return []
 
@@ -1242,7 +1242,7 @@ class MailThread(models.AbstractModel):
             self._routing_create_bounce_email(
                 email_from, body, message,
                 # add a reference with a tag, to be able to ignore response to this email
-                references=f'{message_id} {tools.generate_tracking_message_id("loop-detection-bounce-email")}',
+                references=f'{message_id} {generate_tracking_message_id("loop-detection-bounce-email")}',
                 reply_to=self.env.company.email)
             return []
 
@@ -1811,7 +1811,7 @@ class MailThread(models.AbstractModel):
                 return bounced_message, reference_ids
 
         reference_ids.extend(unfold_references(message_dict['in_reply_to']))
-        reference_ids.extend(unfold_references(message_dict['references']))
+        reference_ids.extend([r.strip() for r in unfold_references(message_dict['references'])])
 
         if message_dict.get('parent_id'):
             # Parent based on References, In-Reply-To, etc
@@ -1827,19 +1827,24 @@ class MailThread(models.AbstractModel):
         :param msg_dict: The dict values already parsed
         :return: The <mail.message> or None if nothing has been found
         """
-        in_reply_to = msg_dict.get('in_reply_to').strip()
+        in_reply_to = msg_dict['in_reply_to']
         if in_reply_to:
             parent = self.env['mail.message'].search(
                 [('message_id', '=', in_reply_to)],
-                order='create_date DESC, id DESC', limit=1)
+                order='id DESC', limit=1)
             if parent:
                 return parent
 
-        msg_references = [r.strip() for r in unfold_references(msg_dict.get('references') or '')]
+        msg_references = [r.strip() for r in unfold_references(msg_dict['references'])]
         if msg_references:
+            # avoid creating a gigantic query by limiting the number of references taken into account.
+            # newer msg_ids are *appended* to References as per RFC5322 §3.6.4, so we should generally
+            # find a match just with the last entry (equal to `In-Reply-To`). 32 refs seems large enough,
+            # we've seen performance degrade with 100+ refs.
+            msg_references = msg_references[-32:]
             parent = self.env['mail.message'].search(
                 [('message_id', 'in', msg_references)],
-                order='create_date DESC, id DESC', limit=1)
+                order='id DESC', limit=1)
             if parent:
                 return parent
 
