@@ -99,8 +99,76 @@ class ResPartner(models.Model):
     )
     # Field representing whether vies_valid is relevant for selecting a fiscal position on this partner
     perform_vies_validation = fields.Boolean(compute='_compute_perform_vies_validation')
-    # Technical field used to determine the VAT to check
-    vies_vat_to_check = fields.Char(compute='_compute_vies_vat_to_check')
+    # We put on inverse to allow for different
+    vat = fields.Char(inverse="_compute_vat", store=True)
+
+    @api.onchange('vat', 'country_id')
+    def _compute_vat(self):
+        for partner in self:
+            if partner.country_id:
+                partner.vat = partner._fix_vat_number(partner.vat, partner.country_id.id)
+
+    @api.depends_context('company')
+    @api.depends('vat')
+    def _compute_perform_vies_validation(self):
+        """ Determine whether to show VIES validity on the current VAT number """
+        for partner in self:
+            to_check = partner.vat
+            company_code = self.env.company.account_fiscal_country_id.code
+            partner.perform_vies_validation = (
+                to_check
+                and not to_check[:2].upper() == company_code
+                and self.env.company.vat_check_vies
+            )
+
+    @api.constrains('vat', 'country_id')
+    def check_vat(self):
+        # The context key 'no_vat_validation' allows you to store/set a VAT number without doing validations.
+        # This is for API pushes from external platforms where you have no control over VAT numbers.
+        if self.env.context.get('no_vat_validation'):
+            return
+
+        for partner in self:
+            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
+            # A partner for which they didn't input VAT, and the one not subject to VAT
+            if not partner.vat or len(partner.vat) == 1:
+                continue
+
+            country = partner.commercial_partner_id.country_id
+            if self._run_vat_test(partner.vat, country, partner.is_company) is False:
+                partner_label = _("partner [%s]", partner.name)
+                msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
+                raise ValidationError(msg)
+
+    @api.depends('vat')
+    def _compute_vies_valid(self):
+        """ Check the VAT number with VIES, if enabled."""
+        if not self.env['res.company'].sudo().search_count([('vat_check_vies', '=', True)]):
+            self.vies_valid = False
+            return
+
+        for partner in self:
+            if not partner.vat:
+                partner.vies_valid = False
+                continue
+            if partner.parent_id and partner.parent_id.vat == partner.vat:
+                partner.vies_valid = partner.parent_id.vies_valid
+                continue
+            try:
+                vies_valid = check_vies(partner.vat, timeout=10)
+                partner.vies_valid = vies_valid['valid']
+            except (OSError, InvalidComponent, zeep.exceptions.Fault) as e:
+                if partner._origin.id:
+                    msg = ""
+                    if isinstance(e, OSError):
+                        msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vat)
+                    elif isinstance(e, InvalidComponent):
+                        msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vat)
+                    elif isinstance(e, zeep.exceptions.Fault):
+                        msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
+                    partner._origin.message_post(body=msg)
+                _logger.warning("The VAT number %s failed VIES check.", partner.vat)
+                partner.vies_valid = False
 
     def _split_vat(self, vat):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
@@ -132,37 +200,6 @@ class ResPartner(models.Model):
             return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
         return check_func(vat_number)
 
-    @api.depends('vat', 'country_id')
-    def _compute_vies_vat_to_check(self):
-        """ Retrieve the VAT number, if one such exists, to be used when checking against the VIES system """
-        eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
-        for partner in self:
-            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
-            # a partner for which they haven't yet input VAT, and one not subject to VAT
-            if not partner.vat or len(partner.vat) == 1 or not partner.country_id or partner.country_id not in self.env.ref('base.europe').country_ids:
-                partner.vies_vat_to_check = ''
-                continue
-            country_code, number = partner._split_vat(partner.vat)
-            if not country_code.isalpha() and partner.country_id:
-                country_code = partner.country_id.code
-                number = partner.vat
-            partner.vies_vat_to_check = (
-                country_code.upper() in eu_country_codes or
-                country_code.lower() in _region_specific_vat_codes
-            ) and self._fix_vat_number(country_code + number, partner.country_id.id) or ''
-
-    @api.depends_context('company')
-    @api.depends('vies_vat_to_check')
-    def _compute_perform_vies_validation(self):
-        """ Determine whether to show VIES validity on the current VAT number """
-        for partner in self:
-            to_check = partner.vies_vat_to_check
-            company_code = self.env.company.account_fiscal_country_id.code
-            partner.perform_vies_validation = (
-                to_check
-                and not to_check[:2].upper() == company_code
-                and self.env.company.vat_check_vies
-            )
 
     @api.model
     def fix_eu_vat_number(self, country_id, vat):
@@ -173,55 +210,6 @@ class ResPartner(models.Model):
             if vat[:2] != country_code:
                 vat = country_code + vat
         return vat
-
-    @api.constrains('vat', 'country_id')
-    def check_vat(self):
-        # The context key 'no_vat_validation' allows you to store/set a VAT number without doing validations.
-        # This is for API pushes from external platforms where you have no control over VAT numbers.
-        if self.env.context.get('no_vat_validation'):
-            return
-
-        for partner in self:
-            # Skip checks when only one character is used. Some users like to put '/' or other as VAT to differentiate between
-            # A partner for which they didn't input VAT, and the one not subject to VAT
-            if not partner.vat or len(partner.vat) == 1:
-                continue
-
-            country = partner.commercial_partner_id.country_id
-            if self._run_vat_test(partner.vat, country, partner.is_company) is False:
-                partner_label = _("partner [%s]", partner.name)
-                msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
-                raise ValidationError(msg)
-
-    @api.depends('vies_vat_to_check')
-    def _compute_vies_valid(self):
-        """ Check the VAT number with VIES, if enabled."""
-        if not self.env['res.company'].sudo().search_count([('vat_check_vies', '=', True)]):
-            self.vies_valid = False
-            return
-
-        for partner in self:
-            if not partner.vies_vat_to_check:
-                partner.vies_valid = False
-                continue
-            if partner.parent_id and partner.parent_id.vies_vat_to_check == partner.vies_vat_to_check:
-                partner.vies_valid = partner.parent_id.vies_valid
-                continue
-            try:
-                vies_valid = check_vies(partner.vies_vat_to_check, timeout=10)
-                partner.vies_valid = vies_valid['valid']
-            except (OSError, InvalidComponent, zeep.exceptions.Fault) as e:
-                if partner._origin.id:
-                    msg = ""
-                    if isinstance(e, OSError):
-                        msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vies_vat_to_check)
-                    elif isinstance(e, InvalidComponent):
-                        msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vies_vat_to_check)
-                    elif isinstance(e, zeep.exceptions.Fault):
-                        msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
-                    partner._origin.message_post(body=msg)
-                _logger.warning("The VAT number %s failed VIES check.", partner.vies_vat_to_check)
-                partner.vies_valid = False
 
     @api.model
     def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
@@ -696,31 +684,13 @@ class ResPartner(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for values in vals_list:
-            if values.get('vat') and values.get('country_id'):
-                values['vat'] = self._fix_vat_number(values['vat'], values['country_id'])
         res = super().create(vals_list)
         if self.env.context.get('import_file'):
             res.env.remove_to_compute(self._fields['vies_valid'], res)
         return res
 
     def write(self, values):
-        if self and (values.get('vat') or values.get('country_id')):
-            multi_country_case = values.get('vat') and not values.get('country_id') and len(self.mapped('country_id')) > 1
-            multi_vat_case = values.get('country_id') and not values.get('vat') and len(self.mapped('vat')) > 1
-            grouping_key = 'country_id' if multi_country_case else 'vat'
-            if not (multi_vat_case or multi_country_case):
-                grouping_key = 'country_id' if not values.get('country_id') else 'vat'
-            split_self = self.grouped(grouping_key)
-            res = True
-            for ss, partners in split_self.items():
-                country_id = ss.id if grouping_key == 'country_id' and not values.get('country_id') else values.get('country_id')
-                vat = ss if grouping_key == 'vat' and not values.get('vat') else values.get('vat')
-                values['vat'] = partners._fix_vat_number(vat, country_id)
-                res = res and super(ResPartner, partners).write(values)
-        else:
-            res = super().write(values)
-
+        res = super().write(values)
         if self.env.context.get('import_file'):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
