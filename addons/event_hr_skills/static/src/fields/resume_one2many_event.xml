@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="ResumeListRenderer.Rows" t-inherit="hr_skills.ResumeListRenderer.Rows" t-inherit-mode="extension">
+        <xpath expr="//t[@t-foreach]" position="after">
+            <th tabindex="-1" class="o_group_name" t-att-colspan="colspan" t-if="!hasEventLines">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-secondary btn-sm"
+                        t-if="isEditable"
+                        t-on-click="() => props.onAdd({ context: { default_line_type_id: this.eventTypeId }})"
+                        role="button">ADD AN EVENT</button>
+                </div>
+            </th>
+        </xpath>
+    </t>
+</odoo>

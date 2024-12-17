@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="event_tag_category_view_form" model="ir.ui.view">
+        <field name="name">event.tag.category.view.form.inherit.event.hr.skills</field>
+        <field name="model">event.tag.category</field>
+        <field name="inherit_id" ref="event.event_tag_category_view_form"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="before">
+                <field name="show_on_resume" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_tag_category_view_tree" model="ir.ui.view">
+        <field name="name">event.tag.category.view.list.inherit.event.hr.skills</field>
+        <field name="model">event.tag.category</field>
+        <field name="inherit_id" ref="event.event_tag_category_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="show_on_resume" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
