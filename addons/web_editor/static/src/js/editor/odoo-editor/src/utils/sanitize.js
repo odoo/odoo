@@ -218,6 +218,7 @@ function sanitizeNode(node, root) {
         } else {
             unwrapContents(node);
         }
+<<<<<<< 17.0
         if (previous && isVisible(previous) && !isBlock(previous) && previous.nodeName !== 'BR') {
             const br = document.createElement('br');
             previous.after(br);
@@ -263,6 +264,142 @@ function sanitizeNode(node, root) {
                 if (nodeRect.width && referenceRect.width) {
                     const width = (nodeRect.left - referenceRect.left) % 40;
                     node.style.width = (40 - width) + 'px';
+||||||| ca89d288a99e9c2818a08be0bd3ca03e757711e7
+        this._parse(node);
+    }
+
+    _parse(node) {
+        while (node) {
+            const closestProtected = closestElement(node, '[data-oe-protected="true"]');
+            if (closestProtected && node !== closestProtected) {
+                return;
+            }
+            // Merge identical elements together.
+            while (
+                areSimilarElements(node, node.previousSibling) &&
+                !isUnbreakable(node) &&
+                !isEditorTab(node)
+            ) {
+                getDeepRange(this.root, { select: true });
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                const nodeP = node.previousSibling;
+                moveNodes(...endPos(node.previousSibling), node);
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+                node = nodeP;
+            }
+
+            // Remove comment nodes to avoid issues with mso comments.
+            if (node.nodeType === Node.COMMENT_NODE) {
+                node.remove();
+            }
+
+            const selection = this.root.ownerDocument.getSelection();
+            const anchor = selection && selection.anchorNode;
+            const anchorEl = anchor && closestElement(anchor);
+            // Remove zero-width spaces added by `fillEmpty` when there is
+            // content.
+            if (
+                node.nodeType === Node.TEXT_NODE &&
+                node.textContent.includes('\u200B') &&
+                node.parentElement.hasAttribute('data-oe-zws-empty-inline') &&
+                (
+                    node.textContent.length > 1 ||
+                    // There can be multiple ajacent text nodes, in which case
+                    // the zero-width space is not needed either, despite being
+                    // alone (length === 1) in its own text node.
+                    Array.from(node.parentNode.childNodes).find(
+                        sibling =>
+                            sibling !== node &&
+                            sibling.nodeType === Node.TEXT_NODE &&
+                            sibling.length > 0
+                    )
+                ) &&
+                !isBlock(node.parentElement)
+            ) {
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                const shouldAdaptAnchor = anchor === node && selection.anchorOffset > node.textContent.indexOf('\u200B');
+                const shouldAdaptFocus = selection.focusNode === node && selection.focusOffset > node.textContent.indexOf('\u200B');
+                node.textContent = node.textContent.replace('\u200B', '');
+                node.parentElement.removeAttribute("data-oe-zws-empty-inline");
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+                if (shouldAdaptAnchor || shouldAdaptFocus) {
+                    setSelection(
+                        selection.anchorNode, shouldAdaptAnchor ? selection.anchorOffset - 1 : selection.anchorOffset,
+                        selection.focusNode, shouldAdaptFocus ? selection.focusOffset - 1 : selection.focusOffset,
+                    );
+=======
+        this._parse(node);
+    }
+
+    _parse(node) {
+        while (node) {
+            const closestProtected = closestElement(node, '[data-oe-protected="true"]');
+            if (closestProtected && node !== closestProtected) {
+                return;
+            }
+            // Merge identical elements together.
+            while (
+                areSimilarElements(node, node.previousSibling) &&
+                !isUnbreakable(node) &&
+                !isEditorTab(node)
+            ) {
+                getDeepRange(this.root, { select: true });
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                const nodeP = node.previousSibling;
+                moveNodes(...endPos(node.previousSibling), node);
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+                node = nodeP;
+            }
+
+            // Remove comment nodes to avoid issues with mso comments.
+            if (node.nodeType === Node.COMMENT_NODE) {
+                node.remove();
+            }
+
+            const selection = this.root.ownerDocument.getSelection();
+            const anchor = selection && selection.anchorNode;
+            const anchorEl = anchor && closestElement(anchor);
+            // Remove zero-width spaces added by `fillEmpty` when there is
+            // content.
+            if (
+                node.nodeType === Node.TEXT_NODE &&
+                node.textContent.includes('\u200B') &&
+                node.parentElement.hasAttribute('data-oe-zws-empty-inline') &&
+                (
+                    node.textContent.length > 1 ||
+                    // There can be multiple ajacent text nodes, in which case
+                    // the zero-width space is not needed either, despite being
+                    // alone (length === 1) in its own text node.
+                    Array.from(node.parentNode.childNodes).find(
+                        sibling =>
+                            sibling !== node &&
+                            sibling.nodeType === Node.TEXT_NODE &&
+                            sibling.length > 0
+                    )
+                ) &&
+                !isBlock(node.parentElement)
+            ) {
+                const { anchorNode, focusNode, anchorOffset, focusOffset } = selection;
+                const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                const shouldAdaptAnchor = anchorNode === node && anchorOffset > node.textContent.indexOf('\u200B');
+                const shouldAdaptFocus = focusNode === node && focusOffset > node.textContent.indexOf('\u200B');
+                node.textContent = node.textContent.replace('\u200B', '');
+                node.parentElement.removeAttribute("data-oe-zws-empty-inline");
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+                if (shouldAdaptAnchor || shouldAdaptFocus) {
+                    setSelection(
+                        anchorNode, shouldAdaptAnchor ? anchorOffset - 1 : anchorOffset,
+                        focusNode, shouldAdaptFocus ? focusOffset - 1 : focusOffset,
+                    );
+>>>>>>> 723343aaed5a54da64db1630cea66ad69abd9cec
                 }
             }
         }

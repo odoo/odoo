@@ -159,6 +159,7 @@ describe('Editor', () => {
                 });
             });
         });
+<<<<<<< 17.0
         describe('sanitize should modify p within a', () => {
             it('should unwrap p element inside editable a inside non editable div', async () => {
                 await testEditor(BasicEditor, {
@@ -167,6 +168,17 @@ describe('Editor', () => {
                 });
             });
         });
+||||||| ca89d288a99e9c2818a08be0bd3ca03e757711e7
+=======
+        describe('Sanitize ZWS', () => {
+            it('should remove zws while preserving the selection', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">&ZeroWidthSpace;a[]</font></p>',
+                    contentAfter: '<p><font style="color: rgb(255, 0, 0);">a[]</font></p>',
+                })
+            })
+        })
+>>>>>>> 723343aaed5a54da64db1630cea66ad69abd9cec
     });
     describe('deleteForward', () => {
         describe('Selection collapsed', () => {
