@@ -32,7 +32,12 @@ class TestRepair(common.TransactionCase):
 
         # Storable products
         cls.product_storable_no = cls.env['product.product'].create({
-            'name': 'Product Storable No Tracking',
+            'name': 'Product Storable No Tracking #1',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        cls.product_storable_no2 = cls.env['product.product'].create({
+            'name': 'Product Storable No Tracking #2',
             'is_storable': True,
             'tracking': 'none',
         })
@@ -47,21 +52,11 @@ class TestRepair(common.TransactionCase):
             'tracking': 'lot',
         })
 
-        # 'Create Repair' Products
-        cls.product_consu_order_repair = cls.env['product.product'].create({
-            'name': 'Repair Consumable',
-            'type': 'consu',
-            'create_repair': True,
-        })
-        cls.product_storable_order_repair = cls.env['product.product'].create({
-            'name': 'Repair Storable',
-            'is_storable': True,
-            'create_repair': True,
-        })
-        cls.product_service_order_repair = cls.env['product.product'].create({
+        # Repair product
+        cls.product_order_repair = cls.env['product.product'].create({
             'name': 'Repair Service',
             'type': 'service',
-            'create_repair': True,
+            'service_tracking': 'repair',
         })
 
         # Location
@@ -186,16 +181,16 @@ class TestRepair(common.TransactionCase):
         with self.assertRaises(UserError):
             repair.action_validate()
 
-        #  Line A with qty > 0 & not available, Line B with qty >= 0 & available --> Warning (stock.warn.insufficient.qty.repair)
-        lineA.product_uom_qty = 2.0
-        lineB = self._create_simple_part_move(repair.id, 2.0, self.product_storable_lot)
+        lineB = self._create_simple_part_move(repair.id, 1.0, self.product_storable_no2)
         repair.move_ids |= lineB
-        quant = self.create_quant(self.product_storable_no, 1)
-        quant |= self.create_quant(self.product_storable_lot, 3)
-        quant.action_apply_inventory()
 
-        lineC = self._create_simple_part_move(repair.id, 1.0, self.product_storable_order_repair)
+        #  Line A with qty > 0 & not available, Line C with qty >= 0 & available --> Warning (stock.warn.insufficient.qty.repair)
+        lineA.product_uom_qty = 2.0
+        lineC = self._create_simple_part_move(repair.id, 2.0, self.product_storable_lot)
         repair.move_ids |= lineC
+        quant = self.create_quant(self.product_storable_no, 1)
+        quant |= self.create_quant(self.product_storable_lot, 2)
+        quant.action_apply_inventory()
 
         repair.product_id = self.product_storable_serial
         validate_action = repair.action_validate()
@@ -207,10 +202,13 @@ class TestRepair(common.TransactionCase):
             ).save()
         warn_qty_wizard.action_done()
 
+        # LineA: 2 > 1, partially available
+        # LineB: 1 > 0, waiting availability
+        # LineC: 2 = 2, available
         self.assertEqual(repair.state, "confirmed", 'Repair order should be in "Confirmed" state.')
         self.assertEqual(lineA.state, "partially_available", 'Repair line #1 should be in "Partial Availability" state.')
-        self.assertEqual(lineB.state, "assigned", 'Repair line #2 should be in "Available" state.')
-        self.assertEqual(lineC.state, "confirmed", 'Repair line #3 should be in "Waiting Availability" state.')
+        self.assertEqual(lineB.state, "confirmed", 'Repair line #2 should be in "Waiting Availability" state.')
+        self.assertEqual(lineC.state, "assigned", 'Repair line #3 should be in "Available" state.')
 
         # Create quotation
         # No partner warning -> working case -> already linked warning
@@ -282,17 +280,17 @@ class TestRepair(common.TransactionCase):
         # Any line with quantity < product_uom_qty => Warning
         repair.move_ids.picked = True
         self.assertTrue(repair.has_uncomplete_moves)
-        # LineB : no serial => ValidationError
-        lot = lineB.move_line_ids.lot_id
+        # LineC : no serial => ValidationError
+        lot = lineC.move_line_ids.lot_id
         with self.assertRaises(UserError) as err:
-            lineB.move_line_ids.lot_id = False
+            lineC.move_line_ids.lot_id = False
             repair.action_repair_done()
 
-        # LineB with lots
-        lineB.move_line_ids.lot_id = lot
+        # LineC with lots
+        lineC.move_line_ids.lot_id = lot
 
         lineA.quantity = 2  # quantity = product_uom_qty
-        lineC.quantity = 2  # quantity > product_uom_qty (No warning)
+        lineB.quantity = 2  # quantity > product_uom_qty (No warning)
         lineD = self._create_simple_part_move(repair.id, 0.0)
         repair.move_ids |= lineD  # product_uom_qty = 0   : state is cancelled
 
@@ -319,7 +317,7 @@ class TestRepair(common.TransactionCase):
     def test_02_repair_sale_order_binding(self):
         # Binding from SO to RO(s)
         #   On SO Confirm
-        #     - Create linked RO per line (only if item with "create_repair" checked)
+        #     - Create linked RO per line (only if service_tracking == 'repair')
         #   Create Repair SOL
         #     - sol qty updated to 0 -> RO canceled (Reciprocal is true too)
         #     - sol qty back to >0 -> RO Confirmed (Reciprocal is not true)
@@ -331,7 +329,7 @@ class TestRepair(common.TransactionCase):
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.res_partner_1
         with so_form.order_line.new() as line:
-            line.product_id = self.product_consu_order_repair
+            line.product_id = self.product_order_repair
             line.product_uom_qty = 2.0
         with so_form.order_line.new() as line:
             line.display_type = 'line_section'
@@ -417,34 +415,10 @@ class TestRepair(common.TransactionCase):
         for line in repair_order.move_ids:
             line.quantity = line.product_uom_qty
         repair_order.action_repair_end()
-        self.assertTrue(float_is_zero(order_line.qty_delivered, 2))
+        self.assertEqual(float_compare(order_line.product_uom_qty, order_line.qty_delivered, 2), 0)
         self.assertEqual(float_compare(sol_part_0.product_uom_qty, ro_line_0.quantity, 2), 0)
         self.assertTrue(float_is_zero(sol_part_1.qty_delivered, 2))
 
-    def test_03_sale_order_delivered_qty(self):
-        so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.res_partner_1
-        with so_form.order_line.new() as line:
-            line.product_id = self.product_consu_order_repair
-            line.product_uom_qty = 1.0
-        with so_form.order_line.new() as line:
-            line.product_id = self.product_storable_order_repair
-            line.product_uom_qty = 1.0
-        with so_form.order_line.new() as line:
-            line.product_id = self.product_service_order_repair
-            line.product_uom_qty = 1.0
-        sale_order = so_form.save()
-        sale_order.action_confirm()
-
-        repair_order_ids = sale_order.repair_order_ids
-        repair_order_ids.action_repair_start()
-        repair_order_ids.action_repair_end()
-
-        for sol in sale_order.order_line:
-            if sol.product_template_id.type == 'service':
-                self.assertEqual(float_compare(sol.product_uom_qty, sol.qty_delivered, 2), 0)
-            else:
-                self.assertTrue(float_is_zero(sol.qty_delivered, 2))
 
     def test_repair_compute_product_uom(self):
         repair = self.env['repair.order'].create({
@@ -619,34 +593,6 @@ class TestRepair(common.TransactionCase):
         repair_order = ro_form.save()
         self.assertFalse(repair_order.lot_id)
 
-    def test_repair_multi_unit_order_with_serial_tracking(self):
-        """
-        Test that a sale order with a single order line with quantity > 1 for a product that creates a repair order and
-        is tracked via serial number creates multiple repair orders rather than grouping the line into a single RO
-        """
-        product_a = self.env['product.product'].create({
-            'name': 'productA',
-            'is_storable': True,
-            'tracking': 'serial',
-            'create_repair': True,
-        })
-
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.res_partner_1.id,
-            'order_line': [Command.create({
-                'product_id': product_a.id,
-                'product_uom_qty': 3.0,
-            })]
-        })
-        sale_order.action_confirm()
-
-        repair_orders = sale_order.repair_order_ids
-        self.assertRecordValues(repair_orders, [
-            {'product_id': product_a.id, 'product_qty': 1.0},
-            {'product_id': product_a.id, 'product_qty': 1.0},
-            {'product_id': product_a.id, 'product_qty': 1.0},
-        ])
-
     def test_onchange_picking_type_id_and_name(self):
         """
         Test that when changing the picking_type_id, the name of the repair order should be changed too
@@ -719,40 +665,13 @@ class TestRepair(common.TransactionCase):
         })
         self.assertEqual(repair_order.company_id, self.env.company)
 
-    def test_delivered_qty_of_generated_so(self):
-        """
-        Test that checks that `qty_delivered` of the generated SOL is correctly set when the repair is done.
-        """
-        repair_order = self.env['repair.order'].create({
-            'product_id': self.product_storable_order_repair.id,
-            'product_uom': self.product_storable_order_repair.uom_id.id,
-            'partner_id': self.res_partner_1.id,
-            'move_ids': [
-                Command.create({
-                    'product_id': self.product_consu_order_repair.id,
-                    'product_uom_qty': 1.0,
-                    'state': 'draft',
-                    'repair_line_type': 'add',
-                })
-            ],
-        })
-        repair_order.action_validate()
-        repair_order.action_repair_start()
-        repair_order.action_repair_end()
-        self.assertEqual(repair_order.state, 'done')
-        self.assertEqual(repair_order.move_ids.quantity, 1.0)
-        repair_order.action_create_sale_order()
-        sale_order = repair_order.sale_order_id
-        sale_order.action_confirm()
-        self.assertEqual(sale_order.order_line.qty_delivered, 1.0)
-
     def test_repair_order_uncomplete_moves(self):
         """
         This test checks that the `has_uncomplete_moves` field is correctly set on a repair order.
         """
         repair_order = self.env['repair.order'].create({
-            'product_id': self.product_storable_order_repair.id,
-            'product_uom': self.product_storable_order_repair.uom_id.id,
+            'product_id': self.product_order_repair.id,
+            'product_uom': self.product_order_repair.uom_id.id,
             'partner_id': self.res_partner_1.id,
             'move_ids': [
                 Command.create({
