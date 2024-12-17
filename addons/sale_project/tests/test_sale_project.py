@@ -1032,3 +1032,24 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'sale_line_id': sale_order_line.id,
         })
         self.assertEqual(sale_order.state, 'sale')
+
+    def test_create_sale_order_with_service_product_through_project(self):
+        """
+        Test when creating a sales order through a billable project
+        and have an order line that creates a project and a task. Make sure
+        no other project has been created.
+        """
+        project = self.env['project.project'].create({
+            'name': 'Test Project',
+            'allow_billable': True,
+            'partner_id': self.partner.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'name': 'Sale Order',
+            'partner_id': self.partner.id,
+            'project_id': project.id,
+            'order_line': [Command.create({'product_id': self.product_order_service3.id})],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(project, sale_order.tasks_ids.project_id)

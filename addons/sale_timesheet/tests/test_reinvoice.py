@@ -42,6 +42,11 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'partner_id': cls.partner_a.id
         })
 
+        cls.project_analytic_account = cls.env['account.analytic.account'].create({
+            'name': 'Test Project AA',
+            'plan_id': int(cls.env['ir.config_parameter'].sudo().get_param('analytic.project_plan')),
+        })
+
         cls.project = cls.env['project.project'].create({
             'name': 'SO Project',
             'allow_timesheets': False,
@@ -70,6 +75,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'product_id': self.company_data['product_order_cost'].id,
             'product_uom_qty': 2,
             'order_id': self.sale_order.id,
+            'analytic_distribution': {self.project_analytic_account.id: 100},
         })
         sale_order_line2 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_cost'].id,
@@ -91,6 +97,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'unit_amount': 1,
             'employee_id': self.employee_user.id,
             'company_id': self.company_data['company'].id,
+            'so_line': sale_order_line1.id,
         })
 
         move_form = Form(self.Invoice)
@@ -165,6 +172,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'product_uom_qty': 2,
             'qty_delivered': 1,
             'order_id': self.sale_order.id,
+            'analytic_distribution': {self.project_analytic_account.id: 100},
         })
         sale_order_line2 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_sales_price'].id,
@@ -182,6 +190,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'task_id': task_sol1.id,
             'unit_amount': 1,
             'employee_id': self.employee_user.id,
+            'so_line': sale_order_line1.id,
         })
 
         # create invoice lines and validate it
@@ -254,6 +263,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'product_uom_qty': 2,
             'qty_delivered': 1,
             'order_id': self.sale_order.id,
+            'analytic_distribution': {self.project_analytic_account.id: 100},
         })
         self.sale_order.action_confirm()
 
@@ -275,6 +285,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'task_id': task_sol1.id,
             'unit_amount': 1,
             'employee_id': self.employee_user.id,
+            'so_line': sale_order_line.id,
         })
 
         self.assertEqual(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")

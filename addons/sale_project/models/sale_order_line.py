@@ -350,7 +350,10 @@ class SaleOrderLine(models.Model):
         for so_line in so_line_new_project:
             project = False
             if so_line.product_id.service_tracking in ['project_only', 'task_in_project']:
-                project = so_line.project_id
+                project = so_line.project_id or so_line.order_id.project_id
+                if project:
+                    project.company_id = self.company_id.id
+                    self.write({'project_id': project.id})
             if not project and _can_create_project(so_line):
                 project = so_line._timesheet_create_project()
                 if so_line.product_id.project_template_id:
