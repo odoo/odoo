@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_tw_edi_ecpay_pos.EcpayInfoPopup">
+        <Dialog title.translate="Ecpay Invoicing Information">
+            <div id="ecpay_info_screen" class="container">
+                <div id="ecpay_invoice_info">
+                    <div class="row">
+                        <div id="ecpay_invoice_donate" class="col-md-5 checkbox">
+                            <label for="ecpay_invoice_donate_checkbox" class="form-check-label me-2">Donate</label>
+                            <input type="checkbox" id="ecpay_invoice_donate_checkbox" name="l10n_tw_edi_is_donate" class="form-check-input" t-att-checked="!state.showCarrierType" t-on-click="_onClickDonate"/>
+                        </div>
+                    </div>
+                    <div id="ecpay_carrier_type_group" t-att-class="state.showCarrierType ? 'd-block' : 'd-none'">
+                        <div class="row">
+                            <div id="carrier_type_selection" class="mt-3 col-md-5">
+                                <label for="l10n_tw_edi_carrier_type" class="form-label">Carrier</label>
+                                <select id="l10n_tw_edi_carrier_type" name="l10n_tw_edi_carrier_type" class="form-select" t-on-change="_onChangeCarrierType">
+                                    <option t-attf-value="0" t-att-selected="state.carrierType == '0'"/>
+                                    <option t-attf-value="1" t-att-selected="state.carrierType == '1'">Merchant Carrier</option>
+                                    <option t-attf-value="2" t-att-selected="state.carrierType == '2'">Citizen Digital Certificate</option>
+                                    <option t-attf-value="3" t-att-selected="state.carrierType == '3'">Mobile Barcode</option>
+                                    <option t-attf-value="4" t-att-selected="state.carrierType == '4'">EasyCard</option>
+                                    <option t-attf-value="5" t-att-selected="state.carrierType == '5'">iPass</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="ecpay_invoice_carrier_number" t-att-class="state.showCarrierNumber ? 'd-block' : 'd-none'" class="row">
+                            <div class="mt-3 col-md-5">
+                                <label for="l10n_tw_edi_carrier_number" class="form-label">Carrier Number</label>
+                                <div class="input-group">
+                                    <input
+                                        id="l10n_tw_edi_carrier_number"
+                                        maxlength="20"
+                                        name="l10n_tw_edi_carrier_number"
+                                        type="text"
+                                        t-on-input="_onInputCarrierNumber"
+                                        t-att-disabled="state.showReEnterCarrierNumber"
+                                        t-att-placeholder="state.carrierNumberPlaceholder"
+                                        class="form-control"
+                                    />
+                                    <button type="button" id="validate_carrier_number" class="btn btn-outline-primary btn-sm" t-if="state.showValidateCarrierNumber" t-on-click="_onClickValidateCarrierNumber">
+                                        Validate Carrier Number
+                                    </button>
+                                    <button type="button" id="reenter_carrier_number" class="btn btn-outline-primary btn-sm" t-if="state.showReEnterCarrierNumber" t-on-click="_onClickReenterCarrierNumber">
+                                        ReEnter Carrier Number
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="ecpay_invoice_carrier_number_2" t-att-class="state.showCarrierNumber2 ? 'd-block' : 'd-none'" class="row">
+                            <div class="mt-3 col-md-5">
+                                <label for="l10n_tw_edi_carrier_number_2" class="form-label">Carrier Number 2</label>
+                                <div class="input-group">
+                                    <input
+                                        id="l10n_tw_edi_carrier_number_2"
+                                        maxlength="20"
+                                        name="l10n_tw_edi_carrier_number_2"
+                                        type="text"
+                                        t-att-placeholder="state.carrierNumberPlaceholder2"
+                                        class="form-control"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ecpay_invoice_love_code" t-att-class="state.showCarrierType ? 'd-none' : 'd-block'" class="row">
+                        <div class="mt-3 col-md-5">
+                            <label for="l10n_tw_edi_love_code" class="form-label">Love Code</label>
+                            <div class="input-group">
+                                <input
+                                    id="l10n_tw_edi_love_code"
+                                    maxlength="7"
+                                    name="l10n_tw_edi_love_code"
+                                    type="text"
+                                    class="form-control"
+                                    t-on-input="_onInputLoveCode"
+                                    t-att-disabled="state.showReEnterLoveCode"
+                                    placeholder="Love code format is 3-7 digits"/>
+                                <button type="button" id="validate_love_code" class="btn btn-outline-primary btn-sm" t-if="state.showValidateLoveCode" t-on-click="_onClickValidateLoveCode">
+                                    Validate Love Code
+                                </button>
+                                <button type="button" id="reenter_love_code" class="btn btn-outline-secondary btn-sm" t-if="state.showReEnterLoveCode" t-on-click="_onClickReenterLoveCode">
+                                    ReEnter Love Code
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="confirm">Ok</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

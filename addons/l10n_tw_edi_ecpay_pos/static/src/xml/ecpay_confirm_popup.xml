@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_tw_edi_ecpay_pos.EcpayConfirmPopup">
+        <Dialog title.translate="Ecpay Invoicing Confirmation">
+            <div id="ecpay_confirm_screen" class="container">
+                Store in Carrier or Donate?
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="confirm_yes">Yes</button>
+                <button class="btn btn-primary" t-on-click="confirm_no">No</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
