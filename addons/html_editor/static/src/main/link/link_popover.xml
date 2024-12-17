@@ -71,15 +71,19 @@
                                 <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" style="max-width: 160px;" t-attf-title="{{state.urlTitle}}">
                                     <t t-esc="state.urlTitle"/>
                                 </a>
-                                <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
-                                    <i class="fa fa-clipboard"></i>
-                                </a>
-                                <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <a href="#" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
-                                    <i class="fa fa-chain-broken"></i>
-                                </a>
+                                <div class="flex-grow-1 d-flex justify-content-end">
+                                    <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
+                                        <i class="fa fa-clipboard"></i>
+                                    </a>
+                                    <t t-if="props.canEdit">
+                                        <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="#" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
+                                            <i class="fa fa-chain-broken"></i>
+                                        </a>
+                                    </t>
+                                </div>
                             </div>
                             <div t-if="state.urlTitle and state.url and state.urlTitle !== state.url" class="text-truncate" style="max-width: 200px; font-size: 12px;">
                                 <span t-attf-class="o_we_full_url text-muted o_we_webkit_box" t-attf-title="{{state.url}}">

@@ -15,6 +15,10 @@ export class LinkPopover extends Component {
         getInternalMetaData: Function,
         getExternalMetaData: Function,
         isImage: Boolean,
+        canEdit: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        canEdit: true,
     };
     colorsData = [
         { type: "", label: _t("Link"), btnPreview: "link" },
