@@ -25,7 +25,7 @@ patch(PaymentAdyen.prototype, {
                 value: parseInt(line.amount * Math.pow(10, this.pos.currency.decimal_places)),
                 currency: this.pos.currency.name,
             },
-            merchantAccount: this.payment_method_id.adyen_merchant_account,
+            merchantAccount: this.payment_method_id.terminal_merchant_key,
             additionalData: {
                 industryUsage: "DelayedCharge",
             },
