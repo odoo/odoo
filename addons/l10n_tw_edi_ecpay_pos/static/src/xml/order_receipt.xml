@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[@id='order-date']" position="replace">
+            <div id="order-date" t-if="props.data.ecpayError" t-out="props.data.date" />
+        </xpath>
+
+        <xpath expr="//div[hasclass('pos-receipt')]" position="inside">
+            <div t-if="!props.data.ecpayError" class="pos-receipt p-2">
+                <hr />
+                <div t-if="props.data.IIS_Carrier_Type == ''" class="pos-receipt-center-align invoice_top">
+                    <h1 class="mt-20" t-out="props.data.company_name"/>
+                    <h2>電子發票證明聯</h2>
+                    <h2 t-out="props.data.invoice_month"/>
+                    <h2 t-out="props.data.IIS_Number"/>
+                    <table width="100%" class="table table-borderless pos-receipt-center-align">
+                        <tr>
+                            <td class="text-start" width="60%">
+                                <t t-out="props.data.IIS_Create_Date" />
+                            </td>
+                            <td class="text-end" width="40%">
+                                <span t-if="props.data.IIS_Category == 'B2B'">格式 25</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%" class="table table-borderless pos-receipt-center-align">
+                        <tr>
+                            <td class="text-start" width="50%">
+                                <span>隨機碼:</span>
+                                <t t-out="props.data.IIS_Random_Number"/>
+                            </td>
+                            <td class="text-end" width="50%">
+                                <span>總計:</span>
+                                <t t-out="props.data.l10n_tw_edi_invoice_amount"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%" class="table table-borderless pos-receipt-center-align">
+                        <tr>
+                            <td class="text-start" width="50%">
+                                <span t-if="props.data.l10n_tw_edi_ecpay_seller_identifier != ''" >賣方:
+                                <t t-out="props.data.l10n_tw_edi_ecpay_seller_identifier"/></span>
+                            </td>
+                            <td class="text-end" width="50%">
+                                <span t-if="props.data.IIS_Category == 'B2B'" >買方:
+                                <t t-out="props.data.IIS_Identifier"/></span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>
+                        <img t-att-src="'/report/barcode/Standard39/'+props.data.PosBarCode" class="img_barcode"/>
+                    </div>
+                    <div>
+                        <img t-att-src="props.data.QRCode_Left"/>
+                        <img t-att-src="props.data.QRCode_Right"/>
+                    </div>
+                </div>
+                <hr t-if="props.data.IIS_Carrier_Type == ''"/>
+                <div class="invoice_details">
+                    <h2 class="pos-receipt-center-align"><span>交易明細</span></h2>
+                    <div class="invoice_details_head">
+                        <span>訂單編號:</span>
+                        <t t-out="props.data.name"/>
+                    </div>
+                    <div class="invoice_details_head">
+                        <span>發票號碼:</span>
+                        <t t-out="props.data.IIS_Number"/>
+                    </div>
+                    <div class="invoice_details_head">
+                        <span t-if="props.data.IIS_Carrier_Num != '' and (props.data.IIS_Carrier_Type == '' or props.data.IIS_Carrier_Type == '1')">共通載具: </span>
+                        <span t-if="props.data.IIS_Carrier_Type == '2'">自然人憑證: </span>
+                        <span t-if="props.data.IIS_Carrier_Type == '3'">手機載具: </span>
+                        <span class="span_inline_block"><t t-out="props.data.IIS_Carrier_Num"/></span>
+                    </div>
+                    <div class="invoice_details_head" t-if="props.data.IIS_Category == 'B2B'">
+                        <span>受買人統編:</span>
+                        <t t-out="props.data.IIS_Identifier"/>
+                    </div>
+                    <div class="invoice_details_head">
+                        <span>結帳時間:</span>
+                        <t t-out="props.data.IIS_Create_Date"/>
+                    </div>
+                    <br/>
+                    <table width="100%" class="table table-borderless pos-receipt-center-align">
+                        <thead>
+                            <tr>
+                                <th width="40%"><span>項目</span></th>
+                                <th width="30%"><span>單價*數量</span></th>
+                                <th width="30%"><span>⾦額</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_quantity" t-value="0"/>
+                            <t t-foreach="props.data.orderlines" t-as="line" t-key="line_index">
+                                <tr>
+                                    <td class="pos-receipt-center-align">
+                                        <t t-out="line.productName"/>
+                                    </td>
+                                    <td class="pos-receipt-center-align">
+                                        <t t-out="line.unitPrice"/>
+                                        *
+                                        <t t-out="Math.round(line.qty)"/>
+                                    </td>
+                                    <td class="pos-receipt-center-align">
+                                        <t t-out="line.price"/>
+                                        <span>TX</span>
+                                    </td>
+                                </tr>
+                                <t t-set="total_quantity" t-value="total_quantity + Math.round(line.qty)"/>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div>
+                        <h5>
+                            <span>小計</span>
+                            <t t-out="props.formatCurrency(props.data.l10n_tw_edi_invoice_amount)" />
+                        </h5>
+                        <h4 t-if="props.data.IIS_Category == 'B2B'">
+                            <span>稅額</span>
+                            <t t-out="props.formatCurrency(props.data.IIS_Tax_Amount)" />
+                        </h4>
+                        <h4>
+                            <span>總計</span>
+                            <span>(共</span>
+                            <t t-out="total_quantity"/>
+                            <span>項)</span>
+                            <t t-out="props.formatCurrency(props.data.l10n_tw_edi_invoice_amount)" />
+                        </h4>
+                        <h4>
+                            <span>發票金額</span>
+                            <t t-out="props.formatCurrency(props.data.l10n_tw_edi_invoice_amount)" />
+                        </h4>
+                        <t t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
+                            <h4>
+                                <t t-out="line.name" /> <t t-out="line.amount" />
+                            </h4>
+                        </t>
+                        <h4>
+                            <span>找零</span>
+                            <t t-out="props.data.change" />
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
