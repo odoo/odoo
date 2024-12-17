@@ -1,6 +1,7 @@
 import { registries, chartHelpers } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
+import { onOdooChartItemHover, onWaterfallOdooChartItemClick } from "./odoo_chart_helpers";
 
 const { chartRegistry } = registries;
 
@@ -85,6 +86,8 @@ function createOdooChartRuntime(chart, getters) {
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
                 waterfallLinesPlugin: { showConnectorLines: definition.showConnectorLines },
             },
+            onHover: onOdooChartItemHover(),
+            onClick: onWaterfallOdooChartItemClick(getters, chart),
         },
     };
 
