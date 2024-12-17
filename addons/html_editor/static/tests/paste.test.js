@@ -3616,13 +3616,12 @@ ${"        "}
 });
 
 describe("onDrop", () => {
-    test("should add text from htmlTransferItem", async () => {
+    test("should drop text from htmlTransferItem after the selected text", async () => {
         const { el } = await setupEditor("<p>a[b]cd</p>");
         const pElement = el.firstChild;
-        const textNode = pElement.firstChild;
 
         patchWithCleanup(document, {
-            caretPositionFromPoint: () => ({ offsetNode: textNode, offset: 3 }),
+            caretPositionFromPoint: () => ({ offsetNode: pElement, offset: 2 }),
         });
 
         const dropData = new DataTransfer();
@@ -3630,7 +3629,23 @@ describe("onDrop", () => {
         await dispatch(pElement, "drop", { dataTransfer: dropData });
         await tick();
 
-        expect(getContent(el)).toBe("<p>abcb[]d</p>");
+        expect(getContent(el)).toBe("<p>acdb[]</p>");
+    });
+    test("should drop text from htmlTransferItem before the selected text", async () => {
+        const { el } = await setupEditor("<p>a[b]cd</p>");
+        const pElement = el.firstChild;
+        const textNode = pElement.firstChild;
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: textNode, offset: 0 }),
+        });
+
+        const dropData = new DataTransfer();
+        dropData.setData("text/html", "b");
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
+        await tick();
+
+        expect(getContent(el)).toBe("<p>b[]acd</p>");
     });
     test("should not be able to paste inside some branded node", async () => {
         const { el } = await setupEditor(`<p data-oe-model="foo" data-oe-type="text">a[b]cd</p>`);
@@ -3650,7 +3665,7 @@ describe("onDrop", () => {
         expect(getContent(el)).toBe(`<p data-oe-model="foo" data-oe-type="text">a[b]cd</p>`);
     });
     test("should add new images form fileTransferItems", async () => {
-        const { el } = await setupEditor(`<p>a[b]cd</p>`);
+        const { el } = await setupEditor(`<p>ab[]cd</p>`);
         const pElement = el.firstChild;
         const textNode = pElement.firstChild;
 
