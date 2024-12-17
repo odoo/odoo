@@ -172,7 +172,6 @@ test.tags("desktop")("faq_horizontal updates titles position with a o_header_fad
     expect(core.interactions.length).toBe(2);
     const wrapwrap = el.querySelector("#wrapwrap");
     const title = el.querySelector(".s_faq_horizontal_entry_title");
-    console.log(wrapwrap.getBoundingClientRect().top);
     await setupTest(core, wrapwrap);
     // Since the header does not move in Hoot, we have to take into
     // account the scroll in the test when checking where the bottom
