@@ -220,7 +220,7 @@ class StockRule(models.Model):
             for wh in warehouse:
                 if wh.manufacture_steps != 'mrp_one_step':
                     wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=wh.pbm_route_id)
-                    extra_delays, extra_delay_description = (wh_manufacture_rules - self)._get_lead_days(product, **values)
+                    extra_delays, extra_delay_description = (wh_manufacture_rules - self).with_context(ignore_global_visibility_days=True)._get_lead_days(product, **values)
                     for key, value in extra_delays.items():
                         delays[key] += value
                     delay_description += extra_delay_description
