@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ec_view_tax_form_inherit" model="ir.ui.view">
+            <field name="name">ec_view_tax_form_inherit</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_type']" position="after">
+                    <field name="l10n_tw_edi_tax_type" invisible="country_code != 'TW'"/>
+                    <field name="l10n_tw_edi_special_tax_type"
+                        invisible="country_code != 'TW' or l10n_tw_edi_tax_type not in ['3', '4']"
+                        required="country_code == 'TW' and l10n_tw_edi_tax_type == '4'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
