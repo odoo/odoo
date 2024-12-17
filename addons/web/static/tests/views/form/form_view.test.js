@@ -55,6 +55,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
+import { cookie } from "@web/core/browser/cookie";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -1162,6 +1163,58 @@ test(`invisible fields are properly hidden`, async () => {
     expect(`label:contains(Foo)`).toHaveCount(0);
     expect(`.o_field_widget[name=foo]`).toHaveCount(0);
     expect(`.o_field_widget[name=float_field]`).toHaveCount(0);
+    expect(`.o_field_widget[name="child_ids"]`).toHaveCount(0);
+});
+
+test(`invisible, required and readonly using company evalContext`, async () => {
+    Partner._records[0].int_field = 3;
+    serverState.companies = [
+        {
+            id: 1,
+            name: "Company 1",
+            sequence: 1,
+            parent_id: false,
+            child_ids: [],
+            country_code: "BE",
+        },
+        {
+            id: 2,
+            name: "Company 2",
+            sequence: 2,
+            parent_id: false,
+            child_ids: [],
+            country_code: "PE",
+        },
+        {
+            id: 3,
+            name: "Company 3",
+            sequence: 3,
+            parent_id: false,
+            child_ids: [],
+            country_code: "AR",
+        },
+    ];
+    cookie.set("cids", "3-1");
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="int_field" invisible="1"/>
+                    <group>
+                        <field name="foo" required="companies.has(companies.active_ids, 'country_code', 'BE')"/>
+                    </group>
+                    <field name="name" readonly="companies.has(companies.active_id, 'country_code', 'AR')"/>
+                    <field name="child_ids" invisible="not companies.has(int_field, 'country_code', 'PE')"/>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`.o_field_widget[name=foo]`).toHaveClass("o_required_modifier");
+    expect(`.o_field_widget[name=name]`).toHaveClass("o_readonly_modifier");
     expect(`.o_field_widget[name="child_ids"]`).toHaveCount(0);
 });
 

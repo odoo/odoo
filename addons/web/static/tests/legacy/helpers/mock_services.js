@@ -263,6 +263,13 @@ export const fakeCompanyService = {
             currentCompany: {},
             setCompanies: () => {},
             getCompany: () => {},
+            evalContext: {
+                multi_company: false,
+                allowed_ids: [],
+                active_ids: [],
+                active_id: undefined,
+                has: () => {},
+            },
         };
     },
 };

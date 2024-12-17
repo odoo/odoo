@@ -326,9 +326,10 @@ export function getBasicEvalContext(config) {
     const { uid, allowed_company_ids } = config.context;
     return {
         context: config.context,
+        companies: config.companies,
         uid,
         allowed_company_ids,
-        current_company_id: config.currentCompanyId,
+        current_company_id: config.companies.active_id,
     };
 }
 

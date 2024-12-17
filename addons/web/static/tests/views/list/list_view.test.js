@@ -88,6 +88,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useBus } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
+import { cookie } from "@web/core/browser/cookie";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 
@@ -1426,6 +1427,50 @@ test(`invisible column based on the context are correctly displayed`, async () =
             invisible: true,
             notInvisible: false,
         },
+    });
+
+    expect(`th:not(.o_list_record_selector)`).toHaveCount(1, {
+        message: "should have 1 th for checkbox, 1 th for foo",
+    });
+    expect(`th:not(.o_list_record_selector)`).toHaveAttribute("data-name", "foo");
+});
+
+test(`invisible column based on the company evalContext are correctly displayed`, async () => {
+    serverState.companies = [
+        {
+            id: 1,
+            name: "Company 1",
+            sequence: 1,
+            parent_id: false,
+            child_ids: [],
+            country_code: "BE",
+        },
+        {
+            id: 2,
+            name: "Company 2",
+            sequence: 2,
+            parent_id: false,
+            child_ids: [],
+            country_code: "PE",
+        },
+        {
+            id: 3,
+            name: "Company 3",
+            sequence: 3,
+            parent_id: false,
+            child_ids: [],
+            country_code: "AR",
+        },
+    ];
+    cookie.set("cids", "3-1");
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list>
+                    <field name="date" column_invisible="not companies.has(companies.active_ids, 'country_code', 'PE')"/>
+                    <field name="foo" column_invisible="companies.has(companies.active_ids, 'country_code', 'PE')"/>
+                    <field name="bar" column_invisible="not companies.has(companies.active_ids, 'country_code', 'PE')"/>
+                </list>`,
     });
 
     expect(`th:not(.o_list_record_selector)`).toHaveCount(1, {
@@ -4886,15 +4931,13 @@ test(`fields are translatable in list view`, async () => {
         fr_BE: "Frenglish",
     });
 
-    onRpc("/web/dataset/call_kw/foo/get_field_translations", () => {
-        return [
-            [
-                { lang: "en_US", source: "yop", value: "yop" },
-                { lang: "fr_BE", source: "yop", value: "valeur français" },
-            ],
-            { translation_type: "char", translation_show_source: false },
-        ];
-    });
+    onRpc("/web/dataset/call_kw/foo/get_field_translations", () => [
+        [
+            { lang: "en_US", source: "yop", value: "yop" },
+            { lang: "fr_BE", source: "yop", value: "valeur français" },
+        ],
+        { translation_type: "char", translation_show_source: false },
+    ]);
 
     await mountView({
         resModel: "foo",
