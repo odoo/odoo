@@ -1100,3 +1100,23 @@ class UoM(models.Model):
         else:
             computed_qty = self._compute_quantity(qty, procurement_uom, rounding_method='HALF-UP')
         return (computed_qty, procurement_uom)
+
+
+class ProductSupplierInfo(models.Model):
+    _inherit = 'product.supplierinfo'
+
+    delay = fields.Integer(inverse='_inverse_delay')
+
+    def _inverse_delay(self):
+        if self.product_id:
+            orderpoint_domain = []
+            buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
+            if buy_route and buy_route.company_id == self.env.company:
+                orderpoint_domain.append(('route_id', '=', buy_route.id))
+            orderpoint_domain.append(('product_id', 'in', self.product_id.ids))
+            impacted_orderpoints = self.env['stock.warehouse.orderpoint'].search(orderpoint_domain)
+            impacted_orderpoints.invalidate_recordset(['qty_forecast'])
+            self.env.add_to_compute(
+                self.env['stock.warehouse.orderpoint']._fields['qty_to_order'],
+                impacted_orderpoints
+            )
