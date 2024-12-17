@@ -314,7 +314,11 @@ class EventRegistration(models.Model):
         # we could simply call _create_missing_mail_registrations and let cron do their job
         # but it currently leads to several delays. We therefore call execute until
         # cron triggers are correctly used
-        onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
+        # onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
+        new_registrations = onsubscribe_schedulers.event_id.registration_ids.filtered_domain(
+                    [('state', 'not in', ('cancel', 'draft'))]
+                ) - onsubscribe_schedulers.mail_registration_ids.registration_id
+        onsubscribe_schedulers._create_missing_mail_registrations(new_registrations)
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY
