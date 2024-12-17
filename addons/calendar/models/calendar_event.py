@@ -534,7 +534,9 @@ class Meeting(models.Model):
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
         model_name = defaults.get('res_model')
         valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
-        if meeting_activity_type and not defaults.get('activity_ids'):
+        # Check if we should create activities
+        create_activity = self.env.context.get('create_calendar_activity', True)
+        if meeting_activity_type and not defaults.get('activity_ids') and create_activity:
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
                 if values.get('activity_ids'):
