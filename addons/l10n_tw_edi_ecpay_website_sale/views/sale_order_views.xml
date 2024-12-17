@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">ecpay_sale_order_form_inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <group name="sale_info" position="after">
+                <group string="ECpay invoice Information" invisible="country_code != 'TW'">
+                    <field name="l10n_tw_edi_is_print" readonly="1"/>
+                    <field name="l10n_tw_edi_love_code" readonly="1"/>
+                    <field name="l10n_tw_edi_carrier_type" readonly="1"/>
+                    <field name="l10n_tw_edi_carrier_number" invisible="l10n_tw_edi_carrier_type not in ['2', '3', '4', '5']" readonly="1"/>
+                    <field name="l10n_tw_edi_carrier_number_2" invisible="l10n_tw_edi_carrier_type not in ['4', '5']" readonly="1"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
