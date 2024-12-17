@@ -148,13 +148,20 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15):
                 e_class = exceptions.AccessError
             elif name == 'UserError':
                 e_class = exceptions.UserError
+            elif name == "ReadTimeout":
+                raise requests.exceptions.Timeout()
             else:
                 raise requests.exceptions.ConnectionError()
             e = e_class(message)
             e.data = response['error']['data']
             raise e
         return response.get('result')
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError):
+    except requests.exceptions.Timeout:
+        _logger.warning('Request timeout with the URL: %s', url)
+        raise exceptions.ValidationError(
+            _('The request to the service timed out. Please contact the author of the app. The URL it tried to contact was %s', url)
+        )
+    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.HTTPError):
         _logger.exception("iap jsonrpc %s failed", url)
         raise exceptions.AccessError(
             _('The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was %s', url)
