@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--Extra step, unpublished by default-->
+        <record id="l10n_tw_edi_ecpay_website_sale.checkout_step_invoicing" model="website.checkout.step">
+            <field name="name">Invoicing info</field>
+            <field name="sequence">400</field>
+            <field name="step_href">/shop/l10n_tw_invoicing_info</field>
+            <field name="main_button_label">Continue checkout</field>
+            <field name="back_button_label">Return to invoicing info</field>
+        </record>
+    </data>
+</odoo>
