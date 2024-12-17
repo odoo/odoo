@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="report_timesheet_sale_timesheet" inherit_id="hr_timesheet.timesheet_table">
+        <xpath expr="//th/span[text()='Description']" position="after">
+            <th class="text-start align-middle fw-bold"
+                t-if="not hide_sale_line and len(set(line.so_line.id for line in lines if line.so_line)) > 1">
+                Sales Order Item
+            </th>
+        </xpath>
+        <xpath expr="//td[span[@t-field='line.name']]" position="after">
+            <td class="align-middle"
+                t-if="not hide_sale_line and len(set(line.so_line.id for line in lines if line.so_line)) > 1">
+                <span t-field="line.so_line"/>
+            </td>
+        </xpath>
+        <xpath expr="//table" position="before">
+            <t t-if="not hide_sale_line and len(set(line.so_line.id for line in lines if line.so_line)) == 1">
+                <h5 class="mt-2 mb-3">
+                    <span>Sales Order Item: </span>
+                    <span t-field="lines.so_line.order_id.name" t-if="lines and lines.so_line"/> -
+                    <span t-field="lines.so_line.name" t-if="lines and lines.so_line"/>
+                </h5>
+            </t>
+        </xpath>
+    </template>
     <template id="timesheet_sale_page">
+        <t t-set="data_report_landscape" t-value="True"/>
         <t t-set="show_project" t-value="true"/>
         <t t-set="show_task" t-value="true"/>
         <t t-call="web.html_container">
             <t t-call="web.internal_layout">
                 <div class="page">
+                    <t t-if="docs and any(doc.timesheet_ids for doc in docs)">
+                        <h1>Timesheets</h1>
+                    </t>
                     <t t-foreach="docs" t-as="doc">
                         <t t-set="doc_name" t-value="doc.name"/>
                         <t t-if="with_order_id" t-set="doc_name" t-value="str(doc.order_id.name) +' - '+ str(doc_name)"/>
@@ -16,9 +43,10 @@
                                 <t t-if="doc.timesheet_ids">
                                     <h2>
                                         <br/>
-                                        <span>Timesheets for the <t t-out="doc_name">S0001</t> <t t-out="record_name">- Timesheet product</t>
-                                        </span>
+                                        <span t-if="not doc_name.startswith('INV/')">Order <t t-out="doc_name"/></span>
+                                        <span t-else="">Invoice <t t-out="doc_name"/></span>
                                     </h2>
+                                    <t t-set="hide_sale_line" t-value="true"/>
                                     <t t-call="hr_timesheet.timesheet_table" lines="doc.timesheet_ids" show_project="show_project" show_task="show_task"/>
                                 </t>
                             </div>
