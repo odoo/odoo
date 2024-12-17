@@ -139,6 +139,12 @@
                                         </div>
                                     </group>
                                 </group>
+                                <group>
+                                    <group>
+                                        <field name="max_sessions_mode" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="max_sessions" invisible="max_sessions_mode != 'limited'"/>
+                                    </group>
+                                </group>
                             </page>
                             <page string="Channel Rules" name="channel_rules">
                                 <field name="rule_ids" colspan="2"/>
