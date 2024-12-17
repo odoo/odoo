@@ -939,6 +939,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         // Reopen dropdown
         triggerHotkey("m", true);
+        await delay();
         await nextTick();
         assert.containsOnce(
             target,
