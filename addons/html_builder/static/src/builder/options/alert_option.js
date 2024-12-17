@@ -25,9 +25,12 @@ class AlertOptionPlugin extends Plugin {
                     }
                     icon.classList.remove(className);
                 },
-
-                isActive: () => {
-                    return true;
+                isActive: ({ editingElement, param }) => {
+                    const iconEl = editingElement.querySelector(".s_alert_icon");
+                    if (!iconEl) {
+                        return;
+                    }
+                    return iconEl.classList.contains(param);
                 },
             },
         },

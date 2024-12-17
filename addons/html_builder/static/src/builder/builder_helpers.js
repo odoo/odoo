@@ -281,7 +281,7 @@ export function useClickableWeWidget() {
         if (!editingElements.length) {
             return;
         }
-        return getAllActions().every((o) => {
+        const areActionsActiveTabs = getAllActions().map((o) => {
             const { actionId, actionParam, actionValue } = o;
             // TODO isActive === first editing el or all ?
             const editingElement = editingElements[0];
@@ -291,6 +291,16 @@ export function useClickableWeWidget() {
                 value: actionValue,
             });
         });
+        // If there is no `isActive` method for the widget return false
+        if (areActionsActiveTabs.every((el) => el === undefined)) {
+            return false;
+        }
+        // If `isActive` is explicitly false for an action return false
+        if (areActionsActiveTabs.some((el) => el === false)) {
+            return false;
+        }
+        // `isActive` is true for at least one action
+        return true;
     }
     function getPriority() {
         return (

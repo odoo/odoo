@@ -337,3 +337,23 @@ test("don't rerender the OptionsContainer every time you click on the same eleme
     await contains(":iframe .sub-child-target").click();
     expect.verifySteps([]);
 });
+
+test("no need to define 'isActive' method for custom action if the widget already has a generic action", async () => {
+    addOption({
+        selector: ".s_test",
+        template: xml`
+        <WeRow label.translate="Type">
+            <WeSelect>
+                <WeSelectItem classAction="'alert-info'" action="'alertIcon'" actionParam="'fa-info-circle'">Info</WeSelectItem>
+            </WeSelect>
+        </WeRow>
+    `,
+    });
+
+    await setupWebsiteBuilder(`
+        <div class="s_test alert-info">
+        a
+        </div>`);
+    await contains(":iframe .s_test").click();
+    expect(".options-container button").toHaveText("Info");
+});
