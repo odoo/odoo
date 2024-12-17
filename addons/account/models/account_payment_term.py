@@ -255,6 +255,8 @@ class AccountPaymentTerm(models.Model):
 
     def _get_last_discount_date(self, date_ref):
         self.ensure_one()
+        if not date_ref:
+            return None
         return date_ref + relativedelta(days=self.discount_days or 0) if self.early_discount else False
 
     def _get_last_discount_date_formatted(self, date_ref):
