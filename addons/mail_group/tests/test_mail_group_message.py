@@ -39,10 +39,8 @@ class TestMailGroupMessage(TestMailListCommon):
         message = self.env['mail.group.message'].search([('mail_message_id.message_id', '=', '<glory.to.the.hypnotoad@localhost>')])
         self.assertEqual(message.subject, 'Never Surrender', 'Should have created a <mail.group.message>')
 
-        mails = self.env['mail.mail'].search([('mail_message_id', '=', message.mail_message_id.id)])
-
         # 42 -1 as the sender doesn't get an email
-        self.assertEqual(len(mails), 41, 'Should have send one and only one email per recipient')
+        self.assertEqual(len(self._new_mails), 41, 'Should have send one and only one email per recipient')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail_group.models.mail_group_message')
     def test_email_duplicated(self):

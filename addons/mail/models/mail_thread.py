@@ -8,6 +8,7 @@ import email
 import email.policy
 import hashlib
 import hmac
+import itertools
 import json
 import lxml
 import logging
@@ -16,7 +17,7 @@ import re
 import time
 import threading
 
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 from email import message_from_string
 from email.message import EmailMessage
 from xmlrpc import client as xmlrpclib
@@ -26,7 +27,7 @@ from markupsafe import Markup, escape
 from requests import Session
 from werkzeug import urls
 
-from odoo import _, api, exceptions, fields, models, Command
+from odoo import _, api, exceptions, fields, models, Command, tools
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import push_to_end_point, DeviceUnreachableError
 from odoo.exceptions import MissingError, AccessError
@@ -826,7 +827,6 @@ class MailThread(models.AbstractModel):
 
         message_id = message_dict['message_id']
         email_from = message_dict['email_from']
-        author_id = message_dict.get('author_id')
         model, thread_id, alias = route[0], route[1], route[4]
         record_set = None
 
@@ -858,20 +858,19 @@ class MailThread(models.AbstractModel):
             self._routing_warn(_('model %s does not accept document creation', model), message_id, route, raise_exception)
             return ()
 
-        # Update message author. We do it now because we need it for aliases (contact settings)
-        if not author_id:
-            if record_set:
-                authors = self._mail_find_partner_from_emails([email_from], records=record_set)
-            elif alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
-                records = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
-                authors = self._mail_find_partner_from_emails([email_from], records=records)
-            else:
-                authors = self._mail_find_partner_from_emails([email_from], records=None)
-            if authors:
-                message_dict['author_id'] = authors[0].id
-
         # Alias: check alias_contact settings
         if alias:
+            # Update message author. We do it now because we need it for aliases contact
+            # settings check. Not great to do it in middle of route processing but hey
+            if not message_dict.get('author_id'):
+                link_doc = record_set
+                if not link_doc and alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
+                    link_doc = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
+                link_doc = link_doc if link_doc and hasattr(link_doc, '_partner_find_from_emails_single') else self.env['mail.thread']
+                authors = link_doc._partner_find_from_emails_single([email_from], no_create=True)
+                if authors:
+                    message_dict['author_id'] = authors[0].id
+
             if thread_id:
                 obj = record_set[0]
             elif alias.alias_parent_model_id and alias.alias_parent_thread_id:
@@ -1316,9 +1315,15 @@ class MailThread(models.AbstractModel):
                 else:
                     subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
-            post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
+            post_params = dict(
+                email_cc=message_dict.pop('cc', False),
+                email_to=message_dict.pop('to', False),
+                subtype_id=subtype_id,
+                partner_ids=partner_ids,
+                **message_dict,
+            )
             # remove computational values not stored on mail.message and avoid warnings when creating it
-            for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner'):
+            for x in ('from', 'recipients', 'references', 'in_reply_to', 'is_bounce', 'bounced_email', 'bounced_message', 'bounced_msg_ids', 'bounced_partner'):
                 post_params.pop(x, None)
             new_msg = False
             if thread_root._name == 'mail.thread':  # message with parent_id not linked to record
@@ -1393,6 +1398,10 @@ class MailThread(models.AbstractModel):
         if self._detect_loop_sender(message, msg_dict, routes):
             return
 
+        # update document-dependant values
+        msg_dict.update(**self._message_parse_post_process(message, msg_dict, routes))
+
+        # process routes
         thread_id = self._message_route_process(message, msg_dict, routes)
         return thread_id
 
@@ -1669,6 +1678,10 @@ class MailThread(models.AbstractModel):
         """ Parses an email.message.Message representing an RFC-2822 email
         and returns a generic dict holding the message details.
 
+        Note that partner finding is delegated to a post processing as it is
+        better done using gateway record as context e.g. to check for
+        followers, ... see '_message_parse_post_process'.
+
         :param message: email to parse
         :type message: email.message.Message
         :param bool save_original: whether the returned dict should include
@@ -1683,7 +1696,6 @@ class MailThread(models.AbstractModel):
               'to': to + delivered-to,
               'cc': cc,
               'recipients': delivered-to + to + cc + resent-to + resent-cc,
-              'partner_ids': partners found based on recipients emails,
               'body': unified_body,
               'references': references,
               'in_reply_to': in-reply-to,
@@ -1735,8 +1747,6 @@ class MailThread(models.AbstractModel):
             ] if address
             for formatted_email in email_split_and_format(address))
         )
-        partner_ids = [x.id for x in self._mail_find_partner_from_emails(email_split(msg_dict['recipients']), records=self) if x]
-        msg_dict['partner_ids'] = partner_ids
         # compute references to find if email_message is a reply to an existing thread
         msg_dict['references'] = decode_message_header(message, 'References')
         msg_dict['in_reply_to'] = decode_message_header(message, 'In-Reply-To').strip()
@@ -1774,6 +1784,29 @@ class MailThread(models.AbstractModel):
                 'is_internal': parent_is_internal and not parent_is_auto_comment
             }
         return {}
+
+    def _message_parse_post_process(self, message, message_dict, routes):
+        """ Parse and process incoming email values that are better computed
+        based on record we are about to create or update. This refers to
+        message author and recipients, which can be preferentially found
+        in document followers when possible. """
+        values = {
+            'author_id': message_dict.get('author_id'),
+            'partner_ids': message_dict.get('partner_ids'),
+        }
+        for model, thread_id, _custom_values, _user_id, alias in routes or ():
+            link_doc = self.env[model].browse(thread_id) if thread_id else self.env[model]
+            if not link_doc and alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
+                link_doc = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
+            link_doc = link_doc if link_doc and hasattr(link_doc, '_partner_find_from_emails_single') else self.env['mail.thread']
+
+            if not values.get('author_id') and message_dict['email_from']:
+                author = link_doc._partner_find_from_emails_single([message_dict['email_from']], no_create=True)
+                if author:
+                    values['author_id'] = author.id
+            if not values.get('partner_ids') and message_dict['recipients']:
+                values['partner_ids'] = link_doc._partner_find_from_emails_single(email_split(message_dict['recipients']), no_create=True).ids
+        return values
 
     def _get_bounced_message_data(self, message, message_dict):
         """Find the original <mail.message> and the bounced email references based on an incoming email.
@@ -1840,97 +1873,229 @@ class MailThread(models.AbstractModel):
     # RECIPIENTS MANAGEMENT TOOLS
     # ------------------------------------------------------
 
-    def _message_add_suggested_recipient(self, result, partner=None, email=None, lang=None, reason=''):
-        """ Called by _message_get_suggested_recipients, to add a suggested
-            recipient as a dictionary in the result list """
-        self.ensure_one()
-        partner_info = {}
-        recipient_data = {'lang': lang, 'reason': reason}
-        if email and not partner:
-            # get partner info from email
-            partner_info = self._message_partner_info_from_emails([email])[0]
-            if partner_info.get('partner_id'):
-                partner = self.env['res.partner'].sudo().browse([partner_info['partner_id']])[0]
-        if email and email in [val['email'] for val in result if val.get('email')]:  # already existing email -> skip
-            return result
-        if partner and partner in self.message_partner_ids:  # recipient already in the followers -> skip
-            return result
-        if partner and partner.id in [val.get('partner_id', False) for val in result]:  # already existing partner ID -> skip
-            return result
-        if partner and partner.email:  # complete profile: id, name <email>
-            email_normalized = ','.join(email_normalize_all(partner.email))
-            recipient_data.update({'partner_id': partner.id, 'name': partner.name or '', 'email': email_normalized})
-        elif partner:  # incomplete profile: id, name
-            recipient_data.update({'partner_id': partner.id, 'name': partner.name})
-        else:  # unknown partner, we are probably managing an email address
-            _, parsed_email_normalized = parse_contact_from_email(email)
-            partner_create_values = self._get_customer_information().get(parsed_email_normalized, {})
-            name = partner_create_values.get('name') or partner_info.get('full_name') or email
-            recipient_data.update({
-                'name': name,
-                'email': partner_info.get('full_name') or email,
-                'create_values': partner_create_values,
-            })
-        result.append(recipient_data)
-        return result
+    def _partner_find_from_emails_single(self, emails, avoid_alias=True, filter_found=None, no_create=False):
+        """ Shortcut version of '_partner_find_from_emails', two usages.
 
-    def _message_get_suggested_recipients(self):
+        Either 'record._partner_find_from_emails_single([..])' on a singleton
+        recordset to skip dictionaries manipulation.
+        Either 'MailThread._partner_find_from_emails_single([..])' to use as a
+        generic tool method, without any record-based context values propagation. """
+        if self:  # void recordset allowed as tool mixin method
+            self.ensure_one()
+        return self._partner_find_from_emails(
+            {self: emails}, avoid_alias=avoid_alias, filter_found=filter_found, no_create=no_create
+        )[self.id]
+
+    def _partner_find_from_emails(self, records_emails, avoid_alias=True, filter_found=None, no_create=False):
+        """ Find or create partners based on emails. Result is contextualized
+        based on records, calling 'Model._get_customer_information()' to populate
+        new partners data. It relies on 'ResPartner._find_or_create_from_emails()'
+        for name / email parsing and record creation.
+
+        :param dict records_emails: for each record in self, list of emails linked
+            to this record e.g. {<crm.lead, 4>: ['"Customer" <customer@test.example.com>']};
+        :param bool avoid_alias: skip link for any email matching existing aliases
+            notably to avoid creating contacts that could mess with mailgateway;
+        :param callable filter_found: if given, filters found partners based on emails;
+        :param bool no_create: skip the 'create' part of 'find or create'. Allows
+          to use tool as 'find and sort' without adding new partners in db;
+
+        :return: for each record ID, a ResPartner recordset containing found
+            (or created) partners based on given emails. As emails are normalized
+            less partners maybe present compared to input if duplicates are
+            present;
+        :rtype: dict
+        """
+        if self and len(self) != len(records_emails):
+            raise ValueError('Invoke with either self maching records_emails, either on a void recordset.')
+        # when invoked through MailThread, ids may come from records_emails (not recommended tool usage)
+        res_ids = self.ids or [record.id for record in records_emails]
+        found_results = dict.fromkeys(res_ids, self.env['res.partner'])
+        # email_key is email_normalized, unless email is wrong and cannot be normalized
+        # in which case the raw input is used instead, to distinguish various wrong
+        # inputs
+        emails_all = []
+        emails_key_all = []
+        emails_key_company_id = {}
+        emails_key_res_ids = defaultdict(list)
+
+        # fetch company information (as sudo, as we should not crash for that)
+        records_company = self.sudo()._mail_get_companies()
+        # fetch model-related additional information
+        emails_normalized_info = self._get_customer_information()
+
+        # classify email / company and email / record IDs
+        for record, mails in records_emails.items():
+            mails = records_emails.get(record, [])
+            record_company = records_company.get(record.id, self.env['res.company'])
+            for mail in mails:
+                mail_normalized = email_normalize(mail, strict=False)
+                email_key = mail_normalized or mail
+                emails_key_res_ids[email_key].append(record.id)
+                if record_company and email_key:  # False is not interesting anyway
+                    emails_key_company_id[email_key] = record_company.id
+                emails_all.append(mail)
+                emails_key_all.append(mail_normalized)
+        if not emails_all:  # early skip, no need to do searches / ...
+            return found_results
+
+        # fetch information used to find existing partners, beware portal/public who
+        # cannot read followers
+        followers = self.sudo().message_partner_ids
+        aliases = self.env['mail.alias'].sudo().search(
+            [('alias_full_name', 'in', emails_key_all)]
+        ) if avoid_alias else self.env['mail.alias'].sudo()
+        emails_ban = aliases.mapped('alias_full_name')
+
+        # inspired notably from odoo/odoo@80a0b45df806ffecfb068b5ef05ae1931d655810; final
+        # ordering is search order defined in '_find_or_create_from_emails', which is id ASC
+        def sort_key(p):
+            return (
+                p == self.env.user.partner_id,                      # prioritize user
+                p in followers,                                     # then followers
+                not p.partner_share,                                # prioritize internal users
+                bool(p.user_ids),                                   # prioritize portal users
+                p.company_id.id == emails_key_company_id.get(
+                    p.email_normalized, False
+                ),                                                  # then partner associated w/ record's company
+                not p.company_id,                                   # then company-agnostic to avoid issues
+            )
+
+        partners = self.env['res.partner']._find_or_create_from_emails(
+            emails_all,
+            additional_values={
+                mail_key: {
+                    'company_id': emails_key_company_id.get(mail_key, False),
+                    **emails_normalized_info.get(mail_key, {}),
+                } for mail_key in emails_key_all
+            },
+            ban_emails=emails_ban,
+            filter_found=filter_found,
+            no_create=no_create,
+            sort_key=sort_key,
+            sort_reverse=True,  # False < True, simplified writing sort
+        )
+
+        for mail, partner in zip(emails_all, partners):
+            mail_key = email_normalize(mail, strict=False) or mail
+            for res_id in emails_key_res_ids[mail_key]:
+                # use an "OR" to avoid duplicates in returned recordset
+                found_results[res_id] |= partner
+        return found_results
+
+    def _message_add_suggested_recipients(self):
+        self.ensure_one()
+        email_to_lst, partners = [], self.env['res.partner']
+
+        # add responsible
+        user_field = self._fields.get('user_id')
+        if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
+            # SUPERUSER because of a read on res.users that would crash otherwise
+            partners += self.sudo().user_id.partner_id
+
+        # add customers
+        partners += self._mail_get_partners()[self.id].filtered(lambda p: not p.is_public)
+
+        # add email
+        email_fname = self._mail_get_primary_email_field()
+        if email_fname and self[email_fname]:
+            email_to_lst.append(self[email_fname])
+
+        return email_to_lst, partners
+
+    def _message_get_suggested_recipients(self, reply_discussion=False, reply_message=None,
+                                          no_create=True):
         """ Get suggested recipients to be managed by Chatter
 
         :returns: list of dictionaries (per suggested recipient) containing:
-            * partner_id:       int: recipient partner id
-            * name:             str: name of the recipient
-            * email:            str: email of recipient
-            * lang:             str: language code
-            * reason:           str
-            * create_values:    dict: data for unknown partner
+            * partner_id:            int: recipient partner id
+            * name:                  str: name of the recipient
+            * email:                 str: email of recipient
+            * new_partner_values:   dict: data for unknown partner
         """
+        def email_key(email):
+            return email_normalize(email, strict=False) or email.strip()
+
         self.ensure_one()
-        result = []
-        user_field = self._fields.get('user_id')
-        if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
-            thread = self.sudo()  # SUPERUSER because of a read on res.users that would crash otherwise
-            if thread.user_id and thread.user_id.partner_id:
-                thread._message_add_suggested_recipient(
-                    result,
-                    partner=thread.user_id.partner_id,
-                    reason=self._fields['user_id'].string,
-                )
-        return result
+        email_to_lst, partners = self._message_add_suggested_recipients()
 
-    def _mail_search_on_user(self, normalized_emails, extra_domain=False):
-        """ Find partners linked to users, given an email address that will
-        be normalized. Search is done as sudo on res.users model to avoid domain
-        on partner like ('user_ids', '!=', False) that would not be efficient. """
-        domain = [('email_normalized', 'in', normalized_emails)]
-        if extra_domain:
-            domain = expression.AND([domain, extra_domain])
-        partners = self.env['res.users'].sudo().search(domain).mapped('partner_id')
-        # return a search on partner to filter results current user should not see (multi company for example)
-        return self.env['res.partner'].search([('id', 'in', partners.ids)])
+        # find last relevant message
+        if reply_discussion:
+            messages = self.message_ids.sorted(
+                lambda msg: (
+                    msg.message_type == 'email',              # incoming email = probably customer
+                    msg.message_type == 'comment',            # user input > other input
+                    msg.date, msg.id,                         # newer first
+                ), reverse=True,
+            )
+            reply_message = next(
+                (msg for msg in messages if msg.message_type in ('comment', 'email')),
+                self.env['mail.message']
+            )
+        # fetch answer-based recipients
+        if reply_message:
+            partners += reply_message.partner_ids
+            email_to_lst += [reply_message.email_to or '', reply_message.email_cc or '']
 
-    def _mail_search_on_partner(self, normalized_emails, extra_domain=False):
-        domain = [('email_normalized', 'in', normalized_emails)]
-        if extra_domain:
-            domain = expression.AND([domain, extra_domain])
-        return self.env['res.partner'].search(domain)
+        # flatten emails, as some input are stringified list of emails (e.g. Cc, To)
+        email_to_lst = list(itertools.chain(
+            e for email_input in email_to_lst
+            for e in email_split_and_format(email_input)
+            if e and e.strip()
+        ))
+
+        # organize and deduplicate partners, exclude followers, keep ordering
+        followers = self.message_partner_ids
+        partners = partners - followers
+        # sanitize email inputs, exclude followers and aliases, keep ordering, then link to partners
+        skip_emails_normalized = (followers + partners).mapped('email_normalized')
+        if email_to_lst:
+            skip_emails_normalized.extend(
+                self.env['mail.alias'].sudo().search(
+                    [('alias_full_name', 'in', [email_key(e) for e in email_to_lst])]
+                ).mapped('alias_full_name')
+            )
+        email_to_lst = [e for e in email_to_lst if email_key(e) not in skip_emails_normalized]
+        partners += self._partner_find_from_emails_single(email_to_lst, no_create=no_create)
+
+        # final filtering
+        partners = self.env['res.partner'].browse(tools.misc.unique(
+            p.id for p in partners if p not in followers
+        ))
+        email_to_lst = list(tools.misc.unique(
+            e for e in email_to_lst
+            if email_key(e) not in (partners.mapped('email_normalized') + partners.mapped('email'))
+        ))
+        # fetch model-related additional information
+        emails_normalized_info = self._get_customer_information() if email_to_lst else {}
+
+        recipients = [{
+            'email': partner.email_normalized,
+            'name': partner.name,
+            'partner_id': partner.id,
+            'create_values': {},
+        } for partner in partners]
+        for email_input in email_to_lst:
+            name, email_normalized = parse_contact_from_email(email_input)
+            recipients.append({
+                'email': email_normalized,
+                'name': emails_normalized_info.get(email_normalized, {}).pop('name', False) or name,
+                'partner_id': False,
+                'create_values': emails_normalized_info.get(email_normalized, {}),
+            })
+        return recipients
 
     def _mail_find_user_for_gateway(self, email_value, alias=None):
         """ Utility method to find user from email address that can create documents
         in the target model. Purpose is to link document creation to users whenever
         possible, for example when creating document through mailgateway.
 
-        Heuristic
-
-          * alias owner record: fetch in its followers for user with matching email;
-          * find any user with matching emails;
-          * try alias owner as fallback;
-
-        Note that standard search order is applied.
+        Look in parent document followers if a user match. Order is made by
+        right company order.
 
         :param str email_value: will be sanitized and parsed to find email;
-        :param mail.alias alias: optional alias. Used to fetch owner followers
-          or fallback user (alias owner);
+        :param mail.alias alias: optional alias, used to link to a owner document
+          for followers;
 
         :return res.user user: user matching email or void recordset if none found
         """
@@ -1939,122 +2104,46 @@ class MailThread(models.AbstractModel):
         if not normalized_email:
             return self.env['res.users']
 
-        if self.env['mail.alias'].sudo().search_count([('alias_full_name', '=', email_value)]):
-            return self.env['res.users']
-
+        record_su = self.env['mail.thread'].sudo()
         if alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
-            followers = self.env['mail.followers'].search([
-                ('res_model', '=', alias.alias_parent_model_id.sudo().model),
-                ('res_id', '=', alias.alias_parent_thread_id)]
-            ).mapped('partner_id')
-        else:
-            followers = self.env['res.partner']
+            record_su = self.env[alias.alias_parent_model_id.sudo().model].browse(alias.alias_parent_thread_id).sudo()
+            record_su = record_su if hasattr(record_su, '_partner_find_from_emails_single') else self.env['mail.thread'].sudo()
 
-        follower_users = self.env['res.users'].search([
-            ('partner_id', 'in', followers.ids), ('email_normalized', '=', normalized_email)
-        ], limit=1) if followers else self.env['res.users']
-        matching_user = follower_users[0] if follower_users else self.env['res.users']
-        if matching_user:
-            return matching_user
-
-        if not matching_user:
-            std_users = self.env['res.users'].sudo().search([('email_normalized', '=', normalized_email)], limit=1)
-            matching_user = std_users[0] if std_users else self.env['res.users']
-
-        return matching_user
+        partner = record_su._partner_find_from_emails_single([email_value], filter_found=lambda p: p.user_ids, no_create=True)
+        return partner.user_ids and partner.user_ids[0] or self.env['res.users']
 
     @api.model
     def _mail_find_partner_from_emails(self, emails, records=None, force_create=False, extra_domain=False):
-        """ Utility method to find partners from email addresses. If no partner is
-        found, create new partners if force_create is enabled. Search heuristics
-
-          * 0: clean incoming email list to use only normalized emails. Exclude
-               those used in aliases to avoid setting partner emails to emails
-               used as aliases;
-          * 1: check in records (record set) followers if records is mail.thread
-               enabled and if check_followers parameter is enabled;
-          * 2: search for partners with user;
-          * 3: search for partners;
-
-        :param records: record set on which to check followers;
-        :param list emails: list of email addresses for finding partner;
-        :param boolean force_create: create a new partner if not found
+        """ Utility method to find partners from email addresses. See
+        '_partner_find_from_emails' for more details. Main change is return
+        type, which follows given input.
 
         :return list partners: a list of partner records ordered as given emails.
           If no partner has been found and/or created for a given emails its
           matching partner is an empty record.
         """
         if records and isinstance(records, self.pool['mail.thread']):
-            followers = records.mapped('message_partner_ids')
+            results = records._partner_find_from_emails(
+                dict.fromkeys(records, emails), avoid_alias=True, no_create=not force_create,
+            )
+            all_partners = self.env['res.partner'].browse(
+                {partner.id for partners in results.values() for partner in partners if partner.id}
+            )
         else:
-            followers = self.env['res.partner']
-
-        # first, build a normalized email list and remove those linked to aliases
-        # to avoid adding aliases as partners. In case of multi-email input, use
-        # the first found valid one to be tolerant against multi emails encoding
-        normalized_emails = [email_normalized
-                             for email_normalized in (email_normalize(contact, strict=False) for contact in emails)
-                             if email_normalized
-                            ]
-        matching_aliases = self.env['mail.alias'].sudo().search([('alias_full_name', 'in', normalized_emails)])
-        if matching_aliases:
-            normalized_emails = [email for email in normalized_emails if email not in matching_aliases.mapped('alias_full_name')]
-
-        done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
-        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
-
-        user_partners = self._mail_search_on_user(remaining, extra_domain=extra_domain)
-        done_partners += [user_partner for user_partner in user_partners]
-        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
-
-        partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
-        done_partners += [partner for partner in partners]
-
-        # prioritize current user if exists in list, and partners with matching company ids
-        if company_fname := records and records._mail_get_company_field():
-            def sort_key(p):
-                return (
-                    self.env.user.partner_id == p,           # prioritize user
-                    p.company_id in records[company_fname],  # then partner associated w/ records
-                    not p.company_id,                        # else pick partner w/out company_id
-                )
-        else:
-            def sort_key(p):
-                return (self.env.user.partner_id == p, not p.company_id)
-
-        done_partners.sort(key=sort_key, reverse=True)  # reverse because False < True
-
-        # iterate and keep ordering
-        partners = []
-        for contact in emails:
-            normalized_email = email_normalize(contact, strict=False)
-            partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
-            if not partner and force_create and normalized_email in normalized_emails:
-                partner = self.env['res.partner'].browse(self.env['res.partner'].name_create(contact)[0])
-            partners.append(partner)
-        return partners
-
-    def _message_partner_info_from_emails(self, emails, link_mail=False):
-        """ Convert a list of emails into a list partner_ids and a list
-            new_partner_ids. The return value is non conventional because
-            it is meant to be used by the mail widget.
-
-            :return dict: partner_ids and new_partner_ids """
-        self.ensure_one()
-        MailMessage = self.env['mail.message'].sudo()
-        partners = self._mail_find_partner_from_emails(emails, records=self)
-        result = list()
-        for idx, contact in enumerate(emails):
-            partner = partners[idx]
-            partner_info = {'full_name': partner.email_formatted if partner else contact, 'partner_id': partner.id}
-            result.append(partner_info)
-            # link mail with this from mail to the new partner id
-            if link_mail and partner:
-                MailMessage.search([
-                    ('email_from', '=ilike', partner.email_normalized),
-                    ('author_id', '=', False)
-                ]).write({'author_id': partner.id})
-        return result
+            all_partners = self.env['mail.thread']._partner_find_from_emails_single(
+                emails, avoid_alias=True, no_create=not force_create,
+            )
+        results = []
+        for email_input in emails:
+            email_key = email_normalize(email_input) or email_input
+            if not email_key:
+                results.append(self.env['res.partner'])
+            else:
+                results.append(next(
+                    (p for p in all_partners if p.email_normalized == email_key or p.email == email_key),
+                    self.env['res.partner']
+                ))
+        return results
 
     def _get_customer_information(self):
         """ Get customer information that can be extracted from the records by
@@ -2076,7 +2165,8 @@ class MailThread(models.AbstractModel):
     def message_post(self, *,
                      body='', subject=None, message_type='notification',
                      email_from=None, author_id=None, parent_id=False,
-                     subtype_xmlid=None, subtype_id=False, partner_ids=None,
+                     subtype_xmlid=None, subtype_id=False,
+                     partner_ids=None, email_to=None, email_cc=None,
                      attachments=None, attachment_ids=None, body_is_html=False,
                      **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
@@ -2097,6 +2187,10 @@ class MailThread(models.AbstractModel):
             notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
             computed based on subtype / followers matching;
+        :param str email_to: comma-separated list of emails to notify in addition
+            to partners;
+        :param str email_cc: comma-separated list of emails to notify as carbon
+            copy in addition ot partners and email_to;
         :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
@@ -2204,6 +2298,8 @@ class MailThread(models.AbstractModel):
             'subtype_id': subtype_id,
             # recipients
             'partner_ids': partner_ids,
+            'email_to': email_to,
+            'email_cc': email_cc,
         })
         # add default-like values afterwards, to avoid useless queries
         if 'record_alias_domain_id' not in msg_values:
@@ -2630,7 +2726,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'message_id', 'message_type', 'parent_id'}
+            forbidden_names={'email_cc', 'email_to', 'message_id', 'message_type', 'parent_id'}
         )
         if attachments:
             # attachments should be a list (or tuples) of 3-elements list (or tuple)
@@ -2827,7 +2923,7 @@ class MailThread(models.AbstractModel):
         """
         if author_id is None:
             if email_from:
-                author = self._mail_find_partner_from_emails([email_from])[0]
+                author = self._partner_find_from_emails_single([email_from], no_create=True)
             else:
                 author = self.env.user.partner_id
                 email_from = author.email_formatted
@@ -2923,8 +3019,10 @@ class MailThread(models.AbstractModel):
             'create_date',  # anyway limited to admins
             'date',
             'email_add_signature',
+            'email_cc',
             'email_from',
             'email_layout_xmlid',
+            'email_to',
             'is_internal',
             'mail_activity_type_id',
             'mail_server_id',
@@ -3250,6 +3348,7 @@ class MailThread(models.AbstractModel):
 
         base_mail_values = self._notify_by_email_get_base_mail_values(
             message,
+            partners_data,
             additional_values={'auto_delete': mail_auto_delete}
         )
 
@@ -3582,12 +3681,13 @@ class MailThread(models.AbstractModel):
             mail_body = message.body
         return mail_body
 
-    def _notify_by_email_get_base_mail_values(self, message, additional_values=None):
+    def _notify_by_email_get_base_mail_values(self, message, recipients_data, additional_values=None):
         """ Return model-specific and message-related values to be used when
         creating notification emails. It serves as a common basis for all
         notification emails based on a given message.
 
         :param record message: <mail.message> record being notified;
+        :param list recipients_data: UPDATE ME;
         :param dict additional_values: optional additional values to add (ease
           custom calls and inheritance);
 
@@ -3621,7 +3721,12 @@ class MailThread(models.AbstractModel):
             base_mail_values.update(additional_values)
 
         # prepare headers (as sudo as accessing mail.alias.domain, restricted)
-        headers = {}
+        headers = {
+            'X-Msg-To-Consolidate': 'external',  # add external customers in Msg['To'] to enable reply-all
+            'X-Msg-To-Add': ','.join(
+                formataddr((r['name'], r['email_normalized'])) for r in recipients_data if r['id'] and r['active'] and r['share']
+            ),  # partner emails involved in the whole sending
+        }
         if message_sudo.record_alias_domain_id.bounce_email:
             headers['Return-Path'] = message_sudo.record_alias_domain_id.bounce_email
         headers = self._notify_by_email_get_headers(headers=headers)

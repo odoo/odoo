@@ -753,6 +753,9 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     'message_values': {
                         'author_id': self.partner_employee,
                         'body': '<p>Body</p>',
+                        # email_cc/_to are informative and do not trigger any notification
+                        'email_cc': '"Leo Pol" <leo@test.example.com>, fab@test.example.com',
+                        'email_to': '"Gaby Tlair" <gab@test.example.com>, ted@test.example.com',
                         'email_from': formataddr((self.partner_employee.name, self.partner_employee.email_normalized)),
                         'is_internal': False,
                         'message_type': 'comment',
@@ -766,6 +769,8 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             ):
             new_message = test_record.message_post(
                 body='Body',
+                email_cc='"Leo Pol" <leo@test.example.com>, fab@test.example.com',
+                email_to='"Gaby Tlair" <gab@test.example.com>, ted@test.example.com',
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=[self.partner_employee_2.id],

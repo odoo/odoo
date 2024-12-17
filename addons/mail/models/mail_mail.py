@@ -56,8 +56,6 @@ class MailMail(models.Model):
     is_notification = fields.Boolean('Notification Email', help='Mail has been created to notify people of an existing mail.message')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
-    email_to = fields.Text('To', help='Message recipients (emails)')
-    email_cc = fields.Char('Cc', help='Carbon copy message recipients')
     recipient_ids = fields.Many2many('res.partner', string='To (Partners)',
         context={'active_test': False})
     # process
@@ -190,7 +188,7 @@ class MailMail(models.Model):
         SQL queries.
         """
         super()._add_inherited_fields()
-        for field in ('email_from', 'reply_to', 'subject'):
+        for field in ('email_cc', 'email_from', 'email_to', 'reply_to', 'subject'):
             self._fields[field].related_sudo = True
 
     def action_retry(self):
@@ -470,6 +468,18 @@ class MailMail(models.Model):
                 'email_to_raw': partner.email or '',
                 'partner_id': partner,
             })
+
+        # update headers with information coming from recipients, used to tweak
+        # SMTP versus Msg['To']. Consider all outgoing emails for this mail.mail.
+        # if headers.get('X-Msg-To-Consolidate'):
+        #     all_email_to_normalized = {email for values in email_list for email in values['email_to_normalized']}
+        #     all_email_to = [
+        #         email for outgoing in email_list for email in (outgoing['email_to'] + outgoing['email_cc'])
+        #     ] + [
+        #         email for email in tools.mail.email_split_and_format(headers.get('X-Msg-To-Add') or [])
+        #         if tools.mail.email_normalize(email, strict=False) not in all_email_to_normalized
+        #     ]
+        #     headers['X-Msg-To-Add'] = ','.join(all_email_to)
 
         attachments = self.attachment_ids
         # Prepare attachments:
