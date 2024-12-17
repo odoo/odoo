@@ -198,7 +198,10 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def setup_independent_company(cls, **kwargs):
-        return cls._create_company(name='company_1_data', **kwargs)
+        if cls.env.registry.loaded:
+            # Only create a new company for post-install tests
+            return cls._create_company(name='company_1_data', **kwargs)
+        return super().setup_independent_company(**kwargs)
 
     @classmethod
     def setup_independent_user(cls):
