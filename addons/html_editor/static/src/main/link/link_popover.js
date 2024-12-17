@@ -18,6 +18,7 @@ export class LinkPopover extends Component {
         isImage: Boolean,
         fileUploadEnabled: { type: Boolean, optional: true },
         uploadFile: { type: Function, optional: true },
+        readOnly: { type: Boolean, optional: true },
     };
     colorsData = [
         { type: "", label: _t("Link"), btnPreview: "link" },
