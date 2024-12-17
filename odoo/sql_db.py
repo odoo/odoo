@@ -15,6 +15,7 @@ import threading
 import time
 import typing
 import uuid
+import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from inspect import currentframe
@@ -256,6 +257,7 @@ class BaseCursor(_CursorProtocol):
     def split_for_in_conditions(self, ids: Iterable[T], size: int = 0) -> Iterator[tuple[T, ...]]:
         """Split a list of identifiers into one or more smaller tuples
            safe for IN conditions, after uniquifying them."""
+        warnings.warn("Deprecated since 19.0, use split_every(cr.IN_MAX, ids)", DeprecationWarning)
         return tools.misc.split_every(size or self.IN_MAX, ids)
 
     def now(self) -> datetime:

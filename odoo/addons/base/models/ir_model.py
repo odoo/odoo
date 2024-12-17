@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 import logging
@@ -15,7 +14,7 @@ from psycopg2.extras import Json
 from odoo import api, fields, models, tools, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list, lazy_property, sql, unique, OrderedSet, SQL
+from odoo.tools import format_list, lazy_property, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 from odoo.tools.translate import _, LazyTranslate
 
@@ -2293,7 +2292,7 @@ class IrModelData(models.Model):
                 FROM ir_model_data d LEFT JOIN "{}" r on d.res_id=r.id
                 WHERE d.module=%s AND d.name IN %s
             """.format(model._table)
-            for subsuffixes in cr.split_for_in_conditions(suffixes):
+            for subsuffixes in split_every(cr.IN_MAX, suffixes):
                 cr.execute(query, (prefix, subsuffixes))
                 result.extend(cr.fetchall())
 
@@ -2317,7 +2316,7 @@ class IrModelData(models.Model):
             noupdate = bool(data.get('noupdate'))
             rows.add((prefix, suffix, record._name, record.id, noupdate))
 
-        for sub_rows in self.env.cr.split_for_in_conditions(rows):
+        for sub_rows in split_every(self.env.cr.IN_MAX, rows):
             # insert rows or update them
             query = self._build_update_xmlids_query(sub_rows, update)
             try:
