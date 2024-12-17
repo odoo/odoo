@@ -1,6 +1,5 @@
 import { DocumentSelector } from "@html_editor/main/media/media_dialog/document_selector";
 import { Plugin } from "@html_editor/plugin";
-import { parseHTML } from "@html_editor/utils/html";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -80,8 +79,6 @@ export class DocumentPlugin extends Plugin {
                 downloadUrl: url,
             },
         });
-
-
 
         // const bannerElement = parseHTML(
         //     this.document,

@@ -78,7 +78,8 @@ export class FilePlugin extends Plugin {
      */
     padFileCardsWithFeff(root, cursors) {
         return (
-            [...selectElements(root, "[data-embedded='file']")]
+            // TODO: consider making this a method by the feff plugin, taking a selector as resource
+            [...selectElements(root, "[data-embedded='file'], .o_file_card")]
                 .flatMap((fileCard) => this.addFeffs(fileCard, cursors))
                 // Avoid sequential FEFFs
                 .filter((feff, i, array) => !(i > 0 && areCloseSiblings(array[i - 1], feff)))
