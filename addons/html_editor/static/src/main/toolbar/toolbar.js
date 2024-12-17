@@ -26,6 +26,7 @@ export class Toolbar extends Component {
                                             groupId: String,
                                             title: { type: [String, Function] },
                                             isAvailable: { type: Function, optional: true },
+                                            isDisabled: { type: Function, optional: true },
                                         };
                                         if (button.Component) {
                                             validate(button, {
@@ -40,7 +41,6 @@ export class Toolbar extends Component {
                                                 icon: { type: String, optional: true },
                                                 text: { type: String, optional: true },
                                                 isActive: { type: Function, optional: true },
-                                                isDisabled: { type: Function, optional: true },
                                             });
                                         }
                                         return true;
