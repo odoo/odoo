@@ -191,12 +191,12 @@ describe("Incorrect URL should be corrected", () => {
             '<p>this is a <a href="mailto:test@test.com">li[]nk</a></p>'
         );
     });
-    test("when a link's URL is an phonenumber, the link's URL should start with tel://:", async () => {
+    test("when a link's URL is an phonenumber, the link's URL should start with tel:", async () => {
         const { el } = await setupEditor("<p>this is a <a>li[]nk</a></p>");
 
         await contains(".o-we-linkpopover input.o_we_href_input_link").edit("+1234567890");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p>this is a <a href="tel://+1234567890">li[]nk</a></p>'
+            '<p>this is a <a href="tel:+1234567890">li[]nk</a></p>'
         );
     });
 });
