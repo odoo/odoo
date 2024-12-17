@@ -22,7 +22,6 @@ class TestL10nECAccountSale(TestSaleCommon):
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
-            'pricelist_id': cls.company_data['default_pricelist'].id,
             'order_line': [
                 Command.create({
                     'product_id': cls.company_data['product_order_no'].id,
@@ -51,7 +50,6 @@ class TestL10nECAccountSale(TestSaleCommon):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         self.assertEqual(new_sale_order.l10n_ec_sri_payment_id, self.sri_payment_method)
 

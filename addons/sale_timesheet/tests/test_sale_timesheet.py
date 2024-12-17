@@ -32,7 +32,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_ordered_project_only = self.env['sale.order.line'].create({
             'product_id': self.product_order_timesheet4.id,
@@ -159,7 +158,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'product_id': self.product_delivery_timesheet2.id,
@@ -282,7 +280,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_manual_global_project = self.env['sale.order.line'].create({
             'product_id': self.product_delivery_manual2.id,
@@ -363,7 +360,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         # Section Line
         so_line_ordered_project_only = self.env['sale.order.line'].create({
@@ -567,13 +563,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         sale_order2 = self.env['sale.order'].create({
             'partner_id': self.partner_b.id,
             'partner_invoice_id': self.partner_b.id,
             'partner_shipping_id': self.partner_b.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so1_product_global_project_so_line = self.env['sale.order.line'].create({
             'product_id': self.product_delivery_timesheet2.id,
@@ -810,7 +804,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,

@@ -37,7 +37,6 @@ class TestReInvoice(TestSaleCommon):
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
             'project_id': cls.project.id,
-            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
         cls.AccountMove = cls.env['account.move'].with_context(

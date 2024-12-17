@@ -28,7 +28,6 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         # Create sale order of product_1
         order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
             'warehouse_id': self.company_data['default_warehouse'].id,
             'order_line': [(0, 0, {
@@ -65,7 +64,6 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
             'warehouse_id': warehouse.id,
             'order_line': [(0, 0, {'name': self.test_product_order.name,
@@ -135,7 +133,6 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
             'warehouse_id': warehouse.id,
             'order_line': [(0, 0, {'name': self.test_product_order.name,
@@ -209,7 +206,6 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         """
         order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
             'warehouse_id': self.company_data['default_warehouse'].id,
         })

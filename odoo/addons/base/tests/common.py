@@ -50,9 +50,9 @@ class BaseCommon(TransactionCase):
             'name': 'Test Partner',
         })
 
-        cls.group_portal = cls.env.ref('base.group_portal')
-        cls.group_user = cls.env.ref('base.group_user')
-        cls.group_system = cls.env.ref('base.group_system')
+        cls.group_portal = cls.quick_ref('base.group_portal')
+        cls.group_user = cls.quick_ref('base.group_user')
+        cls.group_system = cls.quick_ref('base.group_system')
 
     @classmethod
     def default_env_context(cls):
@@ -144,6 +144,12 @@ class BaseCommon(TransactionCase):
             groups='base.group_portal',
             **({'login': 'portal_user'} | kwargs),
         )
+
+    @classmethod
+    def quick_ref(cls, xmlid):
+        """Find the matching record, without an existence check."""
+        model, id = cls.env['ir.model.data']._xmlid_to_res_model_res_id(xmlid)
+        return cls.env[model].browse(id)
 
 
 class TransactionCaseWithUserDemo(TransactionCase):

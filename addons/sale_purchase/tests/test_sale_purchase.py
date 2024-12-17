@@ -31,7 +31,6 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
-            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol1_service_deliver = cls.env['sale.order.line'].create({
             'product_id': cls.company_data['product_service_delivery'].id,
@@ -56,7 +55,6 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
             'partner_id': cls.partner_a.id,
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
-            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol2_product_deliver = cls.env['sale.order.line'].create({
             'product_id': cls.company_data['product_delivery_no'].id,

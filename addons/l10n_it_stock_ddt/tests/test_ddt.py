@@ -57,7 +57,6 @@ class TestDDT(TestSaleCommon):
                     self.company_data['product_service_order'],
                     self.company_data['product_delivery_no'],
                 )],
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
         self.so.action_confirm()
@@ -107,7 +106,6 @@ class TestDDT(TestSaleCommon):
                                    'tax_ids': self.company_data['default_tax_sale']
                                    }
                             )],
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
         so.action_confirm()

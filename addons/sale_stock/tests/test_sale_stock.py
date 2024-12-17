@@ -35,11 +35,10 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': amount,
-                'price_unit': product.list_price})],
-            'pricelist_id': self.company_data['default_pricelist'].id,
+                'price_unit': product.list_price})
+            ],
         }
-        sale_order = self.env['sale.order'].create(sale_order_vals)
-        return sale_order
+        return self.env['sale.order'].create(sale_order_vals)
 
     def test_00_sale_stock_invoice(self):
         """
@@ -62,7 +61,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                     self.company_data['product_service_order'],
                     self.company_data['product_delivery_no'],
                 )],
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
 
@@ -140,7 +138,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'product_uom_qty': 2,
                 'price_unit': p.list_price,
                 }) for p in product_list],
-            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
         # confirm our standard so, check the picking
@@ -191,7 +188,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'product_id': self.product.id,
                 'product_uom_qty': 5.0,
                 'price_unit': self.product.list_price})],
-            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         self.so = self.env['sale.order'].create(so_vals)
 
@@ -884,7 +880,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'product_id': product.id,
                 'product_uom_qty': 5.0,
                 'price_unit': product.list_price})],
-            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         so = self.env['sale.order'].create(so_vals)
 
