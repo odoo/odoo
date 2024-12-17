@@ -54,7 +54,7 @@ class ReportProductReport_Pricelist(models.AbstractModel):
         for qty in quantities:
             data['price'][qty] = pricelist._get_product_price(product, qty)
 
-        if is_product_tmpl and product.product_variant_count > 1:
+        if is_product_tmpl and not product.product_single_variant_id:
             data['variants'] = [
                 self._get_product_data(False, variant, pricelist, quantities)
                 for variant in product.product_variant_ids
