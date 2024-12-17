@@ -6121,24 +6121,45 @@ class BaseModel(metaclass=MetaModel):
 
     def __iter__(self) -> typing.Iterator[Self]:
         """ Return an iterator over ``self``. """
-        if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
-            for ids in split_every(PREFETCH_MAX, self._ids):
-                for id_ in ids:
-                    yield self.__class__(self.env, (id_,), ids)
+        ids = self._ids
+        size = len(ids)
+        if size <= 1:
+            # detect and handle small recordsets (single `1f`)
+            # early return if no records and avoid allocation if we have a one
+            if size == 1:
+                yield self
+            return
+        cls = self.__class__
+        env = self.env
+        prefetch_ids = self._prefetch_ids
+        if size > PREFETCH_MAX and prefetch_ids is ids:
+            for sub_ids in split_every(PREFETCH_MAX, ids):
+                for id_ in sub_ids:
+                    yield cls(env, (id_,), sub_ids)
         else:
-            for id_ in self._ids:
-                yield self.__class__(self.env, (id_,), self._prefetch_ids)
+            for id_ in ids:
+                yield cls(env, (id_,), prefetch_ids)
 
     def __reversed__(self) -> typing.Iterator[Self]:
         """ Return an reversed iterator over ``self``. """
-        if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
-            for ids in split_every(PREFETCH_MAX, reversed(self._ids)):
-                for id_ in ids:
-                    yield self.__class__(self.env, (id_,), ids)
-        elif self._ids:
-            prefetch_ids = ReversedIterable(self._prefetch_ids)
-            for id_ in reversed(self._ids):
-                yield self.__class__(self.env, (id_,), prefetch_ids)
+        # same as __iter__ but reversed
+        ids = self._ids
+        size = len(ids)
+        if size <= 1:
+            if size == 1:
+                yield self
+            return
+        cls = self.__class__
+        env = self.env
+        prefetch_ids = self._prefetch_ids
+        if size > PREFETCH_MAX and prefetch_ids is ids:
+            for sub_ids in split_every(PREFETCH_MAX, reversed(ids)):
+                for id_ in sub_ids:
+                    yield cls(env, (id_,), sub_ids)
+        else:
+            prefetch_ids = ReversedIterable(prefetch_ids)
+            for id_ in reversed(ids):
+                yield cls(env, (id_,), prefetch_ids)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.
