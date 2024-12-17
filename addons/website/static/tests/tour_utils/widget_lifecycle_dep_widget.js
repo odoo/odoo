@@ -1,12 +1,13 @@
+import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 const localStorage = browser.localStorage;
 
 odoo.loader.bus.addEventListener("module-started", (e) => {
-    if (e.detail.moduleName !== "@web/legacy/js/public/public_widget") {
+    if (e.detail.moduleName !== "@web/public/interaction") {
         return;
     }
 
-    const publicWidget = e.detail.module[Symbol.for("default")];
+    const { Interaction } = e.detail.module;
 
     const localStorageKey = 'widgetAndWysiwygLifecycle';
     if (!localStorage.getItem(localStorageKey)) {
@@ -19,25 +20,28 @@ odoo.loader.bus.addEventListener("module-started", (e) => {
         localStorage.setItem(localStorageKey, newValue);
     }
 
-    publicWidget.registry.CountdownPatch = publicWidget.Widget.extend({
-        selector: ".s_countdown",
-        disabledInEditableMode: false,
+    // TODO Re-evaluate: possibly became obsolete.
+    class CountdownPatch extends Interaction {
+        static selector = ".s_countdown";
+        dynamicContent = {
+            "_root": {
+                // TODO Adapt naming if still needed.
+                "t-att-class": () => ({ "public_widget_started": true }),
+            },
+        };
+        // TODO Handle edit mode.
+        disabledInEditableMode = false;
 
-        /**
-         * @override
-         */
-        async start() {
+        start() {
             addLifecycleStep('widgetStart');
-            await this._super(...arguments);
-            this.el.classList.add("public_widget_started");
-        },
-        /**
-         * @override
-         */
+        }
+
         destroy() {
-            this.el.classList.remove("public_widget_started");
             addLifecycleStep('widgetStop');
-            this._super(...arguments);
-        },
-    });
+        }
+    }
+
+    registry
+        .category("public.interactions")
+        .add("website.countdown_patch", CountdownPatch);
 });
