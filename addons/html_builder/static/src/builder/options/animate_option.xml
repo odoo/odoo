@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.AnimateOption">
+    <WeRow label.translate="Animation">
+        <WeSelect dependencies="'!transformImage'" preview="false">
+            <WeSelectItem action="'setAnimationMode'" actionValue="''"
+                        classAction="''"
+                        id="'no_animation_opt'">None</WeSelectItem>
+            <WeSelectItem action="'setAnimationMode'" actionValue="'onAppearance'"
+                        actionParam="{forceAnimation: true}"
+                        classAction="'o_animate'"
+                        id="'animation_on_appearance_opt'">On Appearance</WeSelectItem>
+            <WeSelectItem action="'setAnimationMode'" actionValue="'onScroll'"
+                        classAction="'o_animate o_animate_on_scroll'"
+                        actionParam="{forceAnimation: true}"
+                        id="'animation_on_scroll_opt'">On Scroll</WeSelectItem>
+            <WeSelectItem action="'setAnimationMode'" actionValue="'onHover'"
+                        classAction="'o_animate_on_hover'"
+                        id="'animation_on_hover_opt'">On Hover</WeSelectItem>
+        </WeSelect>
+    </WeRow>
+</t>
+
+
+</templates>
