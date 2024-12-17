@@ -8,15 +8,16 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='tz']" position="after">
+                <xpath expr="//group[@name='signature']" position="after">
                     <field name="has_access_livechat" invisible="1"/>
-                    <field name="livechat_username" string="Online Chat Name"
-                        invisible="not has_access_livechat"/>
-                    <field name="livechat_lang_ids" string="Online Chat Language"
-                        invisible="not has_access_livechat"
-                        options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"
-                        widget="many2many_tags"/>
-                    <field name="livechat_expertise_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}" invisible="not has_access_livechat"/>
+                    <group name="livechat" string="Live Chat"
+                        invisible="not has_access_livechat">
+                        <field name="livechat_username" string="Username"/>
+                        <field name="livechat_lang_ids" string="Languages"
+                            options="{'no_create': True, 'no_edit': True}"
+                            widget="many2many_tags"/>
+                        <field name="livechat_expertise_ids" string="Expertise" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
                 </xpath>
             </field>
         </record>
