@@ -29,7 +29,7 @@ class PosVivaComController(http.Controller):
                 data_webhook = data.get('EventData', {})
                 if terminal_id:
                     payment_method_sudo = request.env['pos.payment.method'].sudo().search(
-                        [('viva_com_terminal_id', '=', terminal_id)], limit=1
+                        [('terminal_identifier', '=', terminal_id)], limit=1
                     )
                     payment_method_sudo._retrieve_session_id(data_webhook)
                 else:

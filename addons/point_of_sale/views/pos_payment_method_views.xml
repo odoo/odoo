@@ -32,6 +32,10 @@
                                 <field name="hide_qr_code_method" invisible="1"/>
                                 <field name="payment_method_type" />
                                 <field name="use_payment_terminal" string="Integrate with" invisible="hide_use_payment_terminal"/>
+                                <field name="terminal_merchant_key" invisible="hide_use_payment_terminal or use_payment_terminal not in ['paytm', 'viva_com']" required="use_payment_terminal in ['paytm', 'viva_com']"/>
+                                <field name="terminal_identifier" invisible="hide_use_payment_terminal or use_payment_terminal not in ['adyen', 'paytm', 'razorpay', 'viva_com']" required="use_payment_terminal in ['adyen', 'paytm', 'razorpay', 'viva_com']"/>
+                                <field name="terminal_api_key" invisible="hide_use_payment_terminal or use_payment_terminal not in ['adyen', 'paytm', 'razorpay', 'viva_com']" required="use_payment_terminal in ['adyen', 'paytm', 'razorpay', 'viva_com']"/>
+                                <field name="test_mode" invisible="hide_use_payment_terminal or use_payment_terminal not in ['adyen', 'paytm', 'razorpay', 'viva_com']" />
                                 <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'qr_code'"/>
                             </group>
                             <widget name="pos_payment_provider_cards" invisible="use_payment_terminal or payment_method_type != 'terminal'" />

@@ -5,8 +5,9 @@
       <field name="model">pos.payment.method</field>
       <field name="inherit_id" ref="pos_adyen.pos_payment_method_view_form_inherit_pos_adyen"/>
       <field name="arch" type="xml">
-          <xpath expr="//field[@name='adyen_terminal_identifier']" position="after">
-                <field name="adyen_merchant_account" invisible="use_payment_terminal != 'adyen'" required="use_payment_terminal == 'adyen'"/>
+          <xpath expr="//field[@name='terminal_merchant_key']" position="attributes">
+                <attribute name="invisible">hide_use_payment_terminal or use_payment_terminal not in ['adyen', 'paytm', 'viva_com']</attribute>
+                <attribute name="required">hide_use_payment_terminal or use_payment_terminal not in ['adyen', 'paytm', 'viva_com']</attribute>
           </xpath>
       </field>
     </record>

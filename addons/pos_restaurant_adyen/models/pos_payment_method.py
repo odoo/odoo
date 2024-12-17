@@ -7,8 +7,6 @@ from odoo import fields, models, api
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
-    adyen_merchant_account = fields.Char(help='The POS merchant account code used in Adyen')
-
     def _get_adyen_endpoints(self):
         return {
             **super(PosPaymentMethod, self)._get_adyen_endpoints(),
@@ -19,5 +17,5 @@ class PosPaymentMethod(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         params = super()._load_pos_data_fields(config_id)
-        params += ['adyen_merchant_account']
+        params += ['terminal_merchant_key']
         return params

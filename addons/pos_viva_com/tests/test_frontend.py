@@ -19,11 +19,11 @@ class TestVivaComHttpCommon(TestPointOfSaleHttpCommon):
             'name': 'Viva',
             'journal_id': cls.bank_journal.id,
             'use_payment_terminal': 'viva_com',
-            'viva_com_merchant_id': 'test-merchant-id',
-            'viva_com_api_key': 'test-api-key',
+            'terminal_merchant_key': 'test-merchant-id',
+            'terminal_api_key': 'test-api-key',
             'viva_com_client_id': 'test-client-id',
             'viva_com_client_secret': 'test-client-secret',
-            'viva_com_terminal_id': '01234543210',
+            'terminal_identifier': '01234543210',
         })
         payment_methods = cls.main_pos_config.payment_method_ids | viva_payment_method
         cls.main_pos_config.write({'payment_method_ids': [Command.set(payment_methods.ids)]})

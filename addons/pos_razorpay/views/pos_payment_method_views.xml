@@ -7,9 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='use_payment_terminal']" position="after">
                 <field name="razorpay_username" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                <field name="razorpay_tid" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                <field name="razorpay_api_key" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
-                <field name="razorpay_test_mode" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
+            </xpath>
+            <xpath expr="//field[@name='terminal_api_key']" position="after">
                 <field name="razorpay_allowed_payment_modes" invisible="use_payment_terminal != 'razorpay'" required="use_payment_terminal == 'razorpay'"/>
             </xpath>
         </field>

@@ -14,38 +14,30 @@ class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
     # Viva.com
-    viva_com_merchant_id = fields.Char(
-        string="Merchant ID", help="Log into Viva.com then navigate to Settings > API Access > Access credentials"
-    )
-    viva_com_api_key = fields.Char(
-        string="API Key", help="Log into Viva.com then navigate to Settings > API Access > Access credentials"
-    )
     viva_com_client_id = fields.Char(
         string="Client ID", help="Log into Viva.com then navigate to Settings > API Access > POS APIs Credentials"
     )
     viva_com_client_secret = fields.Char(
         string="Client secret", help="Log into Viva.com then navigate to Settings > API Access > POS APIs Credentials"
     )
-    viva_com_terminal_id = fields.Char(string="Terminal ID", help='[ID of the Viva.com terminal], e.g. 16002169')
     viva_com_bearer_token = fields.Char(default='Bearer Token')
     viva_com_webhook_verification_key = fields.Char()
     viva_com_latest_response = fields.Json() # used to buffer the latest asynchronous notification from Viva.com
-    viva_com_test_mode = fields.Boolean(string="Test mode", help="Run transactions in the test environment.")
     viva_com_webhook_endpoint = fields.Char(compute='_compute_viva_com_webhook_endpoint', readonly=True)
 
 
     def _viva_com_account_get_endpoint(self):
-        if self.viva_com_test_mode:
+        if self.test_mode:
             return 'https://demo-accounts.vivapayments.com'
         return 'https://accounts.vivapayments.com'
 
     def _viva_com_api_get_endpoint(self):
-        if self.viva_com_test_mode:
+        if self.test_mode:
             return 'https://demo-api.vivapayments.com'
         return 'https://api.vivapayments.com'
 
     def _viva_com_webhook_get_endpoint(self):
-        if self.viva_com_test_mode:
+        if self.test_mode:
             return 'https://demo.vivapayments.com'
         return 'https://www.vivapayments.com'
 
@@ -133,9 +125,6 @@ class PosPaymentMethod(models.Model):
                 'config_id': pos_session_sudo.config_id.id
             })
 
-    def _load_pos_data_fields(self, config_id):
-        return [*super()._load_pos_data_fields(config_id), 'viva_com_terminal_id']
-
     def viva_com_send_payment_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva.com payment request"))
@@ -169,11 +158,11 @@ class PosPaymentMethod(models.Model):
     def write(self, vals):
         record = super().write(vals)
 
-        if vals.get('viva_com_merchant_id') and vals.get('viva_com_api_key'):
+        if vals.get('terminal_merchant_key') and vals.get('terminal_api_key'):
             self.viva_com_webhook_verification_key = get_verification_key(
                 self._viva_com_webhook_get_endpoint(),
-                self.viva_com_merchant_id,
-                self.viva_com_api_key,
+                self.terminal_merchant_key,
+                self.terminal_api_key,
             )
             if not self.viva_com_webhook_verification_key:
                 raise UserError(_("Can't update payment method. Please check the data and update it."))
@@ -185,11 +174,11 @@ class PosPaymentMethod(models.Model):
         records = super().create(vals)
 
         for record in records:
-            if record.viva_com_merchant_id and record.viva_com_api_key:
+            if record.terminal_merchant_key and record.terminal_api_key:
                 record.viva_com_webhook_verification_key = get_verification_key(
                     record._viva_com_webhook_get_endpoint(),
-                    record.viva_com_merchant_id,
-                    record.viva_com_api_key,
+                    record.terminal_merchant_key,
+                    record.terminal_api_key,
                 )
                 if not record.viva_com_webhook_verification_key:
                     raise UserError(_("Can't create payment method. Please check the data and update it."))
@@ -206,11 +195,11 @@ class PosPaymentMethod(models.Model):
             if (
                 record.use_payment_terminal == 'viva_com'
                 and not all(record[f] for f in [
-                    'viva_com_merchant_id',
-                    'viva_com_api_key',
+                    'terminal_merchant_key',
+                    'terminal_api_key',
                     'viva_com_client_id',
                     'viva_com_client_secret',
-                    'viva_com_terminal_id',
+                    'terminal_identifier',
                 ])
             ):
                 raise UserError(_('It is essential to provide API key for the use of Viva.com'))
@@ -226,14 +215,14 @@ def get_viva_com_session(should_retry=True):
         )))
     return session
 
-def get_verification_key(endpoint, viva_com_merchant_id, viva_com_api_key):
+def get_verification_key(endpoint, terminal_merchant_key, terminal_api_key):
     """Get a key to configure the webhook.
     This key need to be the response when we receive a notification.
     Do not execute this query in test mode.
 
     :param endpoint: The endpoint to get the verification key from
-    :param viva_com_merchant_id: The merchant ID
-    :param viva_com_api_key: The API
+    :param terminal_merchant_key: The merchant ID
+    :param terminal_api_key: The API
     :return: The verification key
     """
     if modules.module.current_test:
@@ -242,7 +231,7 @@ def get_verification_key(endpoint, viva_com_merchant_id, viva_com_api_key):
     try:
         response = requests.get(
             f"{endpoint}/api/messages/config/token",
-            auth=(viva_com_merchant_id, viva_com_api_key),
+            auth=(terminal_merchant_key, terminal_api_key),
             timeout=TIMEOUT
         )
         response.raise_for_status()

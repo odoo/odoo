@@ -26,7 +26,7 @@ class PosPayment(models.Model):
                 'value': int(self.amount * 10**self.currency_id.decimal_places),
                 'currency': self.currency_id.name,
             },
-            'merchantAccount': self.payment_method_id.adyen_merchant_account,
+            'merchantAccount': self.payment_method_id.terminal_merchant_key,
         }
 
         return self.payment_method_id.proxy_adyen_request(data, 'capture')

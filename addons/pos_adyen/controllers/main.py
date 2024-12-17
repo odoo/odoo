@@ -33,7 +33,7 @@ class PosAdyenController(http.Controller):
             return
 
         terminal_identifier = msg_header['POIID']
-        adyen_pm_sudo = request.env['pos.payment.method'].sudo().search([('adyen_terminal_identifier', '=', terminal_identifier)], limit=1)
+        adyen_pm_sudo = request.env['pos.payment.method'].sudo().search([('terminal_identifier', '=', terminal_identifier)], limit=1)
         if not adyen_pm_sudo:
             _logger.warning('Received an Adyen event notification for a terminal not registered in Odoo: %s', terminal_identifier)
             return
