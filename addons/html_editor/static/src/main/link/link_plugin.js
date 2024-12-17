@@ -405,6 +405,7 @@ export class LinkPlugin extends Plugin {
                     this.removeCurrentLinkIfEmtpy();
                     this.dependencies.history.addStep();
                 },
+                canEdit: !this.linkElement.classList.contains("o_link_readonly"),
             };
 
             if (linkEl.isConnected) {
