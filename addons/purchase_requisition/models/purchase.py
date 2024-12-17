@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
@@ -270,7 +271,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             line.price_total_cc = line.price_subtotal / line.order_id.currency_rate
 
-    def _compute_price_unit_and_date_planned_and_name(self):
+    def _compute_price_unit_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
         for pol in self:
             if pol.product_id.id not in pol.order_id.requisition_id.line_ids.product_id.ids:
@@ -289,7 +290,8 @@ class PurchaseOrderLine(models.Model):
                         params=params)
 
                     if not pol.date_planned:
-                        pol.date_planned = pol._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                        date_planned = fields.Datetime.from_string(pol.date_planned_pol_placeholder) if pol.date_planned_pol_placeholder else pol._get_date_planned(seller)
+                        pol.date_planned = fields.Datetime.to_string(date_planned)
 
                     product_ctx = {'seller_id': seller.id, 'lang': get_lang(pol.env, partner.lang).code}
                     name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
@@ -297,7 +299,7 @@ class PurchaseOrderLine(models.Model):
                         name += '\n' + line.product_description_variants
                     pol.name = name
                     break
-        super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
+        super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_name()
 
     def action_clear_quantities(self):
         zeroed_lines = self.filtered(lambda l: l.state not in ['cancel', 'purchase', 'done'])

@@ -42,7 +42,7 @@
 
         <record id="purchase_order_8" model="purchase.order">
             <field name="partner_id" ref="base.res_partner_4"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="state">draft</field>
             <field name="date_order" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="date_planned" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
@@ -65,6 +65,28 @@
         </record>
 
         <function model="purchase.order" name="button_confirm" eval="[[ref('purchase_order_8')]]"/>
+
+        <record id="purchase_order_12" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="date_order" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_product_12'),
+                    'name': 'Office Chair Black',
+                    'price_unit': 250.50,
+                    'product_qty': 10.0,
+                    'product_uom_id': ref('uom.product_uom_dozen'),
+                    'date_planned': DateTime.today() + relativedelta(days=3)}),
+            ]"/>
+        </record>
+
+        <function model="purchase.order" name="button_confirm" eval="[[ref('purchase_order_12')]]"/>
+
+        <function model="stock.picking" name="button_validate">
+            <value model="stock.move" eval="obj().env.ref('purchase_stock.purchase_order_12').picking_ids.ids"/>
+        </function>
 
     </data>
 

@@ -37,14 +37,16 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
         Test purchase dashboard values with multiple users.
         '''
 
-        # Create 3 Request for Quotations with lines.
+        # Create 10 Request for Quotations with lines.
         rfqs = self.env['purchase.order'].create([{
             'partner_id': self.partner_a.id,
+            'user_id': self.user_a.id if i < 6 else self.user_b.id,
             'company_id': self.user_a.company_id.id,
             'currency_id': self.user_a.company_id.currency_id.id,
-            'date_order': fields.Date.today(),
-        } for i in range(3)])
-        for rfq, qty in zip(rfqs, [1, 2, 3]):
+            'date_order': fields.Date.today() - timedelta(days=i),
+            'priority': '1' if i % 2 == 0 else '0',
+        } for i in range(10)])
+        for rfq, qty in zip(rfqs, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]):
             rfq_form = Form(rfq)
             with rfq_form.order_line.new() as line_1:
                 line_1.product_id = self.product_100
@@ -53,22 +55,6 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
                 line_2.product_id = self.product_250
                 line_2.product_qty = qty
             rfq_form.save()
-
-        # Create 1 late RFQ without line.
-        self.env['purchase.order'].create([{
-            'partner_id': self.partner_a.id,
-            'company_id': self.user_a.company_id.id,
-            'currency_id': self.user_a.company_id.currency_id.id,
-            'date_order': fields.Date.today() - timedelta(days=7)
-        }])
-
-        # Create 1 draft RFQ for user A.
-        self.env['purchase.order'].with_user(self.user_a).create([{
-            'partner_id': self.partner_a.id,
-            'company_id': self.user_a.company_id.id,
-            'currency_id': self.user_a.company_id.currency_id.id,
-            'date_order': fields.Date().today() + timedelta(days=7)
-        }])
 
         self.flush_tracking()
         with self.mock_mail_gateway():
@@ -81,19 +67,32 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertEqual(rfqs[1].state, 'sent')
 
-        # Confirm Orders with lines.
-        rfqs.button_confirm()
-        # Retrieve dashboard as User A to check 'my_{to_send, waiting, late}' values.
+        # Confirm the purchase orders.
+        for idx, rfq in enumerate(rfqs):
+            if idx in (0, 1):
+                continue
+            if idx % 3 == 0:
+                rfq.button_confirm()
+                date_offset = timedelta(days=idx + 1)
+                rfq.write({'date_approve': fields.Datetime.now() - date_offset if idx % 2 == 0 else fields.Datetime.now() + date_offset})
+
+        # Send a reminder mail for the 4th order in the list.
+        rfqs[3].confirm_reminder_mail()
+
+        # Retrieve dashboard as User A to check all values.
         dashboard_result = rfqs.with_user(self.user_a).retrieve_dashboard()
 
         # Check dashboard values
-        currency_id = self.env.company.currency_id
-        zero_value_keys = ['all_waiting', 'my_waiting', 'my_late']
-        self.assertListEqual([dashboard_result[key] for key in zero_value_keys], [0]*len(zero_value_keys))
-        self.assertEqual(dashboard_result['all_to_send'], 2)
-        self.assertEqual(dashboard_result['my_to_send'], 1)
-        self.assertEqual(dashboard_result['all_late'], 1)
-        self.assertEqual(dashboard_result['all_avg_order_value'], format_amount(self.env, self.tax_purchase_a.compute_all(700.0)['total_included'], currency_id))
-        self.assertEqual(dashboard_result['all_avg_days_to_purchase'], 0)
-        self.assertEqual(dashboard_result['all_total_last_7_days'], format_amount(self.env, self.tax_purchase_a.compute_all(2100.0)['total_included'], currency_id))
+        self.assertEqual(dashboard_result['all_draft_rfqs'], 5)
+        self.assertEqual(dashboard_result['my_draft_rfqs'], 3)
+        self.assertEqual(dashboard_result['all_priority_draft_rfqs'], 3)
+        self.assertEqual(dashboard_result['my_priority_draft_rfqs'], 2)
         self.assertEqual(dashboard_result['all_sent_rfqs'], 2)
+        self.assertEqual(dashboard_result['my_sent_rfqs'], 2)
+        self.assertEqual(dashboard_result['all_late_rfqs'], 7)
+        self.assertEqual(dashboard_result['my_late_rfqs'], 5)
+        self.assertEqual(dashboard_result['all_not_acknowledged_orders'], 3)
+        self.assertEqual(dashboard_result['my_not_acknowledged_orders'], 1)
+        self.assertEqual(dashboard_result['all_avg_days_to_purchase'], 2.33)
+        self.assertEqual(dashboard_result['my_avg_days_to_purchase'], 4)
+        self.assertEqual(dashboard_result['default_days_to_purchase'], 0)

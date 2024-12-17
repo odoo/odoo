@@ -143,17 +143,6 @@
                       <h2 t-field="order.amount_total" data-id="total_amount" class="mb-0 text-break"/>
                   </t>
                   <t t-set="entries">
-                    <div t-if="not request.env.user._is_public() and order.state in ['sent']" class="flex-grow-1 d-flex gap-2">
-                        <div class="btn-group flex-grow-1 mb-1">
-                            <a t-if="not order.mail_reception_confirmed" t-att-href="order.get_confirm_url(confirm_type='reception')" target="_self" class="btn btn-secondary btn-block px-3" name="accept" title="Accept" style="background-color: #875A7B;">Accept</a>
-                            <a t-else="" href="#" class="btn btn-secondary btn-block px-3 disabled" style="background-color: #875A7B;" tabindex="-1" aria-disabled="true" name="accept" title="Accept">Accept</a>
-                        </div>
-                        <div class="btn-group flex-grow-1 mb-1">
-                            <a t-if="not order.mail_reception_declined" t-att-href="order.get_confirm_url(confirm_type='decline')" target="_self" class="btn btn-secondary btn-block px-3" name="decline" title="Decline">Decline</a>
-                            <a t-else="" href="#" class="btn btn-secondary btn-block px-3 disabled" tabindex="-1" aria-disabled="true" name="decline" title="Decline">Decline</a>
-                        </div>
-                    </div>
-
                       <div class="d-flex flex-column gap-4 mt-3">
                         <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>Download / Print</a>
                           <div class="navspy flex-grow-1 ps-0" t-ignore="true" role="complementary">
@@ -220,13 +209,9 @@
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
                       <strong>This purchase has been cancelled.</strong>
                   </div>
-                  <div t-if="order.mail_reception_confirmed and order.state not in ['purchase', 'done']" class="alert alert-success alert-dismissible d-print-none" role="alert">
+                  <div t-if="order.mail_reception_acknowledged and order.state == 'purchase'" class="alert alert-success alert-dismissible d-print-none" role="alert">
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-                      <strong>This quotation has been accepted.</strong>
-                  </div>
-                  <div t-if="order.mail_reception_declined and order.state not in ['purchase', 'done']" class="alert alert-warning alert-dismissible d-print-none" role="alert">
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-                      <strong>This quotation has been declined.</strong>
+                      <strong>This receipt is acknowledged by <span class="ms-1" t-field="order.partner_id.name"></span>.</strong>
                   </div>
 
                   <!-- main content -->

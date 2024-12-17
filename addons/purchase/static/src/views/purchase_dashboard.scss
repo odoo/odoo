@@ -1,0 +1,63 @@
+@media (max-width: 768px) {
+    .col-12.col-xl-8 {
+      &.responsive-sm {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        .row {
+          flex-direction: column; //Cards row vertically for small screens.
+        }
+      }
+    }
+
+    .o_purchase_dashboard div {
+      font-size: 1.1rem;
+    }
+
+    .full-width-row {
+      width: 100%;
+    }
+
+    .row-flat {
+      margin-left: 0% !important;
+      margin-right: 0% !important;
+    }
+
+    .card-min-height {
+      min-height: 107px;
+    }
+
+    #all_my_avg_days_otd_box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: -15px;
+
+      .row {
+          flex: 1;
+          max-width: 50%;
+          padding: 1rem;
+      }
+
+      .row > * {
+        padding-left: 1% !important;
+        padding-right: 1% !important;
+      }
+
+      .card-min-height {
+          min-height: 107px;
+      }
+  }
+}
+
+@media (max-width: 476px) {
+    #all_my_avg_days_otd_box {
+      padding: 0%;
+      gap: 5px;
+    }
+
+    .row, .responsive-sm {
+      padding-left: 0% !important;
+      padding-right: 0% !important;
+    }
+}

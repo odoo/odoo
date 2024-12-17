@@ -35,6 +35,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_qty = 10
             po_line.price_unit = 200
         po = po.save()
+        po.button_confirm()
 
         # Check that the same date is planned on both PO lines.
         self.assertNotEqual(po.order_line[0].date_planned, False)
@@ -77,6 +78,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         })
         with Form(po) as po_form:
             po_form.date_planned = fields.Datetime.now() + timedelta(days=1)
+
+        po.button_confirm()
         self.assertEqual(po.order_line.date_planned, po.date_planned)
 
         with Form(po) as po_form:
@@ -739,11 +742,12 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = self.product_a
             po_line.product_qty = 10
         po = po_form.save()
+        po.button_confirm()
         self.assertEqual(po.order_line.price_unit, 5)
         self.assertEqual(po.order_line.name, '[Vendor A] product_a')
         self.assertEqual(po.order_line.product_qty, 10)
         self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=5))
-        po.partner_id = self.partner_b
+        po.write({'partner_id': self.partner_b.id})
         self.assertEqual(po.order_line.price_unit, 10)
         self.assertEqual(po.order_line.name, '[Vendor B] product_a')
         self.assertEqual(po.order_line.product_qty, 10)
@@ -842,3 +846,38 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_untaxed, 15.0)
         po.company_id = company_a.id
         self.assertEqual(po.amount_untaxed, 10.0)
+
+    def test_date_planned_behavior_for_manual_rfq(self):
+        """
+        Verify that the 'date_planned' field remains blank for both Purchase Orders
+        and Purchase Order Lines until the RFQ is confirmed when manually created.
+        Also, ensure that the 'date_planned' placeholder are calculated correctly
+        and displayed accurately in the 'date_planned' field as a placeholder.
+        """
+        # Create a manually created Purchase Order (PO).
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.partner_a
+        with po.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 1
+            po_line.price_unit = 100
+        po = po.save()
+
+        # Ensure 'date_planned' is blank and 'date_planned_placeholder' is computed correctly.
+        self.assertEqual((po.date_planned, po.order_line.date_planned), (False, False))
+        self.assertEqual((po.date_planned_placeholder, po.order_line.date_planned_pol_placeholder),
+            (fields.Datetime.now().strftime('%Y-%m-%d %H:%M:%S'), fields.Datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
+        # Confirm the RFQ and check that 'date_planned' is computed for both PO and PO lines.
+        po.button_confirm()
+        self.assertAlmostEqual((po.date_planned, po.order_line.date_planned),
+            (fields.Datetime.now(), fields.Datetime.now()), delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.order_line.date_planned, po.date_planned, delta=timedelta(seconds=10))
+
+        # Update 'date_planned' and verify placeholders are updated and synchronized.
+        po_form = Form(po)
+        po_form.date_planned = po.date_planned - timedelta(days=1)
+        po = po_form.save()
+        self.assertEqual(po.order_line.date_planned, po.date_planned)
+        self.assertAlmostEqual(po.date_planned_placeholder, po.date_planned.strftime('%Y-%m-%d %H:%M:%S'), delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.order_line.date_planned_pol_placeholder, po.date_planned.strftime('%Y-%m-%d %H:%M:%S'), delta=timedelta(seconds=10))

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="purchase.PurchaseListController" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='props.info.actionMenus']" position="before">
+            <PurchaseFileUploader resModel="props.resModel">
+                <t t-set-slot="toggler">
+                    <button type="button" class="btn btn-secondary" data-hotkey="b">
+                        Upload Bill
+                    </button>
+                </t>
+            </PurchaseFileUploader>
+        </xpath>
+    </t>
+
+</templates>

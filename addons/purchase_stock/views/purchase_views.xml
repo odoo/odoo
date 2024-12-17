@@ -105,4 +105,16 @@
             </field>
         </field>
     </record>
+
+    <record id="view_purchase_order_filter_inherit" model="ir.ui.view">
+        <field name="name">request.quotation.select.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='late_rfqs']" position="after">
+                <filter name="late_receipt" string="Late Receipt Order" domain="[('state', '=', 'purchase'), ('effective_date', '=', False), ('date_planned', '&lt;', datetime.datetime.now())]"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

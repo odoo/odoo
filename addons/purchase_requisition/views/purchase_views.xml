@@ -60,21 +60,6 @@
         </field>
     </record>
 
-    <record id="purchase_order_kpis_tree_inherit_purchase_requisition" model="ir.ui.view">
-        <field name="name">purchase.order.kpis.list.inherit.purchase.requisition</field>
-        <field name="model">purchase.order</field>
-        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
-        <field name="arch" type="xml">
-            <field name="name" position="before">
-                <field name="has_alternatives" column_invisible="True"/>
-                <button class="fa fa-copy"
-                    title="Has Alternatives"
-                    disabled="1"
-                    invisible="not has_alternatives"/>
-            </field>
-        </field>
-    </record>
-
     <record id="purchase_order_tree_inherit_purchase_requisition" model="ir.ui.view">
         <field name="name">purchase.order.list.inherit.purchase.requisition</field>
         <field name="model">purchase.order</field>

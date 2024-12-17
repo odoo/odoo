@@ -1178,8 +1178,8 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
                 }),
             ]
         })
-        po2 = po1.copy()
         po1.button_confirm()
+        po2 = po1.copy()
         po2.button_confirm()
         # creating bill from PO
         po1.order_line.qty_received = 1

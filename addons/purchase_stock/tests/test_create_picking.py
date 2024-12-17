@@ -717,3 +717,39 @@ class TestCreatePicking(common.TestProductCommon):
 
         self.assertEqual(po.order_line.qty_received, 8)
         self.assertEqual(push_pick.partner_id, po.partner_id)
+
+    def test_propagate_scheduled_date(self):
+        """
+            Ensure that the scheduled date of the delivery order updates
+            if the delivery deadline is later than the current scheduled date.
+        """
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+
+        # change scheduled date of po which is later then current date_planned.
+        purchase_form = Form(po)
+        purchase_form.date_planned = po.date_planned + timedelta(days=5)
+        purchase_form.save()
+
+        # Now check scheduled date of delivery order which is changed based on deadline date only if the delivery deadline is later than the current scheduled date.
+        self.assertEqual(
+            po.picking_ids.scheduled_date, po.picking_ids.date_deadline,
+            'Scheduled delivery order date and deadline date should be same.')
+
+        # change scheduled date of po which is smaller then current date_planned.
+        purchase_form = Form(po)
+        purchase_form.date_planned = po.date_planned - timedelta(days=3)
+        purchase_form.save()
+
+        # Only deadline changed of picking but based on that scheduled date is not changed beacuase scheduled is later then deadline of picking.
+        self.assertNotEqual(
+            po.picking_ids.scheduled_date, po.picking_ids.date_deadline,
+            'Scheduled delivery order date and deadline date should not be same.')
+
+        purchase_form = Form(po)
+        purchase_form.date_planned = po.date_planned + timedelta(days=7)
+        purchase_form.save()
+
+        self.assertEqual(
+            po.picking_ids.scheduled_date, po.picking_ids.date_deadline,
+            'Scheduled delivery order date and deadline date should be same.')

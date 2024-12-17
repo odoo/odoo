@@ -6,9 +6,9 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <div name="reminder" position="after">
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
                 <field name="project_id" groups="project.group_project_user"/>
-            </div>
+            </xpath>
         </field>
     </record>
 </odoo>

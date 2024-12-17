@@ -13,6 +13,11 @@
                 <strong>Shipping address:</strong>
                 <div t-field="o.dest_address_id"
                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
+                <div>
+                    <strong>Requested Ship Date:</strong>
+                    <span t-if="o.date_planned" t-field="o.date_planned" t-options="{'date_only': 'true'}"/>
+                    <span t-else="" t-field="o.date_planned_placeholder"/>
+                </div>
             </t>
         </t>
         <div class="page">
@@ -37,7 +42,8 @@
                                     <span t-field="order_line.name"/>
                                 </td>
                                 <td class="text-center">
-                                    <span t-field="order_line.date_planned"/>
+                                    <span t-if="order_line.date_planned" t-field="order_line.date_planned" t-options="{'date_only': 'true'}"/>
+                                    <span t-else="" t-field="order_line.date_planned_pol_placeholder"/>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="order_line.product_qty"/>
