@@ -64,6 +64,7 @@ class Parallax extends Interaction {
         this.ratio = this.speed * (this.viewportHeight / 10);
 
         this.updateBgCSS({ top: -Math.abs(this.ratio) + "px", bottom: -Math.abs(this.ratio) + "px" })
+        this.onScroll();
     }
 
     onResize() {
