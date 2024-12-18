@@ -18,10 +18,11 @@
                 </span>
             </div>
             <t t-set="itemIndex" t-value="0"/>
-            <div class="o-EmojiPicker-content overflow-auto d-flex flex-grow-1 w-100 flex-wrap align-items-center user-select-none mt-1" t-att-class="getEmojis().length === 0 ? 'flex-column justify-content-center' : 'align-content-start'" t-ref="emoji-grid" t-on-scroll="highlightActiveCategory">
-                <t t-if="searchTerm and getEmojis().length === 0" class="d-flex flex-column">
+            <t t-set="emojisFromSearch" t-value="getEmojisFromSearch()"/>
+            <div class="o-EmojiPicker-content overflow-auto d-flex flex-grow-1 w-100 flex-wrap align-items-center user-select-none mt-1" t-att-class="emojisFromSearch.length === 0 ? 'flex-column justify-content-center' : 'align-content-start'" t-ref="emoji-grid" t-on-scroll="highlightActiveCategory">
+                <t t-if="searchTerm and emojisFromSearch.length === 0" class="d-flex flex-column">
                     <span class="o-EmojiPicker-empty">😢</span>
-                    <span class="fs-5 text-muted">No emoji match your search</span>
+                    <span class="fs-5 text-muted">No emoji matches your search</span>
                 </t>
                 <t t-if="recentEmojis.length > 0">
                     <t t-if="!searchTerm" t-call="web.EmojiPicker.section">
