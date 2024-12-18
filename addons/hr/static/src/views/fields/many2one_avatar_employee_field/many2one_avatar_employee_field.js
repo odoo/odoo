@@ -7,10 +7,16 @@ import {
 } from "@mail/views/web/fields/many2one_avatar_user_field/many2one_avatar_user_field";
 import { EmployeeFieldRelationMixin } from "@hr/views/fields/employee_field_relation_mixin";
 
-
 export class Many2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
     Many2OneAvatarUserField
 ) {
+    get displayAvatarCard() {
+        return (
+            (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
+            super.displayAvatarCard
+        );
+    }
+
     get many2OneProps() {
         return {
             ...super.many2OneProps,
@@ -38,6 +44,12 @@ registry.category("fields").add("many2one_avatar_employee", many2OneAvatarEmploy
 export class KanbanMany2OneAvatarEmployeeField extends EmployeeFieldRelationMixin(
     KanbanMany2OneAvatarUserField
 ) {
+    get displayAvatarCard() {
+        return (
+            (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
+            super.displayAvatarCard
+        );
+    }
     get many2OneProps() {
         return {
             ...super.many2OneProps,
@@ -57,4 +69,5 @@ export const kanbanMany2OneAvatarEmployeeField = {
 
 registry
     .category("fields")
-    .add("kanban.many2one_avatar_employee", kanbanMany2OneAvatarEmployeeField);
+    .add("kanban.many2one_avatar_employee", kanbanMany2OneAvatarEmployeeField)
+    .add("activity.many2one_avatar_employee", kanbanMany2OneAvatarEmployeeField);
