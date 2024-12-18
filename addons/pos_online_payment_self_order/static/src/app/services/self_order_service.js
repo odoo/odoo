@@ -47,7 +47,13 @@ patch(SelfOrder.prototype, {
     },
     filterPaymentMethods(pms) {
         const pm = super.filterPaymentMethods(...arguments);
-        const online_pms = pms.filter((rec) => rec.is_online_payment);
+        const online_pms = pms.filter(
+            (rec) =>
+                rec.is_online_payment &&
+                (this.config.self_order_online_payment_method_id?.id === rec.id ||
+                    (this.config.self_ordering_mode === "kiosk" &&
+                        this.config.payment_method_ids.includes(rec.id)))
+        );
         return [...new Set([...pm, ...online_pms])];
     },
 });
