@@ -203,7 +203,6 @@ class IrRule(models.Model):
         return res
 
     def _make_access_error(self, operation, records):
-        _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
         self = self.with_context(self.env.user.context_get())
 
         model = records._name
@@ -215,8 +214,10 @@ class IrRule(models.Model):
             'unlink': _("unlink"),
         }
         user_description = f"{self.env.user.name} (id={self.env.user.id})"
-        operation_error = _("Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n" \
-            "Sorry, %(user)s doesn't have '%(operation)s' access to:", user=user_description, operation=operations[operation])
+        operation_error = _(
+            "Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n"
+            "Sorry, %(user)s doesn't have '%(operation)s' access to:",
+            user=user_description, operation=operations[operation])
         failing_model = _("- %(description)s (%(model)s)", description=description, model=model)
 
         resolution_info = _("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
