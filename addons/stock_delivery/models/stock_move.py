@@ -56,7 +56,13 @@ class StockMoveLine(models.Model):
 
     @api.depends('quantity', 'product_uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom')
     def _compute_sale_price(self):
+        has_bom_line = "bom_line_id" in self.env["stock.move"]._fields
         for move_line in self:
+            if has_bom_line and move_line.move_id.bom_line_id:
+                # Compute the sale price for kits is implemented in `sale_mrp`,
+                # which is invoked when calling super below.
+                # TODO: remove in master
+                continue
             if move_line.move_id.sale_line_id:
                 unit_price = move_line.move_id.sale_line_id.price_reduce_taxinc
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.move_id.sale_line_id.product_uom)
