@@ -1,15 +1,16 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import logging
 import unittest
 import zipfile
-from odoo.fields import Command
-
-from odoo.tests.common import HttpCase, tagged
 from base64 import b64decode
 
+from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
+from odoo.exceptions import AccessError
+from odoo.fields import Command
+from odoo.tests.common import HttpCase, tagged
 from odoo.tools import mute_logger
+
 _logger = logging.getLogger(__name__)
 
 try:
@@ -17,6 +18,16 @@ try:
 except ImportError:
     _logger.warning("`vobject` Python module not found, vcard file generation disabled. Consider installing this module if you want to generate vcard files")
     vobject = None
+
+
+class TestPartnerPrivate(TransactionCaseWithUserPortal):
+    def test_access_onchange(self):
+        partner = self.partner_portal.with_user(self.user_portal)
+        self.assertEqual(partner.has_access('read'), True)
+        self.assertEqual(partner.has_access('write'), False)
+
+        with self.assertRaises(AccessError):
+            partner.onchange({}, ['name'], {'name': {}})
 
 
 @tagged('-at_install', 'post_install')
