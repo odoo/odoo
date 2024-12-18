@@ -25,3 +25,16 @@ class TestOnSitePaymentProvider(HttpCase, ClickAndCollectCommon):
         self.assertFalse(any(
             p.code == 'custom' and p.custom_mode == 'on_site' for p in compatible_providers
         ))
+
+    def test_choosing_on_site_payment_confirms_order(self):
+        order = self._create_so(carrier_id=self.carrier.id, state='draft')
+        tx = self._create_transaction(
+            flow='direct',
+            sale_order_ids=[order.id],
+            state='pending',
+            payment_method_id=self.provider.payment_method_ids.id,
+        )
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx._post_process()
+
+        self.assertEqual(order.state, 'sale')
