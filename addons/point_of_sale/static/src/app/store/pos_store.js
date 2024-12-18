@@ -13,7 +13,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
@@ -1767,7 +1767,16 @@ export class PosStore extends Reactive {
      */
     async _addProducts(ids, setAvailable = true) {
         if (setAvailable) {
-            await this.orm.write("product.product", ids, { available_in_pos: true });
+            try {
+                await this.orm.write("product.product", ids, { available_in_pos: true });
+            } catch (error) {
+                const ignoreError =
+                    error instanceof RPCError &&
+                    error.exceptionName === "odoo.exceptions.AccessError";
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
         }
         const product = await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
             odoo.pos_session_id,
