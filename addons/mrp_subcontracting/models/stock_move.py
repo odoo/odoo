@@ -216,9 +216,10 @@ class StockMove(models.Model):
             bom = move._get_subcontract_bom()
             if not bom:
                 continue
+            company_id = move.company_id
             move.write({
                 'is_subcontract': True,
-                'location_id': move.picking_id.partner_id.with_company(move.company_id).property_stock_subcontractor.id
+                'location_id': move.picking_id.partner_id.with_company(company_id).property_stock_subcontractor.id or company_id.subcontracting_location_id
             })
         res = super()._action_confirm(merge=merge, merge_into=merge_into)
         for move in res:
