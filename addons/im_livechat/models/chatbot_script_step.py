@@ -333,7 +333,7 @@ class ChatbotScriptStep(models.Model):
             return self._process_step_forward_operator(discuss_channel)
         return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
-    def _process_step_forward_operator(self, discuss_channel, posted_message=False):
+    def _process_step_forward_operator(self, discuss_channel, posted_message=False, operators=None):
         """ Special type of step that will add a human operator to the conversation when reached,
         which stops the script and allow the visitor to discuss with a real person.
 
@@ -349,7 +349,8 @@ class ChatbotScriptStep(models.Model):
             # sudo: res.lang - visitor can access their own lang
             human_operator = discuss_channel.livechat_channel_id.sudo()._get_operator(
                 lang=discuss_channel.livechat_visitor_id.sudo().lang_id.code if hasattr(discuss_channel, "livechat_visitor_id") else None,
-                country_id=discuss_channel.country_id.id
+                country_id=discuss_channel.country_id.id,
+                operators=operators,
             )
 
         # handle edge case where we found yourself as available operator -> don't do anything

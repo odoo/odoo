@@ -224,7 +224,7 @@ class Im_LivechatChannel(models.Model):
         candidates = operators.filtered(lambda o: o.partner_id.id in best_status_op_partner_ids)
         return random.choice(candidates)
 
-    def _get_operator(self, previous_operator_id=None, lang=None, country_id=None):
+    def _get_operator(self, previous_operator_id=None, lang=None, country_id=None, operators=None):
         """ Return an operator for a livechat. Try to return the previous
         operator if available. If not, one of the most available operators be
         returned.
@@ -244,7 +244,8 @@ class Im_LivechatChannel(models.Model):
         :return : user
         :rtype : res.users
         """
-        if not self.available_operator_ids:
+        final_operators = operators | self.available_operator_ids
+        if not final_operators:
             return False
         self.env.cr.execute("""
             WITH operator_rtc_session AS (
@@ -265,12 +266,12 @@ class Im_LivechatChannel(models.Model):
             AND c.livechat_operator_id in %s
             GROUP BY c.livechat_operator_id, rtc.nbr
             ORDER BY COUNT(DISTINCT c.id) < 2 OR rtc.nbr IS NULL DESC, COUNT(DISTINCT c.id) ASC, rtc.nbr IS NULL DESC""",
-            (tuple(self.available_operator_ids.partner_id.ids),)
+            (tuple(final_operators.partner_id.ids),)
         )
         operator_statuses = self.env.cr.dictfetchall()
         operator = None
         # Try to match the previous operator
-        if previous_operator_id in self.available_operator_ids.partner_id.ids:
+        if previous_operator_id in final_operators.partner_id.ids:
             previous_operator_status = next(
                 (status for status in operator_statuses if status['livechat_operator_id'] == previous_operator_id),
                 None
@@ -278,7 +279,7 @@ class Im_LivechatChannel(models.Model):
             if not previous_operator_status or previous_operator_status['count'] < 2 or not previous_operator_status['in_call']:
                 previous_operator_user = next(
                     available_user
-                    for available_user in self.available_operator_ids
+                    for available_user in final_operators
                     if available_user.partner_id.id == previous_operator_id
                 )
                 return previous_operator_user
@@ -289,17 +290,17 @@ class Im_LivechatChannel(models.Model):
             if same_lang_operator_ids:
                 operator = self._get_less_active_operator(operator_statuses, same_lang_operator_ids)
             else:
-                addition_lang_operator_ids = self.available_operator_ids.filtered(lambda operator: lang in operator.res_users_settings_id.livechat_lang_ids.mapped('code'))
+                addition_lang_operator_ids = final_operators.filtered(lambda operator: lang in operator.res_users_settings_id.livechat_lang_ids.mapped('code'))
                 if addition_lang_operator_ids:
                     operator = self._get_less_active_operator(operator_statuses, addition_lang_operator_ids)
         # Try to match an operator with the same country as the visitor
         if country_id and not operator:
-            same_country_operator_ids = self.available_operator_ids.filtered(lambda operator: operator.partner_id.country_id.id == country_id)
+            same_country_operator_ids = final_operators.filtered(lambda operator: operator.partner_id.country_id.id == country_id)
             if same_country_operator_ids:
                 operator = self._get_less_active_operator(operator_statuses, same_country_operator_ids)
         # Try to get a random operator, regardless of the lang or the country
         if not operator:
-            operator = self._get_less_active_operator(operator_statuses, self.available_operator_ids)
+            operator = self._get_less_active_operator(operator_statuses, final_operators)
         return operator
 
     def _get_channel_infos(self):
