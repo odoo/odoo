@@ -16,7 +16,7 @@ import { ProductConfiguratorDialog } from "./product_configurator_dialog/product
 import { uuid } from "@web/views/utils";
 import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_configurator_dialog";
 import { ProductCombo } from "./models/product_combo";
-import { getLinkedSaleOrderLines, serializeComboItem } from "./sale_utils";
+import { getLinkedSaleOrderLines, serializeComboItem, getSelectedCustomPtav } from "./sale_utils";
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
@@ -24,9 +24,7 @@ async function applyProduct(record, product) {
         x2ManyCommands.set([]),  // Command.clear isn't supported in static_list/_applyCommands
     ];
     for (const ptal of product.attribute_lines) {
-        const selectedCustomPTAV = ptal.attribute_values.find(
-            ptav => ptav.is_custom && ptal.selected_attribute_value_ids.includes(ptav.id)
-        );
+        const selectedCustomPTAV = getSelectedCustomPtav(ptal);
         if (selectedCustomPTAV) {
             customAttributesCommands.push(
                 x2ManyCommands.create(undefined, {
