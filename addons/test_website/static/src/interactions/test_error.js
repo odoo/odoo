@@ -1,4 +1,4 @@
-import { Interaction } from "@web/core/interaction";
+import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { rpc } from "@web/core/network/rpc";
