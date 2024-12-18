@@ -666,7 +666,11 @@ class IrActionsReport(models.Model):
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
         streams.append(result_stream)
-        writer.write(result_stream)
+        try:
+            writer.write(result_stream)
+        except (PdfReadError, TypeError, NotImplementedError, ValueError):
+            raise UserError(_("Odoo is unable to merge the generated PDFs."))
+
         return result_stream
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
