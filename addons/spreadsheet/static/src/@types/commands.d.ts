@@ -133,11 +133,6 @@ declare module "@spreadsheet" {
         filters: { filterId: string; value: any }[];
     }
 
-    export interface ClearGlobalFilterValueCommand {
-        type: "CLEAR_GLOBAL_FILTER_VALUE";
-        id: string;
-    }
-
     type OdooCoreCommand =
         | ExtendedAddPivotCommand
         | ExtendedUpdatePivotCommand
@@ -155,8 +150,7 @@ declare module "@spreadsheet" {
     type OdooLocalCommand =
         | RefreshAllDataSourcesCommand
         | SetGlobalFilterValueCommand
-        | SetManyGlobalFilterValueCommand
-        | ClearGlobalFilterValueCommand;
+        | SetManyGlobalFilterValueCommand;
 
     type OdooCommand = OdooCoreCommand | OdooLocalCommand;
 
