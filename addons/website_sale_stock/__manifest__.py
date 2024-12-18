@@ -21,6 +21,7 @@ Then it can be made specific at the product level.
         'views/website_sale_stock_templates.xml',
         'views/stock_picking_views.xml',
         'views/website_pages_views.xml',
+        'views/website_sale_templates.xml',
         'data/template_email.xml',
         'data/ir_cron_data.xml',
     ],

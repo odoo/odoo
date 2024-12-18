@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="gmc_xml" inherit_id="website_sale.gmc_xml" xmlns:g="http://base.google.com/ns/1.0">
+        <xpath expr="//t[@id='more_values']" position="after">
+            <g:availability_date t-if="'availability_date' in item">
+                <t t-out="item['availability_date']"/>
+            </g:availability_date>
+        </xpath>
+    </template>
+</odoo>

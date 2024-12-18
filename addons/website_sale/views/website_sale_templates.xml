@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="gmc_xml"><t t-translation="off">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</t>
+    <rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+        <channel>
+            <title><t t-out="title"/></title>
+            <t t-translation="off">&lt;link&gt;<t t-out="link"/>&lt;/link&gt;</t>
+            <description><t t-out="description"/></description>
+            <t t-foreach="items.values()" t-as="item" >
+                <item>
+                    <!-- Required -->
+                    <g:id><t t-out="item['id']"/></g:id>
+                    <g:title><t t-out="item['title']"/></g:title>
+                    <g:description><t t-out="item['description']"/></g:description>
+                    <g:link><t t-out="item['link']"/></g:link>
+                    <g:image_link><t t-out="item['image_link']"/></g:image_link>
+                    <g:availability><t t-out="item['availability']"/></g:availability>
+                    <g:price><t t-out="item['price']"/></g:price>
+                    <g:identifier_exists>
+                        <t t-out="item['identifier_exists']"/>
+                    </g:identifier_exists>
+                    <g:gtin t-if="'gtin' in item"><t t-out="item['gtin']"/></g:gtin>
+                    <t t-foreach="item['shipping']" t-as="shipping">
+                        <g:shipping>
+                            <g:country><t t-out="shipping['country']"/></g:country>
+                            <g:service><t t-out="shipping['service']"/></g:service>
+                            <g:price><t t-out="shipping['price']"/></g:price>
+                        </g:shipping>
+                    </t>
+
+                    <!-- Optional -->
+                    <g:sale_price t-if="'sale_price' in item">
+                        <t t-out="item['sale_price']"/>
+                    </g:sale_price>
+                    <g:sale_price_effective_date t-if="'sale_price_effective_date' in item">
+                        <t t-out="item['sale_price_effective_date']"/>
+                    </g:sale_price_effective_date>
+                    <g:unit_pricing_measure t-if="'unit_pricing_measure' in item">
+                        <t t-out="item['unit_pricing_measure']"/>
+                    </g:unit_pricing_measure>
+                    <t t-foreach="item['custom_label']" t-as="tag_label">
+                        <t t-translation="off">
+                            &lt;g:<t t-out="tag_label[0]"/>&gt;
+                                <t t-out="tag_label[1]"/>
+                            &lt;/g:<t t-out="tag_label[0]"/>&gt;
+                        </t>
+                    </t>
+                    <t t-foreach="item['additionnal_image_link']" t-as="link">
+                        <g:additionnal_image_link><t t-out="link"/></g:additionnal_image_link>
+                    </t>
+                    <t t-foreach="item['product_type']" t-as="type">
+                        <g:product_type><t t-out="type"/></g:product_type>
+                    </t>
+                    <g:item_group_id t-if="'item_group_id' in item">
+                        <t t-out="item['item_group_id']"/>
+                    </g:item_group_id>
+                    <g:is_bundle><t t-out="item['is_bundle']"/></g:is_bundle>
+                    <t t-foreach="item['product_detail']" t-as="name_value">
+                        <g:product_detail>
+                            <g:attribute_name><t t-out="name_value[0]"/></g:attribute_name>
+                            <g:attribute_value><t t-out="name_value[1]"/></g:attribute_value>
+                        </g:product_detail>
+                    </t>
+                    <t t-foreach="item['free_shipping_threshold']" t-as="shipping">
+                        <g:free_shipping_threshold>
+                            <g:country><t t-out="shipping['country']"/></g:country>
+                            <g:price_threshold><t t-out="shipping['price_threshold']"/></g:price_threshold>
+                        </g:free_shipping_threshold>
+                    </t>
+                    <t id="more_values"/>
+                </item>
+            </t>
+        </channel>
+    </rss>
+</template>
+</odoo>

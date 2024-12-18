@@ -348,6 +348,8 @@ class Website(models.Model):
         :rtype: product.pricelist
         """
         self.ensure_one()
+        if request and 'forced_pricelist' in request.context:
+            return request.context['forced_pricelist']
 
         ProductPricelistSudo = self.env['product.pricelist'].sudo()
         pricelist_sudo = ProductPricelistSudo

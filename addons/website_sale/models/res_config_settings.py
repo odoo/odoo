@@ -95,6 +95,11 @@ class ResConfigSettings(models.TransientModel):
                                                  compute='_compute_checkout_process_steps', readonly=False, store=True)
     enabled_buy_now_button = fields.Boolean(string="Buy Now",
                                             compute='_compute_checkout_process_steps', readonly=False, store=True)
+    enabled_gmc_src = fields.Boolean(
+        string="Google Merchant Center Data Source",
+        related='website_id.enabled_gmc_src',
+        readonly=False,
+    )
 
     #=== COMPUTE METHODS ===#
 
