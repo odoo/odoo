@@ -122,20 +122,17 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 break;
             }
             case "SET_GLOBAL_FILTER_VALUE":
-                this.recordsDisplayName[cmd.id] = cmd.displayNames;
                 if (!cmd.value) {
+                    delete this.recordsDisplayName[cmd.id];
                     this._clearGlobalFilterValue(cmd.id);
                 } else {
+                    this.recordsDisplayName[cmd.id] = cmd.displayNames;
                     this._setGlobalFilterValue(cmd.id, cmd.value);
                 }
                 break;
             case "REMOVE_GLOBAL_FILTER":
                 delete this.recordsDisplayName[cmd.id];
                 delete this.values[cmd.id];
-                break;
-            case "CLEAR_GLOBAL_FILTER_VALUE":
-                this.recordsDisplayName[cmd.id] = [];
-                this._clearGlobalFilterValue(cmd.id);
                 break;
         }
     }
