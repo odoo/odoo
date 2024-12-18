@@ -60,7 +60,7 @@ export class ComboConfiguratorDialog extends Component {
         // Use up-to-date selected PTAVs and custom values to populate the product configurator.
         comboItem = this.getSelectedOrProvidedComboItem(comboId, comboItem);
         let product = comboItem.product;
-        if (product.hasNoVariantPtals) {
+        if (comboItem.is_configurable) {
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: product.product_tmpl_id,
                 ptavIds: product.selectedPtavIds,
@@ -165,7 +165,7 @@ export class ComboConfiguratorDialog extends Component {
      */
     _initSelectedComboItems() {
         for (const combo of this.props.combos) {
-            const comboItem = combo.selectedComboItem ?? combo.preselectedComboItem;
+            const comboItem = combo.selectedComboItem;
             if (comboItem) {
                 this.state.selectedComboItems.set(combo.id, comboItem.deepCopy());
             }

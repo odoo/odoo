@@ -5,14 +5,14 @@ export class ProductComboItem {
      * @param {number} id
      * @param {number} extra_price
      * @param {boolean} is_selected
-     * @param {boolean} is_preselected
+     * @param {boolean} is_configurable
      * @param {ProductProduct|object} product
      */
-    constructor({id, extra_price, is_selected, is_preselected, product}) {
+    constructor({id, extra_price, is_selected, is_configurable, product}) {
         this.id = id;
         this.extra_price = extra_price;
         this.is_selected = is_selected;
-        this.is_preselected = is_preselected;
+        this.is_configurable = is_configurable;
         this.product = new ProductProduct(product);
     }
 

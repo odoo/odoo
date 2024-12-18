@@ -5,7 +5,7 @@ import { ProductCombo } from '@sale/js/models/product_combo';
 import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
-import { serializeComboItem } from '@sale/js/sale_utils';
+import { serializeComboItem, getSelectedCustomPtav } from '@sale/js/sale_utils';
 import { browser } from '@web/core/browser/browser';
 import { serializeDateTime } from '@web/core/l10n/dates';
 import { _t } from '@web/core/l10n/translation';
@@ -141,20 +141,20 @@ export class CartService {
                     ...rest
                 }
             );
-            const preselectedComboItems = combos
+            const selectedComboItems = combos
                  .map(combo => new ProductCombo(combo))
-                 .map(combo => combo.preselectedComboItem)
+                 .map(combo => combo.selectedComboItem)
                  .filter(Boolean);
-            // If each combo choice has only one combo item, and that combo item can't be configured
-            // (i.e. it has no `no_variant` attributes), then the combo product is already fully
-            // configured and the user doesn't need to do anything else.
-            if (preselectedComboItems.length === combos.length) {
+            // If the combo product is already fully configured (i.e. a combo item has been selected
+            // for each combo choice), then it can be added to the cart without opening the combo
+            // configurator.
+            if (selectedComboItems.length === combos.length) {
                 return this._makeRequest({
                     productTemplateId: productTemplateId,
                     productId: productId,
                     quantity: remainingData.quantity,
                     is_combo: true,
-                    linked_products: preselectedComboItems.map(
+                    linked_products: selectedComboItems.map(
                         (comboItem) => this._serializeComboItem(
                             comboItem, productTemplateId, remainingData.quantity
                         )
@@ -365,10 +365,7 @@ export class CartService {
         // Custom attributes.
         serializedProduct.product_custom_attribute_values = [];
         for (const ptal of product.attribute_lines) {
-            const selectedPtavIds = new Set(ptal.selected_attribute_value_ids);
-            const selectedCustomPtav = ptal.attribute_values.find(
-                ptav => ptav.is_custom && selectedPtavIds.has(ptav.id)
-            );
+            const selectedCustomPtav = getSelectedCustomPtav(ptal);
             if (selectedCustomPtav) {
                 serializedProduct.product_custom_attribute_values.push({
                     custom_product_template_attribute_value_id: selectedCustomPtav.id,
