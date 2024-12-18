@@ -199,6 +199,22 @@ export function addActionOption(actions = {}) {
     });
 }
 
+export function addDropZoneSelector(selector) {
+    const pluginId = uniqueId("test-dropzone-selector");
+
+    class P extends Plugin {
+        static id = pluginId;
+        resources = {
+            dropzone_selector: [selector],
+        };
+    }
+
+    registry.category("website-plugins").add(pluginId, P);
+    after(() => {
+        registry.category("website-plugins").remove(P);
+    });
+}
+
 export async function modifyText(editor) {
     setContent(editor.editable, getEditable('<h1 class="title">H[]ello</h1>'));
     editor.shared.history.addStep();

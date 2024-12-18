@@ -1,5 +1,6 @@
 import { Editor } from "@html_editor/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     Component,
     EventBus,
@@ -11,31 +12,31 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { BuilderOverlayPlugin } from "../plugins/builder_overlay/builder_overlay_plugin";
-import { OverlayButtonsPlugin } from "../plugins/overlay_buttons/overlay_buttons_plugin";
-import { MovePlugin } from "../plugins/move/move_plugin";
-import { GridLayoutPlugin } from "../plugins/grid_layout/grid_layout_plugin";
-import { DropZonePlugin } from "../plugins/drop_zone_plugin";
+import { useService } from "@web/core/utils/hooks";
+import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { useSetupAction } from "@web/search/action_hook";
+import { BuilderActionsPlugin } from "../plugins/builder_actions_plugin";
 import { BuilderOptionsPlugin } from "../plugins/builder_options_plugin";
+import { BuilderOverlayPlugin } from "../plugins/builder_overlay/builder_overlay_plugin";
+import { DropZonePlugin } from "../plugins/drop_zone_plugin";
+import { DropZoneSelectorPlugin } from "../plugins/dropzone_selector_plugin";
+import { GridLayoutPlugin } from "../plugins/grid_layout/grid_layout_plugin";
 import { HandleDirtyElementPlugin } from "../plugins/handle_dirty_element_plugin";
 import { MediaWebsitePlugin } from "../plugins/media_website_plugin";
-import { SetupEditorPlugin } from "../plugins/setup_editor_plugin";
-import { SnippetModel } from "../snippet_model";
-import { BlockTab, blockTab } from "./tabs/block_tab/block_tab";
-import { CustomizeTab, customizeTab } from "./tabs/customize_tab";
-import { InvisibleElementsPanel } from "./invisible_elements_panel";
-import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
-import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { useSetupAction } from "@web/search/action_hook";
-import { closestElement } from "@html_editor/utils/dom_traversal";
-import { BuilderActionsPlugin } from "../plugins/builder_actions_plugin";
+import { MovePlugin } from "../plugins/move/move_plugin";
 import { OperationPlugin } from "../plugins/operation_plugin";
+import { OverlayButtonsPlugin } from "../plugins/overlay_buttons/overlay_buttons_plugin";
+import { SetupEditorPlugin } from "../plugins/setup_editor_plugin";
 import { SnippetLifecyclePlugin } from "../plugins/snippet_lifecycle_plugin";
 import { VisibilityPlugin } from "../plugins/visibility_plugin";
+import { SnippetModel } from "../snippet_model";
+import { InvisibleElementsPanel } from "./invisible_elements_panel";
+import { BlockTab, blockTab } from "./tabs/block_tab/block_tab";
+import { CustomizeTab, customizeTab } from "./tabs/customize_tab";
 
 const BUILDER_PLUGIN = [
     BuilderOptionsPlugin,
@@ -51,6 +52,7 @@ const BUILDER_PLUGIN = [
     HandleDirtyElementPlugin,
     SnippetLifecyclePlugin,
     VisibilityPlugin,
+    DropZoneSelectorPlugin,
 ];
 
 export class BuilderSidebar extends Component {

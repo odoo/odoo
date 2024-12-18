@@ -56,9 +56,9 @@ export class BlockTab extends Component {
             },
             onDragStart: ({ element }) => {
                 copyOnDrag.insert();
-                const { category } = element.dataset;
-                const selector = category === "snippet_groups" ? "section" : "p, img";
-                this.dropzonePlugin.displayDropZone(selector);
+                const { category, id } = element.dataset;
+                const snippet = this.props.snippetModel.getSnippet(category, id);
+                this.dropzonePlugin.displayDropZone(snippet);
             },
             onDrag: ({ element }) => {
                 this.dropzonePlugin.dragElement(element);
@@ -90,7 +90,7 @@ export class BlockTab extends Component {
             return;
         }
         if (!position) {
-            this.dropzonePlugin.displayDropZone("section");
+            this.dropzonePlugin.displayDropZone(snippet);
         }
         const addElement = this.dropzonePlugin.getAddElement(position);
         this.dialog.add(

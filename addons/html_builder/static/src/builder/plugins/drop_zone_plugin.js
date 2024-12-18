@@ -2,6 +2,20 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { closest, touching } from "@web/core/utils/ui";
 
+function computeSelector({ editable, selector, exclude }) {
+    const filterFunction = (el) => {
+        // TODO add all filter like website
+        if (exclude && el.matches(exclude)) {
+            return false;
+        }
+        return true;
+    };
+    return {
+        is: (el) => el.matches(selector) && filterFunction(el),
+        all: () => [...editable.querySelectorAll(selector)].filter(filterFunction),
+    };
+}
+
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
     static dependencies = ["history"];
@@ -13,6 +27,18 @@ export class DropZonePlugin extends Plugin {
 
     setup() {
         this.dropZoneElements = [];
+
+        this.dropZoneSelectors = this.getResource("dropzone_selector").map(
+            ({ selector, exclude, dropIn, dropNear }) => ({
+                selector: computeSelector({ editable: this.editable, selector, exclude }),
+                dropIn: computeSelector({ editable: this.editable, selector: dropIn, exclude }),
+                dropNear: computeSelector({
+                    editable: this.editable,
+                    selector: dropNear,
+                    exclude,
+                }),
+            })
+        );
     }
 
     /**
@@ -29,9 +55,40 @@ export class DropZonePlugin extends Plugin {
         return true;
     }
 
-    displayDropZone(selector) {
+    getSelectors(snippet) {
+        const selectorSiblings = [];
+        const selectorChildren = [];
+
+        for (const dropZoneSelector of this.dropZoneSelectors) {
+            const { selector, dropNear, dropIn } = dropZoneSelector;
+            if (!selector.is(snippet.content)) {
+                continue;
+            }
+
+            if (dropNear) {
+                selectorSiblings.push(...dropNear.all());
+            }
+            if (dropIn) {
+                selectorChildren.push(...dropIn.all());
+            }
+        }
+
+        return {
+            selectorSiblings,
+            selectorChildren,
+        };
+    }
+
+    displayDropZone(snippet) {
         this.clearDropZone();
-        const targets = this.editable.querySelectorAll(selector);
+
+        // TODO need to imp check old website
+        const { selectorChildren, selectorSiblings } = this.getSelectors(snippet);
+        const targets = [];
+        for (const el of selectorChildren) {
+            targets.push(...el.children);
+        }
+        targets.push(...selectorSiblings);
 
         const createDropZone = () => {
             const dropZone = this.document.createElement("div");

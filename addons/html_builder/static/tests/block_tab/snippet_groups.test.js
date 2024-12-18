@@ -9,7 +9,12 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, getSnippetStructure, setupWebsiteBuilder } from "../helpers";
+import {
+    addDropZoneSelector,
+    defineWebsiteModels,
+    getSnippetStructure,
+    setupWebsiteBuilder,
+} from "../helpers";
 
 defineWebsiteModels();
 
@@ -30,6 +35,10 @@ beforeEach(() => {
             '<div name="C" data-o-image-preview="" data-oe-thumbnail="c.svg" data-oe-snippet-id="123" data-oe-keywords="" data-o-snippet-group="c"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
         ],
     };
+    addDropZoneSelector({
+        selector: "*",
+        dropNear: "section",
+    });
 });
 
 test("display group snippet", async () => {
