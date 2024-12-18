@@ -12,7 +12,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
-from odoo.tools import clean_context, float_round, groupby, lazy, single_email_re, str2bool, SQL
+from odoo.tools import SQL, clean_context, float_round, groupby, lazy, single_email_re, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
 
@@ -860,17 +860,31 @@ class WebsiteSale(payment_portal.PaymentPortal):
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs
         )
+
         # If the line is a combo product line, and it already has combo items, we need to update
         # the combo item quantities as well.
         line = request.env['sale.order.line'].browse(values['line_id'])
         if line.product_type == 'combo' and line.linked_line_ids:
-            for linked_line_id in line.linked_line_ids:
-                if values['quantity'] != linked_line_id.product_uom_qty:
-                    order._cart_update(
-                        product_id=linked_line_id.product_id.id,
-                        line_id=linked_line_id.id,
-                        set_qty=values['quantity'],
+            quantity = values['quantity']
+            min_quantity = quantity
+            for linked_line in line.linked_line_ids:
+                if quantity != linked_line.product_uom_qty:
+                    # The requested quantity might not be available for the combo item. If so, the
+                    # line's quantity will be lowered to the maximum available quantity in
+                    # `_cart_update`.
+                    item_values = order._cart_update(
+                        product_id=linked_line.product_id.id,
+                        line_id=linked_line.id,
+                        set_qty=quantity,
                     )
+                    min_quantity = min(min_quantity, item_values['quantity'])
+            # A combo product and its items should have the same quantity (by definition). So, if
+            # the requested quantity isn't available for one or more combo items, we should lower
+            # the quantity of the combo product and its items to the maximum available quantity of
+            # the combo item with the least available quantity.
+            if min_quantity < quantity:
+                line.product_uom_qty = min_quantity
+                line.linked_line_ids.product_uom_qty = min_quantity
 
         values['notification_info'] = self._get_cart_notification_information(order, [values['line_id']])
         values['notification_info']['warning'] = values.pop('warning', '')
@@ -1561,7 +1575,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :param dict address_values: The address value.
         :return: None
         """
-        pass
 
     @route(
         _express_checkout_route, type='json', methods=['POST'], auth="public", website=True,

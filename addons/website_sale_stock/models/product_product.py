@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import _, fields, models
 from odoo.http import request
 
 
@@ -23,6 +22,14 @@ class ProductProduct(models.Model):
             if cart:
                 return sum(cart._get_common_product_lines(product=self).mapped('product_uom_qty'))
         return 0
+
+    def _get_max_quantity(self, website, **kwargs):
+        self.ensure_one()
+        if self.is_storable and not self.allow_out_of_stock_order:
+            available_qty = website._get_product_available_qty(self.sudo(), **kwargs)
+            cart_quantity = self._get_cart_qty(website)
+            return available_qty - cart_quantity
+        return None
 
     def _is_sold_out(self):
         self.ensure_one()
