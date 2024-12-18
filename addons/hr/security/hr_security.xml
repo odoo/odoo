@@ -36,6 +36,19 @@
         ]</field>
     </record>
 
+    <record id="resource_resource_multi_company" model="ir.rule">
+        <field name="name">resource.resource multi-company</field>
+        <field name="model_id" ref="model_resource_resource"/>
+        <field name="domain_force">['|', '|', '|',
+            ('company_id', 'in', company_ids + [False]),
+            '&amp;',
+                ('employee_id', '!=', 'False'),
+                ('employee_id.parent_id.user_id', '=', user.id),
+            ('id', '=', user.employee_id.parent_id.resource_id.id),
+            ('user_id', '=', user.id),
+        ]</field>
+    </record>
+
     <record id="hr_dept_comp_rule" model="ir.rule">
         <field name="name">Department multi company rule</field>
         <field name="model_id" ref="model_hr_department"/>

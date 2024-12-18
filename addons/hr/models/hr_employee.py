@@ -683,27 +683,6 @@ class HrEmployee(models.Model):
             employee_timezones |= {emp_id: cal.tz for emp_id, cal in calendars.items()}
         return employee_timezones
 
-    def _employee_attendance_intervals(self, start, stop, lunch=False):
-        self.ensure_one()
-        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
-        if not lunch:
-            return self._get_expected_attendances(start, stop)
-        else:
-            return calendar._attendance_intervals_batch(start, stop, self.resource_id, lunch=True)[self.resource_id.id]
-
-    def _get_expected_attendances(self, date_from, date_to):
-        self.ensure_one()
-        employee_timezone = timezone(self.tz) if self.tz else None
-        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
-        calendar_intervals = calendar._work_intervals_batch(
-                                date_from,
-                                date_to,
-                                tz=employee_timezone,
-                                resources=self.resource_id,
-                                compute_leaves=True,
-                                domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
-        return calendar_intervals
-
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         employee_timezone = timezone(self.tz) if self.tz else None

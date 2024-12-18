@@ -41,8 +41,6 @@ class ResourceCalendarLeaves(models.Model):
                 }
         """
         resource_calendars = resource_calendars or self._get_resource_calendars()
-        # to easily find the calendar with its id.
-        calendars_dict = {calendar.id: calendar for calendar in resource_calendars}
 
         leaves_read_group = self.env['resource.calendar.leaves']._read_group(
             [('id', 'in', self.ids), ('calendar_id', '!=', False)],
@@ -59,7 +57,7 @@ class ResourceCalendarLeaves(models.Model):
                 'resources': resources,
                 'leaves': leaves,
             }
-            cal_attendance_intervals_dict[calendar.id] = calendar_data
+            cal_attendance_intervals_dict[calendar] = calendar_data
 
         comp_leaves_read_group = self.env['resource.calendar.leaves']._read_group(
             [('id', 'in', self.ids), ('calendar_id', '=', False)],
@@ -67,10 +65,10 @@ class ResourceCalendarLeaves(models.Model):
             ['id:recordset', 'resource_id:recordset', 'date_from:min', 'date_to:max'],
         )
         for company, leaves, resources, date_from_min, date_to_max in comp_leaves_read_group:
-            for calendar_id in resource_calendars.ids:
-                if calendars_dict[calendar_id].company_id != company:
+            for calendar in resource_calendars:
+                if calendar.company_id != company:
                     continue  # only consider global leaves of the same company as the calendar
-                calendar_data = cal_attendance_intervals_dict.get(calendar_id)
+                calendar_data = cal_attendance_intervals_dict.get(calendar)
                 if calendar_data is None:
                     calendar_data = {
                         'date_from': utc.localize(date_from_min),
@@ -78,7 +76,7 @@ class ResourceCalendarLeaves(models.Model):
                         'resources': resources,
                         'leaves': leaves,
                     }
-                    cal_attendance_intervals_dict[calendar_id] = calendar_data
+                    cal_attendance_intervals_dict[calendar] = calendar_data
                 else:
                     calendar_data.update(
                         date_from=min(utc.localize(date_from_min), calendar_data['date_from']),
@@ -92,23 +90,27 @@ class ResourceCalendarLeaves(models.Model):
         #         and values: a dict of keys: date
         #              and values: number of days
         results = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
-        for calendar_id, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
-            calendar = calendars_dict[calendar_id]
-            work_hours_intervals = calendar._attendance_intervals_batch(
+        for calendar, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
+            resources = cal_attendance_intervals_params_entry['resources']
+            res_work_hours_intervals = resources._get_attendance_intervals_batch(
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
-                cal_attendance_intervals_params_entry['resources'],
+                tz=timezone(calendar.tz)
+            )
+            cal_work_hours_intervals = calendar._get_attendance_intervals(
+                cal_attendance_intervals_params_entry['date_from'],
+                cal_attendance_intervals_params_entry['date_to'],
                 tz=timezone(calendar.tz)
             )
             for leave in cal_attendance_intervals_params_entry['leaves']:
-                work_hours_data = work_hours_intervals[leave.resource_id.id]
+                work_hours_data = res_work_hours_intervals.get(leave.resource_id, cal_work_hours_intervals)
 
                 for date_from, date_to, _dummy in work_hours_data:
                     if date_to > utc.localize(leave.date_from) and date_from < utc.localize(leave.date_to):
                         tmp_start = max(date_from, utc.localize(leave.date_from))
                         tmp_end = min(date_to, utc.localize(leave.date_to))
-                        results[calendar_id][leave.id][tmp_start.date()] += (tmp_end - tmp_start).total_seconds() / 3600
-                results[calendar_id][leave.id] = sorted(results[calendar_id][leave.id].items())
+                        results[calendar.id][leave.id][tmp_start.date()] += (tmp_end - tmp_start).total_seconds() / 3600
+                results[calendar.id][leave.id] = sorted(results[calendar.id][leave.id].items())
         return results
 
     def _timesheet_create_lines(self):

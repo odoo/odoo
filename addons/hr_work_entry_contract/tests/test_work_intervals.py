@@ -1,4 +1,4 @@
-from odoo.addons.hr_work_entry_contract.models.hr_work_intervals import WorkIntervals
+from odoo.addons.resource.models.utils import WorkIntervals
 from odoo.tests.common import TransactionCase
 
 

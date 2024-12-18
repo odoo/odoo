@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
 from pytz import utc
 
 from odoo import api, fields, models
-from .utils import timezone_datetime
+from .utils import get_attendance_intervals_days_data, timezone_datetime, WorkIntervals
 
 
 class ResourceMixin(models.AbstractModel):
@@ -92,41 +91,19 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the
             quantity of working time expressed as days and as hours.
         """
-        resources = self.mapped('resource_id')
-        mapped_employees = {e.resource_id.id: e.id for e in self}
-        result = {}
+        result = defaultdict(lambda: {'days': 0, 'hours': 0})
 
         # naive datetimes are made explicit in UTC
         from_datetime = timezone_datetime(from_datetime)
         to_datetime = timezone_datetime(to_datetime)
 
-        if calendar:
-            mapped_resources = {calendar: self.resource_id}
-        else:
-            calendar_by_resource = self._get_calendars(from_datetime)
-            mapped_resources = defaultdict(lambda: self.env['resource.resource'])
-            for resource in self:
-                mapped_resources[calendar_by_resource[resource.id]] |= resource.resource_id
+        intervals = self._get_work_intervals_batch(from_datetime, to_datetime, domain, compute_leaves=compute_leaves)
 
-        for calendar, calendar_resources in mapped_resources.items():
-            if not calendar:
-                for calendar_resource in calendar_resources:
-                    result[calendar_resource.id] = {'days': 0, 'hours': 0}
-                continue
+        for resource in self:
+            result[resource.id] = get_attendance_intervals_days_data(intervals[resource])
+        return result
 
-            # actual hours per day
-            if compute_leaves:
-                intervals = calendar._work_intervals_batch(from_datetime, to_datetime, calendar_resources, domain)
-            else:
-                intervals = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
-
-            for calendar_resource in calendar_resources:
-                result[calendar_resource.id] = calendar._get_attendance_intervals_days_data(intervals[calendar_resource.id])
-
-        # convert "resource: result" into "employee: result"
-        return {mapped_employees[r.id]: result[r.id] for r in resources}
-
-    def _get_leave_days_data_batch(self, from_datetime, to_datetime, calendar=None, domain=None):
+    def _get_leave_days_data_batch(self, from_datetime, to_datetime, domain=None):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -137,30 +114,18 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the number of leaves
             expressed as days and as hours.
         """
-        resources = self.mapped('resource_id')
-        mapped_employees = {e.resource_id.id: e.id for e in self}
-        result = {}
 
         # naive datetimes are made explicit in UTC
         from_datetime = timezone_datetime(from_datetime)
         to_datetime = timezone_datetime(to_datetime)
 
-        mapped_resources = defaultdict(lambda: self.env['resource.resource'])
-        for record in self:
-            mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
+        attendances = self._get_attendance_intervals_batch(from_datetime, to_datetime)
+        leaves = self._get_leave_intervals_batch(from_datetime, to_datetime, domain)
 
-        for calendar, calendar_resources in mapped_resources.items():
-            # compute actual hours per day
-            attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
-            leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, calendar_resources, domain)
-
-            for calendar_resource in calendar_resources:
-                result[calendar_resource.id] = calendar._get_attendance_intervals_days_data(
-                    attendances[calendar_resource.id] & leaves[calendar_resource.id]
-                )
-
-        # convert "resource: result" into "employee: result"
-        return {mapped_employees[r.id]: result[r.id] for r in resources}
+        return {
+            resource: get_attendance_intervals_days_data(attendances[resource] & leaves[resource])
+            for resource in self
+        }
 
     def _adjust_to_calendar(self, start, end):
         resource_results = self.resource_id._adjust_to_calendar(start, end)
@@ -181,11 +146,6 @@ class ResourceMixin(models.AbstractModel):
             Returns a list of tuples (day, hours) for each day
             containing at least an attendance.
         """
-        result = {}
-        records_by_calendar = defaultdict(lambda: self.env[self._name])
-        for record in self:
-            records_by_calendar[calendar or record.resource_calendar_id or record.company_id.resource_calendar_id] += record
-
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:
             from_datetime = from_datetime.replace(tzinfo=utc)
@@ -193,41 +153,70 @@ class ResourceMixin(models.AbstractModel):
             to_datetime = to_datetime.replace(tzinfo=utc)
         compute_leaves = self.env.context.get('compute_leaves', True)
 
-        for calendar, records in records_by_calendar.items():
-            resources = self.resource_id
-            all_intervals = calendar._work_intervals_batch(from_datetime, to_datetime, resources, domain, compute_leaves=compute_leaves)
-            for record in records:
-                intervals = all_intervals[record.resource_id.id]
-                record_result = defaultdict(float)
-                for start, stop, _meta in intervals:
-                    record_result[start.date()] += (stop - start).total_seconds() / 3600
-                result[record.id] = sorted(record_result.items())
+        all_intervals = self._get_work_intervals_batch(from_datetime, to_datetime, domain, compute_leaves=compute_leaves)
+
+        result = {}
+        for resource in self:
+            record_result = defaultdict(float)
+            for start, stop, meta in all_intervals[resource]:
+                record_result[start.date()] += (stop - start).total_seconds() / 3600
+            result[resource.id] = sorted(record_result.items())
+
         return result
 
-    def list_leaves(self, from_datetime, to_datetime, calendar=None, domain=None):
+    def _get_calendar_periods(self, start, stop):
         """
-            By default the resource calendar is used, but it can be
-            changed using the `calendar` argument.
-
-            `domain` is used in order to recognise the leaves to take,
-            None means default value ('time_type', '=', 'leave')
-
-            Returns a list of tuples (day, hours, resource.calendar.leaves)
-            for each leave in the calendar.
+        :param datetime start: the start of the period
+        :param datetime stop: the stop of the period
+        This method can be overridden in other modules where it's possible to have different resource calendars for an
+        employee depending on the date.
         """
-        resource = self.resource_id
-        calendar = calendar or self.resource_calendar_id
+        calendar_periods_by_employee = {}
+        for employee in self:
+            calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
+            calendar_periods_by_employee[employee] = [(start, stop, calendar)]
+        return calendar_periods_by_employee
 
-        # naive datetimes are made explicit in UTC
-        if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
-        if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+    def _get_attendance_intervals_batch(self, start_dt, end_dt, domain=None, tz=None, calendar=False, lunch=False, inverse_result=False):
+        intervals_per_resource = self.resource_id._get_attendance_intervals_batch(start_dt, end_dt, domain, tz)
+        return {
+            resource: intervals_per_resource.get(resource.resource_id, WorkIntervals([]))
+            for resource in self
+        }
 
-        attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, resource)[resource.id]
-        leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, resource, domain)[resource.id]
-        result = []
-        for start, stop, leave in (leaves & attendances):
-            hours = (stop - start).total_seconds() / 3600
-            result.append((start.date(), hours, leave))
-        return result
+    def _get_leave_intervals_batch(self, start_dt, end_dt, domain=None, tz=None):
+        intervals_per_resource = self.resource_id._get_leave_intervals_batch(start_dt, end_dt, domain, tz)
+        return {
+            resource: intervals_per_resource.get(resource.resource_id, WorkIntervals([]))
+            for resource in self
+        }
+
+    def _get_work_intervals_batch(self, start_dt, end_dt, domain=None, tz=None, calendar=None, compute_leaves=True):
+        intervals_per_resource = self.resource_id._get_work_intervals_batch(start_dt, end_dt, domain, tz, calendar, compute_leaves)
+        return {
+            resource: intervals_per_resource.get(resource.resource_id, WorkIntervals([]))
+            for resource in self
+        }
+
+    def _get_absence_intervals_batch(self, start_dt, end_dt, domain=None, tz=None, calendar=None):
+        intervals_per_resource = self.resource_id._get_absence_intervals_batch(start_dt, end_dt, domain, tz, calendar)
+        return {
+            resource: intervals_per_resource.get(resource.resource_id, WorkIntervals([]))
+            for resource in self
+        }
+
+    def _get_attendance_intervals(self, start_dt, end_dt, domain=None, tz=None, calendar=False, lunch=False, inverse_result=False):
+        self.ensure_one()
+        return self._get_attendance_intervals_batch(start_dt, end_dt, domain, tz)[self]
+
+    def _get_leave_intervals(self, start_dt, end_dt, domain=None, tz=None):
+        self.ensure_one()
+        return self._get_leave_intervals_batch(start_dt, end_dt, domain, tz)[self]
+
+    def _get_work_intervals(self, start_dt, end_dt, domain=None, tz=None, calendar=None, compute_leaves=True):
+        self.ensure_one()
+        return self._get_work_intervals_batch(start_dt, end_dt, domain, tz, calendar, compute_leaves)[self]
+
+    def _get_absence_intervals(self, start_dt, end_dt, domain=None, tz=None, calendar=None):
+        self.ensure_one()
+        return self._get_absence_intervals_batch(start_dt, end_dt, domain, tz, calendar)[self]

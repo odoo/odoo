@@ -142,16 +142,15 @@ class HrEmployeeBase(models.AbstractModel):
             periods = self._get_calendar_periods(dt, dt + timedelta(days=lookahead_day))
             if not periods:
                 calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
-                work_intervals = calendar._work_intervals_batch(
-                    dt, dt + timedelta(days=lookahead_day), resources=self.resource_id)
+                work_intervals = self.resource_id._get_work_intervals(
+                    dt, dt + timedelta(days=lookahead_day))
             else:
                 for period in periods[self]:
                     start, end, calendar = period
-                    work_intervals = calendar._work_intervals_batch(
-                        start, end, resources=self.resource_id)
-            if work_intervals.get(self.resource_id.id) and work_intervals[self.resource_id.id]._items:
+                    work_intervals = self.resource_id._get_work_intervals(start, end)
+            if work_intervals._items:
                 # return start time of the earliest interval
-                return work_intervals[self.resource_id.id]._items[0][0]
+                return work_intervals._items[0][0]
 
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule

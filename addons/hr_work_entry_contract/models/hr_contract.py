@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -9,12 +8,10 @@ import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.utils import string_to_datetime, Intervals
+from odoo.addons.resource.models.utils import string_to_datetime, WorkIntervals
 from odoo.osv import expression
 from odoo.tools import ormcache, format_list
 from odoo.exceptions import UserError
-
-from .hr_work_intervals import WorkIntervals
 
 
 class HrContract(models.Model):
@@ -91,38 +88,8 @@ class HrContract(models.Model):
     def _get_resource_calendar_leaves(self, start_dt, end_dt):
         return self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
 
-    def _get_attendance_intervals(self, start_dt, end_dt):
-        # {resource: intervals}
-        employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
-        for contract in self:
-            if contract.work_entry_source != 'calendar':
-                continue
-            employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
-        result = dict()
-        for calendar, employees in employees_by_calendar.items():
-            result.update(calendar._attendance_intervals_batch(
-                start_dt,
-                end_dt,
-                resources=employees.resource_id,
-                tz=pytz.timezone(calendar.tz)
-            ))
-        return result
-
-    def _get_lunch_intervals(self, start_dt, end_dt):
-        # {resource: intervals}
-        employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
-        for contract in self:
-            employees_by_calendar[contract.resource_calendar_id] |= contract.employee_id
-        result = {}
-        for calendar, employees in employees_by_calendar.items():
-            result.update(calendar._attendance_intervals_batch(
-                start_dt,
-                end_dt,
-                resources=employees.resource_id,
-                tz=pytz.timezone(calendar.tz),
-                lunch=True,
-            ))
-        return result
+    def _get_work_entry_source_intervals(self, start_dt, end_dt):
+        return self.employee_id._get_attendance_intervals_batch(start_dt, end_dt)
 
     def _get_interval_work_entry_type(self, interval):
         self.ensure_one()
@@ -140,7 +107,7 @@ class HrContract(models.Model):
         contract_vals = []
         bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
 
-        attendances_by_resource = self._get_attendance_intervals(start_dt, end_dt)
+        attendances_by_employee = self._get_work_entry_source_intervals(start_dt, end_dt)
 
         resource_calendar_leaves = self._get_resource_calendar_leaves(start_dt, end_dt)
         # {resource: resource_calendar_leaves}
@@ -155,7 +122,7 @@ class HrContract(models.Model):
             resource = employee.resource_id
             # if the contract is fully flexible, we refer to the employee's timezone
             tz = pytz.timezone(resource.tz) if contract._is_fully_flexible() else pytz.timezone(calendar.tz)
-            attendances = attendances_by_resource[resource.id]
+            attendances = attendances_by_employee[employee]
 
             # Other calendars: In case the employee has declared time off in another calendar
             # Example: Take a time off, then a credit time.
@@ -194,8 +161,7 @@ class HrContract(models.Model):
                 real_leaves = attendances - real_attendances
             else:
                 # In the case of attendance based contracts use regular attendances to generate leave intervals
-                static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources=resource, tz=tz)[resource.id]
+                static_attendances = employee._get_attendance_intervals(start_dt, end_dt, tz=tz)
                 real_leaves = static_attendances & leaves
 
             if not contract.has_static_work_entries():

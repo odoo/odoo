@@ -60,7 +60,7 @@
 
     <record id="hr_contract_mit" model="hr.contract">
         <field name="name">R&amp;D Dev Contract</field>
-        <field name="date_start" eval="time.strftime('%Y')+'-3-1'"/>
+        <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
         <field name="employee_id" ref="hr.employee_mit"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_mit').job_id.id"/>
@@ -96,8 +96,7 @@
         <field name="department_id" model="hr.department"
             eval="obj().env.ref('hr.employee_qdp').department_id.id"/>
         <field eval="3750.0" name="wage"/>
-        <field name="state">draft</field>
-        <field name="kanban_state">normal</field>
+        <field name="state">open</field>
         <field name="hr_responsible_id" ref="base.user_admin"/>
     </record>
 
@@ -181,7 +180,7 @@
     <record id="hr_contract_fme" model="hr.contract">
         <field name="name">Keith Byrd Contract</field>
         <field name="date_start" eval="'2015-1-1'"/>
-        <field name="date_end" eval="time.strftime('%Y-%m-%d')"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=1)).strftime('%Y-%m-%d')"/>
         <field name="employee_id" ref="hr.employee_fme"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_fme').job_id.id"/>

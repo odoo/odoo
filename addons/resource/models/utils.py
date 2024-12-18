@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
+from collections import defaultdict
 from datetime import time
 from itertools import chain
 from pytz import utc
@@ -182,12 +183,129 @@ class Intervals(object):
         """ Return the intervals. """
         return self._items
 
+class WorkIntervals(object):
+    """
+        This class is a modified copy of the ``Intervals`` class.
+        A generic solution to handle intervals should probably be developped the day a similar
+        class is needed elsewhere.
+
+        This implementation differs from the resource implementation in its management
+        of two continuous intervals. Here, continuous intervals are not merged together
+        while they are merged in resource.
+        e.g.:
+        In resource: (1, 4, rec1) and (4, 10, rec2) are merged into (1, 10, rec1 | rec2)
+        Here: they remain two different intervals.
+        To implement this behaviour, the main implementation change is the way boundaries are sorted.
+    """
+    def __init__(self, intervals=()):
+        self._items = []
+        if intervals:
+            # normalize the representation of intervals
+            append = self._items.append
+            starts = []
+            recses = []
+            for value, flag, recs in sorted(_boundaries(sorted(intervals), 'start', 'stop'), key=lambda i: i[0]):
+                if flag == 'start':
+                    starts.append(value)
+                    recses.append(recs)
+                else:
+                    start = starts.pop()
+                    if not starts:
+                        append((start, value, recses[0].union(*recses)))
+                        recses.clear()
+
+    def __bool__(self):
+        return bool(self._items)
+
+    def __len__(self):
+        return len(self._items)
+
+    def __iter__(self):
+        return iter(self._items)
+
+    def __reversed__(self):
+        return reversed(self._items)
+
+    def __or__(self, other):
+        """ Return the union of two sets of intervals. """
+        return WorkIntervals(chain(self._items, other._items))
+
+    def __and__(self, other):
+        """ Return the intersection of two sets of intervals. """
+        return self._merge(other, False)
+
+    def __sub__(self, other):
+        """ Return the difference of two sets of intervals. """
+        return self._merge(other, True)
+
+    def _merge(self, other, difference):
+        """ Return the difference or intersection of two sets of intervals. """
+        result = WorkIntervals()
+        append = result._items.append
+
+        # using 'self' and 'other' below forces normalization
+        bounds1 = _boundaries(sorted(self), 'start', 'stop')
+        bounds2 = _boundaries(sorted(other), 'switch', 'switch')
+
+        start = None                    # set by start/stop
+        recs1 = None                    # set by start
+        enabled = difference            # changed by switch
+        for value, flag, recs in sorted(chain(bounds1, bounds2), key=lambda i: i[0]):
+            if flag == 'start':
+                start = value
+                recs1 = recs
+            elif flag == 'stop':
+                if enabled and start < value:
+                    append((start, value, recs1))
+                start = None
+            else:
+                if not enabled and start is not None:
+                    start = value
+                if enabled and start is not None and start < value:
+                    append((start, value, recs1))
+                enabled = not enabled
+
+        return result
+
+    def remove(self, interval):
+        """ Remove an interval from the set. """
+        self._items.remove(interval)
+
+    def items(self):
+        """ Return the intervals. """
+        return self._items
+
 def sum_intervals(intervals):
     """ Sum the intervals duration (unit : hour)"""
     return sum(
         (stop - start).total_seconds() / 3600
         for start, stop, meta in intervals
     )
+
+def get_attendance_intervals_days_data(attendance_intervals):
+    """
+    helper function to compute duration of `intervals` that have
+    'resource.calendar.attendance' records as payload (3rd element in tuple).
+    expressed in days and hours.
+
+    resource.calendar.attendance records have durations associated
+    with them so this method merely calculates the proportion that is
+    covered by the intervals.
+    """
+    day_hours = defaultdict(float)
+    day_days = defaultdict(float)
+    for start, stop, meta in attendance_intervals:
+        # If the interval covers only a part of the original attendance, we
+        # take durations in days proportionally to what is left of the interval.
+        interval_hours = (stop - start).total_seconds() / 3600
+        day_hours[start.date()] += interval_hours
+        day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
+
+    return {
+        # Round the number of days to the closest 16th of a day.
+        'days': float_round(sum(day_days[day] for day in day_days), precision_rounding=0.001),
+        'hours': sum(day_hours.values()),
+    }
 
 def timezone_datetime(time):
     if not time.tzinfo:

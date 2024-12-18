@@ -21,7 +21,9 @@ class ResourceCalendarLeaves(models.Model):
             user_tz = timezone(self.env.user.tz or self._context.get('tz') or self.company_id.resource_calendar_id.tz or 'UTC')
             date_from = user_tz.localize(datetime.combine(today, time.min))
             date_to = user_tz.localize(datetime.combine(today, time.max))
-            intervals = self.env.company.resource_calendar_id._work_intervals_batch(date_from.replace(tzinfo=utc), date_to.replace(tzinfo=utc))[False]
+            intervals = self.env.company.resource_calendar_id._get_work_intervals(
+                date_from.replace(tzinfo=utc),
+                date_to.replace(tzinfo=utc))
             if intervals:  # Then we stop and return the dates given in parameter
                 list_intervals = [(start, stop) for start, stop, records in intervals]  # Convert intervals in interval list
                 date_from = list_intervals[0][0]  # We take the first date in the interval list
