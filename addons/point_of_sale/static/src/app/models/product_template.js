@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
+import { getTaxesAfterFiscalPosition, getTaxesValues } from "./utils/tax_utils";
 
 /**
  * ProductProduct, shadow of product.product in python.
@@ -14,6 +15,43 @@ import { roundPrecision } from "@web/core/utils/numbers";
 
 export class ProductTemplate extends Base {
     static pythonModel = "product.template";
+
+    getProductPriceDetails(price, pricelist = false, fiscalPosition = false) {
+        const config = this.models["pos.config"].getFirst();
+        const productTemplate = this instanceof ProductTemplate ? this : this.product_tmpl_id;
+        const basePrice = this?.lst_price || productTemplate.getPrice(pricelist, 1);
+        const selectedPrice = price === undefined ? basePrice : price;
+
+        let taxes = productTemplate.taxes_id;
+
+        // Fiscal position.
+        if (fiscalPosition) {
+            taxes = getTaxesAfterFiscalPosition(taxes, fiscalPosition, this.models);
+        }
+
+        // Taxes computation.
+        const taxesData = getTaxesValues(
+            taxes,
+            selectedPrice,
+            1,
+            productTemplate,
+            config._product_default_values,
+            config.company_id,
+            config.currency_id
+        );
+
+        return taxesData;
+    }
+
+    getProductPrice(price = false, pricelist = false, fiscalPosition = false) {
+        const config = this.models["pos.config"].getFirst();
+        const taxesData = this.getProductPriceDetails(price, pricelist, fiscalPosition);
+        if (config.iface_tax_included === "total") {
+            return taxesData.total_included;
+        } else {
+            return taxesData.total_excluded;
+        }
+    }
 
     isAllowOnlyOneLot() {
         const productUnit = this.uom_id;

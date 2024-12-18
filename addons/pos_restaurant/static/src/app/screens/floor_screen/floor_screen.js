@@ -987,7 +987,7 @@ export class FloorScreen extends Component {
         );
 
         for (const order of tableOrders) {
-            const changes = getOrderChanges(order, false, this.pos.orderPreparationCategories);
+            const changes = getOrderChanges(order, false, this.pos.config.preparationCategories);
             changeCount += changes.nbrOfChanges;
             skipCount += changes.nbrOfSkipped;
         }

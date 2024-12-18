@@ -25,10 +25,10 @@ patch(ProductScreen.prototype, {
         const orderline = order.getSelectedOrderline();
         const isForPreparation = orderline.product_id.pos_categ_ids
             .map((categ) => categ.id)
-            .some((id) => this.pos.orderPreparationCategories.has(id));
+            .some((id) => this.pos.config.preparationCategories.has(id));
         if (
             this.pos.config.module_pos_restaurant &&
-            this.pos.orderPreparationCategories.size &&
+            this.pos.config.preparationCategories.size &&
             isForPreparation
         ) {
             const changes = Object.values(this.pos.getOrderChanges().orderlines).find(
@@ -42,7 +42,7 @@ patch(ProductScreen.prototype, {
         return this.pos.getOrderChanges().nbrOfChanges;
     },
     get swapButton() {
-        return this.pos.config.module_pos_restaurant && this.pos.orderPreparationCategories.size;
+        return this.pos.config.module_pos_restaurant && this.pos.config.preparationCategories.size;
     },
     get displayCategoryCount() {
         return this.pos.categoryCount.slice(0, 3);

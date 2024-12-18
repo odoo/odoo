@@ -15,10 +15,7 @@ patch(ProductScreen.prototype, {
             return super.getProductPrice(productTemplate);
         }
 
-        return _t(
-            "From %s",
-            this.env.utils.formatCurrency(this.pos.getProductPrice({ productTemplate }))
-        );
+        return _t("From %s", this.pos.getProductPrice(productTemplate, false, true));
     },
     getProductImage(product) {
         if (!product.event_id) {
