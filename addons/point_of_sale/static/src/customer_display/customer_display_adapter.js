@@ -49,9 +49,9 @@ export class CustomerDisplayPosAdapter {
         }
     }
 
-    addScaleData(isScale, data) {
-        this.data.isScaleScreenVisible = isScale;
-        if (data && isScale) {
+    addScaleData(data) {
+        this.data.isScaleScreenVisible = data?.isScaleScreenVisible;
+        if (data?.isScaleScreenVisible) {
             this.data.scaleData = {
                 productName: data.productName,
                 uomName: data.uomName,

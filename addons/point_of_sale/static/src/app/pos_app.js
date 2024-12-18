@@ -49,17 +49,16 @@ export class Chrome extends Component {
                     totalPriceOnScale,
                     isScaleScreenVisible,
                 }) => {
-                    if (
-                        !selectedOrder &&
-                        !scaleData &&
-                        !scaleWeight &&
-                        !scaleTare &&
-                        !totalPriceOnScale &&
-                        !isScaleScreenVisible
-                    ) {
-                        return;
+                    if (selectedOrder) {
+                        const allScaleData = {
+                            ...scaleData,
+                            weight: scaleWeight,
+                            tare: scaleTare,
+                            totalPriceOnScale,
+                            isScaleScreenVisible,
+                        };
+                        this.sendOrderToCustomerDisplay(selectedOrder, allScaleData);
                     }
-                    this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
                 }
             ),
             [this.pos]
@@ -69,10 +68,10 @@ export class Chrome extends Component {
     sendOrderToCustomerDisplay(selectedOrder, scaleData) {
         const adapter = new CustomerDisplayPosAdapter();
         adapter.formatOrderData(selectedOrder);
-        adapter.addScaleData(this.pos.isScaleScreenVisible, scaleData);
-        adapter.data.weight = this.pos.scaleWeight;
-        adapter.data.tare = this.pos.scaleTare;
-        adapter.data.totalPriceOnScale = this.pos.totalPriceOnScale;
+        adapter.addScaleData(scaleData);
+        adapter.data.weight = scaleData.weight;
+        adapter.data.tare = scaleData.tare;
+        adapter.data.totalPriceOnScale = scaleData.totalPriceOnScale;
         adapter.dispatch(this.pos);
     }
 
