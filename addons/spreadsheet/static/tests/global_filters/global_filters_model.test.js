@@ -1885,10 +1885,9 @@ test("can clear 'from_to' date filter values", async function () {
     };
     await setGlobalFilterValue(model, { id: "42", value });
     model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id: filter.id });
-    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual(
-        { preventAutomaticValue: true },
-        { message: "can clear 'from_to' date filter values" }
-    );
+    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual(undefined, {
+        message: "can clear 'from_to' date filter values",
+    });
 });
 
 test("A date filter without a yearOffset value yields an empty domain", async function () {
