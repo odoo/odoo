@@ -80,6 +80,42 @@ test("start interactions even if there is a crash", async () => {
     expect.verifySteps(["destroy notboom"]);
 });
 
+test("start interactions even if there is a crash when evaluating selector", async () => {
+    class Boom extends Interaction {
+        static selector = "div:invalid(coucou)";
+
+        setup() {
+            expect.step("start boom");
+        }
+        destroy() {
+            expect.step("destroy boom");
+        }
+    }
+    class NotBoom extends Interaction {
+        static selector = ".test";
+
+        setup() {
+            expect.step("start notboom");
+        }
+    }
+
+    const { core } = await startInteraction([Boom, NotBoom], `<div class="test"></div>`, {
+        waitForStart: false,
+    });
+
+    let e = null;
+    try {
+        await core.isReady;
+    } catch (_e) {
+        e = _e;
+    }
+    expect(e.message).toBe(
+        "Could not start interaction Boom (invalid selector: 'div:invalid(coucou)')"
+    );
+
+    expect.verifySteps(["start notboom"]);
+});
+
 test("recover from error as much as possible when applying dynamiccontent", async () => {
     let a = "a";
     let b = "b";
