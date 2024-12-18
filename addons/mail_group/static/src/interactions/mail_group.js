@@ -8,21 +8,21 @@ export class MailGroup extends Interaction {
     static selector = ".o_mail_group";
     dynamicContent = {
         _root: {
-            "t-att-class": {
+            "t-att-class": () => ({
                 "o_has_error": this.inError,
-            }
+            }),
         },
         ".form-control, .form-select": {
-            "t-att-class": {
+            "t-att-class": () => ({
                 "is-invalid": this.inError,
-            }
+            }),
         },
         ".o_mg_subscribe_btn": {
             "t-on-click.prevent": this.onClickSubscribe,
-            "t-att-class": {
+            "t-att-class": () => ({
                 "btn-primary": !this.isMember,
                 "btn-outline-primary": this.isMember,
-            },
+            }),
             "t-out": () => this.isMember ? _t('Unsubscribe') : _t('Subscribe'),
         },
     }
@@ -54,7 +54,7 @@ export class MailGroup extends Interaction {
             'token': this.token,
         }));
 
-        this.el.querySelector(".o_mg_alert").remove();
+        this.el.querySelector(".o_mg_alert")?.remove();
 
         if (response === 'added') {
             this.isMember = true;
@@ -84,4 +84,4 @@ export class MailGroup extends Interaction {
 
 registry
     .category("public.interactions")
-    .add("mail_groupe.mail_group", MailGroup);
+    .add("mail_group.mail_group", MailGroup);
