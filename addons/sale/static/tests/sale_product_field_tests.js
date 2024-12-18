@@ -57,7 +57,29 @@ QUnit.module("Fields", (hooks) => {
                         name: {
                             string: "Description",
                             type: "char",
-                        }
+                        },
+                        product_type: {
+                            string: "Type",
+                            type: "selection",
+                        },
+                        service_tracking: {
+                            string: "Service type",
+                            type: "selection",
+                        },
+                        is_configurable_product: {
+                            string: "Is product configurable",
+                            type: "boolean",
+                        },
+                        product_template_attribute_value_ids: {
+                            string: "Product template attributes values",
+                            type: "many2many",
+                            relation: "product.template.attribute.value",
+                        },
+                        // added to the field dependencies by sale_product_matrix module
+                        product_add_mode: {
+                            string: "Configurator mode",
+                            type: "selection",
+                        },
                     },
                     records: [],
                 },
