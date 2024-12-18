@@ -131,3 +131,25 @@ class ChatbotCase(chatbot_common.ChatbotCase):
         self_member._rtc_join_call()
         self.assertTrue(guest_member.rtc_inviting_session_id)
         self.assertFalse(bot_member.rtc_inviting_session_id)
+
+    def test_forward_to_specific_operator(self):
+        """Test _process_step_forward_operator takes into account the given users as candidates."""
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Test Visitor",
+                "channel_id": self.livechat_channel.id,
+                "chatbot_script_id": self.chatbot_script.id,
+            },
+        )
+        discuss_channel = (
+            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+        )
+        self.step_forward_operator._process_step_forward_operator(discuss_channel)
+        self.assertEqual(
+            discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id
+        )
+        self.step_forward_operator._process_step_forward_operator(
+            discuss_channel, users=self.user_employee
+        )
+        self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
