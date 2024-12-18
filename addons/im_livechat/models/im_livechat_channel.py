@@ -83,16 +83,29 @@ class Im_LivechatChannel(models.Model):
         "user_ids.channel_ids.livechat_operator_id",
         "user_ids.im_status",
         "user_ids.is_in_call",
+        "user_ids.partner_id",
     )
     def _compute_available_operator_ids(self):
+        operators_by_livechat_channel = self._get_available_operators_by_livechat_channel()
+        for livechat_channel in self:
+            livechat_channel.available_operator_ids = operators_by_livechat_channel[livechat_channel]
+
+    def _get_available_operators_by_livechat_channel(self, users=None):
+        """Return a dictionary mapping each livechat channel in self to the users that are available
+        for that livechat channel, according to the user status and the optional limit of concurrent
+        sessions of the livechat channel.
+        When users are provided, each user is attempted to be mapped for each livechat channel.
+        Otherwise, only the users of each respective livechat channel are considered.
+        """
         counts = {}
         if livechat_channels := self.filtered(lambda c: c.max_sessions_mode == "limited"):
-            users = livechat_channels.user_ids.filtered(lambda user: user._is_user_available())
+            possible_users = users if users is not None else livechat_channels.user_ids
+            limited_users = possible_users.filtered(lambda user: user._is_user_available())
             counts = dict(
                 ((partner, livechat_channels), count)
                 for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
                     [
-                        ("livechat_operator_id", "in", users.partner_id.ids),
+                        ("livechat_operator_id", "in", limited_users.partner_id.ids),
                         ("livechat_active", "=", True),
                         ("last_interest_dt", ">=", fields.Datetime.now() - timedelta(minutes=15)),
                     ],
@@ -111,11 +124,13 @@ class Im_LivechatChannel(models.Model):
                     and not user.sudo().is_in_call
                 )
             )
-
+        operators_by_livechat_channel = {}
         for livechat_channel in self:
-            livechat_channel.available_operator_ids = livechat_channel.user_ids.filtered(
+            possible_users = users if users is not None else livechat_channel.user_ids
+            operators_by_livechat_channel[livechat_channel] = possible_users.filtered(
                 lambda user, livechat_channel=livechat_channel: is_available(user, livechat_channel)
             )
+        return operators_by_livechat_channel
 
     @api.depends('rule_ids.chatbot_script_id')
     def _compute_chatbot_script_count(self):
