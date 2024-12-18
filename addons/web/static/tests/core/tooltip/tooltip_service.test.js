@@ -1,18 +1,11 @@
 import { expect, test } from "@odoo/hoot";
-import { hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { click, drag, hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
-import {
-    makeMockEnv,
-    mockService,
-    mountWithCleanup,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { makeMockEnv, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
 import { popoverService } from "@web/core/popover/popover_service";
-
-const OPEN_DELAY = 400; // Default opening delay time
+import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service";
 
 test.tags("desktop");
 test("basic rendering", async () => {
@@ -301,11 +294,8 @@ test("tooltip does not crash with disappearing target", async () => {
 });
 
 test.tags("desktop");
-test("tooltip using the mouse with a touch enabled device", async () => {
-    // Cannot use mockTouch(), because we don't want hoot to trigger touch events
-    patchWithCleanup(browser, {
-        ontouchstart: null,
-    });
+test("tooltip using touch enabled device", async () => {
+    mockTouch(true);
 
     class MyComponent extends Component {
         static props = ["*"];
@@ -315,21 +305,18 @@ test("tooltip using the mouse with a touch enabled device", async () => {
     await mountWithCleanup(MyComponent);
     expect(".o_popover").toHaveCount(0);
 
-    await hover(".mybtn");
+    await drag(".mybtn");
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 
-    await runAllTimers();
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
 
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
-
-    await leave();
-    await animationFrame();
-    expect(".o_popover").toHaveCount(0);
 });
 
 test.tags("mobile");
@@ -345,12 +332,17 @@ test("touch rendering - hold-to-show", async () => {
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 
-    await runAllTimers();
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
 
     await pointerUp("button");
-    await runAllTimers();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+
+    await pointerDown(document.body);
+    await animationFrame();
     expect(".o_popover").toHaveCount(0);
 });
 
@@ -367,7 +359,8 @@ test("touch rendering - tap-to-show", async () => {
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 
-    await runAllTimers();
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
 
@@ -377,7 +370,19 @@ test("touch rendering - tap-to-show", async () => {
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
 
+    // The tooltip should be closed if you click on the button itself
+    await click("button[data-tooltip]");
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+
+    // Reopen it
     await pointerDown("button[data-tooltip]");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+
+    // The tooltip should be also closed if you click anywhere else
+    await pointerDown(document.body);
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 });
