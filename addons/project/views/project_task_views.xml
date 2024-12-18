@@ -138,7 +138,7 @@
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <graph string="Tasks" sample="1" js_class="project_task_graph">
+                <graph string="Tasks" sample="1">
                     <field name="project_id" invisible="context.get('default_project_id', False)"/>
                     <field name="stage_id"/>
                     <field name="working_hours_open" widget="float_time"/>
@@ -171,7 +171,7 @@
             <field name="name">project.task.pivot</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <pivot string="Tasks" sample="1" js_class="project_pivot">
+                <pivot string="Tasks" sample="1">
                     <field name="project_id" type="row"/>
                     <field name="color" invisible="1"/>
                     <field name="sequence" invisible="1"/>
