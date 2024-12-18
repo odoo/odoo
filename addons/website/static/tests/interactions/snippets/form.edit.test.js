@@ -1,9 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
-import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 import { switchToEditMode } from "../../helpers";
 
 describe.current.tags("interaction_dev");
@@ -52,17 +49,12 @@ const formXml = `
 `;
 
 function setupUser() {
-    patchWithCleanup(MockServer.prototype, {
-        callOrm(params) {
-            expect(params.model).toBe("res.users");
-            expect(params.method).toBe("read");
-            const result = super.callOrm(...arguments);
-            result[0].commercial_company_name = "TestCompany";
-            return result;
-        }
+    onRpc("res.users", "read", ({ parent }) => {
+        const result = parent();
+        result[0].commercial_company_name = "TestCompany";
+        return result;
     });
 }
-
 
 test("form formats date in edit mode", async () => {
     setupInteractionWhiteList("website.form_date_formatter");
@@ -78,7 +70,7 @@ test("form is NOT prefilled in edit mode", async () => {
     setupInteractionWhiteList("website.form_date_formatter");
     setupUser();
     const { core } = await startInteractions(formXml, { waitForStart: true, editMode: true });
-    await switchToEditMode(core)
+    await switchToEditMode(core);
     expect(core.interactions).toHaveLength(1);
     expect("form input[name=company]").toHaveValue("");
 });
