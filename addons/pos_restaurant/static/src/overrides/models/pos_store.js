@@ -3,7 +3,16 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
+<<<<<<< 18.0
 import { _t } from "@web/core/l10n/translation";
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+=======
+import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { uuidv4 } from "@point_of_sale/utils";
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -25,7 +34,29 @@ patch(PosStore.prototype, {
         this.isEditMode = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
+<<<<<<< 18.0
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+        this.floorPlanStyle =
+            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
+        if (this.config.module_pos_restaurant) {
+            this.setActivityListeners();
+            this.showScreen("FloorScreen", { floor: this.selectedTable?.floor || null });
+            this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
+            // Sync the number of orders on each table with other PoS
+            this.getTableOrderCount();
+        }
+=======
+        this.floorPlanStyle =
+            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
+        if (this.config.module_pos_restaurant) {
+            this.setActivityListeners();
+            this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
+            // Sync the number of orders on each table with other PoS
+            this.getTableOrderCount();
+        }
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
     },
+<<<<<<< 18.0
     get firstScreen() {
         const screen = super.firstScreen;
 
@@ -45,6 +76,20 @@ patch(PosStore.prototype, {
             this.showScreen("FloorScreen");
         }
         return orderIsDeleted;
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+    async getTableOrderCount() {
+        this.lastWsTs = DateTime.now().ts;
+        this.bus.subscribe("TABLE_ORDER_COUNT", this.ws_syncTableCount.bind(this));
+=======
+
+    get firstScreen() {
+        return this.config.module_pos_restaurant ? "FloorScreen" : super.firstScreen;
+    },
+
+    async getTableOrderCount() {
+        this.lastWsTs = DateTime.now().ts;
+        this.bus.subscribe("TABLE_ORDER_COUNT", this.ws_syncTableCount.bind(this));
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
     },
     // using the same floorplan.
     async ws_syncTableCount(data) {
@@ -443,6 +488,7 @@ patch(PosStore.prototype, {
             (o) => o.table_id?.id === table.id && !o.finalized && o.lines.length
         );
     },
+<<<<<<< 18.0
     tableHasOrders(table) {
         return Boolean(table.getOrder());
     },
@@ -450,10 +496,30 @@ patch(PosStore.prototype, {
         return this.models["restaurant.table"].get(
             [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
         );
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+    tableHasOrders(table) {
+        return this.getActiveOrdersOnTable(table).length > 0;
     },
+    shouldShowNavbarButtons() {
+        return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransferUuid;
+=======
+    shouldShowNavbarButtons() {
+        return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransferUuid;
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
+    },
+<<<<<<< 18.0
     async transferOrder(orderUuid, destinationTable) {
         const order = this.models["pos.order"].getBy("uuid", orderUuid);
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+    async transferOrder(destinationTable) {
+        const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
+=======
+    async transferOrder(destinationTable) {
+        const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
+        const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
         const originalTable = order.table_id;
+<<<<<<< 18.0
         this.loadingOrderState = false;
         this.alert.dismiss();
         if (destinationTable.id === originalTable?.id) {
@@ -462,22 +528,61 @@ patch(PosStore.prototype, {
             return;
         }
         if (!this.tableHasOrders(destinationTable)) {
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+        this.loadingOrderState = false;
+        this.orderToTransferUuid = null;
+        this.alert.dismiss();
+        if (destinationTable.id === originalTable?.id) {
+            this.set_order(order);
+            await this.setTable(destinationTable);
+            return;
+        }
+        if (!this.tableHasOrders(destinationTable)) {
+=======
+
+        this.orderToTransferUuid = null;
+        this.loadingOrderState = false;
+
+        // Only one order by table so we do nothing
+        this.set_order(destinationOrder || order);
+        if (!destinationOrder) {
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
             order.update({ table_id: destinationTable });
+<<<<<<< 18.0
             this.set_order(order);
             this.addPendingOrder([order.id]);
         } else {
             const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
             const linesToUpdate = [];
             for (const orphanLine of order.lines) {
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+            this.set_order(order);
+        } else {
+            const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
+            for (const orphanLine of order.lines) {
+=======
+            return;
+        } else if (destinationTable.id !== originalTable?.id || destinationOrder.id !== order.id) {
+            for (const orphanLine of [...order.lines]) {
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
                 const adoptingLine = destinationOrder.lines.find((l) =>
                     l.can_be_merged_with(orphanLine)
                 );
                 if (adoptingLine) {
                     adoptingLine.merge(orphanLine);
+                    orphanLine.delete();
                 } else {
+<<<<<<< 18.0
                     linesToUpdate.push(orphanLine);
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+                    orphanLine.update({ order_id: destinationOrder });
+=======
+                    orphanLine.uuid = uuidv4();
+                    orphanLine.update({ order_id: destinationOrder });
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
                 }
             }
+<<<<<<< 18.0
             linesToUpdate.forEach((orderline) => {
                 orderline.update({ order_id: destinationOrder });
             });
@@ -485,8 +590,14 @@ patch(PosStore.prototype, {
             if (destinationOrder?.id) {
                 this.addPendingOrder([destinationOrder.id]);
             }
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+            this.set_order(destinationOrder);
+=======
+
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
             await this.deleteOrders([order]);
         }
+
         await this.setTable(destinationTable);
     },
     updateTables(...tables) {

@@ -148,6 +148,7 @@ export class PosStore extends Reactive {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
+<<<<<<< 18.0
     }
 
     get firstScreen() {
@@ -206,6 +207,15 @@ export class PosStore extends Reactive {
 
     _resetConnectedCashier() {
         sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
+||||||| 741bf9f0b17969299666854f7e14423bb3cbed33
+        this.showScreen("ProductScreen");
+=======
+        this.showScreen(this.firstScreen);
+    }
+
+    get firstScreen() {
+        return "ProductScreen";
+>>>>>>> 2978a881a968613d1141718f0309d8dd76527f27
     }
 
     useProxy() {
@@ -1477,6 +1487,7 @@ export class PosStore extends Reactive {
             this.get_order()?.deselect_orderline();
         }
         this.previousScreen = this.mainScreen.component?.name;
+        name = !name ? this.firstScreen : name;
         const component = registry.category("pos_screens").get(name);
         this.mainScreen = { component, props };
         // Save the screen to the order so that it is shown again when the order is selected.
