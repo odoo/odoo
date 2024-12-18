@@ -13,6 +13,7 @@ import {
     useX2ManyCrud,
 } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
@@ -197,6 +198,7 @@ export class X2ManyField extends Component {
         if (this.props.viewMode === "kanban") {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
+            props.Compiler = KanbanCompiler;
             // TODO: apply same logic in the list case
             props.deleteRecord = (record) => {
                 if (this.isMany2Many) {

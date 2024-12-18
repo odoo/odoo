@@ -13155,16 +13155,9 @@ test("kanbans with basic and custom compiler, same arch", async () => {
             return compiledNode;
         }
     }
-    class MyKanbanRecord extends KanbanRecord {}
-    MyKanbanRecord.Compiler = MyKanbanCompiler;
-    class MyKanbanRenderer extends KanbanRenderer {}
-    MyKanbanRenderer.components = {
-        ...KanbanRenderer.components,
-        KanbanRecord: MyKanbanRecord,
-    };
     viewRegistry.add("my_kanban", {
         ...kanbanView,
-        Renderer: MyKanbanRenderer,
+        Compiler: MyKanbanCompiler,
     });
     after(() => viewRegistry.remove("my_kanban"));
 
