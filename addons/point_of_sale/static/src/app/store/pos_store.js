@@ -136,7 +136,11 @@ export class PosStore extends Reactive {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
-        this.showScreen("ProductScreen");
+        this.showScreen(this.firstScreen);
+    }
+
+    get firstScreen() {
+        return "ProductScreen";
     }
 
     useProxy() {
@@ -1317,6 +1321,7 @@ export class PosStore extends Reactive {
     }
     showScreen(name, props) {
         this.previousScreen = this.mainScreen.component?.name;
+        name = !name ? this.firstScreen : name;
         const component = registry.category("pos_screens").get(name);
         this.mainScreen = { component, props };
         // Save the screen to the order so that it is shown again when the order is selected.
