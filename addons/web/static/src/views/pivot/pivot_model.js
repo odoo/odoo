@@ -361,9 +361,7 @@ export class PivotModel extends Model {
         this.keepLast = new KeepLast();
         this.race = new Race();
         const _loadData = this._loadData.bind(this);
-        this._loadData = (...args) => {
-            return this.race.add(_loadData(...args));
-        };
+        this._loadData = (...args) => this.race.add(_loadData(...args));
 
         let sortedColumn = params.metaData.sortedColumn || null;
         if (!sortedColumn && params.metaData.defaultOrder) {
@@ -577,31 +575,27 @@ export class PivotModel extends Model {
         // remove the empty headers on left side
         colGroupHeaderRows[0].splice(0, 1);
 
-        colGroupHeaderRows = colGroupHeaderRows.map((headerRow) => {
-            return headerRow.map(processHeader);
-        });
+        colGroupHeaderRows = colGroupHeaderRows.map((headerRow) => headerRow.map(processHeader));
 
         // process rows
-        const tableRows = table.rows.map((row) => {
-            return {
-                title: row.title,
-                indent: row.indent,
-                values: row.subGroupMeasurements.map((measurement) => {
-                    let value = measurement.value;
-                    if (value === undefined) {
-                        value = "";
-                    } else if (measurement.originIndexes.length > 1) {
-                        // in that case the value is a variation and a
-                        // number between 0 and 1
-                        value = value * 100;
-                    }
-                    return {
-                        is_bold: measurement.isBold,
-                        value: value,
-                    };
-                }),
-            };
-        });
+        const tableRows = table.rows.map((row) => ({
+            title: row.title,
+            indent: row.indent,
+            values: row.subGroupMeasurements.map((measurement) => {
+                let value = measurement.value;
+                if (value === undefined) {
+                    value = "";
+                } else if (measurement.originIndexes.length > 1) {
+                    // in that case the value is a variation and a
+                    // number between 0 and 1
+                    value = value * 100;
+                }
+                return {
+                    is_bold: measurement.isBold,
+                    value: value,
+                };
+            }),
+        }));
 
         return {
             model: this.metaData.resModel,
@@ -923,9 +917,9 @@ export class PivotModel extends Model {
         if (!config.data.measurements[key]) {
             return;
         }
-        var values = originIndexes.map((originIndex) => {
-            return config.data.measurements[key][originIndex][measure];
-        });
+        var values = originIndexes.map(
+            (originIndex) => config.data.measurements[key][originIndex][measure]
+        );
         if (originIndexes.length > 1) {
             return computeVariation(values[1], values[0]);
         } else {
@@ -1379,9 +1373,7 @@ export class PivotModel extends Model {
      * @returns {boolean} true iff there's no data in the table
      */
     _hasData(data) {
-        return (data.counts[JSON.stringify([[], []])] || []).some((count) => {
-            return count > 0;
-        });
+        return (data.counts[JSON.stringify([[], []])] || []).some((count) => count > 0);
     }
     /**
      * Initialize/Reinitialize data.rowGroupTree, colGroupTree, measurements,
@@ -1504,9 +1496,9 @@ export class PivotModel extends Model {
                 const originIndex = groupSubdivision.group.originIndex;
 
                 if (!(key in data.measurements)) {
-                    data.measurements[key] = metaData.origins.map(() => {
-                        return this._getMeasurements({}, config);
-                    });
+                    data.measurements[key] = metaData.origins.map(() =>
+                        this._getMeasurements({}, config)
+                    );
                 }
                 data.measurements[key][originIndex] = this._getMeasurements(subGroup, config);
 
@@ -1560,10 +1552,6 @@ export class PivotModel extends Model {
         });
     }
 
-    _getEmptyGroupLabel(fieldName) {
-        return _t("None");
-    }
-
     /**
      * Extract from a groupBy value a label.
      *
@@ -1584,7 +1572,7 @@ export class PivotModel extends Model {
             }
         }
         if (value === false) {
-            return this._getEmptyGroupLabel(fieldName);
+            return metaData.fields[fieldName].falsy_value_label || _t("None");
         }
         if (value instanceof Array) {
             return this._getNumberedLabel(value, fieldName, config);
@@ -1677,19 +1665,17 @@ export class PivotModel extends Model {
         sortedColumn.originIndexes = sortedColumn.originIndexes || [0];
         metaData.sortedColumn = sortedColumn;
 
-        const sortFunction = (tree) => {
-            return (subTreeKey) => {
-                const subTree = tree.directSubTrees.get(subTreeKey);
-                const groupIntersectionId = [subTree.root.values, colGroupValues];
-                const value =
-                    this._getCellValue(
-                        groupIntersectionId,
-                        sortedColumn.measure,
-                        sortedColumn.originIndexes,
-                        { data }
-                    ) || 0;
-                return sortedColumn.order === "asc" ? value : -value;
-            };
+        const sortFunction = (tree) => (subTreeKey) => {
+            const subTree = tree.directSubTrees.get(subTreeKey);
+            const groupIntersectionId = [subTree.root.values, colGroupValues];
+            const value =
+                this._getCellValue(
+                    groupIntersectionId,
+                    sortedColumn.measure,
+                    sortedColumn.originIndexes,
+                    { data }
+                ) || 0;
+            return sortedColumn.order === "asc" ? value : -value;
         };
 
         this._sortTree(sortFunction, data.rowGroupTree);

@@ -1,11 +1,11 @@
-import { ProjectTaskGraphModel } from "@project/views/project_task_graph/project_task_graph_model";
+import { GraphModel } from "@web/views/graph/graph_model";
 
 const FIELDS = [
     'unit_amount', 'effective_hours', 'allocated_hours', 'remaining_hours', 'total_hours_spent', 'subtask_effective_hours',
     'overtime', 'number_hours', 'difference', 'timesheet_unit_amount'
 ];
 
-export class hrTimesheetGraphModel extends ProjectTaskGraphModel {
+export class hrTimesheetGraphModel extends GraphModel {
     /**
      * @override
      */
@@ -34,4 +34,4 @@ export class hrTimesheetGraphModel extends ProjectTaskGraphModel {
         return super._getProcessedDataPoints(...arguments);
     }
 }
-hrTimesheetGraphModel.services = [...ProjectTaskGraphModel.services, "company"];
+hrTimesheetGraphModel.services = [...GraphModel.services, "company"];
