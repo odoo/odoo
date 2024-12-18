@@ -29,7 +29,7 @@ export class NoBackdropPopup extends Interaction {
         // '.modal-content' (see comments in CSS).
         const modalContentEl = this.el.querySelector(".modal-content");
         const isOverflowing = isScrollableY(modalContentEl);
-        const bsModal = window.Modal.getInstance(this.el);
+        const bsModal = window.Modal.getOrCreateInstance(this.el);
         if (isOverflowing) {
             // If the "no-backdrop" modal has a scrollbar, the page's scrollbar
             // must be hidden. This is because if the two scrollbars overlap, it

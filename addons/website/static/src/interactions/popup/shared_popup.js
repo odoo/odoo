@@ -42,7 +42,3 @@ export class SharedPopup extends Interaction {
 registry
     .category("public.interactions")
     .add("website.shared_popup", SharedPopup);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.shared_popup", { Interaction: SharedPopup });
