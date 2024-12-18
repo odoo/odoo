@@ -11,6 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
 import { App, Component, whenReady } from "@odoo/owl";
 import { RPCError } from '@web/core/network/rpc';
+import { patch } from "@web/core/utils/patch";
 
 const { Settings } = luxon;
 
@@ -49,6 +50,27 @@ export const PublicRoot = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
         this.env = env;
         this.publicWidgets = [];
+        // Patch interaction_service so that it also starts and stops public
+        // widgets.
+        const interactionsService = this.env.services["public.interactions"];
+        const publicRoot = this;
+        if (interactionsService) {
+            patch(interactionsService.constructor.prototype, {
+                startInteractions(el) {
+                    super.startInteractions(el);
+                    if (!this.startFromEventHandler) {
+                        publicRoot._startWidgets($(el || this.el), { fromInteractionPatch: true })
+                    }
+                },
+                stopInteractions(el) {
+                    super.stopInteractions(el);
+                    // Call to interactions is only from the event handler.
+                    if (!this.stopFromEventHandler) {
+                        publicRoot._stopWidgets($(el || this.el));
+                    }
+                },
+            });
+        }
     },
     /**
      * @override
@@ -153,7 +175,7 @@ export const PublicRoot = publicWidget.Widget.extend({
         });
 
         this._stopWidgets($from);
-        if (!options?.starting) {
+        if (!options?.starting && !options?.fromInteractionPatch) {
             const targetEl = $from ? $from[0] : undefined;
             this._restartInteractions(targetEl, options);
         }
@@ -265,17 +287,21 @@ export const PublicRoot = publicWidget.Widget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onWidgetsStartRequest: function (ev) {
-        this._startWidgets(ev.data.$target, ev.data.options)
-            .then(ev.data.onSuccess)
-            .catch((e) => {
-                if (ev.data.onFailure) {
-                    ev.data.onFailure(e);
-                }
-                if (!(e instanceof RPCError)) {
-                    return Promise.reject(e);
-                }
-            });
+    async _onWidgetsStartRequest(ev) {
+        this.startFromEventHandler = true;
+        try {
+            await this._startWidgets(ev.data.$target, ev.data.options);
+            ev.data.onSuccess();
+        } catch (e) {
+            if (ev.data.onFailure) {
+                ev.data.onFailure(e);
+            }
+            if (!(e instanceof RPCError)) {
+                throw e;
+            }
+        } finally {
+            this.stopFromEventHandler = true;
+        }
     },
     /**
      * Called when the root is notified that the public widgets have to be
@@ -289,7 +315,12 @@ export const PublicRoot = publicWidget.Widget.extend({
         // also stops interactions
         const targetEl = ev.data.$target ? ev.data.$target[0] : undefined;
         const publicInteractions = this.bindService("public.interactions");
-        publicInteractions.stopInteractions(targetEl);
+        this.stopFromEventHandler = true;
+        try {
+            publicInteractions.stopInteractions(targetEl);
+        } finally {
+            this.stopFromEventHandler = false;
+        }
     },
     /**
      * @todo review
