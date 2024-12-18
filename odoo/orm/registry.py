@@ -207,9 +207,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._is_modifying_relations: dict[Field, bool] = {}
 
         # Inter-process signaling:
-        # The `base_registry_signaling` sequence indicates the whole registry
+        # The `base_signaling_registry` sequence indicates the whole registry
         # must be reloaded.
-        # The `base_cache_signaling sequence` indicates all caches must be
+        # The `base_signaling_... sequence` indicates come cache_sequences must be
         # invalidated (i.e. cleared).
         self.registry_sequence: int = -1
         self.cache_sequences: dict[str, int] = {}
@@ -264,7 +264,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
     def __delitem__(self, model_name: str):
         """ Remove a (custom) model from the registry. """
         del self.models[model_name]
-        # the custom model can inherit from mixins ('mail.thread', ...)
+        # the custom model can inherit from mixins ('mail('mail.thread', ...)
         for Model in self.models.values():
             Model._inherit_children.discard(model_name)
 
@@ -850,21 +850,24 @@ class Registry(Mapping[str, type["BaseModel"]]):
             return
 
         with self.cursor() as cr:
-            # The `base_registry_signaling` sequence indicates when the registry
+            # The `base_signaling_registry` sequence indicates when the registry
             # must be reloaded.
-            # The `base_cache_signaling_...` sequences indicates when caches must
+            # The `base_signaling_...` sequences indicates when caches must
             # be invalidated (i.e. cleared).
-            sequence_names = ('base_registry_signaling', *(f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY))
-            cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name IN %s", [sequence_names])
-            existing_sequences = tuple(s[0] for s in cr.fetchall())  # could be a set but not efficient with such a little list
-
-            for sequence_name in sequence_names:
-                if sequence_name not in existing_sequences:
-                    cr.execute(SQL(
-                        "CREATE SEQUENCE %s INCREMENT BY 1 START WITH 1",
-                        SQL.identifier(sequence_name),
-                    ))
-                    cr.execute(SQL("SELECT nextval(%s)", sequence_name))
+            cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name = 'base_signaling'")
+            if not cr.fetchone():
+                cr.execute("CREATE TABLE base_signaling (key CHARACTER VARYING, value INTEGER)")
+                cr.execute("CREATE INDEX base_signaling_key_id ON base_signaling(key, value)")
+                # prefill the table
+            for key in ['registry'] + list(_CACHES_BY_KEY):
+                sequence_name = f'base_signaling_{key}'
+                cr.execute("SELECT 1 FROM information_schema.sequences WHERE sequence_name = %s", (sequence_name,))
+                if not cr.fetchone():
+                    cr.execute(SQL('CREATE SEQUENCE %s', SQL.identifier(sequence_name)))
+                # check if the key is already in the table, could not be the case if the table was just created
+                cr.execute("SELECT 1 FROM base_signaling WHERE key = %s", (key,))
+                if not cr.fetchone():
+                    cr.execute("INSERT INTO base_signaling (key, value) VALUES (%s, nextval(%s))", (key, sequence_name))
 
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
             self.registry_sequence = db_registry_sequence
@@ -874,16 +877,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
                           self.registry_sequence, ' '.join('[Cache %s: %s]' % cs for cs in self.cache_sequences.items()))
 
     def get_sequences(self, cr: BaseCursor) -> tuple[int, dict[str, int]]:
-        cache_sequences_query = ', '.join([f'base_cache_signaling_{cache_name}' for cache_name in _CACHES_BY_KEY])
-        cache_sequences_values_query = ',\n'.join([f'base_cache_signaling_{cache_name}.last_value' for cache_name in _CACHES_BY_KEY])
-        cr.execute(f"""
-            SELECT base_registry_signaling.last_value, {cache_sequences_values_query}
-            FROM base_registry_signaling, {cache_sequences_query}
-        """)
-        row = cr.fetchone()
-        assert row is not None, "No result when reading signaling sequences"
-        registry_sequence, *cache_sequences_values = row
-        cache_sequences = dict(zip(_CACHES_BY_KEY, cache_sequences_values))
+        cache_sequences = {key: 0 for key in _CACHES_BY_KEY}
+        cr.execute(f"""SELECT key, max(value) FROM base_signaling GROUP BY key""")
+        cache_sequences.update(dict(cr.fetchall()))
+        registry_sequence = cache_sequences.pop('registry', 0)
         return registry_sequence, cache_sequences
 
     def check_signaling(self, cr: BaseCursor | None = None) -> Registry:
@@ -931,8 +928,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         if self.registry_invalidated:
             _logger.info("Registry changed, signaling through the database")
-            with closing(self.cursor()) as cr:
-                cr.execute("select nextval('base_registry_signaling')")
+            with self.cursor() as cr:
+                cr.execute("INSERT INTO base_signaling (key, value) VALUES ('registry', nextval('base_signaling_registry'))")
+                                                                
                 # If another process concurrently updates the registry,
                 # self.registry_sequence will actually be out-of-date,
                 # and the next call to check_signaling() will detect that and trigger a registry reload.
@@ -943,14 +941,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # because reloading the registry implies starting with an empty cache
         elif self.cache_invalidated:
             _logger.info("Caches invalidated, signaling through the database: %s", sorted(self.cache_invalidated))
-            with closing(self.cursor()) as cr:
+            with self.cursor() as cr:
                 for cache_name in self.cache_invalidated:
-                    cr.execute("select nextval(%s)", [f'base_cache_signaling_{cache_name}'])
+                    cr.execute(f"INSERT INTO base_signaling (key, value) VALUES (%s, nextval(%s))", (cache_name, f'base_signaling_{cache_name}'))
                     # If another process concurrently updates the cache,
                     # self.cache_sequences[cache_name] will actually be out-of-date,
                     # and the next call to check_signaling() will detect that and trigger cache invalidation.
                     # otherwise, self.cache_sequences[cache_name] should be equal to cr.fetchone()[0]
-                    self.cache_sequences[cache_name] += 1
+                    self.cache_sequences[cache_name] +=1
 
         self.registry_invalidated = False
         self.cache_invalidated.clear()
