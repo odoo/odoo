@@ -527,10 +527,9 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("Many2One 'Search more...' updates on resModel change", async function (assert) {
-
         serverData.views = {
             "product,false,list": '<tree><field name="display_name"/></tree>',
-            "product,false,search": '<search/>',
+            "product,false,search": "<search/>",
         };
 
         await makeView({
@@ -541,14 +540,25 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // Selecting a relation
-        await editSelect(target.querySelector("div.o_field_reference"), "select.o_input", "partner_type");
+        await editSelect(
+            target.querySelector("div.o_field_reference"),
+            "select.o_input",
+            "partner_type"
+        );
 
         // Selecting another relation
-        await editSelect(target.querySelector("div.o_field_reference"), "select.o_input", "product");
+        await editSelect(
+            target.querySelector("div.o_field_reference"),
+            "select.o_input",
+            "product"
+        );
 
         // Opening the Search More... option
         await click(target.querySelector("div.o_field_reference"), "input.o_input");
-        await click(target.querySelector("div.o_field_reference"), ".o_m2o_dropdown_option_search_more");
+        await click(
+            target.querySelector("div.o_field_reference"),
+            ".o_m2o_dropdown_option_search_more"
+        );
 
         assert.strictEqual(
             target.querySelector("div.modal td.o_data_cell").innerText,
@@ -1178,5 +1188,28 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
+    });
+
+    QUnit.test("reference char with list view pager navigation", async function (assert) {
+        assert.expect(2);
+        serverData.models.partner.records[0].reference_char = "product,37";
+        serverData.models.partner.records[1].reference_char = "product,41";
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form edit="0"><field name="reference_char" widget="reference" string="Record"/></form>`,
+            resIds: [1, 2],
+        });
+        assert.strictEqual(
+            target.querySelector(".o_field_reference .o_form_uri").textContent,
+            "xphone"
+        );
+        await click(target, ".o_pager_next");
+        assert.strictEqual(
+            target.querySelector(".o_field_reference .o_form_uri").textContent,
+            "xpad"
+        );
     });
 });
