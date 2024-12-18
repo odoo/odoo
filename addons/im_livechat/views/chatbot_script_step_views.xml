@@ -10,7 +10,7 @@
                 <div class="alert alert-info text-center mb-0" role="alert" invisible="not is_forward_operator_child">
                     <span>Reminder: This step will only be played if no operator is available.</span>
                 </div>
-                <div class="alert alert-info text-center mb-0" role="alert" invisible="step_type != 'forward_operator'">
+                <div class="alert alert-info text-center mb-0" role="alert" invisible="not is_forward_operator">
                     <span>Tip: Plan further steps for the Bot in case no operator is available.</span>
                 </div>
                 <sheet>
@@ -18,7 +18,7 @@
                         <group>
                             <field name="sequence" invisible="1"/>
                             <field name="message" widget="text_emojis" placeholder="e.g. 'How can I help you?'"
-                                required="step_type != 'forward_operator'"/>
+                                required="not is_forward_operator"/>
                             <field name="chatbot_script_id" invisible="1"/>
                             <field name="step_type"/>
                             <field name="operator_expertise_ids" widget="many2many_tags" options="{'edit_tags': True}" invisible="step_type != 'forward_operator'"/>

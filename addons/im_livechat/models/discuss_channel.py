@@ -63,7 +63,7 @@ class DiscussChannel(models.Model):
             current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=lang)
             chatbot_script = current_step_sudo.chatbot_script_id
             step_message = self.env["chatbot.message"]
-            if current_step_sudo.step_type != "forward_operator":
+            if not current_step_sudo.is_forward_operator:
                 step_message = channel.sudo().chatbot_message_ids.filtered(
                     lambda m: m.script_step_id == current_step_sudo
                     and m.mail_message_id.author_id == chatbot_script.operator_partner_id
@@ -71,7 +71,7 @@ class DiscussChannel(models.Model):
             current_step = {
                 "scriptStep": current_step_sudo.id,
                 "message": step_message.mail_message_id.id,
-                "operatorFound": current_step_sudo.step_type == "forward_operator"
+                "operatorFound": current_step_sudo.is_forward_operator
                 and channel.livechat_operator_id != chatbot_script.operator_partner_id,
             }
             store.add(current_step_sudo)

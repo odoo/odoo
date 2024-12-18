@@ -36,7 +36,7 @@ class ChatbotScript(models.Model):
         for script in self:
             script.livechat_channel_count = mapped_channels.get(script.id, 0)
 
-    @api.depends('script_step_ids.step_type')
+    @api.depends("script_step_ids.is_forward_operator", "script_step_ids.step_type" )
     def _compute_first_step_warning(self):
         for script in self:
             allowed_first_step_types = [
@@ -47,7 +47,7 @@ class ChatbotScript(models.Model):
                 'free_input_multi',
             ]
             welcome_steps = script.script_step_ids and script._get_welcome_steps()
-            if welcome_steps and welcome_steps[-1].step_type == 'forward_operator':
+            if welcome_steps and welcome_steps[-1].is_forward_operator:
                 script.first_step_warning = 'first_step_operator'
             elif welcome_steps and welcome_steps[-1].step_type not in allowed_first_step_types:
                 script.first_step_warning = 'first_step_invalid'
