@@ -44,15 +44,19 @@ class PosMercadoPagoWebhook(http.Controller):
 
         # If and only if this webhook is related with a payment intend (see payment_mercado_pago.js)
         # then the field data['additional_info']['external_reference'] contains a string
-        # formated like "XXX_YYY_ZZZ" where "XXX" is the session_id, "YYY" is the payment_method_id,
-        # and ZZZ is the pos_reference/uid for customer identification (Format ZZZZ-ZZZZ-ZZZZ)
+        # formated like `XXX_YYY_ZZZ` where:
+        # - `XXX` is the session_id
+        # - `YYY` is the payment_method_id
+        # - `ZZZ` is the pos order uuid for customer identification (Format xxxx-xxxx-xxx) where x is a hexadecimal digit
         external_reference = data.get('additional_info', {}).get('external_reference')
 
-        if not external_reference or not re.fullmatch(r'\d+_\d+[_\d-]*', external_reference):
+        mercado_pago_pattern = r'(\d+)_(\d+)_([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
+
+        if not external_reference or not (match := re.fullmatch(mercado_pago_pattern, external_reference)):
             _logger.warning('POST message received with no or malformed "external_reference" key: %s', external_reference)
             return http.Response(status=400)
 
-        session_id, payment_method_id, _ = external_reference.split('_')
+        session_id, payment_method_id, _ = match.groups()
 
         pos_session_sudo = request.env['pos.session'].sudo().browse(int(session_id))
         if not pos_session_sudo or pos_session_sudo.state != 'opened':
