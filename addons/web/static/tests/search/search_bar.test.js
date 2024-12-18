@@ -1239,7 +1239,7 @@ test("edit a filter", async () => {
     expect(SELECTORS.condition).toHaveCount(1);
     expect(queryAllTexts`.modal footer button`).toEqual(["Confirm", "Discard"]);
     expect(getCurrentPath()).toBe("Birthday");
-    expect(getCurrentOperator()).toBe(">=");
+    expect(getCurrentOperator()).toBe("is greater or equal");
     expect(getCurrentValue()).toBe("context_today()");
     expect(`.modal footer button`).toBeEnabled();
 
@@ -1250,12 +1250,12 @@ test("edit a filter", async () => {
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     expect(SELECTORS.condition).toHaveCount(1);
     expect(getCurrentPath()).toBe("Id");
-    expect(getCurrentOperator()).toBe("=");
+    expect(getCurrentOperator()).toBe("is equal");
     expect(getCurrentValue()).toBe("1");
 
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual(["Bool", "Id = 1"]);
+    expect(getFacetTexts()).toEqual(["Bool", "Id is equal 1"]);
 });
 
 test("edit a filter with context: context is kept after edition", async () => {
@@ -1277,7 +1277,7 @@ test("edit a filter with context: context is kept after edition", async () => {
 
     await contains(".o_facet_with_domain .o_searchview_facet_label").click();
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`Foo = abc`]);
+    expect(getFacetTexts()).toEqual([`Foo is equal abc`]);
     expect(searchBar.env.searchModel.context.specialKey).toBe("abc");
 });
 
@@ -1470,7 +1470,9 @@ test("facets display with any / not any operator (with a complex path)", async f
     expect.verifySteps([`fields_get`]);
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Company ➔ Company matches ( Id = 1 ) or Bar = false"]);
+    expect(getFacetTexts()).toEqual([
+        "Company ➔ Company matches ( Id is equal 1 ) or Bar is equal false",
+    ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
 
@@ -1499,7 +1501,7 @@ test("facets display with any / not any operator (with a or)", async function ()
     expect.verifySteps([`fields_get`]);
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Company matches ( Id = 1 ) or Bar = false"]);
+    expect(getFacetTexts()).toEqual(["Company matches ( Id is equal 1 ) or Bar is equal false"]);
     expect.verifySteps([`/web/domain/validate`]);
 });
 
@@ -1529,7 +1531,7 @@ test("facets display with any / not any operator (check brackets)", async functi
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
-        "Company matches ( Bar matches ( Bool is not set ) and Bar matches ( Bool is set ) ) or Bar = false",
+        "Company matches ( Bar matches ( Bool is not set ) and Bar matches ( Bool is set ) ) or Bar is equal false",
     ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
