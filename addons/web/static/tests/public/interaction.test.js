@@ -5,6 +5,8 @@ import { advanceTime, Deferred } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
+import { patchDynamicContent } from "@web/public/utils";
+import { patch } from "@web/core/utils/patch";
 import { startInteraction } from "./helpers";
 import { Component, onWillDestroy, xml } from "@odoo/owl";
 
@@ -2067,5 +2069,68 @@ describe("throttled_for_animation (2)", () => {
         expect.verifySteps([]);
         await click(".test");
         expect.verifySteps(["click"]);
+    });
+});
+
+describe("patching", () => {
+    test("'this' is kept through patches", async () => {
+        class Base extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                span: {
+                    "t-on-click": () => this.value++,
+                    "t-att-value": () => this.value,
+                    "t-att-class": () => ({
+                        base: true,
+                    }),
+                },
+            };
+            setup() {
+                this.value = 10;
+            }
+        }
+        patch(Base.prototype, {
+            setup() {
+                super.setup();
+                patchDynamicContent(this.dynamicContent, {
+                    span: {
+                        "t-on-click": undefined,
+                        "t-att-value": (el, old) => old * 2 + this.value,
+                        "t-att-class": () => ({
+                            big: this.value >= 50,
+                        }),
+                    },
+                });
+            },
+        });
+        patch(Base.prototype, {
+            setup() {
+                super.setup();
+                patchDynamicContent(this.dynamicContent, {
+                    span: {
+                        "t-on-click": () => (this.value *= 5),
+                        "t-att-value": (el, old) => old * 10 - this.value,
+                        "t-att-class": () => ({
+                            bigger: this.value >= 100,
+                        }),
+                    },
+                });
+            },
+        });
+        const { core } = await startInteraction(Base, TemplateTest);
+        const interaction = core.interactions[0].interaction;
+        expect(interaction.value).toBe(10);
+        expect("span").toHaveAttribute("value", "290");
+        expect("span").toHaveClass("base");
+        expect("span").not.toHaveClass(["big", "bigger"]);
+        await click("span");
+        expect(interaction.value).toBe(50);
+        expect("span").toHaveAttribute("value", "1450");
+        expect("span").toHaveClass(["base", "big"]);
+        expect("span").not.toHaveClass("bigger");
+        await click("span");
+        expect(interaction.value).toBe(250);
+        expect("span").toHaveAttribute("value", "7250");
+        expect("span").toHaveClass(["base", "big", "bigger"]);
     });
 });

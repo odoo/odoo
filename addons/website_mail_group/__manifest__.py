@@ -22,7 +22,7 @@
             ('remove', 'website_mail_group/static/src/**/*.edit.js'),
             ('remove', 'website_mail_group/static/src/**/options.js'),
         ],
-        'web.assets_edit_frontend': [
+        'website.assets_edit_frontend': [
             'website_mail_group/static/src/**/*.edit.js',
         ],
     },

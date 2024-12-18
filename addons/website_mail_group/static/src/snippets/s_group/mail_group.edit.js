@@ -8,15 +8,15 @@ import { Interaction } from "@web/public/interaction";
 // but without the rest. Arguably could just enable the whole widget in edit
 // mode but not stable-friendly.
 export class MailGroupEdit extends Interaction {
-    static selector = MailGroup.prototype.selector;
+    static selector = MailGroup.selector;
     dynamicContent = {
         _root: {
-            "t-att-class": {
+            "t-att-class": () => ({
                 "d-none": false,
-            },
+            }),
         },
     };
-});
+}
 
 registry
     .category("public.interactions.edit")

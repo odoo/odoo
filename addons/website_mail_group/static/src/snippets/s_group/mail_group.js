@@ -2,16 +2,18 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { MailGroup } from "@mail_group/interactions/mail_group";
 import { patch } from "@web/core/utils/patch";
+import { patchDynamicContent } from "@web/public/utils";
 
 patch(MailGroup.prototype, {
     setup() {
         super.setup();
-        const oldRootClass = this.dynamicContent._root["t-att-class"];
-        this.dynamicContent._root["t-att-class"] = () => {
-            const classes = oldRootClass.apply(this, this.el);
-            classes["d-none"] = false;
-            return classes;
-        };
+        patchDynamicContent(this.dynamicContent, {
+            _root: {
+                "t-att-class": () => ({
+                    "d-none": false,
+                }),
+            },
+        });
     },
 
     async willStart() {
