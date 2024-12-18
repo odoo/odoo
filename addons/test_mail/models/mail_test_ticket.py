@@ -1,3 +1,5 @@
+import ast
+
 from odoo import api, fields, models, _
 from odoo.tools import email_normalize
 
@@ -152,6 +154,15 @@ class MailTestTicketMc(models.Model):
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     container_id = fields.Many2one('mail.test.container.mc', tracking=True)
 
+    def _notify_get_reply_to(self, default=None):
+        # Override to use alias of the parent container
+        aliases = self.sudo().mapped('container_id')._notify_get_reply_to(default=default)
+        res = {ticket.id: aliases.get(ticket.container_id.id) for ticket in self}
+        leftover = self.filtered(lambda rec: not rec.container_id)
+        if leftover:
+            res.update(super()._notify_get_reply_to(default=default))
+        return res
+
 
 class MailTestContainer(models.Model):
     """ This model can be used in tests when container records like projects
@@ -191,10 +202,11 @@ class MailTestContainer(models.Model):
 
     def _alias_get_creation_values(self):
         values = super()._alias_get_creation_values()
-        values['alias_model_id'] = self.env['ir.model']._get('mail.test.container').id
+        values['alias_model_id'] = self.env['ir.model']._get('mail.test.ticket').id
+        values['alias_force_thread_id'] = False
         if self.id:
-            values['alias_force_thread_id'] = self.id
-            values['alias_parent_thread_id'] = self.id
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            defaults['container_id'] = self.id
         return values
 
 
@@ -208,3 +220,8 @@ class MailTestContainerMc(models.Model):
     _inherit = ['mail.test.container']
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+
+    def _alias_get_creation_values(self):
+        values = super()._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('mail.test.ticket.mc').id
+        return values
