@@ -10,6 +10,9 @@
             <keywords>form, updates, digest, bulletin, announcements, notifications, communication, email, modal, alert, dialog, prompt, pop-up, subscription</keywords>
         </t>
     </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_aside_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_aside" string="Newsletter Aside" t-forbid-sanitize="form" group="contact_and_forms"/>
+    </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
         <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" string="Newsletter Popup" t-forbid-sanitize="form" group="contact_and_forms"/>
     </xpath>
@@ -44,6 +47,94 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
     <section class="s_newsletter_block s_newsletter_list o_cc o_cc2 pt64 pb64" data-list-id="0">
         <div class="container">
             <t t-call="website_mass_mailing.s_newsletter_block_default_template"/>
+        </div>
+    </section>
+</template>
+
+<template id="s_newsletter_aside" name="Newsletter Aside">
+    <section class="s_newsletter_aside s_website_form" data-snippet="s_newsletter_aside" data-name="Newsletter Aside">
+        <div class="container-fluid">
+            <div class="row o_grid_mode" data-row-count="12">
+                <div class="o_grid_item g-height-12 g-col-lg-6 col-lg-6 o_cc o_cc1 oe_img_bg o_not_editable" style="grid-area: 1 / 1 / 13 / 7; --grid-item-padding-x: 0px; --grid-item-padding-y: 0px; background-image: url('/web/image/website.s_newsletter_aside_default_image');"/>
+                <div class="o_grid_item g-height-12 g-col-lg-5 col-lg-5" style="grid-area: 1 / 7 / 13 / 12; --grid-item-padding-x: 40px; --grid-item-padding-y: 40px;">
+                    <h2 class="h3-fs">Subscribe for updates, offers and insights!</h2>
+                    <form id="newsletter_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required"
+                            data-mark="*" data-model_name="mailing.contact" data-success-mode="message" hide-change-model="true">
+                        <div class="s_website_form_rows row s_col_no_bgcolor">
+                            <div t-if="request.env['mailing.contact']._is_name_split_activated()" class="s_website_form_field s_website_form_model_required col-lg-6 pt24" data-type="char" data-name="Field">
+                                <label class="s_website_form_label" style="width: 200px" for="mailing_sub1">
+                                    <span class="s_website_form_label_content">First Name</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <input id="mailing_sub1" type="text" class="form-control s_website_form_input"
+                                        name="first_name" placeholder="First Name" required="1"/>
+                            </div>
+                            <div t-if="request.env['mailing.contact']._is_name_split_activated()" class="s_website_form_field s_website_form_model_required col-lg-6 pt24" data-type="char" data-name="Field">
+                                <label class="s_website_form_label" style="width: 200px" for="mailing_sub2">
+                                    <span class="s_website_form_label_content">Last Name</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <input type="text" class="form-control s_website_form_input"
+                                        name="last_name" placeholder="Last Name" required="1"/>
+                            </div>
+                            <div t-else="" class="s_website_form_field s_website_form_model_required col-lg-6 pt24" data-type="char" data-name="Field">
+                                <label class="s_website_form_label" style="width: 200px" for="mailing_sub1">
+                                    <span class="s_website_form_label_content">Name</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <input id="mailing_sub1" type="text" class="form-control s_website_form_input" name="name" required="1" placeholder="John Smith"/>
+                            </div>
+                            <div t-attf-class="#{'col-lg-12' if request.env['mailing.contact']._is_name_split_activated() else 'col-lg-6'} mb-0 pt24 pb0 s_website_form_field s_website_form_model_required" data-type="email" data-name="Field">
+                                <label class="s_website_form_label" style="width: 200px" for="mailing_sub2">
+                                    <span class="s_website_form_label_content">Email</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <input id="mailing_sub2" type='email' class='form-control s_website_form_input' name="email" placeholder="johnsmith@example.com"/>
+                            </div>
+                            <t t-call="website.s_hr"/>
+                            <t t-set="mailing_lists" t-value="request.env['mailing.list'].search([('is_public', '=', True)])"/>
+                            <div t-attf-class="#{'' if len(mailing_lists) > 1 else 'd-none'} col-lg-12 s_website_form_field s_website_form_model_required pb24" t-if="len(mailing_lists) > 0" data-type="many2many" data-name="Field">
+                                <label class="col-sm-auto s_website_form_label d-none" style="width: 250px" for="mailing_list_">
+                                    <span class="s_website_form_label_content">Our mailing lists</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="s_website_form_multiple" data-name="list_ids" data-display="vertical">
+                                    <t t-foreach="mailing_lists" t-as="record">
+                                        <div class="checkbox col-12">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="s_website_form_input form-check-input" name="list_ids"
+                                                    t-attf-id="mailing_list_#{record.id}" t-att-checked="len(mailing_lists) &lt;= 1" t-att-value="record.id" required="1"/>
+                                                <label class="form-check-label s_website_form_check_label" t-attf-for="mailing_list_#{record.id}">
+                                                    Subscribe to <t t-esc="record.name"/>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                                <div class="s_website_form_field_description small form-text text-muted">
+                                    We send one weekly newsletter per list and always try to keep it interesting. You can unsubscribe at any time.
+                                </div>
+                            </div>
+                            <div class="s_website_form_submit s_website_form_no_submit_label col-12" data-name="Submit Button">
+                                <div style="width: 250px;" class="s_website_form_label"/>
+                                <span id="s_website_form_result"></span>
+                                <a href="#" role="button" class="btn btn-primary s_website_form_send">Subscribe</a>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="s_website_form_end_message d-none mt-4">
+                        <div class="oe_structure">
+                            <section class="s_text_block border rounded pt40 pb40 text-center" data-snippet="s_text_block">
+                                <div class="container">
+                                    <i class="fa fa-paper-plane mb-3 rounded-circle text-bg-success" role="presentation"/>
+                                    <h2 class="h4">Thank you for subscribing!</h2>
+                                    <p class="text-muted">You will now be informed about the latest news.</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </template>
