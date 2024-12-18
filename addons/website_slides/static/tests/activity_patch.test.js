@@ -5,8 +5,7 @@ import {
     start,
     startServer
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
-import { asyncStep, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
+import { describe, test } from "@odoo/hoot";
 import { defineWebsiteSlidesModels } from "@website_slides/../tests/website_slides_test_helpers";
 
 describe.current.tags("desktop");
@@ -22,20 +21,11 @@ test("grant course access", async () => {
         request_partner_id: partnerId,
         res_model: "slide.channel",
     });
-    onRpc("action_grant_access", (args) => {
-        expect(args.args).toHaveLength(1);
-        expect(args.args[0]).toHaveLength(1);
-        expect(args.args[0][0]).toBe(channelId);
-        expect(args.kwargs.partner_id).toBe(partnerId);
-        asyncStep("access_grant");
-        // random value returned in order for the mock server to know that this route is implemented.
-        return true;
-    });
     await start();
     await openFormView("slide.channel", channelId);
     await contains(".o-mail-Activity");
     await click("button", { text: "Grant Access" });
-    await waitForSteps(["access_grant"]);
+    await contains(".o-mail-Activity", { count: 0 });
 });
 
 test("refuse course access", async () => {
@@ -48,18 +38,9 @@ test("refuse course access", async () => {
         request_partner_id: partnerId,
         res_model: "slide.channel",
     });
-    onRpc("action_refuse_access", (args) => {
-        expect(args.args).toHaveLength(1);
-        expect(args.args[0]).toHaveLength(1);
-        expect(args.args[0][0]).toBe(channelId);
-        expect(args.kwargs.partner_id).toBe(partnerId);
-        asyncStep("access_refused");
-        // random value returned in order for the mock server to know that this route is implemented.
-        return true;
-    });
     await start();
     await openFormView("slide.channel", channelId);
     await contains(".o-mail-Activity");
     await click("button", { text: "Refuse Access" });
-    await waitForSteps(["access_refused"]);
+    await contains(".o-mail-Activity", { count: 0 });
 });
