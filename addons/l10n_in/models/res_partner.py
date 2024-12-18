@@ -76,8 +76,15 @@ class ResPartner(models.Model):
 
     @api.onchange('vat')
     def onchange_vat(self):
-        if self.vat and self.check_vat_in(self.vat):
+        # TODO: Refactor this section when the VAT validation dependency
+        # changes from relying on a length of 1 to checking for the presence
+        # of a '/' in the VAT field. Refer to the related discussion and
+        # implementation details in PR #179078: https://github.com/odoo/odoo/pull/179078
+        if self.vat and len(self.vat) == 1 and self.country_id.code == 'IN':
+            self.l10n_in_gst_treatment = 'unregistered'
+        elif self.vat and self.check_vat_in(self.vat):
             self.vat = self.vat.upper()
+            self.l10n_in_gst_treatment = 'regular'
             state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', self.vat[:2])], limit=1)
             if state_id:
                 self.state_id = state_id
