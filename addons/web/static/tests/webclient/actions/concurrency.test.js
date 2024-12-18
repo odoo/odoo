@@ -84,8 +84,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -97,7 +95,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -110,7 +107,6 @@ defineActions([
         name: "Create a Partner",
         res_model: "partner",
         target: "new",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
     {
@@ -118,7 +114,6 @@ defineActions([
         xml_id: "action_8",
         name: "Favorite Ponies",
         res_model: "pony",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [false, "form"],
@@ -261,7 +256,6 @@ test("execute a new action while handling a call_button", async () => {
         return {
             name: "Partners Action 1",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[1, "kanban"]],
         };
     });

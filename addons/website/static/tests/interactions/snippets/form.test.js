@@ -1,13 +1,10 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { click, fill, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
 
-import { MockServer, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 setupInteractionWhiteList(["website.form", "website.post_link"]);
 
@@ -17,9 +14,13 @@ function checkField(inputEl, isVisible, hasError) {
     const fieldEl = inputEl.closest(".s_website_form_field");
     isVisible ? expect(fieldEl).not.toHaveClass("d-none") : expect(fieldEl).toHaveClass("d-none");
     isVisible ? expect(inputEl).toBeEnabled() : expect(inputEl).not.toBeEnabled();
-    hasError ? expect(inputEl).toHaveClass("is-invalid") : expect(inputEl).not.toHaveClass("is-invalid");
-    hasError ? expect(fieldEl).toHaveClass("o_has_error") : expect(fieldEl).not.toHaveClass("o_has_error");
-};
+    hasError
+        ? expect(inputEl).toHaveClass("is-invalid")
+        : expect(inputEl).not.toHaveClass("is-invalid");
+    hasError
+        ? expect(fieldEl).toHaveClass("o_has_error")
+        : expect(fieldEl).not.toHaveClass("o_has_error");
+}
 
 const formTemplate = `
     <div id="wrapwrap">
@@ -135,7 +136,9 @@ test("(name) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(nameEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => { return {} });
+    onRpc("/website/form/mail.mail", async () => {
+        return {};
+    });
     await click("a.s_website_form_send");
     checkField(nameEl, true, false);
 });
@@ -170,7 +173,9 @@ test("(mail) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(mailEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => { return {} });
+    onRpc("/website/form/mail.mail", async () => {
+        return {};
+    });
     await click("a.s_website_form_send");
     checkField(mailEl, true, false);
 });
@@ -205,7 +210,9 @@ test("(subject) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(subjectEl, true, false);
     // Submit
-    onRpc("/website/form/mail.mail", async () => { return {} });
+    onRpc("/website/form/mail.mail", async () => {
+        return {};
+    });
     await click("a.s_website_form_send");
     checkField(subjectEl, true, false);
 });
@@ -240,7 +247,9 @@ test("(question) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(questionEl, true, true);
     // Submit
-    onRpc("/website/form/mail.mail", async () => { return {} });
+    onRpc("/website/form/mail.mail", async () => {
+        return {};
+    });
     await click("a.s_website_form_send");
     checkField(questionEl, true, false);
 });
@@ -276,14 +285,10 @@ test("(rpc) form checks conditions", async () => {
 });
 
 test("form prefilled conditional", async () => {
-    patchWithCleanup(MockServer.prototype, {
-        callOrm(params) {
-            expect(params.model).toBe("res.users");
-            expect(params.method).toBe("read");
-            const result = super.callOrm(...arguments);
-            result[0].phone = "+1-555-5555";
-            return result;
-        }
+    onRpc("res.users", "read", ({ parent }) => {
+        const result = parent();
+        result[0].phone = "+1-555-5555";
+        return result;
     });
 
     // Phone number is only visible if name is filled.

@@ -5,7 +5,6 @@ import {
     clearRegistry,
     contains,
     defineMenus,
-    defineParams,
     getService,
     makeMockEnv,
     mountWithCleanup,
@@ -194,8 +193,8 @@ test("many sublevels in app menu items", async () => {
 test.tags("desktop");
 test("data-menu-xmlid attribute on AppsMenu items", async () => {
     // Replace all default menus and setting new one
-    defineParams({
-        menus: [
+    defineMenus(
+        [
             {
                 id: 1,
                 children: [
@@ -228,7 +227,8 @@ test("data-menu-xmlid attribute on AppsMenu items", async () => {
             },
             { id: 2, children: [], name: "App1 without xmlid", appID: 2 },
         ],
-    });
+        { mode: "replace" }
+    );
     await mountWithCleanup(NavBar);
 
     // check apps
