@@ -976,3 +976,8 @@ class Web_Editor(http.Controller):
                 raise UserError(_("Sorry, we could not generate a response. Please try again later."))
         except AccessError:
             raise AccessError(_("Oops, it looks like our AI is unreachable!"))
+
+    @http.route("/web_editor/field/translation/update", type="json", auth="user", website=True)
+    def update_field_translation(self, model, record_id, field_name, translations):
+        record = request.env[model].browse(record_id)
+        return record.web_update_field_translations(field_name, translations)
