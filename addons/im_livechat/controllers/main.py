@@ -83,7 +83,9 @@ class LivechatController(http.Controller):
         # find the first matching rule for the given country and url
         matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
         if matching_rule and (not matching_rule.chatbot_script_id or matching_rule.chatbot_script_id.script_step_ids):
-            frontend_lang = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or 'en_US')
+            frontend_lang = tools.get_lang(
+                request.env, lang_code=request.httprequest.cookies.get("frontend_lang")
+            ).code
             matching_rule = matching_rule.with_context(lang=frontend_lang)
             rule = {
                 'action': matching_rule.action,
