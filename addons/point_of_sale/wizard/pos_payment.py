@@ -68,7 +68,7 @@ class PosMakePayment(models.TransientModel):
 
         if order.state == 'draft' and order._is_pos_order_paid():
             order._process_saved_order(False)
-            if order.state in {'paid', 'done', 'invoiced'}:
+            if order.state in {'paid', 'done'}:
                 order._send_order()
             return {'type': 'ir.actions.act_window_close'}
 
