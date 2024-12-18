@@ -1,8 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import ast
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 
 
 class Department(models.Model):
@@ -63,10 +65,18 @@ class Department(models.Model):
             department.total_employee = result.get(department.id, 0)
 
     def _compute_plan_count(self):
-        plans_data = self.env['mail.activity.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
+        plans_data = self.env['mail.activity.plan']._read_group(
+            domain=[
+                '|',
+                ('department_id', '=', False),
+                ('department_id', 'in', self.ids)
+            ],
+            groupby=['department_id'],
+            aggregates=['__count'],
+        )
         plans_count = {department.id: count for department, count in plans_data}
         for department in self:
-            department.plans_count = plans_count.get(department.id, 0)
+            department.plans_count = plans_count.get(department.id, 0) + plans_count.get(False, 0)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -129,7 +139,15 @@ class Department(models.Model):
 
     def action_plan_from_department(self):
         action = self.env['ir.actions.actions']._for_xml_id('hr.mail_activity_plan_action')
-        action['context'] = {'default_department_id': self.id, 'search_default_department_id': self.id}
+        action['context'] = dict(ast.literal_eval(action.get('context')), default_department_id=self.id)
+        domain = [
+            '|',
+            ('department_id', '=', False),
+            ('department_id', 'in', self.ids),
+        ]
+        action['domain'] = expression.AND([ast.literal_eval(action['domain']), domain]) if 'domain' in action else domain
+        if self.plans_count == 0:
+            action['views'] = [(False, 'form')]
         return action
 
     def get_children_department_ids(self):
