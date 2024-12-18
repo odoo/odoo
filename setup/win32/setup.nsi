@@ -343,8 +343,8 @@ Section $(TITLE_Nginx) Nginx
     FindClose $0
     File "conf\nginx\nginx.conf"
     # Temporary certs for the first start
-    File "..\..\odoo\addons\point_of_sale\tools\posbox\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
-    File "..\..\odoo\addons\point_of_sale\tools\posbox\overwrite_after_init\etc\ssl\private\nginx-cert.key"
+    File "..\..\odoo\addons\iot_box_image\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
+    File "..\..\odoo\addons\iot_box_image\overwrite_after_init\etc\ssl\private\nginx-cert.key"
 SectionEnd
 
 Section $(TITLE_Ghostscript) SectionGhostscript
