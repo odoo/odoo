@@ -438,6 +438,14 @@ class AccountMove(models.Model):
         string="Display QR-code",
         compute='_compute_display_qr_code',
     )
+    display_payment_qr_code = fields.Boolean(
+        string="Display Payment QR-code",
+        compute='_compute_display_payment_qr_code',
+    )
+    display_link_qr_code = fields.Boolean(
+        string="Display Link QR-code",
+        compute='_compute_display_link_qr_code',
+    )
     qr_code_method = fields.Selection(
         string="Payment QR-code", copy=False,
         selection=lambda self: self.env['res.partner.bank'].get_available_qr_methods_in_sequence(),
@@ -1908,6 +1916,22 @@ class AccountMove(models.Model):
             move.display_qr_code = (
                 move.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt')
                 and move.company_id.qr_code
+            )
+
+    @api.depends('company_id')
+    def _compute_display_payment_qr_code(self):
+        for move in self:
+            move.display_payment_qr_code = (
+                move.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt')
+                and move.company_id.payment_qr_code
+            )
+
+    @api.depends('company_id')
+    def _compute_display_link_qr_code(self):
+        for move in self:
+            move.display_link_qr_code = (
+                move.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt')
+                and move.company_id.link_qr_code
             )
 
     @api.depends('amount_total', 'currency_id')
@@ -5694,6 +5718,10 @@ class AccountMove(models.Model):
         self.qr_code_method = qr_code_method
 
         return rslt
+
+    def _generate_portal_qr(self):
+        self.ensure_one()
+        return None
 
     def _generate_and_send(self, force_synchronous=True, allow_fallback_pdf=True, **custom_settings):
         """ Generate the pdf and electronic format(s) for the current invoices and send them given default settings
