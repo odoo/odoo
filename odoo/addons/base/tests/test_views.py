@@ -4025,6 +4025,96 @@ class TestViewCombined(ViewCase):
             model=main_view.model,
         )
 
+    def test_inherit_attribute_update_context(self):
+        main_view = self.View.create(
+            {
+                'model': 'res.partner',
+                'arch': '''
+                    <form>
+                        <field name="parent_id" context="{'default_company_id': company_id}"/>
+                        <field name="company_id" invisible="1" />
+                        <field name="user_id" invisible="1" />
+                    </form>
+                ''',
+            }
+        )
+
+        def assertResult(arch, result, msg = None):
+            view = self.View.create({
+                'model': 'res.partner',
+                'inherit_id': main_view.id,
+                'mode': 'primary',
+                'arch': arch,
+            })
+            context_expr = etree.fromstring(view.get_combined_arch())[0].get('context')
+            self.assertEqual(context_expr, result, msg)
+
+        assertResult(
+            '''
+            <field name="parent_id" position="attributes">
+            <attribute name="context" operation="update">
+                {"default_user_id": uid}
+            </attribute>
+            </field>
+            ''',
+            "{'default_company_id': company_id, 'default_user_id': uid}",
+            msg="The context should be combined, with the new added key"
+        )
+
+        assertResult(
+            '''
+            <field name="parent_id" position="attributes">
+                <attribute name="context" operation="update">
+                {"default_company_id": 1}
+            </attribute>
+        </field>
+        ''',
+            "{'default_company_id': 1}",
+            msg="The context should be updated, replacing the existing value"
+        )
+
+        assertResult(
+            '''
+            <field name="parent_id" position="attributes">
+                <attribute name="context" operation="update">
+                    {
+                        'default_user_id': (
+                            user_id == uid and uid or False
+                        )
+                    }
+                </attribute>
+            </field>
+            ''',
+            "{'default_company_id': company_id, 'default_user_id': user_id == uid and uid or False}",
+            msg="The context should be combined, even with complex expressions"
+        )
+
+        with self.assertRaisesRegex(TypeError, "Operation for attribute “context” is not a dict"):
+            self.View.create(
+                {
+                    'model': 'res.partner',
+                    'inherit_id': main_view.id,
+                    'arch': '''
+                        <field name="parent_id" position="attributes">
+                            <attribute name="context" operation="update">company_id</attribute>
+                        </field>
+                    ''',
+                }
+            )
+
+        with self.assertRaisesRegex(TypeError, "Attribute “invisible” is not a dict"):
+            self.View.create(
+                {
+                    'model': 'res.partner',
+                    'inherit_id': main_view.id,
+                    'arch': '''
+                        <field name="company_id" position="attributes">
+                            <attribute name="invisible" operation="update">company_id</attribute>
+                        </field>
+                    ''',
+                }
+            )
+
 
 class TestOptionalViews(ViewCase):
     """
