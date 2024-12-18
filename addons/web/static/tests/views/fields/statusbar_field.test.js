@@ -547,7 +547,6 @@ test("For the same record, a single rpc is done to recover the specialData", asy
             id: 1,
             name: "Partners",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -588,7 +587,6 @@ test("open form with statusbar, leave and come back to another one with other do
             id: 1,
             name: "Partners",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
