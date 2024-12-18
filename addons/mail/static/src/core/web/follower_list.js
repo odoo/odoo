@@ -32,15 +32,16 @@ export class FollowerList extends Component {
     onClickAddFollowers() {
         const action = {
             type: "ir.actions.act_window",
-            res_model: "mail.wizard.invite",
+            res_model: "mail.followers.edit",
             view_mode: "form",
             views: [[false, "form"]],
             name: _t("Add followers to this document"),
             target: "new",
             context: {
                 default_res_model: this.props.thread.model,
-                default_res_id: this.props.thread.id,
+                default_res_ids: [this.props.thread.id],
                 dialog_size: "medium",
+                only_add_followers: true,
             },
         };
         this.action.doAction(action, {
