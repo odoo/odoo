@@ -85,7 +85,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         }
 
         return _super(...arguments);
-    },
+    },  
     /**
      * @override
      */
