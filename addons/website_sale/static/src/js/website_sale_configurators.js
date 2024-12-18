@@ -9,7 +9,7 @@ import { ProductCombo } from "@sale/js/models/product_combo";
 import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
-import { serializeComboItem } from '@sale/js/sale_utils';
+import { serializeComboItem, getSelectedCustomPtav } from '@sale/js/sale_utils';
 import { WebsiteSale } from '@website_sale/js/website_sale';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
@@ -32,15 +32,15 @@ WebsiteSale.include({
             }
         );
         if (combos.length) {
-            const preselectedComboItems = combos
+            const selectedComboItems = combos
                 .map(combo => new ProductCombo(combo))
-                .map(combo => combo.preselectedComboItem)
+                .map(combo => combo.selectedComboItem)
                 .filter(Boolean);
-            // If each combo choice has only one combo item, and that combo item can't be configured
-            // (i.e. it has no `no_variant` attributes), then the combo product is already fully
-            // configured and the user doesn't need to do anything else.
-            if (preselectedComboItems.length === combos.length) {
-                const extraPrice = preselectedComboItems.reduce(
+            // If the combo product is already fully configured (i.e. a combo item has been selected
+            // for each combo choice), then it can be added to the cart without opening the combo
+            // configurator.
+            if (selectedComboItems.length === combos.length) {
+                const extraPrice = selectedComboItems.reduce(
                     (price, item) => price + item.totalExtraPrice, 0
                 );
                 const comboProductData = {
@@ -48,7 +48,7 @@ WebsiteSale.include({
                     price: remainingData.price + extraPrice,
                 };
                 return this.addComboProductToCart(
-                    comboProductData, preselectedComboItems, remainingData, {}
+                    comboProductData, selectedComboItems, remainingData, {}
                 );
             }
             // If some combo choices need to be configured, open the combo configurator.
@@ -198,10 +198,7 @@ WebsiteSale.include({
         // Custom attributes.
         serializedProduct.product_custom_attribute_values = [];
         for (const ptal of product.attribute_lines) {
-            const selectedPtavIds = new Set(ptal.selected_attribute_value_ids);
-            const selectedCustomPtav = ptal.attribute_values.find(
-                ptav => ptav.is_custom && selectedPtavIds.has(ptav.id)
-            );
+            const selectedCustomPtav = getSelectedCustomPtav(ptal);
             if (selectedCustomPtav) {
                 serializedProduct.product_custom_attribute_values.push({
                     custom_product_template_attribute_value_id: selectedCustomPtav.id,
