@@ -8,7 +8,6 @@
  */
 
 import { _t } from "@web/core/l10n/translation";
-import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { constructDateRange, QUARTER_OPTIONS } from "@web/search/utils/dates";
@@ -234,7 +233,9 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     getFilterDisplayValue(filterName) {
         const filter = this.getters.getGlobalFilterLabel(filterName);
         if (!filter) {
-            throw new EvaluationError(sprintf(_t(`Filter "%s" not found`), filterName));
+            throw new EvaluationError(
+                _t(`Filter "%(filter_name)s" not found`, { filter_name: filterName })
+            );
         }
         const value = this.getGlobalFilterValue(filter.id);
         switch (filter.type) {
