@@ -23,6 +23,7 @@ import { compareListTypes, createList, insertListAfter, isListItem } from "./uti
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { getListMode, switchListMode } from "@html_editor/utils/list";
 import { withSequence } from "@html_editor/utils/resource";
+import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
 
 function isListActive(listMode) {
     return (selection) => {
@@ -113,10 +114,12 @@ export class ListPlugin extends Plugin {
         ],
 
         hints: [{ selector: "LI", text: _t("List") }],
+        system_style_properties: ["--placeholder-left"],
 
         /** Handlers */
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
+        make_hint_handlers: this.handleListPlaceholderPosition.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -125,6 +128,8 @@ export class ListPlugin extends Plugin {
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         color_apply_overrides: this.applyColorToListItem.bind(this),
+        format_selection_overrides: this.applyFormatToListItem.bind(this),
+        set_tag_overrides: this.handleListStylePosition.bind(this),
     };
 
     setup() {
@@ -546,6 +551,7 @@ export class ListPlugin extends Plugin {
         let toMove = li.lastChild;
         const movedNodes = [];
         const listColor = li.style.color;
+        const liFontSizeStyle = getFontSizeOrClass(li);
         while (toMove) {
             if (isBlock(toMove)) {
                 if (p && isVisible(p)) {
@@ -580,6 +586,16 @@ export class ListPlugin extends Plugin {
                 font.append(...childNodes);
                 node.replaceChildren(font);
                 this.dependencies.color.colorElement(font, listColor, "color");
+            }
+            if (liFontSizeStyle && !isEmptyBlock(node)) {
+                const span = document.createElement("span");
+                span.append(...childNodes);
+                node.replaceChildren(span);
+                if (liFontSizeStyle.type === "font-size") {
+                    span.style.fontSize = liFontSizeStyle.value;
+                } else if (liFontSizeStyle.type === "class") {
+                    span.classList.add(liFontSizeStyle.value);
+                }
             }
         }
         cursors.update(callbacksForCursorUpdate.remove(li));
@@ -833,6 +849,81 @@ export class ListPlugin extends Plugin {
                 }
                 this.dependencies.color.colorElement(list, color, mode);
             }
+        }
+    }
+
+    applyFormatToListItem(formatName, { formatProps } = {}) {
+        const selectedNodes = new Set(
+            this.dependencies.selection
+                .getSelectedNodes()
+                .map((n) => closestElement(n, "li"))
+                .filter(Boolean)
+        );
+        if (!selectedNodes.size || !["setFontSizeClassName", "fontSize"].includes(formatName)) {
+            return false;
+        }
+
+        for (const listItem of selectedNodes) {
+            // Skip list items with block descendants
+            if ([...descendants(listItem)].some(isBlock)) {
+                continue;
+            }
+
+            if (this.dependencies.selection.isNodeContentsFullySelected(listItem)) {
+                for (const node of [listItem, ...descendants(listItem)]) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        removeClass(node, ...FONT_SIZE_CLASSES);
+                    }
+                }
+
+                if (formatName === "setFontSizeClassName") {
+                    listItem.classList.add(formatProps.className);
+                } else if (formatName === "fontSize") {
+                    listItem.style.fontSize = formatProps.size;
+                }
+                listItem.style.listStylePosition = "inside";
+            }
+        }
+        return true;
+    }
+
+    handleListStylePosition(block, newEl) {
+        if (block.style.listStylePosition !== "inside" || newEl.tagName === "LI") {
+            return;
+        }
+
+        const fontSizeStyle = getFontSizeOrClass(block);
+        const cursors = this.dependencies.selection.preserveSelection();
+
+        if (fontSizeStyle) {
+            const span = document.createElement("span");
+            span.append(...newEl.childNodes);
+            newEl.replaceChildren(span);
+
+            if (fontSizeStyle.type === "font-size") {
+                block.style.fontSize = "";
+                span.style.fontSize = fontSizeStyle.value;
+            } else if (fontSizeStyle.type === "class") {
+                removeClass(block, ...FONT_SIZE_CLASSES);
+                span.classList.add(fontSizeStyle.value);
+            }
+        }
+        block.style.listStylePosition = "";
+        cursors.restore();
+    }
+
+    handleListPlaceholderPosition(el) {
+        if (el.tagName === "LI" && el.style.listStylePosition === "inside") {
+            this.dependencies.history.disableObserver();
+            const rangeEl = document.createElement("range-el");
+            el.prepend(rangeEl);
+            el.style.listStylePosition = "";
+            const initialRect = rangeEl.getBoundingClientRect();
+            el.style.listStylePosition = "inside";
+            const afterRect = rangeEl.getBoundingClientRect();
+            el.style.setProperty("--placeholder-left", `${afterRect.left - initialRect.left}px`);
+            rangeEl.remove();
+            this.dependencies.history.enableObserver();
         }
     }
 }
