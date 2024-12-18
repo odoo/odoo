@@ -184,7 +184,6 @@ export class KanbanRecord extends Component {
         "record",
         "progressBarState?",
     ];
-    static Compiler = KanbanCompiler;
     static KANBAN_CARD_ATTRIBUTE = KANBAN_CARD_ATTRIBUTE;
     static KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
     static menuTemplate = "web.KanbanRecordMenu";
@@ -197,7 +196,7 @@ export class KanbanRecord extends Component {
         this.notification = useService("notification");
 
         const { Compiler, archInfo } = this.props;
-        const ViewCompiler = Compiler || this.constructor.Compiler;
+        const ViewCompiler = Compiler || KanbanCompiler;
         const { templateDocs: templates } = archInfo;
 
         this.templates = useViewCompiler(ViewCompiler, templates);
