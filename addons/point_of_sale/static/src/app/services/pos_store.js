@@ -527,6 +527,54 @@ export class PosStore extends WithLazyGetterTrap {
             quantity: 1,
         };
     }
+    async processConfigurableData(payload, values, productTemplate) {
+        // Find candidate based on instantly created variants.
+        const attributeValues = this.models["product.template.attribute.value"]
+            .readMany(payload.attribute_value_ids)
+            .map((value) => value.id);
+
+        let candidate = productTemplate.product_variant_ids.find((variant) => {
+            const attributeIds = variant.product_template_variant_value_ids.map(
+                (value) => value.id
+            );
+            return (
+                attributeValues.every((id) => attributeIds.includes(id)) && attributeValues.length
+            );
+        });
+        const isDynamic = productTemplate.attribute_line_ids.some(
+            (line) => line.attribute_id.create_variant === "dynamic"
+        );
+
+        if (!candidate && isDynamic) {
+            // Need to create the new product.
+            const result = await this.data.callRelated(
+                "product.template",
+                "create_product_variant_from_pos",
+                [productTemplate.id, payload.attribute_value_ids, this.config.id]
+            );
+            candidate = result["product.product"][0];
+        }
+
+        return {
+            attribute_value_ids: payload.attribute_value_ids.map((id) => [
+                "link",
+                this.models["product.template.attribute.value"].get(id),
+            ]),
+            custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
+                ([id, cus]) => [
+                    "create",
+                    {
+                        custom_product_template_attribute_value_id:
+                            this.models["product.template.attribute.value"].get(id),
+                        custom_value: cus,
+                    },
+                ]
+            ),
+            price_extra: values.price_extra + payload.price_extra,
+            qty: payload.qty || values.qty,
+            product_id: candidate || productTemplate.product_variant_ids[0],
+        };
+    }
     getDefaultSearchDetails() {
         let field = "RECEIPT_NUMBER";
         let term = "";
@@ -627,54 +675,12 @@ export class PosStore extends WithLazyGetterTrap {
             const payload = await this.openConfigurator(productTemplate);
 
             if (payload) {
-                // Find candidate based on instantly created variants.
-                const attributeValues = this.models["product.template.attribute.value"]
-                    .readMany(payload.attribute_value_ids)
-                    .map((value) => value.id);
-
-                let candidate = productTemplate.product_variant_ids.find((variant) => {
-                    const attributeIds = variant.product_template_variant_value_ids.map(
-                        (value) => value.id
-                    );
-                    return (
-                        attributeValues.every((id) => attributeIds.includes(id)) &&
-                        attributeValues.length
-                    );
-                });
-
-                const isDynamic = productTemplate.attribute_line_ids.some(
-                    (line) => line.attribute_id.create_variant === "dynamic"
+                const configurableData = await this.processConfigurableData(
+                    payload,
+                    values,
+                    productTemplate
                 );
-
-                if (!candidate && isDynamic) {
-                    // Need to create the new product.
-                    const result = await this.data.callRelated(
-                        "product.template",
-                        "create_product_variant_from_pos",
-                        [productTemplate.id, payload.attribute_value_ids, this.config.id]
-                    );
-                    candidate = result["product.product"][0];
-                }
-
-                Object.assign(values, {
-                    attribute_value_ids: payload.attribute_value_ids.map((id) => [
-                        "link",
-                        this.models["product.template.attribute.value"].get(id),
-                    ]),
-                    custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
-                        ([id, cus]) => [
-                            "create",
-                            {
-                                custom_product_template_attribute_value_id:
-                                    this.models["product.template.attribute.value"].get(id),
-                                custom_value: cus,
-                            },
-                        ]
-                    ),
-                    price_extra: values.price_extra + payload.price_extra,
-                    qty: payload.qty || values.qty,
-                    product_id: candidate || productTemplate.product_variant_ids[0],
-                });
+                Object.assign(values, configurableData);
             } else {
                 return;
             }
