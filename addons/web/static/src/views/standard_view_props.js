@@ -1,15 +1,3 @@
-// TODO: add this in info props description
-
-// breadcrumbs: { type: Array, optional: true },
-// __getLocalState__: { type: CallbackRecorder, optional: true },
-// __getContext__: { type: CallbackRecorder, optional: true },
-// displayName: { type: String, optional: true },
-// noContentHelp: { type: String, optional: true },
-// searchViewId: { type: [Number, false], optional: true },
-// viewId: { type: [Number, false], optional: true },
-// views: { type: Array, element: Array, optional: true },
-// viewSwitcherEntries: { type: Array, optional: true },
-
 export const standardViewProps = {
     info: {
         type: Object,
