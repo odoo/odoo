@@ -74,30 +74,30 @@ class AccountMove(models.Model):
                             indicates a client error (4xx), or if a server error occurs (500).
         :return: None
         """
-        client = _get_nilvera_client(self.env.company)
-        response = client.request(
-            "POST",
-            endpoint,
-            files={'file': (xml_file.name, xml_file, 'application/xml')},
-            handle_response=False,
-        )
+        with _get_nilvera_client(self.env.company) as client:
+            response = client.request(
+                "POST",
+                endpoint,
+                files={'file': (xml_file.name, xml_file, 'application/xml')},
+                handle_response=False,
+            )
 
-        if response.status_code == 200:
-            self.l10n_tr_nilvera_send_status = 'sent'
-        elif response.status_code in {401, 403}:
-            raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
-        elif 400 <= response.status_code < 500:
-            error_message, error_codes = self._l10n_tr_nilvera_einvoice_get_error_messages_from_response(response)
+            if response.status_code == 200:
+                self.l10n_tr_nilvera_send_status = 'sent'
+            elif response.status_code in {401, 403}:
+                raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
+            elif 400 <= response.status_code < 500:
+                error_message, error_codes = self._l10n_tr_nilvera_einvoice_get_error_messages_from_response(response)
 
-            # If the sequence/series is not found on Nilvera, add it then retry.
-            if 3009 in error_codes and post_series:
-                self._l10n_tr_nilvera_post_series(endpoint, client)
-                return self._l10n_tr_nilvera_submit_document(xml_file, endpoint, post_series=False)
-            raise UserError(error_message)
-        elif response.status_code == 500:
-            return UserError(_("Server error from Nilvera, please try again later."))
+                # If the sequence/series is not found on Nilvera, add it then retry.
+                if 3009 in error_codes and post_series:
+                    self._l10n_tr_nilvera_post_series(endpoint, client)
+                    return self._l10n_tr_nilvera_submit_document(xml_file, endpoint, post_series=False)
+                raise UserError(error_message)
+            elif response.status_code == 500:
+                return UserError(_("Server error from Nilvera, please try again later."))
 
-        self.message_post(body=_("The invoice has been successfully sent to Nilvera."))
+            self.message_post(body=_("The invoice has been successfully sent to Nilvera."))
 
     def _l10n_tr_nilvera_post_series(self, endpoint, client):
         """Post the series to Nilvera based on the endpoint."""
@@ -125,59 +125,59 @@ class AccountMove(models.Model):
         )
 
     def _l10n_tr_nilvera_get_submitted_document_status(self):
-        client = _get_nilvera_client(self.env.company)
-        for invoice in self:
-            response = client.request(
-                "GET",
-                f"/einvoice/sale/{invoice.l10n_tr_nilvera_uuid}/Status",
-            )
+        with _get_nilvera_client(self.env.company) as client:
+            for invoice in self:
+                response = client.request(
+                    "GET",
+                    f"/einvoice/sale/{invoice.l10n_tr_nilvera_uuid}/Status",
+                )
 
-            nilvera_status = response.get('InvoiceStatus', {}).get('Code')
-            if nilvera_status in dict(invoice._fields['l10n_tr_nilvera_send_status'].selection):
-                invoice.l10n_tr_nilvera_send_status = nilvera_status
-                if nilvera_status == 'error':
-                    invoice.message_post(
-                        body=Markup(
-                            "%s<br/>%s - %s<br/>"
-                        ) % (
-                            _("The invoice couldn't be sent to the recipient."),
-                            response['InvoiceStatus'].get('Description'),
-                            response['InvoiceStatus'].get('DetailDescription'),
+                nilvera_status = response.get('InvoiceStatus', {}).get('Code')
+                if nilvera_status in dict(invoice._fields['l10n_tr_nilvera_send_status'].selection):
+                    invoice.l10n_tr_nilvera_send_status = nilvera_status
+                    if nilvera_status == 'error':
+                        invoice.message_post(
+                            body=Markup(
+                                "%s<br/>%s - %s<br/>"
+                            ) % (
+                                _("The invoice couldn't be sent to the recipient."),
+                                response['InvoiceStatus'].get('Description'),
+                                response['InvoiceStatus'].get('DetailDescription'),
+                            )
                         )
-                    )
-            else:
-                invoice.message_post(body=_("The invoice status couldn't be retrieved from Nilvera."))
+                else:
+                    invoice.message_post(body=_("The invoice status couldn't be retrieved from Nilvera."))
 
     def _l10n_tr_nilvera_get_documents(self):
-        client = _get_nilvera_client(self.env.company)
-        response = client.request(
-            "GET",
-            "/einvoice/Purchase",
-        )
+        with _get_nilvera_client(self.env.company) as client:
+            response = client.request(
+                "GET",
+                "/einvoice/Purchase",
+            )
 
-        if not response.get('Content'):
-            return
+            if not response.get('Content'):
+                return
 
-        journal = self.env.company.l10n_tr_nilvera_purchase_journal_id
-        if not journal:
-            journal = self.env['account.journal'].search([
-                *self.env['account.journal']._check_company_domain(self.env.company),
-                ('type', '=', 'purchase'),
-            ], limit=1)
+            journal = self.env.company.l10n_tr_nilvera_purchase_journal_id
+            if not journal:
+                journal = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(self.env.company),
+                    ('type', '=', 'purchase'),
+                ], limit=1)
 
-        document_uuids = [content.get('UUID') for content in response.get('Content')]
-        document_uuids_count = dict(self.env['account.move']._read_group(
-            [('l10n_tr_nilvera_uuid', 'in', document_uuids)],
-            groupby=['l10n_tr_nilvera_uuid'],
-            aggregates=['__count'],
-        ))
-        for document_uuid in document_uuids:
-            # Skip invoices that have already been downloaded.
-            if document_uuid in document_uuids_count:
-                continue
-            move = self._l10n_tr_nilvera_get_invoice_from_uuid(client, journal, document_uuid)
-            self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid)
-            self._cr.commit()
+            document_uuids = [content.get('UUID') for content in response.get('Content')]
+            document_uuids_count = dict(self.env['account.move']._read_group(
+                [('l10n_tr_nilvera_uuid', 'in', document_uuids)],
+                groupby=['l10n_tr_nilvera_uuid'],
+                aggregates=['__count'],
+            ))
+            for document_uuid in document_uuids:
+                # Skip invoices that have already been downloaded.
+                if document_uuid in document_uuids_count:
+                    continue
+                move = self._l10n_tr_nilvera_get_invoice_from_uuid(client, journal, document_uuid)
+                self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid)
+                self._cr.commit()
 
     def _l10n_tr_nilvera_get_invoice_from_uuid(self, client, journal, document_uuid):
         response = client.request(

@@ -28,6 +28,13 @@ class NilveraClient:
         if api_key:
             self.session.headers['Authorization'] = 'Bearer ' + api_key
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, type, value, traceback):
+        if hasattr(self, 'session'):
+            self.session.close()
+
     def request(self, method, endpoint, params=None, json=None, files=None, handle_response=True):
         start = datetime.utcnow()
         url = self.base_url + endpoint
@@ -71,7 +78,3 @@ class NilveraClient:
         except JSONDecodeError:
             _logger.exception("Invalid JSON response: %s", response.text)
             raise UserError(_("An error occurred. Try again later."))
-
-    def __del__(self):
-        if hasattr(self, 'session'):
-            self.session.close()
