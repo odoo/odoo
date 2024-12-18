@@ -27,7 +27,6 @@ import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
-import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -93,12 +92,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
 
-        // Business data; loaded from the server at launch
-        this.company_logo = null;
-        this.company_logo_base64 = "";
-        this.order_sequence = 1;
-        this.printers_category_ids_set = new Set();
-
         // Object mapping the order's name (which contains the uuid) to it's server_id after
         // validation (order paid then sent to the backend).
         this.validated_orders_name_server_id_map = {};
@@ -146,7 +139,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.hardwareProxy.pos = this;
         this.syncingOrders = new Set();
         await this.initServerData();
-        if (this.useProxy()) {
+        if (this.config.useProxy) {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
@@ -209,6 +202,24 @@ export class PosStore extends WithLazyGetterTrap {
         this._storeConnectedCashier(user);
     }
 
+    getProductPrice(product, price = false, formatted = false) {
+        const order = this.getOrder();
+        const fiscalPosition = order.fiscal_position_id || this.config.fiscal_position_id;
+        const pricelist = order.pricelist_id || this.config.pricelist_id;
+        const pPrice = product.getProductPrice(price, pricelist, fiscalPosition);
+
+        if (formatted) {
+            const formattedPrice = this.env.utils.formatCurrency(pPrice);
+            if (product.to_weight) {
+                return `${formattedPrice}/${product.uom_id.name}`;
+            } else {
+                return formattedPrice;
+            }
+        }
+
+        return pPrice;
+    }
+
     _getConnectedCashier() {
         const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
         if (cashier_id && this.models["res.users"].get(cashier_id)) {
@@ -223,16 +234,6 @@ export class PosStore extends WithLazyGetterTrap {
 
     _resetConnectedCashier() {
         sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
-    }
-
-    useProxy() {
-        return (
-            this.config.is_posbox &&
-            (this.config.iface_electronic_scale ||
-                this.config.iface_print_via_proxy ||
-                this.config.iface_scan_via_proxy ||
-                this.config.iface_customer_facing_display_via_proxy)
-        );
     }
 
     async initServerData() {
@@ -275,10 +276,6 @@ export class PosStore extends WithLazyGetterTrap {
 
             HWPrinter.config = printer;
             this.unwatched.printers.push(HWPrinter);
-
-            for (const id of printer.product_categories_ids) {
-                this.printers_category_ids_set.add(id);
-            }
         }
         this.config.iface_printers = !!this.unwatched.printers.length;
 
@@ -497,17 +494,6 @@ export class PosStore extends WithLazyGetterTrap {
             return "flex-row-reverse justify-content-between m-1";
         }
     }
-    getProductPriceFormatted(productTemplate) {
-        const formattedUnitPrice = this.env.utils.formatCurrency(
-            this.getProductPrice({ productTemplate })
-        );
-
-        if (productTemplate.to_weight) {
-            return `${formattedUnitPrice}/${productTemplate.uom_id.name}`;
-        } else {
-            return formattedUnitPrice;
-        }
-    }
     async openConfigurator(pTemplate) {
         const attrById = this.models["product.attribute"].getAllBy("id");
         const attributeLines = pTemplate.attribute_line_ids.filter(
@@ -539,13 +525,6 @@ export class PosStore extends WithLazyGetterTrap {
             fieldName: field,
             searchTerm: term,
         };
-    }
-    getDefaultPricelist() {
-        const current_order = this.getOrder();
-        if (current_order) {
-            return current_order.pricelist_id;
-        }
-        return this.config.pricelist_id;
     }
 
     async setTip(tip) {
@@ -791,9 +770,7 @@ export class PosStore extends WithLazyGetterTrap {
                     productName: values?.product_id?.display_name,
                     uomName: values.product_tmpl_id.uom_id?.name,
                     uomRounding: values.product_tmpl_id.uom_id?.rounding,
-                    productPrice: this.getProductPrice({
-                        productTemplate: values.product_tmpl_id,
-                    }),
+                    productPrice: this.getProductPrice(values.product_id),
                 };
                 const weight = await makeAwaitable(
                     this.env.services.dialog,
@@ -921,7 +898,7 @@ export class PosStore extends WithLazyGetterTrap {
      * @param order
      */
     removeOrder(order, removeFromServer = true) {
-        if (this.isOpenOrderShareable() || removeFromServer) {
+        if (this.config.isShareable || removeFromServer) {
             if (typeof order.id === "number" && !order.finalized) {
                 this.addPendingOrder([order.id], true);
             }
@@ -945,12 +922,6 @@ export class PosStore extends WithLazyGetterTrap {
     }
     getCashierUserId() {
         return this.user.id;
-    }
-    get orderPreparationCategories() {
-        if (this.printers_category_ids_set) {
-            return new Set([...this.printers_category_ids_set]);
-        }
-        return new Set();
     }
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.getCashier()._role == "manager";
@@ -1354,41 +1325,6 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    getProducePriceDetails({ productTemplate, product, price }) {
-        const pricelist = this.getDefaultPricelist();
-        const basePrice = product?.lst_price || productTemplate.getPrice(pricelist, 1);
-        const selectedPrice = price === undefined ? basePrice : price;
-
-        let taxes = productTemplate.taxes_id;
-
-        // Fiscal position.
-        const order = this.getOrder();
-        if (order && order.fiscal_position_id) {
-            taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
-        }
-
-        // Taxes computation.
-        const taxesData = getTaxesValues(
-            taxes,
-            selectedPrice,
-            1,
-            productTemplate,
-            this.config._product_default_values,
-            this.company,
-            this.currency
-        );
-        return taxesData;
-    }
-
-    getProductPrice({ product, productTemplate, price = false }) {
-        const taxesData = this.getProducePriceDetails({ product, productTemplate, price });
-        if (this.config.iface_tax_included === "total") {
-            return taxesData.total_included;
-        } else {
-            return taxesData.total_excluded;
-        }
-    }
-
     /**
      * @param {str} terminalName
      */
@@ -1423,12 +1359,6 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
-    getCurrencySymbol() {
-        return this.currency ? this.currency.symbol : "$";
-    }
-    isOpenOrderShareable() {
-        return this.config.raw.trusted_config_ids.length > 0;
-    }
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
     }
@@ -1479,16 +1409,16 @@ export class PosStore extends WithLazyGetterTrap {
         return true;
     }
     getOrderChanges(skipped = false, order = this.getOrder()) {
-        return getOrderChanges(order, skipped, this.orderPreparationCategories);
+        return getOrderChanges(order, skipped, this.config.preparationCategories);
     }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, cancelled = false) {
-        if (this.printers_category_ids_set.size) {
+        if (this.config.printerCategories.size) {
             try {
                 const orderChange = changesToOrder(
                     order,
                     false,
-                    this.orderPreparationCategories,
+                    this.config.preparationCategories,
                     cancelled
                 );
                 this.printChanges(order, orderChange);
@@ -2064,7 +1994,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.isTicketScreenShown) {
             this.closeScreen();
         } else {
-            if (this._shouldLoadOrders()) {
+            if (this.config.shouldLoadOrders) {
                 try {
                     this.setLoadingOrderState(true);
                     await this.getServerOrders();
@@ -2080,10 +2010,6 @@ export class PosStore extends WithLazyGetterTrap {
 
     get isTicketScreenShown() {
         return this.mainScreen.component === TicketScreen;
-    }
-
-    _shouldLoadOrders() {
-        return this.config.raw.trusted_config_ids.length > 0;
     }
 
     redirectToBackend() {
