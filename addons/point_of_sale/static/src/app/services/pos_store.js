@@ -1530,30 +1530,13 @@ export class PosStore extends WithLazyGetterTrap {
                 printer.config.product_categories_ids,
                 orderChange
             );
-            const toPrintArray = this.preparePrintingData(order, changes);
             const diningModeUpdate = orderChange.modeUpdate;
             if (diningModeUpdate || !Object.keys(lastChangedLines).length) {
-                // Prepare orderlines based on the dining mode update
-                const lines =
-                    diningModeUpdate && Object.keys(lastChangedLines).length
-                        ? lastChangedLines
-                        : order.lines;
-
-                // converting in format we need to show on xml
-                const orderlines = Object.entries(lines).map(([key, value]) => ({
-                    basic_name: diningModeUpdate ? value.basic_name : value.product_id.name,
-                    isCombo: diningModeUpdate ? value.isCombo : value.combo_item_id?.id,
-                    quantity: diningModeUpdate ? value.quantity : value.qty,
-                    note: value.note,
-                    attribute_value_ids: value.attribute_value_ids,
-                }));
-
-                // Print detailed receipt
                 const printed = await this.printReceipts(
                     order,
                     printer,
                     "New",
-                    orderlines,
+                    changes.new,
                     true,
                     diningModeUpdate
                 );
@@ -1562,6 +1545,7 @@ export class PosStore extends WithLazyGetterTrap {
                 }
             } else {
                 // Print all receipts related to line changes
+                const toPrintArray = this.preparePrintingData(order, changes);
                 for (const [key, value] of Object.entries(toPrintArray)) {
                     const printed = await this.printReceipts(order, printer, key, value, false);
                     if (!printed) {
