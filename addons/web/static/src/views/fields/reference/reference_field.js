@@ -57,21 +57,21 @@ export class ReferenceField extends Component {
         if (this._isCharField(this.props)) {
             /** Fetch the display name of the record referenced by the field */
             let currentValue = undefined;
-            useRecordObserver(async (record) => {
-                if (currentValue !== record.data[this.props.name]) {
-                    this.state.formattedCharValue = await this._fetchReferenceCharData(this.props);
-                    currentValue = record.data[this.props.name];
+            useRecordObserver(async (record, props) => {
+                if (currentValue !== record.data[props.name]) {
+                    this.state.formattedCharValue = await this._fetchReferenceCharData(props);
+                    currentValue = record.data[props.name];
                 }
             });
         } else if (this.props.modelField) {
             /** Fetch the technical name of the co model */
-            useRecordObserver(async (record) => {
-                if (this.currentModelId !== record.data[this.props.modelField]?.[0]) {
-                    this.state.modelName = await this._fetchModelTechnicalName(this.props);
+            useRecordObserver(async (record, props) => {
+                if (this.currentModelId !== record.data[props.modelField]?.[0]) {
+                    this.state.modelName = await this._fetchModelTechnicalName(props);
                     if (this.currentModelId !== undefined) {
-                        record.update({ [this.props.name]: false });
+                        record.update({ [props.name]: false });
                     }
-                    this.currentModelId = record.data[this.props.modelField]?.[0];
+                    this.currentModelId = record.data[props.modelField]?.[0];
                 }
             });
         }
