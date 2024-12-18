@@ -13,21 +13,12 @@ import { STORAGE, storageGet, storageSet } from "../hoot_utils";
 
 const {
     matchMedia,
-    Object: { entries: $entries },
+    Object: { entries: $entries, keys: $keys },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-const updateClassNames = () => {
-    if (!colorRoot) {
-        return;
-    }
-    const { classList } = colorRoot;
-    classList.remove(...COLOR_SCHEMES);
-    classList.add(current.scheme);
-};
 
 const GRAYS = {
     100: "#f1f5f9",
@@ -145,17 +136,38 @@ const COLOR_VALUES = {
 };
 
 /** @type {ColorScheme[]} */
-const COLOR_SCHEMES = ["dark", "light"];
+const COLOR_SCHEMES = $keys(COLOR_VALUES).filter((k) => k !== "default");
 
-/** @type {HTMLElement | null} */
-let colorRoot = null;
 /** @type {ColorScheme} */
 let defaultScheme = storageGet(STORAGE.scheme);
 if (!COLOR_SCHEMES.includes(defaultScheme)) {
     defaultScheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     storageSet(STORAGE.scheme, defaultScheme);
 }
-const current = reactive({ scheme: defaultScheme }, updateClassNames);
+
+const colorChangedCallbacks = [
+    () => {
+        const { classList } = current.root;
+        classList.remove(...COLOR_SCHEMES);
+        classList.add(current.scheme);
+    },
+];
+const current = reactive(
+    {
+        /** @type {HTMLElement | null} */
+        root: null,
+        scheme: defaultScheme,
+    },
+    () => {
+        if (!current.root) {
+            return;
+        }
+        for (const callback of colorChangedCallbacks) {
+            callback();
+        }
+    }
+);
+current.root;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -178,9 +190,18 @@ export function generateStyleSheets() {
     return styles;
 }
 
+/**
+ * @param {() => any} callback
+ */
+export function onColorSchemeChange(callback) {
+    colorChangedCallbacks.push(callback);
+}
+
+/**
+ * @param {HTMLElement | null} element
+ */
 export function setColorRoot(element) {
-    colorRoot = element;
-    updateClassNames();
+    current.root = element;
 }
 
 export function toggleColorScheme() {
