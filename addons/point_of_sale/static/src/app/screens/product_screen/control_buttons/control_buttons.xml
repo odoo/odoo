@@ -4,8 +4,8 @@
         <!-- All buttons always displayed -->
         <SelectPartnerButton partner="partner" t-if="!props.showRemainingButtons"/>
         <t t-if="!props.showRemainingButtons || (ui.isSmall and props.showRemainingButtons)">
-            <NoteButton
-                label="internalNoteLabel()"
+            <InternalNoteButton
+                label="getNoteLabel()"
                 type="'internal'"
                 class="buttonClass"/>
         </t>

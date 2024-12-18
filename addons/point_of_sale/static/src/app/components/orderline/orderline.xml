@@ -40,9 +40,7 @@
                         <t t-esc="line.customer_note" />
                     </li>
                     <div t-if="this.props.mode === 'display'" class="internal-note-container d-flex gap-2">
-                        <t t-foreach="line.note?.split?.('\n') or []" t-as="note" t-key="note_index">
-                            <li t-if="note.trim() !== ''" t-esc="note" class="internal-note badge mt-2 p-2 rounded-pill bg-info text-info bg-opacity-25" style="font-size: 0.85rem;" />
-                        </t>
+                        <TagsList tags="getInternalNotes()" />
                     </div>
                     <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
                     <t t-slot="default" />
