@@ -138,7 +138,7 @@ export class SplitBillScreen extends Component {
         // order and for the new one. This is not entirely correct
         // but avoids flooding the kitchen with unnecessary orders.
         // Not sure what to do in this case.
-        if (this.pos.orderPreparationCategories.size) {
+        if (this.pos.config.preparationCategories.size) {
             originalOrder.updateLastOrderChange();
             newOrder.updateLastOrderChange();
         }
