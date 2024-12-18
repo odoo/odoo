@@ -93,6 +93,7 @@ export class EmojiPicker extends Component {
 
     setup() {
         this.gridRef = useRef("emoji-grid");
+        this.navbarRef = useRef("navbar");
         this.ui = useState(useService("ui"));
         this.isMobileOS = isMobileOS();
         this.state = useState({
@@ -120,6 +121,9 @@ export class EmojiPicker extends Component {
                 : this.categories[0].sortId;
         });
         onMounted(() => {
+            this.navbarResizeObserver = new ResizeObserver(() => this.adaptNavbar());
+            this.navbarResizeObserver.observe(this.navbarRef.el);
+            this.adaptNavbar();
             if (this.emojis.length === 0) {
                 return;
             }
@@ -182,6 +186,7 @@ export class EmojiPicker extends Component {
             () => [this.searchTerm]
         );
         onWillUnmount(() => {
+            this.navbarResizeObserver.disconnect();
             if (!this.gridRef.el) {
                 return;
             }
@@ -189,6 +194,57 @@ export class EmojiPicker extends Component {
                 this.props.storeScroll.set(this.gridRef.el.scrollTop);
             }
         });
+    }
+
+    adaptNavbar() {
+        const computedStyle = getComputedStyle(this.navbarRef.el);
+        const availableWidth =
+            this.navbarRef.el.getBoundingClientRect().width -
+            parseInt(computedStyle.paddingLeft) -
+            parseInt(computedStyle.marginLeft) -
+            parseInt(computedStyle.paddingLeft) -
+            parseInt(computedStyle.marginLeft);
+        const itemWidth = this.navbarRef.el.querySelector(".o-Emoji").getBoundingClientRect().width;
+        const gapWidth = parseInt(computedStyle.gap);
+        const maxAvailableNavbarItemAmountAtOnce = Math.floor(
+            availableWidth / (itemWidth + gapWidth)
+        );
+        const repr = [];
+        let panel = [];
+        const allCategories = this.getAllCategories();
+        for (const category of allCategories) {
+            if (
+                panel.length === maxAvailableNavbarItemAmountAtOnce - 1 &&
+                category !== allCategories.at(-1)
+            ) {
+                panel.push("next");
+                repr.push(panel);
+                panel = [];
+                panel.push("previous");
+            }
+            panel.push(category.sortId);
+        }
+        if (panel.length > 0) {
+            if (repr.length > 0) {
+                panel.push(
+                    ...[...Array(maxAvailableNavbarItemAmountAtOnce - panel.length)].map(
+                        (_, idx) => "empty_" + idx
+                    )
+                );
+            }
+            repr.push(panel);
+        }
+        this.state.emojiNavbarRepr = repr;
+    }
+
+    get currentNavbarPanel() {
+        if (!this.state.emojiNavbarRepr) {
+            return this.getAllCategories().map((c) => c.sortId);
+        }
+        if (this.state.categoryId === null || Number.isNaN(this.state.categoryId)) {
+            return this.state.emojiNavbarRepr[0];
+        }
+        return this.state.emojiNavbarRepr.find((panel) => panel.includes(this.state.categoryId));
     }
 
     get searchTerm() {
@@ -224,6 +280,20 @@ export class EmojiPicker extends Component {
 
     onClick(ev) {
         markEventHandled(ev, "emoji.selectEmoji");
+    }
+
+    onClickToNextCategories() {
+        const panelIndex = this.state.emojiNavbarRepr.findIndex((p) =>
+            p.includes(this.state.categoryId)
+        );
+        this.selectCategory(this.state.emojiNavbarRepr[panelIndex + 1][1]);
+    }
+
+    onClickToPreviousCategories() {
+        const panelIndex = this.state.emojiNavbarRepr.findIndex((p) =>
+            p.includes(this.state.categoryId)
+        );
+        this.selectCategory(this.state.emojiNavbarRepr[panelIndex - 1].at(-2));
     }
 
     /**
@@ -323,6 +393,14 @@ export class EmojiPicker extends Component {
         }
     }
 
+    getAllCategories() {
+        const res = [...this.categories];
+        if (this.recentEmojis.length > 0) {
+            res.unshift(this.recentCategory);
+        }
+        return res;
+    }
+
     getEmojis() {
         let emojisToDisplay = [...this.emojis];
         const recentEmojis = this.recentEmojis;
@@ -344,10 +422,9 @@ export class EmojiPicker extends Component {
         return [...this.recentEmojis, ...this.getEmojis()];
     }
 
-    selectCategory(ev) {
-        const id = Number(ev.currentTarget.dataset.id);
+    selectCategory(categoryId) {
         this.searchTerm = "";
-        this.state.categoryId = id;
+        this.state.categoryId = categoryId;
         this.shouldScrollElem = true;
     }
 

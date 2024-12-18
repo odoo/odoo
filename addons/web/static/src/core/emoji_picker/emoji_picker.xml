@@ -52,13 +52,19 @@
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>
             </div>
-            <div class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center overflow-auto px-2 gap-1 border-top border-secondary">
-                <t t-if="recentEmojis.length > 0" t-call="web.EmojiPicker.tab">
-                    <t t-set="category" t-value="recentCategory"/>
-                </t>
-                <t t-foreach="categories" t-as="category" t-key="category.sortId">
-                    <t t-call="web.EmojiPicker.tab">
-                        <t t-set="category" t-value="category"/>
+            <div class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top border-secondary" t-att-class="{ 'opacity-0': !state.emojiNavbarRepr }" t-ref="navbar">
+                <t t-if="currentNavbarPanel">
+                    <t t-set="allCategories" t-value="getAllCategories()"/>
+                    <t t-foreach="currentNavbarPanel" t-as="navbarItemId" t-key="navbarItemId">
+                        <t t-if="navbarItemId === 'next'" t-call="web.EmojiPicker.tabNext"/>
+                        <t t-elif="navbarItemId === 'previous'" t-call="web.EmojiPicker.tabPrev"/>
+                        <t t-elif="typeof navbarItemId === 'string' and navbarItemId.startsWith('empty')" t-call="web.EmojiPicker.tabEmpty"/>
+                        <t t-else="">
+                            <t t-set="category" t-value="allCategories.find(cat => cat.sortId === navbarItemId)"/>
+                            <t t-if="category" t-call="web.EmojiPicker.tab">
+                                <t t-set="category" t-value="category"/>
+                            </t>
+                        </t>
                     </t>
                 </t>
             </div>
@@ -67,13 +73,39 @@
 </t>
 
 <t t-name="web.EmojiPicker.tab">
-    <span class="o-Emoji text-center fs-5 rounded-3 cursor-pointer d-flex align-items-center" t-att-class="{'o-active': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId" t-on-click="selectCategory">
+    <span class="o-Emoji text-center fs-5 rounded-3 cursor-pointer d-flex align-items-center align-self-stretch" t-att-class="{'o-active': category.sortId === state.categoryId}" t-att-title="category.name" t-att-data-id="category.sortId" t-on-click="() => this.selectCategory(category.sortId)">
         <span t-esc="category.title"/>
     </span>
 </t>
 
+<t t-name="web.EmojiPicker.tabNext">
+    <span class="o-Emoji text-center fs-5 rounded-3 cursor-pointer d-flex align-items-center align-self-stretch" title="To previous categories" t-on-click="onClickToNextCategories">
+        <span class="position-relative">
+            <i class="oi oi-chevron-right fa-fw smaller opacity-0"/>
+            <i class="oi oi-chevron-right fa-fw smaller position-absolute opacity-75" style="left: 3px; transform: translateY(75%);"/>
+            <i class="oi oi-chevron-right fa-fw smaller position-absolute opacity-75" style="left: -3px; transform: translateY(75%);"/>
+        </span>
+    </span>
+</t>
+
+<t t-name="web.EmojiPicker.tabPrev">
+    <span class="o-Emoji text-center fs-5 rounded-3 cursor-pointer d-flex align-items-center align-self-stretch" title="To next categories" t-on-click="onClickToPreviousCategories">
+        <span class="position-relative">
+            <i class="oi oi-chevron-left fa-fw smaller opacity-0"/>
+            <i class="oi oi-chevron-left fa-fw smaller position-absolute opacity-75" style="left: 3px; transform: translateY(75%);"/>
+            <i class="oi oi-chevron-left fa-fw smaller position-absolute opacity-75" style="left: -3px; transform: translateY(75%);"/>
+        </span>
+    </span>
+</t>
+
+<t t-name="web.EmojiPicker.tabEmpty">
+    <span class="o-Emoji text-center fs-5 rounded-3 cursor-pointer d-flex align-items-center align-self-stretch opacity-0">
+        <span>🫥</span>
+    </span>
+</t>
+
 <t t-name="web.EmojiPicker.section">
-    <span class="w-100 fs-7 px-2 py-1 position-sticky top-0 bg-100" t-att-data-category="category.sortId"><span class="o-EmojiPicker-sectionIcon fs-5 opacity-50" t-esc="category.title"/><span class="ms-2 text-muted text-uppercase fs-7 opacity-50" t-esc="category.displayName"/></span>
+    <span class="w-100 fs-7 px-2 py-1 position-sticky top-0 bg-100 align-self-stretch" t-att-data-category="category.sortId"><span class="o-EmojiPicker-sectionIcon fs-5 opacity-50" t-esc="category.title"/><span class="ms-2 text-muted text-uppercase fs-7 opacity-50" t-esc="category.displayName"/></span>
     <span class="o-EmojiPicker-category opacity-100 fs-7 py-2" t-att-data-category="category.sortId"/>
 </t>
 
