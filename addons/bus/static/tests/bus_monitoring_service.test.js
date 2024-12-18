@@ -63,9 +63,7 @@ test("connection considered as lost after failed reconnect attempt", async () =>
     await env.services.bus_service.start();
     await waitForSteps(["connect"]);
     const unlockWebsocket = lockWebsocketConnect();
-    MockServer.current.env["bus.bus"]._simulateDisconnection(
-        WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE
-    );
+    MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
     await def;
     await advanceTime(CONNECTION_LOST_WARNING_DELAY - 1000);
     await waitForSteps([`connectionStatus - ${CONNECTION_STATUS.CONNECTION_LOST}`]);
@@ -84,7 +82,7 @@ test("brief disconnect not considered lost", async () => {
     unlockBus();
     await env.services.bus_service.start();
     await waitForSteps(["connect"]);
-    MockServer.current.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED);
+    MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED);
     await waitForSteps([
         `connectionStatus - ${CONNECTION_STATUS.CONNECTION_LOST}`,
         `connectionStatus - ${CONNECTION_STATUS.CONNECTED}`,
