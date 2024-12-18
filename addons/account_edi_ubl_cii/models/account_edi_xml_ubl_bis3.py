@@ -64,7 +64,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             # Australia). Allow them to use Bis 3 without raising BR-CO-09.
             if (
                 partner.country_id
-                and partner.country_id not in self.env.ref('base.europe').country_ids
+                and 'EU' not in partner.country_id.country_group_codes
                 and not partner.vat[:2].isalpha()
             ):
                 vals['company_id'] = partner.country_id.code + partner.vat

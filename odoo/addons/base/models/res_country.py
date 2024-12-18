@@ -65,6 +65,7 @@ class ResCountry(models.Model):
     phone_code = fields.Integer(string='Country Calling Code')
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
+    country_group_codes = fields.Char(compute="_compute_country_group_codes")
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
     name_position = fields.Selection([
             ('before', 'Before Address'),
@@ -150,12 +151,17 @@ class ResCountry(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+    @api.depends('country_group_ids')
+    def _compute_country_group_codes(self):
+        for country in self:
+            country.country_group_codes = ",".join(country.country_group_ids.mapped('code')) or ","
 
 class ResCountryGroup(models.Model):
     _name = 'res.country.group'
     _description = "Country Group"
 
     name = fields.Char(required=True, translate=True)
+    code = fields.Char(string='Country Group Code', help='The country group code.')
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 

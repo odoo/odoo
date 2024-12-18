@@ -45,6 +45,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         cls.country_be = cls.env.ref('base.be')
         cls.benelux = cls.env['res.country.group'].create({
             'name': 'BeNeLux',
+            'code': 'BE-NL-LU',
             'country_ids': [Command.set((cls.country_be + cls.env.ref('base.lu') + cls.env.ref('base.nl')).ids)]
         })
         cls.curr_eur = cls._enable_currency('EUR')
@@ -97,6 +98,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
         ca_group = cls.env['res.country.group'].create({
             'name': 'Canada',
+            'code': 'CA',
             'country_ids': [Command.set([cls.env.ref('base.ca').id])]
         })
         cls.env['product.pricelist'].create({
@@ -504,6 +506,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         c_EUR = self.env.ref('base.europe')
         c_BENELUX = self.env['res.country.group'].create({
             'name': 'BeNeLux',
+            'code': 'BE-NL-LU',
             'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
         })
 
@@ -511,8 +514,8 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         self.US = self.env.ref('base.us')
         NL = self.env.ref('base.nl')
         c_BE, c_NL = self.env['res.country.group'].create([
-            {'name': 'Belgium', 'country_ids': [(6, 0, [self.BE.id])]},
-            {'name': 'Netherlands', 'country_ids': [(6, 0, [NL.id])]},
+            {'name': 'Belgium', 'code': 'BE', 'country_ids': [(6, 0, [self.BE.id])]},
+            {'name': 'Netherlands', 'code': 'NL', 'country_ids': [(6, 0, [NL.id])]},
         ])
 
         (self.backend_pl + self.generic_pl_select + self.generic_pl_code + self.w1_pl_select).write({'country_group_ids': [Command.set(c_BE.ids)]})
