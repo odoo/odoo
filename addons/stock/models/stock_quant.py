@@ -1077,7 +1077,7 @@ class StockQuant(models.Model):
             if quantity:
                 vals['quantity'] = quant.quantity + quantity
             if reserved_quantity:
-                vals['reserved_quantity'] = quant.reserved_quantity + reserved_quantity
+                vals['reserved_quantity'] = max(0, quant.reserved_quantity + reserved_quantity)
             quant.write(vals)
         else:
             vals = {
@@ -1141,7 +1141,7 @@ class StockQuant(models.Model):
                         dupes AS (
                             SELECT min(id) as to_update_quant_id,
                                 (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
-                                SUM(reserved_quantity) as reserved_quantity,
+                                GREATEST(0, SUM(reserved_quantity)) as reserved_quantity,
                                 SUM(inventory_quantity) as inventory_quantity,
                                 SUM(quantity) as quantity,
                                 MIN(in_date) as in_date
