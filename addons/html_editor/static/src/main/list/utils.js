@@ -1,3 +1,5 @@
+import { getFontSizeOrClass } from "@html_editor/utils/formatting";
+
 export function createList(document, mode) {
     const node = document.createElement(mode === "OL" ? "OL" : "UL");
     if (mode === "CL") {
@@ -14,8 +16,21 @@ export function insertListAfter(document, afterNode, mode, content = []) {
     list.append(
         ...content.map((c) => {
             const li = document.createElement("LI");
+            let fontSizeStyle;
             if (c.length === 1 && c[0].tagName === "FONT" && c[0].style.color) {
                 li.style.color = c[0].style.color;
+                li.append(...c[0].childNodes);
+            } else if (
+                c.length === 1 &&
+                c[0].tagName === "SPAN" &&
+                (fontSizeStyle = getFontSizeOrClass(c[0]))
+            ) {
+                if (fontSizeStyle.type === "font-size") {
+                    li.style.fontSize = fontSizeStyle.value;
+                } else if (fontSizeStyle.type === "class") {
+                    li.classList.add(fontSizeStyle.value);
+                }
+                li.style.listStylePosition = "inside";
                 li.append(...c[0].childNodes);
             } else {
                 li.append(...[].concat(c));
