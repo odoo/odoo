@@ -189,7 +189,7 @@ class ChatRoom extends Interaction {
     /**
       * Perform an HTTP request to update the participant count on the server side.
       *
-      * @param {integer} count, current number of participant in the room
+      * @param {number} count, current number of participant in the room
       * @param {boolean} joined, true if someone joined the room
       */
     async updateParticipantCount(count, joined) {

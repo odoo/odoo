@@ -40,7 +40,7 @@ export class CarouselProduct extends Interaction {
         let size = 5;
         for (const el of document.querySelectorAll(".o_top_fixed_element")) {
             const style = window.getComputedStyle(el);
-            size += el.getBoundingClientRect().height + parseFloat(el.marginTop) + parseFloat(el.marginBottom);
+            size += el.getBoundingClientRect().height + parseFloat(style.marginTop) + parseFloat(style.marginBottom);
         }
         this.top = size;
     }
