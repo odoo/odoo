@@ -41,6 +41,7 @@ class ChatbotScriptStep(models.Model):
         copy=False,  # copied manually, see chatbot.script#copy
         string='Only If', help='Show this step only if all of these answers have been selected.')
     # forward-operator specifics
+    is_forward_operator = fields.Boolean(compute="_compute_is_forward_operator")
     is_forward_operator_child = fields.Boolean(compute='_compute_is_forward_operator_child')
     operator_expertise_ids = fields.Many2many(
         "im_livechat.expertise",
@@ -56,13 +57,25 @@ class ChatbotScriptStep(models.Model):
             if update_command:
                 step.triggering_answer_ids = update_command
 
-    @api.depends('sequence', 'triggering_answer_ids', 'chatbot_script_id.script_step_ids.triggering_answer_ids',
-                 'chatbot_script_id.script_step_ids.answer_ids', 'chatbot_script_id.script_step_ids.sequence')
+    @api.depends("step_type")
+    def _compute_is_forward_operator(self):
+        for step in self:
+            step.is_forward_operator = step.step_type == "forward_operator"
+
+    @api.depends(
+        "chatbot_script_id.script_step_ids.answer_ids",
+        "chatbot_script_id.script_step_ids.is_forward_operator",
+        "chatbot_script_id.script_step_ids.sequence",
+        "chatbot_script_id.script_step_ids.step_type",
+        "chatbot_script_id.script_step_ids.triggering_answer_ids",
+        "sequence",
+        "triggering_answer_ids",
+    )
     def _compute_is_forward_operator_child(self):
         parent_steps_by_chatbot = {}
         for chatbot in self.chatbot_script_id:
             parent_steps_by_chatbot[chatbot.id] = chatbot.script_step_ids.filtered(
-                lambda step: step.step_type in ['forward_operator', 'question_selection']
+                lambda step: step.is_forward_operator or step.step_type == "question_selection"
             ).sorted(lambda s: s.sequence, reverse=True)
         for step in self:
             parent_steps = parent_steps_by_chatbot[step.chatbot_script_id.id].filtered(
@@ -71,9 +84,9 @@ class ChatbotScriptStep(models.Model):
             parent = step
             while True:
                 parent = parent._get_parent_step(parent_steps)
-                if not parent or parent.step_type == 'forward_operator':
+                if not parent or parent.is_forward_operator:
                     break
-            step.is_forward_operator_child = parent and parent.step_type == 'forward_operator'
+            step.is_forward_operator_child = parent and parent.is_forward_operator
 
     @api.model_create_multi
     def create(self, vals_list):
