@@ -6,14 +6,14 @@
             <div class="o_kanban_header_title position-relative d-flex lh-lg">
                 <div t-if="group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1 gap-1"
                      t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave">
-                    <t t-esc="groupName"></t>
+                    <t t-esc="group.displayName"></t>
                     <span t-if="group.count > 0 and !props.list.model.useSampleModel" t-esc="'(' + group.count + ')'"/>
                 </div>
                 <div t-if="!group.isFolded"
                     class="o_column_title flex-grow-1 min-w-0 mw-100 gap-1 d-flex fs-4 fw-bold align-top text-900"
                       t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave"
                 >
-                    <span class="text-truncate" t-esc="groupName"/>
+                    <span class="text-truncate" t-esc="group.displayName"/>
                     <span t-if="!progressBar and !props.list.model.useSampleModel" t-esc="'(' + group.count + ')'"/>
                 </div>
                 <t t-if="env.isSmall or !group.isFolded">

@@ -25,9 +25,7 @@ export class GraphModel extends Model {
         this.keepLast = new KeepLast();
         this.race = new Race();
         const _fetchDataPoints = this._fetchDataPoints.bind(this);
-        this._fetchDataPoints = (...args) => {
-            return this.race.add(_fetchDataPoints(...args));
-        };
+        this._fetchDataPoints = (...args) => this.race.add(_fetchDataPoints(...args));
 
         this.initialGroupBy = null;
 
@@ -279,8 +277,8 @@ export class GraphModel extends Model {
      * @protected
      * @returns {string}
      */
-    _getDefaultFilterLabel(field) {
-        return _t("None");
+    _getDefaultFilterLabel(gb) {
+        return this.metaData.fields[gb?.fieldName]?.falsy_value_label || _t("None");
     }
 
     /**
