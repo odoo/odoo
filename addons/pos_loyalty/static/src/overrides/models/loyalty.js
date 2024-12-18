@@ -2,7 +2,7 @@
 
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { Mutex } from "@web/core/utils/concurrency";
-import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
+import { roundPrecision, roundDecimals } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
@@ -744,6 +744,50 @@ patch(Order.prototype, {
         }
         return true;
     },
+    getTotalQuantityPerProduct(program, rule, orderLines) {
+        let totalProductQty = 0;
+        // Only count points for paid lines.
+        const qtyPerProduct = {};
+        let orderedProductPaid = 0;
+        for (const line of orderLines) {
+            if (
+                ((!line.reward_product_id &&
+                    (rule.any_product ||
+                        rule.valid_product_ids.has(line.get_product().id))) ||
+                    (line.reward_product_id &&
+                        (rule.any_product ||
+                            rule.valid_product_ids.has(line.reward_product_id)))) &&
+                !line.ignoreLoyaltyPoints({ program })
+            ) {
+                // We only count reward products from the same program to avoid unwanted feedback loops
+                if (line.is_reward_line) {
+                    const reward = this.pos.reward_by_id[line.reward_id];
+                    if ((program.id === reward.program_id.id) || ['gift_card', 'ewallet'].includes(reward.program_id.program_type)) {
+                        continue;
+                    }
+                }
+                const lineQty = line.reward_product_id
+                    ? -line.get_quantity()
+                    : line.get_quantity();
+                if (qtyPerProduct[line.reward_product_id || line.get_product().id]) {
+                    qtyPerProduct[line.reward_product_id || line.get_product().id] +=
+                        lineQty;
+                } else {
+                    qtyPerProduct[line.reward_product_id || line.get_product().id] =
+                        lineQty;
+                }
+                orderedProductPaid += line.get_price_with_tax();
+                if (!line.is_reward_line) {
+                    totalProductQty += lineQty;
+                }
+            }
+        }
+        return {
+            'totalProductQty': totalProductQty,
+            'qtyPerProduct': qtyPerProduct,
+            'orderedProductPaid': orderedProductPaid
+        }
+    },
     /**
      * Computes how much points each program gives.
      *
@@ -803,43 +847,7 @@ patch(Order.prototype, {
                 if (rule.minimum_amount > amountCheck) {
                     continue;
                 }
-                let totalProductQty = 0;
-                // Only count points for paid lines.
-                const qtyPerProduct = {};
-                let orderedProductPaid = 0;
-                for (const line of orderLines) {
-                    if (
-                        ((!line.reward_product_id &&
-                            (rule.any_product ||
-                                rule.valid_product_ids.has(line.get_product().id))) ||
-                            (line.reward_product_id &&
-                                (rule.any_product ||
-                                    rule.valid_product_ids.has(line.reward_product_id)))) &&
-                        !line.ignoreLoyaltyPoints({ program })
-                    ) {
-                        // We only count reward products from the same program to avoid unwanted feedback loops
-                        if (line.is_reward_line) {
-                            const reward = this.pos.reward_by_id[line.reward_id];
-                            if ((program.id === reward.program_id.id) || ['gift_card', 'ewallet'].includes(reward.program_id.program_type)) {
-                                continue;
-                            }
-                        }
-                        const lineQty = line.reward_product_id
-                            ? -line.get_quantity()
-                            : line.get_quantity();
-                        if (qtyPerProduct[line.reward_product_id || line.get_product().id]) {
-                            qtyPerProduct[line.reward_product_id || line.get_product().id] +=
-                                lineQty;
-                        } else {
-                            qtyPerProduct[line.reward_product_id || line.get_product().id] =
-                                lineQty;
-                        }
-                        orderedProductPaid += line.get_price_with_tax();
-                        if (!line.is_reward_line) {
-                            totalProductQty += lineQty;
-                        }
-                    }
-                }
+                const { totalProductQty, orderedProductPaid } = this.getTotalQuantityPerProduct(program, rule, orderLines);
                 if (totalProductQty < rule.minimum_qty) {
                     // Should also count the points from negative quantities.
                     // For example, when refunding an ewallet payment. See TicketScreen override in this addon.
@@ -1010,7 +1018,16 @@ patch(Order.prototype, {
                 if (points < reward.required_points) {
                     continue;
                 }
-                if (auto && this.disabledRewards.has(reward.id)) {
+                const isNotEnough = program.rules.some(
+                    (rule) =>
+                        this.getTotalQuantityPerProduct(program, rule, this.orderlines)
+                            .totalProductQty <= rule.minimum_qty
+                );
+                if (
+                    auto &&
+                    ((reward.reward_type === "product" && isNotEnough) ||
+                        this.disabledRewards.has(reward.id))
+                ) {
                     continue;
                 }
                 // Try to filter out rewards that will not be claimable anyway.
@@ -1541,7 +1558,7 @@ patch(Order.prototype, {
                 product: reward.discount_line_product_id,
                 price: -roundDecimals(
                     product.get_price(this.pricelist, freeQuantity),
-                    this.pos.currency.decimal_places
+                    this.pos.currency.decimal_places,
                 ),
                 tax_ids: product.taxes_id,
                 quantity: freeQuantity,
