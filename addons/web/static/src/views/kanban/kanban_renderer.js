@@ -46,7 +46,7 @@ export class KanbanRenderer extends Component {
     };
     static props = [
         "archInfo",
-        "Compiler?",
+        "Compiler",
         "list",
         "deleteRecord",
         "openRecord",
