@@ -42,3 +42,6 @@ class L10nLatamDocumentType(models.Model):
 
     def _is_doc_type_electronic_ticket(self):
         return self.code in ['39', '41'] and self.country_id.code == 'CL'
+
+    def _is_doc_type_refund(self):
+        return self.code == '61' and self.country_id.code == 'CL'
