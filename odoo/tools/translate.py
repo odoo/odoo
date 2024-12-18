@@ -1568,7 +1568,7 @@ def _get_translation_upgrade_queries(cr, field):
                   FROM _ir_translation it
              LEFT JOIN ir_model_data imd
                     ON imd.model = %s AND imd.res_id = it.res_id AND imd.module != '__export__'
-                 WHERE it.type = 'model' AND it.name = %s AND it.state = 'translated'
+                 WHERE it.type = 'model' AND it.name = %s AND it.state IN ('translated','to_translate')
               GROUP BY it.res_id
             )
             UPDATE {Model._table} m
