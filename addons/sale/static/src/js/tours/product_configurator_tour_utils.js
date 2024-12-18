@@ -199,18 +199,18 @@ function assertProductNameContains(productName) {
 function assertFooterButtonsDisabled() {
     return {
         content: "Assert that the footer buttons are disabled",
-        trigger: 'footer.modal-footer button:disabled',
+        trigger: '.o_sale_product_configurator_dialog footer.modal-footer button:disabled',
     };
 }
 
 function saveConfigurator() {
     return [
         {
-            trigger: '.modal button:contains(Confirm)',
+            trigger: '.o_sale_product_configurator_dialog button:contains(Confirm)',
             run: 'click',
         }, {
             content: "Wait until the modal is closed",
-            trigger: 'body:not(:has(.modal))',
+            trigger: 'body:not(:has(.o_sale_product_configurator_dialog))',
         }
     ];
 }
