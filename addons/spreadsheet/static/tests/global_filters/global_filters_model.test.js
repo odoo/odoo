@@ -985,15 +985,15 @@ test("ODOO.FILTER.VALUE date from/to with from and to defined", async function (
 
 test("ODOO.FILTER.VALUE relation filter", async function () {
     const { model } = await createModelWithDataSource({
-        mockRPC: function (route, { method, args }) {
-            if (method === "read") {
-                const resId = args[0][0];
+        mockRPC: function (route, { method, kwargs }) {
+            if (method === "web_search_read") {
+                const resId = kwargs.domain[0][2][0];
                 const names = {
                     1: "Jean-Jacques",
                     2: "Raoul Grosbedon",
                 };
                 expect.step(`read_${resId}`);
-                return [{ id: resId, display_name: names[resId] }];
+                return { records: [{ id: resId, display_name: names[resId] }] };
             }
         },
     });
