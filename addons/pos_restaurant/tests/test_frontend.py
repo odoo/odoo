@@ -325,3 +325,18 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('CrmTeamTour')
         order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(order.crm_team_id.id, sale_team.id)
+
+    def test_14_pos_payment_sync(self):
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        def assert_payment(lines_count, amount):
+            self.assertEqual(len(order.payment_ids), lines_count)
+            self.assertEqual(round(sum(payment.amount for payment in order.payment_ids), 2), amount)
+        self.start_pos_tour('PoSPaymentSyncTour1')
+        order = self.pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        assert_payment(1, 2.2)
+        self.start_pos_tour('PoSPaymentSyncTour2')
+        assert_payment(1, 4.4)
+        self.start_pos_tour('PoSPaymentSyncTour3')
+        assert_payment(2, 6.6)
