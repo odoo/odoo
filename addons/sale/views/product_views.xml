@@ -25,13 +25,10 @@
             </field>
             <group name="description" position="after">
                 <t groups="sales_team.group_sale_salesman">
-                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
-                        <field name="sale_line_warn" string="Warning"/>
+                    <group string="Warning on Sales Orders" groups="sale.group_warning_sale">
                         <field name="sale_line_warn_msg"
                                string="Message"
-                               placeholder="Type a message..."
-                               invisible="sale_line_warn == 'no-message'"
-                               required="sale_line_warn != 'no-message'"/>
+                               placeholder="Type a message..."/>
                     </group>
                 </t>
                 <group name="expense_info" string="Expense" invisible="not visible_expense_policy">

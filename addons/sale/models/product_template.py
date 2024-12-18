@@ -6,8 +6,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
-from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
-
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -20,9 +18,6 @@ class ProductTemplate(models.Model):
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
              "Create a task and track hours: Create a task on the sales order validation and track the work hours.")
-    sale_line_warn = fields.Selection(
-        WARNING_MESSAGE, string="Sales Order Line",
-        help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text(string="Message for Sales Order Line")
     expense_policy = fields.Selection(
         selection=[
@@ -225,12 +220,6 @@ class ProductTemplate(models.Model):
                 'has_optional_products': has_optional_products,
                 'is_combo': self.type == 'combo',
             })
-        if self.sale_line_warn != 'no-message':
-            res['sale_warning'] = {
-                'type': self.sale_line_warn,
-                'title': _("Warning for %s", self.name),
-                'message': self.sale_line_warn_msg,
-            }
         return res
 
     @api.model

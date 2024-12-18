@@ -878,32 +878,6 @@ class SaleOrder(models.Model):
         ):
             self.show_update_fpos = True
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id_warning(self):
-        if not self.partner_id:
-            return
-
-        partner = self.partner_id
-
-        # If partner has no warning, check its company
-        if partner.sale_warn == 'no-message' and partner.parent_id:
-            partner = partner.parent_id
-
-        if partner.sale_warn and partner.sale_warn != 'no-message':
-            # Block if partner only has warning but parent company is blocked
-            if partner.sale_warn != 'block' and partner.parent_id and partner.parent_id.sale_warn == 'block':
-                partner = partner.parent_id
-
-            if partner.sale_warn == 'block':
-                self.partner_id = False
-
-            return {
-                'warning': {
-                    'title': _("Warning for %s", partner.name),
-                    'message': partner.sale_warn_msg,
-                }
-            }
-
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
         self.show_update_pricelist = bool(self.order_line)
@@ -2155,10 +2129,8 @@ class SaleOrder(models.Model):
         res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
             res[product.id]['price'] = pricelist.get(product.id)
-            if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
+            if product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
-            if product.sale_line_warn == "block":
-                res[product.id]['readOnly'] = True
         return res
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):

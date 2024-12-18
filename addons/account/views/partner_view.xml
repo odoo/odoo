@@ -175,18 +175,6 @@
                     </button>
                 </div>
 
-                <page name="internal_notes" position="inside">
-                    <group groups="account.group_account_invoice,account.group_account_readonly">
-                        <group groups="account.group_warning_account" col="2">
-                            <separator string="Warning on the Invoice" colspan="2"/>
-                            <field name="invoice_warn" nolabel="1" colspan="2" required="1"/>
-                            <field name="invoice_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"
-                                invisible="invoice_warn in (False, 'no-message')"
-                                required="invoice_warn and invoice_warn != 'no-message'"/>
-                        </group>
-                    </group>
-                </page>
-
                 <field name="vat" position="before">
                     <field name="partner_vat_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
                 </field>

@@ -103,11 +103,8 @@
                 <page name="internal_notes" position="inside">
                     <group groups="purchase.group_purchase_user">
                         <group groups="purchase.group_warning_purchase" col="2">
-                            <separator string="Warning on the Purchase Order" colspan="2"/>
-                            <field name="purchase_warn" nolabel="1" colspan="2" required="1"/>
-                            <field name="purchase_warn_msg" colspan="2" placeholder="Type a message..." nolabel="1"
-                                invisible="purchase_warn in (False, 'no-message')"
-                                required="purchase_warn and purchase_warn != 'no-message'"/>
+                            <separator string="Warning on Purchase Orders and Bills" colspan="2"/>
+                            <field name="purchase_warn_msg" colspan="2" placeholder="Type a message..." nolabel="1"/>
                         </group>
                     </group>
                 </page>

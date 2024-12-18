@@ -285,26 +285,6 @@ class PurchaseOrderLine(models.Model):
 
         self._compute_tax_id()
 
-    @api.onchange('product_id')
-    def onchange_product_id_warning(self):
-        if not self.product_id or not self.env.user.has_group('purchase.group_warning_purchase'):
-            return
-        warning = {}
-        title = False
-        message = False
-
-        product_info = self.product_id
-
-        if product_info.purchase_line_warn != 'no-message':
-            title = _("Warning for %s", product_info.name)
-            message = product_info.purchase_line_warn_msg
-            warning['title'] = title
-            warning['message'] = message
-            if product_info.purchase_line_warn == 'block':
-                self.product_id = False
-            return {'warning': warning}
-        return {}
-
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
     def _compute_allowed_uom_ids(self):
         for line in self:
@@ -424,8 +404,7 @@ class PurchaseOrderLine(models.Model):
         the product is read-only or not.
 
         A product is considered read-only if the order is considered read-only (see
-        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records
-        or if it has purchase_line_warn == "block".
+        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records.
 
         Note: This method cannot be called with multiple records that have different products linked.
 

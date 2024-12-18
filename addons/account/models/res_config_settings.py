@@ -78,7 +78,6 @@ class ResConfigSettings(models.TransientModel):
         ],
         help="Intermediary account used when moving from a liquidity account to another.")
     module_account_accountant = fields.Boolean(string='Accounting')
-    group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
     group_show_sale_receipts = fields.Boolean(string='Sale Receipt',
         implied_group='account.group_sale_receipts')

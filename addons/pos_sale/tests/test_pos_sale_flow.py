@@ -850,8 +850,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
     def test_pos_sale_warnings(self):
         self.env['res.partner'].create([
-            {'name': 'A Test Customer', 'sale_warn': 'warning', 'sale_warn_msg': 'Highly infectious disease'},
-            {'name': 'A Test Customer 2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'}
+            {'name': 'A Test Customer 1', 'sale_warn_msg': 'Highly infectious disease'},
+            {'name': 'A Test Customer 2', 'sale_warn_msg': 'Cannot afford our services'}
         ])
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSaleWarning', login="accountman")

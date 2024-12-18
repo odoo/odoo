@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models, Command
-from odoo.exceptions import UserError
 
 
 class PurchaseRequisitionCreateAlternative(models.TransientModel):
@@ -15,49 +14,32 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
     partner_id = fields.Many2one(
         'res.partner', string='Vendor', required=True,
         help="Choose a vendor for alternative PO")
-    creation_blocked = fields.Boolean(
-        help="If the chosen vendor or if any of the products in the original PO have a blocking warning then we prevent creation of alternative PO. "
-             "This is because normally these fields are cleared w/warning message within form view, but we cannot recreate that in this case.",
-        compute="_compute_purchase_warn",
-        groups="purchase.group_warning_purchase")
     purchase_warn_msg = fields.Text(
         'Warning Messages',
-        compute="_compute_purchase_warn",
+        compute="_compute_purchase_warn_msg",
         groups="purchase.group_warning_purchase")
     copy_products = fields.Boolean(
         "Copy Products", default=True,
         help="If this is checked, the product quantities of the original PO will be copied")
 
     @api.depends('partner_id', 'copy_products')
-    def _compute_purchase_warn(self):
-        self.creation_blocked = False
+    def _compute_purchase_warn_msg(self):
         self.purchase_warn_msg = ''
         # follows partner warning logic from PurchaseOrder
         if not self.env.user.has_group('purchase.group_warning_purchase'):
             return
         partner = self.partner_id
         # If partner has no warning, check its company
-        if partner and partner.purchase_warn == 'no-message':
+        if not partner.purchase_warn_msg:
             partner = partner.parent_id
-        if partner and partner.purchase_warn != 'no-message':
+        if partner and partner.purchase_warn_msg:
             self.purchase_warn_msg = _("Warning for %(partner)s:\n%(warning_message)s\n", partner=partner.name, warning_message=partner.purchase_warn_msg)
-            if partner.purchase_warn == 'block':
-                self.creation_blocked = True
-                self.purchase_warn_msg += _("This is a blocking warning!\n")
         if self.copy_products and self.origin_po_id.order_line:
             for line in self.origin_po_id.order_line:
-                if line.product_id.purchase_line_warn != 'no-message':
+                if line.product_id.purchase_line_warn_msg:
                     self.purchase_warn_msg += _("Warning for %(product)s:\n%(warning_message)s\n", product=line.product_id.name, warning_message=line.product_id.purchase_line_warn_msg)
-                    if line.product_id.purchase_line_warn == 'block':
-                        self.creation_blocked = True
-                        self.purchase_warn_msg += _("This is a blocking warning!\n")
 
     def action_create_alternative(self):
-        if self.env.user.has_group('purchase.group_warning_purchase') and self.creation_blocked:
-            raise UserError(
-                _('The vendor you have selected or at least one of the products you are copying from the original '
-                  'order has a blocking warning on it and cannot be selected to create an alternative.')
-            )
         vals = self._get_alternative_values()
         alt_po = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id, default_requisition_id=False).create(vals)
         alt_po.order_line._compute_tax_id()

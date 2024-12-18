@@ -6,4 +6,4 @@ class ResPartner(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return super()._load_pos_data_fields(config_id) + ['sale_warn', 'sale_warn_msg']
+        return super()._load_pos_data_fields(config_id) + ['sale_warn_msg']

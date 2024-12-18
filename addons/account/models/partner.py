@@ -10,8 +10,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, SQL, mute_logger, unique
-
-from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
@@ -567,8 +565,6 @@ class ResPartner(models.Model):
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', company_dependent=True)
     ignore_abnormal_invoice_date = fields.Boolean(company_dependent=True)
     ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
-    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
-    invoice_warn_msg = fields.Text('Message for Invoice')
     invoice_sending_method = fields.Selection(
         string="Invoice sending",
         selection=[
