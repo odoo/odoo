@@ -17,8 +17,7 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
             <field name="bom_id" position="attributes">
-                <attribute name="context">{
-                    'default_product_tmpl_id': product_tmpl_id,
+                <attribute name="context" operation="update">{
                     'default_project_id': project_id,
                 }</attribute>
             </field>

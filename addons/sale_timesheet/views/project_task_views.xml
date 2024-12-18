@@ -6,12 +6,6 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_view_sos'][1]" position="attributes">
-                <attribute name="context">{'create_for_project_id': id, 'default_project_id': id, 'default_partner_id': partner_id}</attribute>
-            </xpath>
-            <xpath expr="//button[@name='action_view_sos'][2]" position="attributes">
-                <attribute name="context">{'create_for_project_id': id, 'default_project_id': id, 'default_partner_id': partner_id}</attribute>
-            </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" invisible="not allow_billable or not partner_id">
                     <field name="sale_line_employee_ids" mode="list,kanban" context="{'default_sale_line_id': sale_line_id}">
@@ -228,14 +222,7 @@
             <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
-                    <attribute name="context">{
-                        'create': False, 'edit': False, 'delete': False,
-                        'with_price_unit': True,
-                        'with_remaining_hours': True,
-                        'form_view_ref': 'sale_project.sale_order_line_view_form_editable',
-                        'default_partner_id': partner_id,
-                        'default_company_id': company_id,
-                    }</attribute>
+                    <attribute name="context" operation="update">{'with_remaining_hours': True}</attribute>
                 </xpath>
             </field>
         </record>

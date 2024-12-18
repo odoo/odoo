@@ -516,8 +516,8 @@
                     <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" invisible="not product_template_variant_value_ids" groups="product.group_product_variant"/>
                 </xpath>
                 <field name="product_tag_ids" position="attributes">
-                    <attribute name="options">{'no_open': True}</attribute>
-                    <attribute name="context">{'product_template_id': product_tmpl_id}</attribute>
+                    <attribute name="options" operation="update">{'no_open': True}</attribute>
+                    <attribute name="context" operation="update">{'product_template_id': product_tmpl_id}</attribute>
                 </field>
                 <field name="product_tag_ids" position="after">
                     <field name="additional_product_tag_ids" widget="many2many_tags"/>

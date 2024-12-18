@@ -386,9 +386,7 @@
                         </t>
                     </div>
                     <xpath expr="//button[@name='%(action_open_routes)d']" position="attributes">
-                        <attribute name="context">
-                            {'default_product_id': id}
-                        </attribute>
+                        <attribute name="context" operation="update">{'default_product_id': id}</attribute>
                     </xpath>
                 </data>
             </field>

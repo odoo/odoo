@@ -7,13 +7,13 @@
         <field name="inherit_id" ref="project.view_task_form2"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="context" operation="update">{'res_partner_search_mode': 'customer'}</attribute>
             </field>
             <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="attributes">
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="context" operation="update">{'res_partner_search_mode': 'customer'}</attribute>
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/list/field[@name='partner_id']" position="attributes">
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="context" operation="update">{'res_partner_search_mode': 'customer'}</attribute>
             </xpath>
         </field>
     </record>
@@ -24,7 +24,7 @@
         <field name="inherit_id" ref="project.project_task_view_tree_base"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="context" operation="update">{'res_partner_search_mode': 'customer'}</attribute>
             </field>
         </field>
     </record>

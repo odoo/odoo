@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="context" operation="update">{'res_partner_search_mode': 'customer'}</attribute>
             </field>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
-                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="context" operation="update">{'res_partner_search_mode': 'customer'}</attribute>
             </field>
         </field>
     </record>

@@ -197,7 +197,7 @@
     <field name="inherit_id" ref="base.view_view_form"/>
     <field name="arch" type="xml">
         <field name="inherit_id" position="attributes">
-            <attribute name="context">{'display_website': True}</attribute>
+            <attribute name="context" operation="update">{'display_website': True}</attribute>
         </field>
         <field name="model_id" position="before">
             <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>

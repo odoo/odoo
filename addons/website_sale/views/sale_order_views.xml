@@ -178,12 +178,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
-                <attribute name="context">{
-                    'display_website': True,
-                    'res_partner_search_mode': 'customer',
-                    'show_address': 1,
-                    'show_vat': True,
-                }</attribute>
+                <attribute name="context" operation="update">{'display_website': True}</attribute>
             </field>
             <field name="team_id" position="after">
                 <field name="website_id" invisible="not website_id" groups="website.group_multi_website"/>

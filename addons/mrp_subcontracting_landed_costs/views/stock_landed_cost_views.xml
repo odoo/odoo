@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="mrp_landed_costs.view_mrp_landed_costs_form"/>
         <field name="arch" type="xml">
             <field name="mrp_production_ids" position="attributes">
-                <attribute name="context">{'search_view_ref': 'mrp_subcontracting.mrp_production_subcontracting_filter', 'list_view_ref': 'mrp_subcontracting.mrp_production_subcontracting_tree_view'}</attribute>
+                <attribute name="context" operation="update">{'search_view_ref': 'mrp_subcontracting.mrp_production_subcontracting_filter', 'list_view_ref': 'mrp_subcontracting.mrp_production_subcontracting_tree_view'}</attribute>
             </field>
             <field name="picking_ids" position="attributes">
                 <attribute name="domain">[('company_id', '=', company_id), '|', ('move_ids.stock_valuation_layer_ids', '!=', False), '&amp;', ('move_ids.is_subcontract', '!=', False), ('move_ids.state', '=', 'done')]</attribute>
