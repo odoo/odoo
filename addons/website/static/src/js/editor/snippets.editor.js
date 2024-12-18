@@ -122,6 +122,13 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         // grid padding option so it is not applied on inner rows.
         const $gridPaddingOptions = $html.find('[data-css-property="--grid-item-padding-y"], [data-css-property="--grid-item-padding-x"]');
         $gridPaddingOptions.attr("data-apply-to", ".row.o_grid_mode");
+
+        // TODO remove in master and adapt XML.
+        const contentAdditionEl = $html.find("#so_content_addition")[0];
+        if (contentAdditionEl) {
+            // Allows dropping "inner blocks" next to an image link.
+            contentAdditionEl.dataset.dropNear += ", .row > div:not(.o_grid_item_image) > a:has(img)";
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
