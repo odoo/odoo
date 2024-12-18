@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
@@ -18,7 +17,6 @@ class ProductTemplate(models.Model):
     ], string="Control Policy", compute='_compute_purchase_method', precompute=True, store=True, readonly=False,
         help="On ordered quantities: Control bills based on ordered quantities.\n"
             "On received quantities: Control bills based on received quantities.")
-    purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line Warning', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
     @api.depends('type')

@@ -38,11 +38,10 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
             run: "click",
         },
         {
-            trigger: ".modal-title:contains(Warning for Conference Chair (TEST))",
+            trigger: 'div[name="sale_warning_text"]:contains("Conference Chair"):contains("sold")',
         },
         {
-            trigger: '.o-default-button',
-            run: "click",
+            trigger: 'tr.text-warning td[name="product_template_id"]:contains("Conference Chair")',
         },
         {
             trigger: 'tr:has(td.o_data_cell:contains("Customizable Desk")) td.o_data_cell:contains("2.0")',

@@ -3,7 +3,6 @@ import {
     productLabelSectionAndNoteField,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 import { useEffect } from "@odoo/owl";
-import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -186,28 +185,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                     this._onProductUpdate();
                 }
             }
+        } else if (!result.mode || result.mode === 'configurator') {
+            this._openProductConfigurator();
         } else {
-            if (result && result.sale_warning) {
-                const { type, title, message } = result.sale_warning;
-                if (type === 'block') {
-                    // display warning block, and remove blocking product
-                    this.dialog.add(WarningDialog, { title, message });
-                    this.props.record.update({ product_template_id: false });
-                    return;
-                } else if (type == 'warning') {
-                    // show the warning but proceed with the configurator opening
-                    this.notification.add(message, {
-                        title,
-                        type: "warning",
-                    });
-                }
-            }
-            if (!result.mode || result.mode === 'configurator') {
-                this._openProductConfigurator();
-            } else {
-                // only triggered when sale_product_matrix is installed.
-                this._openGridConfigurator();
-            }
+            // only triggered when sale_product_matrix is installed.
+            this._openGridConfigurator();
         }
     }
 
