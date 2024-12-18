@@ -2730,8 +2730,8 @@ const VisibilityPageOptionUpdate = options.Class.extend({
         await this._togglePageOption(this.overlayOptionName, transparent);
 
         if (transparent) {
-            await this._togglePageOption(this.colorOptionName, '');
-            await this._togglePageOption(this.textColorOptionName, '');
+            await this._togglePageOption(this.colorOptionName, "");
+            await this._togglePageOption(this.textColorOptionName, "");
         }
     },
 
@@ -2742,7 +2742,7 @@ const VisibilityPageOptionUpdate = options.Class.extend({
         if (!optionName) return; // Skip if option name is undefined
         return new Promise((resolve, reject) => {
             this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
+                actionName: "toggle_page_option",
                 params: [{ name: optionName, value: value }],
                 onSuccess: resolve,
                 onFailure: reject,
@@ -2754,12 +2754,12 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'visibility') {
+        if (methodName === "visibility") {
             const shown = await this._isShown();
             if (this.overlayOptionName) {
                 this.shownValue = await this._getOverlayState();
             }
-            return shown ? this.shownValue : 'hidden';
+            return shown ? this.shownValue : "hidden";
         }
         return this._super(...arguments);
     },
@@ -2784,8 +2784,8 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      */
     async _isShown() {
         return new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'get_page_option',
+            this.trigger_up("action_demand", {
+                actionName: "get_page_option",
                 params: [this.pageOptionName],
                 onSuccess: (v) => resolve(!!v),
                 onFailure: reject,
@@ -2802,6 +2802,7 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
 
 options.registry.BaseColorOption = options.Class.extend({
     colorOptionName: null,
+
     //---------------------------------------------------------------------------
     // Options
     //---------------------------------------------------------------------------

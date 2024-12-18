@@ -87,8 +87,8 @@ registerWebsitePreviewTour('website_page_options', {
     },
 ]);
 
-registerWebsitePreviewTour('website_page_breadcrumb', {
-    url: '/contactus',
+registerWebsitePreviewTour("website_page_breadcrumb", {
+    url: "/contactus",
     edition: false,
 }, () => [
     {
@@ -131,18 +131,18 @@ registerWebsitePreviewTour('website_page_breadcrumb', {
     ...clickOnSave(),
     {
         content: "Check that the breadcrumb is in black-50",
-        trigger: ":iframe .page_breadcrumb",
+        trigger: ":iframe .o_page_breadcrumb",
         run: () => {
             const iframeEl = document.querySelector("iframe");
-            const sectionEl = iframeEl.contentDocument.querySelector("main div.page_breadcrumb nav");
-            const rgbString = getComputedStyle(sectionEl)['background-color'];
-            return rgbString === 'rgba(0, 0, 0, 0.5)';
+            const sectionEl = iframeEl.contentDocument.querySelector("main div.o_page_breadcrumb nav");
+            const rgbString = getComputedStyle(sectionEl)["background-color"];
+            return rgbString === "rgba(0, 0, 0, 0.5)";
         },
     },
     ...clickOnEditAndWaitEditMode(),
     ...clickOnSnippet(breadcrumb),
-    changeOption("BreadcrumbOptions", 'we-select:has([data-visibility]) we-toggler'),
-    changeOption("BreadcrumbOptions", 'we-button[data-visibility="transparent"]'),
+    changeOption("BreadcrumbOptions", "we-select:has([data-visibility]) we-toggler"),
+    changeOption("BreadcrumbOptions", "we-button[data-visibility='transparent']"),
     ...clickOnSave(),
     {
         content: "Check that the breadcrumb is transparent",
@@ -150,21 +150,21 @@ registerWebsitePreviewTour('website_page_breadcrumb', {
     },
     ...clickOnEditAndWaitEditMode(),
     ...clickOnSnippet(breadcrumb),
-    changeOption("BreadcrumbColor", 'we-select.o_we_so_color_palette'),
-    changeOption("BreadcrumbColor", 'button[data-color="black-50"]', "background color", "bottom", true),
+    changeOption("BreadcrumbColor", "we-select.o_we_so_color_palette"),
+    changeOption("BreadcrumbColor", "button[data-color='black-50']", "background color", "bottom", true),
     ...clickOnSave(),
     {
         content: "Check that the breadcrumb is in black-50",
-        trigger: ":iframe .page_breadcrumb.bg-black-50",
+        trigger: ":iframe .o_page_breadcrumb.bg-black-50",
     },
     ...clickOnEditAndWaitEditMode(),
     ...clickOnSnippet(breadcrumb),
-    changeOption("BreadcrumbOptions", 'we-select:has([data-visibility]) we-toggler'),
-    changeOption("BreadcrumbOptions", 'we-button[data-visibility="hidden"]'),
+    changeOption("BreadcrumbOptions", "we-select:has([data-visibility]) we-toggler"),
+    changeOption("BreadcrumbOptions", "we-button[data-visibility='hidden']"),
     ...clickOnSave(),
     {
         content: "Check that the breadcrumb is hidden",
-        trigger: ":iframe main:has(div.page_breadcrumb.d-none.o_snippet_invisible)",
+        trigger: ":iframe main:has(div.o_page_breadcrumb.d-none.o_snippet_invisible)",
     },
     ...clickOnEditAndWaitEditMode(),
     {

@@ -177,13 +177,12 @@ class WebsitePageProperties(models.TransientModel):
     @api.depends('parent_id')
     def _compute_has_parent_page(self):
         for page in self:
-            if page.parent_id :
-                page.has_parent_page = True
+            page.has_parent_page = page.parent_id and True or False
 
     @api.onchange('has_parent_page')
     def _onchange_has_parent_page(self):
         website = self.env['website'].get_current_website()
-        homepage = self.env['website.page'].search([('website_id', '=', website.id)]).filtered(lambda r: r.is_homepage)
+        homepage = self.env['website.page'].search(website.website_domain()).filtered(lambda r: r.is_homepage)
         for page in self:
             page.parent_id = (page.parent_id or homepage) if page.has_parent_page else False
 
@@ -223,12 +222,3 @@ class WebsitePageProperties(models.TransientModel):
                     record.old_url = new_url
 
         return write_result
-    
-    # @api.constrains('parent_id')
-    # def _check_parent_page_id(self):
-    #     for page in self:
-    #         breakpoint()
-    #         if page.is_homepage and page.parent_id:
-    #             raise ValidationError(_("Homepage '%s' cannot have a parent page") % page.name)
-    #         if page.parent_id.id == page.id:
-    #             raise ValidationError(_("Page '%s' cannot be parent of itself") % page.name)
