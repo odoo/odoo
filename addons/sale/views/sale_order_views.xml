@@ -747,6 +747,16 @@
                             </group>
                             <group class="oe_subtotal_footer d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="sale_total">
                                 <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1"/>
+                                <div
+                                    class="d-flex"
+                                    groups="base.group_user"
+                                    invisible="state not in ['draft','sent']"
+                                >
+                                    <label for="amount_due"/>
+                                    <div>
+                                        <field name="amount_due" class="oe_inline"/>
+                                    </div>
+                                </div>
                             </group>
                         </group>
                     </page>

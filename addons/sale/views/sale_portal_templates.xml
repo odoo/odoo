@@ -130,18 +130,84 @@
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar" id="sale_order_portal_sidebar">
                     <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
-
-                    <t t-set="title">
-                        <h2 t-field="sale_order.amount_total" data-id="total_amount" class="mb-0 text-break"/>
+                    <t t-if="sale_order.prepayment_percent != 1.0 and sale_order.state in 'draft,sent'">
+                        <t t-set="title">
+                            <h4>
+                                <div>
+                                    Down payment
+                                </div>
+                                <h3>
+                                    <t
+                                        t-out="sale_order._get_prepayment_required_amount()"
+                                        data-id="total_amount"
+                                        class="mb-0 text-break"
+                                        t-options="{
+                                            'widget': 'monetary',
+                                            'display_currency': sale_order.currency_id
+                                        }"
+                                    />
+                                    (<b t-esc="sale_order.prepayment_percent * 100"/>%)
+                                </h3>
+                            </h4>
+                        </t>
+                    </t>
+                    <t t-else="sale_order.amount_total == sale_order._get_prepayment_required_amount()">
+                        <t t-set="title">
+                            <h2
+                                t-field="sale_order.amount_total"
+                                data-id="total_amount"
+                                class="mb-0 text-break"
+                            />
+                        </t>
                     </t>
                     <t t-set="entries">
+                            <t t-if="
+                                0 &lt; sale_order.amount_paid &lt; sale_order.amount_total
+                                and sale_order.state not in 'canceled'"
+                            >
+                                <div class="alert alert-success" role="alert">
+                                    Amount paid:
+                                    <span
+                                        t-field="sale_order.amount_paid"
+                                        t-options="{
+                                            'widget': 'monetary',
+                                            'display_currency': sale_order.currency_id
+                                        }"
+                                    />
+                                </div>
+                            </t>
+                            <div
+                                t-if="sale_order.require_payment and sale_order.state in 'draft,sent'"
+                                class="alert alert-warning"
+                                role="alert"
+                            >
+                                Left to pay:
+                                <span t-field="sale_order.amount_due"/>
+                            </div>
+
                         <div class="d-flex flex-column gap-4 mt-3">
                             <div class="d-flex flex-column gap-2" id="sale_order_sidebar_button">
-                                <a t-if="sale_order._has_to_be_signed()" role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
+                                <!--If link payment, signing is skipped as link payment is only for paying-->
+                                <a
+                                    t-if="sale_order._has_to_be_signed() and not link_amount"
+                                    role="button"
+                                    class="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalaccept"
+                                    href="#"
+                                >
                                     <i class="fa fa-check"/><t t-if="sale_order._has_to_be_paid()"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
-                                <a t-elif="sale_order._has_to_be_paid()" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'%s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
-                                    <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
+                                <a
+                                    t-elif="sale_order._has_to_be_paid() or (link_amount and sale_order.amount_paid &lt; sale_order.amount_total)"
+                                    role="button"
+                                    id="o_sale_portal_paynow"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalaccept"
+                                    href="#"
+                                    t-att-class="'%s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')"
+                                >
+                                    <i class="fa fa-check"/> <t t-if="not sale_order.signature and sale_order._has_to_be_paid() and not link_amount">Accept &amp; Pay</t><t t-else="">Pay Now</t>
                                 </a>
                                 <div class="o_download_pdf d-flex gap-2 flex-lg-column flex-xl-row flex-wrap">
                                     <a class="btn btn-light o_print_btn o_portal_invoice_print flex-grow-1" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>View Details</a>
@@ -186,10 +252,13 @@
 
                 <!-- Page content -->
                 <div id="quote_content" class="col-12 col-lg-8 col-xxl-9 mt-5 mt-lg-0">
-
+                    <t
+                        t-set="amount_total_left_to_pay"
+                        t-value="sale_order.amount_total - sale_order.amount_paid"
+                    />
                     <!-- modal relative to the actions sign and pay -->
                     <div role="dialog" class="modal fade" id="modalaccept" name="sale_order_modal_sign_and_pay">
-                        <div class="modal-dialog" t-if="sale_order._has_to_be_signed()">
+                        <div class="modal-dialog" t-if="sale_order._has_to_be_signed() and not link_amount">
                             <form id="accept" method="POST" t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="js_accept_json modal-content js_website_submit_form">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
@@ -211,7 +280,11 @@
                             </form>
                         </div>
 
-                        <div class="modal-dialog" t-if="not sale_order._has_to_be_signed() and sale_order._has_to_be_paid()" name="sale_order_modal_validate">
+                        <div
+                            class="modal-dialog"
+                            t-if="not sale_order._has_to_be_signed() and sale_order._has_to_be_paid() or link_amount"
+                            name="sale_order_modal_validate"
+                        >
                             <div class="modal-content">
                                 <header class="modal-header">
                                     <h4 class="modal-title">Validate Order</h4>
@@ -220,33 +293,86 @@
                                 <main class="modal-body" id="sign-dialog">
                                     <t t-set="prepayment_amount" t-value="sale_order._get_prepayment_required_amount()"/>
                                     <t t-set="prepayment_available" t-value="sale_order.prepayment_percent and sale_order.prepayment_percent != 1.0"/>
+                                    <t t-set="is_installment_amount" t-value="sale_order._has_to_be_paid() and link_amount and link_amount &lt; amount_total_left_to_pay"/>
                                     <!-- Display choices only if a pre payment can confirm the order. -->
-                                    <div t-if="prepayment_available"
-                                         id="o_sale_portal_prepayment_buttons"
-                                         class="d-flex btn-group mb-3"
-                                         role="group"
+                                    <div
+                                        t-if="sale_order._has_to_be_paid() and (prepayment_available or link_amount and is_installment_amount)"
+                                        id="o_sale_portal_prepayment_buttons"
+                                        class="d-flex btn-group mb-3"
+                                        role="group"
                                     >
                                         <button name="o_sale_portal_amount_prepayment_button" class="btn btn-light active">
-                                            Down payment <br/>
-                                            <span t-esc="prepayment_amount" class="fw-bold"
-                                                  t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+                                            <t t-if="link_amount and link_amount &lt; sale_order.amount_due">
+                                                Installment <br/>
+                                            </t>
+                                            <t t-else="">
+                                                Down payment <br/>
+                                            </t>
+                                            <t t-if="not link_amount">
+                                                <span
+                                                    t-esc="prepayment_amount - sale_order.amount_paid"
+                                                    class="fw-bold"
+                                                    t-options="{
+                                                        'widget': 'monetary',
+                                                        'display_currency': sale_order.currency_id
+                                                    }"
+                                                />
+                                            </t>
+                                            <t t-else="">
+                                                <span
+                                                    t-esc="link_amount"
+                                                    t-options="{
+                                                        'widget': 'monetary',
+                                                        'display_currency': sale_order.currency_id
+                                                    }"
+                                                    class="fw-bold"
+                                                />
+                                            </t>
                                         </button>
                                         <button name="o_sale_portal_amount_total_button" class="btn btn-light">
-                                            Full amount <br/>
-                                            <span class="fw-bold" t-field="sale_order.amount_total"/>
+                                            <t t-if="link_amount and link_amount &lt; sale_order.amount_due != amount_total_left_to_pay">
+                                                Down payment <br/>
+                                                <span
+                                                    t-esc="sale_order.amount_due"
+                                                    t-options="{
+                                                        'widget': 'monetary',
+                                                        'display_currency': sale_order.currency_id
+                                                    }"
+                                                    class="fw-bold"
+                                                />
+                                            </t>
+                                            <t t-else="">
+                                                Full amount <br/>
+                                                <span
+                                                    class="fw-bold"
+                                                    t-out="amount_total_left_to_pay"
+                                                    t-options="{
+                                                        'widget': 'monetary',
+                                                        'display_currency': sale_order.currency_id
+                                                    }"
+                                                />
+                                            </t>
                                         </button>
                                     </div>
-                                    <div class="mb-3">
+                                    <div
+                                        t-if="sale_order._has_to_be_paid() and amount >= sale_order.amount_due"
+                                        class="mb-3"
+                                    >
                                         <!-- The widget associated with this modal will hide and show divs in function of the amount selected. -->
                                         <span t-if="prepayment_available">
                                             <span id="o_sale_portal_use_amount_prepayment">
                                                 By paying a <u>down payment</u> of
                                                 <span
-                                                    t-esc="prepayment_amount"
-                                                    t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"
+                                                    t-esc="amount"
+                                                    t-options="{
+                                                        'widget': 'monetary',
+                                                        'display_currency': sale_order.currency_id
+                                                    }"
                                                     class="fw-bold"
                                                 />
-                                                (<b t-esc="sale_order.prepayment_percent * 100"/>%),
+                                                <t t-if="sale_order.amount_due == amount">
+                                                    (<b t-esc="sale_order.prepayment_percent * 100"/>%),
+                                                </t>
                                             </span>
                                             <span id="o_sale_portal_use_amount_total">
                                                 By paying,
@@ -259,10 +385,21 @@
                                         for the <b data-id="total_amount" t-field="sale_order.amount_total"/> quote.
                                         <b t-if="sale_order.payment_term_id" t-field="sale_order.payment_term_id.note" class="o_sale_payment_terms"/>
                                     </div>
+                                    <div t-if="link_amount and not sale_order._has_to_be_paid()">
+                                        Amount:
+                                        <span
+                                            t-esc="link_amount"
+                                            t-options="{
+                                                'widget': 'monetary',
+                                                'display_currency': sale_order.currency_id
+                                            }"
+                                            class="fw-bold"
+                                        />
+                                    </div>
                                     <div t-if="company_mismatch">
                                         <t t-call="payment.company_mismatch_warning"/>
                                     </div>
-                                    <div t-elif="not sale_order._has_to_be_paid()" class="alert alert-danger">
+                                    <div t-elif="not sale_order._has_to_be_paid() and not link_amount" class="alert alert-danger">
                                         The order is not in a state requiring customer payment.
                                     </div>
                                     <div t-else="" id="payment_method" class="text-start mt-0" >
