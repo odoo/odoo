@@ -75,9 +75,9 @@ export class ConfirmationPage extends Component {
         );
         this.confirmedOrder = order;
 
-        const paymentMethods = this.selfOrder.models["pos.payment.method"].filter(
-            (p) => p.is_online_payment
-        );
+        const paymentMethods = this.selfOrder.filterPaymentMethods(
+            this.selfOrder.models["pos.payment.method"].getAll()
+        ); // Stripe, Adyen, Online
 
         if (
             !order ||
