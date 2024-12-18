@@ -1351,6 +1351,7 @@
                                     <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center">
                                         <t t-set="hasQuantities" t-value="false"/>
                                         <t t-set="hasBuyNow" t-value="false"/>
+                                        <!-- TODO: remove line below in master -->
                                         <t t-set="ctaSizeBig" t-value="not hasQuantities or not hasBuyNow"/>
 
                                         <div id="add_to_cart_wrap" t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}} align-items-center mb-2 me-auto">
@@ -1671,7 +1672,7 @@
             <attribute name="t-value" remove="false" add="true" separator=" "/>
         </xpath>
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" t-attf-class="btn btn-outline-primary o_we_buy_now ms-1 #{'btn-lg' if ctaSizeBig else ''}" href="#">
+            <a role="button" class="btn btn-outline-primary o_we_buy_now ms-1" href="#">
                 <i class="fa fa-bolt me-2"/>
                 Buy now
             </a>

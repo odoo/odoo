@@ -116,6 +116,7 @@ class AccountMove(models.Model):
         tracking=True,
         index='trigram',
     )
+    name_placeholder = fields.Char(compute='_compute_name_placeholder')
     ref = fields.Char(
         string='Reference',
         copy=False,
@@ -872,26 +873,25 @@ class AccountMove(models.Model):
                 continue
 
             move_has_name = move.name and move.name != '/'
-            if move_has_name or move.state != 'posted':
-                if not move.posted_before and not move._sequence_matches_date():
-                    if move._get_last_sequence():
-                        # The name does not match the date and the move is not the first in the period:
-                        # Reset to draft
-                        move.name = False
-                        continue
-                else:
-                    if move_has_name and move.posted_before or not move_has_name and move._get_last_sequence():
-                        # The move either
-                        # - has a name and was posted before, or
-                        # - doesn't have a name, but is not the first in the period
-                        # so we don't recompute the name
-                        continue
-            if move.date and (not move_has_name or not move._sequence_matches_date()):
+            if not move.posted_before and not move._sequence_matches_date():
+                # The name does not match the date and the move is not the first in the period:
+                # Reset to draft
+                move.name = False
+                continue
+            if move.date and not move_has_name and move.state != 'draft':
                 move._set_next_sequence()
 
-        self.filtered(lambda m: not m.name and not move.quick_edit_mode).name = '/'
         self._inverse_name()
 
+    @api.depends('date', 'journal_id', 'move_type', 'name', 'posted_before', 'sequence_number', 'sequence_prefix', 'state')
+    def _compute_name_placeholder(self):
+        for move in self:
+            if (not move.name or move.name == '/') and not move._get_last_sequence():
+                sequence_format_string, sequence_format_values = move._get_sequence_format_param(move._get_starting_sequence())
+                sequence_format_values['seq'] = sequence_format_values['seq'] + 1
+                move.name_placeholder = sequence_format_string.format(**sequence_format_values)
+            else:
+                move.name_placeholder = False
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
@@ -2279,7 +2279,7 @@ class AccountMove(models.Model):
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
         if not self.quick_edit_mode:
-            self.name = '/'
+            self.name = False
             self._compute_name()
 
     @api.onchange('invoice_cash_rounding_id')
