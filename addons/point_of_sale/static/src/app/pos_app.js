@@ -50,17 +50,16 @@ export class Chrome extends Component {
                     totalPriceOnScale,
                     isScaleScreenVisible,
                 }) => {
-                    if (
-                        !selectedOrder &&
-                        !scaleData &&
-                        !scaleWeight &&
-                        !scaleTare &&
-                        !totalPriceOnScale &&
-                        !isScaleScreenVisible
-                    ) {
-                        return;
+                    if (selectedOrder) {
+                        const allScaleData = {
+                            ...scaleData,
+                            weight: scaleWeight,
+                            tare: scaleTare,
+                            totalPriceOnScale,
+                            isScaleScreenVisible,
+                        };
+                        this.sendOrderToCustomerDisplay(selectedOrder, allScaleData);
                     }
-                    this.sendOrderToCustomerDisplay(selectedOrder, scaleData);
                 }
             ),
             [this.pos]
@@ -69,7 +68,7 @@ export class Chrome extends Component {
 
     sendOrderToCustomerDisplay(selectedOrder, scaleData) {
         const customerDisplayData = selectedOrder.getCustomerDisplayData();
-        customerDisplayData.isScaleScreenVisible = this.pos.isScaleScreenVisible;
+        customerDisplayData.isScaleScreenVisible = scaleData.isScaleScreenVisible;
         if (scaleData) {
             customerDisplayData.scaleData = {
                 productName: scaleData.productName,
@@ -78,9 +77,9 @@ export class Chrome extends Component {
                 productPrice: scaleData.productPrice,
             };
         }
-        customerDisplayData.weight = this.pos.scaleWeight;
-        customerDisplayData.tare = this.pos.scaleTare;
-        customerDisplayData.totalPriceOnScale = this.pos.totalPriceOnScale;
+        customerDisplayData.weight = scaleData.weight;
+        customerDisplayData.tare = scaleData.tare;
+        customerDisplayData.totalPriceOnScale = scaleData.totalPriceOnScale;
 
         if (this.pos.config.customer_display_type === "local") {
             this.customerDisplayChannel.postMessage(customerDisplayData);
