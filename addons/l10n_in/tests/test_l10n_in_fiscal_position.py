@@ -26,15 +26,15 @@ class TestFiscal(L10nInTestInvoicingCommon):
                 }]
             )
 
-    def _assert_invoice_fiscal_position(self, fiscal_position_ref, partner, taxes, post=True):
+    def _assert_invoice_fiscal_position(self, fpos_ref, partner, taxes, move_type='out_invoice', post=True):
         test_invoice = self.init_invoice(
-            move_type="out_invoice",
+            move_type=move_type,
             partner=partner,
             post=post,
             amounts=[110, 500],
             taxes=taxes
         )
-        self.assertEqual(test_invoice.fiscal_position_id, self.env['account.chart.template'].ref(fiscal_position_ref))
+        self.assertEqual(test_invoice.fiscal_position_id, self.env['account.chart.template'].ref(fpos_ref))
         return test_invoice
 
     def test_l10n_in_setting_up_company(self):
@@ -53,19 +53,19 @@ class TestFiscal(L10nInTestInvoicingCommon):
 
         # Intra State
         self._assert_invoice_fiscal_position(
-            fiscal_position_ref='fiscal_position_in_intra_state',
+            fpos_ref='fiscal_position_in_intra_state',
             partner=self.partner_a,
             taxes=self.sgst_sale_18,
         )
         # Inter State
         self._assert_invoice_fiscal_position(
-            fiscal_position_ref='fiscal_position_in_inter_state',
+            fpos_ref='fiscal_position_in_inter_state',
             partner=self.partner_b,
             taxes=self.igst_sale_18,
         )
         # Outside India
         self._assert_invoice_fiscal_position(
-            fiscal_position_ref='fiscal_position_in_export_sez_in',
+            fpos_ref='fiscal_position_in_export_sez_in',
             partner=self.partner_foreign,
             taxes=self.igst_sale_18,
         )
@@ -92,17 +92,17 @@ class TestFiscal(L10nInTestInvoicingCommon):
         # Invoice fiscal test with branch
         self.env.company = branch_1
         self._assert_invoice_fiscal_position(
-            fiscal_position_ref='fiscal_position_in_intra_state',
+            fpos_ref='fiscal_position_in_intra_state',
             partner=self.partner_b,
             taxes=self.sgst_sale_18,
         )
         self._assert_invoice_fiscal_position(
-            fiscal_position_ref='fiscal_position_in_inter_state',
+            fpos_ref='fiscal_position_in_inter_state',
             partner=self.partner_a,
             taxes=self.igst_sale_18,
         )
         self._assert_invoice_fiscal_position(
-            fiscal_position_ref='fiscal_position_in_export_sez_in',
+            fpos_ref='fiscal_position_in_export_sez_in',
             partner=self.partner_foreign,
             taxes=self.igst_sale_18,
         )
@@ -111,7 +111,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
         self.env.company = self.default_company
         # Inter State
         out_invoice = self._assert_invoice_fiscal_position(
-            fiscal_position_ref='fiscal_position_in_inter_state',
+            fpos_ref='fiscal_position_in_inter_state',
             partner=self.partner_b,
             taxes=self.igst_sale_18,
             post=False,
@@ -131,4 +131,77 @@ class TestFiscal(L10nInTestInvoicingCommon):
         self.assertEqual(
             out_invoice.fiscal_position_id,
             self.env['account.chart.template'].ref('fiscal_position_in_export_sez_in')
+        )
+
+    def test_l10n_in_fiscal_in_vendor_bills(self):
+        self.env.company = self.default_company
+        company_res_state = self.default_company.state_id
+        template = self.env['account.chart.template']
+        self.partner_a.write({
+            'state_id': company_res_state.id,
+            'country_id': company_res_state.country_id.id,
+        })
+        other_state = self.env['res.country.state'].search([
+            ('id', '!=', company_res_state.id), ('country_id', '=', company_res_state.country_id.id)],
+            limit=1
+        )
+        # Intra State
+        vendor_bill_1 = self._assert_invoice_fiscal_position(
+            fpos_ref='fiscal_position_in_intra_state',
+            partner=self.partner_a,
+            taxes=self.sgst_sale_18,
+            move_type='in_invoice',
+            post=False,
+        )
+        # Inter State
+        vendor_bill_1.write({
+            'l10n_in_state_id': other_state.id,
+        })
+        self.assertEqual(
+            vendor_bill_1.fiscal_position_id,
+            template.ref('fiscal_position_in_inter_state')
+        )
+        self.partner_a.write({
+            'state_id': other_state.id,
+        })
+        vendor_bill_2 = self._assert_invoice_fiscal_position(
+            fpos_ref='fiscal_position_in_inter_state',
+            partner=self.partner_a,
+            taxes=self.sgst_sale_18,
+            move_type='in_invoice',
+            post=False,
+        )
+        vendor_bill_2.write({
+            'l10n_in_state_id': other_state.id,
+        })
+        self.assertEqual(
+            vendor_bill_2.fiscal_position_id,
+            template.ref('fiscal_position_in_intra_state')
+        )
+        # Outside India (Export/SEZ)
+        vendor_bill_2.write({
+            'l10n_in_state_id': self.env.ref('l10n_in.state_in_oc').id,  # Other Country State
+        })
+        self.assertEqual(
+            vendor_bill_2.fiscal_position_id,
+            template.ref('fiscal_position_in_export_sez_in')
+        )
+        vendor_bill_3 = self._assert_invoice_fiscal_position(
+            fpos_ref='fiscal_position_in_export_sez_in',
+            partner=self.partner_foreign,
+            taxes=self.sgst_sale_18,
+            move_type='in_invoice',
+            post=False,
+        )
+        # Manual Partner Fiscal Check
+        self.partner_a.write({
+            'state_id': company_res_state.id,  # Intra-State Partner
+            # Partner is Intra-State, but the manual Fiscal Position marks it as Export/SEZ.
+            'property_account_position_id': template.ref('fiscal_position_in_export_sez_in')
+        })
+        vendor_bill_4 = self._assert_invoice_fiscal_position(
+            fpos_ref='fiscal_position_in_export_sez_in',
+            partner=self.partner_a,
+            move_type='in_invoice',
+            taxes=self.sgst_sale_18,
         )
