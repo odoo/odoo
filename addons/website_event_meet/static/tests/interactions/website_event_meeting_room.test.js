@@ -1,10 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
-import { onRpc } from "@web/../tests/web_test_helpers";
-
-import { WebsiteEventMeetingRoom } from "../../src/interactions/website_event_meeting_room";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+// import { click } from "@odoo/hoot-dom";
 
 import {
     startInteractions,

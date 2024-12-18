@@ -1,7 +1,6 @@
 import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-import { throttleForAnimation } from "@web/core/utils/timing";
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";

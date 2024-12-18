@@ -5,7 +5,7 @@ import {
 } from "@web/../tests/public/helpers";
 import { switchToEditMode } from "../helpers";
 
-const interactions = setupInteractionWhiteList("website.carousel_section_slider");
+setupInteractionWhiteList("website.carousel_section_slider");
 describe.current.tags("interaction_dev");
 
 const carouselHtml = `

@@ -1533,6 +1533,7 @@ describe("components", () => {
         let isCDestroyed = false;
         class C extends Component {
             static template = xml`component`;
+            static props = {};
 
             setup() {
                 onWillDestroy(() => (isCDestroyed = true));
@@ -1595,6 +1596,7 @@ describe("components", () => {
     test("can insert a component with mountComponent", async () => {
         class C extends Component {
             static template = xml`component`;
+            static props = {};
         }
 
         class Test extends Interaction {

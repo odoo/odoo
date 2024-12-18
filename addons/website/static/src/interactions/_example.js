@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+// import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 import { Component, xml, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
@@ -11,7 +11,7 @@ import { useService } from "@web/core/utils/hooks";
 // -----------------------------------------------------------------------------
 // Example of interaction
 // -----------------------------------------------------------------------------
-class TogglableBackgroundSection extends Interaction {
+export class TogglableBackgroundSection extends Interaction {
     static selector = "section";
     dynamicContent = {
         _root: {
@@ -45,7 +45,7 @@ registry
 // -----------------------------------------------------------------------------
 // Example of interaction
 // -----------------------------------------------------------------------------
-class FunNotificationThing extends Interaction {
+export class FunNotificationThing extends Interaction {
     static selector = "#wrapwrap";
     dynamicContent = {
         "b,strong:t-on-click": this.onClick,
@@ -66,12 +66,13 @@ registry
 // -----------------------------------------------------------------------------
 // Example of mounted component
 // -----------------------------------------------------------------------------
-class Counter extends Component {
+export class Counter extends Component {
     static selector = "#wrapwrap h1";
     static template = xml`
         <div class="btn btn-primary" t-on-click="increment">
             Counter. Value=<t t-esc="state.value"/>
         </div>`;
+    static props = {};
 
     setup() {
         this.state = useState({ value: 1 });

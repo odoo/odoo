@@ -31,9 +31,9 @@ class MailGroupMessage extends Interaction {
         readMore.addEventListener("click", () => quoted.classList.toggle("visible"));
     }
 
-    async onClickReadMore() {
+    async onClickReadMore(ev) {
         const data = await this.waitFor(rpc(ev.target.getAttribute('href'), {
-            last_displayed_id: ev.target.dataste.listDisplayedId,
+            last_displayed_id: ev.target.dataset.listDisplayedId,
         }));
         if (data) {
             const threadContainer = ev.target.closest(".o_mg_replies")?.querySelector("ul.list-unstyled");
@@ -47,7 +47,7 @@ class MailGroupMessage extends Interaction {
                 }
                 this.insert(data.querySelector('.o_mg_read_more').parentElement, threadContainer);
             }
-            target.parentElement.remove();
+            ev.target.parentElement.remove();
         }
     }
 }

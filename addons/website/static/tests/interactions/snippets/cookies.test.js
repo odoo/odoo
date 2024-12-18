@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
+import { click, queryOne, waitFor } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { cookie } from "@web/core/browser/cookie";
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
