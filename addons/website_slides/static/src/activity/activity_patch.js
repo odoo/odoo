@@ -9,7 +9,7 @@ const ActivityPatch = {
             "slide.channel",
             "action_grant_access",
             [[this.props.activity.res_id]],
-            { partner_id: this.props.activity.request_partner_id }
+            { partner_id: this.props.activity.request_partner_id.id }
         );
         this.props.activity.remove();
         this.props.reloadParentView();
@@ -19,7 +19,7 @@ const ActivityPatch = {
             "slide.channel",
             "action_refuse_access",
             [[this.props.activity.res_id]],
-            { partner_id: this.props.activity.request_partner_id }
+            { partner_id: this.props.activity.request_partner_id.id }
         );
         this.props.activity.remove();
         this.props.reloadParentView();

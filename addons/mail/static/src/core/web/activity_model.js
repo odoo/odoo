@@ -62,9 +62,6 @@ export class Activity extends Record {
     static _insert(data, { broadcast = true } = {}) {
         /** @type {import("models").Activity} */
         const activity = this.preinsert(data);
-        if (data.request_partner_id) {
-            data.request_partner_id = data.request_partner_id[0];
-        }
         assignDefined(activity, data);
         if (broadcast) {
             this.store.activityBroadcastChannel?.postMessage({
