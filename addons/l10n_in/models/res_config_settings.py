@@ -15,15 +15,49 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.l10n_in_edi_production_env",
         readonly=False
     )
-    module_l10n_in_edi = fields.Boolean('Indian Electronic Invoicing')
-    module_l10n_in_ewaybill = fields.Boolean('Indian Electronic Waybill')
-    module_l10n_in_gstin_status = fields.Boolean('Check GST Number Status')
-    module_l10n_in_withholding = fields.Boolean('Indian TDS and TCS')
     l10n_in_hsn_code_digit = fields.Selection(related='company_id.l10n_in_hsn_code_digit', readonly=False)
-    module_l10n_in_enet_batch_payment = fields.Boolean(string="Vendor Payment")
+
+    # TDS/TCS settings
+    l10n_in_tds_feature = fields.Boolean(related='company_id.l10n_in_tds_feature', readonly=False)
+    l10n_in_tcs_feature = fields.Boolean(related='company_id.l10n_in_tcs_feature', readonly=False)
+    l10n_in_withholding_account_id = fields.Many2one(related='company_id.l10n_in_withholding_account_id', readonly=False)
+    l10n_in_withholding_journal_id = fields.Many2one(related='company_id.l10n_in_withholding_journal_id', readonly=False)
+    l10n_in_tan = fields.Char(related='company_id.l10n_in_tan', readonly=False)
+
+    # GST settings
+    l10n_in_is_gst_registered = fields.Boolean(related='company_id.l10n_in_is_gst_registered', readonly=False)
+    l10n_in_gstin = fields.Char(string="GST Number", related='company_id.vat', readonly=False)
+    l10n_in_gstin_status_feature = fields.Boolean(related='company_id.l10n_in_gstin_status_feature', readonly=False)
+    l10n_in_gst_efiling_feature = fields.Boolean(related='company_id.l10n_in_gst_efiling_feature', readonly=False)
+    l10n_in_fetch_vendor_edi_feature = fields.Boolean(related='company_id.l10n_in_fetch_vendor_edi_feature', readonly=False)
+    # Automatically set to True if either l10n_in_gst_efiling_feature or l10n_in_fetch_vendor_edi_feature is activated.
+    module_l10n_in_reports = fields.Boolean('GST E-Filing & Matching')
+
+    # E-Invoice
+    l10n_in_edi_feature = fields.Boolean(related='company_id.l10n_in_edi_feature', readonly=False)
+    # Automatically set to True if l10n_in_edi_feature is activated.
+    module_l10n_in_edi = fields.Boolean('Indian Electronic Invoicing')
+
+    # E-Waybill
+    l10n_in_ewaybill_feature = fields.Boolean(related='company_id.l10n_in_ewaybill_feature', readonly=False)
+    # Automatically set to True if l10n_in_ewaybill_feature is activated.
+    module_l10n_in_ewaybill = fields.Boolean('Indian Electronic Waybill')
+
+    # ENet Batch Payment
+    l10n_in_enet_vendor_batch_payment_feature = fields.Boolean(related='company_id.l10n_in_enet_vendor_batch_payment_feature', readonly=False)
+
+    def set_values(self):
+        super().set_values()
+        if self.country_code == 'IN':
+            if not self.module_l10n_in_reports and (self.l10n_in_fetch_vendor_edi_feature or self.l10n_in_gst_efiling_feature or self.l10n_in_enet_vendor_batch_payment_feature):
+                self.module_l10n_in_reports = True
+            if not self.module_l10n_in_edi and self.l10n_in_edi_feature:
+                self.module_l10n_in_edi = True
+            if not self.module_l10n_in_ewaybill and self.l10n_in_ewaybill_feature:
+                self.module_l10n_in_ewaybill = True
 
     def l10n_in_edi_buy_iap(self):
-        if not self.l10n_in_edi_production_env or not (self.module_l10n_in_edi or self.module_l10n_in_gstin_status):
+        if not self.l10n_in_edi_production_env or not (self.l10n_in_edi_feature or self.l10n_in_gstin_status_feature or self.l10n_in_ewaybill_feature or self.l10n_in_gst_efiling_feature):
             raise ValidationError(_(
                 "Please ensure that at least one Indian service and production environment is enabled,"
                 " and save the configuration to proceed with purchasing credits."
