@@ -140,6 +140,8 @@ QUnit.module(
             insertText(editor, 'Test2');
             triggerEvent(editor.editable, "keydown", { key: "a", ctrlKey: true });
             await nextTick();
+            await nextTick();
+            await nextTick();
             triggerEvent(editor.editable, "input", { inputType: "deleteContentBackward" });
             await nextTick();
             assert.strictEqual(
