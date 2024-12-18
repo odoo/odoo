@@ -970,3 +970,19 @@ test("do not ask for display_name if field is invisible", async () => {
         arch: `<form><field name="reference" invisible="1"/></form>`,
     });
 });
+
+test("reference char with list view pager navigation", async () => {
+    Partner._records[0].reference_char = "product,37";
+    Partner._records[1].reference_char = "product,41";
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        resIds: [1, 2],
+        arch: `<form edit="0"><field name="reference_char" widget="reference" string="Record"/></form>`,
+    });
+    expect(".o_field_reference").toHaveText("xphone");
+    await click(".o_pager_next");
+    await animationFrame();
+    expect(".o_field_reference").toHaveText("xpad");
+});
