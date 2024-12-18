@@ -1583,7 +1583,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # If the move is already fully paid, we should alert the user
         with self.assertRaisesRegex(UserError, r"You can't register a payment because there is nothing left"):
-            action_register_payment = move.action_force_register_payment()
             self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
 
     def test_in_invoice_switch_type_1(self):
