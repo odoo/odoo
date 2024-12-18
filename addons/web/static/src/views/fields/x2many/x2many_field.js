@@ -13,6 +13,7 @@ import {
     useX2ManyCrud,
 } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
@@ -70,12 +71,10 @@ export class X2ManyField extends Component {
             }),
             fieldType: this.isMany2Many ? "many2many" : "one2many",
             subViewActiveActions,
-            getEvalParams: (props) => {
-                return {
-                    evalContext: props.record.evalContext,
-                    readonly: props.readonly,
-                };
-            },
+            getEvalParams: (props) => ({
+                evalContext: props.record.evalContext,
+                readonly: props.readonly,
+            }),
         });
 
         this.addInLine = useAddInlineRecord({
@@ -198,6 +197,7 @@ export class X2ManyField extends Component {
         if (this.props.viewMode === "kanban") {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
+            props.Compiler = KanbanCompiler;
             props.readonly = this.props.readonly;
             // TODO: apply same logic in the list case
             props.deleteRecord = (record) => {
