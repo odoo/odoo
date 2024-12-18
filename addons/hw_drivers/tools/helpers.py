@@ -412,11 +412,32 @@ def download_iot_handlers(auto=True):
     server = get_odoo_server_url()
     if server:
         try:
+<<<<<<< master
             response = requests.post(
                 server + '/iot/get_handlers', data={'mac': get_mac_address(), 'auto': auto}, timeout=8
             )
             response.raise_for_status()
         except requests.exceptions.RequestException:
+||||||| 95f7b19ddaef18c3e40d5a1896827d8bc887852d
+            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
+            if resp.data:
+                delete_iot_handlers()
+                with writable():
+                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
+                    path = path_file(str(Path().joinpath(*drivers_path)))
+                    zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
+                    zip_file.extractall(path)
+        except Exception:
+=======
+            resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
+            if resp.data:
+                delete_iot_handlers()
+                with writable():
+                    path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
+                    zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
+                    zip_file.extractall(path)
+        except Exception:
+>>>>>>> 99a96ed7b72b933d7a00e6978a71ab5e01c30c58
             _logger.exception('Could not reach configured server to download IoT handlers')
             return
 
@@ -474,12 +495,23 @@ def odoo_restart(delay=0):
 def path_file(*args):
     """Return the path to the file from IoT Box root or Windows Odoo
     server folder
+<<<<<<< master
 
+||||||| 95f7b19ddaef18c3e40d5a1896827d8bc887852d
+def path_file(filename):
+=======
+>>>>>>> 99a96ed7b72b933d7a00e6978a71ab5e01c30c58
     :return: The path to the file
     """
     platform_os = platform.system()
     if platform_os == 'Linux':
+<<<<<<< master
         return Path("~pi", *args).expanduser()  # Path.home() returns odoo user's home instead of pi's
+||||||| 95f7b19ddaef18c3e40d5a1896827d8bc887852d
+        return Path.home() / filename
+=======
+        return Path("~pi", *args).expanduser() # Path.home() returns odoo user's home instead of pi's
+>>>>>>> 99a96ed7b72b933d7a00e6978a71ab5e01c30c58
     elif platform_os == 'Windows':
         return Path().absolute().parent.joinpath('server', *args)
 
