@@ -139,9 +139,8 @@ class ThreadController(http.Controller):
         if not thread:
             raise NotFound()
         if not request.env[thread_model]._get_thread_with_access(thread_id, "write"):
-            thread.env.context = frozendict(
-                thread.env.context, mail_create_nosubscribe=True, mail_post_autofollow=False
-            )
+            request.update_context(mail_create_nosubscribe=True, mail_post_autofollow=False)
+            thread = thread.with_env(request.env)
         post_data = {
                 key: value
                 for key, value in post_data.items()
