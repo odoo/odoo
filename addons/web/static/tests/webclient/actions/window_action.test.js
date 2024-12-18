@@ -2674,15 +2674,9 @@ test("sample server: populate groups", async () => {
         return {
             groups: [
                 {
-                    date_count: 0,
-                    "write_date:month": "December 2022",
-                    __range: {
-                        "write_date:month": {
-                            from: "2022-12-01",
-                            to: "2023-01-01",
-                        },
-                    },
-                    __domain: [
+                    __count: 0,
+                    "write_date:month": ["2022-12-01", "December 2022"],
+                    __domain_part: [
                         ["write_date", ">=", "2022-12-01"],
                         ["write_date", "<", "2023-01-01"],
                     ],

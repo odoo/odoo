@@ -228,7 +228,6 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
                 ],
                 groupby: ["bar"],
                 aggregates: ["__count"],
-                limit: Number.MAX_SAFE_INTEGER, // kanban have no limit for groupsLimit
                 offset: 0,
                 order: "",
             },
