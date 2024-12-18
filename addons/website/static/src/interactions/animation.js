@@ -52,7 +52,7 @@ export class Animation extends Interaction {
 
     setup() {
         this.wrapwrapEl = document.querySelector("#wrapwrap");
-        this.scrollingElement = getScrollingElement(this.el.ownerDocument);
+        this.scrollingElement = this.findScrollingElement();
         this.scrollingTarget = isScrollableY(this.scrollingElement) ? this.scrollingElement : this.scrollingElement.ownerDocument.defaultView;
         this.isAnimating = false;
         this.isAnimated = false;
@@ -70,6 +70,10 @@ export class Animation extends Interaction {
             this.resetAnimation();
             this.updateContent();
         }
+    }
+
+    findScrollingElement() {
+        return getScrollingElement(this.el.ownerDocument);
     }
 
     /**
