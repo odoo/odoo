@@ -617,6 +617,7 @@ publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
         "[data-snippet='s_image_gallery'] .carousel",
         "[data-snippet='s_carousel'] .carousel",
         "[data-snippet='s_quotes_carousel'] .carousel",
+        "#o-carousel-product.carousel", // TODO adapt the shop XML directly in master
     ].join(", "),
     disabledInEditableMode: false,
     events: {
@@ -650,7 +651,7 @@ publicWidget.registry.CarouselBootstrapUpgradeFix = publicWidget.Widget.extend({
             // instead of "carousel", it's better not to change the behavior and
             // let the user update the snippet manually to avoid making changes
             // that they don't expect.
-            const snippetName = this.el.closest("[data-snippet]").dataset.snippet;
+            const snippetName = this.el.closest("[data-snippet]")?.dataset.snippet;
             this.el.dataset.bsRide = this.OLD_AUTO_SLIDING_SNIPPETS.includes(snippetName) ? "carousel" : "true";
             await this._destroyCarouselInstance();
             const options = this.editableMode ? {ride: false, pause: true} : undefined;
