@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 
 class ResPartner(models.Model):
@@ -63,7 +62,6 @@ class ResPartner(models.Model):
         compute='_compute_purchase_order_count',
     )
     supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
-    purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Warning', help=WARNING_HELP, default="no-message")
     purchase_warn_msg = fields.Text('Message for Purchase Order')
 
     receipt_reminder_email = fields.Boolean('Receipt Reminder', company_dependent=True,
