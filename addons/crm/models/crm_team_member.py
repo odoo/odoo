@@ -18,6 +18,7 @@ class CrmTeamMember(models.Model):
     # assignment
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
     assignment_domain = fields.Char('Assignment Domain', tracking=True)
+    assignment_preferred_domain = fields.Char('Preference assignment Domain', tracking=True)
     assignment_optout = fields.Boolean('Skip auto assignment')
     assignment_max = fields.Integer('Average Leads Capacity (on 30 days)', default=30)
     lead_day_count = fields.Integer(

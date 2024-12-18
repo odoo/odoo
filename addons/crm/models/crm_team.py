@@ -612,6 +612,8 @@ class CrmTeam(models.Model):
             # and make sure we need them before fetching them
             ['id:array_agg'],
         ))
+        total_assigned_preffered_count = 0
+        total_preffered_count = 0
         for team, leads_to_assign_ids in leads_per_team.items():
             members_to_assign = list(team.crm_team_member_ids.filtered(lambda member:
                 not member.assignment_optout and quota_per_member.get(member, 0) > 0
@@ -625,11 +627,45 @@ class CrmTeam(models.Model):
             # Need to check that record still exists since the ids have been fetched at the begining of the process
             # Previous iteration has commited the change, records may have been deleted in the meanwhile
             leads_to_assign = self.env['crm.lead'].browse(leads_to_assign_ids).exists()
+
+            members_to_assign_with_preferred_domain = [m for m in members_to_assign if m.assignment_preferred_domain]
+            preferred_leads_per_member = {
+                member: leads_to_assign.filtered_domain(expression.AND([literal_eval(member.assignment_domain or '[]'), literal_eval(member.assignment_preferred_domain)]))
+                for member in members_to_assign_with_preferred_domain
+            }
+            preferred_leads = self.env['crm.lead'].concat(*[lead for lead in preferred_leads_per_member.values()])
+            assigned_preferred_leads = self.env['crm.lead']
+            total_preffered_count += len(preferred_leads)
+            for lead in preferred_leads.sorted(lambda lead: (-lead.probability, id)):
+                counter += 1
+                member_found = next((member for member in members_to_assign_with_preferred_domain if lead in preferred_leads_per_member[member]), False)
+                if not member_found:
+                    continue
+                lead.with_context(mail_auto_subscribe_no_notify=True).convert_opportunity(
+                    lead.partner_id,
+                    user_ids=member_found.user_id.ids
+                )
+                result_data[member_found]['assigned'] += lead
+                assigned_preferred_leads += lead
+                # We remove them from both lists as we don't want to keep them for next
+                # round if they have reached their quota
+                members_to_assign.remove(member_found)
+                members_to_assign_with_preferred_domain.remove(member_found)
+                quota_per_member[member_found] -= 1
+                if quota_per_member[member_found] > 0:
+                    # If the member should receive more lead, send him back at the end of the list
+                    members_to_assign.append(member_found)
+                    members_to_assign_with_preferred_domain.append(member_found)
+
+                if auto_commit and counter % commit_bundle_size == 0:
+                    self.env.cr.commit()
+            total_assigned_preffered_count += len(assigned_preferred_leads)
+            remaining_leads = leads_to_assign - assigned_preferred_leads
             leads_per_member = {
-                member: leads_to_assign.filtered_domain(literal_eval(member.assignment_domain or '[]'))
+                member: remaining_leads.filtered_domain(literal_eval(member.assignment_domain or '[]'))
                 for member in members_to_assign
             }
-            for lead in leads_to_assign.sorted(lambda lead: (-lead.probability, id)):
+            for lead in remaining_leads.sorted(lambda lead: (-lead.probability, id)):
                 counter += 1
                 member_found = next((member for member in members_to_assign if lead in leads_per_member[member]), False)
                 if not member_found:
@@ -657,6 +693,7 @@ class CrmTeam(models.Model):
         _logger.info('Assigned %s leads to %s salesmen', sum(len(r['assigned']) for r in result_data.values()), len(result_data))
         for member, member_info in result_data.items():
             _logger.info('-> member %s of team %s: assigned %d/%d leads (%s)', member.id, member.crm_team_id.id, len(member_info["assigned"]), member_info["quota"], member_info["assigned"])
+        _logger.info('%s preferred leads have not been assigned to preference because of quota on a total of %s leads with preference', total_preffered_count - total_assigned_preffered_count, total_preffered_count)
         return result_data
 
     # ------------------------------------------------------------
