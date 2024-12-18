@@ -147,6 +147,25 @@ test("search emojis prioritize frequently used emojis", async () => {
     await contains(".o-EmojiPicker-content .o-Emoji:eq(0)", { text: "🤥" });
 });
 
+test("search matches only frequently used emojis", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add Emojis']");
+    await contains(".o-EmojiPicker-navbar [title='Frequently used']", { count: 0 });
+    await click(".o-EmojiPicker-content .o-Emoji", { text: "🥦" });
+    await click("button[title='Add Emojis']");
+    await contains(".o-EmojiPicker-navbar [title='Frequently used']");
+    await insertText("input[placeholder='Search emoji']", "brocoli");
+    await contains(".o-EmojiPicker-sectionIcon", { count: 0 }); // await search performed
+    await contains(".o-EmojiPicker-content .o-Emoji:eq(0)", { text: "🥦" });
+    await contains(".o-EmojiPicker-content .o-Emoji", { count: 1 });
+    await contains(".o-EmojiPicker-content", { text: "No emoji matches your search", count: 0 });
+    await insertText("input[placeholder='Search emoji']", "2");
+    await contains(".o-EmojiPicker-content", { text: "No emoji matches your search" });
+});
+
 test("emoji usage amount orders frequent emojis", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
