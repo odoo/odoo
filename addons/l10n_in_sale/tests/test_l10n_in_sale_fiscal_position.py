@@ -64,11 +64,11 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
 
         # Sub-test: SEZ (Special Economic Zone)
         with self.subTest(scenario="SEZ"):
-            # Here fpos should Intra-State. But due to `l10n_in_gst_treatment` it will be SEZ
+            # Here fpos should Intra-State. But due to `l10n_in_gst_treatment` on partner, it will be SEZ
+            self.partner_a.l10n_in_gst_treatment = 'special_economic_zone'
             sale_order = self.env['sale.order'].with_company(self.env.company).create({
                 'date_order': fields.Date.from_string('2019-01-01'),
                 'partner_id': self.partner_a.id,  # Intra-State Partner
-                'l10n_in_gst_treatment': 'special_economic_zone',
                 'order_line': [Command.create({
                     'product_id': self.product_a.id,
                     'product_uom_qty': 10,
