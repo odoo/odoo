@@ -31,12 +31,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'pcg_765',
                 'deferred_expense_account_id': 'pcg_486',
                 'deferred_revenue_account_id': 'pcg_487',
-                'l10n_fr_rounding_difference_loss_account_id': 'pcg_658',
-                'l10n_fr_rounding_difference_profit_account_id': 'pcg_758',
+                'l10n_fr_rounding_difference_loss_account_id': 'pcg_4768',
+                'l10n_fr_rounding_difference_profit_account_id': 'pcg_4778',
                 'account_sale_tax_id': 'tva_normale',
                 'account_purchase_tax_id': 'tva_acq_normale',
-                'expense_account_id': 'pcg_6071',
-                'income_account_id': 'pcg_7071',
+                'expense_account_id': 'pcg_607_account',
+                'income_account_id': 'pcg_707_account',
             },
         }
 
