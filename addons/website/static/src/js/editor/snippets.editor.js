@@ -185,7 +185,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (HighlightOptionEl) {
             HighlightOptionEl.dataset.textSelector = HighlightOptionEl.dataset.selector;
         }
-        
+
         // TODO remove in master: see snippets.xml
         $html.find('we-checkbox[data-dependencies="!footer_copyright_opt"]')[0]?.remove();
         $html.find('[data-name="header_language_selector_none_opt"]')[0]?.remove();
@@ -195,6 +195,13 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         // grid spacing option so it is not applied on inner rows.
         const $gridSpacingOptions = $html.find('[data-css-property="row-gap"], [data-css-property="column-gap"]');
         $gridSpacingOptions.attr("data-apply-to", ".row.o_grid_mode");
+
+        // TODO remove in master and adapt XML.
+        const contentAdditionEl = $html.find("#so_content_addition")[0];
+        if (contentAdditionEl) {
+            // Allows dropping "inner blocks" next to an image link.
+            contentAdditionEl.dataset.dropNear += ", div:not(.o_grid_item_image) > a:has(img)";
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
