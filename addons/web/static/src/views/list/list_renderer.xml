@@ -188,7 +188,7 @@
                 <div class="d-flex align-items-center">
                     <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
                         t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>
-                    <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
+                    <t t-esc="group.displayName"/> (<t t-esc="group.count"/>)
                     <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded and group.record.resId)" class="o_group_buttons">
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
                             <t t-if="!evalInvisible(button.invisible, group.record)">

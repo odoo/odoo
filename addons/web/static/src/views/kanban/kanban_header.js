@@ -94,21 +94,6 @@ export class KanbanHeader extends Component {
         return this.props.group;
     }
 
-    _getEmptyGroupLabel(fieldName) {
-        return _t("None");
-    }
-
-    get groupName() {
-        const { groupByField, displayName } = this.group;
-        if (groupByField.type === "boolean") {
-            return displayName ? _t("Yes") : _t("No");
-        } else if (groupByField.type === "integer") {
-            return displayName || "0";
-        } else {
-            return displayName || this._getEmptyGroupLabel(groupByField.name);
-        }
-    }
-
     get groupAggregate() {
         const { group, progressBarState } = this.props;
         const { sumField } = progressBarState.progressAttributes;

@@ -75,13 +75,9 @@
             'project/static/src/scss/project_form.scss',
             'project/static/src/scss/project_widgets.scss',
             'project/static/src/xml/**/*',
-            ('remove', 'project/static/src/views/project_task_graph/**'),
-            ('remove', 'project/static/src/views/project_task_pivot/**'),
             ('remove', 'project/static/src/views/burndown_chart/**'),
         ],
         'web.assets_backend_lazy': [
-            'project/static/src/views/project_task_graph/**',
-            'project/static/src/views/project_task_pivot/**',
             'project/static/src/views/burndown_chart/**',
         ],
         'web.assets_frontend': [

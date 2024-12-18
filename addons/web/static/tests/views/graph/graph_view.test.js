@@ -47,11 +47,9 @@ import {
 
 import { DEFAULT_BG, getBorderWhite, getColors, lightenColor } from "@web/core/colors/colors";
 import { Domain } from "@web/core/domain";
-import { registry } from "@web/core/registry";
 import { SampleServer } from "@web/model/sample_server";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";
-import { graphView } from "@web/views/graph/graph_view";
 import { WebClient } from "@web/webclient/webclient";
 
 class Color extends models.Model {
@@ -2677,42 +2675,6 @@ test("single chart rendering on search", async () => {
     expect.verifySteps(["rendering"]);
 });
 
-test("apply default filter label", async () => {
-    class CustomGraphModel extends graphView.Model {
-        _getDefaultFilterLabel(fields) {
-            return "None";
-        }
-    }
-    registry.category("views").add("custom_graph", {
-        ...graphView,
-        Model: CustomGraphModel,
-    });
-
-    const view = await mountView({
-        type: "graph",
-        resModel: "foo",
-        arch: /* xml */ `
-            <graph js_class="custom_graph">
-                <field name="product_id" />
-                <field name="color_id" />
-            </graph>
-        `,
-    });
-
-    checkLabels(view, ["xphone", "xpad"]);
-    checkLegend(view, ["red", "None", "Sum"]);
-
-    await selectMode("line");
-
-    checkLabels(view, ["xphone", "xpad"]);
-    checkLegend(view, ["red", "None"]);
-
-    await selectMode("pie");
-
-    checkLabels(view, ["xphone / red", "xphone / None", "xpad / None"]);
-    checkLegend(view, ["xphone / red", "xphone / None", "xpad / None"]);
-});
-
 test("missing property field definition is fetched", async function () {
     Foo._fields.properties_definition = fields.PropertiesDefinition();
     Foo._fields.parent_id = fields.Many2one({ relation: "foo" });
@@ -2838,7 +2800,7 @@ test("missing deleted property field definition is created", async function () {
     );
 });
 
-test("display '0' for empty int field values in grouped graph view", async () => {
+test("display '0' for false group, when grouped by int field", async () => {
     Foo._records[0].foo = false;
 
     const view = await mountView({
@@ -2849,4 +2811,18 @@ test("display '0' for empty int field values in grouped graph view", async () =>
     });
 
     checkLabels(view, ["2", "4", "24", "42", "48", "53", "63", "0"]);
+});
+
+test("display the field's falsy_value_label for false group, if defined", async () => {
+    Foo._fields.product_id.falsy_value_label = "I'm the false group";
+    Foo._records[0].product_id = false;
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["product_id"],
+        arch: /* xml */ `<graph type="bar" />`,
+    });
+
+    checkLabels(view, ["xphone", "xpad", "I'm the false group"]);
 });
