@@ -2,7 +2,7 @@
 
 import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { Mutex } from "@web/core/utils/concurrency";
-import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
+import { roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
@@ -1101,6 +1101,9 @@ patch(Order.prototype, {
             { env: this.env },
             { pos: this.pos, order: this, product: vals["product"] }
         );
+        if (vals["display_name"]) {
+            line.full_product_name = vals["display_name"];
+        }
         this.fix_tax_included_price(line);
         this.set_orderline_options(line, vals);
         return line;
@@ -1538,11 +1541,9 @@ patch(Order.prototype, {
         );
         return [
             {
-                product: reward.discount_line_product_id,
-                price: -roundDecimals(
-                    product.get_price(this.pricelist, freeQuantity),
-                    this.pos.currency.decimal_places
-                ),
+                product: product,
+                discount: 100,
+                display_name: _t("Free Product - ") + product.display_name,
                 tax_ids: product.taxes_id,
                 quantity: freeQuantity,
                 reward_id: reward.id,
