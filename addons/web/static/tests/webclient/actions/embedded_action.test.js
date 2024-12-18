@@ -3,23 +3,22 @@ import { queryAllTexts } from "@odoo/hoot-dom";
 import {
     contains,
     defineActions,
-    defineEmbeddedActions,
     defineModels,
     fields,
     getService,
     models,
     mountWithCleanup,
     onRpc,
-    webModels,
-    toggleSearchBarMenu,
     toggleMenuItem,
+    toggleSearchBarMenu,
+    webModels,
 } from "@web/../tests/web_test_helpers";
 
+import { mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
-import { WebClient } from "@web/webclient/webclient";
 import { router } from "@web/core/browser/router";
 import { user } from "@web/core/user";
-import { runAllTimers, mockTouch } from "@odoo/hoot-mock";
+import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
 
@@ -112,7 +111,6 @@ defineActions([
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -120,8 +118,6 @@ defineActions([
         xml_id: "action_2",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -133,7 +129,6 @@ defineActions([
         xml_id: "action_3",
         name: "Favorite Ponies",
         res_model: "pony",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [false, "kanban"],
@@ -145,18 +140,14 @@ defineActions([
         xml_id: "action_4",
         name: "Ponies",
         res_model: "pony",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [false, "kanban"],
             [false, "form"],
         ],
     },
-]);
-
-defineEmbeddedActions([
     {
-        id: 2,
+        id: 102,
         xml_id: "embedded_action_2",
         name: "Embedded Action 2",
         parent_res_model: "partner",
@@ -168,7 +159,7 @@ defineEmbeddedActions([
         },
     },
     {
-        id: 3,
+        id: 103,
         name: "Embedded Action 3",
         parent_res_model: "partner",
         type: "ir.embedded.actions",
@@ -176,7 +167,7 @@ defineEmbeddedActions([
         python_method: "do_python_method",
     },
     {
-        id: 4,
+        id: 104,
         name: "Custom Embedded Action 4",
         type: "ir.embedded.actions",
         user_id: user.userId,
@@ -464,7 +455,10 @@ test("User can unselect the main (first) embedded action", async () => {
 
 test("User should be redirected to the first embedded action set in localStorage", async () => {
     await mountWithCleanup(WebClient);
-    browser.localStorage.setItem(`orderEmbedded1++${user.userId}`, JSON.stringify([2, false, 3])); // set embedded action 2 in first
+    browser.localStorage.setItem(
+        `orderEmbedded1++${user.userId}`,
+        JSON.stringify([102, false, 103])
+    ); // set embedded action 2 in first
     await getService("action").doActionButton({
         name: 1,
         type: "action",
@@ -514,7 +508,7 @@ test("execute a regular action from an embedded action", async () => {
 
 test("custom embedded action loaded first", async () => {
     await mountWithCleanup(WebClient);
-    browser.localStorage.setItem(`orderEmbedded4++${user.userId}`, JSON.stringify([4, false])); // set embedded action 4 in first
+    browser.localStorage.setItem(`orderEmbedded4++${user.userId}`, JSON.stringify([104, false])); // set embedded action 4 in first
     await getService("action").doActionButton({
         name: 4,
         type: "action",
