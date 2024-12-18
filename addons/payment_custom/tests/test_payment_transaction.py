@@ -4,17 +4,17 @@ from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.addons.payment_custom.tests.common import PaymentCustomCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestPaymentTransaction(PaymentCommon):
+class TestPaymentTransaction(PaymentCustomCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.provider = cls._prepare_provider(code='custom')
+        cls.provider = cls._prepare_provider(code='custom', custom_mode='wire_transfer')
         cls.product = cls.env['product.product'].create({
             'name': "test product", 'list_price': cls.amount
         })

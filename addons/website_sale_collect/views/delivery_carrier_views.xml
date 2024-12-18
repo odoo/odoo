@@ -6,6 +6,9 @@
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
         <field name="model">delivery.carrier</field>
         <field name="arch" type="xml">
+            <field name="allow_cash_on_delivery" position="attributes">
+                <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
+            </field>
             <field name="integration_level" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
             </field>
