@@ -28,4 +28,4 @@ class TwilioSmsTemplate(models.Model):
     _description = 'Twilio SmS Template'
 
     name = fields.Char(string='Name', help='Name of Template', required=True)
-    content = fields.Text(string='Content', help='Content of the Template')
+    content = fields.Text(string='Content', required=True, help='Content of the Template')

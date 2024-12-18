@@ -19,7 +19,7 @@
 #    If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
-from odoo import fields, models, _
+from odoo import fields, models, api, _
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioException
 import logging
@@ -33,6 +33,9 @@ class SmsBuilder(models.TransientModel):
     _name = 'sms.builder'
     _description = 'SMS Builder'
 
+    def _get_default_twilio_account(self):
+        return self.env['twilio.account'].search([], limit=1, order='id').id
+
     partner_id = fields.Many2one('res.partner', string='Recipient',
                                  help='Receiving User')
     receiving_number = fields.Char(string='Receiving Number',
@@ -43,13 +46,17 @@ class SmsBuilder(models.TransientModel):
                                   string='Select Template',
                                   help='Message Template')
     text_message = fields.Text(string='Message', help='Message Content',
-                               required=True, related='template_id.content',
-                               readonly=False)
+                               required=True, readonly=False)
     account_id = fields.Many2one('twilio.account',
                                  string='Twilio Account', help='Choose the '
                                                                'Twilio '
                                                                'account',
-                                 required=True)
+                                 required=True, default=_get_default_twilio_account)
+
+    @api.onchange("template_id")
+    def onchange_template_id(self):
+        if self.template_id:
+            self.text_message = self.template_id.content
 
     def action_confirm_sms(self):
         """Send sms to the corresponding user by using the twilio connection"""

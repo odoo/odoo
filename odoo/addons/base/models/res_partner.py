@@ -739,6 +739,8 @@ class Partner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
+            if 'company_id' not in vals or vals['company_id'] is False:
+                vals['company_id'] = self.env.user.company_id.id
         partners = super(Partner, self).create(vals_list)
 
         if self.env.context.get('_partners_skip_fields_sync'):

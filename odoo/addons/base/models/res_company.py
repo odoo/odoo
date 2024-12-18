@@ -273,7 +273,8 @@ class Company(models.Model):
 
         # Make sure that the selected currencies are enabled
         companies.currency_id.sudo().filtered(lambda c: not c.active).active = True
-
+        for company in companies:
+            company.partner_id.company_id = company.id
         return companies
 
     def cache_invalidation_fields(self):

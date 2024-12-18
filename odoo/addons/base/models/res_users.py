@@ -660,8 +660,9 @@ class Users(models.Model):
         users = super(Users, self).create(vals_list)
         for user in users:
             # if partner is global we keep it that way
-            if user.partner_id.company_id:
-                user.partner_id.company_id = user.company_id
+            #if user.partner_id.company_id:
+            user.partner_id.company_id = user.company_id
+            user.partner_id.parent_id = False
             user.partner_id.active = user.active
             # Generate employee initals as avatar for internal users without image
             if not user.image_1920 and not user.share and user.name:
