@@ -51,8 +51,8 @@ class MailMessage(models.Model):
                         "id": (step.id, channel.id),
                         "message": message.id,
                         "scriptStep": step.id,
-                        "operatorFound": step.step_type == "forward_operator"
-                        and channel.livechat_operator_id != chatbot
+                        "operatorFound": step.is_forward_operator
+                        and channel.livechat_operator_id != chatbot,
                     }
                     if answer := chatbot_message.user_script_answer_id:
                         step_data["selectedAnswer"] = answer.id
