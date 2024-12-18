@@ -1336,7 +1336,7 @@ def _operator_hierarchy(condition, model):
         hierarchy = _operator_child_of_domain
     value = condition.value
     if value is False:
-        _logger.warning('Using %s with False value, the result will be empty', condition.operator)
+        return _FALSE_DOMAIN
     # Get:
     # - field: used in the resulting domain)
     # - parent (str | None): field name to find parent in the hierarchy
