@@ -1178,7 +1178,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             **form_data
         )
 
-
         is_anonymous_customer = request.env.user._is_public()
         is_main_address = is_anonymous_customer or order_sudo.partner_id.id == partner_sudo.id
         partner_fnames = set()
@@ -1234,7 +1233,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             else:
                 address_type = 'billing'
 
-        if partner_sudo and not partner_sudo._can_edited_by_current_customer():
+        if partner_sudo and not partner_sudo._can_edited_by_current_customer(order_sudo=order_sudo):
             raise Forbidden()
 
         return partner_sudo, address_type
@@ -1250,16 +1249,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_values.pop('lang')
         if not order_sudo:
             return
-        if not address_values['company_id']:
-            address_values['company_id'] = order_sudo.website_id.company_id.id
+        address_values['company_id'] = order_sudo.website_id.company_id.id or address_values['company_id']
         address_values['user_id'] = order_sudo.website_id.salesperson_id.id
         if order_sudo.website_id.specific_user_account:
             address_values['website_id'] = order_sudo.website_id.id
-
-    def _get_current_partner_id(self, order_sudo=False, **kwargs):
-        if order_sudo:
-            return order_sudo.partner_id
-        return super()._get_current_partner_id(order_sudo=order_sudo, **kwargs)
 
     def _create_new_address(
         self, address_values, address_type, use_delivery_as_billing, order_sudo
@@ -1727,7 +1720,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if (
             not order_sudo.only_services
             and not self._check_delivery_address(delivery_partner_sudo)
-            and delivery_partner_sudo._can_edited_by_current_customer()
+            and delivery_partner_sudo._can_edited_by_current_customer(order_sudo=order_sudo)
         ):
             return request.redirect(
                 f'/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery'
@@ -1736,7 +1729,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         invoice_partner_sudo = order_sudo.partner_invoice_id
         if (
             not self._check_billing_address(invoice_partner_sudo)
-            and invoice_partner_sudo._can_edited_by_current_customer()
+            and invoice_partner_sudo._can_edited_by_current_customer(order_sudo=order_sudo)
         ):
             return request.redirect(
                 f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'

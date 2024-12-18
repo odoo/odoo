@@ -50,6 +50,11 @@ class ResPartner(models.Model):
                 ),
             }}
 
+    def _get_current_partner(self, order_sudo=False, **kwargs):
+        if order_sudo:
+            return order_sudo.partner_id
+        return super()._get_current_partner(order_sudo=order_sudo, **kwargs)
+
     def _is_anonymous_customer(self):
         """ Override `portal` to check if customer is anonymous or not by comparing
         customer with website public user partner if same then customer is anonymous.

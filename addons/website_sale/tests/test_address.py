@@ -476,8 +476,7 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         so = self._create_so(partner_id=user_partner.id)
         self.assertNotEqual(so.partner_shipping_id, shipping)
         self.assertNotEqual(so.partner_invoice_id, invoicing)
-        self.assertFalse(so.partner_invoice_id._can_edited_by_current_customer())
-        self.assertFalse(colleague._can_edited_by_current_customer())
+        self.assertFalse(colleague._can_edited_by_current_customer(order_sudo=so))
 
         env = api.Environment(self.env.cr, user.id, {})
         # change also website env for `sale_get_order` to not change order partner_id

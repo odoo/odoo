@@ -21,17 +21,19 @@ class ResPartner(models.Model):
         self.ensure_one()
         return not self.parent_id
 
-    def _can_edited_by_current_customer(self):
+    def _can_edited_by_current_customer(self, **kwargs):
         """ Return whether customer can be edited by current user's customer. """
         self.ensure_one()
-        commercial_partner = self.commercial_partner_id
-        if self == commercial_partner:
+        if self == self._get_current_partner(**kwargs):
             return True
         children_partner_ids = self.env['res.partner']._search([
-            ('id', 'child_of', commercial_partner.id),
+            ('id', 'child_of', self.commercial_partner_id.id),
             ('type', 'in', ('invoice', 'delivery', 'other')),
         ])
-        return  self.id in children_partner_ids
+        return self.id in children_partner_ids
+
+    def _get_current_partner(self, **kwargs):
+        return self.env.user.partner_id
 
     def _is_anonymous_customer(self):
         """ Check if customer is anonymous or not. """

@@ -235,7 +235,7 @@ class CustomerPortal(Controller):
         """ Display my address page.
 
         :param dict query_params: The query string parameters.
-        :return: The rendered my/address page.
+        :return: The rendered my address page.
         :rtype: str
         """
         partner_sudo = request.env.user.partner_id.sudo()
@@ -247,13 +247,14 @@ class CustomerPortal(Controller):
         return request.render("portal.my_addresses", values)
 
     def _prepare_address_data(self, partner_sudo):
-        """ Prepare and return the address (billing and delivery) data to use to
+        """ Prepare and return the address (billing and delivery) data used to
         render the my addresses page.
 
-        :param res.partner partner_sudo: The current cart.
-        :return: The checkout page values.
+        :param res.partner partner_sudo: The current user partner.
+        :return: The current user addresses.
         :rtype: dict
         """
+        partner_sudo = partner_sudo.with_context(show_address=1)
         commercial_partner_sudo = partner_sudo.commercial_partner_id
         billing_partners_sudo = partner_sudo | partner_sudo.search([
             ('id', 'child_of', commercial_partner_sudo.ids),
@@ -285,28 +286,6 @@ class CustomerPortal(Controller):
             'delivery_addresses': delivery_partners_sudo,
         }
 
-    def _check_delivery_address(self, partner_sudo):
-        """ Check that all mandatory delivery fields are filled for the given partner.
-
-        :param res.partner: The partner whose delivery address to check.
-        :return: Whether all mandatory fields are filled.
-        :rtype: bool
-        """
-        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
-            partner_sudo.country_id
-        )
-        return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
-
-    def _get_mandatory_delivery_address_fields(self, country_sudo):
-        """ Return the set of mandatory delivery field names.
-
-        :param res.country country_sudo: The country to use to build the set of mandatory fields.
-        :return: The set of mandatory delivery field names.
-        :rtype: set
-        """
-        return self._get_mandatory_address_fields(country_sudo)
-
-
     def _check_billing_address(self, partner_sudo):
         """ Check that all mandatory billing fields are filled for the given partner.
 
@@ -330,6 +309,27 @@ class CustomerPortal(Controller):
         # Include the required billing fields from the portal logic.
         field_names |= set(self._get_mandatory_fields())
         return field_names
+
+    def _check_delivery_address(self, partner_sudo):
+        """ Check that all mandatory delivery fields are filled for the given partner.
+
+        :param res.partner: The partner whose delivery address to check.
+        :return: Whether all mandatory fields are filled.
+        :rtype: bool
+        """
+        mandatory_delivery_fields = self._get_mandatory_delivery_address_fields(
+            partner_sudo.country_id
+        )
+        return all(partner_sudo.read(mandatory_delivery_fields)[0].values())
+
+    def _get_mandatory_delivery_address_fields(self, country_sudo):
+        """ Return the set of mandatory delivery field names.
+
+        :param res.country country_sudo: The country to use to build the set of mandatory fields.
+        :return: The set of mandatory delivery field names.
+        :rtype: set
+        """
+        return self._get_mandatory_address_fields(country_sudo)
 
     def _get_mandatory_address_fields(self, country_sudo):
         """ Return the set of common mandatory address fields.
@@ -712,7 +712,7 @@ class CustomerPortal(Controller):
         if request.lang.code in request.website.mapped('language_ids.code'):
             address_values['lang'] = request.lang.code
 
-        partner = self._get_current_partner_id(**kwargs)
+        partner = self.env['res.partner']._get_current_partner(**kwargs)
         address_values['company_id'] = partner.company_id.id
         commercial_partner = partner.commercial_partner_id
         if partner._is_anonymous_customer():
@@ -727,9 +727,6 @@ class CustomerPortal(Controller):
         # Avoid linking the address to the default archived 'Public user' partner.
         if commercial_partner.active:
             address_values['parent_id'] = commercial_partner.id
-
-    def _get_current_partner_id(self, **kwargs):
-        return request.env.user.partner_id
 
     def _are_same_addresses(self, address_values, partner):
         ResPartner = request.env['res.partner']
