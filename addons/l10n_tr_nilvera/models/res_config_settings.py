@@ -28,8 +28,8 @@ class ResConfigSettings(models.TransientModel):
         # company's data and this way we can verify the connection and the tax ID in the same step.
         response = client.request("GET", "/general/Company", handle_response=False)
         if response.status_code == 200:
-            nilvera_resgistered_tax_number = response.json().get('TaxNumber')
-            if self.env.company.vat == nilvera_resgistered_tax_number:
+            nilvera_registered_tax_number = response.json().get('TaxNumber')
+            if self.env.company.vat == nilvera_registered_tax_number:
                 self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                     'type': 'success',
                     'message': _("Nilvera connection successful!"),
@@ -45,4 +45,7 @@ class ResConfigSettings(models.TransientModel):
                 'message': _("Nilvera connection was unsuccessful, check the API key."),
             })
         else:
-            client.handle_response(response)
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                'type': 'danger',
+                'message': _("An error occurred. Try again later."),
+            })

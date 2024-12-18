@@ -214,7 +214,7 @@ class ResPartner(models.Model):
     def _compute_hide_peppol_fields(self):
         """ Hides the people fields depending on the UBL format. Can be extended to add different hiding conditions. """
         for partner in self:
-            partner.hide_peppol_fields = bool(not partner.ubl_cii_format or partner.ubl_cii_format == 'facturx')
+            partner.hide_peppol_fields = not partner.ubl_cii_format or partner.ubl_cii_format == 'facturx'
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""

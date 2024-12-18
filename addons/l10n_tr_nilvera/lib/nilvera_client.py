@@ -5,7 +5,7 @@ from json import JSONDecodeError
 from pprint import pformat
 
 from odoo import _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -26,10 +26,10 @@ class NilveraClient:
         self.session = requests.Session()
         self.session.headers.update({'Accept': 'application/json'})
         if api_key:
-            self.session.headers.update({'Authorization': 'Bearer ' + api_key})
+            self.session.headers['Authorization'] = 'Bearer ' + api_key
 
     def request(self, method, endpoint, params=None, json=None, files=None, handle_response=True):
-        start = str(datetime.utcnow())
+        start = datetime.utcnow()
         url = self.base_url + endpoint
 
         response = self.session.request(
@@ -39,7 +39,7 @@ class NilveraClient:
             json=json,
             files=files,
         )
-        end = str(datetime.utcnow())
+        end = datetime.utcnow()
         self._log_request(method, start, end, url, params, json, response)
 
         if handle_response:
@@ -61,23 +61,16 @@ class NilveraClient:
         )
 
     def handle_response(self, response):
-        try:
-            response.raise_for_status()
-        except requests.exceptions.HTTPError:
-            _logger.exception("HTTP error occurred")
-            if response.status_code in {401, 403}:
-                raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
-            else:
-                raise UserError(_("Odoo could not perform this action at the moment, try again later."))
-        except requests.exceptions.RequestException:
-            _logger.exception("Request exception occurred")
-            raise UserError(_("An error occurred. Try again later."))
+        if response.status_code in {401, 403}:
+            raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
+        elif 403 < response.status_code < 600:
+            raise UserError(_("Odoo could not perform this action at the moment, try again later."))
 
         try:
             return response.json()
         except JSONDecodeError:
             _logger.exception("Invalid JSON response: %s", response.text)
-            raise ValidationError(_("An error occurred. Try again later."))
+            raise UserError(_("An error occurred. Try again later."))
 
     def __del__(self):
         if hasattr(self, 'session'):

@@ -1,5 +1,6 @@
 import uuid
 from markupsafe import Markup
+from urllib.parse import quote, urlencode, urlparse
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -49,7 +50,7 @@ class AccountMove(models.Model):
     def _l10n_tr_nilvera_submit_einvoice(self, xml_file, customer_alias):
         self._l10n_tr_nilvera_submit_document(
             xml_file=xml_file,
-            endpoint=f"/einvoice/Send/Xml?Alias={customer_alias}",
+            endpoint=f"/einvoice/Send/Xml?{urlencode({'Alias': customer_alias})}",
         )
 
     def _l10n_tr_nilvera_submit_earchive(self, xml_file):
@@ -58,8 +59,21 @@ class AccountMove(models.Model):
             endpoint="/earchive/Send/Xml",
         )
 
-    def _l10n_tr_nilvera_submit_document(self, xml_file, endpoint):
-        """Generic function to handle e-invoice and e-archive submissions to Nilvera."""
+    def _l10n_tr_nilvera_submit_document(self, xml_file, endpoint, post_series=True):
+        """
+        Submits an e-invoice or e-archive document to Nilvera for processing.
+
+        :param xml_file: The XML file to be submitted.
+        :type xml_file: file-like object
+        :param endpoint: The Nilvera API endpoint for submission.
+        :type endpoint: str
+        :param post_series: Whether to attempt posting the series/sequence to Nilvera if it is missing.
+                            Defaults to True. Useful for avoiding an infinite loop.
+        :type post_series: bool
+        :raises UserError: If the API key lacks necessary rights (401 or 403 responses), if the response
+                            indicates a client error (4xx), or if a server error occurs (500).
+        :return: None
+        """
         client = _get_nilvera_client(self.env.company)
         response = client.request(
             "POST",
@@ -76,9 +90,9 @@ class AccountMove(models.Model):
             error_message, error_codes = self._l10n_tr_nilvera_einvoice_get_error_messages_from_response(response)
 
             # If the sequence/series is not found on Nilvera, add it then retry.
-            if 3009 in error_codes:
+            if 3009 in error_codes and post_series:
                 self._l10n_tr_nilvera_post_series(endpoint, client)
-                return self._l10n_tr_nilvera_submit_document(xml_file, endpoint)
+                return self._l10n_tr_nilvera_submit_document(xml_file, endpoint, post_series=False)
             raise UserError(error_message)
         elif response.status_code == 500:
             return UserError(_("Server error from Nilvera, please try again later."))
@@ -87,18 +101,19 @@ class AccountMove(models.Model):
 
     def _l10n_tr_nilvera_post_series(self, endpoint, client):
         """Post the series to Nilvera based on the endpoint."""
-        if "einvoice" in endpoint:
+        path = urlparse(endpoint).path  # Remove query params from te endpoint.
+        if path == "/einvoice/Send/Xml":
             series_endpoint = "/einvoice/Series"
-        elif "earchive" in endpoint:
+        elif path == "/earchive/Send/Xml":
             series_endpoint = "/earchive/Series"
         else:
-            # The endpoint should contain either "einvoice" or "earchive, return early if it's not valid.
+            # Return early if endpoint couldn't be matched.
             return
 
         if not self.sequence_prefix:
             return
 
-        series = self.sequence_prefix.split('/')[0]
+        series = self.sequence_prefix.split('/', 1)[0]
         client.request(
             "POST",
             series_endpoint,
@@ -167,7 +182,7 @@ class AccountMove(models.Model):
     def _l10n_tr_nilvera_get_invoice_from_uuid(self, client, journal, document_uuid):
         response = client.request(
             "GET",
-            f"/einvoice/Purchase/{document_uuid}/xml",
+            f"/einvoice/Purchase/{quote(document_uuid)}/xml",
         )
 
         attachment_vals = {
@@ -177,8 +192,8 @@ class AccountMove(models.Model):
             'mimetype': 'application/xml',
         }
 
+        attachment = self.env['ir.attachment'].create(attachment_vals)
         try:
-            attachment = self.env['ir.attachment'].create(attachment_vals)
             move = journal.with_context(
                 default_move_type='in_invoice',
                 default_l10n_tr_nilvera_uuid=document_uuid,
@@ -197,18 +212,17 @@ class AccountMove(models.Model):
                 'company_id': self.env.company.id,
                 'l10n_tr_nilvera_uuid': document_uuid,
             })
-            attachment_vals.update({
+            attachment.write({
                 'res_model': 'account.move',
                 'res_id': move.id,
             })
-            self.env['ir.attachment'].create(attachment_vals)
 
         return move
 
     def _l10n_tr_nilvera_add_pdf_to_invoice(self, client, invoice, document_uuid):
         response = client.request(
             "GET",
-            f"/einvoice/Purchase/{document_uuid}/pdf",
+            f"/einvoice/Purchase/{quote(document_uuid)}/pdf",
         )
 
         filename = f'{invoice.ref}.pdf' if invoice.ref else 'Nilvera PDF.pdf'

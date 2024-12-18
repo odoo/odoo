@@ -1,4 +1,5 @@
 import logging
+import urllib.parse
 
 from odoo import api, fields, models
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
@@ -45,7 +46,7 @@ class ResPartner(models.Model):
         # EXTENDS 'account_edi_ubl_cii'
         super()._compute_hide_peppol_fields()
         for partner in self:
-            partner.hide_peppol_fields = bool(partner.ubl_cii_format == 'ubl_tr')
+            partner.hide_peppol_fields = partner.ubl_cii_format == 'ubl_tr'
 
     @api.depends('country_code')
     def _compute_ubl_cii_format(self):
@@ -71,7 +72,7 @@ class ResPartner(models.Model):
             return
 
         client = _get_nilvera_client(self.env.company)
-        response = client.request("GET", "/general/GlobalCompany/Check/TaxNumber/" + self.vat, handle_response=False)
+        response = client.request("GET", "/general/GlobalCompany/Check/TaxNumber/" + urllib.parse.quote(self.vat), handle_response=False)
         if response.status_code == 200:
             query_result = response.json()
 
@@ -82,12 +83,12 @@ class ResPartner(models.Model):
                 self.l10n_tr_nilvera_customer_status = 'einvoice'
 
                 # We need to sync the data from the API with the records in database.
-                aliases = [result.get('Name') for result in query_result]
+                aliases = {result.get('Name') for result in query_result}
                 persisted_aliases = self.l10n_tr_nilvera_customer_alias_ids
                 # Find aliases to add (in query result but not in database).
-                aliases_to_add = set(aliases) - set(persisted_aliases.mapped('name'))
+                aliases_to_add = aliases - set(persisted_aliases.mapped('name'))
                 # Find aliases to remove (in database but not in query result).
-                aliases_to_remove = set(persisted_aliases.mapped('name')) - set(aliases)
+                aliases_to_remove = set(persisted_aliases.mapped('name')) - aliases
 
                 newly_persisted_aliases = self.env['l10n_tr.nilvera.alias'].create([{
                     'name': alias_name,
