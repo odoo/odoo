@@ -82,6 +82,7 @@ Featuring
             'website_slides/static/src/views/**/*.xml',
         ],
         'web.assets_frontend': [
+            'website_slides/static/src/interactions/**/*',
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/src/scss/website_slides_profile.scss',
             'website_slides/static/src/scss/slides_slide_fullscreen.scss',
@@ -103,7 +104,6 @@ Featuring
             'website_slides/static/src/js/slides_course_quiz_question_form.js',
             'website_slides/static/src/js/slides_course_tag_add.js',
             'website_slides/static/src/js/slides_course_unsubscribe.js',
-            'website_slides/static/src/js/snippets.animation.js',
             'website_slides/static/src/js/portal_rating_composer.js',
             'website_slides/static/src/xml/website_slides_sidebar.xml',
             'website_slides/static/src/xml/website_slides_fullscreen.xml',
@@ -197,6 +197,9 @@ Featuring
             'website_slides/static/tests/**/*',
             ('remove', 'website_slides/static/tests/legacy/**/*'),
             ('remove', 'website_slides/static/tests/tours/**/*'),
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_slides/static/src/interactions/**/*',
         ],
     },
     'license': 'LGPL-3',
