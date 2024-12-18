@@ -37,7 +37,7 @@
 </template>
 
 <template id="s_images_wall" name="Images Wall">
-    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24" data-vcss="002" data-columns="3" data-mobile-columns="1" style="overflow: hidden;">
+    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24" data-vcss="002" data-columns="3" data-mobile-columns="1" data-expandable="false" data-expandable-count="6" style="overflow: hidden;">
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
@@ -53,6 +53,11 @@
                     <img class="img img-fluid d-block rounded" src="/web/image/website.library_image_16" data-index="5" data-name="Image" alt=""/>
                 </div>
             </div>
+        </div>
+        <div id="expandable_controls" class="d-flex justify-content-center">
+            <!-- Expandable control buttons -->
+            <button class="btn btn-primary rounded-circle d-none" id="btn-expand-gallery"><span class="fa fa-2x fa-angle-down"/></button>
+            <button class="btn btn-primary rounded-circle d-none" id="btn-collapse-gallery"><span class="fa fa-2x fa-angle-up"/></button>
         </div>
     </section>
 </template>
@@ -129,6 +134,17 @@
                 <t t-set="apply_to" t-valuef="img"/>
                 <t t-set="so_rounded_no_dependencies" t-value="true"/>
             </t>
+            <we-checkbox string="Expandable"
+                data-dependencies="!slideshow_mode_opt"
+                data-select-data-attribute="true"
+                data-attribute-name="expandable"
+                data-name="expandable_opt"/>
+            <we-input string="Default Limit"
+                data-step="1"
+                data-select-data-attribute="true"
+                data-dependencies="expandable_opt"
+                class="o_we_sublevel_1"
+                data-attribute-name="expandableCount"/>
         </div>
         <div data-js="gallery_img" data-selector=".s_image_gallery img"></div>
     </xpath>

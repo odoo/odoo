@@ -175,8 +175,16 @@ async function _createMasonryLayout(rowEl, desktopColumnCount, mobileColumnCount
     rowEl.classList.add(MASONRY.CLASSES.ROW, MASONRY.CLASSES.FIXED_COLUMNS);
 
     // Distribute items across the columns
+    const originallyHiddenEls = [];
     for (const el of originalEls) {
         el.classList.add(MASONRY.CLASSES.ITEM);
+
+        // Make hidden elements available for layout calculation.
+        if (el.classList.contains("d-none")) {
+            el.classList.remove("d-none");
+            el.classList.add("opacity-0");
+            originallyHiddenEls.push(el);
+        }
 
         // Get the shortest column and append the element to it
         const shortestColumnEl = _getShortestColumn(columnEls);
@@ -198,6 +206,12 @@ async function _createMasonryLayout(rowEl, desktopColumnCount, mobileColumnCount
                     })
             )
         );
+    }
+
+    // Restore element's original visibility
+    for (const el of originallyHiddenEls) {
+        el.classList.remove("opacity-0");
+        el.classList.add("d-none");
     }
 }
 

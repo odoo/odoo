@@ -495,6 +495,63 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
     }
 }
 
+/**
+ * Retrieves a sorted list of gallery items based on a specified `data-index`
+ * attribute.
+ *
+ * @param {HTMLElement} rootEl - The parent element containing gallery items.
+ * @param {string[]} containerSelectors - Array of CSS selectors for container
+ *                                        elements that may wrap the actual
+ *                                        gallery items.
+ * @param {string} indexAttribute - The attribute used to determine the order of
+ *                                  gallery items (default: 'data-index').
+ * @returns {HTMLElement[]} A sorted array of gallery item elements.
+ */
+export function getSortedGalleryItems(
+    rootEl,
+    containerSelectors = [],
+    indexAttribute = "data-index"
+) {
+    /**
+     * Helper function to retrieve the index of a gallery item.
+     *
+     * @param {HTMLElement} element - Either the gallery item itself or its
+     *                                container.
+     * @returns {number} The numeric index of the gallery item. Items without an
+     *                   index will be assigned `Infinity` to ensure they appear
+     *                   last.
+     */
+    const getItemIndex = (element) => {
+        // If the element itself has the index attribute
+        if (element.hasAttribute(indexAttribute)) {
+            return parseInt(element.getAttribute(indexAttribute), 10);
+        }
+
+        // If the gallery item is wrapped in a container, look for a child
+        // element with the index
+        const itemWithIndexEl = element.querySelector(`[${indexAttribute}]`);
+        if (itemWithIndexEl && itemWithIndexEl.hasAttribute(indexAttribute)) {
+            return parseInt(itemWithIndexEl.getAttribute(indexAttribute), 10);
+        }
+
+        return Infinity; // Items without a valid index appear last
+    };
+
+    // Retrieve all elements with the index attribute (direct gallery items).
+    const indexedElements = Array.from(rootEl.querySelectorAll(`[${indexAttribute}]`));
+
+    // Map each element to its container (if it exists), or the element itself.
+    const galleryItems = indexedElements.map((element) => {
+        const wrappingContainer = element.closest(containerSelectors.join(",")) || element; // Fallback to self
+        return wrappingContainer;
+    });
+
+    // Sort the gallery items based on their index.
+    return galleryItems.sort(
+        (firstItemEl, secondItemEl) => getItemIndex(firstItemEl) - getItemIndex(secondItemEl)
+    );
+}
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -511,4 +568,5 @@ export default {
     getParsedDataFor: getParsedDataFor,
     cloneContentEls: cloneContentEls,
     checkAndNotifySEO: checkAndNotifySEO,
+    getSortedGalleryItems: getSortedGalleryItems,
 };

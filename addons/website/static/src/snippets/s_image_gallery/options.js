@@ -347,6 +347,21 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         } else {
             layoutPromise = Promise.resolve();
         }
+
+        const snippetEl = this.$target[0];
+        if (snippetEl.dataset.expandable === "true") {
+            // Show all items hidden by expandable option
+            this._toggleGalleryView({ showExpandedView: true });
+
+            // Hide expandable control buttons
+            const showMoreButtonEl = snippetEl.querySelector("#btn-expand-gallery");
+            const hideExtraButtonEl = snippetEl.querySelector("#btn-collapse-gallery");
+            if (showMoreButtonEl && hideExtraButtonEl) {
+                showMoreButtonEl.classList.add("d-none");
+                hideExtraButtonEl.classList.add("d-none");
+            }
+        }
+
         return layoutPromise.then(() => _super.apply(this, arguments).then(() => {
             // Call specific mode's start if defined (e.g. _slideshowStart)
             const startMode = this[`_${this._getMode()}Start`];
@@ -361,6 +376,11 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
     cleanForSave() {
         if (this.$target.hasClass('slideshow')) {
             this.$target.removeAttr('style');
+        }
+
+        // If using expandable option, collapse the gallery
+        if (this.$target[0].dataset.expandable === "true") {
+            this._toggleGalleryView({ showExpandedView: false });
         }
     },
 
@@ -442,6 +462,43 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
             return false;
         }
         return this._super(...arguments);
+    },
+    /**
+     * Toggles the visibility of extra gallery items based on the
+     * `showExpandedView` option.
+     *
+     * If `showExpandedView` is true, all gallery items are shown
+     * ("expanded view"); if false, only items within the allowed limit
+     * are shown, hiding the rest ("collapsed view").
+     *
+     * @private
+     * @param {{ showExpandedView?: boolean }} options - Options to control
+     *                                                   gallery visibility.
+     * @param {boolean} [options.showExpandedView=true] - If true, displays all
+     *                    items; if false, hides items beyond the allowed limit.
+     */
+    _toggleGalleryView({ showExpandedView = true } = {}) {
+        const snippetEl = this.$target[0];
+        const maxAllowedItemCount =
+            parseInt(snippetEl.dataset.expandableCount, 10) || galleryItemEls.length;
+        const galleryItemEls = wUtils.getSortedGalleryItems(snippetEl, [".o_grid_item"]);
+        galleryItemEls
+            .slice(maxAllowedItemCount) // Selects the gallery items beyond allowed limit
+            .forEach((galleryItemEl) => {
+                // For items that are beyond allowed limit, toggle visibility
+                // based on showExpandedView parameter
+                galleryItemEl.classList.toggle("d-none", !showExpandedView);
+            });
+
+        if (!showExpandedView && galleryItemEls.length > maxAllowedItemCount) {
+            // Show `#btn-expand-gallery` when in collapsed view and the number
+            // of gallery items exceeds the allowed limit
+            const showMoreButtonEl = snippetEl.querySelector("#btn-expand-gallery");
+            if (showMoreButtonEl) {
+                showMoreButtonEl.classList.remove("d-none");
+                showMoreButtonEl.style.setProperty("--gallery-items-count", galleryItemEls.length);
+            }
+        }
     },
 });
 

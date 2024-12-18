@@ -363,6 +363,22 @@
             }
         }
     }
+
+    & #btn-expand-gallery {
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: 100vw;
+            height: 5rem;
+            background-image: linear-gradient(to top, var(--white), transparent);
+            bottom: calc(100% +  var(--border-width));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: calc(var(--gallery-items-count) + 1);
+        }
+    }
 }
 
 .s_gallery_lightbox {
