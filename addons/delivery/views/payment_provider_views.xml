@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">COD Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment_custom.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <field name="qr_code" position="attributes">
+                <attribute
+                    name="invisible" separator=" or " add="custom_mode == 'cash_on_delivery'"
+                />
+            </field>
+        </field>
+    </record>
+
+</odoo>
