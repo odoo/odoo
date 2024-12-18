@@ -8,7 +8,7 @@
                     <group>
                         <field name="holiday_status_id" domain="[('requires_allocation', '=', 'no')]"/>
                         <field name="allocation_mode" string="Mode"/>
-                        <field name="employee_ids" invisible="allocation_mode != 'employee'" required="allocation_mode == 'employee'" widget="many2many_avatar_user"/>
+                        <field name="employee_ids" invisible="allocation_mode != 'employee'" required="allocation_mode == 'employee'" widget="many2many_avatar_employee"/>
                         <field name="company_id" invisible="allocation_mode != 'company'"/>
                         <field name="department_id" invisible="allocation_mode != 'department'" required="allocation_mode == 'department'"/>
                         <field name="category_id" invisible="allocation_mode != 'category'" required="allocation_mode == 'category'"/>

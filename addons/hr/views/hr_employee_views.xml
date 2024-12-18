@@ -105,8 +105,8 @@
                             <group>
                                 <field name="department_id"/>
                                 <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
-                                <field name="parent_id" widget="many2one_avatar_user"/>
-                                <field name="coach_id" widget="many2one_avatar_user"/>
+                                <field name="parent_id" widget="many2one_avatar_employee"/>
+                                <field name="coach_id" widget="many2one_avatar_employee"/>
                             </group>
                         </group>
                         <field name="employee_properties" columns="2"/>
@@ -284,12 +284,12 @@
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="department_id"/>
                     <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}"/>
-                    <field name="parent_id" widget="many2one_avatar_user" optional="show"/>
+                    <field name="parent_id" widget="many2one_avatar_employee" optional="show"/>
                     <field name="address_id" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="birthday" optional="hide"/>
                     <field name="work_location_id" optional="hide"/>
-                    <field name="coach_id" widget="many2one_avatar_user" optional="hide"/>
+                    <field name="coach_id" widget="many2one_avatar_employee" optional="hide"/>
                     <field name="active" column_invisible="True"/>
                     <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="country_id" optional="hide"/>
@@ -306,7 +306,7 @@
                     <field name="company_id" optional="hide"/>
                     <field name="department_id" optional="hide"/>
                     <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="hide"/>
-                    <field name="parent_id" widget="many2one_avatar_user" optional="hide"/>
+                    <field name="parent_id" widget="many2one_avatar_employee" optional="hide"/>
                     <field name="resource_calendar_id" optional="show"/>
                 </list>
             </field>
