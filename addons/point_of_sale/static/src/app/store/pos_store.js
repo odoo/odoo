@@ -851,10 +851,9 @@ export class PosStore extends Reactive {
                     ScaleScreen,
                     this.scaleData
                 );
-                if (!weight) {
-                    return;
+                if (weight) {
+                    values.qty = weight;
                 }
-                values.qty = weight;
                 this.isScaleScreenVisible = false;
                 this.scaleWeight = 0;
                 this.scaleTare = 0;

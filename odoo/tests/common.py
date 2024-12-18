@@ -1207,7 +1207,7 @@ class ChromeBrowser:
             switches['--touch-events'] = ''
         if debug is not False:
             switches['--auto-open-devtools-for-tabs'] = ''
-            switches['--start-maximized'] = ''
+            switches['--start-fullscreen'] = ''
 
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
