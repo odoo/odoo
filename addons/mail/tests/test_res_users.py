@@ -172,12 +172,18 @@ class TestUserSettings(MailCommon):
 
     @users('employee')
     def test_find_or_create_for_user_should_return_correct_res_users_settings(self):
-        self.user_employee.res_users_settings_ids.unlink()
-        settings = self.env['res.users.settings'].create({
-            'user_id': self.user_employee.id,
-        })
-        result = self.env['res.users.settings']._find_or_create_for_user(self.user_employee)
-        self.assertEqual(result, settings, "Correct mail user settings should be returned")
+        voip_officer_group = self.env.ref("voip.group_voip_officer")
+        self.user_employee.groups_id += voip_officer_group
+
+        try:
+            self.user_employee.res_users_settings_ids.unlink()
+            settings = self.env['res.users.settings'].create({
+                'user_id': self.user_employee.id,
+            })
+            result = self.env['res.users.settings']._find_or_create_for_user(self.user_employee)
+            self.assertEqual(result, settings, "Correct mail user settings should be returned")
+        finally:
+            self.user_employee.groups_id -= voip_officer_group
 
     @users('employee')
     def test_set_res_users_settings_should_send_notification_on_bus(self):
