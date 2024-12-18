@@ -16,7 +16,4 @@ patch(PosStore.prototype, {
 
         return await super.getServerOrders(...arguments);
     },
-    _shouldLoadOrders() {
-        return super._shouldLoadOrders() || this.session._self_ordering;
-    },
 });

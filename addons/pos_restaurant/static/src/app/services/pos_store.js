@@ -569,16 +569,10 @@ patch(PosStore.prototype, {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);
         return tableOrders.reduce((count, order) => count + order.getCustomerCount(), 0);
     },
-    isOpenOrderShareable() {
-        return super.isOpenOrderShareable(...arguments) || this.config.module_pos_restaurant;
-    },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
         if (this.isEditMode) {
             this.tableSelectorState = false;
         }
-    },
-    _shouldLoadOrders() {
-        return super._shouldLoadOrders() || this.config.module_pos_restaurant;
     },
 });
