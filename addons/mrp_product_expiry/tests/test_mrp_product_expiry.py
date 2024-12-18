@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
 
 
-class TestStockLot(TestStockCommon):
+class TestStockLot(TestMrpCommon):
 
     @classmethod
     def setUpClass(cls):

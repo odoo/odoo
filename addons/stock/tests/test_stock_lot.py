@@ -143,21 +143,20 @@ class TestLotSerial(TestStockCommon):
         customer = self.PartnerObj.create({'name': 'bob'})
         delivery_picking = self.env['stock.picking'].create({
             'partner_id': customer.id,
-            'picking_type_id': self.picking_type_out,
+            'picking_type_id': self.picking_type_out.id,
             'move_ids': [Command.create({
                 'name': self.productC.name,
                 'product_id': self.productC.id,
                 'product_uom_qty': 5,
                 'quantity': 5,
-                'location_id': self.stock_location,
-                'location_dest_id': self.customer_location,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
             })]
         })
-        stock = self.env['stock.location'].browse(self.stock_location)
         additional_product = self.productA
         lot = self.lot_p_a
-        lot.location_id = stock
-        quant = additional_product.stock_quant_ids.filtered(lambda q: q.location_id == stock)
+        lot.location_id = self.stock_location
+        quant = additional_product.stock_quant_ids.filtered(lambda q: q.location_id == self.stock_location)
         self.assertRecordValues(quant, [{'quantity': 10.0, 'reserved_quantity': 0.0}])
         delivery_picking.button_validate()
         delivery_picking.is_locked = False
@@ -184,7 +183,7 @@ class TestLotSerial(TestStockCommon):
         move = self.env["stock.move"].create({
             'name': 'test_move',
             'location_id': self.locationA.id,
-            'location_dest_id': self.customer_location,
+            'location_dest_id': self.customer_location.id,
             'product_id': self.productB.id,
             'product_uom_qty': 1.0,
         })
@@ -197,11 +196,11 @@ class TestLotSerial(TestStockCommon):
         # check that the quantity of starting quant is moved to a new quant
         self.assertEqual(starting_quant.quantity, 0)
         # check that the sn is in customer location
-        self.assertEqual(self.lot_p_b.location_id.id, self.customer_location)
+        self.assertEqual(self.lot_p_b.location_id.id, self.customer_location.id)
         # create a return
         move = self.env['stock.move'].create({
             'name': 'test_move',
-            'location_id': self.customer_location,
+            'location_id': self.customer_location.id,
             'location_dest_id': self.locationA.id,
             'product_id': self.productB.id,
             'lot_ids': self.lot_p_b,
