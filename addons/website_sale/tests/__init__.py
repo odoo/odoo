@@ -19,6 +19,7 @@ from . import test_website_sale_cart_notification
 from . import test_website_sale_cart_payment
 from . import test_website_sale_cart_recovery
 from . import test_website_sale_combo_configurator
+from . import test_website_sale_gmc
 from . import test_website_sale_image
 from . import test_website_sale_invoice
 from . import test_website_sale_mail

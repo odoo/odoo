@@ -1,9 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+from pytz import UTC
+from urllib.parse import urljoin
+
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import float_round
+from odoo.tools import float_is_zero, float_round, lazy
+
+from odoo.addons.website_sale.const import GMC_SUPPORTED_UOM, GMC_BASE_MEASURE
 
 
 class ProductProduct(models.Model):
@@ -184,3 +190,184 @@ class ProductProduct(models.Model):
                 'reviewCount': self.rating_count,
             }
         return markup_data
+
+    def _get_image_1920_link(self, website_id=None):
+        """
+        :return: the main image URl for the current product
+        """
+        self.ensure_one()
+        website_id = website_id or self.website_id
+        return website_id.image_url(self, 'image_1920')
+
+    def _get_extra_image_1920_links(self, website_id=None):
+        """
+        :return: the list of extra images URL (no videos) for the current product
+        """
+        self.ensure_one()
+        website_id = website_id or self.website_id
+        return [
+            website_id.image_url(extra_image, 'image_1920')
+            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            if extra_image.image_1920  # only images, no video urls
+        ]
+
+    def _prepare_gmc_items(self):
+        """Prepare Google Merchant Center items' fields.
+
+        See [Google](https://support.google.com/merchants/answer/7052112)'s documentation for more
+        information about each field.
+
+        :return: a dictionary for each non-service product in this recordset.
+        :rtype: list[dict]
+        """
+        self = self.with_context(display_default_code=False)
+
+        pricelist_id = request.pricelist.id
+        currency = request.website.currency_id
+        IrHttp = request.env['ir.http']
+        base_url = request.website.get_base_url()
+
+        def format_link(url):
+            return urljoin(base_url, IrHttp._url_lang(url))
+
+        def format_product_link(url):
+            return format_link(f'/shop/change_pricelist/{pricelist_id}?r={url}')
+
+        def format_price(price):
+            return f"{currency.round(price)} {currency.name}"
+
+        def format_date(dt):
+            return UTC.localize(dt).isoformat(timespec='minutes')
+
+        delivery_methods = self.env['delivery.carrier'].sudo().search([('is_published', '=', True)])
+        all_countries = lazy(lambda: self.env['res.country'].search([], limit=100))
+        dummy_partner = self.env['res.partner'].new({})
+        dummy_order = self.env['sale.order'].new({
+            'partner_id': dummy_partner.id,
+            'pricelist_id': request.pricelist,
+            'order_line': [{'product_uom_qty': 1.0}],
+        })
+        order_line = dummy_order.order_line[0]
+        all_product_items = {}
+        for product in self:
+            if product.type not in ('consu', 'combo'):
+                continue
+            combination_info = product.product_tmpl_id._get_combination_info(
+                combination=product.product_template_attribute_value_ids,
+            )
+            if (
+                not combination_info['is_combination_possible']
+                or combination_info['prevent_zero_price_sale']
+            ):
+                continue
+            # Compute the best shipping service for each country this product can be shipped to.
+            order_line.product_id = product
+            best_carrier_by_country = defaultdict(lambda: (float('inf'), None))
+            best_free_shipping_threshold = defaultdict(lambda: float('inf'))
+            for dm in delivery_methods:
+                for country in dm.country_ids[:100] or all_countries:
+                    dummy_partner.country_id = country
+                    if not dm._is_available_for_order(dummy_order):
+                        continue
+                    shipment_rate = dm.rate_shipment(dummy_order)
+                    if not shipment_rate['success']:
+                        continue
+                    best_carrier_by_country[country] = min(
+                        best_carrier_by_country[country], (shipment_rate['price'], dm)
+                    )
+                    if dm.free_over:
+                        best_free_shipping_threshold[country] = min(
+                            best_free_shipping_threshold[country],
+                            dm.amount,
+                        )
+            product_items = {
+                # Required
+                'id': product.default_code or product.id,
+                'title': product.display_name,
+                'availability': 'in_stock',
+                'description': product.website_meta_description or product.description_sale,
+                'link': format_product_link(product.website_url),
+                'image_link': (
+                    # don't send any image link if there isn't. Google does not allow placeholder
+                    format_link(product._get_image_1920_link())
+                    if product.image_1920
+                    else ''
+                ),
+                'price': format_price(combination_info['list_price']),
+                'identifier_exists': 'no',
+                'shipping': [
+                    {
+                        'country': country.code,
+                        'service': carrier.name,
+                        'price': format_price(best_price),
+                    }
+                    for country, (best_price, carrier) in best_carrier_by_country.items()
+                ],
+                # Optional
+                'product_detail': [
+                    (attr.attribute_id.name, attr.name)
+                    for attr in product.product_template_attribute_value_ids
+                ],
+                'is_bundle': 'yes' if product.type == 'combo' else 'no',
+                'additional_image_link': [
+                    format_link(link)
+                    # supports up to 10 extra images
+                    for link in product._get_extra_image_1920_links()[:10]
+                ],
+                'product_type': [
+                    category.replace('/', '>')  # google uses a different format
+                    for i, category in zip(
+                        range(5),  # up to 5 categories
+                        product.public_categ_ids.sorted('sequence').mapped('display_name'),
+                    )
+                ],
+                'custom_label': [
+                    (f'custom_label_{i}', tag_name)
+                    for i, tag_name in zip(
+                        range(5),  # supports up to 5 custom labels
+                        product.all_product_tag_ids.sorted('sequence').mapped('name'),
+                    )
+                ],
+                'free_shipping_threshold': [
+                    {
+                        'country': country.code,
+                        'price_threshold': format_price(best_threshold),
+                    }
+                    for country, best_threshold in best_free_shipping_threshold.items()
+                ],
+            }
+            # prefer barcode over record id
+            if product.barcode:
+                product_items.update({'gtin': product.barcode, 'identifier_exists': 'yes'})
+            # link variants together
+            if len(product.product_tmpl_id.product_variant_ids) > 1:
+                product_items['item_group_id'] = product.product_tmpl_id.id
+            # sales/promo/discount/etc.
+            if combination_info['has_discounted_price']:
+                product_items['sale_price'] = format_price(combination_info['price'])
+                effective_date = combination_info['discounted_price_effective_date']
+                if all(effective_date):  # if there is start and end date
+                    product_items['sale_price_effective_date'] = (
+                        '/'.join(map(format_date, effective_date))
+                    )
+            # note: Google only supports a restricted set of unit and computes the comparison prices
+            # differently than Odoo.
+            # Ex: product="Pack of wine (6 bottles)", price=$65.00, uom_name="Pack".
+            #   - in odoo: base_unit_count=6.0, base_unit_name="750ml"
+            #       => displayed: "$10.83 / 750ml"
+            #   - in google: unit_pricing_measure="4500ml", unit_pricing_base_measure="750ml"
+            #       => displayed: "$10.83 / 750ml"
+            if (
+                combination_info.get('base_unit_name')
+                and product.base_unit_count
+                and (match := GMC_BASE_MEASURE.match(
+                    combination_info['base_unit_name'].strip().lower()
+                ))
+            ):
+                base_count, base_unit = match['base_count'] or '1', match['base_unit']
+                count = product.base_unit_count * int(base_count)
+                if base_unit in GMC_SUPPORTED_UOM and not float_is_zero(count, 2):
+                    product_items['unit_pricing_measure'] = f'{float_round(count, 2)}{base_unit}'
+                    product_items['unit_pricing_base_measure'] = f'{base_count}{base_unit}'
+            all_product_items[product] = product_items
+        return all_product_items
