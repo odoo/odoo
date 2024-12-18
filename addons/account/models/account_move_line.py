@@ -1522,6 +1522,10 @@ class AccountMoveLine(models.Model):
 
         return result_vals_list
 
+    def _get_line_balance(self):
+        self.ensure_one()
+        return self.company_id.currency_id.round(self.amount_currency / self.currency_rate)
+
     @contextmanager
     def _sync_invoice(self, container):
         if container['records'].env.context.get('skip_invoice_line_sync'):
@@ -1567,8 +1571,7 @@ class AccountMoveLine(models.Model):
                 and 'balance' not in protected.get(line, {})
                 and (not changed('balance') or (line not in before and not line.balance))
             ):
-                balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
-                line.balance = balance
+                line.balance = line._get_line_balance()
         # Since this method is called during the sync, inside of `create`/`write`, these fields
         # already have been computed and marked as so. But this method should re-trigger it since
         # it changes the dependencies.

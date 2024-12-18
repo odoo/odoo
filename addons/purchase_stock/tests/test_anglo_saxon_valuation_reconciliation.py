@@ -548,6 +548,10 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order.invoice_ids.action_post()
         post_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
         self.assertEqual(post_bill_remaining_value, pre_bill_remaining_value)
+        currency_exchange_items = self.env['account.move.line'].search([
+            ('name', '=', 'Currency exchange rate difference'),
+        ])
+        self.assertFalse(currency_exchange_items)
 
     def test_manual_cost_adjustment_journal_items_quantity(self):
         """ The quantity field of `account.move.line` should be permitted to be zero, e.g., in the
