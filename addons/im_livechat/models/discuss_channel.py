@@ -297,3 +297,7 @@ class DiscussChannel(models.Model):
             self.sudo().livechat_active = False
             self._bus_send_store(Store(self, "livechat_active"))
         super()._action_unfollow(partner, guest)
+
+    def _post_leave_notification(self, member):
+        if member.partner_id != self.chatbot_current_step_id.chatbot_script_id.operator_partner_id:
+            super()._post_leave_notification(member)
