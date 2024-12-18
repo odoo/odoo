@@ -5,6 +5,22 @@ import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
 import { Interaction } from "@web/public/interaction";
 
+/**
+ * @typedef jitsiRoom
+ * @type {Object}
+ * @property {object} _events
+ * @property {number} _eventsCount
+ * @property {string} _url
+ * @property {object} _frame
+ * @property {string} _height
+ * @property {string} _width
+ * @property {object} _transport
+ * @property {boolean} _isLargeVideoVisible
+ * @property {boolean} _isPrejoinVideoVisible
+ * @property {number} _numberOfParticipants
+ * @property {object} _participants
+ */
+
 class ChatRoom extends Interaction {
     static selector = ".o_wjitsi_room_widget";
     dynamicContent = {
@@ -86,10 +102,10 @@ class ChatRoom extends Interaction {
             this.registerCleanup(() => bsJitsiModal.dispose());
 
             const modalBodyEl = jitsiModalEl.querySelector(".modal-body");
-            const jitsiRoomEl = await this.waitFor(this.joinJitsiRoom(modalBodyEl));
+            const jitsiRoom = await this.waitFor(this.joinJitsiRoom(modalBodyEl));
 
             // close the modal when hanging up
-            this.addListener(jitsiRoomEl, "videoConferenceLeft", () => {
+            this.addListener(jitsiRoom, "videoConferenceLeft", () => {
                 bsJitsiModal.hide();
             });
 
@@ -128,11 +144,10 @@ class ChatRoom extends Interaction {
       * Update on the 29 June 2020
       *
       * @param {HTMLElement} parentNode, parent element in which we add the Jitsi room
-      * @returns {HTMLElement} the newly created Jitsi room
+      * @returns {jitsiRoom} the newly created Jitsi room
       */
     async joinJitsiRoom(parentNode) {
         const jitsiRoom = await this.waitFor(this.createJitsiRoom(this.roomName, parentNode));
-
         if (this.defaultUsername) {
             jitsiRoom.executeCommand("displayName", this.defaultUsername);
         }
@@ -220,7 +235,7 @@ class ChatRoom extends Interaction {
       *
       * @param {string} roomName
       * @param {HTMLElement} parentNode
-      * @returns {HTMLElement} the newly created Jitsi room
+      * @returns {jitsiRoom} the newly created Jitsi room
       */
     async createJitsiRoom(roomName, parentNode) {
       await this.waitFor(this.loadJitsi());
