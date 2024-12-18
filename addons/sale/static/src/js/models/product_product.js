@@ -31,15 +31,6 @@ export class ProductProduct {
     }
 
     /**
-     * Check whether this product has `no_variant` PTALs.
-     *
-     * @return {Boolean} Whether this product has `no_variant` PTALs.
-     */
-    get hasNoVariantPtals() {
-        return this.noVariantPtals.length > 0;
-    }
-
-    /**
      * Return the extra price of the selected `no_variant` PTAVs.
      *
      * @return {Number} The extra price of the selected `no_variant` PTAVs.
