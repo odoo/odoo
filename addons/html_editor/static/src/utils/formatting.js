@@ -236,3 +236,19 @@ export function getFontSizeDisplayValue(sel, document) {
     const pxValue = convertNumericToUnit(remValue, "rem", "px", htmlStyle);
     return pxValue || parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
 }
+
+export function getFontSizeOrClass(node) {
+    if (!node) {
+        return null;
+    }
+
+    if (node.style.fontSize) {
+        return { type: "font-size", value: node.style.fontSize };
+    }
+
+    const fontSizeClass = FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls));
+    if (fontSizeClass) {
+        return { type: "class", value: fontSizeClass };
+    }
+    return null;
+}
