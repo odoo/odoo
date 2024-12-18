@@ -170,8 +170,17 @@
                             </div>
                             <div class="row mt-4">
                                 <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-                                    <button class="btn btn-primary btn-lg lh-lg w-100">Request invoice</button>
+                                    <button class="btn btn-primary btn-lg lh-lg w-100">Request</button>
                                 </div>
+                            </div>
+                            <div hidden="true">
+                                <select name="invoice_sending_method" class="form-select">
+                                    <t t-foreach="invoice_sending_methods" t-as="method">
+                                        <option t-att-value="method" t-att-selected="(invoice_sending_method or partner.invoice_sending_method) == method">
+                                            <t t-esc="method_value"/>
+                                        </option>
+                                    </t>
+                                </select>
                             </div>
                         </div>
                     </div>
