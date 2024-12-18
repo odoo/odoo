@@ -433,3 +433,25 @@ class TestGetOperator(MailCommon, HttpCase):
                 livechat_channels[1]: self.env["res.users"],
             },
         )
+
+    @users("employee")
+    def test_get_non_member_operator(self):
+        """Test _get_operator works with a given list of operators that are not members of the
+        livechat channel"""
+        operator_1 = self._create_operator(lang_code="fr_FR")
+        operator_2 = self._create_operator(lang_code="en_US")
+        all_operators = operator_1 + operator_2
+        livechat_channel_data = {"name": "Livechat Channel 2"}
+        livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
+        self.assertFalse(livechat_channel._get_operator())
+        self.assertFalse(
+            livechat_channel._get_operator(previous_operator_id=operator_1.partner_id.id)
+        )
+        self.assertEqual(livechat_channel._get_operator(users=all_operators), operator_1)
+        self.assertEqual(
+            livechat_channel._get_operator(previous_operator_id=operator_2.partner_id.id, users=all_operators),
+            operator_2,
+        )
+        self.assertEqual(
+            livechat_channel._get_operator(lang="en_US", users=all_operators), operator_2
+        )
