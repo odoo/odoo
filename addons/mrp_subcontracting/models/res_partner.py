@@ -9,6 +9,7 @@ class ResPartner(models.Model):
 
     property_stock_subcontractor = fields.Many2one(
         'stock.location', string="Subcontractor Location", company_dependent=True,
+        required=True,
         help="The stock location used as source and destination when sending\
         goods to this contact during a subcontracting process.")
     is_subcontractor = fields.Boolean(
