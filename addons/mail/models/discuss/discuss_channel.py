@@ -437,7 +437,7 @@ class DiscussChannel(models.Model):
             ],
         )
 
-    def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
+    def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True,seen_id=False):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         partners = self.env['res.partner'].browse(partner_ids or []).exists()
@@ -460,6 +460,7 @@ class DiscussChannel(models.Model):
                 'guest_id': guest.id,
                 'channel_id': channel.id,
             } for guest in guests - existing_members.guest_id]
+            # breakpoint()
             new_members = self.env['discuss.channel.member'].create(members_to_create)
             all_new_members += new_members
             for member in new_members:
@@ -474,6 +475,7 @@ class DiscussChannel(models.Model):
                 if not member.is_self and not self.env.user._is_public():
                     payload["invited_by_user_id"] = self.env.user.id
                 member._bus_send("discuss.channel/joined", payload)
+                # breakpoint()
                 if post_joined_message:
                     notification = (
                         _("joined the channel")
@@ -485,6 +487,7 @@ class DiscussChannel(models.Model):
                         message_type="notification",
                         subtype_xmlid="mail.mt_comment",
                     )
+                member.seen_message_id = seen_id
             if new_members:
                 channel._bus_send_store(Store(channel, "member_count").add(new_members))
             if existing_members and (target := current_partner or current_guest):
