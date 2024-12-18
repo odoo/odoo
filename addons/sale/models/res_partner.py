@@ -3,8 +3,6 @@
 from odoo import api, fields, models
 from odoo.osv import expression
 
-from odoo.addons.base.models.res_partner import WARNING_HELP, WARNING_MESSAGE
-
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -15,7 +13,6 @@ class ResPartner(models.Model):
         compute='_compute_sale_order_count',
     )
     sale_order_ids = fields.One2many('sale.order', 'partner_id', 'Sales Order')
-    sale_warn = fields.Selection(WARNING_MESSAGE, 'Sales Warnings', default='no-message', help=WARNING_HELP)
     sale_warn_msg = fields.Text('Message for Sales Order')
 
     @api.model
