@@ -26,6 +26,20 @@ export class Interaction {
     static selector = "";
 
     /**
+     * The `selectorHas` attribute, if defined, allows to filter elements found
+     * through the `selector` attribute by only considering those which contain
+     * at least an element which matches this `selectorHas` selector.
+     *
+     * Note that this is the equivalent of setting up a `selector` using the
+     * `:has` pseudo-selector but that pseudo-selector is known to not be fully
+     * supported in all browsers. To prevent useless crashes, using this
+     * `selectorHas` attribute should be preferred.
+     *
+     * @type {string}
+     */
+    static selectorHas = "";
+
+    /**
      * Note that a dynamic selector is allowed to return a falsy value, for ex
      * the result of a querySelector. In that case, the directive will simply be
      * ignored.

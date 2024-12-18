@@ -109,9 +109,13 @@ class InteractionService {
             try {
                 const isMatch = el.matches(I.selector);
                 targets = isMatch ? [el] : el.querySelectorAll(I.selector);
+                if (I.selectorHas) {
+                    targets = [...targets].filter((el) => !!el.querySelector(I.selectorHas));
+                }
             } catch {
+                const selectorHasError = I.selectorHas ? ` or selectorHas: '${I.selectorHas}'` : "";
                 const error = new Error(
-                    `Could not start interaction ${I.name} (invalid selector: '${I.selector}')`
+                    `Could not start interaction ${I.name} (invalid selector: '${I.selector}'${selectorHasError})`
                 );
                 proms.push(Promise.reject(error));
                 continue;

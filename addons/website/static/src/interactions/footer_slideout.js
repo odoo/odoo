@@ -2,7 +2,9 @@ import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 
 export class FooterSlideout extends Interaction {
-    static selector = "#wrapwrap:has(.o_footer_slideout)";
+    static selector = "#wrapwrap";
+    static selectorHas = ".o_footer_slideout";
+
     dynamicContent = {
         "_root": {
             "t-att-class": () => ({

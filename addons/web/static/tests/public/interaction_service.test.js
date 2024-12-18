@@ -1,10 +1,12 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 
 import { Component, xml } from "@odoo/owl";
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
 import { Interaction } from "@web/public/interaction";
 import { startInteraction } from "./helpers";
+
+describe.current.tags("interaction_dev");
 
 test("properly handles case where we have no match for wrapwrap", async () => {
     const env = await makeMockEnv();
@@ -111,6 +113,43 @@ test("start interactions even if there is a crash when evaluating selector", asy
     }
     expect(e.message).toBe(
         "Could not start interaction Boom (invalid selector: 'div:invalid(coucou)')"
+    );
+
+    expect.verifySteps(["start notboom"]);
+});
+
+test("start interactions even if there is a crash when evaluating selectorHas", async () => {
+    class Boom extends Interaction {
+        static selector = ".test";
+        static selectorHas = "div:invalid(coucou)";
+
+        setup() {
+            expect.step("start boom");
+        }
+        destroy() {
+            expect.step("destroy boom");
+        }
+    }
+    class NotBoom extends Interaction {
+        static selector = ".test";
+
+        setup() {
+            expect.step("start notboom");
+        }
+    }
+
+    const { core } = await startInteraction([Boom, NotBoom], `<div class="test"><div></div></div>`, {
+        waitForStart: false,
+    });
+
+    let e = null;
+    try {
+        await core.isReady;
+    } catch (_e) {
+        e = _e;
+    }
+    expect(e.message).toBe(
+        "Could not start interaction Boom (invalid selector: '.test' or selectorHas: 'div:invalid(coucou)')"
     );
 
     expect.verifySteps(["start notboom"]);
