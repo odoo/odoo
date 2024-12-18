@@ -17,7 +17,7 @@ export class CustomerDisplay extends Component {
     }
 
     get netWeight() {
-        const weight = round_pr(this.order.weight || 0, this.order.uomRounding);
+        const weight = round_pr(this.order.weight || 0, this.order.scaleData.uomRounding);
         const weightRound = weight.toFixed(
             Math.ceil(Math.log(1.0 / this.order.scaleData.uomRounding) / Math.log(10))
         );
