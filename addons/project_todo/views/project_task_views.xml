@@ -102,14 +102,14 @@
                   js_class="todo_form">
                 <field name="name" invisible="1"/>
                 <header>
-                    <div class="py-1 px-2 border rounded bg-view">
+                    <div invisible="1" class="py-1 px-2 border rounded bg-view">
                         <field name="tag_ids"
                                widget="many2many_tags"
                                options="{'color_field': 'color', 'no_create_edit': True}"
                                class="me-2"
                                placeholder="Tags"/>
                     </div>
-                    <div class="py-1 px-2 border rounded bg-view">
+                    <div invisible="1" class="py-1 px-2 border rounded bg-view">
                         <field name="user_ids"
                                widget="many2many_avatar_user"
                                options="{'no_quick_create': True}"
@@ -123,6 +123,18 @@
                     <field name="state" invisible="1"/>
                 </header>
                 <sheet class="o_todo_form_sheet_bg">
+                    <group class="m-2">
+                        <group>
+                            <field name="tag_ids"
+                                   widget="many2many_tags"
+                                   options="{'color_field': 'color', 'no_create_edit': True}"
+                                   placeholder="Tags"/>
+                            <field name="user_ids"
+                                   widget="many2many_avatar_user"
+                                   options="{'no_quick_create': True}"
+                                   placeholder="Assignees"/>
+                        </group>
+                    </group>
                     <widget name="web_ribbon" class="todo_archived" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="description" type="html" class="oe_description" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
                 </sheet>
