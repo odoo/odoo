@@ -178,7 +178,7 @@ class TestUserSettings(MailCommon):
     @users('employee')
     def test_find_or_create_for_user_should_return_correct_res_users_settings(self):
         self.user_employee.res_users_settings_ids.unlink()
-        settings = self.env['res.users.settings'].create({
+        settings = self.env['res.users.settings'].sudo().create({
             'user_id': self.user_employee.id,
         })
         result = self.env['res.users.settings']._find_or_create_for_user(self.user_employee)
