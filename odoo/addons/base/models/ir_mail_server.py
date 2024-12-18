@@ -90,16 +90,24 @@ smtplib.stderr = WriteToLogger()
 def is_ascii(s):
     return all(ord(cp) < 128 for cp in s)
 
-address_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
+# Regex pattern to match emails within angle brackets and standalone ones
+angle_brackets_pattern = re.compile(r'<([^" ,<@]+@[^>" ,]+)>')
+standalone_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
+
 
 def extract_rfc2822_addresses(text):
     """Returns a list of valid RFC2822 addresses
-       that can be found in ``source``, ignoring
+       that can be found in ``text``, ignoring
        malformed ones and non-ASCII ones.
     """
     if not text:
         return []
-    candidates = address_pattern.findall(ustr(text))
+
+    # First try to match emails inside angle brackets
+    candidates = angle_brackets_pattern.findall(text)
+    if not candidates:  # Fall back to standalone pattern if no matches
+        candidates = standalone_pattern.findall(text)
+
     valid_addresses = []
     for c in candidates:
         try:

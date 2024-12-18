@@ -311,3 +311,38 @@ class TestIrMailServer(MailCommon):
             message_from='"specific_user" <test@custom_domain.com>',
             from_filter='random.domain',
         )
+
+    @mute_logger('odoo.models.unlink')
+    def test_smtp_to_list(self):
+        self.test_partner = self.env["res.partner"].create(
+            {
+                "name": "mail@partner.com",
+                "email": "mail@company.com",
+            }
+        )
+        self.partner = self.env.ref('base.res_partner_main1')
+        self.test_subtype = self.env['mail.message.subtype'].create({
+            'name': 'Test',
+            'description': 'only description',
+        })
+
+        # Make test user follow Test HR Job
+        self.env["mail.followers"].create(
+            {
+                "res_model": self.partner._name,
+                "res_id": self.partner.id,
+                "partner_id": self.test_partner.id,
+                "subtype_ids": [(4, self.test_subtype.id)],
+            }
+        )
+        with self.mock_smtplib_connection():
+            self.test_partner.message_post(
+                body="Test mail",
+                subject="Test mail",
+                subtype_id=self.test_subtype.id,
+                partner_ids=[self.test_partner.id],
+            )
+        self.connect_mocked.assert_called_once()
+        self.assertSMTPEmailsSent(
+            smtp_to_list=['mail@company.com'],
+        )
