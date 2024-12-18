@@ -37,4 +37,12 @@ patch(ComboConfiguratorDialog.prototype, {
         }
         return comboProductData;
     },
+
+    _getAdditionalDialogProps() {
+        const props = super._getAdditionalDialogProps();
+        if (this.props.isFrontend) {
+            props.isFrontend = this.props.isFrontend;
+        }
+        return props;
+    },
 });
