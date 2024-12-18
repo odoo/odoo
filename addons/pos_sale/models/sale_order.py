@@ -73,6 +73,7 @@ class SaleOrderLine(models.Model):
                 item['qty_invoiced'] = self._convert_qty(sale_line, item['qty_invoiced'], 's2p')
                 item['qty_to_invoice'] = self._convert_qty(sale_line, item['qty_to_invoice'], 's2p')
                 item['price_unit'] = sale_line_uom._compute_price(item['price_unit'], product_uom)
+                item['tax_id'] = sale_line.tax_id.id
                 results.append(item)
 
             elif sale_line.display_type == 'line_note':
