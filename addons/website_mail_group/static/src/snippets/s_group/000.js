@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import MailGroup from "@mail_group/js/mail_group";
@@ -28,14 +27,18 @@ MailGroup.include({
         const userEmail = response.email;
         this.isMember = response.is_member;
 
+        const inputGroup = this.$el.find('.o_mg_email_input_group')
+
         if (userEmail && userEmail.length) {
-            const emailInput = this.$el.find('.o_mg_subscribe_email');
+            inputGroup.removeClass('input-group').addClass('d-flex justify-content-end');
+            const emailInput = inputGroup.find('.o_mg_subscribe_email');
             emailInput.val(userEmail);
-            emailInput.attr('readonly', 1);
+            emailInput.addClass('d-none');
         }
 
-        if (this.isMember) {
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+        if (this.isMember){
+            this.$el.find('.o_mg_unsubscribe_btn').removeClass('d-none');
+            inputGroup.addClass('d-none');
         }
 
         this.$el.data('isMember', this.isMember);
