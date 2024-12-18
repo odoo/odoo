@@ -1877,7 +1877,7 @@
 
     <!-- Lines that show items in the cart. Called in `website_sale.cart`. -->
     <template id="cart_lines" name="Shopping Cart Lines">
-        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
+        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info mt-4">
             Your cart is empty!
         </div>
         <t t-if='website_sale_order'>
@@ -1889,130 +1889,132 @@
              t-if="website_sale_order and website_sale_order.website_order_line"
              class="js_cart_lines d-flex flex-column mb32">
             <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
-            <div t-foreach="website_sale_order.website_order_line"
-                 t-as="line"
-                 t-attf-class="o_cart_product d-flex align-items-stretch gap-3 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom pb-4'} #{line_index &gt; 0 and 'pt-4'}"
-                 t-attf-data-product-id="#{line.product_id and line.product_id.id}">
-                <t t-if="line.product_id">
-                    <div style="width: 64px">
-                        <!--
-                            Unsellable lines can have unpublished products, but portal users have no
-                            access to unpublished product images. To ensure product images are
-                            always shown for unsellable lines, we use the raw image data as src
-                            (which doesn't require access, unlike the image URL).
-                        -->
-                        <img
-                            t-if="line._is_not_sellable_line() and line.product_id.image_128"
-                            t-att-src="image_data_uri(line.product_id.image_128)"
-                            class="o_image_64_max img rounded"
-                            t-att-alt="line.name_short"
-                        />
-                        <div
-                            t-elif="line.product_id.image_128"
-                            t-field="line.product_id.image_128"
-                            t-options="{
-                                'widget': 'image',
-                                'qweb_img_responsive': False,
-                                'class': 'o_image_64_max rounded',
-                            }"
-                        />
-                    </div>
-                    <div class="flex-grow-1 text-overflow-ellipsis">
-                        <t t-call="website_sale.cart_line_product_link">
-                            <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
-                        </t>
-                        <t t-call="website_sale.cart_line_description_following_lines"/>
-                        <div name="o_wsale_cart_line_button_container">
-                            <a href='#'
-                               class="js_delete_product d-none d-md-inline-block small"
-                               aria-label="Remove from cart"
-                               title="Remove from cart">Remove</a>
-                            <button class="js_delete_product btn btn-light d-inline-block d-md-none"
-                                    title="remove">
-                                <i class="fa fa-trash-o"/>
-                            </button>
-                        </div>
-                        <t t-if="line.product_type == 'combo'">
+            <t t-foreach="website_sale_order.website_order_line" t-as="line">
+                <div
+                    t-attf-class="o_cart_product d-flex align-items-stretch gap-3 py-4 #{line.linked_line_id and 'optional_product info'} #{not line_last and 'border-bottom'}"
+                    t-attf-data-product-id="#{line.product_id and line.product_id.id}"
+                >
+                    <t t-if="line.product_id">
+                        <div style="width: 64px">
+                            <!--
+                                Unsellable lines can have unpublished products, but portal users have no
+                                access to unpublished product images. To ensure product images are
+                                always shown for unsellable lines, we use the raw image data as src
+                                (which doesn't require access, unlike the image URL).
+                            -->
+                            <img
+                                t-if="line._is_not_sellable_line() and line.product_id.image_128"
+                                t-att-src="image_data_uri(line.product_id.image_128)"
+                                class="o_image_64_max img rounded"
+                                t-att-alt="line.name_short"
+                            />
                             <div
-                                t-foreach="line.linked_line_ids"
-                                t-as="combo_item_line"
-                                t-attf-class="{{'' if combo_item_line_last else 'pb-2'}}"
-                            >
-                                <t t-call="website_sale.cart_combo_item_line"/>
+                                t-elif="line.product_id.image_128"
+                                t-field="line.product_id.image_128"
+                                t-options="{
+                                    'widget': 'image',
+                                    'qweb_img_responsive': False,
+                                    'class': 'o_image_64_max rounded',
+                                }"
+                            />
+                        </div>
+                        <div class="flex-grow-1 text-overflow-ellipsis">
+                            <t t-call="website_sale.cart_line_product_link">
+                                <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
+                            </t>
+                            <t t-call="website_sale.cart_line_description_following_lines"/>
+                            <div name="o_wsale_cart_line_button_container">
+                                <a href='#'
+                                class="js_delete_product d-none d-md-inline-block small"
+                                aria-label="Remove from cart"
+                                title="Remove from cart">Remove</a>
+                                <button class="js_delete_product btn btn-light d-inline-block d-md-none"
+                                        title="remove">
+                                    <i class="fa fa-trash-o"/>
+                                </button>
                             </div>
-                        </t>
-                    </div>
-                    <div class="d-flex flex-column align-items-end">
-                        <div t-attf-class="css_quantity input-group mb-2"
-                             name="website_sale_cart_line_quantity">
-                            <t t-if="not line._is_not_sellable_line()">
-                                <t t-if="show_qty">
-                                    <a href="#"
-                                       class="js_add_cart_json btn btn-link d-inline-block border-end-0"
-                                       aria-label="Remove one"
-                                       title="Remove one">
-                                        <i class="position-relative z-1 fa fa-minus"/>
-                                    </a>
-                                    <input type="text"
-                                           class="js_quantity quantity form-control border-start-0 border-end-0"
-                                           t-att-data-line-id="line.id"
-                                           t-att-data-product-id="line.product_id.id"
-                                           t-att-value="line._get_displayed_quantity()"/>
-                                    <t t-if="line._get_shop_warning(clear=False)">
-                                        <a href="#" class="btn btn-link">
-                                        <i class='fa fa-warning text-warning'
-                                           t-att-title="line._get_shop_warning()"
-                                           role="img"
-                                           aria-label="Warning"/>
+                            <t t-if="line.product_type == 'combo'">
+                                <div
+                                    t-foreach="line.linked_line_ids"
+                                    t-as="combo_item_line"
+                                    t-attf-class="{{'' if combo_item_line_last else 'pb-2'}}"
+                                >
+                                    <t t-call="website_sale.cart_combo_item_line"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="d-flex flex-column align-items-end">
+                            <div t-attf-class="css_quantity input-group mb-2"
+                                name="website_sale_cart_line_quantity">
+                                <t t-if="not line._is_not_sellable_line()">
+                                    <t t-if="show_qty">
+                                        <a href="#"
+                                        class="js_add_cart_json btn btn-link d-inline-block border-end-0"
+                                        aria-label="Remove one"
+                                        title="Remove one">
+                                            <i class="position-relative z-1 fa fa-minus"/>
+                                        </a>
+                                        <input type="text"
+                                            class="js_quantity quantity form-control border-start-0 border-end-0"
+                                            t-att-data-line-id="line.id"
+                                            t-att-data-product-id="line.product_id.id"
+                                            t-att-value="line._get_displayed_quantity()"/>
+                                        <t t-if="line._get_shop_warning(clear=False)">
+                                            <a href="#" class="btn btn-link">
+                                            <i class='fa fa-warning text-warning'
+                                            t-att-title="line._get_shop_warning()"
+                                            role="img"
+                                            aria-label="Warning"/>
+                                            </a>
+                                        </t>
+                                        <a t-else=""
+                                        href="#"
+                                        class="js_add_cart_json d-inline-block float_left btn btn-link border-start-0"
+                                        aria-label="Add one"
+                                        title="Add one">
+                                            <i class="fa fa-plus position-relative z-1"/>
                                         </a>
                                     </t>
-                                    <a t-else=""
-                                       href="#"
-                                       class="js_add_cart_json d-inline-block float_left btn btn-link border-start-0"
-                                       aria-label="Add one"
-                                       title="Add one">
-                                        <i class="fa fa-plus position-relative z-1"/>
-                                    </a>
+                                    <t t-else="">
+                                        <input type="hidden"
+                                            class="js_quantity form-control quantity"
+                                            t-att-data-line-id="line.id"
+                                            t-att-data-product-id="line.product_id.id"
+                                            t-att-value="line._get_displayed_quantity()"/>
+                                    </t>
                                 </t>
                                 <t t-else="">
+                                    <span class="w-100 text-muted" t-esc="int(line.product_uom_qty)"/>
                                     <input type="hidden"
-                                           class="js_quantity form-control quantity"
-                                           t-att-data-line-id="line.id"
-                                           t-att-data-product-id="line.product_id.id"
-                                           t-att-value="line._get_displayed_quantity()"/>
+                                        class="js_quantity quantity form-control"
+                                        t-att-data-line-id="line.id"
+                                        t-att-data-product-id="line.product_id.id"
+                                        t-att-value="line._get_displayed_quantity()"/>
                                 </t>
-                            </t>
-                            <t t-else="">
-                                <span class="w-100 text-muted" t-esc="int(line.product_uom_qty)"/>
-                                <input type="hidden"
-                                       class="js_quantity quantity form-control"
-                                       t-att-data-line-id="line.id"
-                                       t-att-data-product-id="line.product_id.id"
-                                       t-att-value="line._get_displayed_quantity()"/>
-                            </t>
-                        </div>
-                        <div class="mb-0 h6 fw-bold text-end" name="website_sale_cart_line_price">
-                            <t t-if="line.discount">
-                                <del t-attf-class="#{'text-muted mr8'}"
-                                     style="white-space: nowrap;"
-                                     t-out="line._get_displayed_unit_price() * line.product_uom_qty"
-                                     t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                            </t>
-                            <t t-set="product_price" t-value="line._get_cart_display_price()"/>
-                            <t t-call="website_sale.cart_product_price"/>
-                            <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
-                                   class="cart_product_base_unit_price d-block text-muted"
-                                   groups="website_sale.group_show_uom_price">
-                                <t t-call='website_sale.base_unit_price'>
-                                    <t t-set='product' t-value='line.product_id'/>
-                                    <t t-set='combination_info'
-                                       t-value="{'base_unit_price': product._get_base_unit_price(product_price/line.product_uom_qty)}"/>
+                            </div>
+                            <div class="mb-0 h6 fw-bold text-end" name="website_sale_cart_line_price">
+                                <t t-if="line.discount">
+                                    <del t-attf-class="#{'text-muted mr8'}"
+                                        style="white-space: nowrap;"
+                                        t-out="line._get_displayed_unit_price() * line.product_uom_qty"
+                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                 </t>
-                            </small>
+                                <t t-set="product_price" t-value="line._get_cart_display_price()"/>
+                                <t t-call="website_sale.cart_product_price"/>
+                                <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
+                                    class="cart_product_base_unit_price d-block text-muted"
+                                    groups="website_sale.group_show_uom_price">
+                                    <t t-call='website_sale.base_unit_price'>
+                                        <t t-set='product' t-value='line.product_id'/>
+                                        <t t-set='combination_info'
+                                        t-value="{'base_unit_price': product._get_base_unit_price(product_price/line.product_uom_qty)}"/>
+                                    </t>
+                                </small>
+                            </div>
                         </div>
-                    </div>
-                </t>
-            </div>
+                    </t>
+                </div>
+            </t>
         </div>
     </template>
 
@@ -2069,7 +2071,7 @@
             </t>
 
             <div class="col" id="shop_cart">
-                <h3 class="mb-4">Order overview</h3>
+                <h3>Order overview</h3>
                 <div t-if="abandoned_proceed or access_token" class="alert alert-info mt8 mb8" role="alert"> <!-- abandoned cart choices -->
                     <t t-if="abandoned_proceed">
                         <p>Your previous cart has already been completed.</p>
@@ -2099,13 +2101,13 @@
     <!-- Deactivatable through the website editor. -->
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
         <xpath expr="//div[@id='cart_products']" position="inside">
-            <h5 t-attf-class="mt32 mb-3" t-if="suggested_products">Suggested accessories</h5>
+            <h5 t-attf-class="mt-3 mb-0" t-if="suggested_products">Suggested accessories</h5>
             <div t-if="suggested_products"
                  id="suggested_products"
                  class="d-flex flex-column align-items-stretch mb32">
                 <div t-foreach="suggested_products"
                      t-as="product"
-                     t-attf-class="d-flex gap-3 #{not product_last and 'border-bottom pb-4'} #{product_index &gt; 0 and 'pt-4'}"
+                     t-attf-class="d-flex gap-3 py-4 #{not product_last and 'border-bottom'}"
                      t-att-data-publish="product.website_published and 'on' or 'off'">
                     <div style="width: 64px">
                         <a t-att-href="product.website_url">
