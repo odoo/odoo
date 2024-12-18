@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 import { Component, xml } from "@odoo/owl";
@@ -153,6 +154,25 @@ test("start interactions even if there is a crash when evaluating selectorHas", 
     );
 
     expect.verifySteps(["start notboom"]);
+});
+
+test("start interactions with selectorHas", async () => {
+    class Test extends Interaction {
+        static selector = ".test";
+        static selectorHas = ".inner";
+
+        start() {
+            expect.step("start");
+        }
+    }
+
+    const { core } = await startInteraction(Test, `
+        <div class="test"><div class="inner"></div></div>
+        <div class="test"><div class="not-inner"></div></div>
+    `);
+    expect(core.interactions).toHaveLength(1);
+    expect.verifySteps(["start"]);
+    expect(core.interactions[0].interaction.el).toBe(queryOne(".test:has(.inner)"));
 });
 
 test("recover from error as much as possible when applying dynamiccontent", async () => {
