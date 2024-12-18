@@ -1653,17 +1653,22 @@ class Product extends PosModel {
         // pricelist that have base == 'pricelist'.
         return price;
     }
-    get_display_price(pricelist, quantity) {
+    _compute_display_price(pricelist, quantity, discount = 0) {
         const order = this.pos.get_order();
+        const unitPrice = this.get_price(pricelist, quantity) * (1.0 - (discount / 100.0));
         const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
-        const priceAfterFp = this.pos.computePriceAfterFp(this.get_price(pricelist, quantity), currentTaxes);
+        const priceAfterFp = this.pos.computePriceAfterFp(unitPrice, currentTaxes);
         const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
-        if (this.pos.config.iface_tax_included === 'total') {
-            return allPrices.total_included;
-        } else {
-            return allPrices.total_excluded;
-        }
+        return this.pos.config.iface_tax_included === 'total' ? allPrices.total_included : allPrices.total_excluded;
+    }
+
+    get_display_price(pricelist, quantity) {
+        return this._compute_display_price(pricelist, quantity);
+    }
+
+    get_display_price_discount(pricelist, quantity, discount) {
+        return this._compute_display_price(pricelist, quantity, discount);
     }
 }
 Registries.Model.add(Product);
@@ -1712,7 +1717,6 @@ class Orderline extends PosModel {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
-        this.price_manually_set = json.price_manually_set;
         this.price_automatically_set = json.price_automatically_set;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, 'do not recompute unit price');
@@ -1731,6 +1735,9 @@ class Orderline extends PosModel {
         this.set_customer_note(json.customer_note);
         this.refunded_qty = json.refunded_qty;
         this.refunded_orderline_id = json.refunded_orderline_id;
+        this.price_manually_set = json.price_manually_set ||
+            this.get_display_price() !==
+            this.product.get_display_price_discount(this.order.pricelist, this.get_quantity(), this.get_discount()) * this.get_quantity();
     }
     clone(){
         var orderline = Orderline.create({},{
