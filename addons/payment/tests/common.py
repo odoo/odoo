@@ -109,7 +109,7 @@ class PaymentCommon(BaseCommon):
     #=== Utils ===#
 
     @classmethod
-    def _prepare_provider(cls, code='none', company=None, update_values=None):
+    def _prepare_provider(cls, code='none', company=None, update_values=None, **kwargs):
         """ Prepare and return the first provider matching the given provider and company.
 
         If no provider is found in the given company, we duplicate the one from the base company.
@@ -119,12 +119,13 @@ class PaymentCommon(BaseCommon):
         :param str code: The code of the provider to prepare
         :param recordset company: The company of the provider to prepare, as a `res.company` record
         :param dict update_values: The values used to update the provider
+        :param dict kwargs: The keyword arguments passed as-is to the called function.
         :return: The provider to prepare, if found
         :rtype: recordset of `payment.provider`
         """
         company = company or cls.env.company
         update_values = update_values or {}
-        provider_domain = cls._get_provider_domain(code)
+        provider_domain = cls._get_provider_domain(code, **kwargs)
 
         provider = cls.env['payment.provider'].sudo().search(
             AND([provider_domain, [('company_id', '=', company.id)]]), limit=1
@@ -145,7 +146,7 @@ class PaymentCommon(BaseCommon):
         return provider
 
     @classmethod
-    def _get_provider_domain(cls, code):
+    def _get_provider_domain(cls, code, **kwargs):
         return [('code', '=', code)]
 
     @classmethod
