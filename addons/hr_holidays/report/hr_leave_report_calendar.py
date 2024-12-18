@@ -98,7 +98,7 @@ class LeaveReportCalendar(models.Model):
                 # Include the time off type name
                 leave.name += f" {leave.leave_id.holiday_status_id.name}"
             # Include the time off duration.
-            leave.name += f": {leave.leave_id.sudo().duration_display}"
+            leave.name += f": {leave.sudo().leave_id.duration_display}"
 
     @api.depends('leave_manager_id')
     def _compute_is_manager(self):
