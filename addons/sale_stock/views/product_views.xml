@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_product_tree_sale_group_inherit" model="ir.ui.view">
+            <field name="name">product.stock.tree.sale.group.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_stock_product_tree"/>
+            <field name="arch" type="xml">
+                <field name="qty_available" position="attributes">
+                    <attribute name="groups" separator="," add="sales_team.group_sale_salesman"/>
+                </field>
+                <field name="virtual_available" position="attributes">
+                    <attribute name="groups" separator="," add="sales_team.group_sale_salesman"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_stock_product_template_tree_sale_group_inherit" model="ir.ui.view">
+            <field name="name">product.template.stock.tree.sale.group.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_stock_product_template_tree"/>
+            <field name="arch" type="xml">
+                <field name="show_on_hand_qty_status_button" position="attributes">
+                    <attribute name="groups" separator="," add="sales_team.group_sale_salesman"/>
+                </field>
+                <field name="qty_available" position="attributes">
+                    <attribute name="groups" separator="," add="sales_team.group_sale_salesman"/>
+                </field>
+                <field name="virtual_available" position="attributes">
+                    <attribute name="groups" separator="," add="sales_team.group_sale_salesman"/>
+                </field>
+                <field name="responsible_id" position="attributes">
+                    <attribute name="groups" separator="," add="sales_team.group_sale_salesman"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_template_kanban_stock_view_sale_group_inherit" model="ir.ui.view">
+            <field name="name">product.template.stock.kanban.sale.group.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.product_template_kanban_stock_view"/>
+            <field name="arch" type="xml">
+                <field name="show_on_hand_qty_status_button" position="attributes">
+                    <attribute name="groups" separator="," add="sales_team.group_sale_salesman"/>
+                </field>
+                <xpath expr="//t[@name='show_qty_available']" position="attributes">
+                    <attribute name="groups" separator="," add="sales_team.group_sale_salesman"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
