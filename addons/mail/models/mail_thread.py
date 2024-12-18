@@ -3440,8 +3440,11 @@ class MailThread(models.AbstractModel):
         """
         lang_to_recipients = {}
         for data in recipients_data:
+            # filter active lang
+            if lang_code := data.get('lang'):
+                lang_code = bool(self.env['res.lang']._lang_get(lang_code)) and lang_code
             lang_to_recipients.setdefault(
-                data.get('lang') or force_email_lang or self.env.lang,
+                lang_code or force_email_lang or self.env.lang,
                 [],
             ).append(data)
 
