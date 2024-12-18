@@ -778,6 +778,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
             }
         }
 
+        this._updateActiveMenuLinks();
         return this._super(...arguments);
     },
 
@@ -812,6 +813,39 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
         Dropdown.getOrCreateInstance(previousMegaMenuToggleEl).hide();
         megaMenuToggleEl.insertAdjacentElement("afterend", megaMenuEl);
         this.options.wysiwyg?.odooEditor.observerActive("moveMegaMenu");
+    },
+
+    /**
+     * @private
+     */
+    _updateActiveMenuLinks() {
+        // Prevent having several active links in the menu.
+        if (this.el.querySelector(".navbar:nth-child(1) a.nav-link.active")) {
+            return;
+        }
+        const currentPathName = window.location.pathname;
+
+        // Check and update the active state of menu items based on the current
+        // page
+        const megaMenuEls = this.el.querySelectorAll(".o_mega_menu");
+        let matchingLink = null;
+        megaMenuEls.forEach((dropdownMenusEl, position) => {
+            const linkEls = Array.from(dropdownMenusEl.querySelectorAll(`a:not([href="#"])`));
+            const megaMenuToggleEl = dropdownMenusEl
+                .closest(".nav-item")
+                .querySelector(".o_mega_menu_toggle");
+            // Target the corresponding link in the mobile navigation. Since the
+            // mega-menu for mobile is dynamically rendered, it is not
+            // accessible at this moment.
+            const mobileMegaMenuToggleEl = this.el.querySelectorAll(
+                "#top_menu_collapse_mobile .top_menu .o_mega_menu_toggle"
+            )[position];
+            matchingLink = linkEls.find((linkEl) => linkEl.pathname === currentPathName);
+            if (matchingLink) {
+                megaMenuToggleEl.classList.add("active");
+                mobileMegaMenuToggleEl.classList.add("active");
+            }
+        });
     },
 
     //--------------------------------------------------------------------------

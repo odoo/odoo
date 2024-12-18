@@ -176,7 +176,8 @@ async function autoHideMenu(el, options) {
                 if (navLink) {
                     navLink.classList.remove('nav-link');
                     navLink.classList.add('dropdown-item');
-                    navLink.classList.toggle('active', el.classList.contains('active'));
+                    const anchorEl = el.querySelector("a");
+                    anchorEl.classList.toggle("active", anchorEl.classList.contains("active"));
                 }
             } else {
                 const dropdownSubMenu = el.querySelector('.dropdown-menu');
