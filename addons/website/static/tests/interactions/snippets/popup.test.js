@@ -37,6 +37,7 @@ function removeTransitions() {
  * @param {boolean} [options.backdrop]
  * @param {string} [options.extraPrimaryBtnClasses]
  * @param {string} [options.modalId]
+ * @param {boolean} [options.focusableElements]
  * @returns {string} - popup template
  */
 function getPopupTemplate(options = {}) {
@@ -46,6 +47,7 @@ function getPopupTemplate(options = {}) {
         backdrop = true,
         extraPrimaryBtnClasses = "",
         modalId = "",
+        focusableElements = false,
     } = options;
     return `
         <div class="s_popup o_snippet_invisible" data-vcss="001" data-snippet="s_popup"
@@ -67,6 +69,7 @@ function getPopupTemplate(options = {}) {
                         <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
                         <section>
                             <a href="#" class="btn btn-primary ${extraPrimaryBtnClasses}">Primary button</a>
+                            ${focusableElements ? '<button id="focus">Button 1</button>' : "" }
                         </section>
                     </div>
                 </div>
@@ -168,5 +171,119 @@ describe("show popup", () => {
         await hover(modalEl.ownerDocument.body);
         await leave(modalEl.ownerDocument.body);
         expect(modalEl).toBeVisible();
+    });
+});
+
+describe("trap focus", () => {
+    beforeEach(removeTransitions);
+    test("focus is trapped when popup opens", async () => {
+        const { core, el } = await startInteractions(`
+            <a href="#">Link</a>
+            ${getPopupTemplate({modalId: "modal", focusableElements: true})}
+        `);
+        expect(core.interactions).toHaveLength(1);
+        await pointerDown(el.ownerDocument.body);
+        await tick();
+        await animationFrame();
+        expect("#modal").toBeVisible();
+        await tick();
+        expect(".btn-primary").toBeFocused();
+        await press("Tab");
+        expect("#focus").toBeFocused();
+        await press("Tab");
+        expect(".btn-primary").toBeFocused();
+        await press("Tab", { shiftKey: true });
+        expect("#focus").toBeFocused();
+    });
+
+    test("reset focus on the previous active element when popup is closed", async () => {
+        const { core, el } = await startInteractions(`
+            <a id="showLink" href="#">Link</a>
+            ${getPopupTemplate({modalId: "modal" })}
+        `);
+        expect(core.interactions).toHaveLength(1);
+        await pointerDown(el.ownerDocument.body);
+        expect(el.ownerDocument.body).toBeFocused(); // Just making sure.
+        await press("Tab");
+        expect("#showLink").toBeFocused();
+        await tick();
+        await animationFrame();
+        expect("#modal").toBeVisible();
+        await tick();
+        expect(".btn-primary").toBeFocused();
+        await click(".s_popup_close");
+        expect("#modal").not.toBeVisible();
+        expect("#showLink").toBeFocused();
+    });
+
+    test("trap & reset focus when popup opens on click", async () => {
+        const { core, el } = await startInteractions(`
+            <a href="#modal">Show popup</a>
+            ${getPopupTemplate({ display: "onClick", modalId: "modal", focusableElements: true })}
+        `);
+        const modal = "#sPopup #modal[data-display='onClick']";
+        expect(core.interactions).toHaveLength(1);
+        await pointerDown(el.ownerDocument.body);
+        expect(el.ownerDocument.body).toBeFocused(); // Just making sure.
+        await press("Tab");
+        expect("[href='#modal']").toBeFocused();
+        await press("Enter");
+        await manuallyDispatchProgrammaticEvent(window, "hashchange", { newURL: browser.location.hash });
+        expect(modal).toBeVisible();
+        await tick();
+        await animationFrame();
+        expect(".btn-primary").toBeFocused();
+        await press("Tab");
+        expect("#focus").toBeFocused();
+        await press("Tab");
+        expect(".btn-primary").toBeFocused();
+        await press("Tab", { shiftKey: true });
+        expect("#focus").toBeFocused();
+        await press("Escape");
+        expect(modal).not.toBeVisible();
+        expect("[href='#modal']").toBeFocused();
+    });
+
+    test("intercept & reset focus with no backdrop popup", async () => {
+        const { core, el } = await startInteractions(`
+            <a id="link1" href="#">Link</a>
+            ${getPopupTemplate({ modalId: "modal", backdrop: false })}
+        `);
+        expect(core.interactions).toHaveLength(1);
+        await pointerDown(el.ownerDocument.body);
+        expect(el.ownerDocument.body).toBeFocused(); // Just making sure.
+        await press("Tab");
+        expect("#link1").toBeFocused();
+        await tick();
+        await animationFrame();
+        expect("#modal").toBeVisible();
+        await tick();
+        expect(".btn-primary").toBeFocused();
+        await press("Escape");
+        expect("#link1").toBeFocused();
+    });
+
+    test("don't trap focus if no backdrop", async () => {
+        const { core } = await startInteractions(`
+            <a id="link1" href="#">Link before</a>
+            ${getPopupTemplate({ modalId: "modal", backdrop: false, focusableElements: true })}
+            <a id="link2" href="#">Link after</a>
+        `);
+        expect(core.interactions).toHaveLength(1);
+        await tick();
+        await animationFrame();
+        expect("#modal").toBeVisible();
+        await tick();
+        expect(".btn-primary").toBeFocused();
+        await press("Tab");
+        expect("#focus").toBeFocused();
+        await press("Tab");
+        expect("#link2").toBeFocused();
+        await press("Tab", { shiftKey: true });
+        expect("#focus").toBeFocused();
+        await press("Tab", { shiftKey: true });
+        expect(".btn-primary").toBeFocused();
+        await press("Tab", { shiftKey: true });
+        expect("#link1").toBeFocused();
     });
 });
