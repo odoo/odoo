@@ -34,6 +34,18 @@ function addOptionalProduct(productName) {
     };
 }
 
+function removeOptionalProduct(productName) {
+    return {
+        content: `Remove ${productName}`,
+        trigger: `
+            ${productSelector(productName)}
+            td.o_sale_product_configurator_qty
+            a:contains("Remove")
+        `,
+        run: 'click',
+    };
+}
+
 function increaseProductQuantity(productName) {
     return {
         content: `Increase the quantity of ${productName}`,
@@ -122,7 +134,7 @@ function selectAndSetCustomAttribute(
     return [
         selectAttribute(productName, attributeName, attributeValue, attributeType),
         setCustomAttribute(productName, attributeName, customValue),
-    ]
+    ];
 }
 
 function assertPriceTotal(total) {
@@ -165,6 +177,7 @@ function assertProductPriceInfo(productName, priceInfo) {
         `,
     };
 }
+
 function assertOptionalProductPriceInfo(productName, priceInfo) {
     return {
         content: `Assert that the price info of ${productName} is ${priceInfo}`,
@@ -199,7 +212,7 @@ function saveConfigurator() {
             content: "Wait until the modal is closed",
             trigger: 'body:not(:has(.modal))',
         }
-    ]
+    ];
 }
 
 export default {
@@ -207,6 +220,7 @@ export default {
     optionalProductSelector,
     optionalProductImageSrc,
     addOptionalProduct,
+    removeOptionalProduct,
     increaseProductQuantity,
     setProductQuantity,
     assertProductQuantity,
