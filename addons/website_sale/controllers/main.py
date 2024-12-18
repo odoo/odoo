@@ -1859,9 +1859,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             href = '/shop/checkout'
 
         return {
-            'website_checkout_current_step': href,
-            'website_checkout_next_step': next_step,
-            'website_checkout_previous_step': previous_step,
+            'current_website_checkout_step': href,
+            'next_website_checkout_step': next_step,
+            'previous_website_checkout_step': previous_step,
         }
 
     @route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
