@@ -664,7 +664,7 @@ class StockPicking(models.Model):
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
     shipping_weight = fields.Float(
-        "Weight for Shipping", compute='_compute_shipping_weight', readonly=False,
+        "Weight for Shipping", compute='_compute_shipping_weight', readonly=False, store=True,
         help="Total weight of packages and products not in a package. "
         "Packages with no shipping weight specified will default to their products' total weight. "
         "This is the weight used to compute the cost of the shipping.")
@@ -703,6 +703,7 @@ class StockPicking(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    partner_country_id = fields.Many2one('res.country', related='partner_id.country_id')
 
     _name_uniq = models.Constraint(
         'unique(name, company_id)',
@@ -874,10 +875,12 @@ class StockPicking(models.Model):
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
             packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
-            picking.shipping_weight = (
+            shipping_weight = (
                 picking.weight_bulk +
                 sum(pack.shipping_weight or packages_weight[pack] for pack in picking.move_line_ids.result_package_id)
             )
+            if not picking.shipping_weight or picking.shipping_weight < shipping_weight:
+                picking.shipping_weight = shipping_weight
 
     def _compute_shipping_volume(self):
         for picking in self:
