@@ -2,6 +2,7 @@
 
 import json
 from datetime import datetime
+from urllib.parse import urljoin
 
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
@@ -680,7 +681,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(['/shop/change_pricelist/<model("product.pricelist"):pricelist>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
-        redirect_url = request.httprequest.referrer
+        redirect_url = request.httprequest.referrer or post.get('r')
         if (
             website.is_pricelist_available(pricelist.id)
             and (
@@ -1618,7 +1619,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         request.session['sale_last_order_id'] = order_sudo.id
 
         if shipping_address:
-            #in order to not override shippig address, it's checked separately from shipping option
+            # in order to not override shippig address, it's checked separately from shipping option
             self._include_country_and_state_in_address(shipping_address)
             shipping_address, _side_values = self._parse_form_data(billing_address)
 
@@ -2214,3 +2215,61 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'currency_id': website.currency_id.id,
             'pricelist_id': website.pricelist_id.id,
         })
+
+    @route(
+        ['/gmc.xml', '/gmc-<pricelist_name_ilike>.xml'],
+        type='http',
+        auth='public',
+        website=True,
+        sitemap=False,
+    )
+    def gmc_data_source(self, pricelist_name_ilike=None):
+        """Generate a Google Merchant Center (GMC) data source/feed.
+
+        - The feed adapts to the context lang; product titles, descriptions, etc.
+        - By default, it uses the connected user's pricelist. A specific
+          pricelist can be selected by including its name or part in the URL. ex:
+          /gmc-christmas.xml or /gmc-christ.xml will force the "christmas" pricelist as
+          well as the pricelist's currency.
+          Note: All the product link will also force the pricelist to ensure the feed's
+          prices corresponds to the website's prices.
+        """
+        website = request.website
+        if not website.enabled_gmc_src:
+            raise NotFound()
+        if pricelist_name_ilike is not None:
+            pricelist = request.env['product.pricelist'].search(
+                [('name', 'ilike', pricelist_name_ilike)]
+                + request.env['product.pricelist']._get_website_pricelists_domain(website),
+                limit=1,
+            )
+            if not pricelist:
+                raise NotFound()
+            request.update_context(forced_pricelist=pricelist)
+
+        View = request.env['ir.ui.view'].sudo()
+        IrHttp = request.env['ir.http']
+        mimetype = 'application/xml;charset=utf-8'
+        products = request.env['product.product'].search(
+            [
+                ('is_published', '=', True),
+                ('type', 'in', ('consu', 'combo')),
+            ]
+            + website.website_domain()
+        )
+        homepage_url = website.homepage_url or '/'
+        website_homepage = website._get_website_pages(
+            [('url', '=', homepage_url), ('website_id', '!=', False)],
+            limit=1,
+        )
+        seo = website_homepage.get_website_meta().get('opengraph_meta', {})
+
+        vals = {
+            'title': seo.get('og:title', website.name),
+            'link': urljoin(website.get_base_url(), IrHttp._url_lang(homepage_url)),
+            'description': seo.get('og:description', ""),
+            'items': products._get_gmc_items(),
+        }
+
+        content = View._render_template('website_sale.gmc_xml', vals)
+        return request.make_response(content, [('Content-Type', mimetype)])

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from pytz import UTC
+
 from odoo import models, fields, _
 from odoo.http import request
 
@@ -61,3 +63,47 @@ class ProductProduct(models.Model):
                 mail = self_ctxt.env['mail.mail'].sudo().create(mail_values)
                 mail.send(raise_exception=False)
                 product.stock_notification_partner_ids -= partner
+
+    def _get_replenishment_domain(self):
+        self.ensure_one()
+        return [
+            ('product_id', '=', self.id),
+            ('state', 'not in', ('draft', 'canceled', 'done')),
+            (
+                'location_dest_id',
+                '=',
+                (
+                    (request and request.website.warehouse_id.lot_stock_id.id)
+                    or self.warehouse_id.lot_stock_id.id
+                ),
+            ),
+        ]
+
+    def _get_gmc_items(self):
+        """Compute Google Merchant Center items' fields.
+
+        See [Google](https://support.google.com/merchants/answer/7052112)'s documentation for more
+        information about each field.
+
+        :return: a dictionary for each non-service product in this recordset.
+        :rtype: list[dict]
+        """
+        dict_items = super()._get_gmc_items()
+        moves_sudo = self.env['stock.move'].sudo()
+        for product, items in dict_items.items():
+            if product._is_sold_out():
+                if not product.allow_out_of_stock_order:
+                    items['availability'] = 'out_of_stock'
+                else:
+                    moves = moves_sudo.search(product._get_replenishment_domain())
+                    availability_date = max(
+                        (move.date for move in moves),
+                        default=False,
+                    )
+                    if availability_date:
+                        # backorder can only be used with an availability_date
+                        items['availability'] = 'backorder'
+                        items['availability_date'] = UTC.localize(availability_date).isoformat(
+                            timespec='minutes'
+                        )
+        return dict_items
