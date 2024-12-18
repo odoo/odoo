@@ -114,6 +114,6 @@ export class FilterValue extends Component {
     }
 
     clear(id) {
-        this.props.model.dispatch("CLEAR_GLOBAL_FILTER_VALUE", { id });
+        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id });
     }
 }
