@@ -31,6 +31,10 @@ class ChatbotScriptStep(models.Model):
         ('free_input_single', 'Free Input'),
         ('free_input_multi', 'Free Input (Multi-Line)'),
     ], default='text', required=True)
+    is_step_forward_operator = fields.Boolean(
+        string="Is Step Forward Operator",
+        compute="_compute_is_step_forward_operator"
+    )
     # answers
     answer_ids = fields.One2many(
         'chatbot.script.answer', 'script_step_id',
@@ -62,7 +66,7 @@ class ChatbotScriptStep(models.Model):
         parent_steps_by_chatbot = {}
         for chatbot in self.chatbot_script_id:
             parent_steps_by_chatbot[chatbot.id] = chatbot.script_step_ids.filtered(
-                lambda step: step.step_type in ['forward_operator', 'question_selection']
+                lambda step: step.step_type in step._get_operator_step_types() + ["question_selection"]
             ).sorted(lambda s: s.sequence, reverse=True)
         for step in self:
             parent_steps = parent_steps_by_chatbot[step.chatbot_script_id.id].filtered(
@@ -71,9 +75,9 @@ class ChatbotScriptStep(models.Model):
             parent = step
             while True:
                 parent = parent._get_parent_step(parent_steps)
-                if not parent or parent.step_type == 'forward_operator':
+                if not parent or parent.step_type in parent._get_operator_step_types():
                     break
-            step.is_forward_operator_child = parent and parent.step_type == 'forward_operator'
+            step.is_forward_operator_child = parent and parent.step_type in parent._get_operator_step_types()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -121,6 +125,11 @@ class ChatbotScriptStep(models.Model):
                     current_sequence += 1
 
         return super().create(vals_list)
+
+    @api.depends('step_type')
+    def _compute_is_step_forward_operator(self):
+        for record in self:
+            record.is_step_forward_operator = record.step_type in self._get_operator_step_types()
 
     # --------------------------
     # Business Methods
@@ -273,6 +282,10 @@ class ChatbotScriptStep(models.Model):
 
         return False
 
+    @api.model
+    def _get_operator_step_types(self):
+        return ["forward_operator"]
+
     def _process_answer(self, discuss_channel, message_body):
         """ Method called when the user reacts to the current chatbot.script step.
         For most chatbot.script.step#step_types it simply returns the next chatbot.script.step of
@@ -325,7 +338,7 @@ class ChatbotScriptStep(models.Model):
             return self._process_step_forward_operator(discuss_channel)
         return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
-    def _process_step_forward_operator(self, discuss_channel):
+    def _process_step_forward_operator(self, discuss_channel, posted_message=False):
         """ Special type of step that will add a human operator to the conversation when reached,
         which stops the script and allow the visitor to discuss with a real person.
 
@@ -334,7 +347,7 @@ class ChatbotScriptStep(models.Model):
         (e.g: ask for the visitor's email and create a lead). """
 
         human_operator = False
-        posted_message = self.env["mail.message"]
+        posted_message = posted_message or self.env["mail.message"]
 
         if discuss_channel.livechat_channel_id:
             # sudo: res.users - visitor can access operator of their channel
@@ -350,7 +363,7 @@ class ChatbotScriptStep(models.Model):
         # handle edge case where we found yourself as available operator -> don't do anything
         # it will act as if no-one is available (which is fine)
         if human_operator and human_operator != self.env.user:
-            if self.message:
+            if self.message and not posted_message:
                 # first post the message of the step (if we have one)
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 

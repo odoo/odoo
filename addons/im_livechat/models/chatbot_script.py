@@ -47,7 +47,7 @@ class ChatbotScript(models.Model):
                 'free_input_multi',
             ]
             welcome_steps = script.script_step_ids and script._get_welcome_steps()
-            if welcome_steps and welcome_steps[-1].step_type == 'forward_operator':
+            if welcome_steps and welcome_steps[-1].step_type in welcome_steps[-1]._get_operator_step_types():
                 script.first_step_warning = 'first_step_operator'
             elif welcome_steps and welcome_steps[-1].step_type not in allowed_first_step_types:
                 script.first_step_warning = 'first_step_invalid'
