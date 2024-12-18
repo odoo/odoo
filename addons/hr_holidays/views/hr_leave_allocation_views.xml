@@ -92,7 +92,7 @@
                 <field name="can_approve" invisible="1"/>
                 <field name="validation_type" invisible="1"/>
                 <!--
-                The following two lines are required so that the two fields are sent as part of the `vals_list` 
+                The following two lines are required so that the two fields are sent as part of the `vals_list`
                 to the create method when the allocation is created. Otherwise, carried_over_days_expiration_date
                 wouldn't be set and the days won't expire on that date.
                 -->
@@ -275,13 +275,13 @@
         <field name="arch" type="xml">
             <list string="Allocation Requests" sample="1">
                 <header>
-                    <button type="action" 
-                        name="%(hr_holidays.action_hr_leave_allocation_generate_multi_wizard)d" 
-                        string="Multiple Requests" class="btn btn-secondary" 
+                    <button type="action"
+                        name="%(hr_holidays.action_hr_leave_allocation_generate_multi_wizard)d"
+                        string="Multiple Requests" class="btn btn-secondary"
                         groups="hr_holidays.group_hr_holidays_user" display="always"
                     />
                 </header>
-                <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_user" readonly="state in ['refuse', 'validate']"/>
+                <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_employee" readonly="state in ['refuse', 'validate']"/>
                 <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
                 <field name="name" string="Title" optional="hide"/>

@@ -75,8 +75,8 @@
                                 <field name="department_id" context="{'open_employees_kanban': 1}"/>
                                 <field name="job_id"/>
                                 <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                                <field name="parent_id" widget="many2one_avatar_user"/>
-                                <field name="coach_id" widget="many2one_avatar_user"/>
+                                <field name="parent_id" widget="many2one_avatar_employee"/>
+                                <field name="coach_id" widget="many2one_avatar_employee"/>
                             </group>
                         </group>
                         <notebook>
@@ -112,8 +112,8 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
                     <field name="job_title"/>
-                    <field name="parent_id" widget="many2one_avatar_user"/>
-                    <field name="coach_id" widget="many2one_avatar_user" optional="show"/>
+                    <field name="parent_id" widget="many2one_avatar_employee"/>
+                    <field name="coach_id" widget="many2one_avatar_employee" optional="show"/>
                 </list>
             </field>
         </record>
