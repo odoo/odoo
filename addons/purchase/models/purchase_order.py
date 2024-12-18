@@ -363,32 +363,6 @@ class PurchaseOrder(models.Model):
         """
         self.order_line._compute_tax_id()
 
-    @api.onchange('partner_id')
-    def onchange_partner_id_warning(self):
-        if not self.partner_id or not self.env.user.has_group('purchase.group_warning_purchase'):
-            return
-
-        partner = self.partner_id
-
-        # If partner has no warning, check its company
-        if partner.purchase_warn == 'no-message' and partner.parent_id:
-            partner = partner.parent_id
-
-        if partner.purchase_warn and partner.purchase_warn != 'no-message':
-            # Block if partner only has warning but parent company is blocked
-            if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
-                partner = partner.parent_id
-            title = _("Warning for %s", partner.name)
-            message = partner.purchase_warn_msg
-            warning = {
-                'title': title,
-                'message': message
-            }
-            if partner.purchase_warn == 'block':
-                self.update({'partner_id': False})
-            return {'warning': warning}
-        return {}
-
     # ------------------------------------------------------------
     # MAIL.THREAD
     # ------------------------------------------------------------
@@ -1081,10 +1055,6 @@ class PurchaseOrder(models.Model):
                 'id': product.uom_id.id,
             },
         }
-        if product.purchase_line_warn_msg:
-            product_infos['warning'] = product.purchase_line_warn_msg
-        if product.purchase_line_warn == "block":
-            product_infos['readOnly'] = True
         params = {'order_id': self}
         # Check if there is a price and a minimum quantity for the order's vendor.
         seller = product._select_seller(

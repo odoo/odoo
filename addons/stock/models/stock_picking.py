@@ -1071,21 +1071,6 @@ class StockPicking(models.Model):
                     continue
                 move.description_picking = move.product_id._get_description(move.picking_type_id)
 
-        if self.partner_id and self.partner_id.picking_warn:
-            if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
-                partner = self.partner_id.parent_id
-            elif self.partner_id.picking_warn not in ('no-message', 'block') and self.partner_id.parent_id.picking_warn == 'block':
-                partner = self.partner_id.parent_id
-            else:
-                partner = self.partner_id
-            if partner.picking_warn != 'no-message':
-                if partner.picking_warn == 'block':
-                    self.partner_id = False
-                return {'warning': {
-                    'title': ("Warning for %s") % partner.name,
-                    'message': partner.picking_warn_msg
-                }}
-
     @api.onchange('location_dest_id')
     def _onchange_location_dest_id(self):
         moves = self.move_ids_without_package
