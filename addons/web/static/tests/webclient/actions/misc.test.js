@@ -93,7 +93,6 @@ defineActions([
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -101,8 +100,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -115,7 +112,6 @@ defineActions([
         name: "Create a Partner",
         res_model: "partner",
         target: "new",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
     {
@@ -123,7 +119,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -135,7 +130,6 @@ defineActions([
         xml_id: "action_8",
         name: "Favorite Ponies",
         res_model: "pony",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [false, "form"],
@@ -149,20 +143,20 @@ const actionHandlersRegistry = registry.category("action_handlers");
 test("can execute actions from id, xmlid and tag", async () => {
     defineActions([
         {
-            id: 1,
+            id: 10,
             tag: "client_action_by_db_id",
             target: "main",
             type: "ir.actions.client",
         },
         {
-            id: 2,
+            id: 20,
             xml_id: "some_action",
             tag: "client_action_by_xml_id",
             target: "main",
             type: "ir.actions.client",
         },
         {
-            id: 3,
+            id: 30,
             path: "my_action",
             tag: "client_action_by_path",
             target: "main",
@@ -177,7 +171,7 @@ test("can execute actions from id, xmlid and tag", async () => {
         .add("client_action_by_object", () => expect.step("client_action_object"));
 
     await makeMockEnv();
-    await getService("action").doAction(1);
+    await getService("action").doAction(10);
     expect.verifySteps(["client_action_db_id"]);
     await getService("action").doAction("some_action");
     expect.verifySteps(["client_action_xml_id"]);
@@ -333,7 +327,6 @@ test('action with "no_breadcrumbs" set to true', async () => {
         {
             id: 42,
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[1, "kanban"]],
             context: { no_breadcrumbs: true },
         },
@@ -444,10 +437,9 @@ test.tags("desktop");
 test("stores and restores scroll position (in kanban)", async () => {
     defineActions([
         {
-            id: 3,
+            id: 10,
             name: "Partners",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "kanban"]],
         },
     ]);
@@ -460,7 +452,7 @@ test("stores and restores scroll position (in kanban)", async () => {
     getFixture().appendChild(container);
     await mountWithCleanup(WebClient, { target: container });
     // execute a first action
-    await getService("action").doAction(3);
+    await getService("action").doAction(10);
     expect(".o_content").toHaveProperty("scrollTop", 0);
     // simulate a scroll
     await scroll(".o_content", { top: 100 });
@@ -581,19 +573,15 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
         { id: 1, name: "Heroes TM", sequence: 3 },
     ];
 
-    const action = {
-        id: 1,
-        name: "Partners Action 1",
-        res_model: "partner",
-        type: "ir.actions.act_window",
-        views: [[1, "kanban"]],
-    };
-
     // Prepare a stored action
     browser.sessionStorage.setItem(
         "current_action",
         JSON.stringify({
-            ...action,
+            id: 1,
+            name: "Partners Action 1",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[1, "kanban"]],
             context: {
                 someKey: 44,
                 allowed_company_ids: [1, 2],
