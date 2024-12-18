@@ -586,14 +586,12 @@ test("settings views does not read existing id when coming back in breadcrumbs",
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -715,7 +713,6 @@ test("settings views does not read existing id when reload", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
@@ -723,7 +720,6 @@ test("settings views does not read existing id when reload", async () => {
             name: "Other action",
             res_model: "task",
             target: "new",
-            type: "ir.actions.act_window",
             views: [["view_ref", "form"]],
         },
     ]);
@@ -784,14 +780,12 @@ test("settings views ask for confirmation when leaving if dirty", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [["view_ref", "form"]],
         },
     ]);
@@ -924,7 +918,6 @@ test("settings views does not write the id on the url", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
     ]);
@@ -971,14 +964,12 @@ test("settings views can search when coming back in breadcrumbs", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -1020,14 +1011,12 @@ test("search for default label when label has empty string", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -1070,14 +1059,12 @@ test("clicking on any button in setting should show discard warning if setting f
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -1162,14 +1149,12 @@ test("header field don't dirty settings", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -1402,14 +1387,12 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[2, "list"]],
         },
     ]);
@@ -1550,21 +1533,18 @@ test("execute action from settings view with several actions in the breadcrumb",
             id: 1,
             name: "First action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[1, "list"]],
         },
         {
             id: 2,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[2, "form"]],
         },
         {
             id: 3,
             name: "Other action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[3, "list"]],
         },
     ]);
@@ -1647,14 +1627,12 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
             id: 4,
             name: "Other Action",
             res_model: "task",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
         },
     ]);
@@ -1713,7 +1691,6 @@ test("Discard button clean the settings view", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
     ]);
@@ -2022,7 +1999,6 @@ test("server actions are called with the correct context", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
         {
@@ -2140,7 +2116,6 @@ test("Open settings from url, with app anchor", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
     ]);
@@ -2178,7 +2153,6 @@ test("Open settings from url, with setting id anchor", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            type: "ir.actions.act_window",
             views: [[1, "form"]],
         },
     ]);
