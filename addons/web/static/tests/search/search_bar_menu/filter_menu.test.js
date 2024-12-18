@@ -702,9 +702,9 @@ test("Add a custom filter", async () => {
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
         "Filter",
-        "Id = 1",
-        "Id = 1",
-        "( Id = 1 and Id = 1 ) or Id is in ( 1 , 1 )",
+        "Id is equal 1",
+        "Id is equal 1",
+        "( Id is equal 1 and Id is equal 1 ) or Id is in ( 1 , 1 )",
     ]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
@@ -793,7 +793,7 @@ test("consistent display of ! in debug mode", async () => {
     expect(".o_tree_editor_row .dropdown-toggle").toHaveText("none");
 
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual([`! ( Foo = 1 or Id = 2 )`]);
+    expect(getFacetTexts()).toEqual([`! ( Foo is equal 1 or Id is equal 2 )`]);
     expect(searchBar.env.searchModel.domain).toEqual(["!", "|", ["foo", "=", 1], ["id", "=", 2]]);
 });
 
@@ -896,10 +896,10 @@ test("display names in facets", async () => {
     await contains(".modal footer button").click();
 
     expect(getFacetTexts()).toEqual([
-        "Bar = John",
+        "Bar is equal John",
         "Bar is in ( David , Inaccessible/missing record ID: 5555 )",
-        "Bar != false",
-        "Id = 2",
+        "Bar is not equal false",
+        "Id is equal 2",
     ]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
@@ -947,7 +947,7 @@ test("display names in facets (with a property)", async () => {
     );
     await contains(".modal footer button").click();
 
-    expect(getFacetTexts()).toEqual(["Properties \u2794 M2O = John"]);
+    expect(getFacetTexts()).toEqual(["Properties \u2794 M2O is equal John"]);
     expect(searchBar.env.searchModel.domain).toEqual([["properties.m2o", "=", 1]]);
 });
 

@@ -114,7 +114,7 @@ test("rendering of falsy values", async () => {
         await parent.set(expr);
         expect(getTreeEditorContent()).toEqual([
             { value: "all", level: 0 },
-            { value: ["0", "=", "1"], level: 1 },
+            { value: ["0", "is equal", "1"], level: 1 },
         ]);
     }
 });
@@ -206,8 +206,8 @@ test("create a new branch from a complex condition control panel", async () => {
         { level: 0, value: "all" },
         { level: 1, value: "expr" },
         { level: 1, value: "any" },
-        { level: 2, value: ["Id", "=", "1"] },
-        { level: 2, value: ["Id", "=", "1"] },
+        { level: 2, value: ["Id", "is equal", "1"] },
+        { level: 2, value: ["Id", "is equal", "1"] },
     ]);
 });
 
@@ -216,8 +216,8 @@ test("rendering of a valid fieldName in fields", async () => {
 
     const toTests = [
         { expr: `foo`, condition: ["Foo", "is set"] },
-        { expr: `foo == "a"`, condition: ["Foo", "=", "a"] },
-        { expr: `foo != "a"`, condition: ["Foo", "!=", "a"] },
+        { expr: `foo == "a"`, condition: ["Foo", "is equal", "a"] },
+        { expr: `foo != "a"`, condition: ["Foo", "is not equal", "a"] },
         // { expr: `foo is "a"`, complexCondition: `foo is "a"` },
         // { expr: `foo is not "a"`, complexCondition: `foo is not "a"` },
         { expr: `not foo`, condition: ["Foo", "is not set"] },
@@ -247,18 +247,18 @@ test("rendering of simple conditions", async () => {
     const parent = await makeExpressionEditor({ fieldFilters: ["foo", "bar"] });
 
     const toTests = [
-        { expr: `bar == "a"`, condition: ["Bar", "=", "a"] },
-        { expr: `foo == expr`, condition: ["Foo", "=", "expr"] },
-        { expr: `"a" == foo`, condition: ["Foo", "=", "a"] },
-        { expr: `expr == foo`, condition: ["Foo", "=", "expr"] },
+        { expr: `bar == "a"`, condition: ["Bar", "is equal", "a"] },
+        { expr: `foo == expr`, condition: ["Foo", "is equal", "expr"] },
+        { expr: `"a" == foo`, condition: ["Foo", "is equal", "a"] },
+        { expr: `expr == foo`, condition: ["Foo", "is equal", "expr"] },
         { expr: `foo == bar`, complexCondition: `foo == bar` },
         { expr: `"a" == "b"`, complexCondition: `"a" == "b"` },
         { expr: `expr1 == expr2`, complexCondition: `expr1 == expr2` },
 
-        { expr: `foo < "a"`, condition: ["Foo", "<", "a"] },
-        { expr: `foo < expr`, condition: ["Foo", "<", "expr"] },
-        { expr: `"a" < foo`, condition: ["Foo", ">", "a"] },
-        { expr: `expr < foo`, condition: ["Foo", ">", "expr"] },
+        { expr: `foo < "a"`, condition: ["Foo", "is lower", "a"] },
+        { expr: `foo < expr`, condition: ["Foo", "is lower", "expr"] },
+        { expr: `"a" < foo`, condition: ["Foo", "is greater", "a"] },
+        { expr: `expr < foo`, condition: ["Foo", "is greater", "expr"] },
         { expr: `foo < bar`, complexCondition: `foo < bar` },
         { expr: `"a" < "b"`, complexCondition: `"a" < "b"` },
         { expr: `expr1 < expr2`, complexCondition: `expr1 < expr2` },
@@ -297,7 +297,7 @@ test("rendering of connectors", async () => {
         { level: 0, value: "any" },
         { level: 1, value: "all" },
         { level: 2, value: "expr" },
-        { level: 2, value: ["Foo", "=", "abc"] },
+        { level: 2, value: ["Foo", "is equal", "abc"] },
         { level: 1, value: ["Bar", "is", "not set"] },
     ]);
 });
@@ -313,7 +313,7 @@ test("rendering of connectors (2)", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "none" },
         { level: 1, value: "expr" },
-        { level: 1, value: ["Foo", "=", "abc"] },
+        { level: 1, value: ["Foo", "is equal", "abc"] },
     ]);
     expect.verifySteps([]);
     expect(queryOne(SELECTORS.debugArea)).toHaveValue(`not (expr or foo == "abc")`);
@@ -323,7 +323,7 @@ test("rendering of connectors (2)", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
         { level: 1, value: "expr" },
-        { level: 1, value: ["Foo", "=", "abc"] },
+        { level: 1, value: ["Foo", "is equal", "abc"] },
     ]);
     expect.verifySteps([`expr and foo == "abc"`]);
     expect(queryOne(SELECTORS.debugArea)).toHaveValue(`expr and foo == "abc"`);
@@ -334,11 +334,11 @@ test("rendering of if else", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "any" },
         { level: 1, value: "all" },
-        { level: 2, value: ["0", "=", "1"] },
-        { level: 2, value: ["1", "=", "1"] },
+        { level: 2, value: ["0", "is equal", "1"] },
+        { level: 2, value: ["1", "is equal", "1"] },
         { level: 1, value: "all" },
-        { level: 2, value: ["1", "=", "1"] },
-        { level: 2, value: ["0", "=", "1"] },
+        { level: 2, value: ["1", "is equal", "1"] },
+        { level: 2, value: ["0", "is equal", "1"] },
     ]);
 });
 
@@ -350,7 +350,7 @@ test("check condition by default when creating a new rule", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
         { level: 1, value: "expr" },
-        { level: 1, value: ["Country ID", "=", ""] },
+        { level: 1, value: ["Country ID", "is equal", ""] },
     ]);
 });
 
@@ -370,9 +370,9 @@ test("allow selection of boolean field", async () => {
 
 test("render false and true leaves", async () => {
     await makeExpressionEditor({ expression: `False and True` });
-    expect(getOperatorOptions()).toEqual(["="]);
+    expect(getOperatorOptions()).toEqual(["is equal"]);
     expect(getValueOptions()).toEqual(["1"]);
-    expect(getOperatorOptions(-1)).toEqual(["="]);
+    expect(getOperatorOptions(-1)).toEqual(["is equal"]);
     expect(getValueOptions(-1)).toEqual(["1"]);
 });
 
@@ -420,7 +420,7 @@ test("no special fields in fields", async () => {
     expect(getTreeEditorContent()).toEqual([
         { level: 0, value: "all" },
         { level: 1, value: ["Bar", "is not", "not set"] },
-        { level: 1, value: ["Foo", "=", ""] },
+        { level: 1, value: ["Foo", "is equal", ""] },
     ]);
     expect.verifySteps([`bar and foo == ""`]);
 });
@@ -433,12 +433,12 @@ test("between operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
-        "=",
-        "!=",
-        ">",
-        ">=",
-        "<",
-        "<=",
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
         "is between",
         "is set",
         "is not set",
