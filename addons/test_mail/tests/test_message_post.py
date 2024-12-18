@@ -2004,6 +2004,47 @@ class TestMessagePostLang(MailCommon, TestRecipients):
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_multi_lang_inactive(self):
+        """ Test posting using an inactive lang, due do some data in DB. It
+        should not crash when trying to search for translated terms / fetch
+        lang bits. """
+        installed = self.env['res.lang'].get_installed()
+        self.assertNotIn('fr_FR', [code for code, _name in installed])
+        test_records = self.test_records.with_env(self.env)
+        customer_inactive_lang = self.env['res.partner'].create({
+            'email': 'test.partner.fr@test.example.com',
+            'lang': 'fr_FR',
+            'name': 'French Inactive Customer',
+        })
+        test_records.message_subscribe(partner_ids=customer_inactive_lang.ids)
+
+        for record in test_records:
+            with self.subTest(record=record.name):
+                with self.mock_mail_gateway(mail_unlink_sent=False), \
+                        self.mock_mail_app():
+                    record.message_post(
+                        body=Markup('<p>Hi there</p>'),
+                        email_layout_xmlid='mail.test_layout',
+                        message_type='comment',
+                        subject='TeDeum',
+                        subtype_xmlid='mail.mt_comment',
+                    )
+                    message = record.message_ids[0]
+                    self.assertEqual(message.notified_partner_ids, customer_inactive_lang)
+
+                    email = self._find_sent_email(
+                        self.partner_employee.email_formatted,
+                        [customer_inactive_lang.email_formatted]
+                    )
+                    self.assertTrue(bool(email), 'Email not found, check recipients')
+
+                    exp_layout_content_en = 'English Layout for Lang Chatter Model'
+                    exp_button_en = 'View Lang Chatter Model'
+                    self.assertIn(exp_layout_content_en, email['body'])
+                    self.assertIn(exp_button_en, email['body'])
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_multi_lang_recipients(self):
         """ Test posting on a document in a multilang environment. Currently
         current user's lang determines completely language used for notification
