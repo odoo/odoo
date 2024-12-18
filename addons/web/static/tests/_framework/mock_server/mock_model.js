@@ -157,7 +157,7 @@ const applyDefaults = ({ _fields }, record, context) => {
             continue;
         }
         if (fieldName === "create_uid") {
-            record.create_uid = MockServer.current.env.uid;
+            record.create_uid = MockServer.env.uid;
             continue;
         }
         const fieldDef = _fields[fieldName];

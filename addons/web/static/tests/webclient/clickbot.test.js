@@ -5,7 +5,6 @@ import {
     defineMenus,
     defineModels,
     fields,
-    makeMockServer,
     makeServerError,
     models,
     mountWithCleanup,
@@ -17,8 +16,8 @@ import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { WebClient } from "@web/webclient/webclient";
 import { SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
+import { WebClient } from "@web/webclient/webclient";
 
 class Foo extends models.Model {
     foo = fields.Char();
@@ -59,12 +58,12 @@ describe.current.tags("desktop");
 defineModels([Foo]);
 
 beforeEach(() => {
+    onRpc("has_group", () => true);
     defineActions([
         {
             id: 1001,
             name: "App1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "kanban"],
@@ -75,7 +74,6 @@ beforeEach(() => {
             id: 1002,
             name: "App2 Menu 1",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[false, "kanban"]],
             xml_id: "app2_menu1",
         },
@@ -83,11 +81,30 @@ beforeEach(() => {
             id: 1022,
             name: "App2 Menu 2",
             res_model: "foo",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
             xml_id: "app2_menu2",
         },
     ]);
+});
+
+test("clickbot clickeverywhere test", async () => {
+    onRpc("has_group", () => true);
+    mockDate("2017-10-08T15:35:11.000");
+    const clickEverywhereDef = new Deferred();
+    patchWithCleanup(browser, {
+        console: {
+            log: (msg) => {
+                expect.step(msg);
+                if (msg === SUCCESS_SIGNAL) {
+                    clickEverywhereDef.resolve();
+                }
+            },
+            error: (msg) => {
+                expect.step(msg);
+                clickEverywhereDef.resolve();
+            },
+        },
+    });
     defineMenus([
         {
             id: "root",
@@ -123,26 +140,6 @@ beforeEach(() => {
             appID: "root",
         },
     ]);
-});
-
-test("clickbot clickeverywhere test", async () => {
-    onRpc("has_group", () => true);
-    mockDate("2017-10-08T15:35:11.000");
-    const clickEverywhereDef = new Deferred();
-    patchWithCleanup(browser, {
-        console: {
-            log: (msg) => {
-                expect.step(msg);
-                if (msg === SUCCESS_SIGNAL) {
-                    clickEverywhereDef.resolve();
-                }
-            },
-            error: (msg) => {
-                expect.step(msg);
-                clickEverywhereDef.resolve();
-            },
-        },
-    });
     const webClient = await mountWithCleanup(WebClient);
     patchWithCleanup(odoo, {
         __WOWL_DEBUG__: { root: webClient },
@@ -210,50 +207,51 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
             },
         },
     });
-    const server = await makeMockServer();
-    // Replace all default menus and setting new one
-    server.menus = [
-        {
-            id: "root",
-            children: [
-                {
-                    id: 2,
-                    children: [
-                        {
-                            id: 5,
-                            children: [
-                                {
-                                    id: 3,
-                                    children: [],
-                                    name: "menu 1",
-                                    appID: 2,
-                                    actionID: 1002,
-                                    xmlid: "app2_menu1",
-                                },
-                                {
-                                    id: 4,
-                                    children: [],
-                                    name: "menu 2",
-                                    appID: 2,
-                                    actionID: 1022,
-                                    xmlid: "app2_menu2",
-                                },
-                            ],
-                            name: "a dropdown",
-                            appID: 2,
-                            xmlid: "app2_dropdown_menu",
-                        },
-                    ],
-                    name: "App2",
-                    appID: 2,
-                    actionID: 1002,
-                    xmlid: "app2",
-                },
-            ],
-            name: "root",
-            appID: "root",
-        },
-    ];
+    defineMenus(
+        [
+            {
+                id: "root",
+                children: [
+                    {
+                        id: 2,
+                        children: [
+                            {
+                                id: 5,
+                                children: [
+                                    {
+                                        id: 3,
+                                        children: [],
+                                        name: "menu 1",
+                                        appID: 2,
+                                        actionID: 1002,
+                                        xmlid: "app2_menu1",
+                                    },
+                                    {
+                                        id: 4,
+                                        children: [],
+                                        name: "menu 2",
+                                        appID: 2,
+                                        actionID: 1022,
+                                        xmlid: "app2_menu2",
+                                    },
+                                ],
+                                name: "a dropdown",
+                                appID: 2,
+                                xmlid: "app2_dropdown_menu",
+                            },
+                        ],
+                        name: "App2",
+                        appID: 2,
+                        actionID: 1002,
+                        xmlid: "app2",
+                    },
+                ],
+                name: "root",
+                appID: "root",
+            },
+        ],
+        { mode: "replace" }
+    );
     const webClient = await mountWithCleanup(WebClient);
     patchWithCleanup(odoo, {
         __WOWL_DEBUG__: { root: webClient },
@@ -295,7 +293,6 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
 });
 
 test("clickbot test waiting rpc after clicking filter", async () => {
-    onRpc("has_group", () => true);
     const clickEverywhereDef = new Deferred();
     let clickBotStarted = false;
     patchWithCleanup(browser, {
@@ -318,25 +315,25 @@ test("clickbot test waiting rpc after clicking filter", async () => {
             expect.step("response");
         }
     });
-    const server = await makeMockServer();
-    server.actions["1001"] = {
-        id: 1,
-        name: "App1",
-        res_model: "foo",
-        type: "ir.actions.act_window",
-        views: [[false, "list"]],
-    };
-    // Replace all default menus and setting new one
-    server.menus = [
+    defineActions(
+        [
+            {
+                id: 1,
+                name: "App1",
+                res_model: "foo",
+                views: [[false, "list"]],
+            },
+        ],
+        { mode: "replace" }
+    );
+    defineMenus([
         {
             id: "root",
-            children: [
-                { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
-            ],
+            children: [{ id: 1, children: [], name: "App1", appID: 1, actionID: 1, xmlid: "app1" }],
             name: "root",
             appID: "root",
         },
-    ];
+    ]);
     const webClient = await mountWithCleanup(WebClient);
     patchWithCleanup(odoo, {
         __WOWL_DEBUG__: { root: webClient },
@@ -391,16 +388,15 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             id++;
         }
     });
-    const server = await makeMockServer();
-    server.actions["1001"] = {
-        id: 1,
-        name: "App1",
-        res_model: "foo",
-        type: "ir.actions.act_window",
-        views: [[false, "list"]],
-    };
-    // Replace all default menus and setting new one
-    server.menus = [
+    defineActions([
+        {
+            id: 1,
+            name: "App1",
+            res_model: "foo",
+            views: [[false, "list"]],
+        },
+    ]);
+    defineMenus([
         {
             id: "root",
             children: [
@@ -409,7 +405,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             name: "root",
             appID: "root",
         },
-    ];
+    ]);
     const webClient = await mountWithCleanup(WebClient);
     patchWithCleanup(odoo, {
         __WOWL_DEBUG__: { root: webClient },
@@ -463,16 +459,15 @@ test("clickbot test waiting render after clicking filter", async () => {
             });
         },
     });
-    const server = await makeMockServer();
-    server.actions["1001"] = {
-        id: 1,
-        name: "App1",
-        res_model: "foo",
-        type: "ir.actions.act_window",
-        views: [[false, "list"]],
-    };
-    // Replace all default menus and setting new one
-    server.menus = [
+    defineActions([
+        {
+            id: 1,
+            name: "App1",
+            res_model: "foo",
+            views: [[false, "list"]],
+        },
+    ]);
+    defineMenus([
         {
             id: "root",
             children: [
@@ -481,7 +476,7 @@ test("clickbot test waiting render after clicking filter", async () => {
             name: "root",
             appID: "root",
         },
-    ];
+    ]);
     const webClient = await mountWithCleanup(WebClient);
     patchWithCleanup(odoo, {
         __WOWL_DEBUG__: { root: webClient },
@@ -525,17 +520,17 @@ test("clickbot clickeverywhere menu modal", async () => {
             },
         },
     });
-    const server = await makeMockServer();
-    server.actions["1099"] = {
-        id: 1099,
-        name: "Modal",
-        res_model: "foo",
-        type: "ir.actions.act_window",
-        views: [[false, "form"]],
-        view_mode: "form",
-        target: "new",
-    };
-    server.menus = [
+    defineActions([
+        {
+            id: 1099,
+            name: "Modal",
+            res_model: "foo",
+            views: [[false, "form"]],
+            view_mode: "form",
+            target: "new",
+        },
+    ]);
+    defineMenus([
         {
             id: "root",
             children: [
@@ -552,7 +547,7 @@ test("clickbot clickeverywhere menu modal", async () => {
             name: "root",
             appID: "root",
         },
-    ];
+    ]);
     const webClient = await mountWithCleanup(WebClient);
     patchWithCleanup(odoo, {
         __WOWL_DEBUG__: { root: webClient },

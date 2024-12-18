@@ -103,7 +103,6 @@ test(`save when page changed`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -156,7 +155,6 @@ test(`save when breadcrumb clicked`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -207,7 +205,6 @@ test(`error on save when breadcrumb clicked`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -249,7 +246,6 @@ test(`save when action changed`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -259,7 +255,6 @@ test(`save when action changed`, async () => {
             id: 2,
             name: "Other action",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "kanban"]],
         },
     ]);
@@ -482,7 +477,6 @@ test(`save on closing tab/browser (detached form)`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],

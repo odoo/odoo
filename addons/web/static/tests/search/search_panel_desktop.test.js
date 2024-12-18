@@ -6,7 +6,6 @@ import {
     contains,
     defineActions,
     defineModels,
-    defineParams,
     fields,
     getService,
     models,
@@ -189,7 +188,6 @@ defineActions([
         id: 1,
         name: "Partners",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [false, "kanban"],
             [false, "list"],
@@ -201,7 +199,6 @@ defineActions([
         id: 2,
         name: "Partners",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
 ]);
@@ -1780,23 +1777,21 @@ test("categories and filters are not reloaded when switching between views", asy
 
 test("categories and filters are loaded when switching from a view without the search panel", async () => {
     // set the pivot view as the default view
-    defineParams(
-        {
-            actions: {
-                1: {
-                    id: 1,
-                    name: "Partners",
-                    res_model: "partner",
-                    type: "ir.actions.act_window",
-                    views: [
-                        [false, "pivot"],
-                        [false, "kanban"],
-                        [false, "list"],
-                    ],
-                },
+    defineActions(
+        [
+            {
+                id: 1,
+                name: "Partners",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "pivot"],
+                    [false, "kanban"],
+                    [false, "list"],
+                ],
             },
-        },
-        "replace"
+        ],
+        { mode: "replace" }
     );
 
     onRpc(/search_panel_/, ({ method }) => expect.step(method));

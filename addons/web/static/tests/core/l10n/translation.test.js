@@ -63,7 +63,7 @@ test("url is given by the session", async () => {
         "/get_translations/*",
         function (request) {
             expect(request.url).toInclude("/get_translations/");
-            return this.mockLoadTranslations();
+            return this.loadTranslations();
         },
         { pure: true }
     );

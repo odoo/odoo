@@ -56,7 +56,6 @@ defineActions([
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -64,8 +63,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -78,7 +75,6 @@ defineActions([
         name: "Partner",
         res_id: 2,
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
 ]);
