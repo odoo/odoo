@@ -12,6 +12,7 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
+    invoice_emails = fields.Char( compute='_compute_invoice_emails',readonly=True)
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -31,7 +32,8 @@ class ResPartner(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
-            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'contact_address'
+            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'contact_address',
+            'invoice_emails'
         ]
 
     def _compute_pos_order(self):
@@ -52,6 +54,12 @@ class ResPartner(models.Model):
                 if partner.id in self_ids:
                     partner.pos_order_count += count
                 partner = partner.parent_id
+
+    @api.depends('child_ids.type', 'child_ids.email')
+    def _compute_invoice_emails(self):
+        for record in self:
+            emails = [child.email for child in record.child_ids if child.type == "invoice" and child.email]
+            record.invoice_emails = ', '.join(emails) if emails else None
 
     def action_view_pos_order(self):
         '''

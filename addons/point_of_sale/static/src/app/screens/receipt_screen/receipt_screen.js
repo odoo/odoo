@@ -22,8 +22,12 @@ export class ReceiptScreen extends Component {
         this.dialog = useService("dialog");
         this.currentOrder = this.pos.getOrder();
         const partner = this.currentOrder.getPartner();
+        let email = partner?.email || "";
+        if (partner?.invoice_emails) {
+            email += (email ? ", " : "") + partner.invoice_emails;
+        }
         this.state = useState({
-            email: partner?.email || "",
+            email: email,
             phone: partner?.mobile || "",
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
