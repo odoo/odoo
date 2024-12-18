@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { useService } from '@web/core/utils/hooks';
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
@@ -39,18 +38,5 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
 
     canDeleteGroup(group) {
         return super.canDeleteGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager);
-    }
-
-    /**
-     * @override
-     */
-    _getEmptyGroupLabel(fieldName) {
-        if (fieldName === "project_id") {
-            return _t("🔒 Private");
-        } else if (fieldName === "user_ids") {
-            return _t("👤 Unassigned");
-        } else {
-            return super._getEmptyGroupLabel(fieldName);
-        }
     }
 }

@@ -286,6 +286,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     related_field = None                # corresponding related field
     aggregator = None                   # operator for aggregating values
     group_expand = None                 # name of method to expand groups in read_group()
+    falsy_value_label = None            # value to display when the field is not set (webclient attr)
     prefetch = True                     # the prefetch group (False means no group)
 
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
@@ -917,6 +918,9 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             field_help = env['ir.model.fields'].get_field_help(model_name)
             return field_help.get(self.name) or self.help
         return self.help
+
+    def _description_falsy_value_label(self, env):
+        return env._(self.falsy_value_label) if self.falsy_value_label else None # pylint: disable=gettext-variable
 
     def is_editable(self):
         """ Return whether the field can be editable in a view. """

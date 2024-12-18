@@ -1,11 +1,11 @@
-import { projectTaskGraphView } from "@project/views/project_task_graph/project_task_graph_view";
-import { hrTimesheetGraphModel } from "./timesheet_graph_model";
 import { registry } from "@web/core/registry";
+import { graphView } from "@web/views/graph/graph_view";
+import { hrTimesheetGraphModel } from "./timesheet_graph_model";
 
 const viewRegistry = registry.category("views");
 
 export const hrTimesheetGraphView = {
-  ...projectTaskGraphView,
+  ...graphView,
   Model: hrTimesheetGraphModel,
 };
 
