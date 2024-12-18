@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+    <record id="hr_holidays.holiday_status_comp" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_compensatory"/>
+    </record>
+
+    <record id="hr_holidays.holiday_status_unpaid" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_unpaid_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_status_sl" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_sick_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_status_cl" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_legal_leave"/>
+    </record>
+
+<!-- AE : United Arab Emirates -->
+    <record id="hr_holidays.uae_sick_leave_50_leave_type" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.uae_sick_leave_50_entry_type"/>
+    </record>
+
+    <record id="hr_holidays.uae_sick_leave_0_leave_type" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.uae_sick_leave_0_entry_type"/>
+    </record>
+
+<!-- BE : Belgium -->
+    <record id="hr_holidays.l10n_be_holiday_type_small_unemployment" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_small_unemployment"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_type_maternity" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_maternity"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_type_unpredictable" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_unpredictable"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_type_training" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_training_time_off"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_type_extra_legal" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_extra_legal"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_type_recovery" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_recovery"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_type_european" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_european"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_type_credit_time" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_credit_time"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_status_work_accident" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_work_accident"/>
+    </record>
+
+    <record id="hr_holidays.l10n_be_holiday_type_strike" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_be_work_entry_type_strike"/>
+    </record>
+
+<!-- HK : Hong Kong -->
+    <record id="hr_holidays.holiday_type_hk_annual_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_legal_leave" />
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_compensation_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_compensatory"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_sick_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_sick_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_sick_leave_80" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_hk_work_entry_type_sick_leave_80"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_unpaid_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_unpaid_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_marriage_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_hk_work_entry_type_marriage_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_maternity_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_hk_work_entry_type_maternity_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_maternity_leave_80" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_hk_work_entry_type_maternity_leave_80"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_paternity_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_hk_work_entry_type_paternity_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_compassionate_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_hk_work_entry_type_compassionate_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_hk_examination_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_hk_work_entry_type_examination_leave"/>
+    </record>
+
+<!-- ID : Indonesia -->
+    <record id="hr_holidays.holiday_type_id_annual_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_legal_leave" />
+    </record>
+
+    <record id="hr_holidays.holiday_type_id_sick_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_sick_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_id_unpaid_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_unpaid_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_id_marriage_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_id_work_entry_type_marriage_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_id_maternity_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_id_work_entry_type_maternity_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_id_paternity_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_id_work_entry_type_paternity_leave"/>
+    </record>
+
+    <record id="hr_holidays.holiday_type_id_bereavement_leave" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_id_work_entry_type_bereavement_leave"/>
+    </record>
+
+<!-- LU : Luxembourg -->
+    <record id="hr_holidays.l10n_lu_holiday_status_situational_unemployment" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_lu_work_entry_type_situational_unemployment"/>
+    </record>
+
+<!-- SK : Slovakia -->
+    <record id="hr_holidays.l10n_sk_hr_leave_type_maternity" model="hr.leave.type">
+        <field name="work_entry_type_id" ref="hr_work_entry.l10n_sk_work_entry_type_maternity"/>
+    </record>
+</data></odoo>
