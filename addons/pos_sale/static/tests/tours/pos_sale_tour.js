@@ -369,22 +369,21 @@ registry.category("web_tour.tours").add("PosSaleWarning", {
                 trigger: ".modal-footer button",
                 run: "click",
             },
-            // Check if no customer is selected
-            ProductScreen.customerIsSelected("Customer"),
+            ProductScreen.customerIsSelected("A Test Customer 2"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("A Test Customer"),
+            ProductScreen.clickCustomer("A Test Customer 1"),
             {
                 content: "Check warning popup are displayed",
                 trigger:
-                    '.modal-dialog:has(.modal-header:contains("Warning for A Test Customer")):has(.modal-body:contains("Highly infectious disease"))',
+                    '.modal-dialog:has(.modal-header:contains("Warning for A Test Customer 1")):has(.modal-body:contains("Highly infectious disease"))',
             },
             {
                 trigger: ".modal-footer button",
                 run: "click",
             },
-            ProductScreen.customerIsSelected("A Test Customer"),
+            ProductScreen.customerIsSelected("A Test Customer 1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.0"),

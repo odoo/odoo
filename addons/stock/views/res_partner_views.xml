@@ -29,11 +29,8 @@
             <page name="internal_notes" position="inside">
                 <group groups="stock.group_warning_stock">
                     <group col="2">
-                        <separator string="Warning on the Picking" colspan="2"/>
-                        <field name="picking_warn" nolabel="1" colspan="2" required="1"/>
-                        <field name="picking_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"
-                            invisible="picking_warn in (False, 'no-message')"
-                            required="picking_warn and picking_warn != 'no-message'"/>
+                        <separator string="Instructions on the Stock Operations" colspan="2"/>
+                        <field name="picking_warn_msg" placeholder="Type a message..." colspan="2" nolabel="1"/>
                     </group>
                 </group>
             </page>
