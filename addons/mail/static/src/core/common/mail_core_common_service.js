@@ -28,8 +28,7 @@ export class MailCoreCommon {
                 if (!message) {
                     continue;
                 }
-                this.env.bus.trigger("mail.message/delete", { message, notifId });
-                message.delete();
+                delete message.notification_ids;
             }
         });
         this.busService.subscribe("mail.message/toggle_star", (payload, metadata) =>
