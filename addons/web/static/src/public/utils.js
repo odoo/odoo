@@ -124,26 +124,24 @@ export function patchDynamicContentEntry(dynamicContent, selector, t, replacemen
     const forSelector = dynamicContent[selector];
     if (replacement === undefined) {
         delete forSelector[t];
-    } else if (typeof replacement === "function") {
+    } else if (typeof replacement === "function" && forSelector[t] && t !== "t-component") {
         const oldFn = forSelector[t];
-        if (oldFn) {
-            if (["t-att-class", "t-att-style"].includes(t)) {
-                forSelector[t] = (el, oldResult) => {
-                    const result = oldResult || {};
-                    Object.assign(result, oldFn(el, result));
-                    Object.assign(result, replacement(el, result));
-                    return result;
-                };
-            } else {
-                forSelector[t] = (el, oldResult) => {
-                    let result = oldResult;
-                    result = oldFn(el, result);
-                    result = replacement(el, result);
-                    return result;
-                };
-            }
+        if (["t-att-class", "t-att-style"].includes(t)) {
+            forSelector[t] = (el, oldResult) => {
+                const result = oldResult || {};
+                Object.assign(result, oldFn(el, result));
+                Object.assign(result, replacement(el, result));
+                return result;
+            };
+        } else if (t.startsWith("t-on-")) {
+            forSelector[t] = (el) => replacement(el, oldFn);
         } else {
-            forSelector[t] = replacement;
+            forSelector[t] = (el, oldResult) => {
+                let result = oldResult;
+                result = oldFn(el, result);
+                result = replacement(el, result);
+                return result;
+            };
         }
     } else {
         forSelector[t] = replacement;
@@ -158,6 +156,10 @@ export function patchDynamicContentEntry(dynamicContent, selector, t, replacemen
  *         "t-att-class": (el, old) => ({
  *             "test": this.condition && old.test,
  *         }),
+ *         "t-on-click": (el, oldFn) => {
+ *             oldFn?.(el);
+ *             this.doMoreStuff();
+ *         },
  *     },
  * })
  *

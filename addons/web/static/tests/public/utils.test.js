@@ -130,4 +130,25 @@ describe("patch dynamic content", () => {
             addMe: 1000,
         });
     });
+
+    test("patch t-on-... provides access to super", () => {
+        const parent = {
+            somewhere: {
+                "t-on-click": () => {
+                    expect.step("base");
+                },
+            },
+        };
+        const patch = {
+            somewhere: {
+                "t-on-click": (el, oldFn) => {
+                    oldFn();
+                    expect.step("patch");
+                },
+            },
+        };
+        patchDynamicContent(parent, patch);
+        parent.somewhere["t-on-click"]();
+        expect.verifySteps(["base", "patch"]);
+    });
 });

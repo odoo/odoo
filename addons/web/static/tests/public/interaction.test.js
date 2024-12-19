@@ -2094,7 +2094,6 @@ describe("patching", () => {
                 super.setup();
                 patchDynamicContent(this.dynamicContent, {
                     span: {
-                        "t-on-click": undefined,
                         "t-att-value": (el, old) => old * 2 + this.value,
                         "t-att-class": () => ({
                             big: this.value >= 50,
