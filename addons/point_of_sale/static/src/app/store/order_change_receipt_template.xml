@@ -5,22 +5,20 @@
         <div class="pos-receipt m-0 p-0">
             <!-- Receipt Header -->
             <div class="receipt-header text-center">
-                <div class="pos-receipt-title">
-                    <t t-if="changes.diningModeUpdate">
-                        <t t-esc="changes.orderMoode"/>
-                    </t>
-                    <t t-else="">
-                        <t t-esc="changes.orderMoode"/>
-                    </t>
+                <div class="pos-receipt-title" t-if="data.reprint">
+                    DUPLICATA !
+                </div>
+                <div class="pos-receipt-title" t-if="data.preset_name">
+                    <t t-esc="data.preset_name"/>
                 </div>
                 <div class="fs-2">
-                    <span><t t-esc="changes.config_name"/> : <t t-esc="changes.time"/></span><br/>
-                    <span>By: <t t-esc="changes.employee_name"/></span>
+                    <span><t t-esc="data.config_name"/> : <t t-esc="data.time"/></span><br/>
+                    <span>By: <t t-esc="data.employee_name"/></span>
                 </div>
                 <span class="my-4" style="font-size: 120%;">
-                    <t t-if="changes.table_name">Table <strong><t t-esc="changes.table_name"/></strong></t>
-                    <strong t-if="changes.tracking_number" class="fw-light my-3">
-                        # <t t-esc="changes.tracking_number"/>
+                    <span>Order <strong><t t-esc="data.pos_reference"/></strong></span>
+                    <strong t-if="data.tracking_number" class="fw-light my-3">
+                        # <t t-esc="data.tracking_number"/>
                     </strong>
                 </span>
             </div>
@@ -28,34 +26,44 @@
 
             <!-- Receipt Body -->
             <div class="pos-receipt-body mb-4">
-                <!-- Operational Title -->
-                <t t-if="operational_title">
-                    <div class="pos-receipt-title text-center" t-esc="operational_title" />
-                </t>
-                <!-- Order Lines -->
-                <div t-foreach="changedlines" t-as="line" t-key="change_index">
-                    <div t-attf-class="orderline #{line.isCombo ? 'mx-5 px-2' : 'mx-1'}">
-                        <div class="d-flex medium">
-                            <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.basic_name"/>
-                        </div>
-                        <div t-if="line.attribute_value_ids?.length" class="mx-5 fs-2">
-                            <t t-foreach="line.attribute_value_ids" t-as="attribute" t-key="attribute.id">
-                                <p class="p-0 m-0">
-                                    - <t t-esc="attribute.name" /><br/>
-                                </p>
-                            </t>
-                        </div>
-                        <div t-if="line.note" class="fs-2 fst-italic">
-                            <t t-esc="line.note.split('\n').join(', ')"/><br/>
-                        </div>
+                <div t-if="data.changes.data?.length" class="new-changes border-bottom w-100">
+                    <div class="pos-receipt-title text-center w-100">
+                        <strong t-esc="data.changes.title" />
+                    </div>
+                    <div t-foreach="data.changes.data" t-as="line" t-key="change_index">
+                        <t t-call="point_of_sale.OrderChangeReceiptLine" />
                     </div>
                 </div>
-                <!-- General Note -->
-                <!-- if no orderline change that means general note change to handle with less arguments -->
-                <div t-if="(!changedlines?.length or fullReceipt) and changes.order_note?.length"
-                    class="fs-2 my-5 fst-italic"
-                    t-esc="changes.order_note.split('\n').join(', ')"
-                />
+                <div t-if="data.internal_note and !data.changes.data" class="new-changes border-bottom w-100">
+                    <div class="pos-receipt-title text-center w-100">
+                        <strong>INTERNAL NOTE</strong>
+                    </div>
+                    <div class="text-center fs-2" t-esc="data.internal_note.split('\n').join(', ')" />
+                </div>
+                <div t-if="data.general_customer_note and !data.changes.data" class="new-changes border-bottom w-100">
+                    <div class="pos-receipt-title text-center w-100">
+                        <strong>CUSTOMER NOTE</strong>
+                    </div>
+                    <div class="text-center fs-2" t-esc="data.general_customer_note.split('\n').join(', ')" />
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.OrderChangeReceiptLine">
+        <div t-attf-class="orderline #{line.isCombo ? 'mx-5 px-2' : 'mx-1'}">
+            <div class="d-flex medium">
+                <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.basic_name"/>
+            </div>
+            <div t-if="line.attribute_value_ids?.length" class="mx-5 fs-2">
+                <t t-foreach="line.attribute_value_ids" t-as="name" t-key="name_index">
+                    <p class="p-0 m-0">
+                        - <t t-esc="name" /><br/>
+                    </p>
+                </t>
+            </div>
+            <div t-if="line.note" class="fs-2 fst-italic">
+                <t t-esc="line.note.split('\n').join(', ')"/><br/>
             </div>
         </div>
     </t>

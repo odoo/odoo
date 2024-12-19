@@ -43,22 +43,21 @@ export class PosOrder extends Base {
         }
 
         // !!Keep all uiState in one object!!
-        this.uiState = {
-            lineToRefund: {},
-            displayed: true,
-            booked: false,
-            screen_data: {},
-            selected_orderline_uuid: undefined,
-            selected_paymentline_uuid: undefined,
-            locked: this.state !== "draft",
-            // Pos restaurant specific to most proper way is to override this
-            TipScreen: {
-                inputTipAmount: "",
-            },
-        };
-
-        if (!this.session_id) {
-            this.session_id = this.session;
+        if (!this.uiState) {
+            this.uiState = {
+                lastPrint: false,
+                lineToRefund: {},
+                displayed: true,
+                booked: false,
+                screen_data: {},
+                selected_orderline_uuid: undefined,
+                selected_paymentline_uuid: undefined,
+                locked: this.state !== "draft",
+                // Pos restaurant specific to most proper way is to override this
+                TipScreen: {
+                    inputTipAmount: "",
+                },
+            };
         }
     }
 

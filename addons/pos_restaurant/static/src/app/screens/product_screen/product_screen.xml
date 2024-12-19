@@ -22,9 +22,15 @@
                         </t>
                     </button>
                     <button
+                            class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
+                            t-on-click="() => this.submitOrder()"
+                            t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrint">
+                        <i class="fa fa-cutlery" aria-hidden="true"></i>
+                    </button>
+                    <button
                         class="btn-switchpane new-button btn btn-lg flex-grow-1 lh-sm btn-secondary"
                         t-on-click="() => this.pos.showDefault()"
-                        t-elif="!this.currentOrder.isDirectSale and !nbrOfChanges and !this.currentOrder.isEmpty()"
+                        t-if="!this.currentOrder.isDirectSale and !nbrOfChanges and !this.currentOrder.isEmpty()"
                     >
                         <span>New</span>
                     </button>

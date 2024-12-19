@@ -263,7 +263,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            // Check if there is no more order to continue
             {
                 ...Dialog.confirm(),
                 content:
