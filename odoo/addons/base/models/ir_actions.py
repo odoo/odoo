@@ -4,7 +4,9 @@
 import odoo
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import MissingError, ValidationError, AccessError, UserError
+from odoo.fields import Domain
 from odoo.tools import frozendict
+from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
 from odoo.http import request
@@ -509,7 +511,7 @@ class IrActionsServer(models.Model):
     _description = 'Server Actions'
     _table = 'ir_act_server'
     _inherit = ['ir.actions.actions']
-    _order = 'sequence,name'
+    _order = 'sequence,name,id'
     _allow_sudo_commands = False
 
     DEFAULT_PYTHON_CODE = """# Available variables:
@@ -538,7 +540,8 @@ class IrActionsServer(models.Model):
                 return field_name
         return ''
 
-    name = fields.Char(required=True)
+    name = fields.Char(compute='_compute_name', store=True, readonly=False)
+    automated_name = fields.Char(compute='_compute_name', store=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
         ('ir_actions_server', 'Server Action'),
@@ -549,7 +552,7 @@ class IrActionsServer(models.Model):
         ('object_create', 'Create Record'),
         ('code', 'Execute Code'),
         ('webhook', 'Send Webhook Notification'),
-        ('multi', 'Execute Existing Actions')], string='Type',
+        ('multi', 'Multi Actions')], string='Type',
         default='object_write', required=True, copy=True,
         help="Type of server action. The following values are available:\n"
              "- 'Update a Record': update the values of a record\n"
@@ -560,7 +563,7 @@ class IrActionsServer(models.Model):
              "- 'Create Record': create a new record with new values\n"
              "- 'Execute Code': a block of Python code that will be executed\n"
              "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-             "- 'Execute Existing Actions': define an action that triggers several other server actions\n")
+             "- 'Multi Actions': define an action that triggers several other server actions\n")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
@@ -576,7 +579,8 @@ class IrActionsServer(models.Model):
                        help="Write Python code that the action will execute. Some variables are "
                             "available for use; help about python expression is given in the help tab.")
     # Multi
-    child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
+    parent_id = fields.Many2one('ir.actions.server', string='Parent Action', ondelete='cascade')
+    child_ids = fields.One2many('ir.actions.server', 'parent_id', copy=True, domain=lambda self: str(self._get_children_domain()),
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
     crud_model_id = fields.Many2one(
@@ -633,13 +637,25 @@ class IrActionsServer(models.Model):
                                               "The name of the action that triggered the webhook is always sent as '_name'.")
     webhook_sample_payload = fields.Text(string='Sample Payload', compute='_compute_webhook_sample_payload')
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if parent_id := vals.get('parent_id'):
+                parent = self.browse(parent_id)
+                vals['model_id'] = parent.model_id.id
+                vals['groups_id'] = parent.groups_id.ids
+        return super().create(vals_list)
+
     @api.model
     def _warning_depends(self):
         return [
-            'model_id',
             'state',
-            'child_ids.model_id',
+            'model_id',
+            'groups_id',
+            'parent_id',
             'child_ids.warning',
+            'child_ids.model_id',
+            'child_ids.groups_id',
             'update_path',
             'webhook_field_ids'
         ]
@@ -652,6 +668,11 @@ class IrActionsServer(models.Model):
             warnings.append(_("Following child actions should have the same model (%(model)s): %(children)s",
                               model=self.model_id.name,
                               children=', '.join(children_with_different_model.mapped('name'))))
+
+        if self.groups_id and (children_with_different_groups := self.child_ids.filtered(lambda a: a.groups_id != self.groups_id)):
+            warnings.append(_("Following child actions should have the same groups (%(groups)s): %(children)s",
+                              groups=', '.join(self.groups_id.mapped('name')),
+                              children=', '.join(children_with_different_groups.mapped('name'))))
 
         if (children_with_warnings := self.child_ids.filtered('warning')):
             warnings.append(_("Following child actions have warnings: %(children)s", children=', '.join(children_with_warnings.mapped('name'))))
@@ -683,6 +704,58 @@ class IrActionsServer(models.Model):
                 action.warning = "\n\n".join(warnings)
             else:
                 action.warning = False
+
+    @api.model
+    def _get_children_domain(self):
+        domain = Domain([
+            ("model_id", "=", unquote("model_id")),
+            ("parent_id", "=", False),
+            ("id", "!=", unquote("id")),
+        ])
+        return domain
+
+    def _generate_action_name(self):
+        self.ensure_one()
+        match self.state:
+            case 'object_write':
+                _field_chain, field_chain_str = self._get_relation_chain("update_path")
+                if self.evaluation_type == 'value':
+                    return _("Update %(field_chain_str)s", field_chain_str=field_chain_str)
+                else:
+                    return _("Compute %(field_chain_str)s", field_chain_str=field_chain_str)
+            case 'object_create':
+                return _(
+                    "Create %(model_name)s with name %(value)s",
+                    model_name=self.crud_model_id.name,
+                    value=self.value
+                )
+            case _:
+                return dict(self._fields["state"]._description_selection(self.env)).get(
+                    self.state, ""
+                )
+
+    def _name_depends(self):
+        return [
+            "state",
+            "update_field_id",
+            "crud_model_id",
+            "value",
+            "evaluation_type",
+        ]
+
+    @api.depends(lambda self: self._name_depends())
+    def _compute_name(self):
+        for action in self:
+            was_automated = action.name == action.automated_name
+            action.automated_name = action._generate_action_name()
+            if was_automated:
+                action.name = action.automated_name
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        if not self.name:
+            self.automated_name = self._generate_action_name()
+            self.name = self.automated_name
 
     @api.depends('state')
     def _compute_available_model_ids(self):
@@ -794,9 +867,9 @@ class IrActionsServer(models.Model):
             if msg:
                 raise ValidationError(msg)
 
-    @api.constrains('child_ids')
+    @api.constrains('parent_id', 'child_ids')
     def _check_children(self):
-        if self._has_cycle('child_ids'):
+        if self._has_cycle():
             raise ValidationError(_('Recursion found in child server actions'))
 
         if (children_with_warnings := self.child_ids.filtered('warning')):

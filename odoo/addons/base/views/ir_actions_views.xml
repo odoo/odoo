@@ -311,7 +311,7 @@
             <field name="model">ir.actions.server</field>
             <field name="arch" type="xml">
                 <form string="Server Action">
-                    <header>
+                    <header invisible="context.get('is_modal')">
                         <button name="create_action" string="Create Contextual Action" type="object"
                                 class="btn-primary"
                                 invisible="binding_model_id"
@@ -326,6 +326,7 @@
                     </header>
                     <sheet>
                         <h1 class="oe_title">
+                            <field name="automated_name" invisible="1"/> <!-- needed for name compute -->
                             <field name="name" placeholder="e.g. Mass archive contacts"/>
                         </h1>
                         <div class="d-flex flex-column">
@@ -335,7 +336,7 @@
                         <div class="alert alert-warning" role="alert" invisible="not warning">
                             <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="warning" nolabel="1"/>
                         </div>
-                        <group string="Technical Settings" groups="base.group_no_one">
+                        <group string="Technical Settings" groups="base.group_no_one" invisible="context.get('is_modal')">
                             <group>
                                 <field name="model_id" options="{'no_create': True, 'no_open': True}" />
                                 <field name="groups_id" widget="many2many_tags" />
@@ -399,10 +400,12 @@
                                     <field name="webhook_sample_payload" string="Sample Payload" nolabel="1" colspan="2" readonly="1" widget="code" options="{'mode': 'javascript'}" />
                                 </group>
                         </group>
-                        <field name="child_ids" domain="[('model_id', '=', model_id)]" invisible="state != 'multi'"/>
-                        <p class="opacity-50" invisible="state != 'multi'">
-                            If several child actions return an action, only the last one will be executed.
-                            This may happen when having server actions executing code that returns an action, or server actions returning a client action.
+                        <field name="child_ids" widget="many2many" invisible="state != 'multi'" mode="kanban" context="{
+                            'is_modal': 1,
+                            'default_model_id': model_id,
+                        }"/>
+                        <p class="opacity-50 mb-1 mt-3" invisible="state != 'multi'">
+                            If several actions return an action, only the last one will be executed.
                         </p>
                         <notebook invisible="state != 'code'">
                             <page string="Code">
@@ -436,6 +439,75 @@ env['res.partner'].create({'name': partner_name})
                 </form>
             </field>
         </record>
+
+        <record id="view_server_action_kanban" model="ir.ui.view">
+            <field name="name">Server Actions</field>
+            <field name="model">ir.actions.server</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <control>
+                        <create string="Add an action" />
+                    </control>
+                    <field name="state"/>
+                    <field name="evaluation_type"/>
+                    <field name="value"/>
+                    <field name="value_field_to_show"/>
+                    <field name="update_field_type"/>
+                    <field name="update_m2m_operation"/>
+                    <templates>
+                        <t t-name="card" class="o_draggable_norotate w-100 flex-row align-items-center gap-1">
+                            <field name="sequence" widget="handle" class="px-1" />
+                            <!-- Icon section -->
+                            <i
+                                data-name="server_action_icon"
+                                t-att-title="record.state.value"
+                                class="fa fa-fw"
+                                t-att-class="{
+                                    'code': 'fa-file-code-o',
+                                    'object_create': 'fa-edit',
+                                    'object_write': 'fa-refresh',
+                                    'multi': 'fa-list-ul',
+                                    'mail_post': 'fa-envelope',
+                                    'followers': 'fa-user-o',
+                                    'remove_followers': 'fa-user-times',
+                                    'next_activity': 'fa-clock-o',
+                                    'sms': 'fa-comments-o',
+                                    'webhook': 'fa-paper-plane',
+                                    'whatsapp': 'fa-whatsapp',
+                                }[record.state.raw_value]"
+                            />
+                            <i class="fa fa-warning text-warning px-2 m-0" invisible="not warning" t-att-title="record.warning.raw_value"/>
+                            <field name="name" class="text-truncate" />
+                            <t invisible="state != 'object_write'">
+                                <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'clear') or evaluation_type != 'value'">
+                                    <span>by clearing it</span>
+                                </t>
+                                <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'add') or evaluation_type != 'value'">
+                                    <span>by adding</span><field name="resource_ref"/>
+                                </t>
+                                <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'remove') or evaluation_type != 'value'">
+                                    <span>by removing</span><field name="resource_ref"/>
+                                </t>
+                                <t invisible="not (update_field_type == 'many2many' and update_m2m_operation == 'set') or evaluation_type != 'value'">
+                                    <span>by setting it to</span><field name="resource_ref"/>
+                                    </t>
+                                <t invisible="update_field_type == 'many2many' and evaluation_type == 'value'">
+                                    <span invisible="evaluation_type != 'value'">to</span>
+                                    <span invisible="evaluation_type != 'equation'">as</span>
+                                    <field name="resource_ref" invisible="not (value_field_to_show == 'resource_ref' and evaluation_type == 'value')" />
+                                    <field name="selection_value" invisible="not (value_field_to_show == 'selection_value' and evaluation_type == 'value')" class="d-inline"/>
+                                    <field name="update_boolean_value" invisible="not (value_field_to_show == 'update_boolean_value' and evaluation_type == 'value')" class="d-inline"/>
+                                    <em invisible="not (value_field_to_show == 'value' and evaluation_type == 'value')" class="d-inline"><field name="value"/></em>
+                                    <code invisible="not (evaluation_type == 'equation')"><field name="value" /></code>
+                                </t>
+                            </t>
+                            <button type="delete" name="delete" class="btn fa fa-trash fa-xl px-3 ms-auto" title="Delete Action" />
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_server_action_tree" model="ir.ui.view">
             <field name="name">Server Actions</field>
             <field name="model">ir.actions.server</field>
@@ -456,6 +528,7 @@ env['res.partner'].create({'name': partner_name})
                     <field name="name" string="Server Action"/>
                     <field name="model_id"/>
                     <field name="state"/>
+                    <filter string="Top-level actions" name="toplevel_actions" domain="[('parent_id', '=', False)]"/>
                     <group expand="0" string="Group By" colspan="4" col="4">
                         <filter string="Action Type" name="action_type" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
@@ -471,7 +544,10 @@ env['res.partner'].create({'name': partner_name})
             <field name="view_mode">list,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
             <field name="search_view_id" ref="view_server_action_search"/>
-            <field name="context">{'key':'server_action'}</field>
+            <field name="context">{
+                'key':'server_action',
+                'search_default_toplevel_actions': 1,
+            }</field>
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
 
