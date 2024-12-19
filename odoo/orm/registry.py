@@ -116,6 +116,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
     _init: bool  # whether init needs to be done
     ready: bool  # whether everything is set up
     loaded: bool  # whether all modules are loaded
+    constraints_validated: bool  # whether there was no errors during validation of constraints
     models: dict[str, type[BaseModel]]
 
     @classmethod
@@ -166,6 +167,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._init = True
         self.loaded = False
         self.ready = False
+        self.constraints_validated = False
 
         self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
         self._sql_constraints = set()  # type: ignore
@@ -578,6 +580,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
     def finalize_constraints(self) -> None:
         """ Call the delayed functions from above. """
+        self.constraints_validated = True
         while self._constraint_queue:
             func, args, kwargs = self._constraint_queue.popleft()
             try:
@@ -586,6 +589,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # warn only, this is not a deployment showstopper, and
                 # can sometimes be a transient error
                 _schema.warning(*e.args)
+                self.constraints_validated = False
 
     def init_models(self, cr: Cursor, model_names: Iterable[str], context: dict[str, typing.Any], install: bool = True):
         """ Initialize a list of models (given by their name). Call methods
