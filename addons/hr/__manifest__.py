@@ -17,6 +17,7 @@
         'phone_validation',
         'resource_mail',
         'web',
+        'hr_base',
     ],
     'data': [
         'security/hr_security.xml',
