@@ -177,9 +177,13 @@ export class LinkPlugin extends Plugin {
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
+        input_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        before_delete_handlers: this.checkUrlTextAligned.bind(this),
+        delete_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        before_paste_handlers: this.checkUrlTextAligned.bind(this),
+        after_paste_handlers: this.onInputDeleteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
-        normalize_handlers: this.normalizeLink.bind(this),
 
         /** Overrides */
         split_element_block_overrides: this.handleSplitBlock.bind(this),
@@ -287,18 +291,6 @@ export class LinkPlugin extends Plugin {
             link = this.getOrCreateLink();
         }
         this.linkElement = link;
-    }
-
-    normalizeLink() {
-        const { anchorNode } = this.dependencies.selection.getEditableSelection();
-        const linkEl = closestElement(anchorNode, "a");
-        if (linkEl && linkEl.isContentEditable) {
-            const label = linkEl.innerText;
-            const url = deduceURLfromText(label, linkEl);
-            if (url) {
-                linkEl.setAttribute("href", url);
-            }
-        }
     }
 
     handleSelectionChange(selectionData) {
@@ -593,6 +585,18 @@ export class LinkPlugin extends Plugin {
         }
     }
 
+    checkUrlTextAligned() {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const linkEl = closestElement(anchorNode, "a");
+        if (linkEl && linkEl.isContentEditable) {
+            const label = linkEl.innerText;
+            const url = deduceURLfromText(label, linkEl);
+            if (url && (url === linkEl?.href || url + "/" === linkEl?.href)) {
+                this.urlTextAligned = true;
+            }
+        }
+    }
+
     onBeforeInput(ev) {
         if (
             ev.inputType === "insertParagraph" ||
@@ -600,6 +604,23 @@ export class LinkPlugin extends Plugin {
             (ev.inputType === "insertText" && ev.data === " ")
         ) {
             this.handleAutomaticLinkInsertion();
+        }
+        this.checkUrlTextAligned();
+    }
+
+    onInputDeleteNormalizeLink() {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const linkEl = closestElement(anchorNode, "a");
+        if (linkEl && linkEl.isContentEditable) {
+            const label = linkEl.innerText;
+            const url = deduceURLfromText(label, linkEl);
+            if (url && this?.urlTextAligned) {
+                linkEl.setAttribute("href", url);
+                this.urlTextAligned = false;
+                if (this.overlay.isOpen) {
+                    this.overlay.close();
+                }
+            }
         }
     }
     /**
