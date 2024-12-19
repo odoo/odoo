@@ -329,11 +329,7 @@ class ChatbotScriptStep(models.Model):
         Those will have a dedicated processing method with specific docstrings.
 
         Returns the mail.message posted by the chatbot's operator_partner_id. """
-
         self.ensure_one()
-        # sudo: discuss.channel - updating current step on the channel is allowed
-        discuss_channel.sudo().chatbot_current_step_id = self.id
-
         if self.step_type == 'forward_operator':
             return self._process_step_forward_operator(discuss_channel)
         return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
@@ -346,8 +342,9 @@ class ChatbotScriptStep(models.Model):
         The script will continue normally, which allows to add extra steps when it's the case
         (e.g: ask for the visitor's email and create a lead).
 
-        When specific available users are not provided, the currently available users of the
-        livechat channel are used as candidates.
+        :param discuss_channel: channel on which to execute the step
+        :param users: recordset of candidate operators, if not provided the currently available
+            users of the livechat channel are used as candidates instead.
         """
 
         human_operator = False
