@@ -28,8 +28,6 @@ class ResPartner(models.Model):
         # Name
         n = vcard.add('n')
         n.value = vobject.vcard.Name(family=self.name or self.complete_name or '')
-        if self.title:
-            n.value.prefix = self.title.name
         # Formatted Name
         fn = vcard.add('fn')
         fn.value = self.name or self.complete_name or ''

@@ -56,7 +56,7 @@ class ResPartner(models.Model):
 
     property_purchase_currency_id = fields.Many2one(
         'res.currency', string="Supplier Currency", company_dependent=True,
-        help="This currency will be used, instead of the default one, for purchases from the current partner")
+        help="This currency will be used for purchases from the current partner")
     purchase_order_count = fields.Integer(
         string="Purchase Order Count",
         groups='purchase.group_purchase_user',
