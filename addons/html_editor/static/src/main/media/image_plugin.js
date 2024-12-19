@@ -340,6 +340,7 @@ export class ImagePlugin extends Plugin {
             addStep: this.dependencies.history.addStep.bind(this),
             document: this.document,
             editable: this.editable,
+            activeTitle: _t("Click again to reset transformation"),
         };
     }
 }
