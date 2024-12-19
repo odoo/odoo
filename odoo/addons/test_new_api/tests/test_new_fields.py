@@ -597,6 +597,14 @@ class TestFields(TransactionCaseWithUserDemo):
         self.registry.setup_models(self.cr)
         self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
+    def test_12_one2many_depends(self):
+        model = self.env['test_new_api.one2many']
+        o2m_field_computed = model._fields['line_ids']
+        o2m_field = model._fields['direct_line_ids']
+        self.assertEqual(o2m_field_computed.get_domain_list(model), [('count', '>', 0)])
+        self.assertEqual(self.registry.field_depends[o2m_field_computed], ('name',))
+        self.assertEqual(self.registry.field_depends[o2m_field], ('direct_line_ids.count',))
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']
@@ -3678,6 +3686,10 @@ class TestRequiredMany2oneTransient(common.TransactionCase):
 
 @common.tagged('m2oref')
 class TestMany2oneReference(common.TransactionCase):
+
+    def test_m2o_reference_inverse_domain(self):
+        o2m_field = self.env['test_new_api.inverse_m2o_ref']._fields['model_ids']
+        self.assertEqual(self.registry.field_depends[o2m_field], ('model_ids.const', 'model_ids.res_model',))
 
     def test_delete_m2o_reference_records(self):
         m = self.env['test_new_api.model_many2one_reference']

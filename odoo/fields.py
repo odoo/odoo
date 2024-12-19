@@ -4245,9 +4245,17 @@ class _RelationalMulti(_Relational):
     def get_depends(self, model):
         depends, depends_context = super().get_depends(model)
         if not self.compute and isinstance(self.domain, list):
+            try:
+                domain = self.get_domain_list(model)
+            except ValueError:
+                # "external ID not found" is raised during installation for callable domains
+                # ignore the domain in that case
+                if model.env.registry.ready:
+                    raise
+                domain = []
             depends = unique(itertools.chain(depends, (
                 self.name + '.' + arg[0]
-                for arg in self.domain
+                for arg in domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
             )))
         return depends, depends_context
@@ -4355,11 +4363,12 @@ class One2many(_RelationalMulti):
                 raise UserError(_("No inverse field %r found for %r") % (self.inverse_name, self.comodel_name))
 
     def get_domain_list(self, records):
-        comodel = records.env.registry[self.comodel_name]
-        inverse_field = comodel._fields[self.inverse_name]
-        domain = super(One2many, self).get_domain_list(records)
-        if inverse_field.type == 'many2one_reference':
-            domain = domain + [(inverse_field.model_field, '=', records._name)]
+        domain = super().get_domain_list(records)
+        if self.comodel_name and self.inverse_name:
+            comodel = records.env.registry[self.comodel_name]
+            inverse_field = comodel._fields[self.inverse_name]
+            if inverse_field.type == 'many2one_reference':
+                domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
     def __get__(self, records, owner):

@@ -851,6 +851,10 @@ class ComputeOne2many(models.Model):
         compute='_compute_line_ids', store=True, readonly=False,
         domain=[('count', '>', 0)],
     )
+    direct_line_ids = fields.One2many(
+        'test_new_api.one2many.line', 'container_id',
+        domain=[('count', '>', 0)],
+    )
 
     @api.depends('name')
     def _compute_line_ids(self):
@@ -1153,13 +1157,16 @@ class ModelMany2oneReference(models.Model):
 
     res_model = fields.Char('Resource Model')
     res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
+    const = fields.Boolean(default=True)
 
 
 class InverseM2oRef(models.Model):
     _name = 'test_new_api.inverse_m2o_ref'
     _description = 'dummy m2oref inverse model'
 
-    model_ids = fields.One2many('test_new_api.model_many2one_reference', 'res_id', string="Models")
+    model_ids = fields.One2many(
+        'test_new_api.model_many2one_reference', 'res_id',
+        string="Models", domain=[('const', '=', True)])
     model_ids_count = fields.Integer("Count", compute='_compute_model_ids_count')
 
     @api.depends('model_ids')
