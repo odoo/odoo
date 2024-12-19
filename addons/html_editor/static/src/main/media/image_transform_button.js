@@ -13,6 +13,7 @@ export class ImageTransformButton extends Component {
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         ...toolbarButtonProps,
+        activeTitle: String,
     };
 
     setup() {
