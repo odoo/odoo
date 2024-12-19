@@ -8,8 +8,9 @@ class IrUiView(models.Model):
         model = self.env[model_name]
     
         for elem in node.xpath('.//*[@l10n]'):
-            l10n_attr_value = self._convert_l10n(elem.get('l10n')).upper()
+            l10n_attr_value = elem.get('l10n').upper()
             assert len(l10n_attr_value) == 2 and l10n_attr_value.isalpha(), 'l10n attribute must be a valid 2 letter country code e.g. "BE"'
+            modifier = 'column_invisible' if elem.tag == 'field' and self.type == 'list' else 'invisible'
             existing_condition = ''
             if rule := elem.get(modifier):
                 existing_condition = '(' + rule + ') and '
