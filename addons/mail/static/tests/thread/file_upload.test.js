@@ -47,5 +47,5 @@ test("Attachment shows spinner during upload", async () => {
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer input[type=file]", [text2]);
-    await contains(".o-mail-AttachmentCard .fa-spinner");
+    await contains(".o-mail-AttachmentCard .fa-circle-o-notch");
 });
