@@ -45,11 +45,11 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
         })
 
         # See method definition in `project_hr_expense.tests.test_project_profitability`
-        expense_sheet = self.check_project_profitability_before_creating_and_approving_expense_sheet(
+        expense = self.check_project_profitability_before_creating_and_approving_expense(
             expense,
             project,
             self.project_profitability_items_empty)
-        self.assertEqual(expense_sheet.state, 'approve')
+        self.assertEqual(expense.state, 'approved')
 
         # Create an expense in a foreign company, the expense is linked to the AA of the project.
         so_foreign = self.env['sale.order'].create({
