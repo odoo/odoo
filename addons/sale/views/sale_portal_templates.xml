@@ -221,7 +221,7 @@
                                                 <span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/>
                                             </li>
                                             <li t-if="sale_order.payment_term_id">
-                                                <span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/>
+                                                <span>With payment terms:</span> <div class="fw-bold" t-field="sale_order.payment_term_id.note"/>
                                             </li>
                                         </ul>
                                     </p>
@@ -279,7 +279,7 @@
                                                 <span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/>
                                             </li>
                                             <li t-if="sale_order.payment_term_id">
-                                                <span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/>
+                                                <span>With payment terms:</span> <div class="fw-bold" t-field="sale_order.payment_term_id.note"/>
                                             </li>
                                         </ul>
                                     </p>

@@ -49,6 +49,10 @@ class SignatureForm extends Component {
         });
     }
 
+    get isSignatureHidden() {
+        return this.state.success || document.querySelector('.editor_enable');
+    }
+
     get sendLabel() {
         return this.props.sendLabel || _t("Accept & Sign");
     }
