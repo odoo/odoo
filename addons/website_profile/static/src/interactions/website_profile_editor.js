@@ -12,14 +12,14 @@ export class WebsiteProfileEditor extends Interaction {
         ".o_forum_profile_pic_clear": { "t-on-click": this.onClickClearProfilePic },
         ".o_forum_profile_bio_edit": {
             "t-on-click.prevent": () => this.isEditingBio = true,
-            "t-att-class": { "d-none": this.editingBio },
+            "t-att-class": () => ({ "d-none": this.editingBio }),
         },
         ".o_forum_profile_bio_cancel_edit": {
-            "t-on-click.prevent": this.isEditingBio = false,
-            "t-att-class": { "d-none": !this.editingBio },
+            "t-on-click.prevent": () => this.isEditingBio = false,
+            "t-att-class": () => ({ "d-none": !this.editingBio }),
         },
-        ".o_forum_profile_bio_form": { "t-att-class": { "d-none": !this.editingBio } },
-        ".o_forum_profile_bio": { "t-att-class": { "d-none": this.editingBio, } },
+        ".o_forum_profile_bio_form": { "t-att-class": () => ({ "d-none": !this.editingBio }) },
+        ".o_forum_profile_bio": { "t-att-class": () => ({ "d-none": this.editingBio, }) },
     };
 
     setup() {
