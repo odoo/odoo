@@ -3,6 +3,7 @@
 import json
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -47,6 +48,30 @@ class SaleOrder(models.Model):
                 order.available_product_document_ids
                 or order.order_line.available_product_document_ids
             )
+
+    # === CRUD METHODS === #
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        orders = super().create(vals_list)
+        default_quotes = self.env['quotation.document'].search([('add_by_default', '=', True)])
+        for order in orders:
+            order.quotation_document_ids |= default_quotes & order.available_product_document_ids
+        return orders
+
+    def write(self, vals):
+        res = super().write(vals)
+        for order in self:
+            unavailable_selected_documents = (
+                order.quotation_document_ids - order.available_product_document_ids
+            )
+            if unavailable_selected_documents:
+                raise ValidationError(_(
+                    "The following headers/footers will not be available for this sale order after "
+                    "your change.\nPlease remove them from the quote before saving again.\n"
+                    + "\n".join(f"- {doc.name}" for doc in unavailable_selected_documents)
+                ))
+        return res
 
     # === ACTION METHODS === #
 
