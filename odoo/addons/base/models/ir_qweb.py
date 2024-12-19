@@ -389,13 +389,14 @@ from dateutil.relativedelta import relativedelta
 from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, models, tools
+from odoo.modules import get_module_path
 from odoo.modules.registry import _REGISTRY_CACHES
 from odoo.tools import config, safe_eval, pycompat
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
 from odoo.tools.lru import LRU
-from odoo.tools.misc import str2bool
+from odoo.tools.misc import str2bool, file_open
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
@@ -618,9 +619,12 @@ class IrQweb(models.AbstractModel):
 
     @QwebTracker.wrap_compile
     def _compile(self, template):
+        ref = None
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
-            ref = None
+        elif isinstance(template, str) and template.endswith('.xml'):
+            with file_open(template, 'rb', filter_ext=('.xml',)) as file:
+                template = etree.fromstring(file.read())
         else:
             ref = self._get_view_id(template)
 
