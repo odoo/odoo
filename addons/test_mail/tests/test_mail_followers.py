@@ -979,9 +979,14 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
         super().setUpClass()
         cls.user_portal = cls._create_portal_user()
         cls.partner_portal = cls.user_portal.partner_id
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test'})
-        cls.test_record_unfollow = cls.env['mail.test.simple.unfollow'].with_context(cls._test_context).create(
-            {'name': 'unfollow'})
+        cls.test_record = cls.env['mail.test.simple'].with_context(
+            cls._test_context,
+            email_show_header=True,
+            email_show_footer=True).create({'name': 'Test'})
+        cls.test_record_unfollow = cls.env['mail.test.simple.unfollow'].with_context(
+            cls._test_context,
+            email_show_header=True,
+            email_show_footer=True).create({'name': 'unfollow'})
         cls.partner_without_user = cls.env['res.partner'].create({
             'name': 'Dave',
             'email': 'dave@odoo.com',
@@ -991,8 +996,11 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
     def _post_message_and_get_unfollow_urls(self, record, partner_ids):
         """ Post a message on the record for the partners and extract the unfollow URLs. """
         with self.mock_mail_gateway():
-            record.message_post(body='test message', subtype_id=self.env.ref('mail.mt_comment').id,
-                                partner_ids=partner_ids.ids)
+            record.message_post(
+                author_id=self.user_admin.partner_id.id,
+                body='test message',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+                partner_ids=partner_ids.ids)
         self.assertEqual(len(self._mails), len(partner_ids))
         mail_by_email = {parse_contact_from_email(email_to)[1]: mail
                          for mail in self._mails
