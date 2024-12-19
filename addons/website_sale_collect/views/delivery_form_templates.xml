@@ -45,6 +45,51 @@
                 </t>
             </t>
         </div>
+        <span name="o_pickup_location_selector" position="attributes">
+            <attribute name="t-if">len(dm.warehouse_ids) &gt; 1</attribute>
+        </span>
+        <button name="o_pickup_location_selector" position="attributes">
+            <attribute
+                name="t-attf-class"
+                add="{{'btn btn-primary ms-4' if len(dm.warehouse_ids) > 1 else 'd-none'}}"
+            />
+        </button>
+        <div name="o_pickup_location_details" position="after">
+            <t t-if="dm.delivery_type=='in_store' and len(dm.warehouse_ids) == 1">
+                <t t-foreach="pickup_locations" t-as="location">
+                    <t t-if="location.get('dm_id') == dm.id">
+                        <t t-set="pickup_location_data" t-value="location.get('pickup_location')"/>
+                        <div name="o_single_pickup_location_details" class="ms-4">
+                            <span>
+                                <b
+                                    name="o_pickup_location_name"
+                                    t-out="pickup_location_data.get('name', '')"
+                                />
+                                <br/>
+                                <i
+                                    name="o_pickup_location_address"
+                                    t-out="(pickup_location_data.get('street', ) or '')
+                                           + ' '
+                                           + (pickup_location_data.get('zip_code') or '')
+                                           + ' '
+                                           + (pickup_location_data.get('city') or '')"
+                                />
+                            </span>
+                            <span
+                                name="o_pickup_location_selector"
+                                class="d-none"
+                                t-att-data-location-id="pickup_location_data.get('id')"
+                                t-att-data-zip-code="pickup_location_data.get('zip_code')"
+                                t-att-data-pickup-location-data="json.dumps(pickup_location_data)"
+                            />
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </div>
+        <div name="o_pickup_location_details" position="attributes">
+            <attribute name="t-if">len(dm.warehouse_ids) &gt; 1</attribute>
+        </div>
     </template>
 
 </odoo>
