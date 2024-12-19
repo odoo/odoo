@@ -57,7 +57,7 @@ class StockMove(models.Model):
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
             total_invoiced_value = 0
             invoiced_qty = 0
-            for invoice_line in line._get_po_line_invoice_lines_su():
+            for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.move_id.state != 'posted':
                     continue
                 if invoice_line.tax_ids:
@@ -68,6 +68,7 @@ class StockMove(models.Model):
                 total_invoiced_value += invoice_line.currency_id._convert(
                         invoice_line_value, order.currency_id, order.company_id, invoice_line.move_id.invoice_date, round=False)
                 invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
+            total_invoiced_value += self.company_id.currency_id._convert(self._additional_invoice_value(move_layer), order.currency_id, order.company_id, self.date, round=False)
             # TODO currency check
             remaining_value = total_invoiced_value - receipt_value
             # TODO qty_received in product uom
@@ -93,6 +94,10 @@ class StockMove(models.Model):
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
         return price_unit
+
+    def _additional_invoice_value(self, layers):
+        """ override to add invoice value not linked to the purchase order line. i.e landed costs"""
+        return 0
 
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
