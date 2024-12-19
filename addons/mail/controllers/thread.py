@@ -169,3 +169,18 @@ class ThreadController(http.Controller):
 
     def _is_message_editable(self, message, **kwargs):
         return message.sudo().is_current_user_or_guest_author or request.env.user._is_admin()
+
+    @http.route("/mail/thread/get_followers", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
+    def mail_thread_get_followers(self, thread_id, thread_model, limit=20, offset=0):
+        domain = [
+            ("res_id", "=", thread_id),
+            ("res_model", "=", thread_model),
+            ("partner_id", "!=", request.env.user.partner_id.id)
+        ]
+        data = request.env["mail.followers"].search(domain, offset=offset, limit=limit, order="name ASC")
+        return Store(data).add_global_values(followerListView = {
+                "threadId": thread_id,
+                "threadModel": thread_model,
+                "followersCount": request.env["mail.followers"].search_count(domain),
+                "followers": Store.Many(data, mode="ADD")._get_id() if offset else Store.Many(data)._get_id(),
+        }).get_result()
