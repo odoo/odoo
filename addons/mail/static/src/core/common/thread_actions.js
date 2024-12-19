@@ -161,8 +161,14 @@ function transformAction(component, id, action) {
          * */
         open({ keepPrevious } = {}) {
             if (this.toggle) {
-                if (component.threadActions.activeAction && keepPrevious) {
-                    component.threadActions.actionStack.push(component.threadActions.activeAction);
+                if (component.threadActions.activeAction) {
+                    if (keepPrevious) {
+                        component.threadActions.actionStack.push(
+                            component.threadActions.activeAction
+                        );
+                    } else {
+                        component.threadActions.activeAction.close();
+                    }
                 }
                 component.threadActions.activeAction = this;
             }

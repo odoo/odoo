@@ -377,7 +377,6 @@ test("show typing in member list", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Members']");
     await contains(".o-discuss-ChannelMember", { count: 2 });
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {

@@ -201,6 +201,12 @@ export class Message extends Record {
                 time: this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, userLocale),
             });
         }
+        if (this.datetime?.year === DateTime.now().year) {
+            return this.datetime.toLocaleString(
+                { ...DateTime.DATETIME_MED, hourCycle: "h23", year: undefined },
+                userLocale
+            );
+        }
         return this.datetime.toLocaleString(
             { ...DateTime.DATETIME_MED, hourCycle: "h23" },
             userLocale

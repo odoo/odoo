@@ -121,18 +121,18 @@ const threadPatch = {
         this.onlineMembers = Record.many("discuss.channel.member", {
             /** @this {import("models").Thread} */
             compute() {
-                return this.channel_member_ids.filter((member) =>
-                    this.store.onlineMemberStatuses.includes(member.persona.im_status)
-                );
-            },
-            sort(m1, m2) {
-                return this.store.sortMembers(m1, m2);
+                return this.channel_member_ids
+                    .filter((member) =>
+                        this.store.onlineMemberStatuses.includes(member.persona.im_status)
+                    )
+                    .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             },
         });
         this.offlineMembers = Record.many("discuss.channel.member", {
-            compute: this._computeOfflineMembers,
-            sort(m1, m2) {
-                return this.store.sortMembers(m1, m2);
+            compute() {
+                return this._computeOfflineMembers().sort(
+                    (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
+                );
             },
         });
         this.otherTypingMembers = Record.many("discuss.channel.member", {
