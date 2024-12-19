@@ -38,6 +38,8 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 
+const { DateTime } = luxon;
+
 export class PosStore extends WithLazyGetterTrap {
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
@@ -510,7 +512,7 @@ export class PosStore extends WithLazyGetterTrap {
                     Object.keys(order.last_order_preparation_change).length > 0 &&
                     !order.isTransferedOrder
                 ) {
-                    await this.sendOrderInPreparation(order, true);
+                    await this.sendOrderInPreparation(order, true, true);
                 }
 
                 const cancelled = this.removeOrder(order, true);
@@ -1562,16 +1564,36 @@ export class PosStore extends WithLazyGetterTrap {
         return getOrderChanges(order, skipped, this.config.preparationCategories);
     }
     // Now the printer should work in PoS without restaurant
-    async sendOrderInPreparation(order, cancelled = false) {
+    async sendOrderInPreparation(order, cancelled = false, orderDone = false) {
         if (this.config.printerCategories.size) {
             try {
-                const orderChange = changesToOrder(
+                let reprint = false;
+                let orderChange = changesToOrder(
                     order,
                     false,
                     this.config.preparationCategories,
                     cancelled
                 );
-                this.printChanges(order, orderChange);
+
+                if (
+                    !orderChange.new.length &&
+                    !orderChange.cancelled.length &&
+                    !orderChange.noteUpdate.length &&
+                    !orderChange.internal_note &&
+                    !orderChange.general_customer_note &&
+                    order.uiState.lastPrint
+                ) {
+                    orderChange = order.uiState.lastPrint;
+                    reprint = true;
+                } else {
+                    order.uiState.lastPrint = orderChange;
+                }
+
+                if (reprint && orderDone) {
+                    return;
+                }
+
+                this.printChanges(order, orderChange, reprint);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
             }
@@ -1591,9 +1613,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    async printChanges(order, orderChange) {
+    async printChanges(order, orderChange, reprint = false) {
         const unsuccedPrints = [];
-        const lastChangedLines = order.last_order_preparation_change.lines;
         orderChange.new.sort((a, b) => {
             const sequenceA = a.pos_categ_sequence;
             const sequenceB = b.pos_categ_sequence;
@@ -1604,55 +1625,67 @@ export class PosStore extends WithLazyGetterTrap {
             return sequenceA - sequenceB;
         });
 
+        const orderData = {
+            reprint: reprint,
+            pos_reference: order.getName(),
+            config_name: order.config_id.name,
+            write_date: DateTime.fromSQL(order.write_date).toFormat("HH:mm"),
+            tracking_number: order.tracking_number,
+            preset_name: order.preset_id?.name || "",
+            employee_name: order.employee_id?.name || order.user_id?.name,
+            internal_note: order.internal_note,
+            general_customer_note: order.general_customer_note,
+            changes: {
+                title: "",
+                data: [],
+            },
+        };
+
         for (const printer of this.unwatched.printers) {
-            const changes = this._getPrintingCategoriesChanges(
+            const changes = this.filterChangeByCategories(
                 printer.config.product_categories_ids,
                 orderChange
             );
-            const toPrintArray = this.preparePrintingData(order, changes);
-            const diningModeUpdate = orderChange.modeUpdate;
-            if (diningModeUpdate || !Object.keys(lastChangedLines).length) {
-                // Prepare orderlines based on the dining mode update
-                const lines =
-                    diningModeUpdate && Object.keys(lastChangedLines).length
-                        ? lastChangedLines
-                        : order.lines;
 
-                // converting in format we need to show on xml
-                const orderlines = Object.entries(lines).map(([key, value]) => ({
-                    basic_name: diningModeUpdate ? value.basic_name : value.product_id.name,
-                    isCombo: diningModeUpdate ? value.isCombo : value.combo_item_id?.id,
-                    quantity: diningModeUpdate ? value.quantity : value.qty,
-                    note: value.note,
-                    attribute_value_ids: value.attribute_value_ids,
-                }));
+            if (changes.new.length) {
+                orderData.changes = {
+                    title: _t("NEW"),
+                    data: changes.new,
+                };
+                const result = await this.printOrderChanges(orderData, printer);
+                if (!result.successful) {
+                    unsuccedPrints.push(printer.name);
+                }
+            }
 
-                // Print detailed receipt
-                const printed = await this.printReceipts(
-                    order,
-                    printer,
-                    "New",
-                    orderlines,
-                    true,
-                    diningModeUpdate
-                );
-                if (!printed) {
-                    unsuccedPrints.push("Detailed Receipt");
+            if (changes.cancelled.length) {
+                orderData.changes = {
+                    title: _t("CANCELLED"),
+                    data: changes.cancelled,
+                };
+                const result = await this.printOrderChanges(orderData, printer);
+                if (!result.successful) {
+                    unsuccedPrints.push(printer.name);
                 }
-            } else {
-                // Print all receipts related to line changes
-                for (const [key, value] of Object.entries(toPrintArray)) {
-                    const printed = await this.printReceipts(order, printer, key, value, false);
-                    if (!printed) {
-                        unsuccedPrints.push(key);
-                    }
+            }
+
+            if (changes.noteUpdate.length) {
+                orderData.changes = {
+                    title: _t("NOTE UPDATE"),
+                    data: changes.noteUpdate,
+                };
+                const result = await this.printOrderChanges(orderData, printer);
+                if (!result.successful) {
+                    unsuccedPrints.push(printer.name);
                 }
-                // Print Order Note if changed
-                if (orderChange.generalNote) {
-                    const printed = await this.printReceipts(order, printer, "Message", []);
-                    if (!printed) {
-                        unsuccedPrints.push("General Message");
-                    }
+                orderData.changes.noteUpdate = [];
+            }
+
+            if (orderChange.internal_note || orderChange.general_customer_note) {
+                orderData.changes = {};
+                const result = await this.printOrderChanges(orderData, printer);
+                if (!result.successful) {
+                    unsuccedPrints.push(printer.name);
                 }
             }
         }
@@ -1667,67 +1700,14 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    async printReceipts(order, printer, title, lines, fullReceipt = false, diningModeUpdate) {
-        let time;
-        if (order.write_date) {
-            time = order.write_date?.split(" ")[1].split(":");
-            time = time[0] + "h" + time[1];
-        }
-
-        const printingChanges = {
-            table_name: order.table_id ? order.table_id.table_number : "",
-            config_name: order.config_id.name,
-            time: order.write_date ? time : "",
-            tracking_number: order.tracking_number,
-            orderMoode: order.preset_id?.name || "",
-            employee_name: order.employee_id?.name || order.user_id?.name,
-            order_note: order.internal_note,
-            diningModeUpdate: diningModeUpdate,
-        };
-
+    async printOrderChanges(data, printer) {
         const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
-            operational_title: title,
-            changes: printingChanges,
-            changedlines: lines,
-            fullReceipt: fullReceipt,
+            data: data,
         });
-        const result = await printer.printReceipt(receipt);
-        return result.successful;
+        return await printer.printReceipt(receipt);
     }
 
-    preparePrintingData(order, changes) {
-        const order_modifications = {};
-        const pdisChangedLines = order.last_order_preparation_change.lines;
-
-        if (changes["new"].length) {
-            order_modifications["New"] = changes["new"];
-        }
-        if (changes["noteUpdated"].length) {
-            order_modifications["Note"] = changes["noteUpdated"];
-        }
-        // Handle removed lines
-        if (changes["cancelled"].length) {
-            if (changes["new"].length) {
-                order_modifications["Cancelled"] = changes["cancelled"];
-            } else {
-                const allCancelled = changes["cancelled"].every((line) => {
-                    const pdisLine = pdisChangedLines[line.uuid + " - " + line.note];
-                    return !pdisLine || pdisLine.quantity <= line.quantity;
-                });
-                if (
-                    allCancelled &&
-                    Object.keys(pdisChangedLines).length == changes["cancelled"].length
-                ) {
-                    order_modifications["Cancel"] = changes["cancelled"];
-                } else {
-                    order_modifications["Cancelled"] = changes["cancelled"];
-                }
-            }
-        }
-        return order_modifications;
-    }
-
-    _getPrintingCategoriesChanges(categories, currentOrderChange) {
+    filterChangeByCategories(categories, currentOrderChange) {
         const filterFn = (change) => {
             const product = this.models["product.product"].get(change["product_id"]);
             const categoryIds = product.parentPosCategIds;
@@ -1742,7 +1722,7 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             new: currentOrderChange["new"].filter(filterFn),
             cancelled: currentOrderChange["cancelled"].filter(filterFn),
-            noteUpdated: currentOrderChange["noteUpdated"].filter(filterFn),
+            noteUpdate: currentOrderChange["noteUpdate"].filter(filterFn),
         };
     }
 

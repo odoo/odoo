@@ -229,7 +229,7 @@ export function clickControlButtonMore() {
         {
             isActive: ["desktop"],
             content: "click Actions button",
-            trigger: controlButtonTrigger("Actions"),
+            trigger: ".more-btn",
             run: "click",
         },
     ];
