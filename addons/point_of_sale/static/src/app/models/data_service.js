@@ -39,7 +39,6 @@ export class PosData extends Reactive {
         };
 
         this.initIndexedDB();
-        await this.verifyCurrentSession();
         await this.initData();
 
         effect(
@@ -56,21 +55,6 @@ export class PosData extends Reactive {
 
     get databaseName() {
         return `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
-    }
-
-    async verifyCurrentSession() {
-        // If another device close the session we need to invalided the indexedDB on
-        // on the current device during the next reload
-        const localSessionId = localStorage.getItem(`pos.session.${odoo.pos_config_id}`);
-        if (
-            parseInt(localSessionId) &&
-            parseInt(localSessionId) !== parseInt(odoo.pos_session_id)
-        ) {
-            await this.resetIndexedDB();
-            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
-            window.location.reload();
-        }
-        localStorage.setItem(`pos.session.${odoo.pos_config_id}`, odoo.pos_session_id);
     }
 
     initIndexedDB() {
