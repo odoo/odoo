@@ -6092,7 +6092,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      */
     _activateLinkTool() {
         const parentEl = this._searchSupportedParentLinkEl();
-        if (parentEl.tagName === 'A') {
+        if (parentEl && parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_url_opt')[0].focus();
         } else {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
@@ -6103,7 +6103,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      */
     _deactivateLinkTool() {
         const parentEl = this._searchSupportedParentLinkEl();
-        if (parentEl.tagName === 'A') {
+        if (parentEl && parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
     },
@@ -6147,6 +6147,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      */
     _searchSupportedParentLinkEl() {
         const parentEl = this.$target[0].parentElement;
+        if (!parentEl) {
+            return null;
+        }
         return parentEl.matches("figure") ? parentEl.parentElement : parentEl;
     },
 });
