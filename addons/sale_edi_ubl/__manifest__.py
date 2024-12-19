@@ -10,6 +10,9 @@ When uploading or pasting Files in order list view with order related data insid
 File with embedded xml data will allow seller to retrieve Order data from Files.
     """,
     'depends': ['sale', 'account_edi_ubl_cii'],
+    'data': [
+        'security/ir.model.access.csv',
+    ],
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

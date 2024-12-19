@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from markupsafe import Markup
 
 from odoo import _, models
@@ -53,14 +55,23 @@ class SaleEdiCommon(models.AbstractModel):
         logs = []
         lines_values = []
         for line_tree in tree.iterfind(xpath):
-            line_values = self._retrieve_line_vals(line_tree)
+            line_values = self._retrieve_line_vals(order, line_tree)
             line_values = {
                 **line_values,
                 'product_uom_qty': line_values['quantity'],
             }
             del line_values['quantity']
             if not line_values['product_id']:
-                logs += [_("Could not retrieve product for line '%s'", line_values['name'])]
+                buyer_product_code_xpath = self._get_product_xpaths()['buyer_product_code']
+                # Set customer product reference on order line
+                line_values['edi_customer_product_ref'] = self._find_value(buyer_product_code_xpath, line_tree)
+                # Find product related to customer product reference
+                line_values['product_id'] = self.env['customer.product.reference'].search([
+                    ('partner_id', '=', order.partner_id.id),
+                    ('customer_product_reference', '=', line_values['edi_customer_product_ref']),
+                ], limit=1).product_id.id
+                if not line_values['product_id']:
+                    logs += [_("Could not retrieve product for line '%s'", line_values['name'])]
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(
                 order, line_values, 'sale',
             )
@@ -96,7 +107,7 @@ class SaleEdiCommon(models.AbstractModel):
         return dest_partner, logs
 
     def _import_partner(self, company_id, name, phone, email, vat, **kwargs):
-        """ Override of edi.mixin to set current user partner if there is no matching partner
+        """ Override of account.edi.common to set current user partner if there is no matching partner
         found and log details related to partner."""
         partner, logs = super()._import_partner(company_id, name, phone, email, vat, **kwargs)
         if not partner:
@@ -118,3 +129,10 @@ class SaleEdiCommon(models.AbstractModel):
             partner_details += _(", Email: %(email)s", email=email)
 
         return partner_details
+
+    def _import_product(self, partner, **product_vals):
+        """ Override of account.edi.common to remove buyer_product_code from product_vals. """
+        # Remove buyer_product_code from vals
+        product_vals.pop('buyer_product_code', '')
+
+        return super()._import_product(partner, **product_vals)

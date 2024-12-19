@@ -157,6 +157,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         vals = {
             'name': product.name or order_line.name,
             'description': order_line.name or product.description,
+            'buyer_item_identification': product.default_code or product.id,
             'standard_item_identification': product.barcode,
             'classified_tax_category_vals': self._get_tax_category_vals(order, order_line)
         }
