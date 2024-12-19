@@ -603,20 +603,8 @@ class TestExpenses(TestExpenseCommon):
 
     def test_attachments_in_move_from_own_expense(self):
         """ Checks that journal entries created form expense reports paid by employee have a copy of the attachments in the expense. """
-        expense = self.env['hr.expense'].create({
-            'name': 'Employee expense',
-            'date': '2022-11-16',
-            'payment_mode': 'own_account',
-            'total_amount': 1000.00,
-            'employee_id': self.expense_employee.id,
-        })
-        expense_2 = self.env['hr.expense'].create({
-            'name': 'Employee expense 2',
-            'date': '2022-11-16',
-            'payment_mode': 'own_account',
-            'total_amount': 1000.00,
-            'employee_id': self.expense_employee.id,
-        })
+        expense = self.create_expenses({'name': 'Employee expense'})
+        expense_2 = self.create_expenses({'name': 'Employee expense 2'})
         attachment = self.env['ir.attachment'].create({
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
             'name': 'file1.png',
@@ -632,47 +620,39 @@ class TestExpenses(TestExpenseCommon):
 
         expense.message_main_attachment_id = attachment
         expense_2.message_main_attachment_id = attachment_2
+
+        expense.message_main_attachment_id = attachment
+        expense_2.message_main_attachment_id = attachment_2
         expenses = expense | expense_2
 
-        expense_sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Expenses paid by employee',
-            'employee_id': self.expense_employee.id,
-            'expense_line_ids': expenses,
-        })
-        expense_sheet.action_submit_sheet()
-        expense_sheet.action_approve_expense_sheets()
-        expense_sheet.action_sheet_move_post()
+        expenses.action_submit()
+        expenses.action_approve()
+        expenses.action_post()
 
-        self.assertRecordValues(expense_sheet.account_move_ids.attachment_ids.sorted('name'), [
+        self.assertRecordValues(expenses.account_move_id.attachment_ids.sorted('name'), [
             {
                 'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
                 'name': 'file1.png',
                 'res_model': 'account.move',
-                'res_id': expense_sheet.account_move_ids.id
+                'res_id': expense.account_move_id.id,
             },
             {
                 'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
                 'name': 'file2.png',
                 'res_model': 'account.move',
-                'res_id': expense_sheet.account_move_ids.id
+                'res_id': expense.account_move_id.id,
             }
         ])
 
     def test_attachments_in_move_from_company_expense(self):
         """ Checks that journal entries created form expense reports paid by company have a copy of the attachments in the expense. """
-        expense = self.env['hr.expense'].create({
+        expense = self.create_expenses({
             'name': 'Company expense',
-            'date': '2022-11-16',
             'payment_mode': 'company_account',
-            'total_amount_currency': 1000.00,
-            'employee_id': self.expense_employee.id,
         })
-        expense_2 = self.env['hr.expense'].create({
+        expense_2 = self.create_expenses({
             'name': 'Company expense 2',
-            'date': '2022-11-16',
             'payment_mode': 'company_account',
-            'total_amount_currency': 1000.00,
-            'employee_id': self.expense_employee.id,
         })
         attachment = self.env['ir.attachment'].create({
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
@@ -691,17 +671,12 @@ class TestExpenses(TestExpenseCommon):
         expense_2.message_main_attachment_id = attachment_2
         expenses = expense | expense_2
 
-        expense_sheet = self.env['hr.expense.sheet'].create({
-            'name': 'Expenses paid by company',
-            'employee_id': self.expense_employee.id,
-            'expense_line_ids': expenses,
-        })
-        expense_sheet.action_submit_sheet()
-        expense_sheet.action_approve_expense_sheets()
-        expense_sheet.action_sheet_move_post()
+        expenses.action_submit()
+        expenses.action_approve()
+        expenses.action_post()
 
-        expense_move = expense_sheet.account_move_ids.filtered(lambda am: am.invoice_line_ids[0].ref == 'Company expense')
-        expense_2_move = expense_sheet.account_move_ids.filtered(lambda am: am.invoice_line_ids[0].ref == 'Company expense 2')
+        expense_move = expense.account_move_id
+        expense_2_move = expense_2.account_move_id
         self.assertRecordValues(expense_move.attachment_ids, [{
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
             'name': 'file1.png',
