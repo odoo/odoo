@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="confirm_unsubscribe">
+        <div class="container o_unsubscribe_form">
+            <div class="row">
+                <form action="/mail/mailing/confirm_unsubscribe" method="POST" class="col-lg-6 offset-lg-3 mt-4">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="email" t-att-value="email"/>
+                    <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
+                    <input type="hidden" name="res_id" t-att-value="res_id"/>
+                    <input type="hidden" name="token" t-att-value="token"/>
+
+                    <div id="info_state"  class="alert alert-success">
+                        <div class="text-center">
+                            <t t-if="len(unsubscribed_list) > 0">
+                                <p>Are you sure you want to unsubscribe from the mailing list <t t-out="unsubscribed_list"/>?</p>
+                            </t>
+                            <t t-else="">
+                                <p>Are you sure you want to unsubscribe from our mailing list?</p>
+                            </t>
+                            <div>
+                                <button type="submit" class="btn btn-primary">Unsubscribe</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
     <template id="unsubscribe">
         <div class="container o_unsubscribe_form">
             <div class="row">
@@ -105,6 +132,11 @@
         </div>
     </template>
 
+    <template id="page_confirm_unsubscribe" name="Confirm Unsubscribe">
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.confirm_unsubscribe"/>
+        </t>
+    </template>
     <template id="page_unsubscribe" name="Unsubscribe">
         <t t-call="mass_mailing.layout">
             <t t-call="mass_mailing.unsubscribe"/>

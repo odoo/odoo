@@ -33,6 +33,31 @@ class MassMailController(http.Controller):
         self.mailing(mailing_id, email=email, res_id=res_id, token=token, **post)
         return Response(status=200)
 
+    @http.route(['/mail/mailing/<int:mailing_id>/confirm_unsubscribe'], type='http', website=True, auth='public')
+    def mailing_confirm_unsubscribe(self, mailing_id, email=None, res_id=None, token="", **post):
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
+        unsubscribed_list = ''
+        # Display list name if list is public
+        if mailing.mailing_model_real == 'mailing.contact':
+            unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
+
+        template = request.env.ref('mass_mailing.page_confirm_unsubscribe',raise_if_not_found=False)
+        if template:
+            return request.render('mass_mailing.page_confirm_unsubscribe', {
+                        'token': token,
+                        'email': email,
+                        'mailing_id': mailing_id,
+                        'unsubscribed_list': unsubscribed_list,
+                        'res_id': res_id,
+                    })
+        else:
+            return self.mailing_confirm_unsubscribe_post(mailing_id, email, res_id, token)
+
+    @http.route(['/mail/mailing/confirm_unsubscribe'], type='http', website=True, auth='public', methods=['POST'])
+    def mailing_confirm_unsubscribe_post(self, mailing_id=None, email=None, res_id=None, token="", **post):
+        url = f'/mail/mailing/{mailing_id}/unsubscribe?email={email}&res_id={res_id}&token={token}'
+        return request.redirect(url)
+
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
