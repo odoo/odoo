@@ -2210,6 +2210,10 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    setKeepCellSelected(label) {
+        this.keepCellSelected = label;
+    }
+
     /**
      * Applies the given command to the current selection. This does *NOT*:
      * 1) update the history cursor
@@ -2402,10 +2406,11 @@ export class OdooEditor extends EventTarget {
         // Get the top table ancestors at range bounds.
         const startTable = ancestors(range.startContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
         const endTable = ancestors(range.endContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
-        if (startTd !== endTd && startTable === endTable) {
+        if ((startTd !== endTd || this.keepCellSelected) && startTable && startTable === endTable) {
             if (!closestElement(startTable, '[data-oe-protected="true"]')) {
-                // The selection goes through at least two different cells ->
-                // select cells.
+                // Select cells if the selection goes through at least two
+                // different cells or if keepCellSelected is true to prevent
+                // closing color-palette if color is applied to single cell.
                 this._selectTableCells(range);
                 appliedCustomSelection = true;
             }
@@ -4370,6 +4375,7 @@ export class OdooEditor extends EventTarget {
     _onMouseDown(ev) {
         this._currentMouseState = ev.type;
         this._lastMouseClickPosition = [ev.x, ev.y];
+        this.setKeepCellSelected(false);
 
         if (this.canActivateContentEditable) {
             this._activateContenteditable();
