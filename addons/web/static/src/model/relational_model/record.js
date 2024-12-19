@@ -539,7 +539,9 @@ export class Record extends DataPoint {
         this._savePoint = undefined;
         this._setEvalContext();
         this._invalidFields.clear();
-        this._closeInvalidFieldsNotification();
+        if (this._closeInvalidFieldsNotification) {
+            this._closeInvalidFieldsNotification();
+        }
         this._closeInvalidFieldsNotification = () => {};
         this._restoreActiveFields();
     }
@@ -1128,9 +1130,15 @@ export class Record extends DataPoint {
             return;
         }
         if (this.selected && this.model.multiEdit && !this._invalidFields.has(fieldName)) {
+            this._invalidFields.add(fieldName);
+
             await this.model.dialog.add(AlertDialog, {
                 body: _t("No valid record to save"),
                 confirm: async () => {
+                    await this.discard();
+                    this.switchMode("readonly");
+                },
+                dismiss: async () => {
                     await this.discard();
                     this.switchMode("readonly");
                 },
