@@ -147,7 +147,7 @@
                     <field name="show_lots_m2o" invisible="1"/>
                     <field name="product_qty" invisible="1"/>
                     <field name="quantity" invisible="1"/>
-                    <group>
+                    <group name="product_qty">
                         <group>
                             <field name="product_id" readonly="id or move_line_ids"/>
                             <label for="product_uom_qty"/>
@@ -218,6 +218,7 @@
                     <field name="state" column_invisible="True"/>
                     <field name="is_locked" column_invisible="True"/>
                     <field name="picking_code" column_invisible="True"/>
+                    <field name="picked" column_invisible="True"/>
                     <field name="quantity" string="Quantity" readonly="(state == 'done' and is_locked) or (package_level_id and parent.picking_type_entire_packs)" sum="Quantity"/>
                     <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
                         readonly="(package_level_id and parent.picking_type_entire_packs) or (state == 'done' and id)"/>
