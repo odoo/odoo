@@ -138,7 +138,11 @@ paymentForm.include({
      */
     _xenditHandleResponse(err, token, processingValues) {
         if (err) {
-            this._displayErrorDialog(_t("Payment processing failed"), err.message);
+            let errMessage = err.message;
+            if (err.errors) {
+                errMessage += _t(" Details:") + `\n${err.errors.map(el => el.message).join('\n')}`;
+            }
+            this._displayErrorDialog(_t("Payment processing failed"), errMessage);
             this._enableButton();
             return;
         }
