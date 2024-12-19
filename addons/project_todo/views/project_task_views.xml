@@ -102,19 +102,15 @@
                   js_class="todo_form">
                 <field name="name" invisible="1"/>
                 <header>
-                    <div class="py-1 px-2 border rounded bg-view">
-                        <field name="tag_ids"
-                               widget="many2many_tags"
-                               options="{'color_field': 'color', 'no_create_edit': True}"
-                               class="me-2"
-                               placeholder="Tags"/>
-                    </div>
-                    <div class="py-1 px-2 border rounded bg-view">
-                        <field name="user_ids"
-                               widget="many2many_avatar_user"
-                               options="{'no_quick_create': True}"
-                               placeholder="Assignees"/>
-                    </div>
+                    <field name="tag_ids"
+                           widget="many2many_tags"
+                           options="{'color_field': 'color', 'no_create_edit': True}"
+                           class="me-2"
+                           placeholder="Tags"/>
+                    <field name="user_ids"
+                           widget="many2many_avatar_user"
+                           options="{'no_quick_create': True}"
+                           placeholder="Assignees"/>
                     <field name="personal_stage_type_id"
                            domain="[('user_id','=',uid)]"
                            widget="statusbar"
