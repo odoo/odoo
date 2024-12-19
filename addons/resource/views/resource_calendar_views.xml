@@ -20,12 +20,6 @@
             <form string="Working Time">
                 <field name="two_weeks_calendar" invisible="1"/>
                 <header>
-                    <button name="switch_calendar_type" invisible="two_weeks_calendar or flexible_hours" string="Switch to 2 weeks calendar" type="object"
-                        confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
-                        confirm-label="Switch"/>
-                    <button name="switch_calendar_type" invisible="not two_weeks_calendar" string="Switch to 1 week calendar" type="object"
-                        confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
-                        confirm-label="Switch"/>
                 </header>
                 <sheet string="Working Time">
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -52,26 +46,190 @@
                     </div>
                     <group name="resource_details" col="2">
                         <group name="resource_working_hours">
-                            <field name="flexible_hours"/>
+                            <field name="schedule_type" widget="radio"/>
+                            <field name="flexible_hours" invisible="1"/>
                             <label for="full_time_required_hours" invisible="flexible_hours"/>
                             <label for="full_time_required_hours" string="Hours per Week" invisible="not flexible_hours"/>
                             <div>
-                                <field name="full_time_required_hours" style="width: 10%" widget="float_time"/>
+                                <field name="full_time_required_hours" style="width: 10%" widget="float_time" readonly="company_id"/>
                                 <span> hours/week</span>
                             </div>
-                            <field name="hours_per_day" widget="float_time" readonly="not flexible_hours"/>
                         </group>
-                        <group name="resource_company">
-                            <field name="active" invisible="1"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
-                            <field name="tz_offset" invisible="1"/>
+                        <group>
+                            <group name="resource_company">
+                                <field name="active" invisible="1"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
+                                <field name="tz_offset" invisible="1"/>
+                                <div invisible="schedule_type != 'fully_fixed'" class="d-flex align-items-center">
+                                    <button name="switch_calendar_type"
+                                            type="object"
+                                            string=""
+                                            class="btn"
+                                            confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
+                                            confirm-label="Switch">
+                                        <i class="fa fa-square-o" title="Switch to 2 weeks calendar" invisible="two_weeks_calendar"/>
+                                        <i class="fa fa-check-square" title="Switch to 1 week calendar" invisible="not two_weeks_calendar"/>
+                                    </button>
+                                    <span>2 Weeks Calendar</span>
+                                </div>
+                                <field name="hours_per_day" widget="float_time" invisible="schedule_type != 'flexible'"/>
+                            </group>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Working Hours" name="working_hours" invisible="flexible_hours">
+                        <page string="Working Hours" name="working_hours" invisible="flexible_hours or two_weeks_calendar">
+                            <group name="weekly_schedule">
+                                <group>
+                                    <field name="hours_per_day" widget="float_time" readonly="schedule_type != 'fixed_time' or fixed_time_with_hours"/>
+                                </group>
+                            </group>
+                            <field name="attendance_ids" invisible="schedule_type == 'fixed_time'"/>
+                            <div invisible="schedule_type != 'fixed_time'">
+                                Check the days of the week the employee will be working 
+                                <div class="d-flex align-items-baseline">
+                                    <div class="w-25">
+                                        <button name="toggle_monday"
+                                                type="object"
+                                                string=""
+                                                class="btn">
+                                            <i class="fa fa-square-o" title="Toggel ON" invisible="monday"/>
+                                            <i class="fa fa-check-square" title="Toggel Off" invisible="not monday"/>
+                                        </button>
+                                        <span class="me-2">Monday</span>
+                                    </div>
+                                    <div>
+                                    
+                                        <label for="monday_hours" class="me-2">Amount of hours</label>
+                                        <field name="monday_hours" string="Amount of hours" invisible="not fixed_time_with_hours"/>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-baseline">
+                                    <div class="w-25">
+                                        <button name="toggle_tuesday"
+                                                type="object"
+                                                string=""
+                                                class="btn">
+                                            <i class="fa fa-square-o" title="Toggel ON" invisible="tuesday"/>
+                                            <i class="fa fa-check-square" title="Toggel Off" invisible="not tuesday"/>
+                                        </button>
+                                        <span class="me-2">Tuesday</span>
+                                    </div>
+                                    <div>
+                                    
+                                        <label for="tuesday_hours" class="me-2">Amount of hours</label>
+                                        <field name="tuesday_hours" string="Amount of hours" invisible="not fixed_time_with_hours"/>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-baseline">
+                                    <div class="w-25">
+                                        <button name="toggle_wednesday"
+                                                type="object"
+                                                string=""
+                                                class="btn">
+                                            <i class="fa fa-square-o" title="Toggel ON" invisible="wednesday"/>
+                                            <i class="fa fa-check-square" title="Toggel Off" invisible="not wednesday"/>
+                                        </button>
+                                        <span class="me-2">Wednesday</span>
+                                    </div>
+                                    <div>
+                                    
+                                        <label for="wednesday_hours" class="me-2">Amount of hours</label>
+                                        <field name="wednesday_hours" string="Amount of hours" invisible="not fixed_time_with_hours"/>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-baseline">
+                                    <div class="w-25">
+                                        <button name="toggle_thursday"
+                                                type="object"
+                                                string=""
+                                                class="btn">
+                                            <i class="fa fa-square-o" title="Toggel ON" invisible="thursday"/>
+                                            <i class="fa fa-check-square" title="Toggel Off" invisible="not thursday"/>
+                                        </button>
+                                        <span class="me-2">Thursday</span>
+                                    </div>
+                                    <div>
+                                    
+                                        <label for="thursday_hours" class="me-2">Amount of hours</label>
+                                        <field name="thursday_hours" string="Amount of hours" invisible="not fixed_time_with_hours"/>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-baseline">
+                                    <div class="w-25">
+                                        <button name="toggle_friday"
+                                                type="object"
+                                                string=""
+                                                class="btn">
+                                            <i class="fa fa-square-o" title="Toggel ON" invisible="friday"/>
+                                            <i class="fa fa-check-square" title="Toggel Off" invisible="not friday"/>
+                                        </button>
+                                        <span class="me-2">Friday</span>
+                                    </div>
+                                    <div>
+                                    
+                                        <label for="friday_hours" class="me-2">Amount of hours</label>
+                                        <field name="friday_hours" string="Amount of hours" invisible="not fixed_time_with_hours"/>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-baseline">
+                                    <div class="w-25">
+                                        <button name="toggle_saturday"
+                                                type="object"
+                                                string=""
+                                                class="btn">
+                                            <i class="fa fa-square-o" title="Toggel ON" invisible="saturday"/>
+                                            <i class="fa fa-check-square" title="Toggel Off" invisible="not saturday"/>
+                                        </button>
+                                        <span class="me-2">Saturday</span>
+                                    </div>
+                                    <div>
+                                    
+                                        <label for="saturday_hours" class="me-2">Amount of hours</label>
+                                        <field name="saturday_hours" string="Amount of hours" invisible="not fixed_time_with_hours"/>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-baseline">
+                                    <div class="w-25">
+                                        <button name="toggle_sunday"
+                                                type="object"
+                                                string=""
+                                                class="btn">
+                                            <i class="fa fa-square-o" title="Toggel ON" invisible="sunday"/>
+                                            <i class="fa fa-check-square" title="Toggel Off" invisible="not sunday"/>
+                                        </button>
+                                        <span class="me-2">Sunday</span>
+                                    </div>
+                                    <div>
+                                    
+                                        <label for="sunday_hours" class="me-2">Amount of hours</label>
+                                        <field name="sunday_hours" string="Amount of hours" invisible="not fixed_time_with_hours"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div>
+                                <label for="fixed_time_with_hours" class="me-2">I want to define specific amount of hours for the selected days</label>
+                                <field name="fixed_time_with_hours" string="I want to define specific amount of hours for the selected days"/>
+                            </div>
+                        </page>
+                        <page string="Working Hours_1st_week" name="working_hours_1st_week" invisible="not two_weeks_calendar">
+                            <group name="weekly_schedule">
+                                <group>
+                                    <field name="hours_per_day" widget="float_time" readonly="1"/>
+                                </group>
+                            </group>
                             <field name="two_weeks_explanation" invisible="not two_weeks_calendar"/>
-                            <field name="attendance_ids" widget="section_one2many"/>
+                            <field name="attendance_ids_1st_week" /> 
+                        </page>
+                        <page string="Working Hours_2nd_week" name="working_hours_2nd_week" invisible="not two_weeks_calendar">
+                            <field name="two_weeks_explanation" invisible="not two_weeks_calendar"/>
+                            <field name="attendance_ids_2nd_week" /> 
                         </page>
                     </notebook>
                 </sheet>
