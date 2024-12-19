@@ -60,7 +60,6 @@ test("Pivot with a type different of ODOO is not converted", async function () {
                 formulaId: "1",
                 colGroupBys: ["foo"],
                 rowGroupBys: ["bar"],
-                sortedColumn: null,
             },
         },
     };
@@ -137,6 +136,28 @@ test("computed format is exported", async function () {
 
 test("odoo charts are replaced with an image", async function () {
     const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+    const data = await freezeOdooData(model);
+    expect(data.sheets[0].figures.length).toBe(1);
+    expect(data.sheets[0].figures[0].tag).toBe("image");
+});
+
+test("geo charts are replaced with an image", async function () {
+    const { model } = await createSpreadsheetWithList({
+        modelConfig: { external: { geoJsonService: { getAvailableRegions: () => [] } } },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    model.dispatch("CREATE_CHART", {
+        sheetId,
+        id: "1",
+        definition: {
+            type: "geo",
+            dataSets: [],
+            dataSetsHaveTitle: false,
+            title: {},
+            legendPosition: "none",
+        },
+    });
+
     const data = await freezeOdooData(model);
     expect(data.sheets[0].figures.length).toBe(1);
     expect(data.sheets[0].figures[0].tag).toBe("image");

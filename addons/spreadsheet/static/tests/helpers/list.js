@@ -42,6 +42,7 @@ export function insertListInSpreadsheet(model, params) {
  * @param {number} [params.linesNumber]
  * @param {[number, number]} [params.position]
  * @param {string} [params.sheetId]
+ * @param {object} [params.modelConfig]
  *
  * @returns { Promise<{ model: OdooSpreadsheetModel, env: Object }>}
  */
@@ -49,6 +50,7 @@ export async function createSpreadsheetWithList(params = {}) {
     const model = await createModelWithDataSource({
         mockRPC: params.mockRPC,
         serverData: params.serverData,
+        modelConfig: params.modelConfig,
     });
 
     insertListInSpreadsheet(model, {
