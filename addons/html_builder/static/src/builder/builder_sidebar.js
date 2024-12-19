@@ -20,9 +20,9 @@ import { HandleDirtyElementPlugin } from "./plugins/handle_dirty_element_plugin"
 import { MediaWebsitePlugin } from "./plugins/media_website_plugin";
 import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
 import { SnippetModel } from "./snippet_model";
-import { BlockTab, blockTab } from "./snippets_menu_tabs/block_tab";
-import { CustomizeTab, customizeTab } from "./snippets_menu_tabs/customize_tab";
-import { InvisibleElementsPanel } from "./snippets_menu_tabs/invisible_elements_panel";
+import { BlockTab, blockTab } from "./sidebar_builder_tabs/block_tab";
+import { CustomizeTab, customizeTab } from "./sidebar_builder_tabs/customize_tab";
+import { InvisibleElementsPanel } from "./sidebar_builder_tabs/invisible_elements_panel";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
