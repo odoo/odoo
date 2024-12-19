@@ -8,13 +8,6 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string="Product">
-                <header>
-                    <button string="Print Labels"
-                        type="object"
-                        name="action_open_label_layout"
-                        invisible="type == 'service'"
-                    />
-                </header>
                 <sheet name="product_form">
                     <field name='product_variant_count' invisible='1'/>
                     <field name='is_product_variant' invisible='1'/>
@@ -329,14 +322,6 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form string="Variant Information" duplicate="false">
-                    <header>
-                        <field name="type" invisible="1"/>
-                        <button string="Print Labels"
-                            type="object"
-                            name="action_open_label_layout"
-                            invisible="type == 'service'"
-                        />
-                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -434,9 +419,6 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Product Variants" multi_edit="1" duplicate="false" sample="1" default_order="is_favorite desc, default_code, name, id">
-                <header>
-                    <button string="Print Labels" type="object" name="action_open_label_layout"/>
-                </header>
                     <field name="is_favorite" widget="boolean_favorite" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
@@ -629,6 +611,17 @@
               </p>
             </field>
         </record>
+
+    <record id="action_product_print_labels" model="ir.actions.server">
+        <field name="name">Print Labels</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_open_label_layout()
+        </field>
+    </record>
 
     <record id="action_product_price_list_report" model="ir.actions.server">
         <field name="name">Pricelist Report</field>

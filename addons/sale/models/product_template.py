@@ -81,13 +81,10 @@ class ProductTemplate(models.Model):
         return tooltip
 
     def _prepare_invoicing_tooltip(self):
-        if self.invoice_policy == 'delivery':
+        if self.invoice_policy == 'delivery' and self.type != 'consu':
             return _("Invoice after delivery, based on quantities delivered, not ordered.")
-        elif self.invoice_policy == 'order':
-            if self.type == 'consu':
-                return _("You can invoice goods before they are delivered.")
-            elif self.type == 'service':
-                return _("Invoice ordered quantities as soon as this service is sold.")
+        elif self.invoice_policy == 'order' and self.type == 'service':
+            return _("Invoice ordered quantities as soon as this service is sold.")
         return ""
 
     def _prepare_service_tracking_tooltip(self):

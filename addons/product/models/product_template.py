@@ -576,6 +576,8 @@ class ProductTemplate(models.Model):
     #=== ACTION METHODS ===#
 
     def action_open_label_layout(self):
+        if any(product_tmpl.type == 'service' for product_tmpl in self):
+            raise ValidationError(_('Labels cannot be printed for products of service type'))
         action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
         action['context'] = {'default_product_tmpl_ids': self.ids}
         return action
