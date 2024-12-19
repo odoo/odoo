@@ -291,11 +291,9 @@ export const PublicRoot = publicWidget.Widget.extend({
         this.startFromEventHandler = true;
         try {
             await this._startWidgets(ev.data.$target, ev.data.options);
-            ev.data.onSuccess();
+            ev.data.onSuccess?.();
         } catch (e) {
-            if (ev.data.onFailure) {
-                ev.data.onFailure(e);
-            }
+            ev.data.onFailure?.(e);
             if (!(e instanceof RPCError)) {
                 throw e;
             }
