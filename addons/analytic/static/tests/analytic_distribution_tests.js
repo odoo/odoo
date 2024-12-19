@@ -381,11 +381,13 @@ QUnit.module("Analytic", (hooks) => {
         // fill internal
         triggerHotkey("Tab");  // new line
         await nextTick();
-        triggerHotkey("arrowdown");
-        await nextTick();
-        triggerHotkey("arrowdown");
-        await nextTick();
-        triggerHotkey("Enter");  // choose Operating Costs
+        const autocomplete = document.activeElement.parentNode;
+        // choose Operating Costs
+        while (autocomplete.querySelector("a[aria-selected='true']")?.textContent !== "Operating Costs") {
+            triggerHotkey("arrowdown");
+            await nextTick();
+        }
+        triggerHotkey("Enter");  // validate
         await nextTick();
         triggerHotkey("Escape");  // close the popup
         await nextTick();
