@@ -1,16 +1,11 @@
 import { expect, test } from "@odoo/hoot";
-import { hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { drag, hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
-import {
-    makeMockEnv,
-    mockService,
-    mountWithCleanup,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { makeMockEnv, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
 import { popoverService } from "@web/core/popover/popover_service";
+import { SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service";
 
 const OPEN_DELAY = 400; // Default opening delay time
 
@@ -301,11 +296,8 @@ test("tooltip does not crash with disappearing target", async () => {
 });
 
 test.tags("desktop");
-test("tooltip using the mouse with a touch enabled device", async () => {
-    // Cannot use mockTouch(), because we don't want hoot to trigger touch events
-    patchWithCleanup(browser, {
-        ontouchstart: null,
-    });
+test("tooltip using touch enabled device", async () => {
+    mockTouch(true);
 
     class MyComponent extends Component {
         static props = ["*"];
@@ -315,9 +307,11 @@ test("tooltip using the mouse with a touch enabled device", async () => {
     await mountWithCleanup(MyComponent);
     expect(".o_popover").toHaveCount(0);
 
-    await hover(".mybtn");
+    const { drop } = await drag(".mybtn");
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
+
+    await advanceTime[SHOW_AFTER_DELAY];
 
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
@@ -327,16 +321,16 @@ test("tooltip using the mouse with a touch enabled device", async () => {
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
 
-    await leave();
+    await drop();
     await animationFrame();
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover").toHaveCount(1);
 });
 
 test.tags("mobile");
 test("touch rendering - hold-to-show", async () => {
     class MyComponent extends Component {
         static props = ["*"];
-        static template = xml`<button data-tooltip="hello">Action</button>`;
+        static template = xml`<button class="m-2" data-tooltip="hello">Action</button>`;
     }
 
     await mountWithCleanup(MyComponent);
@@ -351,6 +345,10 @@ test("touch rendering - hold-to-show", async () => {
 
     await pointerUp("button");
     await runAllTimers();
+    expect(".o_popover").toHaveCount(1);
+
+    await pointerDown(document.body);
+    await animationFrame();
     expect(".o_popover").toHaveCount(0);
 });
 
@@ -378,6 +376,10 @@ test("touch rendering - tap-to-show", async () => {
     expect(".o_popover").toHaveCount(1);
 
     await pointerDown("button[data-tooltip]");
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+
+    await pointerDown(document.body);
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 });
