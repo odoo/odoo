@@ -25,9 +25,13 @@ export class EventScanView extends Component {
         this.eventId = default_event_id || (active_model === "event.event" && active_id);
         this.isMultiEvent = !this.eventId;
         this.isDisplayStandalone = isDisplayStandalone();
+        this.isBarcodeScanner = false;
 
         const barcode = useService("barcode");
-        useBus(barcode.bus, "barcode_scanned", (ev) => this.onBarcodeScanned(ev.detail.barcode));
+        useBus(barcode.bus, "barcode_scanned", (ev) => {
+            this.isBarcodeScanner = true;
+            this.onBarcodeScanned(ev.detail.barcode)
+        });
 
         onWillStart(this.onWillStart);
     }
@@ -94,6 +98,10 @@ export class EventScanView extends Component {
      * from the dialog.
      */
     async doNextScan() {
+        if (this.isBarcodeScanner) {
+            this.isBarcodeScanner = false;
+            return;
+        }
         let error = null;
         let barcode = null;
         try {
