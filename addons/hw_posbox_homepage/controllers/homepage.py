@@ -147,7 +147,7 @@ class IotBoxOwlHomePage(http.Controller):
             'name': device.device_name,
             'value': str(device.data['value']),
             'type': device.device_type,
-            'identifer': device.device_identifier
+            'identifier': device.device_identifier
         } for device in iot_devices.values()]
         device_type_key = lambda device: device['type']
         grouped_devices = {
