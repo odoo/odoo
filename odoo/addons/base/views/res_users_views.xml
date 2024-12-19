@@ -203,8 +203,16 @@
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
                             <field name="email" invisible="1"/><!-- needed to update partner's email from on_change_login() -->
-                            <label for="login" string="Email Address"/>
-                            <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
+                            <div class="d-flex">
+                                <div class="col-7 me-5">
+                                    <label for="login" string="Email Address"/>
+                                    <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
+                                </div>
+                                <div class="col-3 ms-5 w-100">
+                                    <label for="phone" string="Phone"/>
+                                    <h2><field name="phone" placeholder="e.g. 555-1234" widget="phone"/></h2>
+                                </div>
+                            </div>
                             <group>
                                 <field name="partner_id" groups="base.group_no_one"
                                         readonly="1"
@@ -432,6 +440,7 @@
                             <group name="preferences">
                                 <group>
                                     <field name="email" widget="email" readonly="0"/>
+                                    <field name="phone"/>
                                 </group>
                                 <group>
                                     <label for="lang"/>
