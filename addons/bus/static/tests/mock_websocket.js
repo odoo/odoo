@@ -79,7 +79,7 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
     patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
     websocketWorker = websocketWorker || new WebsocketWorker();
     websocketWorker.INITIAL_RECONNECT_DELAY = 0;
-    websocketWorker.RECONNECT_JITTER = 0;
+    websocketWorker.RECONNECT_JITTER = 5;
     patchWithCleanup(browser, {
         SharedWorker: function () {
             const sharedWorker = new SharedWorkerMock(websocketWorker);

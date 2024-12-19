@@ -14,7 +14,12 @@ import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
 import { registry } from "@web/core/registry";
 import { deepEqual } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
+<<<<<<< master
 import { patchWebsocketWorkerWithCleanup } from "./mock_websocket";
+||||||| ba8c46ec724f1f0e0f372b311975b0f10d7b3def
+=======
+import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
+>>>>>>> c4e4c59995ddf45c983893ddcd52ad5bedb5d4f9
 
 patch(busService, {
     _onMessage(id, type, payload) {
@@ -221,6 +226,7 @@ export function waitNotifications(...expectedNotifications) {
 }
 
 /**
+<<<<<<< master
  * Returns a deferred that resolves when an event matching the given type is
  * received by the websocket worker.
  *
@@ -275,4 +281,57 @@ export function lockBusServiceStart() {
         },
     });
     return () => unlockDeferred.resolve();
+||||||| ba8c46ec724f1f0e0f372b311975b0f10d7b3def
+=======
+ * Lock the bus service start process until the returned function is called.
+ * This is useful in tests where an environment is mounted and the bus service
+ * is started immediately. However, some tests need to wait in order to setup
+ * their listeners.
+ *
+ * @returns {Function} A function that can be used to unlock the bus service
+ * start process.
+ */
+export function lockBusServiceStart() {
+    const unlockDeferred = new Deferred();
+    patchWithCleanup(busService, {
+        start() {
+            const API = super.start(...arguments);
+            patch(API, {
+                async start() {
+                    await unlockDeferred;
+                    return super.start(...arguments);
+                },
+            });
+            return API;
+        },
+    });
+    return () => unlockDeferred.resolve();
+}
+
+/**
+ *  Lock the websocket connection until the returned function is called. Usefull
+ *  to simulate server being unavailable.
+ *
+ * @returns {Function} A function that can be used to unlock the websocket
+ * connection.
+ */
+export function lockWebsocketConnect() {
+    let locked = true;
+    const ogSocket = window.WebSocket;
+    patchWithCleanup(window, {
+        WebSocket: function () {
+            const ws = locked ? new EventTarget() : new ogSocket(...arguments);
+            if (locked) {
+                queueMicrotask(() => {
+                    ws.dispatchEvent(new Event("error"));
+                    ws.dispatchEvent(
+                        new CloseEvent("close", { code: WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE })
+                    );
+                });
+            }
+            return ws;
+        },
+    });
+    return () => (locked = false);
+>>>>>>> c4e4c59995ddf45c983893ddcd52ad5bedb5d4f9
 }
