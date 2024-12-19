@@ -70,21 +70,19 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "formatFontSize",
-                run: ({ size }) => {
-                    return this.formatSelection("fontSize", {
+                run: ({ size }) =>
+                    this.formatSelection("fontSize", {
                         applyStyle: true,
                         formatProps: { size },
-                    });
-                },
+                    }),
             },
             {
                 id: "formatFontSizeClassName",
-                run: ({ className }) => {
-                    return this.formatSelection("setFontSizeClassName", {
+                run: ({ className }) =>
+                    this.formatSelection("setFontSizeClassName", {
                         applyStyle: true,
                         formatProps: { className },
-                    });
-                },
+                    }),
             },
             {
                 id: "removeFormat",
@@ -202,6 +200,7 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(...args) {
+        this.delegateTo("format_selection_overrides", ...args);
         if (this._formatSelection(...args)) {
             this.dependencies.history.addStep();
         }
@@ -240,6 +239,17 @@ export class FormatPlugin extends Plugin {
                         isContentEditable(n)
                 )
         );
+        const unformattedTextNodes = selectedNodes.filter((n) => {
+            const listItem = closestElement(n, "li");
+            if (listItem && this.dependencies.selection.isNodeContentsFullySelected(listItem)) {
+                const hasFontSizeStyle =
+                    formatName === "setFontSizeClassName"
+                        ? listItem.classList.contains(formatProps?.className)
+                        : listItem.style.fontSize;
+                return !hasFontSizeStyle;
+            }
+            return true;
+        });
 
         const selectedFieldNodes = new Set(
             this.dependencies.selection
@@ -248,7 +258,7 @@ export class FormatPlugin extends Plugin {
                 .filter(Boolean)
         );
         const formatSpec = formatsSpecs[formatName];
-        for (const node of selectedNodes) {
+        for (const node of unformattedTextNodes) {
             const inlineAncestors = [];
             /** @type { Node } */
             let currentNode = node;
@@ -291,7 +301,10 @@ export class FormatPlugin extends Plugin {
             if (firstBlockOrClassHasFormat && !applyStyle) {
                 formatSpec.addNeutralStyle &&
                     formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors));
-            } else if (!firstBlockOrClassHasFormat && applyStyle) {
+            } else if (
+                (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
+                applyStyle
+            ) {
                 const tag = formatSpec.tagName && this.document.createElement(formatSpec.tagName);
                 if (tag) {
                     node.after(tag);
@@ -300,16 +313,10 @@ export class FormatPlugin extends Plugin {
                     if (!formatSpec.isFormatted(tag, formatProps)) {
                         tag.after(node);
                         tag.remove();
-                        formatSpec.addStyle(
-                            getOrCreateSpan(node, inlineAncestors),
-                            formatProps
-                        );
+                        formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
                     }
                 } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
-                    formatSpec.addStyle(
-                        getOrCreateSpan(node, inlineAncestors),
-                        formatProps
-                    );
+                    formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
                 }
             }
         }
@@ -326,8 +333,8 @@ export class FormatPlugin extends Plugin {
             const siblings = [...zws.parentElement.childNodes];
             if (
                 !isBlock(zws.parentElement) &&
-                selectedNodes.includes(siblings[0]) &&
-                selectedNodes.includes(siblings[siblings.length - 1])
+                unformattedTextNodes.includes(siblings[0]) &&
+                unformattedTextNodes.includes(siblings[siblings.length - 1])
             ) {
                 zws.parentElement.setAttribute("data-oe-zws-empty-inline", "");
             } else {
@@ -338,8 +345,8 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        if (selectedNodes[0] && selectedNodes[0].textContent === "\u200B") {
-            this.dependencies.selection.setCursorStart(selectedNodes[0]);
+        if (unformattedTextNodes[0] && unformattedTextNodes[0].textContent === "\u200B") {
+            this.dependencies.selection.setCursorStart(unformattedTextNodes[0]);
         } else if (selectedNodes.length) {
             const firstNode = selectedNodes[0];
             const lastNode = selectedNodes[selectedNodes.length - 1];
@@ -538,9 +545,9 @@ function removeFormat(node, formatSpec) {
     }
 
     if (formatSpec.isTag && formatSpec.isTag(node)) {
-        const attributesNames = node.getAttributeNames().filter((name) => {
-            return name !== "data-oe-zws-empty-inline";
-        });
+        const attributesNames = node
+            .getAttributeNames()
+            .filter((name) => name !== "data-oe-zws-empty-inline");
         if (attributesNames.length) {
             // Change tag name
             const newNode = document.createElement("span");
