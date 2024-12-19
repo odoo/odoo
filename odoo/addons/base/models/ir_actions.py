@@ -738,8 +738,7 @@ class IrServerObjectLines(models.Model):
 
     @api.constrains('col1', 'evaluation_type')
     def _raise_many2many_error(self):
-        if self.filtered(lambda line: line.col1.ttype == 'many2many' and line.evaluation_type == 'reference'):
-            raise ValidationError(_('many2many fields cannot be evaluated by reference'))
+        pass  # TODO: remove in master
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
@@ -758,6 +757,9 @@ class IrServerObjectLines(models.Model):
                     expr = int(line.value)
                 except Exception:
                     pass
+            elif line.col1.ttype == 'many2many':
+                with contextlib.suppress(Exception):
+                    expr = [int(line.value)]
             elif line.col1.ttype == 'float':
                 with contextlib.suppress(Exception):
                     expr = float(line.value)
