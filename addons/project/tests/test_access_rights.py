@@ -85,6 +85,13 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
         self.task.invalidate_model()
         self.task.with_user(self.env.user).name
 
+    @users('Internal user')
+    def test_task_allowed_read_internal_read(self):
+        self.task.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.task.flush_model()
+        self.task.invalidate_model()
+        self.task.with_user(self.env.user).name
+
     @users('Internal user', 'Portal user')
     def test_task_no_write(self):
         with self.assertRaises(AccessError, msg="%s should not be able to write on the task" % self.env.user.name):
