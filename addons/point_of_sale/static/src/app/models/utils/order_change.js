@@ -24,10 +24,9 @@ export const changesToOrder = (
     return {
         new: toAdd,
         cancelled: toRemove,
+        noteUpdate: Object.values(orderChanges.noteUpdate),
         general_customer_note: orderChanges.general_customer_note,
-        generalNote: orderChanges.internal_note,
-        noteUpdated: Object.values(orderChanges.noteUpdated),
-        modeUpdate: orderChanges.modeUpdate,
+        internal_note: orderChanges.internal_note,
     };
 };
 
@@ -41,7 +40,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     const prepaCategoryIds = orderPreparationCategories;
     const oldChanges = order.last_order_preparation_change.lines;
     const changes = {};
-    const noteupdated = {};
+    const noteUpdate = {};
     let changesCount = 0;
     let changeAbsCount = 0;
     let skipCount = 0;
@@ -73,7 +72,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 basic_name: orderline.product_id.name,
                 isCombo: orderline.combo_item_id?.id,
                 product_id: product.id,
-                attribute_value_ids: orderline.attribute_value_ids,
+                attribute_value_ids: orderline.attribute_value_ids.map((a) => a.name),
                 quantity: quantityDiff,
                 note: note,
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
@@ -87,7 +86,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 changeAbsCount += Math.abs(quantityDiff);
                 if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
                     lineDetails.quantity = oldChanges[relatedKey].quantity;
-                    noteupdated[lineKey] = lineDetails;
+                    noteUpdate[lineKey] = lineDetails;
                 }
 
                 if (!orderline.skip_change) {
@@ -101,7 +100,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     // If only note updated
                     if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
                         lineDetails.quantity = orderline.qty;
-                        noteupdated[lineKey] = lineDetails;
+                        noteUpdate[lineKey] = lineDetails;
                         orderline.setHasChange(true);
                         changesCount += 1;
                     } else {
@@ -139,7 +138,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     const result = {
         nbrOfSkipped: skipCount,
         nbrOfChanges: changeAbsCount,
-        noteUpdated: noteupdated,
+        noteUpdate: noteUpdate,
         orderlines: changes,
         count: changesCount,
     };
@@ -152,10 +151,6 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     const lastInternalNote = order.last_order_preparation_change.internal_note || "";
     if (lastInternalNote !== order.internal_note) {
         result.internal_note = order.internal_note;
-    }
-    const sittingMode = order.last_order_preparation_change.sittingMode;
-    if (sittingMode !== order.preset_id?.id) {
-        result.modeUpdate = true;
     }
     return result;
 };

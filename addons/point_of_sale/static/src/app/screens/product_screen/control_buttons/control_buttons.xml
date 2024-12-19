@@ -15,8 +15,8 @@
             t-on-click="() => this.pos.selectPreset()">
             <span t-esc="currentOrder.preset_id?.name" />
         </button>
-        <button class="btn btn-secondary btn-lg flex-shrink-0 ms-auto" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
-            Actions
+        <button class="btn btn-secondary btn-lg flex-shrink-0 ms-auto more-btn" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
+            <i class="fa fa-ellipsis-v" aria-hidden="true" />
         </button>
         <!-- All these buttons will only be displayed in a dialog -->
         <t t-if="props.showRemainingButtons">

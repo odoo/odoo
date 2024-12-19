@@ -12,8 +12,8 @@
                     t-on-click="() => this.pos.selectPreset()">
                     <span t-esc="currentOrder.preset_id?.name" />
                 </button>
-                <button class="button mobile-more-button btn btn-secondary btn-lg flex-fill" t-if="props.onClickMore" t-on-click="props.onClickMore">
-                    <span>Actions</span>
+                <button class="button mobile-more-button btn btn-secondary btn-lg flex-fill ms-auto" t-if="props.onClickMore" t-on-click="props.onClickMore">
+                    <i class="fa fa-ellipsis-v" aria-hidden="true" />
                 </button>
             </div>
             <div t-if="props.showActionButton" class="validation d-flex gap-2">
