@@ -91,7 +91,6 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         # /!\ use the same journal as the invoice's one to import the attachment !
         invoice.journal_id.create_document_from_attachment(attachment.ids)
         new_invoice = self.env['account.move'].search([], order='id desc', limit=1)
-
         self.assertTrue(new_invoice)
         self.assert_same_invoice(invoice, new_invoice)
 
