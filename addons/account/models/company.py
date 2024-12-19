@@ -30,20 +30,20 @@ MONTH_SELECTION = [
     ('12', 'December'),
 ]
 
-INTEGRITY_HASH_BATCH_SIZE = 1000
-
 # List of countries where Peppol should be used by default.
+# !!! KEEP ALIGNED WITH ACCOUNT_PEPPOL MANIFEST -> COUNTRIES
 PEPPOL_DEFAULT_COUNTRIES = [
     'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
     'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
     'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
 ]
-
 # List of countries where Peppol is accessible.
 PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
     'AD', 'AL',  'BA', 'BG', 'GB', 'HR', 'HU', 'LI', 'MC', 'ME',
     'MK', 'RS', 'SK', 'SM', 'TR', 'VA',
 ]
+
+INTEGRITY_HASH_BATCH_SIZE = 1000
 
 SOFT_LOCK_DATE_FIELDS = [
     'fiscalyear_lock_date',

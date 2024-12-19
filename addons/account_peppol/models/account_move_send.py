@@ -1,8 +1,8 @@
 from base64 import b64encode
+
 from odoo import api, models, _
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-
 
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
@@ -25,24 +25,55 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
+        def peppol_partner(moves):
+            return moves.partner_id.commercial_partner_id
+
+        def filter_peppol_state(moves, state):
+            return peppol_partner(moves.filtered(
+                lambda m: peppol_partner(m).with_company(m.company_id).peppol_verification_state == state))
+
         alerts = super()._get_alerts(moves, moves_data)
-        if peppol_moves := moves.filtered(lambda m: 'peppol' in moves_data[m]['sending_methods']):
-            invalid_partners = peppol_moves.filtered(
-                lambda move: move.partner_id.commercial_partner_id.with_company(move.company_id).peppol_verification_state != 'valid'
-            ).partner_id.commercial_partner_id
-            ubl_warning_already_displayed = 'account_edi_ubl_cii_configure_partner' in alerts
-            if invalid_partners and not ubl_warning_already_displayed:
-                alerts['account_peppol_warning_partner'] = {
-                    'message': _("The following partners are not correctly configured to receive Peppol documents. "
-                                 "Please check and verify their Peppol endpoint and the Electronic Invoicing format"),
-                    'action_text': _("View Partner(s)"),
-                    'action': invalid_partners._get_records_action(name=_("Check Partner(s)")),
-                }
-            edi_modes = [move.company_id.account_edi_proxy_client_ids.filtered(lambda usr: usr.proxy_type == 'peppol').edi_mode for move in peppol_moves]
-            if any(edi_mode in ('test', 'demo') for edi_mode in edi_modes):
+        # Check for invalid peppol partners.
+        peppol_moves = moves.filtered(lambda m: 'peppol' in moves_data[m]['sending_methods'])
+        invalid_partners = filter_peppol_state(peppol_moves, 'not_valid_format')
+        if invalid_partners and not 'account_edi_ubl_cii_configure_partner' in alerts:
+            alerts['account_peppol_warning_partner'] = {
+                'message': _("Customer is on Peppol but did not enable receiving documents."),
+                'action_text': _("View Partner(s)"),
+                'action': invalid_partners._get_records_action(name=_("Check Partner(s)")),
+            }
+            edi_modes = set(
+                peppol_moves.company_id.account_edi_proxy_client_ids \
+                    .filtered(lambda usr: usr.proxy_type == 'peppol') \
+                    .mapped('edi_mode')
+            )
+            if edi_modes.intersection({'test', 'demo'}):
                 alerts['account_peppol_demo_test_mode'] = {
                     'message': _("Peppol is in testing/demo mode."),
                     'level': 'info',
+                }
+
+        # Check for not peppol partners that are on the network.
+        not_peppol_moves = moves.filtered(lambda m: 'peppol' not in moves_data[m]['sending_methods'])
+        if peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, 'valid'):
+            if len(peppol_not_selected_partners) == 1:
+                alerts['account_peppol_partner_want_peppol'] = {
+                    'message': _(
+                        "%s has requested electronic invoices reception on Peppol.",
+                         peppol_not_selected_partners.display_name
+                    ),
+                    'level': 'info',
+                    'action_text': _("Why should you use it ?"),
+                    'action': {
+                        'name': _("Why should I use PEPPOL ?"),
+                        'type': 'ir.actions.client',
+                        'tag': 'account_peppol.what_is_peppol',
+                        'target': 'new',
+                        'context': {
+                            'footer': False,
+                            'move_ids': moves.ids,
+                        },
+                    },
                 }
         return alerts
 
@@ -75,11 +106,13 @@ class AccountMoveSend(models.AbstractModel):
     def _is_applicable_to_move(self, method, move):
         # EXTENDS 'account'
         if method == 'peppol':
+            partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
             return all([
                 self._is_applicable_to_company(method, move.company_id),
-                move.partner_id.commercial_partner_id.with_company(move.company_id).is_peppol_edi_format,
+                partner.is_peppol_edi_format,
+                partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
-                move._need_ubl_cii_xml(move.partner_id.commercial_partner_id.with_company(move.company_id).invoice_edi_format)
+                move._need_ubl_cii_xml(partner.invoice_edi_format)
                 or move.ubl_cii_xml_id and move.peppol_move_state not in ('processing', 'done'),
             ])
         else:

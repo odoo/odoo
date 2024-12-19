@@ -5,83 +5,45 @@
         <field name="model">peppol.registration</field>
         <field name="groups_id" eval="[Command.link(ref('account.group_account_manager'))]"/>
         <field name="arch" type="xml">
-            <form>
+            <form class="form_peppol_registration">
                 <field name="company_id" invisible="1"/>
                 <sheet>
                     <div class="m-0" name="warnings" invisible="not peppol_warnings or account_peppol_proxy_state != 'not_registered'">
                         <field name="peppol_warnings" class="o_field_html" widget="actionable_errors"/>
                     </div>
 
-                    <group name="peppol_registration" invisible="account_peppol_proxy_state not in ('not_registered', 'in_verification')">
-                        <div colspan="2" class="text-muted mb-3">
-                            You need to register in order to Send Customer Invoices on the Peppol network.
-                        </div>
+                    <div name="peppol_registration" invisible="account_peppol_proxy_state not in ('not_registered', 'in_verification')">
+                        <p class="text-muted">Send electronic invoices, and receive bills automatically via Peppol</p>
+                        <group col="1">
+                            <group>
+                                <field name="smp_registration" string="Allow incoming invoices" widget="boolean_toggle"/>
+                                <field name="peppol_eas" nolabel="1" class="o_form_label"/>
+                                <field name="peppol_endpoint" nolabel="1" placeholder="Your endpoint"/>
+                                <field name="contact_email" string="Email"/>
+                                <field name="phone_number" required="edi_mode not in ('demo', 'test')" string="Your mobile"/>
+                            </group>
 
-                        <!-- Optional step: receiver registration fields -->
-                        <div name="receiver_registration" colspan="2" class="mb-4">
-                            <div colspan="2">
-                                <field colspan="2" name="smp_registration" nolabel="1"/>
-                                Check this box if you also need to receive vendor bills
-                            </div>
-                            <div colspan="2" invisible="not smp_registration">
-                                I want to migrate my existing Peppol connection to Odoo (optional):
-                                <field name="account_peppol_migration_key" class="oe_inline ms-2"/>
-                            </div>
-                        </div>
-
-                        <!-- business fields -->
-                        <field name="peppol_eas" string="E-Address Scheme"/>
-                        <field name="peppol_endpoint" string="Endpoint"/>
-                        <field name="contact_email" string="Email"/>
-
-                        <div colspan="2" class="row">
-                            <label for="phone_number" string="Phone" class="text-900 col-2"/>
-                            <field name="phone_number" required="edi_mode != 'demo'" class="col-2 w-25 ps-0"/>
-                            <div class="text-muted col">for validation purposes</div>
-                        </div>
-                        <div colspan="2" class="row mb-3" invisible="not phone_number or account_peppol_proxy_state == 'in_verification'">
-                            <div class="col-2"/>
-                            <button string="Send a registration code by SMS"
-                                    name="button_peppol_sender_registration"
-                                    type="object"
-                                    class="btn-link w-auto ps-0"
-                                    icon="fa-check"/>
-                        </div>
-
-                        <!-- The participant needs to fill in the SMS code they received -->
-                        <div colspan="2" name="kyc" invisible="account_peppol_proxy_state != 'in_verification'" class="mb-4">
-                            <div colspan="2" class="text-muted mt-3">
-                                Fill in the code below that we sent you by SMS to
-                                <field name="phone_number"
-                                       class="oe_inline"
-                                       nolabel="1"
-                                       readonly="account_peppol_proxy_state == 'in_verification'"/>
-                            </div>
-                            <div colspan="2" class="mt-1 ps-3 w-50">
-                                <field name="verification_code" widget="verification_code"/>
-                            </div>
-                        </div>
-
-                        <div colspan="2" class="row" invisible="account_peppol_proxy_state != 'not_registered'">
-                            <div class="text-muted col" invisible="edi_mode != 'prod'">
-                                By clicking the button below I accept that Odoo may process my e-invoices.
-                            </div>
-                            <div class="text-muted col" invisible="edi_mode != 'test'">
-                                Test mode allows sending e-invoices through the test Peppol network.
-                                By clicking the button below I accept that Odoo may process my e-invoices.
-                            </div>
-                            <div class="text-muted col" invisible="edi_mode != 'demo'">
-                                In demo mode sending invoices is simulated.
-                                There will be no communication with the Peppol network.
-                            </div>
-                        </div>
-                    </group>
-
-                    <footer>
-                        <widget name="peppol_settings_buttons"
-                                invisible="account_peppol_proxy_state in ('rejected', False)"/>
-                    </footer>
+                            <group invisible="account_peppol_proxy_state != 'not_registered'">
+                                <div class="text-muted col" invisible="edi_mode != 'prod'">
+                                    By clicking the button below I accept that Odoo may process my e-invoices.
+                                </div>
+                                <div class="text-muted col" invisible="edi_mode != 'test'">
+                                    Test mode allows sending e-invoices through the test Peppol network.
+                                    By clicking the button below I accept that Odoo may process my e-invoices.
+                                </div>
+                            </group>
+                        </group>
+                    </div>
                 </sheet>
+                <footer>
+                    <button string="Activate Peppol" name="button_register_peppol_participant" type="object"
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'prod'"/>
+                    <button string="Activate Peppol (Test)" name="button_register_peppol_participant" type="object"
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'test'"/>
+                    <button string="Activate Peppol (Demo)" name="button_register_peppol_participant" type="object"
+                            class="btn-primary" data-hotkey="q" invisible="edi_mode != 'demo'"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
             </form>
         </field>
     </record>
