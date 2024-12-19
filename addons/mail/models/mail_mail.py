@@ -57,6 +57,9 @@ class MailMail(models.Model):
     is_notification = fields.Boolean('Notification Email', help='Mail has been created to notify people of an existing mail.message')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
+    # note that email_{cc,to} are different from mail.message fields as mail.mail
+    # are also used for outgoing emails sharing the same mail_message_id but with
+    # different recipients
     email_to = fields.Text('To', help='Message recipients (emails)')
     email_cc = fields.Char('Cc', help='Carbon copy message recipients')
     recipient_ids = fields.Many2many('res.partner', string='To (Partners)',
