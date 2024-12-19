@@ -326,6 +326,15 @@ class PosOrder(models.Model):
     has_deleted_line = fields.Boolean(string='Has Deleted Line')
     order_edit_tracking = fields.Boolean(related="config_id.order_edit_tracking", readonly=True)
     available_payment_method_ids = fields.Many2many('pos.payment.method', related='config_id.payment_method_ids', string='Available Payment Methods', readonly=True, store=False)
+    invoice_status = fields.Selection([
+        ('invoiced', 'Fully Invoiced'),
+        ('to_invoice', 'To Invoice'),
+    ], string='Invoice Status', compute='_compute_invoice_status')
+
+    @api.depends('account_move')
+    def _compute_invoice_status(self):
+        for order in self:
+            order.invoice_status = 'invoiced' if len(order.account_move) else 'to_invoice'
 
     @api.depends('session_id')
     def _compute_order_config_id(self):
