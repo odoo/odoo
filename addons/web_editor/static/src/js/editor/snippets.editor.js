@@ -499,8 +499,8 @@ var SnippetEditor = publicWidget.Widget.extend({
                         // Consider layout-only elements (like bg-shapes) as empty
                         return el.matches(this.layoutElementsSelector);
                     }));
-                return isEmpty && !$el.hasClass('oe_structure')
-                    && !$el.parent().hasClass('carousel-item')
+                const notRemovableSelector = ".oe_structure, .carousel-item";
+                return isEmpty && !$el[0].matches(notRemovableSelector)
                     && (!editor || editor.isTargetParentEditable)
                     && !isUnremovable($el[0]);
             };
