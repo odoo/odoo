@@ -9,6 +9,7 @@ class PurchaseOrderLine(models.Model):
         return res
 
     def _get_po_line_invoice_lines_su(self):
+        #TODO remove in master: un-used
         po_line_invoices_lines = super()._get_po_line_invoice_lines_su()
         move = self.sudo().invoice_lines.move_id
         if move.landed_costs_ids.filtered(lambda lc: lc.state == 'done'):
