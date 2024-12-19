@@ -77,6 +77,60 @@ test("displays figures in first sheet", async () => {
     expect(".o-chart-container").toHaveCount(1);
 });
 
+test("scorecards are placed two per row", async () => {
+    const figure = { tag: "chart", height: 500, width: 500, x: 100, y: 100 };
+    const lineChartData = {
+        type: "line",
+        dataSetsHaveTitle: false,
+        dataSets: [{ dataRange: "A1" }],
+        legendPosition: "top",
+        verticalAxisPosition: "left",
+        title: { text: "" },
+    };
+    const scorecardChartData = {
+        type: "scorecard",
+        title: { text: "test" },
+        keyValue: "A1",
+        background: "#fff",
+        baselineMode: "absolute",
+    };
+    const spreadsheetData = {
+        sheets: [
+            {
+                id: "sheet1",
+                figures: [
+                    { ...figure, id: "figure1", data: scorecardChartData },
+                    { ...figure, id: "figure2", data: scorecardChartData },
+                    { ...figure, id: "figure3", data: scorecardChartData },
+                    { ...figure, id: "figure4", data: lineChartData },
+                ],
+            },
+        ],
+    };
+    const serverData = getDashboardServerData();
+    serverData.models["spreadsheet.dashboard.group"].records = [
+        { published_dashboard_ids: [789], id: 1, name: "Chart" },
+    ];
+    serverData.models["spreadsheet.dashboard"].records = [
+        {
+            id: 789,
+            name: "Spreadsheet with chart figure",
+            json_data: JSON.stringify(spreadsheetData),
+            spreadsheet_data: JSON.stringify(spreadsheetData),
+            dashboard_group_id: 1,
+        },
+    ];
+    await createSpreadsheetDashboard({ serverData });
+    const figureRows = queryAll(".o_figure_row");
+    expect(figureRows).toHaveLength(3);
+    expect(figureRows[0].querySelectorAll(".o-scorecard")).toHaveLength(2);
+
+    expect(figureRows[1].querySelectorAll(".o-scorecard")).toHaveLength(1);
+    expect(figureRows[1].querySelectorAll(".o_empty_figure")).toHaveLength(1);
+
+    expect(figureRows[2].querySelectorAll(".o-figure-canvas")).toHaveLength(1);
+});
+
 test("double clicking on a figure doesn't open the side panel", async () => {
     const figure = {
         tag: "chart",

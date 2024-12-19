@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="documents_spreadsheet.MobileFigureContainer">
-        <t t-if="!figures.length">
+        <t t-if="!figureRows.length">
             Only chart figures are displayed in small screens but this dashboard doesn't contain any
         </t>
-        <t
-            t-foreach="figures" t-as="figure"
-            t-component="getFigureComponent(figure)"
-            onFigureDeleted="() => {}"
-            figure="figure"
-            t-key="figure.id"/>
+        <t t-foreach="figureRows" t-as="figureRow" t-key="figureRow_index">
+            <div class="o_figure_row d-flex flex-row">
+                <t t-foreach="figureRow" t-as="figure" t-key="figure_index">
+                    <div t-if="figure.tag === 'empty'" class="o_empty_figure w-100 h-100"/>
+                    <t t-else="" figure="figure" t-component="getFigureComponent(figure)" onFigureDeleted="() => {}" />
+                </t>
+            </div>
+        </t>
     </t>
 </templates>
-
