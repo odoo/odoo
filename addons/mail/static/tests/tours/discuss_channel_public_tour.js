@@ -4,9 +4,6 @@ import { click, contains, inputFiles } from "@web/../tests/utils";
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     steps: () => [
         {
-            trigger: ".o-mail-Discuss",
-        },
-        {
             content: "Check that we are on channel page",
             trigger: ".o-mail-Thread",
             run() {

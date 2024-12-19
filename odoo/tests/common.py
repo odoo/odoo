@@ -1846,6 +1846,38 @@ class HttpCase(TransactionCase):
         # v8 api with correct xmlrpc exception handling.
         cls.xmlrpc_url = f'{cls.base_url()}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+        cls._allow_websocket_patcher = None
+        # with contextlib.suppress(ImportError):
+        #     from odoo.addons.bus.models.bus import BusBus
+        #     from odoo.addons.bus.websocket import WebsocketConnectionHandler
+        #     print("============= NO PATCH")
+        #     cls.env["bus.bus"]._sendone("hello_world", "hellow_world", {})
+        #     cls.env["bus.bus"]._sendone("hello_world", "hellow_world", {})
+        #     cls.env["bus.bus"]._sendone("hello_world", "hellow_world", {})
+
+        #     original_send_one = BusBus._sendone
+        #     def patched_send_one(self, target, notification_type, message):
+        #         print("==== in patched send one")
+        #         original_send_one(self, target, notification_type, message)
+        #         self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+        #         self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+        #     patched_send_one = patch.object(BusBus, "_sendone", patched_send_one)
+
+            # cls._allow_websocket_patcher = patch.object(
+            #     WebsocketConnectionHandler, "websocket_allowed", return_value=True
+            # )
+            # cls._allow_websocket_patcher.stop()
+
+            # original_send_one = BusBus._sendone
+
+            # def patched_send_one(self, target, notification_type, message):
+            #     original_send_one(self, target, notification_type, message)
+            #     self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+            #     self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+            # patched_send_one = patch.object(BusBus, "_sendone", patched_send_one)
+            # cls.startClassPatcher(patched_send_one)
 
     @classmethod
     def base_url(cls):
@@ -1867,6 +1899,9 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr), use_datetime=True)
         # setup an url opener helper
         self.opener = Opener(self.cr)
+        with contextlib.suppress(ImportError):
+            from odoo.addons.bus.websocket import CloseCode, _kick_all
+            self.addCleanup(partial(_kick_all, CloseCode.KILL_NOW))
 
     def parse_http_location(self, location):
         """ Parse a Location http header typically found in 201/3xx
@@ -2011,7 +2046,29 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
+        sendone_patch = None
+        websocket_allowed_patch = None
+        kick_all_websockets = None
         try:
+            with contextlib.suppress(ImportError):
+                from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
+                from odoo.addons.bus.models.bus import BusBus
+
+                kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
+                original_send_one = BusBus._sendone
+
+                def sendone_wrapper(self, target, notification_type, message):
+                    original_send_one(self, target, notification_type, message)
+                    self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+                    self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+                sendone_patch = patch.object(BusBus, "_sendone", sendone_wrapper)
+                websocket_allowed_patch = patch.object(
+                    WebsocketConnectionHandler, "websocket_allowed", return_value=True
+                )
+                sendone_patch.start()
+                websocket_allowed_patch.start()
+
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
@@ -2055,6 +2112,12 @@ class HttpCase(TransactionCase):
 
         finally:
             browser.stop()
+            if sendone_patch:
+                sendone_patch.stop()
+            if websocket_allowed_patch:
+                websocket_allowed_patch.stop()
+            if kick_all_websockets:
+                kick_all_websockets()
             self._wait_remaining_requests()
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
@@ -2075,6 +2138,8 @@ class HttpCase(TransactionCase):
         if options["delayToCheckUndeterminisms"] > 0:
             timeout = timeout + 1000 * options["delayToCheckUndeterminisms"]
             _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)
+
+
         return self.browser_js(url_path=url_path, code=code, ready=ready, timeout=timeout, success_signal="tour succeeded", **kwargs)
 
     def profile(self, **kwargs):
