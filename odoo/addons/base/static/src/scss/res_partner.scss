@@ -6,3 +6,16 @@
         --gutter-x: 0;
     }
 }
+.o_kanban_partner_footer div a:first-child{
+    padding-left: 0;
+}
+
+aside {
+    &.o_kanban_aside_left {
+        > * {
+            @include media-breakpoint-up(md) {
+                margin-left: var(--KanbanRecord-padding-h) !important;
+            }
+        }
+    }
+}

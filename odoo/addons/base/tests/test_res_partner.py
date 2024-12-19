@@ -380,7 +380,7 @@ class TestPartnerAddressCompany(TransactionCase):
 
         p1street = 'My Street, 11'
         p1.write({'street': p1street})
-        self.assertEqual(ghoststep.street, ghoststreet, 'Touching contact should never alter parent')
+        self.assertEqual(ghoststep.street, p1street, 'Address fields must be synced automatically')
 
     def test_address_first_contact_sync(self):
         """ Test initial creation of company/contact pair where contact address gets copied to
