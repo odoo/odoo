@@ -420,7 +420,7 @@ class DiscussChannel(models.Model):
             target._bus_send_store(custom_store, notification_type="discuss.channel/leave")
             return
         notification = Markup('<div class="o_mail_notification">%s</div>') % _(
-            "left the channel"
+            "%(user)s left the channel", user=member.partner_id.name
         )
         # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
         member.channel_id.sudo().message_post(
@@ -436,6 +436,19 @@ class DiscussChannel(models.Model):
                 "member_count",
             ],
         )
+
+    def _post_joined_message(self, member=None, partner=None):
+        if member and partner:
+            notification = (
+                _("%(user)s joined the thread", user=member.partner_id.name) if member.is_self and self.parent_channel_id
+                else _("%(user)s joined the channel", user=member.partner_id.name) if member.is_self
+                else _("%(user)s invited %(url)s to the channel", user=partner.name, url=member._get_html_link(for_persona=True))
+            )
+            member.channel_id.message_post(
+                body=Markup('<div class="o_mail_notification">%s</div>') % notification,
+                message_type="notification",
+                subtype_xmlid="mail.mt_comment",
+            )
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
@@ -476,9 +489,9 @@ class DiscussChannel(models.Model):
                 member._bus_send("discuss.channel/joined", payload)
                 if post_joined_message:
                     notification = (
-                        _("joined the channel")
-                        if member.is_self
-                        else _("invited %s to the channel", member._get_html_link(for_persona=True))
+                        _("%(user)s joined the thread", user=member.partner_id.name) if member.is_self and self.parent_channel_id
+                        else _("%(user)s joined the channel", user=member.partner_id.name) if member.is_self
+                        else _("%(user)s invited %(url)s to the channel", user=current_partner.name, url=member._get_html_link(for_persona=True))
                     )
                     member.channel_id.message_post(
                         body=Markup('<div class="o_mail_notification">%s</div>') % notification,
@@ -1194,7 +1207,8 @@ class DiscussChannel(models.Model):
         new_channel = self.create(vals)
         group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
         new_channel.group_public_id = group.id if group else None
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
+        current_partner, __ = self.env["res.partner"]._get_current_persona()
+        notification = Markup('<div class="o_mail_notification">%s</div>') % _("%(user)s created this channel.", user=current_partner.name)
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         self.env.user._bus_send_store(new_channel)
         return new_channel
