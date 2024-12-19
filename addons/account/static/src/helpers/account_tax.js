@@ -26,7 +26,7 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    batch_for_taxes_computation(taxes, { special_mode = false } = {}) {
+    batch_for_taxes_computation(taxes, { special_mode = null } = {}) {
         function sort_key(taxes) {
             return taxes.sort((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
         }
@@ -80,7 +80,7 @@ export const accountTaxHelpers = {
         return results;
     },
 
-    propagate_extra_taxes_base(taxes, tax, taxes_data, { special_mode = false } = {}) {
+    propagate_extra_taxes_base(taxes, tax, taxes_data, { special_mode = null } = {}) {
         function* get_tax_before() {
             for (const tax_before of taxes) {
                 if (taxes_data[tax.id].batch.includes(tax_before)) {
@@ -223,7 +223,7 @@ export const accountTaxHelpers = {
             // method because we have no way to deal with it automatically in this method since it depends of
             // the type of involved fields and we don't have access to this information js-side.
             product = null,
-            special_mode = false,
+            special_mode = null,
         } = {}
     ) {
         const self = this;
@@ -472,8 +472,8 @@ export const accountTaxHelpers = {
             discount: load('discount', 0.0),
             currency_id: currency,
             sign: load('sign', 1.0),
-            special_mode: kwargs.special_mode || false,
-            special_type: kwargs.special_type || false,
+            special_mode: kwargs.special_mode || null,
+            special_type: kwargs.special_type || null,
         }
     },
 
