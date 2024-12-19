@@ -80,6 +80,31 @@
             </field>
         </record>
 
+        <!-- EVENT.SLOT.TAG VIEWS -->
+        <record id="event_slot_tag_view_form" model="ir.ui.view">
+            <field name="name">event.slot.tag.view.form</field>
+            <field name="model">event.slot.tag</field>
+            <field name="arch" type="xml">
+                <form string="Event Slot" class="o_event_slot_tag_form">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <label for="start_time" string="Slot"/>
+                                <div class="d-flex flex-nowrap align-items-baseline gap-2">
+                                    From <field name="start_time" class="w-auto" widget="float_time" options="{'type': 'time'}"/>
+                                    to <field name="end_time" class="w-auto" widget="float_time" options="{'type': 'time'}"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="color" widget="color_picker"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record id="menu_event_category" model="ir.ui.menu">
             <field name="action" ref="event.event_tag_category_action_tree"/>
         </record>

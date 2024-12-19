@@ -58,6 +58,7 @@
                             <field name="date_begin" string="Date" widget="daterange" options="{'end_date_field': 'date_end'}" />
                             <field name="date_end" invisible="1" />
                             <field name="date_tz"/>
+                            <field name="multi_slots" invisible="not date_begin or not date_end or is_one_day"/>
                             <field name="lang"/>
                             <field name="event_type_id" string="Template"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
@@ -96,6 +97,19 @@
                                     <field name="mail_count_done"/>
                                     <field name="mail_state" widget="event_icon_selection" string=" " nolabel="1"
                                         options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Dates &amp; Slots" name="event_dates_slots" invisible="not multi_slots">
+                            <field name="slot_date_ids">
+                                <list editable="bottom">
+                                    <field name="date"/>
+                                    <field name="slot_tag_ids" string="Slots" placeholder="No selection" required="1"
+                                        widget="many2many_slot_tags" options="{'color_field': 'color', 'no_create_edit': True, 'edit_tags': True}"/>
+                                    <field name="weekday"/>
+                                    <control>
+                                        <create string="Add a line" data-hotkey="enter"/>
+                                    </control>
                                 </list>
                             </field>
                         </page>

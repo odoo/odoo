@@ -68,6 +68,9 @@
                         <group string="Event Information" name="event">
                             <field class="text-break" name="event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
+                            <field name="slot_id" string="Slot" invisible="not multi_slots" required="multi_slots"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   domain="[('event_id', '=', event_id)]"/>
                             <field name="barcode" groups="base.group_no_one"/>
                             <field name="event_ticket_id" invisible="not event_id"
                                    context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"

@@ -50,6 +50,9 @@ class EventRegistration(models.Model):
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=4)
     company_name = fields.Char(
         string='Company Name', compute='_compute_company_name', readonly=False, store=True, tracking=5)
+    # Multiple slots
+    multi_slots = fields.Boolean(related="event_id.multi_slots", readonly=True)
+    slot_id = fields.Many2one("event.slot", string="Event Slot")
     # organization
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
