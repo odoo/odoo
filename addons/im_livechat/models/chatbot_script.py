@@ -217,5 +217,14 @@ class ChatbotScript(models.Model):
         }
 
     def _get_chatbot_language(self):
+<<<<<<< saas-17.4
         frontend_lang = request and request.cookies.get('frontend_lang')
         return frontend_lang or self.env.user.lang or get_lang(self.env).code
+||||||| 1e3b3a94754f1c94afcfa9302829cad503f131db
+        frontend_lang = request and request.httprequest.cookies.get('frontend_lang')
+        return frontend_lang or self.env.user.lang or get_lang(self.env).code
+=======
+        return get_lang(
+            self.env, lang_code=request and request.httprequest.cookies.get("frontend_lang")
+        ).code
+>>>>>>> 68f84618cbe86d05af10c599d370fd91069f0301
