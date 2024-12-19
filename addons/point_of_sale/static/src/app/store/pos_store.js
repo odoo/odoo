@@ -152,7 +152,45 @@ export class PosStore extends Reactive {
     async initServerData() {
         await this.processServerData();
         this.onNotified = getOnNotified(this.bus, this.config.access_token);
+        this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.onNotified("CANCEL_ORDERS", this.cancelOrderNotification.bind(this));
+
         return await this.afterProcessServerData();
+    }
+
+    async cancelOrderNotification(data) {
+        if (data.login_number === this.session.login_number) {
+            return;
+        }
+
+        const orders = this.models["pos.order"].readMany(data.order_ids);
+        for (const order of orders) {
+            if (!order.finalized) {
+                order.state = "cancel";
+            }
+        }
+    }
+
+    async closingSessionNotification(data) {
+        if (data.login_number === this.session.login_number) {
+            return;
+        }
+
+        const orders = this.models["pos.order"].getAll();
+        for (const order of orders) {
+            if (!order.finalized) {
+                order.state = "cancel";
+            }
+        }
+
+        this.dialog(AlertDialog, {
+            title: _t("Closing Session"),
+            body: _t("The session is being closed by another user. The page will be reloaded."),
+        });
+
+        setTimeout(() => {
+            window.location.reload();
+        }, 5000);
     }
 
     get session() {
@@ -281,7 +319,9 @@ export class PosStore extends Reactive {
 
         if (ids.size > 0) {
             this.pendingOrder.delete.clear();
-            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)], {
+                context: { login_number: this.session.login_number },
+            });
             return true;
         }
 
@@ -590,18 +630,14 @@ export class PosStore extends Reactive {
                             this.data.models["product.template.attribute.value"].get(id),
                         ]),
                     custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
-                        ([id, cus]) => {
-                            return [
-                                "create",
-                                {
-                                    custom_product_template_attribute_value_id:
-                                        this.data.models["product.template.attribute.value"].get(
-                                            id
-                                        ),
-                                    custom_value: cus,
-                                },
-                            ];
-                        }
+                        ([id, cus]) => [
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    this.data.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            },
+                        ]
                     ),
                     price_extra: values.price_extra + payload.price_extra,
                     qty: payload.qty || values.qty,
@@ -657,16 +693,14 @@ export class PosStore extends Reactive {
                     ]),
                     custom_attribute_value_ids: Object.entries(
                         comboLine.attribute_custom_values
-                    ).map(([id, cus]) => {
-                        return [
-                            "create",
-                            {
-                                custom_product_template_attribute_value_id:
-                                    this.data.models["product.template.attribute.value"].get(id),
-                                custom_value: cus,
-                            },
-                        ];
-                    }),
+                    ).map(([id, cus]) => [
+                        "create",
+                        {
+                            custom_product_template_attribute_value_id:
+                                this.data.models["product.template.attribute.value"].get(id),
+                            custom_value: cus,
+                        },
+                    ]),
                 },
             ]);
         }
@@ -877,9 +911,9 @@ export class PosStore extends Reactive {
         );
     }
     createNewOrder(data = {}) {
-        const fiscalPosition = this.models["account.fiscal.position"].find((fp) => {
-            return fp.id === this.config.default_fiscal_position_id?.id;
-        });
+        const fiscalPosition = this.models["account.fiscal.position"].find(
+            (fp) => fp.id === this.config.default_fiscal_position_id?.id
+        );
 
         const uniqId = this.generate_unique_id();
         const order = this.models["pos.order"].create({
@@ -984,6 +1018,7 @@ export class PosStore extends Reactive {
     getSyncAllOrdersContext(orders, options = {}) {
         return {
             config_id: this.config.id,
+            login_number: this.session.login_number,
         };
     }
 

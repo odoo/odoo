@@ -140,6 +140,14 @@ patch(PosStore.prototype, {
 
         this.computeTableCount(data);
     },
+    cancelOrderNotification(data) {
+        super.cancelOrderNotification(...arguments);
+        this.computeTableCount(data);
+    },
+    async closingSessionNotification(data) {
+        await super.closingSessionNotification(...arguments);
+        this.computeTableCount(data);
+    },
     computeTableCount(data) {
         const tableIds = data?.table_ids;
         const tables = tableIds
@@ -306,7 +314,6 @@ patch(PosStore.prototype, {
     getSyncAllOrdersContext(orders, options = {}) {
         const context = super.getSyncAllOrdersContext(...arguments);
         context["cancel_table_notification"] = options["cancel_table_notification"] || false;
-        context["login_number"] = this.session.login_number;
         if (this.config.module_pos_restaurant && this.selectedTable) {
             context["table_ids"] = [this.selectedTable.id];
             context["force"] = true;
