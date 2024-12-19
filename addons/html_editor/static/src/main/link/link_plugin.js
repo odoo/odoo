@@ -218,7 +218,7 @@ export class LinkPlugin extends Plugin {
     }
 
     destroy() {
-        this.removeLinkShortcut();
+        this.removeLinkShortcut?.();
     }
 
     // -------------------------------------------------------------------------
