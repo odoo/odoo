@@ -458,6 +458,58 @@ class TestProjectSharing(TestProjectSharingCommon):
         task.write({'tag_ids': [Command.set([self.task_tag.id])]})
         self.assertEqual(task.tag_ids, self.task_tag)
 
+    @mute_logger("odoo.addons.base.models.ir_model", "odoo.addons.base.models.ir_rule")
+    def test_read_task_in_project_sharing(self):
+        """Test when portal user reads a task in project sharing views.
+        We create also a second user with edit access to check the rights are not
+        shared between users."""
+        user_partner_id = self.user_portal.partner_id
+        task = self.task_cow.with_user(self.user_portal)
+
+        # Give the 'read' access mode to a portal user
+        project_share_form = Form(
+            self.env["project.share.wizard"].with_context(
+                active_model="project.project", active_id=self.project_cows.id
+            )
+        )
+        with project_share_form.collaborator_ids.new() as collaborator_form:
+            collaborator_form.partner_id = user_partner_id
+            collaborator_form.access_mode = "read"
+        # Give the 'edit' access mode to a second user and ensure
+        # the rights are not shared between users
+        second_user = self.user_portal.copy()
+        with project_share_form.collaborator_ids.new() as collaborator_form:
+            collaborator_form.partner_id = second_user.partner_id
+            collaborator_form.access_mode = "edit"
+        project_share_form.save()
+
+        self.assertEqual(
+            len(self.project_cows.collaborator_ids),
+            1,
+            "Only the second user should considered as collaborator.",
+        )
+
+        # Test as non-follower of the TASK
+        self.task_cow.message_unsubscribe(partner_ids=user_partner_id.ids)
+        with self.assertRaises(
+            AccessError,
+            msg="User should not be able to read a task in a project he has only read access but not following the task.",
+        ):
+            task.read(["name"])
+        with self.assertRaises(
+            AccessError,
+            msg="User should not be able to update a task in a project he has only read access.",
+        ):
+            task.update({"name": "Test"})
+
+        # Test as follower of the TASK
+        self.task_cow.message_subscribe(partner_ids=user_partner_id.ids)
+        task.read(["name"])
+        with self.assertRaises(
+            AccessError,
+            msg="User should not be able to update a task in a project he has only read access.",
+        ):
+            task.update({"name": "Test"})
 
     def test_portal_user_cannot_see_all_assignees(self):
         """ Test when the portal sees a task he cannot see all the assignees.
