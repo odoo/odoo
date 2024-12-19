@@ -68,7 +68,7 @@ export class Call extends Component {
     }
 
     get isActiveCall() {
-        return Boolean(this.props.thread.eq(this.rtc.state?.channel));
+        return Boolean(this.props.thread.eq(this.rtc.channel));
     }
 
     get minimized() {

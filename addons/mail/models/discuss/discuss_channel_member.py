@@ -312,9 +312,15 @@ class DiscussChannelMember(models.Model):
 
     def _rtc_join_call(self, store: Store = None, check_rtc_session_ids=None, camera=False):
         self.ensure_one()
-        check_rtc_session_ids = (check_rtc_session_ids or []) + self.rtc_session_ids.ids
+        session_domain = []
+        if self.partner_id:
+            session_domain = [("partner_id", "=", self.partner_id.id)]
+        elif self.guest_id:
+            session_domain = [("guest_id", "=", self.guest_id.id)]
+        user_sessions = self.search(session_domain).rtc_session_ids
+        check_rtc_session_ids = (check_rtc_session_ids or []) + user_sessions.ids
         self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
-        self.rtc_session_ids.unlink()
+        user_sessions.unlink()
         rtc_session = self.env['discuss.channel.rtc.session'].create({'channel_member_id': self.id, 'is_camera_on': camera})
         current_rtc_sessions, outdated_rtc_sessions = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
         ice_servers = self.env["mail.ice.server"]._get_ice_servers()
@@ -331,7 +337,7 @@ class DiscussChannelMember(models.Model):
                 "Rtc",
                 {
                     "iceServers": ice_servers or False,
-                    "selfSession": Store.One(rtc_session),
+                    "localSession": Store.One(rtc_session),
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )

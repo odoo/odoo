@@ -2,7 +2,7 @@ import { Record } from "@mail/core/common/record";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { rpc } from "@web/core/network/rpc";
-import { closeStream, onChange } from "@mail/utils/common/misc";
+import { assignDefined, closeStream, onChange } from "@mail/utils/common/misc";
 
 import { reactive, toRaw } from "@odoo/owl";
 
@@ -60,6 +60,17 @@ const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.Medi
 const DEFAULT_ICE_SERVERS = [
     { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
 ];
+export const CROSS_TAB_HOST_MESSAGE = {
+    PING: "PING", // signals that the host is still active
+    UPDATE_REMOTE: "UPDATE_REMOTE", // sent with updated state of the remote rtc sessions of the call
+    CLOSE: "CLOSE", // sent when the host ends the call
+};
+export const CROSS_TAB_CLIENT_MESSAGE = {
+    INIT: "INIT", // sent by a tab to signal its presence and receive a state update
+    REQUEST_ACTION: "REQUEST_ACTION", // request that an action be executed by the host (mute, deaf,...)
+    LEAVE: "LEAVE", // request the host to leave the call
+};
+const PING_INTERVAL = 30_000;
 
 /**
  * @param {Array<RTCIceServer>} iceServers
@@ -183,7 +194,37 @@ export class Rtc extends Record {
             return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
         },
     });
-    selfSession = Record.one("discuss.channel.rtc.session");
+    localSession = Record.one("discuss.channel.rtc.session");
+    selfSession = Record.one("discuss.channel.rtc.session", {
+        compute() {
+            return (
+                this.localSession ||
+                this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
+            );
+        },
+    });
+    channel = Record.one("Thread", {
+        compute() {
+            if (this.state.channel) {
+                return this.state.channel;
+            }
+            if (this._remotelyHostedChannelId) {
+                return this.store.Thread.insert({
+                    model: "discuss.channel",
+                    id: this._remotelyHostedChannelId,
+                });
+            }
+        },
+        onUpdate() {
+            if (!this.channel) {
+                return;
+            }
+            this.store.Thread.getOrFetch({
+                model: "discuss.channel",
+                id: this.channel.id,
+            });
+        },
+    });
     serverInfo;
     /**
      * @type {Network}
@@ -200,6 +241,24 @@ export class Rtc extends Record {
     lastSelfCallAction = undefined;
     /** callbacks to be called when cleaning the state up after a call */
     cleanups = [];
+    // cross tab sync
+    _broadcastChannel = new browser.BroadcastChannel("call_sync_state");
+    _remotelyHostedSessionId;
+    _remotelyHostedChannelId;
+    _crossTabTimeoutId;
+
+    /**
+     * Whether this tab serves as a remote for a call hosted on another tab.
+     */
+    get isRemote() {
+        return Boolean(this._remotelyHostedChannelId);
+    }
+    /**
+     * Whether the current tab is the host of the call.
+     */
+    get isHost() {
+        return Boolean(this.localSession);
+    }
 
     callActions = Record.attr([], {
         compute() {
@@ -260,6 +319,10 @@ export class Rtc extends Record {
         this.notification = services.notification;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
+        if (this._broadcastChannel) {
+            this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
+            this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
+        }
         /**
          * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
          */
@@ -279,7 +342,7 @@ export class Rtc extends Record {
             this.linkVoiceActivationDebounce();
         });
         onChange(this.store.settings, "audioInputDeviceId", async () => {
-            if (this.selfSession) {
+            if (this.localSession) {
                 await this.resetAudioTrack({ force: true });
             }
         });
@@ -309,7 +372,7 @@ export class Rtc extends Record {
                     !this.state.channel ||
                     !this.store.settings.use_push_to_talk ||
                     !this.store.settings.isPushToTalkKey(ev) ||
-                    !this.selfSession.isTalking
+                    !this.localSession.isTalking
                 ) {
                     return;
                 }
@@ -344,21 +407,25 @@ export class Rtc extends Record {
          * connections that were established but failed or timed out.
          */
         browser.setInterval(async () => {
-            if (!this.selfSession || !this.state.channel) {
+            if (!this.localSession || !this.state.channel) {
                 return;
             }
+            this._postToTabs({
+                type: CROSS_TAB_HOST_MESSAGE.PING,
+                hostedSessionId: this.localSession.id,
+            });
             await this.ping();
-            if (!this.selfSession || !this.state.channel) {
+            if (!this.localSession || !this.state.channel) {
                 return;
             }
             this.call();
-        }, 30_000);
+        }, PING_INTERVAL);
     }
 
     setPttReleaseTimeout(duration = 200) {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);
-            if (!this.selfSession?.isMute) {
+            if (!this.localSession?.isMute) {
                 this.soundEffectsService.play("ptt-release", { volume: 0.3 });
             }
         }, Math.max(this.store.settings.voice_active_duration || 0, duration));
@@ -373,7 +440,7 @@ export class Rtc extends Record {
             return;
         }
         browser.clearTimeout(this.state.pttReleaseTimeout);
-        if (!this.selfSession.isTalking && !this.selfSession.isMute) {
+        if (!this.localSession.isTalking && !this.localSession.isMute) {
             this.soundEffectsService.play("ptt-press", { volume: 0.3 });
         }
         this.setTalking(true);
@@ -422,6 +489,7 @@ export class Rtc extends Record {
      * @param {import("models").Thread} [channel]
      */
     endCall(channel = this.state.channel) {
+        this._endHost();
         channel.rtcInvitingSession = undefined;
         channel.activeRtcSession = undefined;
         if (channel.eq(this.state.channel)) {
@@ -433,6 +501,10 @@ export class Rtc extends Record {
     }
 
     async deafen() {
+        if (this.isRemote) {
+            this._remoteAction({ is_deaf: true });
+            return;
+        }
         await this.setDeaf(true);
         this.soundEffectsService.play("earphone-off");
     }
@@ -460,6 +532,10 @@ export class Rtc extends Record {
     }
 
     async mute() {
+        if (this.isRemote) {
+            this._remoteAction({ is_muted: true });
+            return;
+        }
         await this.setMute(true);
         this.soundEffectsService.play("mic-off");
     }
@@ -471,6 +547,11 @@ export class Rtc extends Record {
      * @param {boolean} [initialState.camera]
      */
     async toggleCall(channel, { audio = true, camera } = {}) {
+        if (channel.id === this._remotelyHostedChannelId) {
+            this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.LEAVE });
+            this.clear();
+            return;
+        }
         await loadJS("/mail/static/lib/selfie_segmentation/selfie_segmentation.js");
         if (this.state.hasPendingRequest) {
             return;
@@ -485,7 +566,7 @@ export class Rtc extends Record {
     }
 
     async toggleMicrophone() {
-        if (this.selfSession.isMute) {
+        if (this.localSession.isMute) {
             await this.unmute();
         } else {
             await this.mute();
@@ -493,11 +574,19 @@ export class Rtc extends Record {
     }
 
     async undeafen() {
+        if (this.isRemote) {
+            this._remoteAction({ is_deaf: false });
+            return;
+        }
         await this.setDeaf(false);
         this.soundEffectsService.play("earphone-on");
     }
 
     async unmute() {
+        if (this.isRemote) {
+            this._remoteAction({ is_muted: false });
+            return;
+        }
         if (this.state.audioTrack) {
             await this.setMute(false);
         } else {
@@ -538,7 +627,7 @@ export class Rtc extends Record {
         this.state.connectionType = CONNECTION_TYPES.P2P;
         this.network?.disconnect();
         // loading p2p in any case as we may need to receive peer-to-peer connections from users who failed to connect to the SFU.
-        this.p2pService.connect(this.selfSession.id, this.state.channel.id, {
+        this.p2pService.connect(this.localSession.id, this.state.channel.id, {
             info: this.formatInfo(),
             iceServers: this.iceServers,
         });
@@ -547,7 +636,7 @@ export class Rtc extends Record {
             try {
                 await this._loadSfu();
                 this.state.connectionType = CONNECTION_TYPES.SERVER;
-                this.selfSession.connectionState = null;
+                this.localSession.connectionState = null;
                 this.network.addSfu(this.sfuClient);
             } catch (e) {
                 this.notification.add(
@@ -556,7 +645,7 @@ export class Rtc extends Record {
                         type: "warning",
                     }
                 );
-                this.log(this.selfSession, "failed to load sfu server", { error: e });
+                this.log(this.localSession, "failed to load sfu server", { error: e });
             }
         }
         this.network.addEventListener("stateChange", this._handleSfuClientStateChange);
@@ -567,6 +656,142 @@ export class Rtc extends Record {
                 this.log(session, message, { step: "p2p", level });
             }
         });
+    }
+
+    /**
+     * Send an action to the host tab of the call
+     *
+     * @param {Object} changes
+     */
+    _remoteAction(changes) {
+        this._postToTabs({
+            type: CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION,
+            changes,
+        });
+    }
+
+    _updateInfo() {
+        if (!this.isHost) {
+            return;
+        }
+        const info = toRaw(this.formatInfo());
+        this.network?.updateInfo(info);
+        this._updateRemoteTabs({ [this.localSession.id]: info });
+    }
+
+    _host() {
+        this._remotelyHostedChannelId = undefined;
+        this._remotelyHostedSessionId = this.localSession.id;
+        this._updateRemoteTabs({ [this.localSession.id]: toRaw(this.formatInfo()) });
+    }
+    _endHost() {
+        this._postToTabs({
+            type: CROSS_TAB_HOST_MESSAGE.CLOSE,
+            hostedSessionId: this._remotelyHostedSessionId,
+        });
+    }
+
+    _updateRemoteTabs(changes) {
+        this._postToTabs({
+            type: CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE,
+            hostedChannelId: this.state.channel.id,
+            hostedSessionId: this.localSession.id,
+            changes,
+        });
+    }
+
+    _postToTabs(message) {
+        if (!this._broadcastChannel) {
+            this.log(this.selfSession, "broadcast channel not available");
+            return;
+        }
+        try {
+            this._broadcastChannel.postMessage(message);
+        } catch (error) {
+            this.log(this.selfSession, "failed to post message to broadcast channel", { error });
+        }
+    }
+
+    _refreshCrossTabTimeout() {
+        browser.clearTimeout(this._crossTabTimeoutId);
+        this._crossTabTimeoutId = browser.setTimeout(() => {
+            this.clear();
+        }, PING_INTERVAL + 10_000);
+    }
+
+    async _onBroadcastChannelMessage({
+        data: { type, hostedChannelId, hostedSessionId, changes },
+    }) {
+        switch (type) {
+            case CROSS_TAB_HOST_MESSAGE.UPDATE_REMOTE:
+                if (this.isHost) {
+                    return;
+                }
+                this._remotelyHostedSessionId = hostedSessionId;
+                this._remotelyHostedChannelId = hostedChannelId;
+                this._refreshCrossTabTimeout();
+                this.updateSessionInfo(changes);
+                return;
+            case CROSS_TAB_HOST_MESSAGE.CLOSE: {
+                if (this._remotelyHostedSessionId !== hostedSessionId) {
+                    return;
+                }
+                this.clear();
+                return;
+            }
+            case CROSS_TAB_HOST_MESSAGE.PING: {
+                this._refreshCrossTabTimeout();
+                return;
+            }
+            case CROSS_TAB_CLIENT_MESSAGE.INIT: {
+                if (!this.isHost) {
+                    return;
+                }
+                this._updateRemoteTabs({ [this.localSession.id]: toRaw(this.formatInfo()) });
+                return;
+            }
+            case CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION: {
+                if (!this.isHost) {
+                    return;
+                }
+                await this._localAction(changes);
+                this._updateRemoteTabs({ [this.localSession.id]: toRaw(this.formatInfo()) });
+                return;
+            }
+            case CROSS_TAB_CLIENT_MESSAGE.LEAVE: {
+                if (!this.isHost) {
+                    return;
+                }
+                await this.leaveCall(this.channel);
+            }
+        }
+    }
+
+    async _localAction(actions = {}) {
+        const promises = [];
+        for (const [key, value] of Object.entries(actions)) {
+            switch (key) {
+                case "is_muted":
+                    if (value === this.localSession.is_muted) {
+                        break;
+                    }
+                    promises.push(value ? this.mute() : this.unmute());
+                    break;
+                case "is_deaf":
+                    if (value === this.localSession.is_deaf) {
+                        break;
+                    }
+                    value ? promises.push(this.deafen()) : promises.push(this.undeafen());
+                    break;
+                case "raisingHand":
+                    if (value === Boolean(this.localSession.raisingHand)) {
+                        break;
+                    }
+                    promises.push(this.raiseHand(value));
+                    break;
+            }
+        }
+        await Promise.all(promises);
     }
 
     /**
@@ -643,26 +868,7 @@ export class Rtc extends Record {
                 }
                 return;
             case "info_change":
-                if (!payload) {
-                    return;
-                }
-                for (const [id, info] of Object.entries(payload)) {
-                    const session = this.store["discuss.channel.rtc.session"].get(Number(id));
-                    if (!session) {
-                        return;
-                    }
-                    // `isRaisingHand` is turned into the Date `raisingHand`
-                    this.setRemoteRaiseHand(session, info.isRaisingHand);
-                    delete info.isRaisingHand;
-                    Object.assign(session, {
-                        is_muted: info.isSelfMuted,
-                        is_deaf: info.isDeaf,
-                        isTalking: info.isTalking,
-                        is_camera_on: info.isCameraOn,
-                        is_screen_sharing_on: info.isScreenSharingOn,
-                    });
-                    Object.assign(session, info);
-                }
+                this.updateSessionInfo(payload);
                 return;
             case "track":
                 {
@@ -687,13 +893,13 @@ export class Rtc extends Record {
     }
 
     async _handleSfuClientStateChange({ detail: { state, cause } }) {
-        this.log(this.selfSession, "SFU connection state changed", { state, cause });
+        this.log(this.localSession, "SFU connection state changed", { state, cause });
         this.state.serverState = state;
         switch (state) {
             case this.SFU_CLIENT_STATE.AUTHENTICATED:
                 // if we are hot-swapping connection type, we clear the p2p as late as possible
                 this.p2pService.removeALlPeers();
-                this.selfSession.connectionState = "connecting";
+                this.localSession.connectionState = "connecting";
                 break;
             case this.SFU_CLIENT_STATE.CONNECTED:
                 this.sfuClient.updateInfo(this.formatInfo(), {
@@ -702,7 +908,7 @@ export class Rtc extends Record {
                 this.sfuClient.updateUpload("audio", this.state.audioTrack);
                 this.sfuClient.updateUpload("camera", this.state.cameraTrack);
                 this.sfuClient.updateUpload("screen", this.state.screenTrack);
-                this.selfSession.connectionState = "connected";
+                this.localSession.connectionState = "connected";
                 return;
             case this.SFU_CLIENT_STATE.CLOSED:
                 {
@@ -721,6 +927,31 @@ export class Rtc extends Record {
         }
     }
 
+    updateSessionInfo(payload) {
+        if (!payload) {
+            return;
+        }
+        if (this.isHost) {
+            this._updateRemoteTabs(payload);
+        }
+        for (const [id, info] of Object.entries(payload)) {
+            const session = this.store["discuss.channel.rtc.session"].get(Number(id));
+            if (!session) {
+                return;
+            }
+            // `isRaisingHand` is turned into the Date `raisingHand`
+            this.setRemoteRaiseHand(session, info.isRaisingHand);
+            delete info.isRaisingHand;
+            assignDefined(session, {
+                is_muted: info.isSelfMuted ?? info.is_muted,
+                is_deaf: info.isDeaf ?? info.is_deaf,
+                isTalking: info.isTalking,
+                is_camera_on: info.isCameraOn ?? info.is_camera_on,
+                is_screen_sharing_on: info.isScreenSharingOn ?? info.is_screen_sharing_on,
+            });
+        }
+    }
+
     async call() {
         if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
             if (this.sfuClient.state === this.SFU_CLIENT_STATE.DISCONNECTED) {
@@ -735,7 +966,7 @@ export class Rtc extends Record {
             return;
         }
         for (const session of this.state.channel.rtcSessions) {
-            if (session.eq(this.selfSession)) {
+            if (session.eq(this.localSession)) {
                 continue;
             }
             this.log(session, "init call", { step: "init call" });
@@ -752,7 +983,7 @@ export class Rtc extends Record {
     async handleRemoteTrack({ session, track, type, active = true }) {
         session.updateStreamState(type, active);
         await this.updateStream(session, track, {
-            mute: this.selfSession.is_deaf,
+            mute: this.localSession.is_deaf,
             videoType: type,
         });
         this.updateActiveSession(session, type, { addVideo: true });
@@ -786,14 +1017,14 @@ export class Rtc extends Record {
         this.state.channel = channel;
         this.store.insert(data);
         this.state.logs.set("channelId", this.state.channel.id);
-        this.state.logs.set("selfSessionId", this.selfSession.id);
+        this.state.logs.set("localSessionId", this.localSession.id);
         this.state.logs.set("hasTURN", hasTurn(this.iceServers));
         const channelProxy = reactive(this.state.channel, () => {
             if (channel.notEq(this.state.channel)) {
                 throw new Error("channel has changed");
             }
             if (this.state.channel) {
-                if (this.state.channel && this.selfSession.notIn(channelProxy.rtcSessions)) {
+                if (this.localSession.notIn(channelProxy.rtcSessions)) {
                     // if the current RTC session is not in the channel sessions, this call is no longer valid.
                     this.endCall();
                     return;
@@ -809,15 +1040,15 @@ export class Rtc extends Record {
         });
         this.state.updateAndBroadcastDebounce = debounce(
             async () => {
-                if (!this.selfSession) {
+                if (!this.localSession) {
                     return;
                 }
                 await rpc(
                     "/mail/rtc/session/update_and_broadcast",
                     {
-                        session_id: this.selfSession.id,
+                        session_id: this.localSession.id,
                         values: pick(
-                            this.selfSession,
+                            this.localSession,
                             "is_camera_on",
                             "is_deaf",
                             "is_muted",
@@ -848,6 +1079,7 @@ export class Rtc extends Record {
         if (!this.state.channel?.id) {
             return;
         }
+        this._host();
         this.cleanups.push(
             // only register the beforeunload event if there is a call as FireFox will not place
             // the pages with beforeunload listeners in the bfcache.
@@ -875,7 +1107,7 @@ export class Rtc extends Record {
             {
                 channel_id: this.state.channel.id,
                 check_rtc_session_ids: this.state.channel.rtcSessions.map((session) => session.id),
-                rtc_session_id: this.selfSession.id,
+                rtc_session_id: this.localSession.id,
             },
             { silent: true }
         );
@@ -910,6 +1142,9 @@ export class Rtc extends Record {
                 session.isTalking = false;
             }
         }
+        this._remotelyHostedSessionId = undefined;
+        this._remotelyHostedChannelId = undefined;
+        browser.clearTimeout(this._crossTabTimeoutId);
         this.cleanups.splice(0).forEach((cleanup) => cleanup());
         this.sfuClient = undefined;
         this.network = undefined;
@@ -926,7 +1161,7 @@ export class Rtc extends Record {
             this.blurManager = undefined;
         }
         this.update({
-            selfSession: undefined,
+            localSession: undefined,
             serverInfo: undefined,
         });
         Object.assign(this.state, {
@@ -968,22 +1203,26 @@ export class Rtc extends Record {
      * @param {Boolean} raise
      */
     async raiseHand(raise) {
-        if (!this.selfSession || !this.state.channel) {
+        if (this.isRemote) {
+            this._remoteAction({ raisingHand: raise });
             return;
         }
-        this.selfSession.raisingHand = raise ? new Date() : undefined;
-        await this.network?.updateInfo(this.formatInfo());
+        if (!this.localSession || !this.state.channel) {
+            return;
+        }
+        this.localSession.raisingHand = raise ? new Date() : undefined;
+        await this._updateInfo();
     }
 
     /**
      * @param {boolean} isTalking
      */
     async setTalking(isTalking) {
-        if (!this.selfSession || isTalking === this.selfSession.isTalking) {
+        if (!this.localSession || isTalking === this.localSession.isTalking) {
             return;
         }
-        this.selfSession.isTalking = isTalking;
-        if (!this.selfSession.isMute) {
+        this.localSession.isTalking = isTalking;
+        if (!this.localSession.isMute) {
             this.pttExtService.notifyIsTalking(isTalking);
             await this.refreshAudioStatus();
         }
@@ -994,6 +1233,12 @@ export class Rtc extends Record {
      * @param {boolean} [force]
      */
     async toggleVideo(type, force) {
+        if (this.isRemote) {
+            this.notification.add(_t("This action can only be done in the call tab."), {
+                type: "warning",
+            });
+            return;
+        }
         if (!this.state.channel?.id) {
             return;
         }
@@ -1013,26 +1258,26 @@ export class Rtc extends Record {
                 break;
             }
         }
-        if (this.selfSession) {
+        if (this.localSession) {
             switch (type) {
                 case "camera": {
-                    this.removeVideoFromSession(this.selfSession, {
+                    this.removeVideoFromSession(this.localSession, {
                         type: "camera",
                         cleanup: false,
                     });
                     if (this.state.cameraTrack) {
-                        this.updateStream(this.selfSession, this.state.cameraTrack);
+                        this.updateStream(this.localSession, this.state.cameraTrack);
                     }
                     break;
                 }
                 case "screen": {
                     if (!this.state.screenTrack) {
-                        this.removeVideoFromSession(this.selfSession, {
+                        this.removeVideoFromSession(this.localSession, {
                             type: "screen",
                             cleanup: false,
                         });
                     } else {
-                        this.updateStream(this.selfSession, this.state.screenTrack);
+                        this.updateStream(this.localSession, this.state.screenTrack);
                     }
                     break;
                 }
@@ -1040,7 +1285,7 @@ export class Rtc extends Record {
         }
         const updatedTrack = type === "camera" ? this.state.cameraTrack : this.state.screenTrack;
         await this.network?.updateUpload(type, updatedTrack);
-        if (!this.selfSession) {
+        if (!this.localSession) {
             return;
         }
         switch (type) {
@@ -1060,8 +1305,8 @@ export class Rtc extends Record {
     }
 
     updateAndBroadcast(data) {
-        const session = this.selfSession;
-        Object.assign(session, data);
+        this._updateRemoteTabs({ [this.localSession.id]: data });
+        assignDefined(this.localSession, data);
         this.state.updateAndBroadcastDebounce?.();
     }
 
@@ -1073,8 +1318,8 @@ export class Rtc extends Record {
         if (!this.state.audioTrack) {
             return;
         }
-        this.state.audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
-        this.network?.updateInfo(this.formatInfo());
+        this.state.audioTrack.enabled = !this.localSession.isMute && this.localSession.isTalking;
+        this._updateInfo();
     }
 
     /**
@@ -1192,7 +1437,7 @@ export class Rtc extends Record {
         if (!this.state.channel) {
             return;
         }
-        if (this.selfSession) {
+        if (this.localSession) {
             this.setMute(true);
         }
         if (force) {
@@ -1202,7 +1447,7 @@ export class Rtc extends Record {
                     audio: this.store.settings.audioConstraints,
                 });
                 audioTrack = audioStream.getAudioTracks()[0];
-                if (this.selfSession) {
+                if (this.localSession) {
                     this.setMute(false);
                 }
             } catch {
@@ -1214,7 +1459,7 @@ export class Rtc extends Record {
                 );
                 return;
             }
-            if (!this.selfSession) {
+            if (!this.localSession) {
                 // The getUserMedia promise could resolve when the call is ended
                 // in which case the track is no longer relevant.
                 audioTrack.stop();
@@ -1225,7 +1470,7 @@ export class Rtc extends Record {
                 await this.resetAudioTrack({ force: false });
                 this.setMute(true);
             });
-            audioTrack.enabled = !this.selfSession.isMute && this.selfSession.isTalking;
+            audioTrack.enabled = !this.localSession.isMute && this.localSession.isTalking;
             this.state.audioTrack = audioTrack;
             this.linkVoiceActivationDebounce();
             await this.network.updateUpload("audio", this.state.audioTrack);
@@ -1238,11 +1483,11 @@ export class Rtc extends Record {
      */
     async linkVoiceActivation() {
         this.state.disconnectAudioMonitor?.();
-        if (!this.selfSession) {
+        if (!this.localSession) {
             return;
         }
         if (this.store.settings.use_push_to_talk || !this.state.channel || !this.state.audioTrack) {
-            this.selfSession.isTalking = false;
+            this.localSession.isTalking = false;
             await this.refreshAudioStatus();
             return;
         }
@@ -1262,7 +1507,7 @@ export class Rtc extends Record {
             this.notification.add(_t("Your browser does not support voice activation"), {
                 type: "warning",
             });
-            this.selfSession.isTalking = true;
+            this.localSession.isTalking = true;
         }
         await this.refreshAudioStatus();
     }
@@ -1273,7 +1518,7 @@ export class Rtc extends Record {
     deleteSession(id) {
         const session = this.store["discuss.channel.rtc.session"].get(id);
         if (session) {
-            if (this.selfSession && session.eq(this.selfSession)) {
+            if (this.localSession && session.eq(this.localSession)) {
                 this.endCall();
             }
             this.disconnect(session);
@@ -1282,9 +1527,9 @@ export class Rtc extends Record {
     }
 
     formatInfo() {
-        this.selfSession.is_camera_on = Boolean(this.state.cameraTrack);
-        this.selfSession.is_screen_sharing_on = Boolean(this.state.screenTrack);
-        return this.selfSession.info;
+        this.localSession.is_camera_on = Boolean(this.state.cameraTrack);
+        this.localSession.is_screen_sharing_on = Boolean(this.state.screenTrack);
+        return this.localSession.info;
     }
 
     /**
@@ -1456,7 +1701,7 @@ export const rtcService = {
         services["bus_service"].subscribe(
             "discuss.channel.rtc.session/sfu_hot_swap",
             async ({ serverInfo }) => {
-                if (!rtc.selfSession) {
+                if (!rtc.localSession) {
                     return;
                 }
                 if (rtc.serverInfo?.url === serverInfo?.url) {
@@ -1470,7 +1715,7 @@ export const rtcService = {
             }
         );
         services["bus_service"].subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
-            if (rtc.selfSession?.id === sessionId) {
+            if (rtc.localSession?.id === sessionId) {
                 rtc.endCall();
                 services.notification.add(_t("Disconnected from the RTC call by the server"), {
                     type: "warning",
@@ -1490,7 +1735,7 @@ export const rtcService = {
                  * If this event comes from the channel of the current call, information is shared in real time
                  * through the peer to peer connection. So we do not use this less accurate broadcast.
                  */
-                if (channelId !== rtc.state.channel?.id) {
+                if (channelId !== rtc.channel?.id) {
                     rtc.store.insert(data);
                 }
             }

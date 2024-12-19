@@ -20,8 +20,8 @@
         >
             <!-- card -->
             <CallParticipantVideo t-if="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
-            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized }" draggable="false">
-                <img alt="Avatar" class="h-100 rounded-circle border-5 o_object_fit_cover" t-att-src="channelMember?.persona.avatarUrl" draggable="false" t-att-class="{
+            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized, 'o-is-remote-video': isRemoteVideo }" draggable="false">
+                <img t-if="!showRemoteWarning" alt="Avatar" class="h-100 rounded-circle border-5 o_object_fit_cover" t-att-src="channelMember?.persona.avatarUrl" draggable="false" t-att-class="{
                     'o-isTalking': isTalking,
                     'o-isInvitation': !rtcSession,
                 }"/>
@@ -29,12 +29,15 @@
             <t t-if="rtcSession">
                 <!-- overlay -->
                 <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden">
-                    <span t-if="!props.minimized and !props.inset" class="p-1 rounded-1 text-truncate" t-esc="name"/>
+                    <span t-if="!props.minimized and !props.inset" class="p-1 rounded-1 text-truncate w-100" t-esc="name"/>
                     <small t-if="rtcSession.is_screen_sharing_on and props.minimized and !isOfActiveCall" class="user-select-none o-minimized rounded-pill text-bg-danger d-flex align-items-center fw-bolder" title="live" aria-label="live">
                         LIVE
                     </small>
                 </span>
-                <div class="o-discuss-CallParticipantCard-overlay position-absolute top-0 end-0 d-flex flex-row-reverse">
+                <span t-if="showRemoteWarning" class="o-discuss-CallParticipantCard-overlay o-proportional-container z-1 w-50 position-absolute d-flex align-items-center justify-content-center overflow-hidden">
+                    <span class="fw-bolder p-1 rounded-1 o-video-text o-proportional-text">Video visible in the call tab</span>
+                </span>
+                <div class="o-discuss-CallParticipantCard-overlay o-proportional-container position-absolute top-0 end-0 d-flex w-25 flex-row-reverse">
                     <span t-if="hasRaisingHand" class="d-flex flex-column justify-content-center me-1 rounded-circle bg-500" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="raising hand" aria-label="raising hand">
                         <i class="fa fa-hand-paper-o"/>
                     </span>
@@ -54,7 +57,7 @@
                     <span t-if="showServerState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtc.state.serverState">
                         <i class="fa fa-exclamation-triangle text-warning"/>
                     </span>
-                    <span t-if="rtcSession.is_screen_sharing_on and !props.minimized and !isOfActiveCall" class="user-select-none rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
+                    <span t-if="showLiveLabel" class="user-select-none rounded-pill o-live-text o-proportional-text text-bg-danger d-flex align-items-center py-1 px-2 fw-bolder" title="live" aria-label="live">
                         LIVE
                     </span>
                 </div>

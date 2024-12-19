@@ -33,6 +33,23 @@
 
 .o-discuss-CallParticipantCard-avatar:not(.o-minimized) {
     background-color: var(--o-discuss-CallParticipantCard-avatarBgColor, #{$o-gray-700});
+    &.o-is-remote-video {
+        background: linear-gradient(180deg, #144173 0%, #082647 30%, #133c68 60%, #082647 90%);
+        background-size: 200% 200%;
+        animation: gradientAnimation 5s ease-in-out infinite alternate;
+        filter: blur(2px);
+    }
+    @keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 100%;
+    }
+}
 }
 
 .o-discuss-CallParticipantCard-avatar img {
@@ -70,6 +87,18 @@
 
 .o-discuss-CallParticipantCard-overlay {
     margin: Min(5%, map-get($spacers, 2));
+
+    &.o-proportional-container {
+        container-type: inline-size;
+        .o-proportional-text {
+            &.o-video-text {
+                font-size: 5cqw;
+            }
+            &.o-live-text {
+                font-size: 8cqw;
+            }
+        }
+    }
 }
 
 .o-discuss-CallParticipantCard-overlayBottom {
