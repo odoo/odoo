@@ -12,7 +12,7 @@ import {
     reloadLazyImages,
     toggleGridMode,
 } from "@html_builder/builder/utils/grid_layout_utils";
-import { Button } from "../components/Button";
+import { Button } from "../components/button";
 
 class LayoutOptionPlugin extends Plugin {
     static id = "LayoutOption";
