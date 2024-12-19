@@ -25,7 +25,6 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'list_price': 100.0,
             'standard_price': 60.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'supplier_taxes_id': [],
             'description': 'FIFO Ice Cream',
         })
@@ -122,7 +121,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         picking = purchase_order_3.picking_ids[0]
         picking.button_validate()
 
-        # Check price is (75.0 * 20 + 200*0.5) / 20.5 = 78.04878€
+        # Check price is (75.0 * 20 + 200 * 0.5) / 20.5 = 78.04878€
         self.assertEqual(product_cable_management_box.qty_available, 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock')
         self.assertEqual(round(product_cable_management_box.standard_price, 2), 78.05,
             'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(product_cable_management_box.standard_price, 2)))

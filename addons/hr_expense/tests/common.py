@@ -61,8 +61,8 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
         # Create product without cost
         cls.product_c = cls.env['product.product'].create({
             'name': 'product_c with no cost',
-            'uom_id': cls.env.ref('uom.product_uom_dozen').id,
-            'lst_price': 200.0,
+            'uom_id': cls.env.ref('uom.product_uom_pack_6').id,
+            'lst_price': 100.0,
             'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
             'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
             'taxes_id': [Command.set((cls.tax_sale_a + cls.tax_sale_b).ids)],
