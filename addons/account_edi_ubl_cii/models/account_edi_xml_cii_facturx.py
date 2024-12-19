@@ -43,14 +43,6 @@ class AccountEdiXmlCII(models.AbstractModel):
             'seller_postal_address': self._check_required_fields(
                 vals['record']['company_id']['partner_id']['commercial_partner_id'], 'country_id'
             ),
-            # [BR-DE-9] The element "Buyer post code" (BT-53) must be transmitted. (only mandatory in Germany ?)
-            'buyer_postal_address': self._check_required_fields(
-                vals['record']['partner_id'], 'zip'
-            ),
-            # [BR-DE-4] The element "Seller post code" (BT-38) must be transmitted. (only mandatory in Germany ?)
-            'seller_post_code': self._check_required_fields(
-                vals['record']['company_id']['partner_id']['commercial_partner_id'], 'zip'
-            ),
             # [BR-CO-26]-In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29),
             # the Seller legal registration identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present.
             'seller_identifier': self._check_required_fields(
