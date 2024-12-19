@@ -100,6 +100,7 @@ class PaymentTransaction(models.Model):
         return_route = WorldlineController._return_url
         return_url_params = urls.url_encode({'provider_id': str(self.provider_id.id)})
         return_url = f'{urls.url_join(base_url, return_route)}?{return_url_params}'
+        first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         payload = {
             'hostedCheckoutSpecificInput': {
                 'locale': self.partner_lang or '',
@@ -122,6 +123,12 @@ class PaymentTransaction(models.Model):
                     'contactDetails': {
                         'emailAddress': self.partner_email or '',
                         'phoneNumber': self.partner_phone or '',
+                    },
+                    'personalInformation': {
+                        'name': {
+                            'firstName': first_name or '',
+                            'surname': last_name or '',
+                        },
                     },
                 },
                 'references': {
