@@ -28,6 +28,8 @@ class MailingList(models.Model):
     contact_ids = fields.Many2many(
         'mailing.contact', 'mailing_subscription', 'list_id', 'contact_id',
         string='Mailing Lists', copy=False)
+    description = fields.Text('Description', translate=True,
+        help="Summary of Mailing List contents. This will appear on the subscription management page.")
     mailing_count = fields.Integer(compute="_compute_mailing_count", string="Number of Mailing")
     mailing_ids = fields.Many2many(
         'mailing.mailing', 'mail_mass_mailing_list_rel',
@@ -332,12 +334,12 @@ class MailingList(models.Model):
                 body = force_message
             elif opt_out:
                 body = Markup('<p>%s</p><ul>%s</ul>') % (
-                    _('%(contact_name)s unsubscribed from the following mailing list(s)', contact_name=contact.display_name),
+                    _('%(contact_name)s unsubscribed from the following mailing list(s):', contact_name=contact.display_name),
                     Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
                 )
             else:
                 body = Markup('<p>%s</p><ul>%s</ul>') % (
-                    _('%(contact_name)s subscribed to the following mailing list(s)', contact_name=contact.display_name),
+                    _('%(contact_name)s subscribed to the following mailing list(s):', contact_name=contact.display_name),
                     Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
                 )
             contact.with_context(mail_create_nosubscribe=True).message_post(

@@ -13,6 +13,7 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     'depends': ['website', 'mass_mailing', 'google_recaptcha'],
     'data': [
         'data/ir_model_data.xml',
+        'views/mailing_templates_portal_unsubscribe.xml',
         'views/snippets/s_popup.xml',
         'views/snippets_templates.xml',
     ],
