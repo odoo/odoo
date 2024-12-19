@@ -47,7 +47,7 @@
         .o_cell:has(+ :is(.o_wrap_label, .o_wrap_field_boolean)),
         .o_wrap_field_boolean,
         .o_cell:first-child:last-child {
-            margin-bottom: map-get($spacers, 3);
+            margin-bottom: map-get($spacers, 4);
         }
     }
 }
@@ -462,7 +462,7 @@
 
     .o_inner_group {
         --columns: 1;
-        gap: map-get($spacers, 2) $o-horizontal-padding;
+        gap: 0 $o-horizontal-padding;
         margin-bottom: map-get($spacers, 2);
 
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
@@ -969,7 +969,7 @@
             margin-top: 0;
 
             .o_inner_group {
-                margin-bottom: 0 !important;
+                margin-bottom: map-get($spacers, 4 ) !important;
 
                 div[name="carrier_selection"] {
                     > div:not(.alert) {
