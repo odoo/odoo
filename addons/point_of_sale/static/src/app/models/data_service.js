@@ -40,7 +40,6 @@ export class PosData extends Reactive {
         };
 
         this.initIndexedDB();
-        await this.verifyCurrentSession();
         await this.initData();
 
         effect(
@@ -64,34 +63,12 @@ export class PosData extends Reactive {
         });
     }
 
-    async verifyCurrentSession() {
-        // If another device close the session we need to invalided the indexedDB on
-        // on the current device during the next reload
-        const localSessionId = localStorage.getItem(`pos.session.${odoo.pos_config_id}`);
-        if (
-            parseInt(localSessionId) &&
-            parseInt(localSessionId) !== parseInt(odoo.pos_session_id)
-        ) {
-            await this.resetIndexedDB();
-            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
-            window.location.reload();
-        }
-        localStorage.setItem(`pos.session.${odoo.pos_config_id}`, odoo.pos_session_id);
-    }
-
-    async resetIndexedDB() {
-        await this.indexedDB.reset();
-    }
-
-    get databaseName() {
-        return `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
-    }
-
     initIndexedDB() {
         // In web tests info is not defined
-        const models = Object.entries(this.opts.databaseTable).map(([name, data]) => {
-            return [data.key, name];
-        });
+        const models = Object.entries(this.opts.databaseTable).map(([name, data]) => [
+            data.key,
+            name,
+        ]);
         this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models);
     }
 
@@ -101,8 +78,8 @@ export class PosData extends Reactive {
 
     syncDataWithIndexedDB(records) {
         // Will separate records to remove from indexedDB and records to add
-        const dataSorter = (records, isFinalized, key) => {
-            return records.reduce(
+        const dataSorter = (records, isFinalized, key) =>
+            records.reduce(
                 (acc, record) => {
                     const finalizedState = isFinalized(record);
 
@@ -118,7 +95,6 @@ export class PosData extends Reactive {
                 },
                 { put: [], remove: [] }
             );
-        };
 
         // This methods will add uiState to the serialized object
         const dataFormatter = (record) => {

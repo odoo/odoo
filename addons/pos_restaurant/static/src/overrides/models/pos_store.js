@@ -149,6 +149,14 @@ patch(PosStore.prototype, {
 
         this.computeTableCount(data);
     },
+    cancelOrderNotification(data) {
+        super.cancelOrderNotification(...arguments);
+        this.computeTableCount(data);
+    },
+    async closingSessionNotification(data) {
+        await super.closingSessionNotification(...arguments);
+        this.computeTableCount(data);
+    },
     computeTableCount(data) {
         const tableIds = data?.table_ids;
         const tables = tableIds

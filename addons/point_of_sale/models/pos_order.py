@@ -975,8 +975,13 @@ class PosOrder(models.Model):
 
     def action_pos_order_cancel(self):
         cancellable_orders = self.filtered(lambda order: order.state == 'draft')
-        cancellable_orders.write({'state': 'cancel'})
-
+        res = cancellable_orders.write({'state': 'cancel'})
+        if res:
+            cancellable_orders[0].config_id._notify(('CANCEL_ORDERS',
+                {"order_ids": cancellable_orders.ids, 'login_number': self.env.context.get('login_number', False)},
+            ))
+        return res
+ 
     def _apply_invoice_payments(self, is_reverse=False):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id
         payment_moves = self.payment_ids.sudo().with_company(self.company_id)._create_payment_moves(is_reverse)
