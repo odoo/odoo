@@ -21,18 +21,6 @@ export function useDomState(getState) {
     return state;
 }
 
-export class WithSubEnv extends Component {
-    static template = xml`<t t-slot="default" />`;
-    static props = {
-        env: Object,
-        slots: Object,
-    };
-
-    setup() {
-        useSubEnv(this.props.env);
-    }
-}
-
 export class BuilderComponent extends Component {
     static template = xml`<t t-if="this.state.isVisible"><t t-slot="default"/></t>`;
     static props = {

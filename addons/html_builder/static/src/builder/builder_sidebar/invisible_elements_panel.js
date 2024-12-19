@@ -1,9 +1,7 @@
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
-import { WithSubEnv } from "../builder_helpers";
 import { getSnippetName } from "../../utils";
 export class InvisibleElementsPanel extends Component {
     static template = "html_builder.InvisibleElementsPanel";
-    static components = { WithSubEnv };
     static props = {
         invisibleEls: { type: Array },
         invisibleSelector: { type: String },
