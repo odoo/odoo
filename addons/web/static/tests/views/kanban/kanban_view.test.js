@@ -6,6 +6,7 @@ import {
     edit,
     hover,
     leave,
+    on,
     pointerDown,
     press,
     queryAll,
@@ -14,6 +15,7 @@ import {
     queryOne,
     queryText,
     resize,
+    scroll,
     setInputFiles,
 } from "@odoo/hoot-dom";
 import { Deferred, advanceFrame, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
@@ -12833,11 +12835,10 @@ test("scroll on group unfold and progressbar click", async () => {
     });
 
     expect.verifySteps(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]);
-    queryOne(".o_content").scrollTo = (params) => {
-        expect.step("scrolled");
-        expect(params.top).toBe(0);
-    };
+    queryOne(".o_content").style.maxHeight = "80px";
+    on(".o_content", "scroll", () => expect.step("scrolled"));
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanProgressBars(0)[0]).click();
 
     expect.verifySteps([
@@ -12850,6 +12851,7 @@ test("scroll on group unfold and progressbar click", async () => {
     ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanColumn(1)).click();
 
     expect.verifySteps(["web_search_read", "scrolled"]);

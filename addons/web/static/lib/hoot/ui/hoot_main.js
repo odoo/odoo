@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { createUrl } from "../core/url";
+import { createUrl, refresh } from "../core/url";
 import { useWindowListener } from "../hoot_utils";
 import { HootButtons } from "./hoot_buttons";
 import { HootConfigDropdown } from "./hoot_config_dropdown";
@@ -49,7 +49,7 @@ export class HootMain extends Component {
                 text-xl rounded-full shadow bg-gray-200 dark:bg-gray-800"
             >
                 Running in headless mode
-                <a class="text-primary hoot-link" t-att-href="createUrl({ headless: null })">
+                <a class="text-primary hover:underline" t-att-href="createUrl({ headless: null })">
                     Run with UI
                 </a>
             </div>
@@ -130,7 +130,11 @@ export class HootMain extends Component {
             case "Enter": {
                 if (runner.state.status === "ready") {
                     ev.preventDefault();
-                    runner.start();
+                    if (runner.config.manual) {
+                        runner.manualStart();
+                    } else {
+                        refresh();
+                    }
                 }
                 break;
             }
