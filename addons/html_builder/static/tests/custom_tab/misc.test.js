@@ -1,10 +1,11 @@
-import { expect, test } from "@odoo/hoot";
-import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 import { defaultBuilderComponents } from "../../src/builder/builder_components/default_builder_components";
 import { OptionsContainer } from "../../src/builder/components/option_container";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 defineWebsiteModels();
 
@@ -356,4 +357,118 @@ test("no need to define 'isActive' method for custom action if the widget alread
         </div>`);
     await contains(":iframe .s_test").click();
     expect(".options-container button").toHaveText("Info");
+});
+
+describe("dependencies", () => {
+    test("a button should not be visible if its dependency isn't (with undo)", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'y'"  id="'id2'">b2</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'id1'">b3</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'2'" dependencies="'id2'">b4</BuilderButton>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        setSelection({
+            anchorNode: queryFirst(":iframe .test-options-target").childNodes[0],
+            anchorOffset: 0,
+        });
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+        await contains(
+            "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
+        ).click();
+        expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+        await contains(
+            "[data-attribute-action='my-attribute1'][data-attribute-action-value='y']"
+        ).click();
+        expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "y");
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).toBeDisplayed();
+        await contains(".fa-undo").click();
+        expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+        await contains(".fa-undo").click();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+    });
+    test("a button should not be visible if the dependency is active", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'!id1'">b3</BuilderButton>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).toBeDisplayed();
+        await contains(
+            "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
+        ).click();
+        expect(":iframe .test-options-target").toHaveAttribute("my-attribute1", "x");
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+    });
+    test("a button should not be visible if the dependency is active (when a dependency is added after a dependent)", async () => {
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'id'">b1</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'2'" dependencies="'!id'">b2</BuilderButton>
+                <BuilderRow label="'dependency'">
+                    <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id'">b3</BuilderButton>
+                </BuilderRow>
+            `,
+        });
+        await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".options-container").toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).not.toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).toBeDisplayed();
+        await contains(
+            "[data-attribute-action='my-attribute1'][data-attribute-action-value='x']"
+        ).click();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
+        ).toBeDisplayed();
+        expect(
+            "[data-attribute-action='my-attribute2'][data-attribute-action-value='2']"
+        ).not.toBeDisplayed();
+    });
 });
