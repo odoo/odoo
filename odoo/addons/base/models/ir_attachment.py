@@ -18,7 +18,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.fields import Domain
 from odoo.http import Stream, root, request
-from odoo.tools import config, human_size, image, str2bool, consteq
+from odoo.tools import config, consteq, human_size, image, split_every, str2bool
 from odoo.tools.mimetypes import guess_mimetype, fix_filename_extension
 from odoo.osv import expression
 
@@ -197,7 +197,7 @@ class IrAttachment(models.Model):
         # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
         # for each chunk.
         removed = 0
-        for names in self.env.cr.split_for_in_conditions(checklist):
+        for names in split_every(self.env.cr.IN_MAX, checklist):
             # determine which files to keep among the checklist
             self.env.cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
             whitelist = set(row[0] for row in self.env.cr.fetchall())
@@ -210,7 +210,7 @@ class IrAttachment(models.Model):
                         os.unlink(self._full_path(fname))
                         _logger.debug("_file_gc unlinked %s", self._full_path(fname))
                         removed += 1
-                    except (OSError, IOError):
+                    except OSError:
                         _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
                 with contextlib.suppress(OSError):
                     os.unlink(filepath)

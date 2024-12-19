@@ -37,7 +37,7 @@ from psycopg2.extras import Json
 import odoo
 from odoo.exceptions import UserError
 from .config import config
-from .misc import file_open, file_path, get_iso_codes, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
+from .misc import file_open, file_path, get_iso_codes, split_every, OrderedSet, ReadonlyDict, SKIPPED_ELEMENT_TYPES
 
 __all__ = [
     "_",
@@ -1533,7 +1533,7 @@ class TranslationImporter:
             # field_name, {xmlid: {src: {lang: value}}}
             for field_name, field_dictionary in model_dictionary.items():
                 field = fields.get(field_name)
-                for sub_xmlids in cr.split_for_in_conditions(field_dictionary.keys()):
+                for sub_xmlids in split_every(cr.IN_MAX, field_dictionary.keys()):
                     # [module_name, imd_name, module_name, imd_name, ...]
                     params = []
                     for xmlid in sub_xmlids:
@@ -1597,7 +1597,7 @@ class TranslationImporter:
             Model = env[model_name]
             model_table = Model._table
             for field_name, field_dictionary in model_dictionary.items():
-                for sub_field_dictionary in cr.split_for_in_conditions(field_dictionary.items()):
+                for sub_field_dictionary in split_every(cr.IN_MAX, field_dictionary.items()):
                     # [xmlid, translations, xmlid, translations, ...]
                     params = []
                     for xmlid, translations in sub_field_dictionary:

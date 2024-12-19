@@ -6,7 +6,8 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, plaintext2html
+from odoo.tools import float_is_zero, float_compare, plaintext2html, split_every
+from odoo.tools.constants import PREFETCH_MAX
 from odoo.service.common import exp_version
 from odoo.osv.expression import AND
 
@@ -1002,8 +1003,7 @@ class PosSession(models.Model):
                     ('product_id.categ_id.property_valuation', '=', 'real_time'),
                     ('product_id.is_storable', '=', True),
                 ])
-                for stock_moves_split in self.env.cr.split_for_in_conditions(stock_moves.ids):
-                    stock_moves_batch = stock_move_sudo.browse(stock_moves_split)
+                for stock_moves_batch in split_every(PREFETCH_MAX, stock_moves._ids, stock_moves.browse):
                     candidates = stock_moves_batch\
                         .filtered(lambda m: not bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
                         .mapped('stock_valuation_layer_ids')
