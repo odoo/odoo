@@ -978,6 +978,7 @@
         we-selection-items {
             .o_we_user_value_widget {
                 margin-top: 0;
+                flex-grow: 1;
             }
         }
 
@@ -1165,13 +1166,16 @@
 
         // Button groups
         we-button-group.o_we_user_value_widget {
+            width: -webkit-fill-available;
+            width: -moz-available;
             we-selection-items {
                 display: flex;
-                max-width: 100%;
+                width: 100%;
 
                 we-button {
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
                     border-radius: 0;
+                    flex: 1;
 
                     + we-button {
                         border-left: none;
@@ -1192,7 +1196,7 @@
             we-button {
                 display: flex;
                 justify-content: center;
-                flex: 0 1 percentage(1/4);
+                flex: 1 1 percentage(1/4);
                 padding: ($o-we-sidebar-content-field-button-group-button-spacing / 4) ($o-we-sidebar-content-field-button-group-button-spacing / 3);
                 text-align: center;
             }
@@ -1574,7 +1578,7 @@
             }
             we-button, .o_we_so_color_palette, we-button-group {
                 &.o_we_user_value_widget {
-                    min-width: auto; // ... except for these ones
+                    min-width: 0; // ... except for these ones
                 }
             }
 
@@ -1620,7 +1624,7 @@
                 width: 100%;
             }
             > div {
-                flex: 0 1 auto;
+                flex: 1 1 auto;
                 min-width: 0;
                 margin-top: $o-we-sidebar-content-field-spacing;
             }
