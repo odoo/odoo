@@ -1,0 +1,1 @@
+from . import test_ir_ui_view_l10n
