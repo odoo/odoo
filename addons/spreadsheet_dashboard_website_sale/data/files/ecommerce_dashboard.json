@@ -18,7 +18,8 @@
         "28": { "size": 34 },
         "29": { "size": 34 },
         "30": { "size": 34 },
-        "31": { "size": 34 }
+        "31": { "size": 34 },
+        "32": { "size": 34 }
       },
       "cols": {
         "0": { "size": 259 },
@@ -123,6 +124,7 @@
         "E30": { "content": "=PIVOT.HEADER(1,\"#categ_id\",7)" },
         "E31": { "content": "=PIVOT.HEADER(1,\"#categ_id\",8)" },
         "E32": { "content": "=PIVOT.HEADER(1,\"#categ_id\",9)" },
+        "E33": { "content": "=PIVOT.HEADER(1,\"#categ_id\",10)" },
         "F23": { "content": "=_t(\"Units\")" },
         "F24": {
           "content": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",1)"
@@ -151,6 +153,9 @@
         "F32": {
           "content": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",9)"
         },
+        "F33": {
+          "content": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",10)"
+        },
         "G23": { "content": "=_t(\"Revenue\")" },
         "G24": {
           "content": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",1)"
@@ -178,6 +183,9 @@
         },
         "G32": {
           "content": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",9)"
+        },
+        "G33": {
+          "content": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",10)"
         }
       },
       "styles": {
@@ -186,8 +194,8 @@
         "E22": 1,
         "A23": 2,
         "E23": 2,
-        "A24:C32": 3,
-        "E24:G32": 3,
+        "A24:C33": 3,
+        "E24:G33": 3,
         "B23:C23": 4,
         "F23:G23": 4
       },
@@ -595,7 +603,7 @@
       "context": {},
       "domain": [["website_id", "!=", false]],
       "id": "2",
-      "measures": [{ "id": "order_reference", "fieldName": "order_reference" }],
+      "measures": [{ "id": "order_reference", "fieldName": "order_reference" }, { "id": "price_subtotal", "fieldName": "price_subtotal" }],
       "model": "sale.report",
       "name": "Sales Analysis by Abandoned Cart",
       "sortedColumn": {
@@ -639,7 +647,7 @@
       "context": { "search_default_confirmed": 1 },
       "domain": [["website_id", "!=", false]],
       "id": "3",
-      "measures": [{ "id": "order_reference", "fieldName": "order_reference" }],
+      "measures": [{ "id": "order_reference", "fieldName": "order_reference" }, { "id": "price_subtotal", "fieldName": "price_subtotal" }],
       "model": "sale.report",
       "name": "Sales Analysis by Abandoned Cart",
       "sortedColumn": {
