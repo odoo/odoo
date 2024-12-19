@@ -703,6 +703,9 @@ class AccountMove(models.Model):
 
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
 
+    # Used to displays a warning when the taxes on a move line do not align with the fiscal position.
+    display_incorrect_taxes_warning = fields.Text(compute="_compute_incorrect_taxes_warning")
+
     # used to display the various dates and amount dues on the invoice's PDF
     payment_term_details = fields.Binary(compute="_compute_payment_term_details", exportable=False)
     show_payment_term_details = fields.Boolean(compute="_compute_show_payment_term_details")
@@ -2043,6 +2046,21 @@ class AccountMove(models.Model):
         for move in self:
             move.next_payment_date = min([line.payment_date for line in move.line_ids.filtered(lambda l: l.payment_date and not l.reconciled)], default=False)
 
+    @api.depends('line_ids.tax_ids', 'fiscal_position_id')
+    def _compute_incorrect_taxes_warning(self):
+        for move in self:
+            if (
+                move.is_invoice()
+                and move.fiscal_position_id
+                and not move._validate_tax_alignment_with_fpos()
+            ):
+                move.display_incorrect_taxes_warning = _(
+                    "Taxes are not aligned with Fiscal Position (%s) set in other info tab",
+                    move.fiscal_position_id.name,
+                )
+            else:
+                move.display_incorrect_taxes_warning = False
+
     def _search_next_payment_date(self, operator, value):
         if operator not in ('=', '<', '<='):
             raise UserError(self.env._('Operation not supported'))
@@ -2400,6 +2418,32 @@ class AccountMove(models.Model):
                 if record.fiscal_position_id and impacted_countries != record.fiscal_position_id.country_id:
                     raise ValidationError(_("This entry contains taxes that are not compatible with your fiscal position. Check the country set in fiscal position and in your tax configuration."))
                 raise ValidationError(_("This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."))
+
+    def _validate_tax_alignment_with_fpos(self):
+        """
+        Method to validate whether the tax_ids on the move_lines are aligned with the fiscal position of the move.
+
+        Returns:
+            bool: `True` if the taxes on the move_lines aligned with the fiscal position, otherwise `False`.
+        """
+
+        self.ensure_one()
+        tax_ids = self.invoice_line_ids.tax_ids
+        tax_mapping = self.env['account.fiscal.position.tax'].with_company(self.company_id).search([
+            '|',
+            ('tax_src_id', 'in', tax_ids.ids),
+            ('tax_dest_id', 'in', tax_ids.ids),
+        ])
+        if tax_mapping:
+            unmapped_tax_ids = self.env['account.tax'].browse(tuple(
+                _id for _id in tax_ids.ids if _id not in set([
+                    *tax_mapping.tax_src_id.ids,
+                    *tax_mapping.tax_dest_id.ids
+                ])
+            ))
+            mapped_tax_ids = self.fiscal_position_id.map_tax(tax_mapping.tax_src_id)
+            return (tax_ids - unmapped_tax_ids) == mapped_tax_ids
+        return True
 
     # -------------------------------------------------------------------------
     # CATALOG
