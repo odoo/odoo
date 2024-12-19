@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_holidays.multi_request.ListView.buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button type="button" class="btn btn-secondary" t-on-click="openMatchingJobApplicants">
+                Multiple Requests
+            </button>
+        </xpath>
+    </t>
+</templates>
