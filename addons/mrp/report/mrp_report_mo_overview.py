@@ -3,10 +3,12 @@
 import copy
 import json
 from collections import defaultdict
+from datetime import datetime, time, timedelta
+from math import log10
+
 from odoo import _, api, fields, models
 from odoo.tools import float_compare, float_repr, float_round, float_is_zero, format_date, get_lang
-from datetime import datetime, timedelta
-from math import log10
+from odoo.addons.mrp.report.mrp_report_bom_structure import simulate_bom_planning
 
 
 class ReportMrpReport_Mo_Overview(models.AbstractModel):
@@ -73,12 +75,13 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         }
 
     def _get_report_data(self, production_id):
+        simulated_leaves_per_workcenter = defaultdict(list)
         production = self.env['mrp.production'].browse(production_id)
         # Necessary to fetch the right quantities for multi-warehouse
         production = production.with_context(warehouse_id=production.warehouse_id.id)
 
-        components = self._get_components_data(production, level=1, current_index='')
-        operations = self._get_operations_data(production, level=1, current_index='')
+        components = self._get_components_data(production, False, 1, '', simulated_leaves_per_workcenter)
+        operations = self._get_operations_data(production, 1, '', components, simulated_leaves_per_workcenter)
         initial_mo_cost, initial_bom_cost, initial_real_cost = self._compute_cost_sums(components, operations)
 
         if production.bom_id:
@@ -188,6 +191,10 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         mo_cost_decorator = decorator if any(compo['summary']['mo_cost_decorator'] == decorator for compo in (components + [operations])) else False
         real_cost_temp_decorator = self._get_comparison_decorator(mo_cost, real_cost, currency.rounding) if self._is_production_started(production) else False
         real_cost_decorator = real_cost_temp_decorator if any(compo['summary']['real_cost_decorator'] == real_cost_temp_decorator for compo in (components + [operations])) else False
+        if operations.get('simulated', False):
+            receipt = self._format_receipt_date('expected', operations.get('expected'))
+        else:
+            receipt = self._check_planned_start(production.date_start, self._get_replenishment_receipt(production, components))
         return {
             'level': 0,
             'model': production._name,
@@ -204,7 +211,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), production.product_uom_id) if product.is_storable else False,
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.product_uom_id) if product.is_storable else False,
             'quantity_reserved': 0.0,
-            'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
+            'receipt': receipt,
             'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
             'mo_cost': currency.round(mo_cost),
             'mo_cost_decorator': mo_cost_decorator,
@@ -278,9 +285,16 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
         return workorder.operation_id._compute_operation_cost() * operation_cycle
 
-    def _get_operations_data(self, production, level=0, current_index=False):
+    def _get_operations_data(self, production, level, current_index, components, simulated_leaves_per_workcenter):
         if production.state == "done":
             return self._get_finished_operation_data(production, level, current_index)
+        operations_planning = {}
+        if production.state not in ('done', 'cancel') and not production.is_planned:
+            max_component_date = fields.Datetime.today()
+            for component in components:
+                if component['summary']['receipt']['date']:
+                    max_component_date = max(max_component_date, component['summary']['receipt']['date'])
+            operations_planning = simulate_bom_planning(production.bom_id, production.product_id, datetime.combine(max_component_date, time.min), production.product_qty, simulated_leaves_per_workcenter=simulated_leaves_per_workcenter)
         currency = (production.company_id or self.env.company).currency_id
         operation_uom = _("Minutes")
         operations = []
@@ -308,7 +322,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                     bom_cost = mo_cost
                 mo_cost_decorator = 'danger' if isinstance(bom_cost, bool) and not bom_cost else self._get_comparison_decorator(bom_cost, mo_cost, 0.01)
             is_workorder_started = not float_is_zero(wo_duration, precision_digits=2)
-
+            planning = operations_planning.get(workorder.operation_id, None)
             operations.append({
                 'level': level,
                 'index': f"{current_index}W{index}",
@@ -328,6 +342,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'real_cost_decorator': real_cost_decorator,
                 'currency_id': currency.id,
                 'currency': currency,
+                'receipt': self._format_receipt_date('expected', planning['date_finished'] if planning else workorder.date_finished)
             })
             total_expected_time += workorder.duration_expected
             total_current_time += wo_duration if is_workorder_started else workorder.duration_expected
@@ -353,6 +368,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'currency': currency,
             },
             'details': operations,
+            'simulated': bool(operations_planning),
+            'expected': max((p['date_finished'] for p in operations_planning.values()), default=production.date_finished),
         }
 
     def _get_kit_operations(self, bom):
@@ -488,7 +505,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             total_real_cost += component.get('summary', {}).get('real_cost', 0.0)
         return total_mo_cost, total_bom_cost, total_real_cost
 
-    def _get_components_data(self, production, replenish_data=False, level=0, current_index=False):
+    def _get_components_data(self, production, replenish_data, level, current_index, simulated_leaves_per_workcenter):
         if not replenish_data:
             replenish_data = {
                 'products': {},
@@ -506,7 +523,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 # If a product wasn't consumed in the MO by the time it is done, no need to display it on the final Overview.
                 continue
             component_index = f"{current_index}{count}"
-            replenishments = self._get_replenishment_lines(production, move_raw, replenish_data, level, component_index)
+            replenishments = self._get_replenishment_lines(production, move_raw, replenish_data, level, component_index, simulated_leaves_per_workcenter)
             # If not enough replenishment -> To Order / Might get "non-available" in summary since all component won't be there in time
             components.append({
                 'summary': self._format_component_move(production, move_raw, replenishments, replenish_data, level, component_index),
@@ -613,7 +630,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         else:
             return self._format_receipt_date('expected', max_date)
 
-    def _get_replenishment_lines(self, production, move_raw, replenish_data, level, current_index):
+    def _get_replenishment_lines(self, production, move_raw, replenish_data, level, current_index, simulated_leaves_per_workcenter):
         product = move_raw.product_id
         quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity
         reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
@@ -654,8 +671,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             }
             forecast_line['already_used'] = True
             if doc_in._name == 'mrp.production':
-                replenishment['components'] = self._get_components_data(doc_in, replenish_data, level + 2, replenishment_index)
-                replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index)
+                replenishment['components'] = self._get_components_data(doc_in, replenish_data, level + 2, replenishment_index, simulated_leaves_per_workcenter)
+                replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index, replenishment['components'], simulated_leaves_per_workcenter)
                 initial_mo_cost, initial_bom_cost, initial_real_cost = self._compute_cost_sums(replenishment['components'], replenishment['operations'])
                 remaining_cost_share, byproducts = self._get_byproducts_data(doc_in, initial_mo_cost, initial_bom_cost, initial_real_cost, level + 2, replenishment_index)
                 replenishment['byproducts'] = byproducts
@@ -666,7 +683,10 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             if self._is_doc_in_done(doc_in):
                 replenishment['summary']['receipt'] = self._format_receipt_date('available')
             else:
-                replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
+                if replenishment.get('operations', {}).get('simulated', False):
+                    replenishment['summary']['receipt'] = self._format_receipt_date('expected', replenishment.get('operations', {}).get('expected'))
+                else:
+                    replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
 
             if self._is_production_started(production):
                 replenishment['summary']['mo_cost_decorator'] = self._get_comparison_decorator(replenishment['summary']['real_cost'], replenishment['summary']['mo_cost'], replenishment['summary']['currency'].rounding)
