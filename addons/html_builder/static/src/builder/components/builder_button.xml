@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.WeButton">
-    <WeComponent dependencies="props.dependencies">
+<t t-name="html_builder.BuilderButton">
+    <BuilderComponent dependencies="props.dependencies">
         <button type="button" class="btn btn-primary"
             t-att-data-action-id="this.props.action"
             t-att-data-class-action="this.props.classAction"
@@ -18,7 +18,7 @@
             <t t-if="props.label"  t-out="props.label"/>
             <t t-slot="default"/>
         </button>
-    </WeComponent>
+    </BuilderComponent>
 </t>
 
 </templates>

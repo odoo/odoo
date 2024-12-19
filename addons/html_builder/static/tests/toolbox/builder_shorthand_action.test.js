@@ -11,10 +11,10 @@ describe("builder shorthand actions", () => {
             addOption({
                 selector: ".test-options-target",
                 template: xml`
-                    <WeButtonGroup>
-                        <WeButton classAction="''"/>
-                        <WeButton classAction="'x'"/>
-                    </WeButtonGroup>
+                    <BuilderButtonGroup>
+                        <BuilderButton classAction="''"/>
+                        <BuilderButton classAction="'x'"/>
+                    </BuilderButtonGroup>
                 `,
             });
             await setupWebsiteBuilder(`<div class="test-options-target x">a</div>`);
@@ -30,10 +30,10 @@ describe("builder shorthand actions", () => {
             addOption({
                 selector: ".test-options-target",
                 template: xml`
-                    <WeButtonGroup>
-                        <WeButton classAction="'x'"/>
-                        <WeButton classAction="'x y z'"/>
-                    </WeButtonGroup>
+                    <BuilderButtonGroup>
+                        <BuilderButton classAction="'x'"/>
+                        <BuilderButton classAction="'x y z'"/>
+                    </BuilderButtonGroup>
                 `,
             });
             await setupWebsiteBuilder(`<div class="test-options-target x">b</div>`);
@@ -54,14 +54,14 @@ describe("builder shorthand actions", () => {
             expect("[data-class-action='x']").toHaveClass("active");
             expect("[data-class-action='x y z']").not.toHaveClass("active");
         });
-        test("toggle class when not inside a WeButtonGroup", async () => {
+        test("toggle class when not inside a BuilderButtonGroup", async () => {
             addOption({
                 selector: ".test-options-target",
                 template: xml`
-                    <WeButton classAction="'x'"/>
-                    <WeButtonGroup>
-                        <WeButton classAction="'y'"/>
-                    </WeButtonGroup>
+                    <BuilderButton classAction="'x'"/>
+                    <BuilderButtonGroup>
+                        <BuilderButton classAction="'y'"/>
+                    </BuilderButtonGroup>
                 `,
             });
             await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);

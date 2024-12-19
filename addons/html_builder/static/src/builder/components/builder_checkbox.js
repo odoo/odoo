@@ -3,13 +3,13 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import {
     clickableWeWidgetProps,
     useClickableWeWidget,
-    WeComponent,
+    BuilderComponent,
     useDependecyDefinition,
 } from "../builder_helpers";
 
-export class WeCheckbox extends Component {
-    static template = "html_builder.WeCheckbox";
-    static components = { WeComponent, CheckBox };
+export class BuilderCheckbox extends Component {
+    static template = "html_builder.BuilderCheckbox";
+    static components = { BuilderComponent, CheckBox };
     static props = {
         ...clickableWeWidgetProps,
         id: { type: String, optional: true },

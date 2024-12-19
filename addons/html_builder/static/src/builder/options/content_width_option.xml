@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ContentWidthOption">
-    <WeRow label.translate="Content width">
-        <WeButtonGroup applyTo="'.container, .container-fluid, .o_container_small'">
-            <WeButton classAction="'o_container_small'"><img src="/website/static/src/img/snippets_options/content_width_small.svg" /></WeButton>
-            <WeButton classAction="'container'"><img src="/website/static/src/img/snippets_options/content_width_normal.svg" /></WeButton>
-            <WeButton classAction="'container-fluid'"><img src="/website/static/src/img/snippets_options/content_width_full.svg" /></WeButton>
-        </WeButtonGroup>
-    </WeRow>
+    <BuilderRow label.translate="Content width">
+        <BuilderButtonGroup applyTo="'.container, .container-fluid, .o_container_small'">
+            <BuilderButton classAction="'o_container_small'"><img src="/website/static/src/img/snippets_options/content_width_small.svg" /></BuilderButton>
+            <BuilderButton classAction="'container'"><img src="/website/static/src/img/snippets_options/content_width_normal.svg" /></BuilderButton>
+            <BuilderButton classAction="'container-fluid'"><img src="/website/static/src/img/snippets_options/content_width_full.svg" /></BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
 </t>
 
 </templates>

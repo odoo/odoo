@@ -1,27 +1,27 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { WeButtonGroup } from "./WeButtonGroup";
+import { BuilderButtonGroup } from "./builder_button_group";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { WeRow } from "./WeRow";
-import { WeButton } from "./WeButton";
+import { BuilderRow } from "./builder_row";
+import { BuilderButton } from "./builder_button";
 import { Button } from "./Button";
-import { WeNumberInput } from "./WeNumberInput";
-import { WeSelect } from "./WeSelect";
-import { WeSelectItem } from "./WeSelectItem";
-import { WeColorpicker } from "./WeColorpicker";
-import { WeTextInput } from "./WeTextInput";
-import { WeCheckbox } from "./WeCheckbox";
+import { BuilderNumberInput } from "./builder_number_input";
+import { BuilderSelect } from "./builder_select";
+import { BuilderSelectItem } from "./builder_select_item";
+import { BuilderColorpicker } from "./builder_colorpicker";
+import { BuilderTextInput } from "./builder_text_input";
+import { BuilderCheckbox } from "./builder_checkbox";
 
 export const defaultOptionComponents = {
-    WeRow,
+    BuilderRow,
     Dropdown,
     DropdownItem,
-    WeButtonGroup,
-    WeButton,
+    BuilderButtonGroup,
+    BuilderButton,
     Button,
-    WeTextInput,
-    WeNumberInput,
-    WeColorpicker,
-    WeSelect,
-    WeSelectItem,
-    WeCheckbox,
+    BuilderTextInput,
+    BuilderNumberInput,
+    BuilderColorpicker,
+    BuilderSelect,
+    BuilderSelectItem,
+    BuilderCheckbox,
 };

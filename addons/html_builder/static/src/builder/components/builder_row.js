@@ -3,13 +3,13 @@ import {
     useVisibilityObserver,
     useApplyVisibility,
     basicContainerWeWidgetProps,
-    useWeComponent,
-    WeComponent,
+    useBuilderComponent,
+    BuilderComponent,
 } from "../builder_helpers";
 
-export class WeRow extends Component {
-    static template = "html_builder.WeRow";
-    static components = { WeComponent };
+export class BuilderRow extends Component {
+    static template = "html_builder.BuilderRow";
+    static components = { BuilderComponent };
     static props = {
         ...basicContainerWeWidgetProps,
         label: String,
@@ -20,7 +20,7 @@ export class WeRow extends Component {
     };
 
     setup() {
-        useWeComponent();
+        useBuilderComponent();
         useVisibilityObserver("content", useApplyVisibility("root"));
     }
 }

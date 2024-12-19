@@ -16,11 +16,11 @@ import { addActionOption, addOption, defineWebsiteModels, setupWebsiteBuilder } 
 
 defineWebsiteModels();
 
-describe("WeRow", () => {
+describe("BuilderRow", () => {
     test("show row title", async () => {
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeRow label="'my label'">row text</WeRow>`,
+            template: xml`<BuilderRow label="'my label'">row text</BuilderRow>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -30,7 +30,7 @@ describe("WeRow", () => {
     test("show row tooltip", async () => {
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeRow label="'my label'" tooltip="'my tooltip'">row text</WeRow>`,
+            template: xml`<BuilderRow label="'my label'" tooltip="'my tooltip'">row text</BuilderRow>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -46,21 +46,21 @@ describe("WeRow", () => {
     test("hide empty row and display row with content", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeRow label="'Row 1'">
-                <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
-            </WeRow>`,
+            template: xml`<BuilderRow label="'Row 1'">
+                <BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+            </BuilderRow>`,
         });
         addOption({
             selector: ".parent-target",
-            template: xml`<WeRow label="'Row 2'">
-                <WeButton applyTo="':not(.my-custom-class)'" classAction="'test'"/>
-            </WeRow>`,
+            template: xml`<BuilderRow label="'Row 2'">
+                <BuilderButton applyTo="':not(.my-custom-class)'" classAction="'test'"/>
+            </BuilderRow>`,
         });
         addOption({
             selector: ".parent-target",
-            template: xml`<WeRow label="'Row 3'">
-                <WeButton applyTo="'.my-custom-class'" classAction="'test'"/>
-            </WeRow>`,
+            template: xml`<BuilderRow label="'Row 3'">
+                <BuilderButton applyTo="'.my-custom-class'" classAction="'test'"/>
+            </BuilderRow>`,
         });
         await setupWebsiteBuilder(
             `<div class="parent-target"><div class="child-target">b</div></div>`
@@ -72,10 +72,10 @@ describe("WeRow", () => {
         await contains("[data-class-action='my-custom-class']").click();
         expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 3"]);
     });
-    test("extra classes on WeRow", async () => {
+    test("extra classes on BuilderRow", async () => {
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeRow label="'my label'" extraClassName="'extra-class'">row text</WeRow>`,
+            template: xml`<BuilderRow label="'my label'" extraClassName="'extra-class'">row text</BuilderRow>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -83,7 +83,7 @@ describe("WeRow", () => {
         expect(".hb-row").toHaveClass("extra-class");
     });
 });
-describe("WeButton", () => {
+describe("BuilderButton", () => {
     test("call a specific action with some params and value", async () => {
         addActionOption({
             customAction: {
@@ -94,7 +94,7 @@ describe("WeButton", () => {
         });
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeButton action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeButton>`,
+            template: xml`<BuilderButton action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</BuilderButton>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -107,7 +107,7 @@ describe("WeButton", () => {
     test("call a shorthand action", async () => {
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeButton classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton classAction="'my-custom-class'"/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -126,7 +126,7 @@ describe("WeButton", () => {
         });
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeButton action="'customAction'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton action="'customAction'" classAction="'my-custom-class'"/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -148,7 +148,7 @@ describe("WeButton", () => {
         });
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeButton action="'customAction'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton action="'customAction'" classAction="'my-custom-class'"/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -171,7 +171,7 @@ describe("WeButton", () => {
         });
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeButton action="'customAction'" preview="false"/>`,
+            template: xml`<BuilderButton action="'customAction'" preview="false"/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -186,10 +186,10 @@ describe("WeButton", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <WeButtonGroup>
-                        <WeButton classAction="'my-custom-class1'"/>
-                        <WeButton classAction="'my-custom-class2'"/>
-                    </WeButtonGroup>`,
+                    <BuilderButtonGroup>
+                        <BuilderButton classAction="'my-custom-class1'"/>
+                        <BuilderButton classAction="'my-custom-class2'"/>
+                    </BuilderButtonGroup>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -209,8 +209,8 @@ describe("WeButton", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                        <WeButton classAction="'my-custom-class1'"/>
-                        <WeButton classAction="'my-custom-class2'"/>`,
+                        <BuilderButton classAction="'my-custom-class1'"/>
+                        <BuilderButton classAction="'my-custom-class2'"/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target my-custom-class1">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -220,7 +220,7 @@ describe("WeButton", () => {
     test("apply classAction on multi elements", async () => {
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeButton applyTo="'.target-apply'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.target-apply'" classAction="'my-custom-class'"/>`,
         });
         const { getEditor } = await setupWebsiteBuilder(`
             <div class="test-options-target">
@@ -245,15 +245,15 @@ describe("WeButton", () => {
     test("hide/display base on applyTo", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeRow label="'my label'">
-                <WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
-            </WeRow>`,
+            template: xml`<BuilderRow label="'my label'">
+                <BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>
+            </BuilderRow>`,
         });
         addOption({
             selector: ".parent-target",
-            template: xml`<WeRow label="'my label'">
-                <WeButton applyTo="'.my-custom-class'" classAction="'test'"/>
-            </WeRow>`,
+            template: xml`<BuilderRow label="'my label'">
+                <BuilderButton applyTo="'.my-custom-class'" classAction="'test'"/>
+            </BuilderRow>`,
         });
 
         const { getEditor } = await setupWebsiteBuilder(
@@ -410,13 +410,13 @@ describe("WeButton", () => {
 
             addOption({
                 selector: ".test-options-target",
-                template: xml`<WeRow label="'my label'">
-                <WeButton action="'asyncAction1'"/>
-                <WeButton action="'asyncAction2'"/>
-                <WeButton action="'asyncAction3'"/>
-                <WeButton action="'action1'"/>
-                <WeButton action="'action2'"/>
-            </WeRow>`,
+                template: xml`<BuilderRow label="'my label'">
+                <BuilderButton action="'asyncAction1'"/>
+                <BuilderButton action="'asyncAction2'"/>
+                <BuilderButton action="'asyncAction3'"/>
+                <BuilderButton action="'action1'"/>
+                <BuilderButton action="'action2'"/>
+            </BuilderRow>`,
             });
 
             await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
@@ -462,13 +462,13 @@ describe("WeButton", () => {
 
             addOption({
                 selector: ".test-options-target",
-                template: xml`<WeRow label="'my label'">
-                <WeButton action="'asyncAction1'"/>
-                <WeButton action="'asyncAction2'"/>
-                <WeButton action="'asyncAction3'"/>
-                <WeButton action="'action1'"/>
-                <WeButton action="'action2'"/>
-            </WeRow>`,
+                template: xml`<BuilderRow label="'my label'">
+                <BuilderButton action="'asyncAction1'"/>
+                <BuilderButton action="'asyncAction2'"/>
+                <BuilderButton action="'asyncAction3'"/>
+                <BuilderButton action="'action1'"/>
+                <BuilderButton action="'action2'"/>
+            </BuilderRow>`,
             });
 
             await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
@@ -509,7 +509,7 @@ describe("WeButton", () => {
         });
     });
 });
-describe("WeButtonGroup", () => {
+describe("BuilderButtonGroup", () => {
     test("change the editingElement of sub widget through `applyTo` prop", async () => {
         addActionOption({
             customAction: {
@@ -521,9 +521,9 @@ describe("WeButtonGroup", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <WeButtonGroup applyTo="'.a'">
-                        <WeButton action="'customAction'"/>
-                    </WeButtonGroup>`,
+                    <BuilderButtonGroup applyTo="'.a'">
+                        <BuilderButton action="'customAction'"/>
+                    </BuilderButtonGroup>`,
         });
         await setupWebsiteBuilder(`
                 <div class="test-options-target">
@@ -546,9 +546,9 @@ describe("WeButtonGroup", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <WeButtonGroup actionParam="'myParam'">
-                        <WeButton action="'customAction'"/>
-                    </WeButtonGroup>`,
+                    <BuilderButtonGroup actionParam="'myParam'">
+                        <BuilderButton action="'customAction'"/>
+                    </BuilderButtonGroup>`,
         });
         await setupWebsiteBuilder(`
                 <div class="test-options-target">
@@ -564,16 +564,16 @@ describe("WeButtonGroup", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <WeButtonGroup preview="false">
-                        <WeButton action="'customAction1'"/>
-                        <WeButton action="'customAction2'" preview="true"/>
-                    </WeButtonGroup>
-                    <WeButtonGroup preview="true">
-                        <WeButton action="'customAction3'"/>
-                    </WeButtonGroup>
-                    <WeButtonGroup>
-                        <WeButton action="'customAction4'"/>
-                    </WeButtonGroup>`,
+                    <BuilderButtonGroup preview="false">
+                        <BuilderButton action="'customAction1'"/>
+                        <BuilderButton action="'customAction2'" preview="true"/>
+                    </BuilderButtonGroup>
+                    <BuilderButtonGroup preview="true">
+                        <BuilderButton action="'customAction3'"/>
+                    </BuilderButtonGroup>
+                    <BuilderButtonGroup>
+                        <BuilderButton action="'customAction4'"/>
+                    </BuilderButtonGroup>`,
         });
         addActionOption({
             customAction1: {
@@ -608,15 +608,15 @@ describe("WeButtonGroup", () => {
     test("hide/display base on applyTo", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
 
         addOption({
             selector: ".parent-target",
             template: xml`
-                <WeButtonGroup applyTo="'.my-custom-class'">
-                    <WeButton classAction="'test'">Test</WeButton>
-                </WeButtonGroup>`,
+                <BuilderButtonGroup applyTo="'.my-custom-class'">
+                    <BuilderButton classAction="'test'">Test</BuilderButton>
+                </BuilderButtonGroup>`,
         });
 
         await setupWebsiteBuilder(
@@ -632,15 +632,15 @@ describe("WeButtonGroup", () => {
     test("hide/display base on applyTo - 2", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
 
         addOption({
             selector: ".parent-target",
             template: xml`
-                <WeButtonGroup>
-                    <WeButton applyTo="'.my-custom-class'" classAction="'test'">Test</WeButton>
-                </WeButtonGroup>`,
+                <BuilderButtonGroup>
+                    <BuilderButton applyTo="'.my-custom-class'" classAction="'test'">Test</BuilderButton>
+                </BuilderButtonGroup>`,
         });
 
         await setupWebsiteBuilder(
@@ -653,7 +653,7 @@ describe("WeButtonGroup", () => {
         expect(".options-container .btn-group").toBeVisible();
     });
 });
-describe("WeNumberInput", () => {
+describe("BuilderNumberInput", () => {
     test("should get the initial value of the input", async () => {
         addActionOption({
             customAction: {
@@ -665,7 +665,7 @@ describe("WeNumberInput", () => {
         });
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeNumberInput action="'customAction'"/>`,
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
                 <div class="test-options-target">10</div>
@@ -687,7 +687,7 @@ describe("WeNumberInput", () => {
         });
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeNumberInput action="'customAction'"/>`,
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
                 <div class="test-options-target">10</div>
@@ -713,7 +713,7 @@ describe("WeNumberInput", () => {
         });
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeNumberInput action="'customAction'"/>`,
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
         });
         await setupWebsiteBuilder(`
                 <div class="test-options-target">10</div>
@@ -733,11 +733,11 @@ describe("WeNumberInput", () => {
     test("hide/display base on applyTo", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
         addOption({
             selector: ".parent-target",
-            template: xml`<WeNumberInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
+            template: xml`<BuilderNumberInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
         });
         addActionOption({
             customAction: {
@@ -765,15 +765,15 @@ describe("WeNumberInput", () => {
         expect("[data-action-id='customAction'] input").toHaveValue("customValue");
     });
 });
-describe("WeTextInput", () => {
+describe("BuilderTextInput", () => {
     test("hide/display base on applyTo", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
         addOption({
             selector: ".parent-target",
-            template: xml`<WeTextInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
+            template: xml`<BuilderTextInput applyTo="'.my-custom-class'" action="'customAction'"/>`,
         });
         addActionOption({
             customAction: {
@@ -801,8 +801,8 @@ describe("WeTextInput", () => {
         expect("[data-action-id='customAction'] input").toHaveValue("customValue");
     });
 });
-describe("WeSelectItem", () => {
-    test("call a specific action with some params and value (WeSelectItem)", async () => {
+describe("BuilderSelectItem", () => {
+    test("call a specific action with some params and value (BuilderSelectItem)", async () => {
         addActionOption({
             customAction: {
                 apply: ({ param, value }) => {
@@ -813,9 +813,9 @@ describe("WeSelectItem", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <WeSelect>
-                        <WeSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</WeSelectItem>
-                    </WeSelect>`,
+                    <BuilderSelect>
+                        <BuilderSelectItem action="'customAction'" actionParam="'myParam'" actionValue="'myValue'">MyAction</BuilderSelectItem>
+                    </BuilderSelect>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -831,11 +831,11 @@ describe("WeSelectItem", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <WeSelect attributeAction="'customAttribute'">
-                        <WeSelectItem attributeActionValue="null">None</WeSelectItem>
-                        <WeSelectItem attributeActionValue="'a'">A</WeSelectItem>
-                        <WeSelectItem attributeActionValue="'b'">B</WeSelectItem>
-                    </WeSelect>`,
+                    <BuilderSelect attributeAction="'customAttribute'">
+                        <BuilderSelectItem attributeActionValue="null">None</BuilderSelectItem>
+                        <BuilderSelectItem attributeActionValue="'a'">A</BuilderSelectItem>
+                        <BuilderSelectItem attributeActionValue="'b'">B</BuilderSelectItem>
+                    </BuilderSelect>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target" customAttribute="a">x</div>`);
         setSelection({
@@ -859,11 +859,11 @@ describe("WeSelectItem", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                    <WeSelect>
-                        <WeSelectItem classAction="''">None</WeSelectItem>
-                        <WeSelectItem classAction="'a'">A</WeSelectItem>
-                        <WeSelectItem classAction="'a b'">A B</WeSelectItem>
-                    </WeSelect>`,
+                    <BuilderSelect>
+                        <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+                        <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
+                        <BuilderSelectItem classAction="'a b'">A B</BuilderSelectItem>
+                    </BuilderSelect>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target a">x</div>`);
         await contains(":iframe .test-options-target").click();
@@ -879,18 +879,18 @@ describe("WeSelectItem", () => {
         await contains(".o-overlay-item [data-class-action='a b']").click();
         expect(".we-bg-options-container .dropdown").toHaveText("A B");
     });
-    test("hide/display WeSelect based on applyTo", async () => {
+    test("hide/display BuilderSelect based on applyTo", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
         addOption({
             selector: ".parent-target",
             template: xml`
-                <WeSelect applyTo="'.my-custom-class'">
-                    <WeSelectItem classAction="'a'">A</WeSelectItem>
-                    <WeSelectItem classAction="'b'">B</WeSelectItem>
-                </WeSelect>`,
+                <BuilderSelect applyTo="'.my-custom-class'">
+                    <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
+                    <BuilderSelectItem classAction="'b'">B</BuilderSelectItem>
+                </BuilderSelect>`,
         });
         const { getEditor } = await setupWebsiteBuilder(
             `<div class="parent-target"><div class="child-target b">b</div></div>`
@@ -913,19 +913,19 @@ describe("WeSelectItem", () => {
         expect(".options-container button.dropdown-toggle").toHaveText("B");
     });
 
-    test("hide/display WeSelectItem base on applyTo", async () => {
+    test("hide/display BuilderSelectItem base on applyTo", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
         addOption({
             selector: ".parent-target",
             template: xml`
-                <WeSelect>
-                    <WeSelectItem classAction="'a'">A</WeSelectItem>
-                    <WeSelectItem applyTo="'.my-custom-class'" classAction="'b'">B</WeSelectItem>
-                    <WeSelectItem classAction="'c'">C</WeSelectItem>
-                </WeSelect>`,
+                <BuilderSelect>
+                    <BuilderSelectItem classAction="'a'">A</BuilderSelectItem>
+                    <BuilderSelectItem applyTo="'.my-custom-class'" classAction="'b'">B</BuilderSelectItem>
+                    <BuilderSelectItem classAction="'c'">C</BuilderSelectItem>
+                </BuilderSelect>`,
         });
         const { getEditor } = await setupWebsiteBuilder(
             `<div class="parent-target"><div class="child-target">b</div></div>`
@@ -949,17 +949,17 @@ describe("WeSelectItem", () => {
         expect(queryAllTexts(".o-dropdown--menu div")).toEqual(["A", "B", "C"]);
     });
 
-    test("hide/display WeSelect base on applyTo in WeSelectItem", async () => {
+    test("hide/display BuilderSelect base on applyTo in BuilderSelectItem", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
         addOption({
             selector: ".parent-target",
             template: xml`
-                <WeSelect>
-                    <WeSelectItem applyTo="'.my-custom-class'" classAction="'a'">A</WeSelectItem>
-                </WeSelect>`,
+                <BuilderSelect>
+                    <BuilderSelectItem applyTo="'.my-custom-class'" classAction="'a'">A</BuilderSelectItem>
+                </BuilderSelect>`,
         });
         await setupWebsiteBuilder(
             `<div class="parent-target"><div class="child-target b">b</div></div>`
@@ -971,11 +971,11 @@ describe("WeSelectItem", () => {
         expect(".options-container button.dropdown-toggle").toBeVisible();
     });
 });
-describe("WeColorpicker", () => {
+describe("BuilderColorpicker", () => {
     test("should apply color to the editing element", async () => {
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeColorpicker/>`,
+            template: xml`<BuilderColorpicker/>`,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
@@ -988,11 +988,11 @@ describe("WeColorpicker", () => {
     test("hide/display base on applyTo", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
         addOption({
             selector: ".parent-target",
-            template: xml`<WeColorpicker applyTo="'.my-custom-class'"/>`,
+            template: xml`<BuilderColorpicker applyTo="'.my-custom-class'"/>`,
         });
         const { getEditor } = await setupWebsiteBuilder(
             `<div class="parent-target"><div class="child-target b">b</div></div>`
@@ -1013,11 +1013,11 @@ describe("WeColorpicker", () => {
         expect(".options-container .o_we_color_preview").toHaveCount(1);
     });
 });
-describe("WeCheckbox", () => {
+describe("BuilderCheckbox", () => {
     test("Click on checkbox", async () => {
         addOption({
             selector: ".test-options-target",
-            template: xml`<WeCheckbox classAction="'checkbox-action'"/>`,
+            template: xml`<BuilderCheckbox classAction="'checkbox-action'"/>`,
         });
         const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
         const editor = getEditor();
@@ -1040,11 +1040,11 @@ describe("WeCheckbox", () => {
     test("hide/display base on applyTo", async () => {
         addOption({
             selector: ".parent-target",
-            template: xml`<WeButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
+            template: xml`<BuilderButton applyTo="'.child-target'" classAction="'my-custom-class'"/>`,
         });
         addOption({
             selector: ".parent-target",
-            template: xml`<WeCheckbox classAction="'checkbox-action'" applyTo="'.my-custom-class'"/>`,
+            template: xml`<BuilderCheckbox classAction="'checkbox-action'" applyTo="'.my-custom-class'"/>`,
         });
         const { getEditor } = await setupWebsiteBuilder(
             `<div class="parent-target"><div class="child-target b">b</div></div>`
@@ -1071,10 +1071,10 @@ describe("dependencies", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                <WeButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</WeButton>
-                <WeButton attributeAction="'my-attribute1'" attributeActionValue="'y'"  id="'id2'">b2</WeButton>
-                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'id1'">b3</WeButton>
-                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'2'" dependencies="'id2'">b4</WeButton>
+                <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'y'"  id="'id2'">b2</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'id1'">b3</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'2'" dependencies="'id2'">b4</BuilderButton>
             `,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
@@ -1130,8 +1130,8 @@ describe("dependencies", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                <WeButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</WeButton>
-                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'!id1'">b3</WeButton>
+                <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id1'">b1</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'!id1'">b3</BuilderButton>
             `,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
@@ -1152,11 +1152,11 @@ describe("dependencies", () => {
         addOption({
             selector: ".test-options-target",
             template: xml`
-                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'id'">b1</WeButton>
-                <WeButton attributeAction="'my-attribute2'" attributeActionValue="'2'" dependencies="'!id'">b2</WeButton>
-                <WeRow label="'dependency'">
-                    <WeButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id'">b3</WeButton>
-                </WeRow>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'1'" dependencies="'id'">b1</BuilderButton>
+                <BuilderButton attributeAction="'my-attribute2'" attributeActionValue="'2'" dependencies="'!id'">b2</BuilderButton>
+                <BuilderRow label="'dependency'">
+                    <BuilderButton attributeAction="'my-attribute1'" attributeActionValue="'x'" id="'id'">b3</BuilderButton>
+                </BuilderRow>
             `,
         });
         await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);

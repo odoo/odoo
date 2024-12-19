@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BlockAlignmentOption">
-    <WeRow label.translate="Alignment" dependencies="'!so_width_100'">
-        <WeButtonGroup>
-            <WeButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"/>
-            <WeButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
-            <WeButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"/>
-        </WeButtonGroup>
-    </WeRow>
+    <BuilderRow label.translate="Alignment" dependencies="'!so_width_100'">
+        <BuilderButtonGroup>
+            <BuilderButton icon="'fa-align-left'" title.translate="Left" classAction="'me-auto'"/>
+            <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
+            <BuilderButton icon="'fa-align-right'" title.translate="Right" classAction="'ms-auto'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
 </t>
 
 </templates>

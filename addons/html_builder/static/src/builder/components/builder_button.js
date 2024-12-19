@@ -2,14 +2,14 @@ import { Component } from "@odoo/owl";
 import {
     clickableWeWidgetProps,
     useClickableWeWidget,
-    WeComponent,
+    BuilderComponent,
     useDependecyDefinition,
     defaultWeWidgetProps,
 } from "../builder_helpers";
 
-export class WeButton extends Component {
-    static template = "html_builder.WeButton";
-    static components = { WeComponent };
+export class BuilderButton extends Component {
+    static template = "html_builder.BuilderButton";
+    static components = { BuilderComponent };
     static props = {
         ...clickableWeWidgetProps,
 

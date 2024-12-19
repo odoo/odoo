@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.WeSelectItem">
-    <WeComponent dependencies="props.dependencies">
+<t t-name="html_builder.BuilderSelectItem">
+    <BuilderComponent dependencies="props.dependencies">
         <div
             class="d-flex flex-column cursor-pointer"
             t-att-class="{'active': this.state.isActive}"
@@ -17,7 +17,7 @@
             t-ref="item">
             <t t-slot="default" />
         </div>
-    </WeComponent>
+    </BuilderComponent>
 </t>
 
 </templates>

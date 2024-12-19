@@ -4,11 +4,11 @@ import {
     defaultWeWidgetProps,
     useClickableWeWidget,
     useDependecyDefinition,
-    WeComponent,
+    BuilderComponent,
 } from "../builder_helpers";
 
-export class WeSelectItem extends Component {
-    static template = "html_builder.WeSelectItem";
+export class BuilderSelectItem extends Component {
+    static template = "html_builder.BuilderSelectItem";
     static props = {
         ...clickableWeWidgetProps,
         id: { type: String, optional: true },
@@ -16,11 +16,11 @@ export class WeSelectItem extends Component {
         slots: { type: Object, optional: true },
     };
     static defaultProps = defaultWeWidgetProps;
-    static components = { WeComponent };
+    static components = { BuilderComponent };
 
     setup() {
-        if (!this.env.weSelectContext) {
-            throw new Error("WeSelectItem must be used inside a WeSelect component.");
+        if (!this.env.BuilderSelectContext) {
+            throw new Error("BuilderSelectItem must be used inside a BuilderSelect component.");
         }
         const item = useRef("item");
         const { state, operation, isActive, getActions, priority } = useClickableWeWidget();
@@ -34,16 +34,16 @@ export class WeSelectItem extends Component {
             getLabel: () => item.el?.innerHTML || "",
         };
 
-        this.env.weSelectContext.addSelectableItem?.(selectableItem);
-        onMounted(this.env.weSelectContext.update);
+        this.env.BuilderSelectContext.addSelectableItem?.(selectableItem);
+        onMounted(this.env.BuilderSelectContext.update);
         onWillDestroy(() => {
-            this.env.weSelectContext.removeSelectableItem?.(selectableItem);
+            this.env.BuilderSelectContext.removeSelectableItem?.(selectableItem);
         });
 
         this.state = state;
         this.onClick = () => {
             operation.commit();
-            this.env.weSelectContext.bus.trigger("select-item");
+            this.env.BuilderSelectContext.bus.trigger("select-item");
         };
         this.onMouseenter = operation.preview;
         this.onMouseleave = operation.revert;

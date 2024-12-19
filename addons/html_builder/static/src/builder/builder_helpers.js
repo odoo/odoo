@@ -33,7 +33,7 @@ export class WithSubEnv extends Component {
     }
 }
 
-export class WeComponent extends Component {
+export class BuilderComponent extends Component {
     static template = xml`<t t-if="this.state.isVisible"><t t-slot="default"/></t>`;
     static props = {
         dependencies: { type: [String, { type: Array, element: String }], optional: true },
@@ -69,7 +69,7 @@ function querySelectorAll(targets, selector) {
     return [...elements];
 }
 
-export function useWeComponent() {
+export function useBuilderComponent() {
     const comp = useComponent();
     const newEnv = {};
     const oldEnv = useEnv();
@@ -129,7 +129,7 @@ export function useDependencies(dependencies) {
 }
 
 export function useClickableWeWidget() {
-    useWeComponent();
+    useBuilderComponent();
     const comp = useComponent();
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
@@ -354,7 +354,7 @@ export function useInputWeWidget() {
     });
     function getState(editingElement) {
         if (!editingElement) {
-            // TODO try to remove it. We need to move hook in WeComponent
+            // TODO try to remove it. We need to move hook in BuilderComponent
             return {};
         }
         const [actionId, actionParam] = getActions()[0];

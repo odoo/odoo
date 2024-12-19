@@ -3,23 +3,23 @@ import { Component, onMounted, useRef } from "@odoo/owl";
 import {
     basicContainerWeWidgetProps,
     useDomState,
-    useWeComponent,
-    WeComponent,
+    useBuilderComponent,
+    BuilderComponent,
 } from "../builder_helpers";
 
-export class WeColorpicker extends Component {
-    static template = "html_builder.WeColorpicker";
+export class BuilderColorpicker extends Component {
+    static template = "html_builder.BuilderColorpicker";
     static props = {
         ...basicContainerWeWidgetProps,
         unit: { type: String, optional: true },
     };
     static components = {
         ColorSelector,
-        WeComponent,
+        BuilderComponent,
     };
 
     setup() {
-        useWeComponent();
+        useBuilderComponent();
         this.currentColors = useDomState((editingElement) => ({
             backgroundColor: editingElement
                 ? getComputedStyle(editingElement).backgroundColor

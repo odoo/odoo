@@ -2,26 +2,26 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ProgressBarOption">
-    <WeRow label.translate="Value">
-        <WeNumberInput action="'progressBarValue'" unit="'%'"/>
-    </WeRow>
-    <WeRow label.translate="Label">
-        <WeSelect>
-            <WeSelectItem action="'display'" actionParam="'inline'" classAction="'s_progress_bar_label_inline'">Display Inside</WeSelectItem>
-            <WeSelectItem action="'display'" actionParam="'below'" classAction="'s_progress_bar_label_below'">Display Below</WeSelectItem>
-            <WeSelectItem action="'display'" actionParam="'after'" classAction="'s_progress_bar_label_after'">Display After</WeSelectItem>
-            <WeSelectItem action="'display'" actionParam="'none'" classAction="'s_progress_bar_label_hidden'">Hide</WeSelectItem>
-        </WeSelect>
-    </WeRow>
-    <WeRow label.translate="Colors">
-        <WeColorpicker applyTo="'.progress-bar'" styleAction="'background-color'"/>
-    </WeRow>
-    <WeRow label.translate="Striped">
-        <WeCheckbox id="'striped_option'" classAction="'progress-bar-striped'" applyTo="'.progress-bar'"/>
-    </WeRow>
-    <WeRow label.translate="Animated" extraClassName="'o_we_sublevel'">
-        <WeCheckbox classAction="'progress-bar-animated'" dependencies="'striped_option'" applyTo="'.progress-bar'"/>
-    </WeRow>
+    <BuilderRow label.translate="Value">
+        <BuilderNumberInput action="'progressBarValue'" unit="'%'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Label">
+        <BuilderSelect>
+            <BuilderSelectItem action="'display'" actionParam="'inline'" classAction="'s_progress_bar_label_inline'">Display Inside</BuilderSelectItem>
+            <BuilderSelectItem action="'display'" actionParam="'below'" classAction="'s_progress_bar_label_below'">Display Below</BuilderSelectItem>
+            <BuilderSelectItem action="'display'" actionParam="'after'" classAction="'s_progress_bar_label_after'">Display After</BuilderSelectItem>
+            <BuilderSelectItem action="'display'" actionParam="'none'" classAction="'s_progress_bar_label_hidden'">Hide</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Colors">
+        <BuilderColorpicker applyTo="'.progress-bar'" styleAction="'background-color'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Striped">
+        <BuilderCheckbox id="'striped_option'" classAction="'progress-bar-striped'" applyTo="'.progress-bar'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Animated" extraClassName="'o_we_sublevel'">
+        <BuilderCheckbox classAction="'progress-bar-animated'" dependencies="'striped_option'" applyTo="'.progress-bar'"/>
+    </BuilderRow>
 </t>
 
 </templates>

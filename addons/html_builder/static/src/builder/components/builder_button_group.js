@@ -3,21 +3,21 @@ import {
     basicContainerWeWidgetProps,
     useVisibilityObserver,
     useApplyVisibility,
-    useWeComponent,
-    WeComponent,
+    useBuilderComponent,
+    BuilderComponent,
 } from "../builder_helpers";
 
-export class WeButtonGroup extends Component {
-    static template = "html_builder.WeButtonGroup";
+export class BuilderButtonGroup extends Component {
+    static template = "html_builder.BuilderButtonGroup";
     static props = {
         ...basicContainerWeWidgetProps,
         dependencies: { type: [String, Array], optional: true },
         slots: { type: Object, optional: true },
     };
-    static components = { WeComponent };
+    static components = { BuilderComponent };
 
     setup() {
-        useWeComponent();
+        useBuilderComponent();
         const bus = new EventBus();
         useSubEnv({
             actionBus: bus,

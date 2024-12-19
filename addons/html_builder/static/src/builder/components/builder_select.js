@@ -4,34 +4,34 @@ import {
     basicContainerWeWidgetProps,
     useVisibilityObserver,
     useApplyVisibility,
-    useWeComponent,
-    WeComponent,
+    useBuilderComponent,
+    BuilderComponent,
 } from "../builder_helpers";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useBus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
-export class WeSelect extends Component {
-    static template = "html_builder.WeSelect";
+export class BuilderSelect extends Component {
+    static template = "html_builder.BuilderSelect";
     static props = {
         ...basicContainerWeWidgetProps,
         slots: Object,
     };
     static components = {
         Dropdown,
-        WeComponent,
+        BuilderComponent,
     };
 
     setup() {
         const button = useRef("button");
-        useWeComponent();
+        useBuilderComponent();
         useVisibilityObserver("content", useApplyVisibility("root"));
         this.dropdown = useDropdownState();
         const selectableItems = [];
         const setLabelDebounced = useDebounced(setLabel, 0);
         useSubEnv({
             actionBus: new EventBus(),
-            weSelectContext: {
+            BuilderSelectContext: {
                 bus: new EventBus(),
                 addSelectableItem: (item) => {
                     selectableItems.push(item);
@@ -65,7 +65,7 @@ export class WeSelect extends Component {
             }
             setLabel();
         });
-        useBus(this.env.weSelectContext.bus, "select-item", (item) => {
+        useBus(this.env.BuilderSelectContext.bus, "select-item", (item) => {
             this.dropdown.close();
         });
     }

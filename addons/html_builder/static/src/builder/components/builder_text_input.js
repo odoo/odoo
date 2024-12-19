@@ -2,20 +2,20 @@ import { Component } from "@odoo/owl";
 import {
     basicContainerWeWidgetProps,
     useInputWeWidget,
-    useWeComponent,
-    WeComponent,
+    useBuilderComponent,
+    BuilderComponent,
 } from "../builder_helpers";
 
-export class WeTextInput extends Component {
-    static template = "html_builder.WeTextInput";
+export class BuilderTextInput extends Component {
+    static template = "html_builder.BuilderTextInput";
     static props = {
         ...basicContainerWeWidgetProps,
         placeholder: { type: String, optional: true },
     };
-    static components = { WeComponent };
+    static components = { BuilderComponent };
 
     setup() {
-        useWeComponent();
+        useBuilderComponent();
         const { state, onChange, onInput } = useInputWeWidget();
         this.onChange = onChange;
         this.onInput = onInput;
