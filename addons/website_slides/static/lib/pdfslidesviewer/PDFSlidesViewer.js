@@ -147,9 +147,13 @@ globalThis.PDFSlidesViewer = (function(){
 
     PDFSlidesViewer.prototype.toggleFullScreenFooter = function(){
         if(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-            var $navBarFooter = $('div#PDFViewer div.oe_slides_panel_footer').parent();
-            $navBarFooter.toggleClass('oe_show_footer');
-            $navBarFooter.toggle();
+            const navBarFooterEl = document.querySelector('div#PDFViewer div.oe_slides_panel_footer').parentElement;
+            navBarFooterEl.classList.toggle('oe_show_footer');
+            if (navBarFooterEl.style.display === "none") {
+                navBarFooterEl.style.display = "block";
+              } else {
+                navBarFooterEl.style.display = "none";
+              }
         }
     }
 
