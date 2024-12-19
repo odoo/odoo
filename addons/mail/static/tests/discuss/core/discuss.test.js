@@ -22,8 +22,7 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Members']");
-    await contains(".o-discuss-ChannelMemberList");
+    await contains(".o-discuss-ChannelMemberList"); // member list open by default
     await click("[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel");
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
