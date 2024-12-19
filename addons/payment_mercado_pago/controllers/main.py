@@ -3,10 +3,13 @@
 import logging
 import pprint
 
+import requests
+
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -62,3 +65,40 @@ class MercadoPagoController(http.Controller):
             except ValidationError:  # Acknowledge the notification to avoid getting spammed.
                 _logger.exception("Unable to handle the notification data; skipping to acknowledge")
         return ''  # Acknowledge the notification.
+
+    @http.route('/mercado_pago/methods', type='http')
+    def mercado_pago_methods(self):
+
+        headers = {'Content-Type':'application/json','Authorization': f'Bearer TEST-8088927131040927-082108-480b8790088df9ec287c80b5982f31ad-1074382083'}
+
+        x = requests.get('https://api.mercadopago.com/v1/payment_methods', params=None, headers=headers, timeout=10)
+        print(x)
+
+
+    @http.route('/payment/mercado_pago/payments', type='jsonrpc', auth='public')
+    def make_mp_transacton(self, payment_method_id, payer, provider_id, reference, transaction_amount, token=None, issuer_id=None):
+        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
+        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+        headers = {'Content-Type': 'application/json',
+                   'Authorization': f'Bearer {provider_sudo.mercado_pago_access_token}',
+                   'X-Idempotency-Key': payment_utils.generate_idempotency_key(tx_sudo)}
+
+        payload = {
+            "transaction_amount": transaction_amount,
+            "description": reference,
+            "installments": 1,
+            "payment_method_id": payment_method_id,
+            "payer": payer,
+            **self.card_payment_values(token, issuer_id)
+        }
+
+        response_content = provider_sudo._mercado_pago_make_request(endpoint='/v1/payments', payload=payload, method='POST', idempotency_key=payment_utils.generate_idempotency_key(tx_sudo))
+
+        tx_sudo._handle_notification_data(
+            'mercado_pago', dict(response_content, merchantReference=reference),  # Match the transaction
+        )
+
+    def card_payment_values(self, token, issuer_id):
+        if token and issuer_id:
+            return {"token": token, "issuer_id": issuer_id}
+        return {}
