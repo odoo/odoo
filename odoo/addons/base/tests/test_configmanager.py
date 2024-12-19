@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import call, patch
 
 import odoo
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, Like
 from odoo.tools import file_path, file_open, file_open_temporary_directory
 from odoo.tools.config import configmanager
 
@@ -75,7 +75,6 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},
             'update': {},
-            'without_demo': False,
             'with_demo': False,
             'demo': {},
             'import_partial': '',
@@ -193,7 +192,6 @@ class TestConfigManager(TransactionCase):
             'save': False,
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
-            'without_demo': False,
             'with_demo': True,
             'demo': {},  # blacklist for save, ignored from the config file
             'import_partial': '/tmp/import-partial',
@@ -368,7 +366,6 @@ class TestConfigManager(TransactionCase):
             'unaccent': False,
             'update': {},
             'upgrade_path': [],
-            'without_demo': False,
             'with_demo': False,
 
             # options that are not taken from the file (also in 14.0)
@@ -446,11 +443,14 @@ class TestConfigManager(TransactionCase):
 
     def test_06_cli(self):
         with file_open('base/tests/config/cli') as file:
-            with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
+            with self.assertLogs('odoo.tools.config', 'WARNING') as capture, self.assertLogs('py.warnings', 'WARNING') as capture_2:
                 self.config._parse_config(file.read().split())
         self.assertEqual(capture.output, [
             "WARNING:odoo.tools.config:option --without-demo: since 19.0, invalid boolean value: 'rigolo', assume True",
         ])
+        self.assertEqual([
+            Like("... DeprecationWarning: The without-demo option should be used as a flag ..."),
+        ], capture_2.output)
 
         self.assertConfigEqual({
             # options not exposed on the command line
@@ -471,7 +471,6 @@ class TestConfigManager(TransactionCase):
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
             'with_demo': False,
-            'without_demo': True,
             'demo': {},
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
