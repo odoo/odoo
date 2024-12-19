@@ -476,7 +476,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
             this.toggleEl.style.removeProperty("--cookies-bar-toggle-inset-block-end");
         } else {
             // Lazy-loaded images don't have a height yet. We need to await them
-            wUtils.onceAllImagesLoaded($(popupEl)).then(() => {
+            wUtils.onceAllImagesLoaded(popupEl).then(() => {
                 const popupHeight = popupEl.querySelector(".modal-content").offsetHeight;
                 const toggleMargin = 8;
                 // Avoid having the toggleEl over another button, but if the

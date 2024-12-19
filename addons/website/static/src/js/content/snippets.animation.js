@@ -1715,7 +1715,7 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
         const imgEls = this.el.querySelectorAll('img[loading="lazy"]');
         for (const imgEl of imgEls) {
             this._updateImgMinHeight(imgEl);
-            wUtils.onceAllImagesLoaded($(imgEl)).then(() => {
+            wUtils.onceAllImagesLoaded(imgEl).then(() => {
                 if (this.isDestroyed()) {
                     return;
                 }
