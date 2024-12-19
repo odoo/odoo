@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { click, contains, inputFiles } from "@web/../tests/utils";
+import { contains, click, inputFiles } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     steps: () => [
@@ -108,8 +108,8 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "hover && click .o-mail-Message [title='Add a Reaction']",
         },
         {
-            trigger: ".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']",
-            run: "click",
+            trigger: ".o-mail-QuickReactionMenu",
+            run: () => click("[title='Toggle Emoji Picker']"),
         },
         {
             trigger: ".o-EmojiPicker .o-Emoji:contains('🙂')",
