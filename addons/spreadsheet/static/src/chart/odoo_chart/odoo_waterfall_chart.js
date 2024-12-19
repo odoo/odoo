@@ -13,6 +13,8 @@ const {
     getWaterfallChartLegend,
     getWaterfallChartTooltip,
     getWaterfallDatasetAndLabels,
+    getEvaluatedChartTitle,
+    getEvaluatedAxesDesign,
 } = chartHelpers;
 
 export class OdooWaterfallChart extends OdooChart {
@@ -63,10 +65,15 @@ function createOdooChartRuntime(chart, getters) {
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
 
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+    const evaluatedAxesDesign = getEvaluatedAxesDesign(getters, definition.axesDesign);
+
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale,
+        evaluatedChartTitle,
+        evaluatedAxesDesign,
     };
 
     const chartJSData = getWaterfallDatasetAndLabels(definition, chartData);
@@ -79,7 +86,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition),
             scales: getWaterfallChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, chartData),
                 legend: getWaterfallChartLegend(definition, chartData),
                 tooltip: getWaterfallChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
