@@ -7985,8 +7985,7 @@ test("default value for nested one2manys (coming from onchange)", async () => {
 });
 
 test("display correct value after validation error", async () => {
-    expect.assertions(4);
-    expect.errors(1);
+    expect.assertions(5);
 
     function validationHandler(env, error, originalError) {
         if (originalError.data.name === "odoo.exceptions.ValidationError") {
@@ -8033,7 +8032,9 @@ test("display correct value after validation error", async () => {
     // click and edit value to 'pinky', which trigger a failed onchange
     await contains(".o_data_row .o_data_cell").click();
     await contains(".o_field_widget[name=turtle_foo] input").edit("pinky", { confirm: false });
+    expect.errors(1);
     await contains(".o_form_view").click();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_data_row .o_data_cell").toHaveText("foo");
 
     // we make sure here that when we save, the values are the current
@@ -12930,7 +12931,6 @@ test("one2many with default_order on id, but id not in view", async () => {
 });
 
 test("one2many causes an onchange on the parent which fails", async () => {
-    expect.errors(1);
     Partner._onChanges = {
         turtles: function () {},
     };
@@ -12955,10 +12955,12 @@ test("one2many causes an onchange on the parent which fails", async () => {
     expect(".o_field_widget[name='turtle_foo'] input").toHaveValue("blip");
 
     // onchange on parent record fails
+    expect.errors(1);
     await contains(".o_field_widget[name='turtle_foo'] input").edit("new value", {
         confirm: "blur",
     });
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_data_cell[name='turtle_foo']").toHaveText("blip");
     expect(".o_error_dialog").toHaveCount(1);
 });

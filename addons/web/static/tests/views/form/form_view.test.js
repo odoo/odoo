@@ -5964,8 +5964,6 @@ test(`switching to non-existing record`, async () => {
 
 test.tags("desktop");
 test(`switching to non-existing record on desktop`, async () => {
-    expect.errors(1);
-
     await mountView({
         resModel: "partner",
         type: "form",
@@ -5976,7 +5974,9 @@ test(`switching to non-existing record on desktop`, async () => {
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(3);
 
+    expect.errors(1);
     await contains(`.o_pager_next`).click();
+    expect.verifyErrors([Error]);
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
 
@@ -10440,6 +10440,7 @@ test("resequence list lines when previous resequencing crashed", async () => {
         "tbody.ui-sortable tr:nth-child(2)"
     );
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(getNames()).toEqual(["first line", "second line"]);
 
     await contains("tbody.ui-sortable tr:nth-child(1) .o_handle_cell").dragAndDrop(

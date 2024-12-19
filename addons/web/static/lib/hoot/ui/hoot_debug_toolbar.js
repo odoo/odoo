@@ -4,6 +4,7 @@ import { Component, onWillRender, useState, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { refresh } from "../core/url";
 import { formatTime } from "../hoot_utils";
+import { HootConfigMenu } from "./hoot_config_menu";
 import { HootTestPath } from "./hoot_test_path";
 import { HootTestResult } from "./hoot_test_result";
 
@@ -19,78 +20,92 @@ import { HootTestResult } from "./hoot_test_result";
 
 /** @extends {Component<HootDebugToolBarProps, import("../hoot").Environment>} */
 export class HootDebugToolBar extends Component {
-    static components = { HootTestPath, HootTestResult };
+    static components = { HootConfigMenu, HootTestPath, HootTestResult };
 
     static props = {
         test: Test,
     };
 
     static template = xml`
-        <div class="${HootDebugToolBar.name}
-            absolute start-0 bottom-0 max-w-full max-h-full
-            flex flex-col overflow-hidden m-4 z-4
-            rounded shadow bg-gray-200 dark:bg-gray-800"
+        <div
+            class="${HootDebugToolBar.name} absolute start-0 bottom-0 max-w-full max-h-full flex p-4 z-4"
+            t-att-class="{ 'w-full': state.open }"
         >
-            <div class="flex items-center gap-2 px-2">
-                <i class="fa fa-bug text-skip" />
-                <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
-                    <button
-                        class="bg-btn px-2 py-1"
-                        title="Exit debug mode (Ctrl + Esc)"
-                        t-on-click.stop="exitDebugMode"
-                    >
-                        <i class="fa fa-sign-out" />
-                    </button>
-                    <t t-if="done">
+            <div class="flex flex-col w-full overflow-hidden rounded shadow bg-gray-200 dark:bg-gray-800">
+                <div class="flex items-center gap-2 px-2">
+                    <i class="fa fa-bug text-cyan" />
+                    <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
                         <button
-                            class="bg-btn px-2 py-1 animate-slide-left"
-                            title="Restart test (F5)"
-                            t-on-click.stop="restart"
+                            class="bg-btn px-2 py-1"
+                            title="Exit debug mode (Ctrl + Esc)"
+                            t-on-click.stop="exitDebugMode"
                         >
-                            <i class="fa fa-refresh" />
+                            <i class="fa fa-sign-out" />
                         </button>
-                    </t>
-                </div>
-                <button
-                    class="flex items-center gap-1 truncate"
-                    t-on-click.stop="() => state.open = !state.open"
-                    title="Click to toggle details"
-                >
-                    status:
-                    <strong
-                        t-attf-class="text-{{ info.className }}"
-                        t-esc="info.status"
-                    />
-                    <span class="text-muted">-</span>
-                    assertions:
-                    <span class="flex gap-1 text-pass">
-                        <strong t-esc="info.passed" />
-                        <span class="hidden sm:inline">passed</span>
-                    </span>
-                    <t t-if="info.failed">
-                        <span class="text-muted">/</span>
-                        <span class="flex gap-1 text-fail">
-                            <strong t-esc="info.failed" />
-                            <span class="hidden sm:inline">failed</span>
+                        <t t-if="done">
+                            <button
+                                class="bg-btn px-2 py-1 animate-slide-left"
+                                title="Restart test (F5)"
+                                t-on-click.stop="refresh"
+                            >
+                                <i class="fa fa-refresh" />
+                            </button>
+                        </t>
+                    </div>
+                    <button
+                        class="flex flex-1 items-center gap-1 truncate"
+                        t-on-click.stop="toggleOpen"
+                        title="Click to toggle details"
+                    >
+                        status:
+                        <strong
+                            t-attf-class="text-{{ info.className }}"
+                            t-esc="info.status"
+                        />
+                        <span class="hidden sm:flex items-center gap-1">
+                            <span class="text-gray">-</span>
+                            assertions:
+                            <span class="contents text-emerald">
+                                <strong t-esc="info.passed" />
+                                passed
+                            </span>
+                            <t t-if="info.failed">
+                                <span class="text-gray">/</span>
+                                <span class="contents text-rose">
+                                    <strong t-esc="info.failed" />
+                                    failed
+                                </span>
+                            </t>
                         </span>
-                    </t>
-                    <span class="text-muted">-</span>
-                    time:
-                    <span
-                        class="text-primary"
-                        t-esc="formatTime(props.test.lastResults?.duration, 'ms')"
-                    />
-                </button>
+                        <span class="text-gray">-</span>
+                        time:
+                        <span
+                            class="text-primary"
+                            t-esc="formatTime(props.test.lastResults?.duration, 'ms')"
+                        />
+                    </button>
+                    <button class="p-2" t-on-click="toggleConfig">
+                        <i class="fa fa-cog" />
+                    </button>
+                </div>
+                <t t-if="state.open">
+                    <div class="flex flex-col w-full sm:flex-row overflow-auto">
+                        <HootTestResult open="'always'" test="props.test" t-key="done">
+                            <HootTestPath canCopy="true" full="true" test="props.test" />
+                        </HootTestResult>
+                        <t t-if="state.configOpen">
+                            <div class="flex flex-col gap-1 p-3 overflow-y-auto">
+                                <HootConfigMenu />
+                            </div>
+                        </t>
+                    </div>
+                </t>
             </div>
-            <t t-if="state.open">
-                <HootTestResult open="true" test="props.test" t-key="done">
-                    <HootTestPath canCopy="true" full="true" test="props.test" />
-                </HootTestResult>
-            </t>
         </div>
     `;
 
     formatTime = formatTime;
+    refresh = refresh;
 
     get done() {
         return Boolean(this.runnerState.done.size); // subscribe to test being added as done
@@ -98,7 +113,10 @@ export class HootDebugToolBar extends Component {
 
     setup() {
         this.runnerState = useState(this.env.runner.state);
-        this.state = useState({ open: false });
+        this.state = useState({
+            configOpen: false,
+            open: false,
+        });
 
         onWillRender(() => {
             this.info = this.getInfo();
@@ -114,7 +132,7 @@ export class HootDebugToolBar extends Component {
     getInfo() {
         const [status, className] = this.getStatus();
         const [assertPassed, assertFailed] = this.groupAssertions(
-            this.props.test.lastResults?.assertions
+            this.props.test.lastResults?.getEvents("assertion")
         );
         return {
             className,
@@ -128,14 +146,14 @@ export class HootDebugToolBar extends Component {
         if (this.props.test.lastResults) {
             switch (this.props.test.status) {
                 case Test.PASSED:
-                    return ["passed", "pass"];
+                    return ["passed", "emerald"];
                 case Test.FAILED:
-                    return ["failed", "fail"];
+                    return ["failed", "rose"];
                 case Test.ABORTED:
-                    return ["aborted", "abort"];
+                    return ["aborted", "amber"];
             }
         }
-        return ["running", "skip"];
+        return ["running", "cyan"];
     }
 
     /**
@@ -154,7 +172,14 @@ export class HootDebugToolBar extends Component {
         return [passed, failed];
     }
 
-    restart() {
-        refresh();
+    toggleConfig() {
+        this.state.configOpen = !this.state.open || !this.state.configOpen;
+        if (this.state.configOpen) {
+            this.state.open = true;
+        }
+    }
+
+    toggleOpen() {
+        this.state.open = !this.state.open;
     }
 }
