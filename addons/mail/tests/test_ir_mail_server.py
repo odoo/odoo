@@ -17,6 +17,82 @@ class TestIrMailServer(MailCommon):
         cls.default_bounce_address = f'{cls.alias_bounce}@{cls.alias_domain}'
         cls.default_from_address = f'{cls.default_from}@{cls.alias_domain}'
 
+    def test_alter_smtp_to_list(self):
+        """ Check smtp_to_list alteration. Reminder: Message is the envelope,
+        SMTP is the actual sending. """
+        IrMailServer = self.env['ir.mail_server']
+        mail_from = 'specific_user@test.mycompany.com'
+
+        for mail_server, mail_values, smtp_to_lst, msg_to_lst, msg_cc_lst in [
+            (
+                IrMailServer,
+                {'email_to': '"Customer" <customer@test.example.com>'},
+                ['customer@test.example.com'],
+                ['"Customer" <customer@test.example.com>'],
+                [],
+            ),
+            # 'send_validated_to' context key: restrict SMTP To actual recipients
+            # but do not rewrite Msg['To'], aka envelope (main usage is to cleanup
+            # addresses found by extract_rfc2822_addresses anyway)
+            (
+                IrMailServer.with_context(send_validated_to=['another@test.example.com', 'customer@test.example.com']),
+                {'email_to': ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com']},
+                ['customer@test.example.com'],
+                ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com'],
+                [],
+            ),
+            # 'send_smtp_skip_to' context key: block list of SMTP recipients
+            (
+                IrMailServer.with_context(send_smtp_skip_to=['skip@test.example.com', 'other@test.example.com', 'wrong', 'skip.2@test.example.com']),
+                {
+                    'email_to': ['"Customer" <customer@test.example.com>', '"Skip Me" <skip@test.example.com>',
+                                 '"User" <user@test.mycompany.com>', 'user2@test.mycompany.com', '"Skip Me 2" <skip.2@test.example.com>'],
+                },
+                ['customer@test.example.com', 'user@test.mycompany.com', 'user2@test.mycompany.com'],
+                ['"Customer" <customer@test.example.com>', '"Skip Me" <skip@test.example.com>',
+                 '"User" <user@test.mycompany.com>', 'user2@test.mycompany.com', '"Skip Me 2" <skip.2@test.example.com>'],
+                {},
+            ),
+            # 'X-Forge-To' header: force envelope Msg['To'] (not SMTP recipients)
+            # used notably for mailing lists
+            (
+                IrMailServer,
+                {
+                    'email_to': ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com'],
+                    'headers': {'X-Forge-To': 'mailing@some.domain'}
+                },
+                ['customer@test.example.com', 'user2@test.mycompany.com'],
+                ['mailing@some.domain'],
+                [],
+            ),
+            # 'X-Msg-To-Add' header: add in Msg['To'] without impacting SMTP To, e.g.
+            # displaying more recipients than actually mailed
+            (
+                IrMailServer,
+                {
+                    'email_to': ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com'],
+                    'headers': {'X-Msg-To-Add': '"Other" <other.customer@test.example.com>'}
+                },
+                ['customer@test.example.com', 'user2@test.mycompany.com'],
+                ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com', '"Other" <other.customer@test.example.com>'],
+                {},
+            ),
+        ]:
+            with self.subTest(mail_values=mail_values, smtp_to_lst=smtp_to_lst):
+                with self.mock_smtplib_connection():
+                    smtp_session = mail_server.connect(smtp_from=mail_from)
+                    message = self._build_email(mail_from=mail_from, **mail_values)
+                    mail_server.send_email(message, smtp_session=smtp_session)
+
+                self.assertEqual(len(self.emails), 1)
+                self.assertSMTPEmailsSent(
+                    message_from=mail_from,
+                    smtp_from=mail_from,
+                    smtp_to_list=smtp_to_lst,
+                    msg_cc_lst=msg_cc_lst,
+                    msg_to_lst=msg_to_lst,
+                )
+
     def test_assert_base_values(self):
         self.assertEqual(
             self.env['ir.mail_server']._get_default_bounce_address(),
