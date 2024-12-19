@@ -1259,6 +1259,7 @@ test("click on save button which throws an error", async () => {
     await animationFrame();
     // error are caught asynchronously, so we have to wait for an extra animationFrame, for the error dialog to be mounted
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_error_dialog").toHaveCount(1);
 
     await clickModalButton({ text: "Close" });
@@ -1517,6 +1518,7 @@ test("settings view shows a message if there are changes even if the save failed
     });
     await click(".o_control_panel .o_form_button_save");
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(".o_control_panel .o_dirty_warning").toHaveCount(1, {
         message: "warning message should be shown",
     });

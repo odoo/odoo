@@ -142,7 +142,7 @@ test("connection lost when opening form view from kanban", async () => {
             // impact on other tests (see connectionLostNotifRemove)
             return true;
         }
-        throw Error(); // simulate a ConnectionLost error
+        throw new Error(); // simulate a ConnectionLost error
     });
     await contains(".o_kanban_record").click();
     expect(".o_kanban_view").toHaveCount(1);
@@ -165,6 +165,7 @@ test("connection lost when opening form view from kanban", async () => {
     await runAllTimers();
     await animationFrame();
     expect.verifySteps(["/web/webclient/version_info"]);
+    expect.verifyErrors([Error, Error]);
 });
 
 test.tags("desktop");
@@ -187,7 +188,7 @@ test("connection lost when coming back to kanban from form", async () => {
             // impact on other tests (see connectionLostNotifRemove)
             return true;
         }
-        throw Error(); // simulate a ConnectionLost error
+        throw new Error(); // simulate a ConnectionLost error
     });
     await contains(".o_breadcrumb .o_back_button a").click();
     await animationFrame();
@@ -211,6 +212,7 @@ test("connection lost when coming back to kanban from form", async () => {
     await runAllTimers();
     await animationFrame();
     expect.verifySteps(["/web/webclient/version_info"]);
+    expect.verifyErrors([Error]);
 });
 
 test("error on onMounted", async () => {
