@@ -9,6 +9,7 @@ export class Orderline extends Component {
         slots: { type: Object, optional: true },
         showTaxGroupLabels: { type: Boolean, optional: true },
         showTaxGroup: { type: Boolean, optional: true },
+        highlightRefund: { type: Boolean, optional: true },
         mode: { type: String, optional: true }, // display, receipt
     };
     static defaultProps = {
