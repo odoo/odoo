@@ -104,6 +104,8 @@ export class ResPartner extends webModels.ResPartner {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const channel = this.env["discuss.channel"].browse(channel_id)[0];
 
         search = search.toLowerCase();
         /**
@@ -170,6 +172,17 @@ export class ResPartner extends webModels.ResPartner {
                 makeKwArgs({ fields: { channel: [], persona: [] } })
             );
         }
+        const internalUsers = ResUsers._filter([]).filter((user) => !user.partner_share);
+        for (const user of internalUsers) {
+            store.add(this.browse(user.partner_id), {
+                group_id: user.groups_id.includes(channel.group_public_id)
+                    ? channel.group_public_id
+                    : undefined,
+            });
+        }
+        store.add(this.env["discuss.channel"].browse(channel_id), {
+            authorizedGroupId: channel.group_public_id ? channel.group_public_id : undefined,
+        });
         return store.get_result();
     }
 
