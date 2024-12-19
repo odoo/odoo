@@ -16,6 +16,7 @@ class IrUiView(models.Model):
             existing_condition = ''
             if rule := elem.get(modifier):
                 existing_condition = '(' + rule + ') and '
+            print(existing_condition + f"{country_code} != '{l10n_attr_value}'")
             elem.set(modifier, existing_condition + f"{country_code} != '{l10n_attr_value}'")
 
         return super()._postprocess_view(node, model_name, editable=editable, node_info=node_info, **options)
