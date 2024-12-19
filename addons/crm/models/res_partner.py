@@ -64,6 +64,8 @@ class ResPartner(models.Model):
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
         action['context'] = {}
+        list_view = self.env.ref('crm.crm_case_tree_view_oppor')
+        action['views'] = [(list_view.id, 'list')] + [(state, view) for state, view in action['views'] if view != 'list']
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
