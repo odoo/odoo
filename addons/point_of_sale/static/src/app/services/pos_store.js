@@ -1486,12 +1486,24 @@ export class PosStore extends WithLazyGetterTrap {
     async sendOrderInPreparation(order, cancelled = false) {
         if (this.printers_category_ids_set.size) {
             try {
-                const orderChange = changesToOrder(
+                let orderChange = changesToOrder(
                     order,
                     false,
                     this.orderPreparationCategories,
                     cancelled
                 );
+
+                if (
+                    !orderChange.new.length &&
+                    !orderChange.cancelled.length &&
+                    !orderChange.noteUpdated.length &&
+                    order.uiState.lastPrint
+                ) {
+                    orderChange = order.uiState.lastPrint;
+                } else {
+                    order.uiState.lastPrint = orderChange;
+                }
+
                 this.printChanges(order, orderChange);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
