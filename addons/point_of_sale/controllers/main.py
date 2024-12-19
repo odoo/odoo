@@ -106,7 +106,7 @@ class PosController(PortalAccount):
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     @http.route(['/pos/ticket'], type='http', auth="public", website=True, sitemap=False)
-    def invoice_request_screen(self, **kwargs):
+    def invoice_request_screen(self, order_uuid="", **kwargs):
         errors = {}
         form_values = {}
         if request.httprequest.method == 'POST':
@@ -133,10 +133,17 @@ class PosController(PortalAccount):
                 else:
                     errors['generic'] = _("No sale order found.")
 
+        fetch_order_from_qr = request.env['pos.order'].sudo().search([('uuid', '=', order_uuid)], limit=1)
+        if not fetch_order_from_qr:
+            return {"error": "Order not found"}
+        order_reference = fetch_order_from_qr.pos_reference.split(" ")[1]
+
         return request.render("point_of_sale.ticket_request_with_code", {
             'errors': errors,
             'banner_error': " ".join(errors.values()),
             'form_values': form_values,
+            'pos_reference': order_reference,
+            'date_order': fetch_order_from_qr.date_order.strftime('%Y-%m-%d')
         })
 
     @http.route(['/pos/ticket/validate'], type='http', auth="public", website=True, sitemap=False)

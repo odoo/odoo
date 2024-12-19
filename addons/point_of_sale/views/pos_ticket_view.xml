@@ -155,11 +155,11 @@
                                             <label class="col-form-label" for="pos_reference">Ticket Nr</label>
                                             <input type="text" name="pos_reference" placeholder="0014-001-00001"
                                                    t-attf-class="form-control #{errors.get('pos_reference') and 'is-invalid' or ''}"
-                                                   t-att-value="form_values.get('pos_reference')"/>
+                                                   t-att-value="pos_reference"/>
                                             <label class="col-form-label" for="date_order">Date</label>
                                             <input type="date" name="date_order"
                                                    t-attf-class="form-control #{errors.get('date_order') and 'is-invalid' or ''}"
-                                                   t-att-value="form_values.get('date_order')"/>
+                                                   t-att-value="date_order"/>
                                             <label class="col-form-label" for="ticket_code">Unique code</label>
                                             <input type="text" name="ticket_code" placeholder="qx9h1"
                                                    t-attf-class="form-control #{errors.get('ticket_code') and 'is-invalid' or ''}"
