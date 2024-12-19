@@ -2167,15 +2167,7 @@ class SaleOrder(models.Model):
             if quantity != 0:
                 sol.product_uom_qty = quantity
             elif self.state in ['draft', 'sent']:
-                price_unit = self.pricelist_id._get_product_price(
-                    product=sol.product_id,
-                    quantity=1.0,
-                    currency=self.currency_id,
-                    date=self.date_order,
-                    **kwargs,
-                )
                 sol.unlink()
-                return price_unit
             else:
                 sol.product_uom_qty = 0
         elif quantity > 0:
@@ -2185,7 +2177,13 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-        return sol.price_unit
+        return self.pricelist_id._get_product_price(
+            product=sol.product_id,
+            quantity=1.0,
+            currency=self.currency_id,
+            date=self.date_order,
+            **kwargs,
+        )
 
     #=== TOOLING ===#
 
