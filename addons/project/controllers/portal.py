@@ -360,7 +360,7 @@ class ProjectCustomerPortal(CustomerPortal):
         elif search_in in self._task_get_searchbar_inputs(milestones_allowed, project):
             return [(search_in, 'ilike', search)]
         else:
-            return FALSE_DOMAIN
+            return ['|', ('name', 'ilike', search), ('id', 'ilike', search)]
 
     def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False, project=False):
         values = self._prepare_portal_layout_values()
@@ -490,7 +490,7 @@ class ProjectCustomerPortal(CustomerPortal):
         return searchbar_filters
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
+    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='name', groupby=None, **kw):
         searchbar_filters = self._get_my_tasks_searchbar_filters()
 
         if not filterby:
