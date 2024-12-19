@@ -995,6 +995,7 @@ class SaleOrder(models.Model):
             'default_res_ids': self.ids,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
+            'email_show_footer': True,
             'proforma': self.env.context.get('proforma', False),
         }
 
@@ -1739,10 +1740,6 @@ class SaleOrder(models.Model):
             subtitles.append(
                 format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
             )
-
-        if self.validity_date and self.state in ['draft', 'sent']:
-            formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
-            subtitles.append(_("Expires on %(date)s", date=formatted_date))
 
         render_context['subtitles'] = subtitles
         return render_context
