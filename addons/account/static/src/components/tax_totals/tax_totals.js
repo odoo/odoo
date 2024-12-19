@@ -12,6 +12,7 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
+import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 
 /**
  A line of some TaxTotalsComponent, giving the values of a tax group.
@@ -41,6 +42,7 @@ class TaxGroupComponent extends Component {
         onWillUpdateProps(() => {
             this.setState("readonly");
         });
+        useNumpadDecimal();
     }
 
     formatMonetary(value) {
