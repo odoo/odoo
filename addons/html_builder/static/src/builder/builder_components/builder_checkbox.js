@@ -6,7 +6,7 @@ import {
     BuilderComponent,
     useDependencyDefinition,
     defaultBuilderComponentProps,
-} from "../builder_helpers";
+} from "./utils";
 
 export class BuilderCheckbox extends Component {
     static template = "html_builder.BuilderCheckbox";

@@ -5,7 +5,7 @@ import {
     BuilderComponent,
     useDependencyDefinition,
     defaultBuilderComponentProps,
-} from "../builder_helpers";
+} from "./utils";
 
 export class BuilderButton extends Component {
     static template = "html_builder.BuilderButton";

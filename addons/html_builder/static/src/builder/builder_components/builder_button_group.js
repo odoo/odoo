@@ -5,7 +5,7 @@ import {
     useApplyVisibility,
     useBuilderComponent,
     BuilderComponent,
-} from "../builder_helpers";
+} from "./utils";
 
 export class BuilderButtonGroup extends Component {
     static template = "html_builder.BuilderButtonGroup";

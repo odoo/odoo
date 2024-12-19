@@ -5,7 +5,7 @@ import {
     useClickableBuilderComponent,
     useDependencyDefinition,
     BuilderComponent,
-} from "../builder_helpers";
+} from "./utils";
 
 export class BuilderSelectItem extends Component {
     static template = "html_builder.BuilderSelectItem";

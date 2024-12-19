@@ -1,6 +1,6 @@
 import { Component, useSubEnv } from "@odoo/owl";
 import { defaultBuilderComponents } from "../builder_components/default_builder_components";
-import { useVisibilityObserver, useApplyVisibility } from "../builder_helpers";
+import { useVisibilityObserver, useApplyVisibility } from "../builder_components/utils";
 import { DependencyManager } from "../plugins/dependency_manager";
 
 export class OptionsContainer extends Component {

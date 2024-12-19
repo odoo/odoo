@@ -5,7 +5,7 @@ import {
     useDomState,
     useBuilderComponent,
     BuilderComponent,
-} from "../builder_helpers";
+} from "./utils";
 
 export class BuilderColorpicker extends Component {
     static template = "html_builder.BuilderColorpicker";

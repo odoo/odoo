@@ -1,6 +1,6 @@
 import { Component, useState } from "@odoo/owl";
 import { OptionsContainer } from "../../components/option_container";
-import { useVisibilityObserver } from "../../builder_helpers";
+import { useVisibilityObserver } from "../../builder_components/utils";
 
 export class CustomizeTab extends Component {
     static template = "html_builder.CustomizeTab";

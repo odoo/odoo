@@ -5,7 +5,7 @@ import {
     basicContainerBuilderComponentProps,
     useBuilderComponent,
     BuilderComponent,
-} from "../builder_helpers";
+} from "./utils";
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";

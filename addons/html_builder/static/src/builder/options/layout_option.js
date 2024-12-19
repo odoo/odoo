@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
 import { defaultBuilderComponents } from "../builder_components/default_builder_components";
-import { useDomState } from "../builder_helpers";
+import { useDomState } from "../builder_components/utils";
 import { SpacingOption } from "./spacing_option";
 import { AddElementOption } from "./add_element_option";
 import { Plugin } from "@html_editor/plugin";

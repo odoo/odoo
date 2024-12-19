@@ -6,7 +6,7 @@ import {
     useApplyVisibility,
     useBuilderComponent,
     BuilderComponent,
-} from "../builder_helpers";
+} from "./utils";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useBus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
