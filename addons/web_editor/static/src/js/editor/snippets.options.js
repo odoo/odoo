@@ -5977,6 +5977,12 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         this._deactivateLinkTool = this._deactivateLinkTool.bind(this);
     },
 
+    destroy: function () {
+        this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
+        this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
+        return this._super(...arguments);
+    },
+
     /**
      * @override
      */
