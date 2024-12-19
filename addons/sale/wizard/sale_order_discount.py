@@ -105,7 +105,7 @@ class SaleOrderDiscount(models.TransientModel):
                 if not line.product_uom_qty or not line.price_unit:
                     continue
 
-                total_price_per_tax_groups[line.tax_id] += (line.price_unit * line.product_uom_qty)
+                total_price_per_tax_groups[line.tax_id] += (line.price_reduce_taxexcl * line.product_uom_qty)
 
             if not total_price_per_tax_groups:
                 # No valid lines on which the discount can be applied
