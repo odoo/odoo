@@ -201,6 +201,7 @@ actual arch.
 * if False, the view currently does not extend its parent but can be enabled
          """)
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
+    l10n = fields.Char(string="L10N")
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
