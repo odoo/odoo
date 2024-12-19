@@ -34,7 +34,7 @@ class MailGroup(models.Model):
     _description = 'Mail Group'
     # TDE CHECK: use blaclist mixin
     _inherit = ['mail.alias.mixin']
-    _order = 'create_date DESC, id DESC'
+    _order = 'is_closed ASC, create_date DESC, id DESC'
 
     @api.model
     def default_get(self, fields):
@@ -47,6 +47,7 @@ class MailGroup(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     description = fields.Text('Description')
     image_128 = fields.Image('Image', max_width=128, max_height=128)
+    is_closed = fields.Boolean('Is Closed', help='Closed groups might still be accessed, but emails sent to it will bounce', copy=False)
     # Messages
     mail_group_message_ids = fields.One2many('mail.group.message', 'mail_group_id', string='Pending Messages')
     mail_group_message_last_month_count = fields.Integer('Messages Per Month', compute='_compute_mail_group_message_last_month_count')
@@ -234,6 +235,14 @@ class MailGroup(models.Model):
         values['alias_defaults'] = literal_eval(self.alias_defaults or '{}')
         return values
 
+    def action_close(self):
+        self.ensure_one()
+        self.is_closed = True
+
+    def action_open(self):
+        self.ensure_one()
+        self.is_closed = False
+
     # ------------------------------------------------------------
     # MAILING
     # ------------------------------------------------------------
@@ -368,6 +377,9 @@ class MailGroup(models.Model):
 
         if not self.moderation_guidelines_msg:
             raise UserError(_('The guidelines description is empty.'))
+
+        if self.is_closed:
+            raise UserError(_("You can not send guidelines for a closed group."))
 
         template = self.env.ref('mail_group.mail_template_guidelines', raise_if_not_found=False)
         if not template:
@@ -522,12 +534,30 @@ class MailGroup(models.Model):
 
         return lxml.etree.tostring(tree, encoding='utf-8').decode()
 
+    @api.model
+    def _routing_check_route(self, message, message_dict, route, raise_exception=True):
+        """Bounce the incoming emails if the group is closed."""
+        if route[0] == 'mail.group' and self.browse(route[1]).is_closed:
+            body = self.env["ir.qweb"]._render(
+                "mail_group.email_template_mail_group_closed"
+            )
+            self.env['mail.thread']._routing_create_bounce_email(
+                message_dict["from"],
+                body,
+                message,
+                references=message_dict.get("message_id", ""),
+            )
+            return ()
+        return self.env['mail.thread']._routing_check_route(message, message_dict, route, raise_exception)
+
     # ------------------------------------------------------------
     # MEMBERSHIP
     # ------------------------------------------------------------
 
     def action_join(self):
         self.check_access('read')
+        if self.is_closed:
+            raise UserError(_("You can not join a closed group."))
         partner = self.env.user.partner_id
         self.sudo()._join_group(partner.email, partner.id)
 
