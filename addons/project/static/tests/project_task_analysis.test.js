@@ -68,13 +68,14 @@ test("report.project.task.user (graph): clicking on a bar leads to project.task 
     });
 
     const view = await mountView("graph");
+    expect.verifySteps(["report.project.task.user"]);
     await animationFrame();
     await clickOnDataset(view);
     await animationFrame();
 
     expect(".o_list_renderer").toBeDisplayed({ message: "Clicking on a bar should open a list view" });
     // The model of the list view that is opened consequently should be "project.task"
-    expect.verifySteps([ "report.project.task.user", "project.task" ]);
+    expect.verifySteps(["project.task"]);
 });
 
 test("report.project.task.user (pivot): clicking on a cell leads to project.task list", async () => {
