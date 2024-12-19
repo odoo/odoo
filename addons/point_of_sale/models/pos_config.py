@@ -371,6 +371,17 @@ class PosConfig(models.Model):
             if config.customer_display_type == 'proxy' and (not config.is_posbox or not config.proxy_ip):
                 raise UserError(_("You must set the iot box's IP address to use an IoT-connected screen. You'll find the field under the 'IoT Box' option."))
 
+    def _check_special_products(self):
+        for config in self:
+            special_products = self._get_special_products().sudo().filtered(lambda product: product.company_id and product.company_id.id != self.company_id.id)
+            if special_products:
+                raise ValidationError(
+                    _("The special product(s) %(product)s (id=%(id)s) must belong to no company or to company %(company)s", 
+                    product=special_products.mapped('name'), 
+                    id=special_products.ids, 
+                    company=config.company_id.name)
+                )
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -608,6 +619,7 @@ class PosConfig(models.Model):
         self._check_currencies()
         self._check_profit_loss_cash_journal()
         self._check_payment_method_ids()
+        self._check_special_products()
 
     def open_ui(self):
         """Open the pos interface with config_id as an extra argument.
