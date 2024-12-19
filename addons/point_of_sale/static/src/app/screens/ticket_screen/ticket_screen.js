@@ -12,7 +12,7 @@ import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_ico
 import { ReprintReceiptButton } from "@point_of_sale/app/screens/ticket_screen/reprint_receipt_button/reprint_receipt_button";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -76,6 +76,9 @@ export class TicketScreen extends Component {
         Object.assign(this.state, this.props.stateOverride || {});
 
         onMounted(this.onMounted);
+        onWillStart(async () => {
+            await this.pos.verifiyOpenOrder();
+        });
     }
     onMounted() {
         setTimeout(() => {
@@ -355,7 +358,7 @@ export class TicketScreen extends Component {
         );
     }
     activeOrderFilter(o) {
-        const screen = ["PaymentScreen", "ProductScreen", "ReceiptScreen", "TipScreen"];
+        const screen = ["ReceiptScreen", "TipScreen"];
         const oScreen = o.get_screen_data();
         return (!o.finalized || screen.includes(oScreen.name)) && o.uiState.displayed;
     }
