@@ -4,7 +4,7 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'">
+            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="stage_id">
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="last_stage_id" column_invisible="True"/>
                 <field name="date_last_stage_update" column_invisible="True"/>
@@ -195,7 +195,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <pivot string="Job Applications" sample="1">
-                <field name="create_date" type="row"/>
+                <field name="job_id" type="row"/>
                 <field name="stage_id" type="col"/>
                 <field name="color" invisible="1"/>
             </pivot>
@@ -386,7 +386,7 @@
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,list,form,graph,calendar,pivot,activity</field>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
-        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'search_default_stage':1, 'dialog_size':'medium', 'allow_search_matching_applicants': 1}</field>
+        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'dialog_size':'medium', 'allow_search_matching_applicants': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No applications yet
@@ -429,7 +429,6 @@
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
-        <field name="context">{'search_default_stage':1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No applications yet
