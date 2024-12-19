@@ -127,6 +127,8 @@ export class SearchBar extends Interaction {
             this.insert(this.menuEl, this.el);
             this.services["public.interactions"].startInteractions(this.menuEl);
         }
+        this.el.classList.toggle("dropdown", !!res);
+        this.el.classList.toggle("show", !!res);
         prevMenuEl?.remove();
     }
 
