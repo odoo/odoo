@@ -6,25 +6,25 @@ import { testEditor } from "./_helpers/editor";
  */
 
 describe("No orphan inline elements compatibility mode", () => {
-    test("should wrap inline node inside a p", async () => {
+    test("should wrap inline node inside a div baseContainer", async () => {
         await testEditor({
             contentBefore: "<p>abc</p> <p>def</p> orphan node",
-            contentAfter: '<p>abc</p><p>def</p><p style="margin-bottom: 0px;"> orphan node</p>',
+            contentAfter: '<p>abc</p><p>def</p><div class="o-base-container"> orphan node</div>',
         });
     });
 
-    test("should wrap inline node inside a p (2)", async () => {
+    test("should wrap inline node inside a div baseContainer (2)", async () => {
         await testEditor({
             contentBefore: "<p>ab</p>cd<p>ef</p>",
-            contentAfter: '<p>ab</p><p style="margin-bottom: 0px;">cd</p><p>ef</p>',
+            contentAfter: '<p>ab</p><div class="o-base-container">cd</div><p>ef</p>',
         });
     });
 
-    test("should transform root <br> into <p>", async () => {
+    test("should transform root <br> into a div baseContainer", async () => {
         await testEditor({
             contentBefore: "ab<br>c",
             contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;">c</p>',
+                '<div class="o-base-container">ab</div><div class="o-base-container">c</div>',
         });
     });
 
@@ -32,7 +32,7 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: "ab<br><br>c",
             contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;"><br></p><p style="margin-bottom: 0px;">c</p>',
+                '<div class="o-base-container">ab</div><div class="o-base-container"><br></div><div class="o-base-container">c</div>',
         });
     });
 
@@ -40,7 +40,7 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: "ab<br><br><br><br>c",
             contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;"><br></p><p style="margin-bottom: 0px;"><br></p><p style="margin-bottom: 0px;"><br></p><p style="margin-bottom: 0px;">c</p>',
+                '<div class="o-base-container">ab</div><div class="o-base-container"><br></div><div class="o-base-container"><br></div><div class="o-base-container"><br></div><div class="o-base-container">c</div>',
         });
     });
 
@@ -48,7 +48,7 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: 'ab<br>c<br>d<span class="keep">xxx</span>e<br>f',
             contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;">c</p><p style="margin-bottom: 0px;">d<span class="keep">xxx</span>e</p><p style="margin-bottom: 0px;">f</p>',
+                '<div class="o-base-container">ab</div><div class="o-base-container">c</div><div class="o-base-container">d<span class="keep">xxx</span>e</div><div class="o-base-container">f</div>',
         });
     });
 
@@ -56,7 +56,7 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: "ab<br>c<ul><li>d</li><li>e</li></ul> f<br>g",
             contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;">c</p><ul><li>d</li><li>e</li></ul><p style="margin-bottom: 0px;"> f</p><p style="margin-bottom: 0px;">g</p>',
+                '<div class="o-base-container">ab</div><div class="o-base-container">c</div><ul><li>d</li><li>e</li></ul><div class="o-base-container"> f</div><div class="o-base-container">g</div>',
         });
     });
 
@@ -72,7 +72,7 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: "xx<p>ab<br>c</p>d<br>yy",
             contentAfter:
-                '<p style="margin-bottom: 0px;">xx</p><p>ab<br>c</p><p style="margin-bottom: 0px;">d</p><p style="margin-bottom: 0px;">yy</p>',
+                '<div class="o-base-container">xx</div><p>ab<br>c</p><div class="o-base-container">d</div><div class="o-base-container">yy</div>',
         });
     });
 
@@ -91,17 +91,19 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: '<p>ab</p><i class="fa fa-beer"></i><p>c</p>',
             contentAfter:
-                '<p>ab</p><p style="margin-bottom: 0px;"><i class="fa fa-beer"></i></p><p>c</p>',
+                '<p>ab</p><div class="o-base-container"><i class="fa fa-beer"></i></div><p>c</p>',
         });
     });
 
+    // TODO ABD: should the div above o_image be a baseContainer ? In that case the normalization
+    // should consider inline nodes as "phrasingContent" ? But then that node can not be converted
+    // back to a P => more complexity
     test("should wrap a div.o_image direct child of the editable into a block", async () => {
         await testEditor({
             contentBefore: '<p>abc</p><div class="o_image"></div><p>def</p>',
             contentBeforeEdit:
-                '<p>abc</p><div style="margin-bottom: 0px;"><div class="o_image" contenteditable="false"></div></div><p>def</p>',
-            contentAfter:
-                '<p>abc</p><div style="margin-bottom: 0px;"><div class="o_image"></div></div><p>def</p>',
+                '<p>abc</p><div><div class="o_image" contenteditable="false"></div></div><p>def</p>',
+            contentAfter: '<p>abc</p><div><div class="o_image"></div></div><p>def</p>',
         });
     });
 });
@@ -110,7 +112,7 @@ describe("allowInlineAtRoot options", () => {
     test("should wrap inline node inside a p by default", async () => {
         await testEditor({
             contentBefore: "abc",
-            contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+            contentAfter: '<div class="o-base-container">abc</div>',
         });
     });
 
@@ -118,7 +120,7 @@ describe("allowInlineAtRoot options", () => {
         await testEditor(
             {
                 contentBefore: "abc",
-                contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+                contentAfter: '<div class="o-base-container">abc</div>',
             },
             { allowInlineAtRoot: false }
         );

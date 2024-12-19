@@ -1,3 +1,4 @@
+import { BaseContainer } from "@html_editor/utils/base_container";
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
@@ -89,7 +90,7 @@ export class PowerButtonsPlugin extends Plugin {
         const element = closestElement(editableSelection.anchorNode);
         if (
             editableSelection.isCollapsed &&
-            element?.tagName === "P" &&
+            element?.matches(BaseContainer.selector) &&
             isEmptyBlock(block) &&
             !this.services.ui.isSmall &&
             !closestElement(editableSelection.anchorNode, "td") &&

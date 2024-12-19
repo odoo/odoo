@@ -29,7 +29,7 @@ function columnIsAvailable(numberOfColumns) {
 
 export class ColumnPlugin extends Plugin {
     static id = "column";
-    static dependencies = ["selection", "history"];
+    static dependencies = ["baseContainer", "selection", "history"];
     resources = {
         user_commands: [
             {
@@ -85,6 +85,8 @@ export class ColumnPlugin extends Plugin {
         unremovable_node_predicates: isUnremovableColumn,
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_text_columns"),
+        // make sure that columns are never set to be a baseContainer
+        assign_base_container_overrides: (el) => isUnremovableColumn(el, this.editable),
     };
 
     columnize({ numberOfColumns, addParagraphAfter = true } = {}) {
@@ -141,12 +143,12 @@ export class ColumnPlugin extends Plugin {
         block.before(container);
         columns.shift().append(block);
         for (const column of columns) {
-            const p = this.document.createElement("p");
+            const p = this.dependencies.baseContainer.getBaseContainer().create();
             p.append(this.document.createElement("br"));
             column.append(p);
         }
         if (addParagraphAfter) {
-            const p = this.document.createElement("p");
+            const p = this.dependencies.baseContainer.getBaseContainer().create();
             p.append(this.document.createElement("br"));
             container.after(p);
         }
@@ -172,7 +174,7 @@ export class ColumnPlugin extends Plugin {
             for (let i = 0; i < diff; i++) {
                 const column = this.document.createElement("div");
                 column.classList.add(`col-${columnSize}`);
-                const p = this.document.createElement("p");
+                const p = this.dependencies.baseContainer.getBaseContainer().create();
                 p.append(this.document.createElement("br"));
                 column.append(p);
                 lastColumn.after(column);
