@@ -10,7 +10,7 @@
                         string="Create e-Waybill"
                         class="oe_highlight"
                         type="object"
-                        invisible="country_code != 'IN' or state != 'posted' or l10n_in_ewaybill_ids"
+                        invisible="country_code != 'IN' or state != 'posted' or l10n_in_ewaybill_ids or move_type == 'entry'"
                         groups="account.group_account_invoice"
                         data-hotkey="e"/>
             </xpath>
@@ -19,7 +19,7 @@
                         class="oe_stat_button"
                         icon="fa-truck"
                         type="object"
-                        invisible="country_code != 'IN' or not l10n_in_ewaybill_ids"
+                        invisible="country_code != 'IN' or not l10n_in_ewaybill_ids or move_type == 'entry'"
                         groups="account.group_account_invoice">
                         <div class="o_stat_info">
                             <span class="o_stat_text">e-Waybill</span>
