@@ -79,9 +79,17 @@
         @include media-only(screen) {
             --ControlPanel-border-bottom: none;
         }
+    }
 
-        &.o_field_x2many_kanban .o_kanban_ghost {
-            display: none;
+    &.o_field_x2many_kanban .o_kanban_ghost {
+        display: none;
+    }
+
+    &.o_kanban_full_width > .o_kanban_ungrouped {
+        padding: 0;
+        .o_kanban_record {
+            width: 100%;
+            margin: 0;
         }
     }
 }

@@ -98,6 +98,59 @@ class IrActionsServer(models.Model):
         'User Field',
         compute='_compute_activity_info', readonly=False, store=True)
 
+    def _name_depends(self):
+        return super()._name_depends() + [
+            "template_id",
+            "partner_ids",
+            "activity_summary",
+            "activity_type_id",
+            "followers_type",
+            "followers_partner_field_name",
+        ]
+
+    def _generate_action_name(self):
+        self.ensure_one()
+        match self.state:
+            # case 'sms':
+            #     return _(
+            #         'Send SMS: %(template_name)s',
+            #         template_name=self.sms_template_id.name
+            #     )
+            case 'mail_post':
+                return _(
+                    'Send email: %(template_name)s',
+                    template_name=self.template_id.name
+                )
+            case 'followers':
+                if self.followers_type == 'generic':
+                    return _(
+                        'Add followers based on field: %(field_name)s',
+                        field_name=self.followers_partner_field_name
+                    )
+                else:
+                    return _(
+                        'Add followers: %(partner_names)s',
+                        partner_names=', '.join(self.partner_ids.mapped('name'))
+                    )
+            case 'remove_followers':
+                if self.followers_type == 'generic':
+                    return _(
+                        'Remove followers based on field: %(field_name)s',
+                        field_name=self.followers_partner_field_name
+                    )
+                else:
+                    return _(
+                        'Remove followers: %(partner_names)s',
+                        partner_names=', '.join(self.partner_ids.mapped('name'))
+                    )
+            case 'next_activity':
+                return _(
+                    'Create activity: %(activity_name)s',
+                    activity_name=self.activity_summary or self.activity_type_id.name
+                )
+            case _:
+                return super()._generate_action_name()
+
     @api.depends('state')
     def _compute_available_model_ids(self):
         mail_thread_based = self.filtered(
