@@ -57,7 +57,7 @@ export class MediaPlugin extends Plugin {
                 ? []
                 : [{ categoryId: "media", commandId: "insertMedia" }]),
         ],
-        power_buttons: { commandId: "insertMedia" },
+        power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
         /** Handlers */
         clean_handlers: this.clean.bind(this),
@@ -66,6 +66,10 @@ export class MediaPlugin extends Plugin {
 
         unsplittable_node_predicates: isIconElement, // avoid merge
     };
+
+    setup() {
+        this.extraTabs = this.getResource("media_dialog_tabs_providers").flatMap((p) => p());
+    }
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
@@ -159,6 +163,7 @@ export class MediaPlugin extends Plugin {
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
             noVideos: !!this.config.disableVideo,
             noImages: !!this.config.disableImage,
+            extraTabs: this.extraTabs,
             ...this.config.mediaModalParams,
             ...params,
         });
