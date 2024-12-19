@@ -1,13 +1,19 @@
 import { debounce } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
+import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
 import { Component } from "@odoo/owl";
+
 
 publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     selector: '.o_wetrack_js_reminder',
     events: {
-        'click': '_onReminderToggleClick',
+        'click .o_wetrack_js_reminder_bell': '_onReminderToggleClick',
+        'click .o_form_button_cancel': '_modalEmailReminderRemove',
+        'submit #o_wetrack_email_reminder_form': '_modalEmailReminderSubmit',
+        'mouseover i': '_fillIcon',
+        'mouseout i': '_emptyIcon'
     },
 
     /**
@@ -30,8 +36,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
     _onReminderToggleClick: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        var self = this;
-        var $trackLink = $(ev.currentTarget).find('i');
+        var $trackLink = $(ev.currentTarget);
 
         if (this.reminderOn === undefined) {
             this.reminderOn = $trackLink.data('reminderOn');
@@ -39,9 +44,21 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
 
         var reminderOnValue = !this.reminderOn;
 
+        var trackId = parseInt($trackLink.data('trackId'));
+
+        if (reminderOnValue){
+            this._checkEmailReminder(trackId);
+        }
+        else {
+            this._removeReminder(trackId);
+        }
+    },
+
+     _addReminder: function (trackId) {
+        var self = this;
         rpc('/event/track/toggle_reminder', {
-            track_id: $trackLink.data('trackId'),
-            set_reminder_on: reminderOnValue,
+            track_id: trackId,
+            set_reminder_on: true,
         }).then(function (result) {
             if (result.error && result.error === 'ignored') {
                 self.notification.add(_t('Talk already in your Favorites'), {
@@ -49,26 +66,75 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                     title: _t('Error'),
                 });
             } else {
-                self.reminderOn = reminderOnValue;
-                var reminderText = self.reminderOn ? _t('Favorite On') : _t('Set Favorite');
-                self.$('.o_wetrack_js_reminder_text').text(reminderText);
+                self.$('.o_wetrack_js_reminder_text').text(_t('Favorite On'));
+                self.reminderOn = true;
                 self._updateDisplay();
-                var message = self.reminderOn ? _t('Talk added to your Favorites') : _t('Talk removed from your Favorites');
-                self.notification.add(message, {
-                    type: 'info',
-                });
-                if (self.reminderOn) {
-                    Component.env.bus.trigger('open_notification_request', [
-                        'add_track_to_favorite',
-                        {
-                            title: _t('Allow push notifications?'),
-                            body: _t('You have to enable push notifications to get reminders for your favorite tracks.'),
-                            delay: 0
-                        },
-                    ]);
-                }
+                Component.env.bus.trigger('open_notification_request', [
+                    'add_track_to_favorite',
+                    {
+                        title: _t('Allow push notifications?'),
+                        body: _t('You have to enable push notifications to get reminders for your favorite tracks.'),
+                        delay: 0
+                    },
+                ]);
             }
         });
+    },
+
+    _removeReminder: function (trackId) {
+        var self = this;
+        rpc('/event/track/toggle_reminder', {
+            track_id: trackId,
+            set_reminder_on: false,
+        }).then(function (result) {
+            self.$('.o_wetrack_js_reminder_text').text(_t('Set Favorite'));
+            self.reminderOn = false;
+            self._updateDisplay();
+            self.notification.add(_t('Talk removed from your Favorites'), {
+                type: 'info',
+            });
+        });
+    },
+
+    _validateAddReminder: function (trackId) {
+        this._addReminder(trackId);
+        this.notification.add(_t('Track successfully added to your favorites. Check your email to add them to your agenda.'),
+            {
+                type: 'info',
+                className: 'o_send_email_reminder_success'
+            });
+    },
+
+    _sendEmailReminder: function (trackId) {
+        rpc('/event/send_email_reminder',  {
+            track_id: trackId,
+        }).then( (result) => {
+            this._validateAddReminder(trackId);
+        });
+    },
+
+    _modalEmailReminderRemove: function () {
+        this.$el.find('.o_wetrack_js_modal_email_reminder').remove();
+    },
+
+    _modalEmailReminderSubmit: function (ev) {
+        var self = this;
+        var data = Object.fromEntries(new FormData(ev.target).entries());
+        rpc('/event/add_session_email_reminder', data).then( (result) => {
+            self._validateAddReminder(parseInt(data.track_id));
+        });
+        this.$el.find('.o_wetrack_js_modal_email_reminder').remove();
+    },
+
+    _checkEmailReminder: function (trackId){
+        rpc('/event/has_email_reminder').then( (result) => {
+            if (result.hasEmailReminder){
+                this._sendEmailReminder(trackId);
+            }
+            else {
+                this.$el.append(renderToElement('website_event_track.email_reminder_modal', {'track_id': trackId}));
+            }
+        })
     },
 
     _updateDisplay: function () {
@@ -79,6 +145,20 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
         } else {
             $trackLink.addClass('fa-bell-o').removeClass('fa-bell');
             $trackLink.attr('title', _t('Set Favorite'));
+        }
+    },
+
+    _fillIcon: function (ev) {
+        var $el = $(ev.target);
+        if ($el.attr('title') == _t('Set Favorite')){
+            $el.removeClass('fa-bell-o').addClass('fa-bell');
+        }
+    },
+
+    _emptyIcon: function (ev){
+        var $el = $(ev.target);
+        if ($el.attr('title') == _t('Set Favorite')){
+            $el.removeClass('fa-bell').addClass('fa-bell-o');
         }
     },
 
