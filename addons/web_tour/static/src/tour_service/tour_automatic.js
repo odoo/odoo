@@ -113,7 +113,7 @@ export class TourAutomatic {
 
         this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay || 300,
+            checkDelay: this.checkDelay || 200,
             steps: macroSteps,
             onError: (error) => {
                 this.throwError([error]);
