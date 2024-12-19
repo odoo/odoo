@@ -94,6 +94,7 @@ export class RecordAutocomplete extends Component {
         this.addDialog(SelectCreateDialog, {
             title: _t("Search: %s", fieldString),
             dynamicFilters,
+            domain: this.getDomain(),
             resModel,
             noCreate: true,
             multiSelect,

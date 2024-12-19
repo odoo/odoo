@@ -19,7 +19,7 @@ class TestAccountMoveAttachment(HttpCase):
                 "thread_id": invoice.id,
                 "thread_model": "account.move",
             },
-            files={"ufile": b""},
+            files={'ufile': ('salut.txt', b"Salut !\n", 'text/plain')},
         )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(invoice.attachment_ids)
