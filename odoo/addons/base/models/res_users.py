@@ -1484,6 +1484,13 @@ class ResUsers(models.Model):
         """
         return False
 
+    def _alert_untrusted_location(self):
+        """
+            To be overriden in other modules to perform actions
+            if an unknown location is detected.
+        """
+        return
+
 
 ResUsersPatchedInTest = ResUsers
 
