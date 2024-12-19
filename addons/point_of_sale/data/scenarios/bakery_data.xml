@@ -26,6 +26,21 @@
 			<field name="categ_id" ref="point_of_sale.product_category_food"/>
 			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_breads')])]" />
 		</record>
+		<record model="product.product" id="product_flour">
+			<field name="name">Flour</field>
+			<field name="list_price">2.99</field>
+			<field name="standard_price">2.69</field>
+			<field name="description_sale">Flour sold by the kilogram.</field>
+			<field name="type">consu</field>
+			<field name="weight">1.00</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_flour.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="to_weight" eval="True"/>
+			<field name="categ_id" ref="point_of_sale.product_category_food"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_breads')])]" />
+		</record>
 		<record model="product.product" id="product_tiger_white_loaf">
 			<field name="name">Tiger white loaf</field>
 			<field name="list_price">2.75</field>
