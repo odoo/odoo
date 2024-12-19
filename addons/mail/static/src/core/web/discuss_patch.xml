@@ -13,6 +13,8 @@
         <xpath expr="//*[@t-ref='root']" position="attributes">
             <attribute name="class" add="h-0" remove="h-100" separator=" "/>
         </xpath>
+    </t>
+    <t t-inherit="mail.Discuss.main" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='main']" position="inside">
             <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>
         </xpath>
