@@ -93,6 +93,7 @@ export class TablePlugin extends Plugin {
             node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName),
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
+        allowed_to_move_elements_selectors: "table",
     };
 
     setup() {
