@@ -3705,11 +3705,11 @@ test("quick create record fails in grouped by selection", async () => {
 
 test.tags("desktop");
 test("quick create record in empty grouped kanban", async () => {
-    onRpc("web_read_group", () => {
+    onRpc("web_read_group", () =>
         // override read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped
         // by stage_id)
-        return {
+        ({
             groups: [
                 {
                     __domain: [["product_id", "=", 3]],
@@ -3723,8 +3723,8 @@ test("quick create record in empty grouped kanban", async () => {
                 },
             ],
             length: 2,
-        };
-    });
+        })
+    );
 
     await mountView({
         type: "kanban",
@@ -6116,24 +6116,22 @@ test("quick create column with x_name as _rec_name", async () => {
 
 test.tags("desktop");
 test("count of folded groups in empty kanban with sample data", async () => {
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    product_id: [1, "New"],
-                    product_id_count: 0,
-                    __domain: [],
-                },
-                {
-                    product_id: [2, "In Progress"],
-                    product_id_count: 0,
-                    __domain: [],
-                    __fold: true,
-                },
-            ],
-            length: 2,
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                product_id: [1, "New"],
+                product_id_count: 0,
+                __domain: [],
+            },
+            {
+                product_id: [2, "In Progress"],
+                product_id_count: 0,
+                __domain: [],
+                __fold: true,
+            },
+        ],
+        length: 2,
+    }));
 
     await mountView({
         resModel: "partner",
@@ -6348,17 +6346,15 @@ test("create column and examples background without ghostColumns titles", async 
 });
 
 test("nocontent helper after adding a record (kanban with progressbar)", async () => {
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
-                    product_id: [3, "hello"],
-                },
-            ],
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                __domain: [["product_id", "=", 3]],
+                product_id_count: 0,
+                product_id: [3, "hello"],
+            },
+        ],
+    }));
     stepAllNetworkCalls();
 
     await mountView({
@@ -6607,18 +6603,16 @@ test("no nocontent helper is shown when no longer creating column", async () => 
 test("no nocontent helper is hidden when quick creating a column", async () => {
     Partner._records = [];
 
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
-                    product_id: [3, "hello"],
-                },
-            ],
-            length: 1,
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                __domain: [["product_id", "=", 3]],
+                product_id_count: 0,
+                product_id: [3, "hello"],
+            },
+        ],
+        length: 1,
+    }));
 
     await mountView({
         type: "kanban",
@@ -6647,18 +6641,16 @@ test("no nocontent helper is hidden when quick creating a column", async () => {
 test("remove nocontent helper after adding a record", async () => {
     Partner._records = [];
 
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
-                    product_id: [3, "hello"],
-                },
-            ],
-            length: 1,
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                __domain: [["product_id", "=", 3]],
+                product_id_count: 0,
+                product_id: [3, "hello"],
+            },
+        ],
+        length: 1,
+    }));
 
     await mountView({
         type: "kanban",
@@ -6689,18 +6681,16 @@ test("remove nocontent helper after adding a record", async () => {
 test("remove nocontent helper when adding a record", async () => {
     Partner._records = [];
 
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
-                    product_id: [3, "hello"],
-                },
-            ],
-            length: 1,
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                __domain: [["product_id", "=", 3]],
+                product_id_count: 0,
+                product_id: [3, "hello"],
+            },
+        ],
+        length: 1,
+    }));
 
     await mountView({
         type: "kanban",
@@ -6730,18 +6720,16 @@ test("remove nocontent helper when adding a record", async () => {
 test("nocontent helper is displayed again after canceling quick create", async () => {
     Partner._records = [];
 
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    __domain: [["product_id", "=", 3]],
-                    product_id_count: 0,
-                    product_id: [3, "hello"],
-                },
-            ],
-            length: 1,
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                __domain: [["product_id", "=", 3]],
+                product_id_count: 0,
+                product_id: [3, "hello"],
+            },
+        ],
+        length: 1,
+    }));
 
     await mountView({
         type: "kanban",
@@ -6846,9 +6834,9 @@ test("empty grouped kanban with sample data and no columns", async () => {
 test("empty kanban with sample data grouped by date range (fill temporal)", async () => {
     Partner._records = [];
 
-    onRpc("web_read_group", () => {
+    onRpc("web_read_group", () =>
         // Simulate fill temporal
-        return {
+        ({
             groups: [
                 {
                     date_count: 0,
@@ -6867,8 +6855,8 @@ test("empty kanban with sample data grouped by date range (fill temporal)", asyn
                 },
             ],
             length: 1,
-        };
-    });
+        })
+    );
     await mountView({
         arch: `
             <kanban sample="1">
@@ -7228,13 +7216,11 @@ test("non empty kanban with sample data", async () => {
 test("empty grouped kanban with sample data: add a column", async () => {
     onRpc("web_read_group", function ({ parent }) {
         const result = parent();
-        result.groups = Product._records.map((r) => {
-            return {
-                product_id: [r.id, r.display_name],
-                product_id_count: 0,
-                __domain: [["product_id", "=", r.id]],
-            };
-        });
+        result.groups = Product._records.map((r) => ({
+            product_id: [r.id, r.display_name],
+            product_id_count: 0,
+            __domain: [["product_id", "=", r.id]],
+        }));
         result.length = result.groups.length;
         return result;
     });
@@ -7320,13 +7306,13 @@ test("empty grouped kanban with sample data: delete a column", async () => {
         },
     ];
 
-    onRpc("web_read_group", () => {
+    onRpc("web_read_group", () =>
         // override read_group to return a single, empty group
-        return {
+        ({
             groups,
             length: groups.length,
-        };
-    });
+        })
+    );
 
     await mountView({
         resModel: "partner",
@@ -7361,13 +7347,11 @@ test("empty grouped kanban with sample data: delete a column", async () => {
 test("empty grouped kanban with sample data: add a column and delete it right away", async () => {
     onRpc("web_read_group", function ({ parent }) {
         const result = parent();
-        result.groups = Product._records.map((r) => {
-            return {
-                product_id: [r.id, r.display_name],
-                product_id_count: 0,
-                __domain: [["product_id", "=", r.id]],
-            };
-        });
+        result.groups = Product._records.map((r) => ({
+            product_id: [r.id, r.display_name],
+            product_id_count: 0,
+            __domain: [["product_id", "=", r.id]],
+        }));
         result.length = result.groups.length;
         return result;
     });
@@ -7420,16 +7404,14 @@ test("kanban with sample data: do an on_create action", async () => {
     Partner._records = [];
     Partner._views["form,some_view_ref"] = `<form><field name="foo"/></form>`;
 
-    onRpc("/web/action/load", () => {
-        return {
-            type: "ir.actions.act_window",
-            name: "Archive Action",
-            res_model: "partner",
-            view_mode: "form",
-            target: "new",
-            views: [[false, "form"]],
-        };
-    });
+    onRpc("/web/action/load", () => ({
+        type: "ir.actions.act_window",
+        name: "Archive Action",
+        res_model: "partner",
+        view_mode: "form",
+        target: "new",
+        views: [[false, "form"]],
+    }));
 
     await mountView({
         resModel: "partner",
@@ -7462,18 +7444,16 @@ test("kanban with sample data: do an on_create action", async () => {
 test("kanban with sample data grouped by m2o and existing groups", async () => {
     Partner._records = [];
 
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    product_id_count: 0,
-                    product_id: [3, "hello"],
-                    __domain: [["product_id", "=", "3"]],
-                },
-            ],
-            length: 2,
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                product_id_count: 0,
+                product_id: [3, "hello"],
+                __domain: [["product_id", "=", "3"]],
+            },
+        ],
+        length: 2,
+    }));
 
     await mountView({
         resModel: "partner",
@@ -8043,8 +8023,8 @@ test("edit the kanban color with the colorpicker", async () => {
 
     await toggleKanbanRecordDropdown(0);
 
-    expect(".o_kanban_record.o_kanban_color_12").toHaveCount(0, {
-        message: "no record should have the color 12",
+    expect(".o_kanban_record.o_kanban_color_13").toHaveCount(0, {
+        message: "no record should have the color 13",
     });
     expect(
         queryAll(".o_kanban_colorpicker", { root: getDropdownMenu(getKanbanRecord({ index: 0 })) })
@@ -8053,7 +8033,7 @@ test("edit the kanban color with the colorpicker", async () => {
         queryAll(".o_kanban_colorpicker > *", {
             root: getDropdownMenu(getKanbanRecord({ index: 0 })),
         })
-    ).toHaveCount(12, { message: "the color picker should have 12 children (the colors)" });
+    ).toHaveCount(13, { message: "the color picker should have 13 children (the colors)" });
 
     await contains(".o_kanban_colorpicker a.o_kanban_color_9").click();
 
@@ -9806,9 +9786,7 @@ test("progressbars and active filter with quick_create_view", async () => {
 
 test.tags("desktop");
 test("quickcreate in first column after moving a record from it", async () => {
-    onRpc("/web/dataset/resequence", () => {
-        return true;
-    });
+    onRpc("/web/dataset/resequence", () => true);
 
     await mountView({
         type: "kanban",
@@ -10980,11 +10958,9 @@ test("kanban widget can extract props from attrs", async () => {
     }
     const testWidget = {
         component: TestWidget,
-        extractProps: ({ attrs }) => {
-            return {
-                title: attrs.title,
-            };
-        },
+        extractProps: ({ attrs }) => ({
+            title: attrs.title,
+        }),
     };
     viewWidgetRegistry.add("widget_test_option", testWidget);
     after(() => viewWidgetRegistry.remove("widget_test_option"));
@@ -12706,28 +12682,26 @@ test("sample server: _mockWebReadGroup API", async () => {
         },
     });
 
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    date_count: 0,
-                    state: false,
-                    "date:month": "December 2022",
-                    __range: {
-                        "date:month": {
-                            from: "2022-12-01",
-                            to: "2023-01-01",
-                        },
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                date_count: 0,
+                state: false,
+                "date:month": "December 2022",
+                __range: {
+                    "date:month": {
+                        from: "2022-12-01",
+                        to: "2023-01-01",
                     },
-                    __domain: [
-                        ["date", ">=", "2022-12-01"],
-                        ["date", "<", "2023-01-01"],
-                    ],
                 },
-            ],
-            length: 1,
-        };
-    });
+                __domain: [
+                    ["date", ">=", "2022-12-01"],
+                    ["date", "<", "2023-01-01"],
+                ],
+            },
+        ],
+        length: 1,
+    }));
 
     await mountView({
         arch: `
@@ -13072,28 +13046,26 @@ test("group by properties and drag and drop", async () => {
     ];
     Partner._records[3].parent_id = 2;
 
-    onRpc("web_read_group", () => {
-        return {
-            groups: [
-                {
-                    "properties.my_char": false,
-                    __domain: [["properties.my_char", "=", false]],
-                    "properties.my_char_count": 2,
-                },
-                {
-                    "properties.my_char": "aaa",
-                    __domain: [["properties.my_char", "=", "aaa"]],
-                    "properties.my_char_count": 1,
-                },
-                {
-                    "properties.my_char": "bbb",
-                    __domain: [["properties.my_char", "=", "bbb"]],
-                    "properties.my_char_count": 1,
-                },
-            ],
-            length: 3,
-        };
-    });
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                "properties.my_char": false,
+                __domain: [["properties.my_char", "=", false]],
+                "properties.my_char_count": 2,
+            },
+            {
+                "properties.my_char": "aaa",
+                __domain: [["properties.my_char", "=", "aaa"]],
+                "properties.my_char_count": 1,
+            },
+            {
+                "properties.my_char": "bbb",
+                __domain: [["properties.my_char", "=", "bbb"]],
+                "properties.my_char_count": 1,
+            },
+        ],
+        length: 3,
+    }));
     onRpc("web_search_read", ({ kwargs }) => {
         const value = kwargs.domain[0][2];
         return {
@@ -13370,11 +13342,11 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
 
 test.tags("desktop");
 test("click on empty kanban must shake the NEW button", async () => {
-    onRpc("web_read_group", () => {
+    onRpc("web_read_group", () =>
         // override read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped
         // by stage_id)
-        return {
+        ({
             groups: [
                 {
                     __domain: [["product_id", "=", 3]],
@@ -13388,8 +13360,8 @@ test("click on empty kanban must shake the NEW button", async () => {
                 },
             ],
             length: 2,
-        };
-    });
+        })
+    );
 
     await mountView({
         type: "kanban",

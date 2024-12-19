@@ -16,6 +16,7 @@ export class ColorList extends Component {
         _t("Raspberry"),
         _t("Green"),
         _t("Violet"),
+        _t("Dark Green"),
     ];
     static template = "web.ColorList";
     static defaultProps = {
