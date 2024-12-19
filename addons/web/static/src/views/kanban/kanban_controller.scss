@@ -79,10 +79,10 @@
         @include media-only(screen) {
             --ControlPanel-border-bottom: none;
         }
+    }
 
-        &.o_field_x2many_kanban .o_kanban_ghost {
-            display: none;
-        }
+    &.o_field_x2many_kanban .o_kanban_ghost {
+        display: none;
     }
 }
 
@@ -170,8 +170,11 @@
     }
 
     .o_dragged {
-        transform: rotate(-3deg);
         transition: transform 0.6s, box-shadow 0.3s;
+
+        &:not(.o_draggable_norotate) {
+            transform: rotate(-3deg);
+        }
 
         .dropdown {
             display: none;
