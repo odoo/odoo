@@ -23,7 +23,7 @@
             <div class="mt-4">
                 <t t-set="layout_document_title">
                     <t t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation #<span t-field="o.name"/></t>
-                    <t t-if="o.state in ['purchase', 'done']">Purchase Order #<span t-field="o.name"/></t>
+                    <t t-if="o.state == 'purchase'">Purchase Order #<span t-field="o.name"/></t>
                     <t t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></t>
                 </t>
             </div>
@@ -37,7 +37,7 @@
                     <strong>Your Order Reference</strong>
                     <div t-field="o.partner_ref"/>
                 </div>
-                <div t-if="o.state in ['purchase','done'] and o.date_approve" class="col-3 bm-2">
+                <div t-if="o.state == 'purchase' and o.date_approve" class="col-3 bm-2">
                     <strong>Order Date:</strong>
                     <p t-field="o.date_approve" t-options="{'date_only': 'true'}" class="m-0"/>
                 </div>
