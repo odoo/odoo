@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+
 from odoo import api, fields, models, _
 from odoo.tools import email_normalize
 
@@ -327,6 +329,7 @@ class MailTestTicket(models.Model):
             )
         return recipients
 
+
 class MailTestTicketEL(models.Model):
     """ Just mail.test.ticket, but exclusion-list enabled. Kept as different
     model to avoid messing with existing tests, notably performance, and ease
@@ -360,6 +363,15 @@ class MailTestTicketMC(models.Model):
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     container_id = fields.Many2one('mail.test.container.mc', tracking=True)
+
+    def _notify_get_reply_to(self, default=None):
+        # Override to use alias of the parent container
+        aliases = self.sudo().mapped('container_id')._notify_get_reply_to(default=default)
+        res = {task.id: aliases.get(task.container_id.id) for task in self}
+        leftover = self.filtered(lambda rec: not rec.container_id)
+        if leftover:
+            res.update(super(MailTestTicketMC, leftover)._notify_get_reply_to(default=default))
+        return res
 
 
 class MailTestContainer(models.Model):
@@ -400,12 +412,14 @@ class MailTestContainer(models.Model):
         return groups
 
     def _alias_get_creation_values(self):
-        values = super(MailTestContainer, self)._alias_get_creation_values()
-        values['alias_model_id'] = self.env['ir.model']._get('mail.test.container').id
+        values = super()._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('mail.test.ticket').id
+        values['alias_force_thread_id'] = False
         if self.id:
-            values['alias_force_thread_id'] = self.id
-            values['alias_parent_thread_id'] = self.id
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            defaults['container_id'] = self.id
         return values
+
 
 class MailTestContainerMC(models.Model):
     """ Just mail.test.container, but multi company. Kept as different model to
@@ -417,6 +431,11 @@ class MailTestContainerMC(models.Model):
     _inherit = ['mail.test.container']
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+
+    def _alias_get_creation_values(self):
+        values = super()._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('mail.test.ticket.mc').id
+        return values
 
 
 class MailTestComposerMixin(models.Model):
