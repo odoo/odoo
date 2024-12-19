@@ -5504,8 +5504,8 @@ class BaseModel(metaclass=MetaModel):
                 to_flush[model._name].add(fname)
                 if field.type == 'one2many' and field.inverse_name:
                     to_flush[field.comodel_name].add(field.inverse_name)
-                    field_domain = field.get_domain_list(model)
-                    if field_domain:
+                    field_domain = field.get_comodel_domain(model)
+                    if not field_domain.is_true():
                         collect_from_domain(self.env[field.comodel_name], field_domain)
                 # DLE P111: `test_message_process_email_partner_find`
                 # Search on res.users with email_normalized in domain
