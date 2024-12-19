@@ -51,17 +51,17 @@ class TestRepair(common.TransactionCase):
         cls.product_consu_order_repair = cls.env['product.product'].create({
             'name': 'Repair Consumable',
             'type': 'consu',
-            'create_repair': True,
+            'service_tracking': 'repair',
         })
         cls.product_storable_order_repair = cls.env['product.product'].create({
             'name': 'Repair Storable',
             'is_storable': True,
-            'create_repair': True,
+            'service_tracking': 'repair',
         })
         cls.product_service_order_repair = cls.env['product.product'].create({
             'name': 'Repair Service',
             'type': 'service',
-            'create_repair': True,
+            'service_tracking': 'repair',
         })
 
         # Location
@@ -319,7 +319,7 @@ class TestRepair(common.TransactionCase):
     def test_02_repair_sale_order_binding(self):
         # Binding from SO to RO(s)
         #   On SO Confirm
-        #     - Create linked RO per line (only if item with "create_repair" checked)
+        #     - Create linked RO per line (only if service_tracking == 'repair')
         #   Create Repair SOL
         #     - sol qty updated to 0 -> RO canceled (Reciprocal is true too)
         #     - sol qty back to >0 -> RO Confirmed (Reciprocal is not true)
@@ -628,7 +628,7 @@ class TestRepair(common.TransactionCase):
             'name': 'productA',
             'is_storable': True,
             'tracking': 'serial',
-            'create_repair': True,
+            'service_tracking': 'repair',
         })
 
         sale_order = self.env['sale.order'].create({
