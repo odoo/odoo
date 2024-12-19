@@ -1676,24 +1676,16 @@ class ProjectTask(models.Model):
         defaults.update(custom_values)
 
         task = super(ProjectTask, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        email_list = task.task_email_split(msg)
-        partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
-        task.message_subscribe(partner_ids)
+        partners = task._partner_find_from_emails_single(task.task_email_split(msg), no_create=True)
+        task.message_subscribe(partners.ids)
         return task
 
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
-        email_list = self.task_email_split(msg)
-        partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=self, force_create=False) if p]
-        self.message_subscribe(partner_ids)
+        for task in self:
+            partners = task._partner_find_from_emails_single(task.task_email_split(msg), no_create=True)
+            task.message_subscribe(partners.ids)
         return super().message_update(msg, update_vals=update_vals)
-
-    def _message_get_suggested_recipients(self):
-        recipients = super()._message_get_suggested_recipients()
-        if self.partner_id:
-            reason = _('Customer Email') if self.partner_id.email else _('Customer')
-            self._message_add_suggested_recipient(recipients, partner=self.partner_id, reason=reason)
-        return recipients
 
     def _notify_by_email_get_headers(self, headers=None):
         headers = super()._notify_by_email_get_headers(headers=headers)

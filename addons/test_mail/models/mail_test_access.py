@@ -1,4 +1,4 @@
-from odoo import exceptions, fields, models
+from odoo import exceptions, fields, models, tools
 
 
 class MailTestAccess(models.Model):
@@ -71,7 +71,20 @@ class MailTestAccessPublic(models.Model):
 
     name = fields.Char("Name")
     customer_id = fields.Many2one('res.partner', 'Customer')
+    email = fields.Char('Email')
+    mobile = fields.Char('Mobile')
     is_locked = fields.Boolean()
 
     def _mail_get_partner_fields(self):
         return ['customer_id']
+
+    def _get_customer_information(self):
+        email_key_to_values = super()._get_customer_information()
+        for record in self.filtered('email'):
+            # do not fill Falsy with random data, unless monorecord (= always correct)
+            if not tools.email_normalize(record.email) and len(self) > 1:
+                continue
+            values = email_key_to_values.setdefault(record.email, {})
+            if not values.get('mobile'):
+                values['mobile'] = record.mobile
+        return email_key_to_values
