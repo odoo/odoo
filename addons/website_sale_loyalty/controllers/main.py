@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import http, _
 from odoo.addons.website_sale.controllers import main
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 
 from werkzeug.urls import url_encode, url_parse
@@ -130,3 +130,24 @@ class WebsiteSale(main.WebsiteSale):
             # and does not follow the request's context
             request.website = request.website.with_context(website_sale_loyalty_delete=True)
         return super().cart_update_json(*args, set_qty=set_qty, **kwargs)
+
+
+class PaymentPortal(main.PaymentPortal):
+
+    def _validate_transaction_for_order(self, transaction, sale_order_id):
+        """Update programs & rewards before finalizing transaction.
+
+        :param payment.transaction transaction: The payment transaction
+        :param int order_id: The id of the sale order to pay
+        :raise: ValidationError if the order amount changed after updating rewards
+        """
+        super()._validate_transaction_for_order(transaction, sale_order_id)
+        order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
+        if order_sudo.exists():
+            initial_amount = order_sudo.amount_total
+            order_sudo._update_programs_and_rewards()
+            order_sudo.validate_taxes_on_sales_order()  # re-applies taxcloud taxes if necessary
+            if initial_amount != order_sudo.amount_total:
+                raise ValidationError(
+                    _("Cannot process payment: applied reward was changed or has expired.")
+                )
