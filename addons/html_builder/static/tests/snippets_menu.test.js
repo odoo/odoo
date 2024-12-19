@@ -4,11 +4,16 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, getEditable, openSnippetsMenu, setupWebsiteBuilder } from "./helpers";
+import {
+    defineWebsiteModels,
+    getEditable,
+    openBuilderSidebar,
+    setupWebsiteBuilder,
+} from "./helpers";
 
 defineWebsiteModels();
 
-test("open SnippetsMenu and discard", async () => {
+test("open BuilderSidebar and discard", async () => {
     let websiteBuilder;
     patchWithCleanup(WebsiteBuilder.prototype, {
         setup() {
@@ -18,7 +23,7 @@ test("open SnippetsMenu and discard", async () => {
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
-    await openSnippetsMenu();
+    await openBuilderSidebar();
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(0);
     await click(".o-snippets-top-actions button:contains(Discard)");
     await websiteBuilder.iframeLoaded;
@@ -31,19 +36,25 @@ test("navigate between builder tab don't fetch snippet description again", async
         expect.step("render_public_asset");
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
-    expect(queryAllTexts(".o-website-snippetsmenu .o-snippets-tabs span")).toEqual([
+    expect(queryAllTexts(".o-website-sidebarbuilder .o-snippets-tabs span")).toEqual([
         "BLOCKS",
         "CUSTOMIZE",
         "THEME",
     ]);
-    expect(queryOne(".o-website-snippetsmenu .o-snippets-tabs button.active")).toHaveText("BLOCKS");
+    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+        "BLOCKS"
+    );
     expect.verifySteps(["render_public_asset"]);
 
-    await contains(".o-website-snippetsmenu .o-snippets-tabs span:contains(THEME)").click();
-    expect(queryOne(".o-website-snippetsmenu .o-snippets-tabs button.active")).toHaveText("THEME");
+    await contains(".o-website-sidebarbuilder .o-snippets-tabs span:contains(THEME)").click();
+    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+        "THEME"
+    );
 
-    await contains(".o-website-snippetsmenu .o-snippets-tabs span:contains(BLOCK)").click();
-    expect(queryOne(".o-website-snippetsmenu .o-snippets-tabs button.active")).toHaveText("BLOCKS");
+    await contains(".o-website-sidebarbuilder .o-snippets-tabs span:contains(BLOCK)").click();
+    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+        "BLOCKS"
+    );
     expect.verifySteps([]);
 });
 
@@ -52,7 +63,7 @@ test("undo and redo buttons", async () => {
         openEditor: false,
     });
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
-    await openSnippetsMenu();
+    await openBuilderSidebar();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").toHaveClass("o_editable");
     const editor = getEditor();
@@ -78,9 +89,11 @@ test("undo and redo buttons", async () => {
 
 test("activate customize tab without any selection", async () => {
     await setupWebsiteBuilder("<h1> Homepage </h1>");
-    expect(queryOne(".o-website-snippetsmenu .o-snippets-tabs button.active")).toHaveText("BLOCKS");
-    await contains(".o-website-snippetsmenu .o-snippets-tabs button:contains(CUSTOMIZE)").click();
-    expect(queryOne(".o-website-snippetsmenu .o-snippets-tabs button.active")).toHaveText(
+    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
+        "BLOCKS"
+    );
+    await contains(".o-website-sidebarbuilder .o-snippets-tabs button:contains(CUSTOMIZE)").click();
+    expect(queryOne(".o-website-sidebarbuilder .o-snippets-tabs button.active")).toHaveText(
         "CUSTOMIZE"
     );
 });

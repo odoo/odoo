@@ -43,9 +43,8 @@ const BUILDER_PLUGIN = [
     HandleDirtyElementPlugin,
 ];
 
-// todo: Why is it called SnippetsMenu? Should we rename it to BuilderSidebar?
-export class SnippetsMenu extends Component {
-    static template = "html_builder.SnippetsMenu";
+export class BuilderSidebar extends Component {
+    static template = "html_builder.BuilderSidebar";
     static components = { BlockTab, CustomizeTab, InvisibleElementsPanel };
     static props = {
         closeEditor: { type: Function },
@@ -60,7 +59,7 @@ export class SnippetsMenu extends Component {
     setup() {
         // const actionService = useService("action");
         this.pages = [blockTab, customizeTab];
-        this.snippetsMenu = useRef("snippetsMenu");
+        this.sidebarBuilderRef = useRef("sidebarBuilder");
         this.state = useState({
             canUndo: false,
             canRedo: false,
@@ -187,7 +186,7 @@ export class SnippetsMenu extends Component {
     async save() {
         this.isSaving = true;
         // TODO: handle the urgent save and the fail of the save operation
-        const snippetMenuEl = this.snippetsMenu.el;
+        const snippetMenuEl = this.sidebarBuilderRef.el;
         // Add a loading effect on the save button and disable the other actions
         addButtonLoadingEffect(snippetMenuEl.querySelector("[data-action='save']"));
         const actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
@@ -304,4 +303,4 @@ export class SnippetsMenu extends Component {
     }
 }
 
-registry.category("lazy_components").add("website.SnippetsMenu", SnippetsMenu);
+registry.category("lazy_components").add("website.BuilderSidebar", BuilderSidebar);

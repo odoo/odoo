@@ -36,26 +36,26 @@ test("drag & drop inner content block", async () => {
     });
     const editor = getEditor();
     expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
-    expect(".o-website-snippetsmenu .fa-undo").not.toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-undo").not.toBeEnabled();
 
-    const { moveTo, drop } = await contains(".o-website-snippetsmenu [name='Button A']").drag();
+    const { moveTo, drop } = await contains(".o-website-sidebarbuilder [name='Button A']").drag();
     await animationFrame(); // TODO we should remove it maybe bug utils hoot
     expect(editor.editable).toHaveInnerHTML(
         `<div><div class="oe_drop_zone oe_insert"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
     );
-    expect(".o-website-snippetsmenu .fa-undo").not.toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-undo").not.toBeEnabled();
 
     await moveTo(editor.editable.querySelector(".oe_drop_zone"));
     expect(editor.editable).toHaveInnerHTML(
         `<div><div class="oe_drop_zone oe_insert o_dropzone_highlighted"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
     );
-    expect(".o-website-snippetsmenu .fa-undo").not.toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-undo").not.toBeEnabled();
 
     await drop(editor.editable.querySelector(".oe_drop_zone"));
     expect(editor.editable).toHaveInnerHTML(
         `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button" data-name="Button A">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
     );
-    expect(".o-website-snippetsmenu .fa-undo").toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-undo").toBeEnabled();
 });
 
 test("drag & drop inner content block + undo/redo", async () => {
@@ -64,22 +64,22 @@ test("drag & drop inner content block + undo/redo", async () => {
     });
     const editor = getEditor();
     expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
-    expect(".o-website-snippetsmenu .fa-undo").not.toBeEnabled();
-    expect(".o-website-snippetsmenu .fa-repeat").not.toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-undo").not.toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-repeat").not.toBeEnabled();
 
-    const { drop } = await contains(".o-website-snippetsmenu [name='Button A']").drag();
+    const { drop } = await contains(".o-website-sidebarbuilder [name='Button A']").drag();
     await drop(editor.editable.querySelector(".oe_drop_zone"));
     expect(editor.editable).toHaveInnerHTML(
         `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button" data-name="Button A">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
     );
-    expect(".o-website-snippetsmenu .fa-undo").toBeEnabled();
-    expect(".o-website-snippetsmenu .fa-repeat").not.toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-undo").toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-repeat").not.toBeEnabled();
 
-    await click(".o-website-snippetsmenu .fa-undo");
+    await click(".o-website-sidebarbuilder .fa-undo");
     await animationFrame();
     expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
-    expect(".o-website-snippetsmenu .fa-undo").not.toBeEnabled();
-    expect(".o-website-snippetsmenu .fa-repeat").toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-undo").not.toBeEnabled();
+    expect(".o-website-sidebarbuilder .fa-repeat").toBeEnabled();
 });
 
 test("drag inner content & drop in outside of a dropzone", async () => {
@@ -89,11 +89,11 @@ test("drag inner content & drop in outside of a dropzone", async () => {
     const editor = getEditor();
     expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
 
-    const { drop } = await contains(".o-website-snippetsmenu [name='Button A']").drag();
+    const { drop } = await contains(".o-website-sidebarbuilder [name='Button A']").drag();
     expect(editor.editable).toHaveInnerHTML(
         `<div><div class="oe_drop_zone oe_insert"></div><p>Text</p><div class="oe_drop_zone oe_insert"></div></div>`
     );
 
-    await drop(editor.editable.querySelector(".o-website-snippetsmenu"));
+    await drop(editor.editable.querySelector(".o-website-sidebarbuilder"));
     expect(editor.editable).toHaveInnerHTML(`<div><p>Text</p></div>`);
 });

@@ -1,4 +1,4 @@
-import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
+import { BuilderSidebar } from "@html_builder/builder/builder_sidebar";
 import { WebsiteBuilder } from "@html_builder/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -87,7 +87,7 @@ export async function setupWebsiteBuilder(
         type: "ir.actions.client",
     });
 
-    patchWithCleanup(SnippetsMenu.prototype, {
+    patchWithCleanup(BuilderSidebar.prototype, {
         setup() {
             super.setup();
             editor = this.editor;
@@ -114,12 +114,12 @@ export async function setupWebsiteBuilder(
     resolveIframeLoaded(iframe);
     await animationFrame();
     if (openEditor) {
-        await openSnippetsMenu();
+        await openBuilderSidebar();
     }
     return { getEditor: () => editor };
 }
 
-export async function openSnippetsMenu() {
+export async function openBuilderSidebar() {
     // The next line allow us to await asynchronous fetches and cache them before it is used
     await Promise.all([getWebsiteSnippets(), loadBundle("website.assets_builder")]);
 

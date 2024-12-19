@@ -48,7 +48,7 @@ export class BlockTab extends Component {
         const copyOnDrag = copyElementOnDrag();
         useDraggable({
             ref: this.env.builderRef,
-            elements: ".o-website-snippetsmenu .o_draggable",
+            elements: ".o-website-sidebarbuilder .o_draggable",
             enable: () => this.env.editor?.isReady,
             iframeWindow: this.env.editor?.editable.ownerDocument.defaultView,
             onWillStartDrag: ({ element }) => {

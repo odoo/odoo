@@ -1,4 +1,4 @@
-import { SnippetsMenu } from "@html_builder/builder/snippets_menu";
+import { BuilderSidebar } from "@html_builder/builder/builder_sidebar";
 import { WebsiteBuilder } from "@html_builder/website_builder_action";
 import { EditWebsiteSystrayItem } from "@html_builder/edit_website_systray_item";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
@@ -41,7 +41,7 @@ test("systray in translate mode", async () => {
 });
 
 test("snippets menu in translate mode", async () => {
-    await setupSnippetsMenuForTranslation({ websiteContent: `<h1> Homepage </h1>` });
+    await setupSidebarBuilderForTranslation({ websiteContent: `<h1> Homepage </h1>` });
     expect(".o-snippets-tabs button:contains('BLOCKS')").toHaveAttribute("disabled");
     expect(".o-snippets-tabs button:contains('THEME')").toHaveAttribute("disabled");
     expect(".o-snippets-tabs button:contains('CUSTOMIZE')").toHaveClass("active");
@@ -49,7 +49,7 @@ test("snippets menu in translate mode", async () => {
 });
 
 test("invisible elements in translate mode", async () => {
-    await setupSnippetsMenuForTranslation({ websiteContent: invisiblePopup });
+    await setupSidebarBuilderForTranslation({ websiteContent: invisiblePopup });
     expect(".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Popup')").toHaveCount(1);
 });
 
@@ -59,7 +59,7 @@ test("translate text", async () => {
         resultSave.push(args[2]["fr_BE"]["sourceSha"]);
         return true;
     });
-    const editor = await setupSnippetsMenuForTranslation({
+    const editor = await setupSidebarBuilderForTranslation({
         websiteContent: getTranslateEditable("Hello"),
     });
     setContent(editor.editable, getTranslateEditable("H[]ello"));
@@ -70,7 +70,7 @@ test("translate text", async () => {
 });
 
 test("add text in translate mode do not split", async () => {
-    const editor = await setupSnippetsMenuForTranslation({
+    const editor = await setupSidebarBuilderForTranslation({
         websiteContent: getTranslateEditable("Hello"),
     });
     setContent(editor.editable, getTranslateEditable("Hello[]"));
@@ -108,13 +108,13 @@ function getTranslateEditable(inWrap) {
         </div>`;
 }
 
-async function setupSnippetsMenuForTranslation(options) {
+async function setupSidebarBuilderForTranslation(options) {
     const { websiteContent, openEditor = true } = options;
     // Hack: configure the snippets menu as in translate mode when clicking
     // on the "Edit" button of the systray. The goal of this hack is to avoid
     // the handling of an extra reload of the action to arrive in translate
     // mode.
-    patchWithCleanup(SnippetsMenu.prototype, {
+    patchWithCleanup(BuilderSidebar.prototype, {
         setup() {
             super.setup();
             this.websiteService = websiteServiceInTranslateMode;
