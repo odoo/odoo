@@ -1,5 +1,5 @@
 import { Component, useSubEnv } from "@odoo/owl";
-import { defaultOptionComponents } from "./defaultComponents";
+import { defaultOptionComponents } from "../builder_components/defaultComponents";
 import { useVisibilityObserver, useApplyVisibility } from "../builder_helpers";
 import { DependencyManager } from "../plugins/dependency_manager";
 

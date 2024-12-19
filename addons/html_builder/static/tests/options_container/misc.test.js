@@ -4,7 +4,7 @@ import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 import { defaultOptionComponents } from "../../src/builder/builder_components/defaultComponents";
-import { OptionsContainer } from "../../src/builder/builder_components/OptionsContainer";
+import { OptionsContainer } from "../../src/builder/components/option_container";
 
 defineWebsiteModels();
 

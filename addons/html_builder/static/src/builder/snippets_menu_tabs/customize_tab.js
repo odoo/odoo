@@ -1,5 +1,5 @@
 import { Component, useState } from "@odoo/owl";
-import { OptionsContainer } from "../builder_components/OptionsContainer";
+import { OptionsContainer } from "../components/option_container";
 import { useVisibilityObserver } from "../builder_helpers";
 
 export class CustomizeTab extends Component {
