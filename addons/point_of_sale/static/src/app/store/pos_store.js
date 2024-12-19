@@ -37,7 +37,18 @@ import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_mo
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
 import { user } from "@web/core/user";
 
+const NON_IDLE_EVENTS = [
+    "mousemove",
+    "mousedown",
+    "touchstart",
+    "touchend",
+    "touchmove",
+    "click",
+    "scroll",
+    "keypress",
+];
 const { DateTime } = luxon;
+let IDLE_TIMER_SETTER;
 
 export class PosStore extends Reactive {
     loadingSkipButtonIsShown = false;
@@ -163,6 +174,58 @@ export class PosStore extends Reactive {
         }
 
         return !this.cashier ? "LoginScreen" : "ProductScreen";
+    }
+
+    setActivityListeners() {
+        IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
+        for (const event of NON_IDLE_EVENTS) {
+            window.addEventListener(event, IDLE_TIMER_SETTER);
+        }
+    }
+
+    shouldResetIdleTimer() {
+        const stayPaymentScreen =
+            this.mainScreen.component === PaymentScreen && this.get_order().payment_ids.length > 0;
+        return !stayPaymentScreen;
+    }
+
+    setIdleTimer() {
+        clearTimeout(this.idleTimer);
+        const isFloorOrScreenSaver = ["FloorScreen", "ScreenSaver", "LoginScreen"].includes(
+            this.mainScreen.component.name
+        );
+        let targetScreen = "ScreenSaver";
+        let timeoutDuration = 300000;
+        if (this.config.module_pos_restaurant && !isFloorOrScreenSaver) {
+            targetScreen = "FloorScreen";
+            timeoutDuration = 180000;
+        } else if (this.mainScreen.component.name == "LoginScreen") {
+            timeoutDuration = 120000;
+        }
+        if (this.shouldResetIdleTimer()) {
+            this.idleTimer = setTimeout(() => this.actionAfterIdle(targetScreen), timeoutDuration);
+        }
+    }
+
+    async actionAfterIdle(targetScreen) {
+        if (!document.querySelector(".modal-open")) {
+            const order = this.get_order();
+            if (order && order.get_screen_data().name === "ReceiptScreen") {
+                // When the order is finalized, we can safely remove it from the memory
+                // We check that it's in ReceiptScreen because we want to keep the order if it's in a tipping state
+                this.removeOrder(order);
+            }
+            if (this.config.module_pos_restaurant) {
+                const table = this.selectedTable;
+                if (targetScreen != "FloorScreen") {
+                    this.showScreen(targetScreen);
+                } else {
+                    this.showScreen(targetScreen, { floor: table?.floor });
+                }
+            } else {
+                this.showScreen(targetScreen);
+            }
+        }
     }
 
     async showLoginScreen() {
@@ -535,6 +598,7 @@ export class PosStore extends Reactive {
         this.syncAllOrders();
 
         if (!this.config.module_pos_restaurant) {
+            this.setActivityListeners();
             this.selectedOrderUuid = openOrders.length
                 ? openOrders[openOrders.length - 1].uuid
                 : this.add_new_order().uuid;
@@ -1482,6 +1546,7 @@ export class PosStore extends Reactive {
         if (component.storeOnOrder ?? true) {
             this.get_order()?.set_screen_data({ name, props });
         }
+        this.setIdleTimer();
     }
     orderExportForPrinting(order) {
         const headerData = this.getReceiptHeaderData(order);
@@ -1786,6 +1851,11 @@ export class PosStore extends Reactive {
     }
     async closePos() {
         this._resetConnectedCashier();
+        if (IDLE_TIMER_SETTER) {
+            for (const event of NON_IDLE_EVENTS) {
+                window.removeEventListener(event, IDLE_TIMER_SETTER);
+            }
+        }
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this) {
