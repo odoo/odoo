@@ -17,9 +17,11 @@ export class MessageReactionList extends Component {
         this.loadEmoji = loadEmoji;
         this.store = useState(useService("mail.store"));
         this.ui = useService("ui");
+        this.preview = useDropdownState();
         this.hover = useHover(["reactionButton", "reactionList*"], {
             onHover: () => (this.preview.isOpen = true),
             onAway: () => (this.preview.isOpen = false),
+            externalState: this.preview,
         });
         this.state = useState({ emojiLoaded: Boolean(loader.loaded) });
         if (!loader.loaded) {
@@ -27,7 +29,6 @@ export class MessageReactionList extends Component {
         }
         onMounted(() => void this.state.emojiLoaded);
         onPatched(() => void this.state.emojiLoaded);
-        this.preview = useDropdownState();
     }
 
     /** @param {import("models").MessageReactions} reaction */
@@ -97,5 +98,10 @@ export class MessageReactionList extends Component {
             ev.preventDefault();
             this.props.openReactionMenu();
         }
+    }
+
+    onClickReactionList(reaction) {
+        this.preview.isOpen = false;
+        this.props.openReactionMenu(reaction);
     }
 }
