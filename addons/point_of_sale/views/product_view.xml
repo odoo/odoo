@@ -97,7 +97,7 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='attribute_line_ids']//field[@name='attribute_id']" position="attributes">
-                <attribute name="context">{'default_create_variant': context.get('create_variant_never', 'always')}</attribute>
+                <attribute name="context" operation="update">{'default_create_variant': context.get('create_variant_never', 'always')}</attribute>
             </xpath>
         </field>
     </record>

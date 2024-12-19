@@ -1,3 +1,4 @@
+import ast
 import copy
 import itertools
 import logging
@@ -8,6 +9,7 @@ from lxml.builder import E
 
 from odoo.tools.translate import LazyTranslate
 from odoo.exceptions import ValidationError
+from .ast import merge_ast_dicts
 from .misc import SKIPPED_ELEMENT_TYPES, html_escape
 
 __all__ = []
@@ -222,7 +224,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                     unknown = [
                         key
                         for key in child.attrib
-                        if key not in ('name', 'add', 'remove', 'separator')
+                        if key not in ('name', 'add', 'operation', 'remove', 'separator')
                         and not key.startswith('data-oe-')
                     ]
                     if unknown:
@@ -283,6 +285,21 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                                 (v for v in values if v and v not in to_remove),
                                 to_add
                             ))
+                    elif child.get('operation') == 'update':
+                        if not child.text:
+                            raise ValueError(_lt("Element <attribute> with 'update' must contain text"))
+                        # Parse ast from both node and spec
+                        value = node.get(attribute, "{}").strip()
+                        source_ast = ast.parse(value, mode="eval").body
+                        update_ast = ast.parse(child.text.strip(), mode="eval").body
+                        if not isinstance(source_ast, ast.Dict):
+                            raise TypeError(_lt("Attribute “%s” is not a dict", attribute))
+                        if not isinstance(update_ast, ast.Dict):
+                            raise TypeError(_lt("Operation for attribute “%s” is not a dict", attribute))
+                        # Update the ast.Dict and dump the combined result as a string
+                        value = ast.unparse(merge_ast_dicts(source_ast, update_ast))
+                    elif child.get('operation'):
+                        raise ValueError(_lt("Invalid operation “%s”", child.get('operation')))
                     else:
                         value = child.text or ''
 
