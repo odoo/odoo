@@ -600,6 +600,13 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.registry.setup_models(self.cr)
         self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
+    def test_12_one2many_reference_domain(self):
+        model = self.env['test_new_api.inverse_m2o_ref']
+        o2m_field = model._fields['model_ids']
+        self.assertEqual(o2m_field.get_domain_list(model), [('res_model', '=', model._name)])
+        o2m_field = model._fields['model_computed_ids']
+        self.assertEqual(o2m_field.get_domain_list(model), [])
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']
