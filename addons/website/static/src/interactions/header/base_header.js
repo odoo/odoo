@@ -56,8 +56,6 @@ export class BaseHeader extends Interaction {
 
         this.isVisible = true;
         this.isScrolled = false;
-        this.hasScrolled = false;
-        this.closeDropdowns = false;
         this.forcedScroll = 0;
 
         this.isOverlay = !!this.el.closest(".o_header_overlay, .o_header_overlay_theme");
@@ -88,21 +86,6 @@ export class BaseHeader extends Interaction {
 
     enableScroll() {
         this.bodyNoScroll = false;
-    }
-
-    onScroll() {
-        if (!this.hasScrolled) {
-            this.hasScrolled = true;
-        } else {
-            this.closeDropdowns = true;
-        }
-
-        if (this.closeDropdowns) {
-            const dropdownToggleEls = this.el.querySelectorAll(".dropdown-toggle.show");
-            for (const dropdownToggleEl of dropdownToggleEls) {
-                Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
-            }
-        }
     }
 
     onResize() {
