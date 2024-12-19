@@ -254,7 +254,7 @@ export function useClickableWeWidget() {
         ];
         for (const [actionId, actionValue] of shorthands) {
             const actionParam = comp.env.weContext[actionId] || comp.props[actionId];
-            if (actionParam) {
+            if (actionParam !== undefined) {
                 actions.push({ actionId, actionParam, actionValue: comp.props[actionValue] });
             }
         }
