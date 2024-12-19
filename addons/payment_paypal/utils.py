@@ -1,15 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-def get_normalized_email_account(provider):
-    """ Remove unicode characters, such as \u200b coming from pasted emails, from the provider's
-    paypal email account.
-
-    :return: The normalized address of the paypal email account of the provider.
-    :rtype: str
-    """
-    return provider.paypal_email_account.encode('ascii', 'ignore').decode('utf-8')
-
-
 def format_partner_address(partner):
     """ Format the partner address values to PayPal address values. When provided, PayPal requires
     at least a country code, so returns only an email address or an empty dict if partner lacks a
