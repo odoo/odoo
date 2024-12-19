@@ -390,3 +390,68 @@ class TestGetOperator(MailCommon, HttpCase):
         self.assertFalse(livechat_channel.available_operator_ids)
         channel.write({"last_interest_dt": fields.Datetime.now() - timedelta(minutes=20)})
         self.assertEqual(livechat_channel.available_operator_ids, operator)
+
+    @users("employee")
+    def test_non_member_operator_availability(self):
+        """Test the availability of an operator not member of any livechat channel is properly
+        computed when explicitly passing them to _get_available_operators_by_livechat_channel."""
+        operator = self._create_operator()
+        livechat_channels_data = [
+            {
+                "name": "Livechat Channel 1",
+                "max_sessions_mode": "limited",
+                "max_sessions": 2,
+            },
+            {
+                "name": "Livechat Channel 2",
+            },
+        ]
+        livechat_channels = self.env["im_livechat.channel"].sudo().create(livechat_channels_data)
+        self.assertFalse(livechat_channels[0].available_operator_ids)
+        self.assertFalse(livechat_channels[1].available_operator_ids)
+        self.assertEqual(
+            livechat_channels._get_available_operators_by_livechat_channel(operator),
+            {
+                livechat_channels[0]: operator,
+                livechat_channels[1]: operator,
+            },
+        )
+        self._create_chat(livechat_channels[0], operator)
+        self._create_chat(livechat_channels[0], operator)
+        self.assertEqual(
+            livechat_channels._get_available_operators_by_livechat_channel(operator),
+            {
+                livechat_channels[0]: self.env["res.users"],
+                livechat_channels[1]: operator,
+            },
+        )
+        self.env["bus.presence"].search([("user_id", "=", operator.id)]).status = "offline"
+        self.assertEqual(
+            livechat_channels._get_available_operators_by_livechat_channel(operator),
+            {
+                livechat_channels[0]: self.env["res.users"],
+                livechat_channels[1]: self.env["res.users"],
+            },
+        )
+
+    @users("employee")
+    def test_get_non_member_operator(self):
+        """Test _get_operator works with a given list of operators that are not members of the
+        livechat channel"""
+        operator_1 = self._create_operator(lang_code="fr_FR")
+        operator_2 = self._create_operator(lang_code="en_US")
+        all_operators = operator_1 + operator_2
+        livechat_channel_data = {"name": "Livechat Channel 2"}
+        livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
+        self.assertFalse(livechat_channel._get_operator())
+        self.assertFalse(
+            livechat_channel._get_operator(previous_operator_id=operator_1.partner_id.id)
+        )
+        self.assertEqual(livechat_channel._get_operator(users=all_operators), operator_1)
+        self.assertEqual(
+            livechat_channel._get_operator(previous_operator_id=operator_2.partner_id.id, users=all_operators),
+            operator_2,
+        )
+        self.assertEqual(
+            livechat_channel._get_operator(lang="en_US", users=all_operators), operator_2
+        )

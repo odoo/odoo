@@ -329,22 +329,23 @@ class ChatbotScriptStep(models.Model):
         Those will have a dedicated processing method with specific docstrings.
 
         Returns the mail.message posted by the chatbot's operator_partner_id. """
-
         self.ensure_one()
-        # sudo: discuss.channel - updating current step on the channel is allowed
-        discuss_channel.sudo().chatbot_current_step_id = self.id
-
         if self.step_type == 'forward_operator':
             return self._process_step_forward_operator(discuss_channel)
         return discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
-    def _process_step_forward_operator(self, discuss_channel):
+    def _process_step_forward_operator(self, discuss_channel, users=None):
         """ Special type of step that will add a human operator to the conversation when reached,
         which stops the script and allow the visitor to discuss with a real person.
 
         In case we don't find any operator (e.g: no-one is available) we don't post any messages.
         The script will continue normally, which allows to add extra steps when it's the case
-        (e.g: ask for the visitor's email and create a lead). """
+        (e.g: ask for the visitor's email and create a lead).
+
+        :param discuss_channel: channel on which to execute the step
+        :param users: recordset of candidate operators, if not provided the currently available
+            users of the livechat channel are used as candidates instead.
+        """
 
         human_operator = False
         posted_message = self.env["mail.message"]
@@ -358,6 +359,7 @@ class ChatbotScriptStep(models.Model):
                 else None,
                 country_id=discuss_channel.country_id.id,
                 expertises=self.operator_expertise_ids,
+                users=users,
             )
 
         # handle edge case where we found yourself as available operator -> don't do anything
