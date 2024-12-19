@@ -48,7 +48,7 @@
                                 <input type="text" class="item form-control fs-1" aria-label="Username" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount"/>
                                 <span class="input-group-text">
                                     <div class="currency">
-                                        <t t-esc="pos.getCurrencySymbol()" />
+                                        <t t-esc="pos.currency.symbol" />
                                     </div>
                                 </span>
                             </div>

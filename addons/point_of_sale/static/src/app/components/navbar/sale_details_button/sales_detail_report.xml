@@ -3,14 +3,8 @@
 
     <t t-name="point_of_sale.SaleDetailsReport">
         <div class="pos-receipt">
-            <t t-if="pos.company_logo_base64">
-                <img class="pos-receipt-logo" t-att-src="pos.company_logo_base64" alt="Logo"/>
-                <br/>
-            </t>
-            <t t-if="!pos.company_logo_base64" class="pos-receipt-center-align">
-                <h1 t-esc="pos.company.name" />
-                <br/>
-            </t>
+            <img t-attf-src="/web/image?model=res.company&amp;id={{pos.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
+            <br/>
             <br /><br />
 
             <div>
