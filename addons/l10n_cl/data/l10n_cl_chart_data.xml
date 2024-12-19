@@ -124,7 +124,7 @@
         <field name="transfer_account_code_prefix">117</field>
         <field name="code_digits">6</field>
         <field name="currency_id" ref="base.CLP"/>
-        <field name="use_anglo_saxon" eval="True" />
+        <field name="use_anglo_saxon" eval="True"/>
         <field name="country_id" ref="base.cl"/>
     </record>
 
@@ -414,6 +414,14 @@
         <field name="name">Crédito Sence</field>
         <field name="account_type">asset_current</field>
         <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+    </record>
+
+    <record id="account_110760" model="account.account.template">
+        <field name="code">110760</field>
+        <field name="name">IVA por Cobrar</field>
+        <field name="account_type">asset_receivable</field>
+        <field name="reconcile" eval="True"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -906,6 +914,14 @@
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
+    <record id="account_210711" model="account.account.template">
+        <field name="code">210711</field>
+        <field name="name">IVA por Pagar</field>
+        <field name="account_type">liability_payable</field>
+        <field name="reconcile" eval="True"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+    </record>
+
     <record id="account_210720" model="account.account.template">
         <field name="code">210720</field>
         <field name="name">PPM por Pagar</field>
@@ -950,7 +966,7 @@
         <field name="code">210760</field>
         <field name="name">Impuestos Mensuales por Pagar</field>
         <field name="account_type">liability_current</field>
-        <field name="reconcile" eval="True"/>
+        <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -1657,8 +1673,8 @@
         <field name="property_stock_account_input_categ_id" ref="account_210230"/>
         <field name="property_stock_account_output_categ_id" ref="account_110640"/>
         <field name="property_stock_valuation_account_id" ref="account_110610"/>
-        <field name="property_tax_payable_account_id" ref="account_210760"/>
-        <field name="property_tax_receivable_account_id" ref="account_210760"/>
+        <field name="property_tax_payable_account_id" ref="account_210711"/>
+        <field name="property_tax_receivable_account_id" ref="account_110760"/>
     </record>
 
 </odoo>
