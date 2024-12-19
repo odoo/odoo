@@ -216,10 +216,11 @@ class TestMailMail(MailCommon):
                              email_cc=['"Herbert" <test.cc.2@example.com>', 'test.cc.1@example.com'])
         self.assertEqual(len(self._mails), 1)
 
-    def test_mail_mail_recipients_tweaks(self):
-        """ Test tweaking recipients of mail.mail versus outgoing emails (SMTP).
-        Use case is to have recipients (SMTP envelope) but forge the To of
-        message to ease email flows. """
+    def test_mail_mail_recipients_add_msg_to(self):
+        """ Test adding recipients in outgoing emails (email Message) without
+        impacting SMTP recipients. Use case is to have a given recipient
+        but forge the To of message to allow a reply-all behavior including
+        "virtual" recipients already mailed using another way. """
         self.maxDiff = None
         test_partners = self.env['res.partner'].create([
             {
@@ -228,38 +229,60 @@ class TestMailMail(MailCommon):
             } for name, email in [('Partner1', 'partner.test@test.example.com'), ("Partner2", '<partner.test.2@test.example.com>')]
         ])
         for mail_values, exp_smtp, exp_to, exp_cc in [
-            (  # add "To" in each outgoing email based on a mail.mail
+            (  # add "To" when having To and partners
                 {
                     'email_to': '"Customer" <customer@test.example.com>, user2@test.mycompany.com',
                     'recipient_ids': [(4, p.id) for p in test_partners],
                     'headers': {
-                        'X-Msg-To-Add': 'skip@test.example.com, "Skip 2" <skip.2@test.example.com>',
+                        'X-Msg-To-Add': 'add.1@test.example.com, "Add 2" <add.2@test.example.com>',
                     },
                 }, [
                     ['customer@test.example.com', 'user2@test.mycompany.com'],
                     ['partner.test@test.example.com'], ['partner.test.2@test.example.com'],
                 ], [
-                    ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com', 'skip@test.example.com', '"Skip 2" <skip.2@test.example.com>'],
-                    ['"Partner1" <partner.test@test.example.com>', 'skip@test.example.com', '"Skip 2" <skip.2@test.example.com>'],
-                    ['"Partner2" <partner.test.2@test.example.com>', 'skip@test.example.com', '"Skip 2" <skip.2@test.example.com>'],
+                    # To + added recipients
+                    ['"Customer" <customer@test.example.com>', 'user2@test.mycompany.com', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    # then each partner + added recipients
+                    ['"Partner1" <partner.test@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    ['"Partner2" <partner.test.2@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
                 ],
                 [[], [], []],
-            ), (  # additional "To" + include all recipients of all outgoing emails based on a mail.mail
+            ), (  # add "To" when having Cc and partners
                 {
-                    'email_cc': '"Cc Customer" <customer.cc@test.example.com>',
-                    'email_to': '"Customer" <customer@test.example.com>, user2@test.mycompany.com',
+                    'email_cc': '"Cc Customer" <customer.cc@test.example.com>, customer.cc.2@test.example.com',
                     'recipient_ids': [(4, p.id) for p in test_partners],
                     'headers': {
-                        'X-Msg-To-Consolidate': '1',
-                        'X-Msg-To-Add': 'skip@test.example.com, "Skip 2" <skip.2@test.example.com>',
+                        'X-Msg-To-Add': 'add.1@test.example.com, "Add 2" <add.2@test.example.com>',
                     },
                 }, [
-                    ['customer@test.example.com', 'user2@test.mycompany.com', 'customer.cc@test.example.com'],  # to and cc in same outgoing email
+                    ['customer.cc@test.example.com', 'customer.cc.2@test.example.com'],
                     ['partner.test@test.example.com'], ['partner.test.2@test.example.com'],
-                ], [['"Customer" <customer@test.example.com>', '"Cc Customer" <customer.cc@test.example.com>',
-                    'skip@test.example.com', '"Skip 2" <skip.2@test.example.com>',
-                    'user2@test.mycompany.com', '"Partner1" <partner.test@test.example.com>',
-                    '"Partner2" <partner.test.2@test.example.com>']] * 3,
+                ], [
+                    # Cc as solo + added recipients
+                    ['add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    # then each partner + added recipients
+                    ['"Partner1" <partner.test@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    ['"Partner2" <partner.test.2@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                ],
+                [['"Cc Customer" <customer.cc@test.example.com>', 'customer.cc.2@test.example.com'], [], []],
+            ), (  # additional "To" when having To + Cc + partners and duplicates and errors in Add To
+                {
+                    'email_cc': '"Cc Customer" <customer.cc@test.example.com>',
+                    'email_to': '"Customer" <customer@test.example.com>',
+                    'recipient_ids': [(4, p.id) for p in test_partners],
+                    'headers': {
+                        'X-Msg-To-Add': 'add.1@test.example.com, "Add 2" <add.2@test.example.com>, customer@test.example.com, ,wrong',
+                    },
+                }, [
+                    ['customer@test.example.com', 'customer.cc@test.example.com'],  # to and cc in same outgoing email
+                    ['partner.test@test.example.com'], ['partner.test.2@test.example.com'],
+                ], [
+                    # To + Cc
+                    ['"Customer" <customer@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>'],
+                    # then each partner + added recipients
+                    ['"Partner1" <partner.test@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>', 'customer@test.example.com'],
+                    ['"Partner2" <partner.test.2@test.example.com>', 'add.1@test.example.com', '"Add 2" <add.2@test.example.com>', 'customer@test.example.com'],
+                ],
                 [['"Cc Customer" <customer.cc@test.example.com>'], [], []],
             ),
         ]:
