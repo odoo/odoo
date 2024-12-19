@@ -1,7 +1,7 @@
-import { session } from "@web/session";
 import { Component } from "@odoo/owl";
 import { FormLabel } from "../form_label";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { useService } from "@web/core/utils/hooks";
 
 export class Setting extends Component {
     static template = "web.Setting";
@@ -26,6 +26,7 @@ export class Setting extends Component {
     };
 
     setup() {
+        this.company = useService("company");
         if (this.props.fieldName) {
             this.fieldType = this.props.record.fields[this.props.fieldName].type;
             if (this.props.fieldInfo.readonly === "True") {
@@ -47,9 +48,7 @@ export class Setting extends Component {
     }
 
     get displayCompanyDependentIcon() {
-        return (
-            this.labelString && this.props.companyDependent && session.display_switch_company_menu
-        );
+        return this.labelString && this.props.companyDependent && this.company.isMultiCompany;
     }
 
     get labelString() {
