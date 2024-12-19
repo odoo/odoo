@@ -94,10 +94,13 @@
 <template id="s_website_form_options" inherit_id="website.snippet_options">
     <!-- Extend drop locations to columns -->
     <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside">, .s_website_form</xpath>
-
+    <!-- <xpath expr="" position="inside">
+        
+    </xpath> -->
     <xpath expr="//div" position="after">
         <!-- Form -->
         <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form" data-drop-exclude-ancestor="form">
+            <we-checkbox string="Send a Copy" class="o_we_sublevel_1" data-select-class="send_a_copy" data-no-preview="true"/>
             <we-select string="Marked Fields" data-name="field_mark_select">
                 <we-button data-select-class="">None</we-button>
                 <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>

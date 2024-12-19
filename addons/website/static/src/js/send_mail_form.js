@@ -40,6 +40,11 @@ FormEditorRegistry.add('send_mail', {
         string: _t('Your Question'),
     }],
     fields: [{
+        name: 'send_a_copy',
+        type: 'binary',
+        string: _t('Send an Copy'),
+        defaultValue: true,
+    }, {
         name: 'email_to',
         type: 'char',
         required: true,
