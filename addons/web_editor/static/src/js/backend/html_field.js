@@ -694,11 +694,6 @@ export const htmlField = {
         name: "snippets",
         type: "string"
     }, {
-        label: _t("No videos"),
-        name: "noVideos",
-        type: "boolean",
-        default: true
-    }, {
         label: _t("Resizable"),
         name: "resizable",
         type: "boolean",
