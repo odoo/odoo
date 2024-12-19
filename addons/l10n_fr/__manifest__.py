@@ -13,7 +13,6 @@
     'data': [
         'data/res_country_data.xml',
         'views/res_company_views.xml',
-        'views/res_partner_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
