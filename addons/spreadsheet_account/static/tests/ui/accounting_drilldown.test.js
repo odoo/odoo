@@ -51,6 +51,7 @@ test("Create drill down domain", async () => {
                             range_type: "year",
                             year: 2020,
                         },
+                        partner_ids: [""],
                     },
                 ]);
                 return drillDownAction;
@@ -104,6 +105,7 @@ test("Create drill down domain when month date is a reference", async () => {
                             range_type: "month",
                             year: 2024,
                         },
+                        partner_ids: [""],
                     },
                 ]);
                 return {};
@@ -138,6 +140,7 @@ test("Create drill down domain when date uses a non-standard locale", async () =
                             month: 2,
                             day: 1,
                         },
+                        partner_ids: [""],
                     },
                 ]);
                 return {};
