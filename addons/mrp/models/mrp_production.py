@@ -1870,40 +1870,51 @@ class MrpProduction(models.Model):
         if res is not True:
             return res
 
-        if self.env.context.get('mo_ids_to_backorder'):
-            productions_to_backorder = self.browse(self.env.context['mo_ids_to_backorder'])
-            productions_not_to_backorder = self - productions_to_backorder
-        else:
-            productions_not_to_backorder = self
-            productions_to_backorder = self.env['mrp.production']
+        groups = [
+            (key, self.env['mrp.production'].concat(*values))
+            for key, values in tools_groupby(self, key=lambda p: p.company_id.id)
+        ]
+        if not groups:
+            groups = [(self.env.company, self)]
+        backorders = self.env['mrp.production']
 
-        self.workorder_ids.button_finish()
+        for company_id,group in groups:
+            productions = group.with_company(company_id)
+            if productions.env.context.get('mo_ids_to_backorder'):
+                productions_to_backorder = productions.browse(productions.env.context['mo_ids_to_backorder'])
+                productions_not_to_backorder = productions - productions_to_backorder
+            else:
+                productions_not_to_backorder = productions
+                productions_to_backorder = productions.env['mrp.production']
 
-        backorders = productions_to_backorder and productions_to_backorder._split_productions()
-        backorders = backorders - productions_to_backorder
+            productions.workorder_ids.button_finish()
 
-        productions_not_to_backorder._post_inventory(cancel_backorder=True)
-        productions_to_backorder._post_inventory(cancel_backorder=True)
+            backorders_for_company = productions_to_backorder and productions_to_backorder._split_productions()
+            backorders_for_company = backorders_for_company - productions_to_backorder
+            backorders += backorders_for_company
 
-        # if completed products make other confirmed/partially_available moves available, assign them
-        done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
-        done_move_finished_ids._trigger_assign()
+            productions_not_to_backorder._post_inventory(cancel_backorder=True)
+            productions_to_backorder._post_inventory(cancel_backorder=True)
 
-        # Moves without quantity done are not posted => set them as done instead of canceling. In
-        # case the user edits the MO later on and sets some consumed quantity on those, we do not
-        # want the move lines to be canceled.
-        (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
-            'state': 'done',
-            'product_uom_qty': 0.0,
-        })
-        for production in self:
-            production.write({
-                'date_finished': fields.Datetime.now(),
-                'product_qty': production.qty_produced,
-                'priority': '0',
-                'is_locked': True,
+            # if completed products make other confirmed/partially_available moves available, assign them
+            done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
+            done_move_finished_ids._trigger_assign()
+
+            # Moves without quantity done are not posted => set them as done instead of canceling. In
+            # case the user edits the MO later on and sets some consumed quantity on those, we do not
+            # want the move lines to be canceled.
+            (productions_not_to_backorder.move_raw_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel')).write({
                 'state': 'done',
+                'product_uom_qty': 0.0,
             })
+            for production in productions:
+                production.write({
+                    'date_finished': fields.Datetime.now(),
+                    'product_qty': production.qty_produced,
+                    'priority': '0',
+                    'is_locked': True,
+                    'state': 'done',
+                })
 
         if not backorders:
             if self.env.context.get('from_workorder'):
