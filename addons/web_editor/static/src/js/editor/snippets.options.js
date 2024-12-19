@@ -6032,6 +6032,11 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         this._deactivateLinkTool = this._deactivateLinkTool.bind(this);
     },
 
+    destroy: function () {
+        this._clearListeners();
+        return this._super(...arguments);
+    },
+
     /**
      * @override
      */
@@ -6046,8 +6051,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     onBlur() {
-        this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
-        this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
+        this._clearListeners();
     },
 
     //--------------------------------------------------------------------------
@@ -6152,6 +6156,13 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         } else {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
+    },
+    /**
+     * @private
+     */
+    _clearListeners() {
+        this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
+        this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
     },
     /**
      * @private
