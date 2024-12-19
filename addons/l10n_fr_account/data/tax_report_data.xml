@@ -15,7 +15,9 @@
         </field>
         <field name="line_ids">
             <record id="tax_report_montant_op_realisees" model="account.report.line">
-                <field name="name">A. Amount of operations carried out</field>
+                <field name="json_name">{"fr_FR": "A. Montant des Opérations Executées",
+                                         "en_US": "A. Amount  of operations carried out",
+                                         "es_419": "A. Monto de operaciones ejecutadas"}</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_op_imposables_ht" model="account.report.line">
