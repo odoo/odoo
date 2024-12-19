@@ -1,7 +1,6 @@
-import { Component, useState, useSubEnv } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { OptionsContainer } from "../builder_components/OptionsContainer";
 import { useVisibilityObserver } from "../builder_helpers";
-import { OptionsContainer } from "../components/OptionsContainer";
-import { Mutex } from "@web/core/utils/concurrency";
 
 export class CustomizeTab extends Component {
     static template = "html_builder.CustomizeTab";

@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { defaultOptionComponents } from "../components/defaultComponents";
+import { defaultOptionComponents } from "../builder_components/defaultComponents";
 
 export class AddElementOption extends Component {
     static template = "html_builder.AddElementOption";

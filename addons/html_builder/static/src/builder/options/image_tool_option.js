@@ -7,7 +7,7 @@ import {
 import { Component } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
-import { defaultOptionComponents } from "../components/defaultComponents";
+import { defaultOptionComponents } from "../builder_components/defaultComponents";
 import { AddElementOption } from "./add_element_option";
 import { SpacingOption } from "./spacing_option";
 import { Plugin } from "@html_editor/plugin";
@@ -32,9 +32,8 @@ class ImageToolOptionPlugin extends Plugin {
     getActions() {
         return {
             cropImage: {
-                isActive: ({ editingElement }) => {
-                    return editingElement.classList.contains("o_we_image_cropped");
-                },
+                isActive: ({ editingElement }) =>
+                    editingElement.classList.contains("o_we_image_cropped"),
                 apply: () => {
                     this.dependencies.userCommand.getCommand("cropImage").run();
                 },
@@ -83,9 +82,7 @@ class ImageToolOptionPlugin extends Plugin {
                 },
             },
             transformImage: {
-                isActive: ({ editingElement }) => {
-                    return editingElement.matches(`[style*="transform"]`);
-                },
+                isActive: ({ editingElement }) => editingElement.matches(`[style*="transform"]`),
                 apply: () => {
                     this.dependencies.userCommand.getCommand("transformImage").run();
                 },
