@@ -84,6 +84,23 @@ class ResPartner(models.Model):
             if self.vat[2].isalpha():
                 self.l10n_in_pan = self.vat[2:12]
 
+    @api.onchange('l10n_in_gst_treatment')
+    def _onchange_l10n_in_gst_treatment(self):
+        if self.l10n_in_gst_treatment:
+            if self.l10n_in_gst_treatment in ('overseas', 'special_economic_zone'):
+                virtual_partner = self.env['res.partner'].new({
+                    'state_id': self.state_id.id,
+                    'country_id': self.country_id.id,
+                })
+                self.property_account_position_id = self.env['account.fiscal.position'].with_company(
+                    self.company_id
+                )._get_fiscal_position(virtual_partner)
+            elif self.property_account_position_id and self.property_account_position_id in (
+                self.env['account.chart.template'].ref('fiscal_position_in_export_sez_in'),
+                self.env['account.chart.template'].ref('fiscal_position_in_lut_sez')
+            ):
+                self.property_account_position_id = False
+
     @api.model
     def _commercial_fields(self):
         res = super()._commercial_fields()
