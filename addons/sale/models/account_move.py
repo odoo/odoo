@@ -29,22 +29,25 @@ class AccountMove(models.Model):
             downpayment_lines.unlink()
         return res
 
-    @api.depends('invoice_user_id')
+    @api.depends('invoice_user_id', 'partner_id')
     def _compute_team_id(self):
         applicable_moves = self.filtered(
             lambda move:
                 move.is_sale_document(include_receipts=True)
         )
 
-        for ((user_id, company_id), moves) in groupby(
-            applicable_moves,
-            key=lambda m: (m.invoice_user_id.id, m.company_id.id)
-        ):
-            self.concat(*moves).team_id = self.env['crm.team'].with_context(
-                allowed_company_ids=[company_id]
-            )._get_default_team_id(
-                user_id=user_id,
-            )
+        team_ids = {}
+        for move in applicable_moves:
+            key = (move.invoice_user_id.id, move.company_id.id)
+
+            if key not in team_ids:
+                default_team_id = self.env.context.get('default_team_id', False) or move.partner_id.team_id.id or move.team_id.id
+                team_ids[key] = self.env['crm.team'].with_context(
+                    allowed_company_ids=[move.company_id.id],
+                    default_team_id=default_team_id
+                )._get_default_team_id(user_id=move.invoice_user_id.id)
+
+            move.team_id = team_ids[key]
 
     @api.depends('line_ids.sale_line_ids')
     def _compute_origin_so_count(self):
