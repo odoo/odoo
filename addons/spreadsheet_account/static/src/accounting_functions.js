@@ -91,8 +91,6 @@ function parseAccountingMonth(dateRange, locale) {
  */
 function parseAccountingYear(dateRange, locale) {
     const dateNumber = toNumber(dateRange?.value, locale);
-    // This allows a bit of flexibility for the user if they were to input a
-    // numeric value instead of a year.
     // Users won't need to fetch accounting info for year 3000 before a long time
     // And the numeric value 3000 corresponds to 18th march 1908, so it's not an
     //issue to prevent them from fetching accounting data prior to that date.
@@ -140,19 +138,42 @@ export function parseAccountingDate(dateRange, locale) {
     }
 }
 
+const YEAR_OFFSET_ARG = arg("offset (number, default=0)", _t("Offset applied to the years."))
+const COMPANY_ARG = arg("company_id (number, optional)", _t("The company to target (Advanced)."))
+const POSTED_ARG = arg(
+    "include_unposted (boolean, default=FALSE)",
+    _t("Set to TRUE to include unposted entries.")
+)
+
 const ODOO_FIN_ARGS = () => [
     arg("account_codes (string)", _t("The prefix of the accounts.")),
     arg(
         "date_range (string, date)",
-        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+        _t(`The date from which we gather lines. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
     ),
-    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
-    arg("company_id (number, optional)", _t("The company to target (Advanced).")),
+    YEAR_OFFSET_ARG,
+    COMPANY_ARG,
+    POSTED_ARG,
+]
+
+const ODOO_RESIDUAL_ARGS = () => [
     arg(
-        "include_unposted (boolean, default=FALSE)",
-        _t("Set to TRUE to include unposted entries.")
+        "account_codes (string, optional)",
+        _t("The prefix of the accounts. If none provided, all receivable and payable accounts will be used.")
     ),
+    arg(
+        "date_range (string, date, optional)",
+        _t(`The date from which we gather lines. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+    ),
+    YEAR_OFFSET_ARG,
+    COMPANY_ARG,
+    POSTED_ARG,
 ];
+
+const ODOO_PARTNER_BALANCE_ARGS = () => {
+    const partner_arg = arg("partner_ids (string)", _t("The partner ids (separated by a comma)."));
+    return [partner_arg, ...ODOO_RESIDUAL_ARGS()];
+}
 
 functionRegistry.add("ODOO.CREDIT", {
     description: _t("Get the total credit for the specified account(s) and period."),
@@ -309,3 +330,82 @@ functionRegistry.add("ODOO.ACCOUNT.GROUP", {
         return accountTypes.join(",");
     },
 });
+
+functionRegistry.add("ODOO.RESIDUAL", {
+    description: _t("Return the residual amount for the specified account(s) and period"),
+    args: ODOO_RESIDUAL_ARGS(),
+    category: "Odoo",
+    returns: ["NUMBER"],
+    compute: function (
+        accountCodes,
+        dateRange,
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
+    ) {
+        const _accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
+        const _offset = toNumber(offset, this.locale);
+        if ( !dateRange?.value ) {
+            dateRange = { value: new Date().getFullYear() }
+        }
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _companyId = toNumber(companyId, this.locale);
+        const _includeUnposted = toBoolean(includeUnposted);
+        return {
+            value: this.getters.getAccountResidual(
+                _accountCodes,
+                _dateRange,
+                _offset,
+                _companyId,
+                _includeUnposted
+            ),
+            format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
+        };
+    },
+})
+
+functionRegistry.add("ODOO.PARTNER.BALANCE", {
+    description: _t("Return the partner balance for the specified account(s) and period"),
+    args: ODOO_PARTNER_BALANCE_ARGS(),
+    category: "Odoo",
+    returns: ["NUMBER"],
+    compute: function (
+        partnerIds,
+        accountCodes,
+        dateRange,
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
+    ) {
+        const _partnerIds = toString(partnerIds)
+            .split(",")
+            .map((partnerId) => toNumber(partnerId, this.locale))
+            .sort();
+        const _accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
+        const _offset = toNumber(offset, this.locale);
+
+        if ( !dateRange?.value ) {
+            dateRange = { value: new Date().getFullYear() }
+        }
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _companyId = toNumber(companyId, this.locale);
+        const _includeUnposted = toBoolean(includeUnposted);
+        return {
+            value: this.getters.getAccountPartnerData(
+                _accountCodes,
+                _dateRange,
+                _offset,
+                _companyId,
+                _includeUnposted,
+                _partnerIds
+            ),
+            format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
+        };
+    },
+})
