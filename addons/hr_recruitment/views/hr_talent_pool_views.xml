@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_talent_pool_view_form" model="ir.ui.view">
+        <field name="name">hr.talent.pool.view.form</field>
+        <field name="model">hr.talent.pool</field>
+        <field name="arch" type="xml">
+            <form string="talent pool">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="pool_manager" />
+                            <field name="categ_ids" widget="many2many_tags" />
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker" />
+                            <field name="company_id" />
+                        </group>
+                        <label for="description" /> <!-- TODO: Make this bold -->
+                        <field name="description" string="Description" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_talent_pool_view_list" model="ir.ui.view">
+        <field name="name">hr.talent.pool.view.list</field>
+        <field name="model">hr.talent.pool</field>
+        <field name="arch" type="xml">
+            <list string="talent pool" multi_edit="1" sample="1">
+                <field name="name" />
+                <field name="pool_manager" />
+                <field name="no_of_talents" />
+                <field name="categ_ids" widget="many2many_tags" />
+                <field name="company_id" />
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_talent_pool_view_form_simple" model="ir.ui.view">
+        <field name="name">hr.talent.pool.view.form.simple</field>
+        <field name="model">hr.talent.pool</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_talent_pool_view_kanban" model="ir.ui.view">
+        <field name="name">hr.talent.pool.view.kanban</field>
+        <field name="model">hr.talent.pool</field>
+        <field name="arch" type="xml">
+            <kanban
+                highlight_color="color"
+                action="%(action_hr_applicant_talent_pool)d"
+                on_create="hr_recruitment.action_hr_talent_pool_create_simple"
+                type="action"
+                limit="40"
+                multi_edit="1"
+                sample="1"
+            >
+                <field name="name" />
+                <field name="pool_manager" />
+                <field name="company_id" />
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" type="action" name="%(action_hr_applicant_talent_pool)d"
+                            class="dropdown-item">
+                            Talents</a>
+                        <field name="color" widget="kanban_color_picker" />
+                        <a class="dropdown-item" t-if="widget.editable" name="edit_talent_pool"
+                            type="open">Configuration</a>
+                        <a role="menuitem" type="archive" class="dropdown-item">
+                            Archive</a>
+                    </t>
+                    <t t-name="card">
+                        <field name="name" />
+                        <field name="pool_manager" />
+                        <field name="company_id" />
+                        <button class="btn btn-primary" name="%(action_hr_applicant_talent_pool)d"
+                            type="action">
+                            View Da Pool
+                        </button>
+                        <footer class="justify-content-end">
+                            <field name="no_of_talents" />
+                            <span>Talents</span>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_hr_talent_pool_create_simple" model="ir.actions.act_window">
+        <field name="name">New Talent Pool</field>
+        <field name="res_model">hr.talent.pool</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_talent_pool_view_form_simple" />
+        <field name="target">new</field>
+        <field name="context">{'dialog_size' : 'small'}</field>
+    </record>
+
+    <record id="action_hr_talent_pool" model="ir.actions.act_window">
+        <field name="name">Talent Pool</field>
+        <field name="path">talent-pool</field>
+        <field name="res_model">hr.talent.pool</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No talent pools yet
+            </p>
+        </field>
+    </record>
+</odoo>

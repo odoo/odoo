@@ -112,6 +112,9 @@ class HrApplicant(models.Model):
     applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
     applicant_notes = fields.Html()
     refuse_date = fields.Datetime('Refuse Date')
+    talent_pool_ids = fields.Many2many(
+        comodel_name="hr.talent.pool", string="Talent Pools", groups="base.group_user"
+    )
 
     _job_id_stage_id_idx = models.Index("(job_id, stage_id) WHERE active IS TRUE")
 

@@ -125,6 +125,7 @@
                     </group>
                     <group>
                         <field name="job_id"/>
+                        <field name="talent_pool_ids" widget="many2many_tags"/>
                         <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
                         <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" placeholder="Who can access candidates" />
                         <field name="date_closed" invisible="not date_closed" />
@@ -221,6 +222,7 @@
                     filter_domain="['|', ('partner_name', 'ilike', self), ('email_from', 'ilike', self)]"/>
                 <field string="Email" name="email_from" filter_domain="[('email_from', 'ilike', self)]"/>
                 <field name="job_id"/>
+                <field name="talent_pool_ids"/>
                 <field name="department_id" operator="child_of"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="user_id"/>
@@ -397,6 +399,206 @@
                 Applicants and their attached résumé are created automatically when an email is sent.
                 If you install the document management modules, all resumes are indexed automatically,
                 so that you can easily search through their content.
+            </p>
+        </field>
+    </record>
+
+    <!-- TODO: This should probably be inherited -->
+    <record model="ir.ui.view" id="hr_applicant_talent_pool_view_kanban">
+        <field name="name">Hr Applicants Talent Pool KanBan</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color"  class="o_kanban_applicant o_search_matching_applicant" sample="1">
+                <field name="legend_normal"/>
+                <field name="legend_blocked"/>
+                <field name="legend_done"/>
+                <field name="date_closed"/>
+                <field name="color"/>
+                <field name="user_id"/>
+                <field name="active"/>
+                <field name="application_status" />
+                <field name="company_id" invisible="1"/> <!-- We need to keep this field as it is used in the domain of user_id in the model -->
+                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" name="action_create_meeting" type="object" class="dropdown-item">Schedule Interview</a>
+                        <a role="menuitem" name="archive_applicant" type="object" class="dropdown-item">Refuse</a>
+                        <a t-if="record.active.raw_value" role="menuitem" type="archive" class="dropdown-item">Archive</a>
+                        <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
+                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                    </t>
+                    <t t-name="card">
+                        <widget name="web_ribbon" title="Hired" bg_color="text-bg-success" invisible="not date_closed"/>
+                        <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="application_status != 'refused'"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="application_status != 'archived'"/>
+                        <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
+                        <field name="job_id" invisible="context.get('search_default_job_id', False)"/>
+                        <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="applicant_properties" widget="properties"/>
+                        <footer>
+                            <field name="priority" widget="priority"/>
+                            <field class="ms-1 align-items-center" name="activity_ids" widget="kanban_activity"/>
+                            <div class="d-flex ms-auto align-items-center">
+                                <a name="action_open_attachments" type="object">
+                                    <i class='fa fa-paperclip' role="img" aria-label="Documents"/>
+                                    <field name="attachment_number"/>
+                                </a>
+                                <field name="kanban_state" class="mx-1" widget="state_selection"/>
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- TODO: This should probably be inherited -->
+    <record model="ir.ui.view" id="hr_applicant_talent_pool_view_form">
+        <field name="name">Talent Pool - Recruitment Form</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+          <form string="Jobs - Recruitment Form" class="o_applicant_form">
+            <field name="company_id" invisible="1"/>
+            <field name="application_status" invisible="1"/>
+            <field name="employee_id" invisible="1"/>
+            <field name="meeting_ids" invisible="1"/>
+            <field name="refuse_reason_id" invisible="1"/>
+            <field name="email_normalized" invisible="1"/>
+            <field name="partner_phone_sanitized" invisible="1"/>
+            <field name="emp_is_active" invisible="1"/>
+            <header>
+                <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr.group_hr_user"
+                        class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
+                <button string="Restore" name="action_unarchive" type="object" invisible="active" data-hotkey="x"/>
+                <button string="Add to a job position" name="action_archive" type="object" />
+            </header>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_open_employee"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-id-card-o"
+                            groups="hr.group_hr_user"
+                            invisible="not (employee_id or emp_is_active)">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="employee_name" readonly="1"/></span>
+                            <span class="o_stat_text">Employee</span>
+                        </div>
+                    </button>
+                    <button name="action_open_other_applications"
+                            class="oe_stat_button"
+                            icon="fa-pencil"
+                            type="object"
+                            context="{'active_test': False}"
+                            invisible="not other_applications_count">
+                        <field name="other_applications_count" widget="statinfo" string="Other applications"/>
+                    </button>
+                    <button name="action_create_meeting" class="oe_stat_button" icon="fa-calendar" type="object" invisible="not id">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text"><field name="meeting_display_text" /></span>
+                            <span class="o_stat_value"><field name="meeting_display_date" readonly="1"/></span>
+                        </div>
+                    </button>
+                </div>
+                <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="application_status != 'refused'"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="application_status != 'archived'"/>
+                <widget name="web_ribbon" title="Hired" invisible="application_status != 'hired'" />
+                <field name="active" invisible="1"/>
+                <field name="legend_normal" invisible="1"/>
+                <field name="legend_blocked" invisible="1"/>
+                <field name="legend_done" invisible="1"/>
+                <field name="kanban_state" widget="state_selection" invisible="1"/>
+                <field name="priority" widget="priority"/>
+                <div class="oe_title pe-0">
+                    <label for="candidate_id" class="oe_edit_only"/>
+                    <h1 class="d-flex justify-content-between align-items-center">
+                        <field name="candidate_id" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="partner_name" invisible="1"/>
+                        <field name="partner_id" invisible="1" />
+                        <field name="refuse_reason_id" invisible="active"/>
+                        <field name="email_from" placeholder="e.g. john.doe@example.com" widget="email" invisible="not candidate_id"/>
+                        <field name="partner_phone" widget="phone" invisible="not candidate_id"/>
+                        <field name="linkedin_profile" placeholder="e.g. https://www.linkedin.com/in/..." widget="url"  invisible="not candidate_id"/>
+                    </group>
+                    <group>
+                        <field name="job_id" invisible="1"/>
+                        <field name="talent_pool_ids" widget="many2many_tags"/>
+                        <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
+                        <field name="interviewer_ids" options="{'no_create': True, 'no_create_edit': True}" widget="many2many_avatar_user" placeholder="Who can access candidates" />
+                        <field name="date_closed" invisible="not date_closed" />
+                        <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    </group>
+                </group>
+                <field name="applicant_properties" columns="2"/>
+                <notebook>
+                    <page string="Note" name="application_note">
+                        <field name="applicant_notes" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Internal notes..."/>
+                    </page>
+                    <page string="Details" name="application_details">
+                        <group>
+                            <group string="Applicant">
+                                <field name="type_id" placeholder="e.g. Masters"/>
+                                <field name="availability" placeholder="Directly"/>
+                            </group>
+                            <group string="Job">
+                                <field name="department_id"/>
+                                <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}' />
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Salary Package" name="recruitment_contract" groups="hr_recruitment.group_hr_recruitment_user">
+                                <label for="salary_expected"/>
+                                <div class="o_row">
+                                    <field name="salary_expected" placeholder="Expected"/>
+                                    <span invisible="not salary_expected_extra"> + </span>
+                                    <field name="salary_expected_extra" placeholder="Other benefits"/>
+                                </div>
+                                <label for="salary_proposed"/>
+                                <div class="o_row">
+                                    <field name="salary_proposed"/>
+                                    <span invisible="not salary_proposed_extra"> + </span>
+                                    <field name="salary_proposed_extra" placeholder="Other benefits"/>
+                                </div>
+                            </group>
+                            <group string="Sourcing">
+                                <field name="source_id"/>
+                                <field name="medium_id"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+            <div class="o_attachment_preview" groups="hr_recruitment.group_applicant_cv_display"/>
+            <chatter open_attachments="True"/>
+          </form>
+        </field>
+    </record>
+
+    <record id="action_hr_applicant_talent_pool" model="ir.actions.act_window">
+        <field name="name">Talent Pool Application</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="domain">[
+            ('talent_pool_ids', '=', active_ids),
+            ('job_id', '=', False),
+        ]</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_applicant_talent_pool_view_kanban')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hr_applicant_talent_pool_view_form')})
+        ]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No applications yet
+            </p><p>
+                Beep boop baapa
+            </p><p>
+                Scarabangooo
             </p>
         </field>
     </record>
