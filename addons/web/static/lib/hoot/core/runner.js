@@ -7,6 +7,7 @@ import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
+    CASE_EVENT_TYPES,
     Callbacks,
     HootError,
     INCLUDE_LEVEL,
@@ -20,6 +21,7 @@ import {
     formatTechnical,
     formatTime,
     getFuzzyScore,
+    isLabel,
     normalize,
     storageGet,
     storageSet,
@@ -38,7 +40,7 @@ import { LOG_LEVELS, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities } from "./tag";
 import { Test, testError } from "./test";
-import { EXCLUDE_PREFIX, createUrlFromId, setParams, urlParams } from "./url";
+import { EXCLUDE_PREFIX, createUrlFromId, setParams } from "./url";
 
 /**
  * @typedef {{
@@ -135,9 +137,9 @@ const filterReady = (jobs) =>
  */
 const formatAssertions = (assertions) => {
     const lines = [];
-    for (let i = 0; i < assertions.length; i++) {
-        const { failedDetails, label, message } = assertions[i];
-        lines.push(`\n${i + 1}. [${label}] ${message}`);
+    for (const { failedDetails, label, message, number } of assertions) {
+        const formattedMessage = message.map((part) => (isLabel(part) ? part[0] : String(part)));
+        lines.push(`\n${number}. [${label}] ${formattedMessage.join(" ")}`);
         if (failedDetails) {
             for (let [key, value] of failedDetails) {
                 if (Markup.isMarkup(key)) {
@@ -181,7 +183,7 @@ const getDefaultPresets = () =>
         [
             "mobile",
             {
-                icon: "fa-mobile",
+                icon: "fa-mobile font-bold",
                 label: "Mobile",
                 platform: "android",
                 size: [375, 667],
@@ -408,13 +410,13 @@ export class Runner {
         this.fixture = makeFixtureManager(this);
         this.test = this._addConfigurators(this.addTest, false);
 
-        const initialConfig = { ...DEFAULT_CONFIG, ...config };
-        const reactiveConfig = reactive({ ...initialConfig, ...urlParams }, () => {
+        this.initialConfig = { ...DEFAULT_CONFIG, ...config };
+        const reactiveConfig = reactive({ ...this.initialConfig }, () => {
             setParams(
                 $fromEntries(
                     $entries(this.config).map(([key, value]) => [
                         key,
-                        deepEqual(value, initialConfig[key]) ? null : value,
+                        deepEqual(value, DEFAULT_CONFIG[key]) ? null : value,
                     ])
                 )
             );
@@ -854,7 +856,7 @@ export class Runner {
         this.state.status = "running";
 
         /** @type {Runner["_handleError"]} */
-        const handleError = !this.config.notrycatch && this._handleError.bind(this);
+        const handleError = this._handleError.bind(this);
 
         /**
          * @param {Job} [job]
@@ -1007,8 +1009,8 @@ export class Runner {
                 this._failed++;
 
                 const failReasons = [];
-                const failedAssertions = lastResults.assertions.filter(
-                    (assertion) => !assertion.pass
+                const failedAssertions = lastResults.events.filter(
+                    (event) => event.type & CASE_EVENT_TYPES.assertion.value && !event.pass
                 );
                 if (failedAssertions.length) {
                     const s = failedAssertions.length === 1 ? "" : "s";
@@ -1017,11 +1019,11 @@ export class Runner {
                         ...formatAssertions(failedAssertions)
                     );
                 }
-                if (lastResults.errors.length) {
-                    const s = lastResults.errors.length === 1 ? "" : "s";
+                if (lastResults.currentErrors.length) {
+                    const s = lastResults.currentErrors.length === 1 ? "" : "s";
                     failReasons.push(
                         `\nError${s} during test:`,
-                        ...lastResults.errors.map((e) => `\n${e.message}`)
+                        ...lastResults.currentErrors.map((error) => `\n${error.message}`)
                     );
                 }
                 logger.logGlobalError(
@@ -1577,10 +1579,13 @@ export class Runner {
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
     _handleError(ev) {
-        const error = ensureError(ev);
-        if (this.config.notrycatch || handledErrors.has(error)) {
-            // Already handled
+        if (this.config.notrycatch) {
             return;
+        }
+        const error = ensureError(ev);
+        if (handledErrors.has(error)) {
+            // Already handled
+            return safePrevent(ev);
         }
         handledErrors.add(error);
 
@@ -1597,7 +1602,7 @@ export class Runner {
             return safePrevent(ev);
         }
 
-        if (this.state.currentTest) {
+        if (this.state.currentTest && !(error instanceof HootError)) {
             // Handle the error in the current test
             const handled = this._handleErrorInTest(ev, error);
             if (handled) {
@@ -1627,17 +1632,7 @@ export class Runner {
             }
         }
 
-        const { lastResults } = this.state.currentTest;
-        if (!lastResults) {
-            return false;
-        }
-
-        lastResults.registerError(error);
-        if (lastResults.expectedErrors >= lastResults.caughtErrors) {
-            return true;
-        }
-
-        return false;
+        return this.expectHooks.error(error);
     }
 
     /**
