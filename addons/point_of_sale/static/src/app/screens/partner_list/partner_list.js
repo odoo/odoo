@@ -5,7 +5,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { Component, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { unaccent } from "@web/core/utils/strings";
 
@@ -26,13 +26,43 @@ export class PartnerList extends Component {
         this.ui = useState(useService("ui"));
         this.notification = useService("notification");
         this.dialog = useService("dialog");
+        this.list = useRef("partner-list");
 
         this.state = useState({
-            query: null,
-            previousQuery: "",
-            currentOffset: 0,
+            initialPartners: new Set(this.pos.models["res.partner"].getAll()),
+            loadedPartners: new Set(),
+            query: "",
+            loading: false,
         });
-        useHotkey("enter", () => this.onEnter());
+        useHotkey("enter", () => this.onEnter(), {
+            bypassEditableProtection: true,
+        });
+
+        useEffect(
+            () => {
+                if (!this.list || !this.list.el) {
+                    return;
+                }
+
+                const scrollMethod = this.onScroll.bind(this);
+                this.list.el.addEventListener("scroll", scrollMethod);
+                return () => {
+                    this.list.el.removeEventListener("scroll", scrollMethod);
+                };
+            },
+            () => [this.list]
+        );
+    }
+    get globalState() {
+        return this.pos.screenState.partnerList;
+    }
+    onScroll(ev) {
+        const height = this.list.el.offsetHeight;
+        const bottomScrollPosition = Math.ceil(this.list.el.scrollTop + height + 10);
+
+        if (this.list.el.scrollHeight < bottomScrollPosition) {
+            this.getNewPartners();
+        }
     }
     async editPartner(p = false) {
         const partner = await this.pos.editPartner(p);
@@ -74,9 +104,9 @@ export class PartnerList extends Component {
         this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
         this.pos.closeTempScreen();
     }
-    getPartners() {
+    getPartners(partnersSet) {
+        const partners = Array.from(partnersSet);
         const searchWord = unaccent((this.state.query || "").trim(), false);
-        const partners = this.pos.models["res.partner"].getAll();
         const exactMatches = partners.filter((partner) => partner.exactMatch(searchWord));
 
         if (exactMatches.length > 0) {
@@ -105,22 +135,13 @@ export class PartnerList extends Component {
         this.props.close();
     }
     async searchPartner() {
-        if (this.state.previousQuery != this.state.query) {
-            this.state.currentOffset = 0;
-        }
         const partner = await this.getNewPartners();
-
-        if (this.state.previousQuery == this.state.query) {
-            this.state.currentOffset += partner.length;
-        } else {
-            this.state.previousQuery = this.state.query;
-            this.state.currentOffset = partner.length;
-        }
         return partner;
     }
     async getNewPartners() {
         let domain = [];
-        const limit = 30;
+        const offset = this.globalState.offsetBySearch[this.state.query] || 0;
+
         if (this.state.query) {
             const search_fields = [
                 "name",
@@ -140,11 +161,25 @@ export class PartnerList extends Component {
             ];
         }
 
-        const result = await this.pos.data.searchRead("res.partner", domain, [], {
-            limit: limit,
-            offset: this.state.currentOffset,
-        });
+        try {
+            this.state.loading = true;
+            const result = await this.pos.data.callRelated("res.partner", "get_new_partner", [
+                this.pos.config.id,
+                domain,
+                offset,
+            ]);
 
-        return result;
+            this.globalState.offsetBySearch[this.state.query] =
+                offset + (result["res.partner"].length || 100);
+            this.state.loadedPartners = new Set([
+                ...this.state.loadedPartners,
+                ...result["res.partner"],
+            ]);
+
+            return result;
+        } catch {
+            this.state.loading = false;
+            return [];
+        }
     }
 }

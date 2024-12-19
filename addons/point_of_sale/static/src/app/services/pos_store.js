@@ -99,13 +99,16 @@ export class PosStore extends WithLazyGetterTrap {
         this.mobile_pane = "right";
         this.ticket_screen_mobile_pane = "left";
 
-        this.ticketScreenState = {
-            offsetByDomain: {},
-            totalCount: 0,
-        };
-
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
-
+        this.screenState = {
+            ticketSCreen: {
+                offsetByDomain: {},
+                totalCount: 0,
+            },
+            partnerList: {
+                offsetBySearch: {},
+            },
+        };
         // Handle offline mode
         // All of Set of ids
         this.pendingOrder = {
@@ -255,6 +258,9 @@ export class PosStore extends WithLazyGetterTrap {
         this.currency = this.config.currency_id;
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
+        this.screenState.partnerList.offsetBySearch = {
+            "": this.models["res.partner"].length,
+        };
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
         // Check cashier
