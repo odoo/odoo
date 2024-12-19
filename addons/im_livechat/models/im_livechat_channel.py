@@ -83,16 +83,29 @@ class Im_LivechatChannel(models.Model):
         "user_ids.channel_ids.livechat_operator_id",
         "user_ids.im_status",
         "user_ids.is_in_call",
+        "user_ids.partner_id",
     )
     def _compute_available_operator_ids(self):
+        operators_by_livechat_channel = self._get_available_operators_by_livechat_channel()
+        for livechat_channel in self:
+            livechat_channel.available_operator_ids = operators_by_livechat_channel[livechat_channel]
+
+    def _get_available_operators_by_livechat_channel(self, users=None):
+        """Return a dictionary mapping each livechat channel in self to the users that are available
+        for that livechat channel, according to the user status and the optional limit of concurrent
+        sessions of the livechat channel.
+        When users are provided, each user is attempted to be mapped for each livechat channel.
+        Otherwise, only the users of each respective livechat channel are considered.
+        """
         counts = {}
         if livechat_channels := self.filtered(lambda c: c.max_sessions_mode == "limited"):
-            users = livechat_channels.user_ids.filtered(lambda user: user._is_user_available())
+            possible_users = users if users is not None else livechat_channels.user_ids
+            limited_users = possible_users.filtered(lambda user: user._is_user_available())
             counts = dict(
                 ((partner, livechat_channels), count)
                 for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
                     [
-                        ("livechat_operator_id", "in", users.partner_id.ids),
+                        ("livechat_operator_id", "in", limited_users.partner_id.ids),
                         ("livechat_active", "=", True),
                         ("last_interest_dt", ">=", fields.Datetime.now() - timedelta(minutes=15)),
                     ],
@@ -111,11 +124,13 @@ class Im_LivechatChannel(models.Model):
                     and not user.sudo().is_in_call
                 )
             )
-
+        operators_by_livechat_channel = {}
         for livechat_channel in self:
-            livechat_channel.available_operator_ids = livechat_channel.user_ids.filtered(
+            possible_users = users if users is not None else livechat_channel.user_ids
+            operators_by_livechat_channel[livechat_channel] = possible_users.filtered(
                 lambda user, livechat_channel=livechat_channel: is_available(user, livechat_channel)
             )
+        return operators_by_livechat_channel
 
     @api.depends('rule_ids.chatbot_script_id')
     def _compute_chatbot_script_count(self):
@@ -274,7 +289,9 @@ class Im_LivechatChannel(models.Model):
         candidates = operators.filtered(lambda o: o.partner_id.id in best_status_op_partner_ids)
         return random.choice(candidates)
 
-    def _get_operator(self, previous_operator_id=None, lang=None, country_id=None, expertises=None):
+    def _get_operator(
+        self, previous_operator_id=None, lang=None, country_id=None, expertises=None, users=None
+    ):
         """ Return an operator for a livechat. Try to return the previous
         operator if available. If not, one of the most available operators be
         returned.
@@ -287,15 +304,19 @@ class Im_LivechatChannel(models.Model):
         holds 'res.users' as available operators and the discuss_channel model
         stores the partner_id of the randomly selected operator)
 
-        :param previous_operator_id: id of the previous operator with whom the
-            visitor was chatting.
+        :param previous_operator_id: partner id of the previous operator with
+            whom the visitor was chatting.
         :param lang: code of the preferred lang of the visitor.
         :param country_id: id of the country of the visitor.
         :param expertises: preferred expertises for filtering operators.
+        :param users: recordset of available users to use as candidates instead
+            of the users of the livechat channel.
         :return : user
         :rtype : res.users
         """
-        if not self.available_operator_ids:
+        self.ensure_one()
+        users = users if users is not None else self.available_operator_ids
+        if not users:
             return self.env["res.users"]
         if expertises is None:
             expertises = self.env["im_livechat.expertise"]
@@ -318,11 +339,11 @@ class Im_LivechatChannel(models.Model):
             AND c.livechat_operator_id in %s
             GROUP BY c.livechat_operator_id, rtc.nbr
             ORDER BY COUNT(DISTINCT c.id) < 2 OR rtc.nbr IS NULL DESC, COUNT(DISTINCT c.id) ASC, rtc.nbr IS NULL DESC""",
-            (tuple(self.available_operator_ids.partner_id.ids),)
+            (tuple(users.partner_id.ids),)
         )
         operator_statuses = self.env.cr.dictfetchall()
         # Try to match the previous operator
-        if previous_operator_id in self.available_operator_ids.partner_id.ids:
+        if previous_operator_id in users.partner_id.ids:
             previous_operator_status = next(
                 (status for status in operator_statuses if status['livechat_operator_id'] == previous_operator_id),
                 None
@@ -330,7 +351,7 @@ class Im_LivechatChannel(models.Model):
             if not previous_operator_status or previous_operator_status['count'] < 2 or not previous_operator_status['in_call']:
                 previous_operator_user = next(
                     available_user
-                    for available_user in self.available_operator_ids
+                    for available_user in users
                     if available_user.partner_id.id == previous_operator_id
                 )
                 return previous_operator_user
@@ -360,12 +381,12 @@ class Im_LivechatChannel(models.Model):
             [one_expertise],
         ]
         for preferences in preferences_list:
-            operators = self.available_operator_ids
+            operators = users
             for preference in preferences:
                 operators = operators.filtered(preference)
             if operators:
                 return self._get_less_active_operator(operator_statuses, operators)
-        return self._get_less_active_operator(operator_statuses, self.available_operator_ids)
+        return self._get_less_active_operator(operator_statuses, users)
 
     def _get_channel_infos(self):
         self.ensure_one()

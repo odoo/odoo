@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.im_livechat.tests import chatbot_common
-from odoo.exceptions import ValidationError
-from odoo.tests.common import tagged
+from odoo.tests.common import JsonRpcException, tagged
+
 
 @tagged("post_install", "-at_install")
 class ChatbotCase(chatbot_common.ChatbotCase):
@@ -54,16 +54,14 @@ class ChatbotCase(chatbot_common.ChatbotCase):
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_dispatch)
 
         self._post_answer_and_trigger_next_step(
-            discuss_channel,
-            self.step_dispatch_buy_software.name,
-            chatbot_script_answer=self.step_dispatch_buy_software
+            discuss_channel, chatbot_script_answer=self.step_dispatch_buy_software
         )
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_email)
 
-        with self.assertRaises(ValidationError, msg="Should raise an error since it's not a valid email"):
-            self._post_answer_and_trigger_next_step(discuss_channel, 'test')
+        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
+            self._post_answer_and_trigger_next_step(discuss_channel, email="test")
 
-        self._post_answer_and_trigger_next_step(discuss_channel, 'test@example.com')
+        self._post_answer_and_trigger_next_step(discuss_channel, email="test@example.com")
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_email_validated)
 
     def test_chatbot_steps_sequence(self):
@@ -131,3 +129,25 @@ class ChatbotCase(chatbot_common.ChatbotCase):
         self_member._rtc_join_call()
         self.assertTrue(guest_member.rtc_inviting_session_id)
         self.assertFalse(bot_member.rtc_inviting_session_id)
+
+    def test_forward_to_specific_operator(self):
+        """Test _process_step_forward_operator takes into account the given users as candidates."""
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Test Visitor",
+                "channel_id": self.livechat_channel.id,
+                "chatbot_script_id": self.chatbot_script.id,
+            },
+        )
+        discuss_channel = (
+            self.env["discuss.channel"].sudo().browse(data["discuss.channel"][0]["id"])
+        )
+        self.step_forward_operator._process_step_forward_operator(discuss_channel)
+        self.assertEqual(
+            discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id
+        )
+        self.step_forward_operator._process_step_forward_operator(
+            discuss_channel, users=self.user_employee
+        )
+        self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
