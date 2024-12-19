@@ -45,9 +45,6 @@ class PurchaseOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
-    def _get_po_line_invoice_lines_su(self):
-        return self.sudo().invoice_lines
-
     @api.depends('move_ids.state', 'move_ids.product_uom', 'move_ids.quantity')
     def _compute_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
