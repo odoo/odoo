@@ -21,7 +21,7 @@
                             onSearch.bind="onSearch"
                             onFilterSelected.bind="onFilterSelected" />
                         <div class="item d-none d-xl-flex align-items-center justify-content-end">
-                            <span class="page me-2"><t t-esc="getPageNumber()" /></span>
+                            <span class="page me-2" t-on-click="onClickPageNbr"><t t-esc="getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
                                 <button class="previous btn btn-secondary" t-on-click="() => this.onPrevPage()">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>

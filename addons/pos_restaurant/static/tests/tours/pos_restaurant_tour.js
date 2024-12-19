@@ -133,11 +133,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
 
             // After clicking next order, floor screen is shown.
