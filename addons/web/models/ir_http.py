@@ -154,7 +154,6 @@ class IrHttp(models.AbstractModel):
                     'disallowed_ancestor_companies': {comp.id: comp._get_session_info(all_companies_in_hierarchy_sudo) for comp in disallowed_ancestor_companies_sudo},
                 },
                 "show_effect": True,
-                "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user_companies) > 1,
             })
         return session_info
 

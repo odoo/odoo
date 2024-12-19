@@ -32,7 +32,6 @@ const makeSession = ({
     },
     can_insert_in_spreadsheet: true,
     db,
-    display_switch_company_menu: false,
     home_action_id: false,
     is_admin: true,
     is_internal_user: true,
