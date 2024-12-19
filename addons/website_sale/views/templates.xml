@@ -1658,6 +1658,7 @@
         <t t-call="website_sale.checkout_layout">
             <t t-set="show_shorter_cart_summary" t-value="True"/>
             <t t-set="show_footer" t-value="True"/>
+            <t t-set="hide_delivery_row" t-value="not website_sale_order.carrier_id"/>
             <t t-set="oe_structure">
                 <!-- This is the drag-and-drop area for website building blocs at the end of each
                      checkout page. This is append at the of the page in `checkout_layout`. The
@@ -2478,7 +2479,7 @@
         <div id="cart_total" t-if="website_sale_order and website_sale_order.website_order_line" t-att-class="_cart_total_classes">
             <table class="table mb-0">
                 <tr
-                    t-if="website_sale_order._has_deliverable_products() and website_sale_order.carrier_id"
+                    t-if="not hide_delivery_row and website_sale_order._has_deliverable_products()"
                     id="order_delivery"
                 >
                     <td
