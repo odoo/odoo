@@ -1325,6 +1325,92 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 self.assert_invoice_tax_totals_summary(invoice, expected_values)
         self._run_js_tests()
 
+    def test_taxes_l10n_pt(self):
+        tax = self.percent_tax(23)
+
+        document_params = self.init_document(
+            lines=[
+                {'quantity': 1.0, 'price_unit': 0.5, 'tax_ids': tax},
+                {'quantity': 12.12, 'price_unit': 12.12, 'tax_ids': tax},
+            ],
+            currency=self.foreign_currency,
+            rate=0.5,
+        )
+        with self.with_tax_calculation_rounding_method('round_per_line'):
+            document = self.populate_document(document_params)
+            expected_values = {
+                'same_tax_base': True,
+                'currency_id': self.foreign_currency.id,
+                'company_currency_id': self.currency.id,
+                'base_amount_currency': 147.39,
+                'base_amount': 294.78,
+                'tax_amount_currency': 33.9,
+                'tax_amount': 67.8,
+                'total_amount_currency': 181.29,
+                'total_amount': 362.58,
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'base_amount_currency': 147.39,
+                        'base_amount': 294.78,
+                        'tax_amount_currency': 33.9,
+                        'tax_amount': 67.8,
+                        'tax_groups': [
+                            {
+                                'id': self.tax_groups[0].id,
+                                'base_amount_currency': 147.39,
+                                'base_amount': 294.78,
+                                'tax_amount_currency': 33.9,
+                                'tax_amount': 67.8,
+                                'display_base_amount_currency': 147.39,
+                                'display_base_amount': 294.78,
+                            },
+                        ],
+                    },
+                ],
+            }
+            self.assert_tax_totals_summary(document, expected_values)
+            invoice = self.convert_document_to_invoice(document)
+            self.assert_invoice_tax_totals_summary(invoice, expected_values)
+
+        with self.with_tax_calculation_rounding_method('round_globally'):
+            document = self.populate_document(document_params)
+            expected_values = {
+                'same_tax_base': True,
+                'currency_id': self.foreign_currency.id,
+                'company_currency_id': self.currency.id,
+                'base_amount_currency': 147.40,
+                'base_amount': 294.79,
+                'tax_amount_currency': 33.9,
+                'tax_amount': 67.8,
+                'total_amount_currency': 181.30,
+                'total_amount': 362.59,
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'base_amount_currency': 147.40,
+                        'base_amount': 294.79,
+                        'tax_amount_currency': 33.9,
+                        'tax_amount': 67.8,
+                        'tax_groups': [
+                            {
+                                'id': self.tax_groups[0].id,
+                                'base_amount_currency': 147.40,
+                                'base_amount': 294.79,
+                                'tax_amount_currency': 33.9,
+                                'tax_amount': 67.8,
+                                'display_base_amount_currency': 147.40,
+                                'display_base_amount': 294.79,
+                            },
+                        ],
+                    },
+                ],
+            }
+            self.assert_tax_totals_summary(document, expected_values)
+            invoice = self.convert_document_to_invoice(document)
+            self.assert_invoice_tax_totals_summary(invoice, expected_values)
+        self._run_js_tests()
+
     def test_taxes_l10n_mx(self):
         tax = self.percent_tax(16, price_include_override='tax_included')
 
