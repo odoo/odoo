@@ -96,14 +96,14 @@ export class HootTechnicalValue extends Component {
                 >
                     <t t-if="labelSize[1] > 0">
                         <i
-                            class="fa fa-caret-right flex justify-center w-2 transition"
+                            class="fa fa-caret-right"
                             t-att-class="{ 'rotate-90': state.open }"
                         />
                     </t>
                     <t t-esc="labelSize[0]" />
                     <t t-if="state.promiseState">
                         &lt;
-                        <span class="text-muted" t-esc="state.promiseState[0]" />
+                        <span class="text-gray" t-esc="state.promiseState[0]" />
                         <t t-if="state.promiseState[0] !== 'pending'">
                             : <HootTechnicalValue value="state.promiseState[1]" />
                         </t>

@@ -45,6 +45,7 @@ import {
 import { MockNotification } from "./notification";
 import { MockStorage } from "./storage";
 import { MockBlob } from "./sync_values";
+import { interactor } from "../../hoot-dom/hoot_dom_utils";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -226,7 +227,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     console: { value: mockConsole, writable: false },
     Date: { value: MockDate, writable: false },
     EventTarget: { value: MockEventTarget },
-    fetch: { value: mockedFetch, writable: false },
+    fetch: { value: interactor("server", mockedFetch).as("fetch"), writable: false },
     history: { value: mockHistory },
     innerHeight: { get: () => getCurrentDimensions().height },
     innerWidth: { get: () => getCurrentDimensions().width },
