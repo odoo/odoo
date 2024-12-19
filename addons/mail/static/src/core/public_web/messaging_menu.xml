@@ -12,7 +12,7 @@
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
-                    body="message?.inlineBody or message?.subtype_description"
+                    body="thread.threadPreviewMessage()"
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
                     iconSrc="thread.avatarUrl"

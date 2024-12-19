@@ -66,11 +66,13 @@ export class Failure extends Record {
 
     get body() {
         if (this.notifications.length === 1 && this.lastMessage?.thread) {
-            return _t("An error occurred when sending an email on “%(record_name)s”", {
-                record_name: this.lastMessage.thread.display_name,
-            });
+            return {
+                text: _t("An error occurred when sending an email on “%(record_name)s”", {
+                    record_name: this.lastMessage.thread.display_name,
+                }),
+            };
         }
-        return _t("An error occurred when sending an email");
+        return { text: _t("An error occurred when sending an email") };
     }
 
     get datetime() {

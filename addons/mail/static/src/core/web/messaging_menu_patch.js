@@ -77,7 +77,7 @@ patch(MessagingMenu.prototype, {
     },
     get installationRequest() {
         return {
-            body: _t("Come here often? Install the app for quick and easy access!"),
+            body: { text: _t("Come here often? Install the app for quick and easy access!") },
             displayName: _t("Install Odoo"),
             onClick: () => {
                 this.pwa.show();
