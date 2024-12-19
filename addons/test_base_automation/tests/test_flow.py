@@ -1021,6 +1021,7 @@ if env.context.get('old_values', None):  # on write
                 model_id=self.env['ir.model']._get('ir.actions.server').id,
                 trigger='on_time',
                 _actions={
+                    'name': 'Send Webhook Notification',
                     'state': 'webhook',
                     'webhook_field_ids': [self.env['ir.model.fields']._get('ir.actions.server', 'code').id],
                 },
@@ -1556,6 +1557,7 @@ class TestHttp(common.HttpCase):
         })
         name_field_id = self.env.ref("test_base_automation.field_base_automation_linked_test__name")
         automation_sender = create_automation(self, trigger="on_write", model_id=model.id, trigger_field_ids=[(6, 0, [name_field_id.id])], _actions={
+            "name": "Send Webhook Notification",
             "state": "webhook",
             "webhook_url": automation_receiver.url,
         })
