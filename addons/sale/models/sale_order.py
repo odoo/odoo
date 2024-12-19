@@ -2183,7 +2183,7 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-        return sol.price_unit
+        return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
 
     #=== TOOLING ===#
 
