@@ -507,12 +507,13 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             num_requests += 1
             return response
 
-        with patch.object(requests, 'post', _patched_post), mute_logger('odoo.addons.base.models.ir_actions'):
+        with patch.object(requests, 'post', _patched_post), mute_logger('odoo.addons.base.models.ir_webhook'):
             # first run: 200
             self.action.with_context(self.context).run()
             # second run: 400, should *not* raise but
             # should warn in logs (hence mute_logger)
             self.action.with_context(self.context).run()
+            self.env.ref('base.execute_webhook').method_direct_trigger()
         self.assertEqual(num_requests, 2)
 
     def test_90_convert_to_float(self):
