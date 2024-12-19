@@ -672,6 +672,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
+        this.synchronizeServerDataInIndexedDB(data);
         const results = this.models.loadData(this.models, data, [], true);
         return results;
     }
