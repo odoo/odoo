@@ -70,13 +70,6 @@ export function searchCustomerValue(val) {
             run: `edit ${val}`,
         },
         {
-            content: `Click on search more if present`,
-            trigger: `.search-more-button > button, .partner-list .partner-info:nth-child(1):contains("${val}")`,
-            run: function () {
-                this.anchor.click();
-            },
-        },
-        {
             content: `Check "${val}" is shown`,
             trigger: `.partner-list .partner-info:nth-child(1):contains("${val}")`,
         },

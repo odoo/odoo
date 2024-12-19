@@ -14,6 +14,15 @@ class ResPartner(models.Model):
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
 
     @api.model
+    def get_new_partner(self, config_id, domain, offset):
+        config = self.env['pos.config'].browse(config_id)
+        limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading(offset)}
+        new_partner = self.search_read(domain + [('id', 'in', list(limited_partner_ids))], self._load_pos_data_fields(config_id), load=False)
+        return {
+            'res.partner': new_partner,
+        }
+
+    @api.model
     def _load_pos_data_domain(self, data):
         config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
 
