@@ -137,12 +137,12 @@ export const qwebSample = /* xml */ `
 <h2>t-if should be inline</h2>
 <div style="text-align: center; margin: 16px 0px 16px 0px;">
     <t t-if="not is_online or object.state != 'accepted'">
-        <a t-attf-href="/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+        <a t-attf-href="/calendar/meeting/accept/{{object.access_token}}/{{object.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a t-attf-href="/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+        <a t-attf-href="/calendar/meeting/decline/{{object.access_token}}/{{object.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
     </t>
-    <a t-attf-href="/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px"><t t-esc="'Reschedule' if is_online and target_customer else 'View'">View</t></a>
+    <a t-attf-href="/calendar/meeting/view/{{object.access_token}}/{{object.event_id.id}}/{{object.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px"><t t-esc="'Reschedule' if is_online and target_customer else 'View'">View</t></a>
 </div>
 
 <h2>should see the t-if background color</h2>
