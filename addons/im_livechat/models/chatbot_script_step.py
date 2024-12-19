@@ -382,7 +382,17 @@ class ChatbotScriptStep(models.Model):
                 lambda m: m.partner_id == self.chatbot_script_id.operator_partner_id
             ):
                 channel_sudo._action_unfollow(partner=bot_member.partner_id)
-            channel_sudo.name = (human_operator.livechat_username or human_operator.name,)
+            # finally, rename the channel to include the operator's name
+            channel_sudo.name = " ".join(
+                [
+                    self.env.user.display_name
+                    if not self.env.user._is_public()
+                    else discuss_channel.anonymous_name,
+                    human_operator.livechat_username
+                    if human_operator.livechat_username
+                    else human_operator.name,
+                ]
+            )
             channel_sudo._broadcast(human_operator.partner_id.ids)
             discuss_channel.channel_pin(pinned=True)
 
