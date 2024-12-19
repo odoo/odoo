@@ -53,6 +53,25 @@ test('display partner mention suggestions on typing "@"', async () => {
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
 });
 
+test('should display internal users with access when mention suggestions on typing "@"', async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+        partner_share: true,
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "dummy channel",
+        channel_member_ids: [Command.create({ partner_id: partnerId_1 })],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion strong", { count: 2 });
+    await contains(".o-mail-Composer-suggestion strong", { text: "Mitchell Admin" });
+});
+
 test('post a first message then display partner mention suggestions on typing "@"', async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({
