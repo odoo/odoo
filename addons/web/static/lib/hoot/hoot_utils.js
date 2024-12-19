@@ -1394,10 +1394,10 @@ export class Markup {
                         const classList = ["no-underline"];
                         let tagName = "t";
                         if (diff[0] === DIFF_INSERT) {
-                            classList.push("text-pass", "bg-pass-900");
+                            classList.push("text-emerald", "bg-emerald-900");
                             tagName = "ins";
                         } else if (diff[0] === DIFF_DELETE) {
-                            classList.push("text-fail", "bg-fail-900");
+                            classList.push("text-rose", "bg-rose-900");
                             tagName = "del";
                         }
                         return new this({
@@ -1415,7 +1415,7 @@ export class Markup {
      * @param {unknown} value
      */
     static green(content, value) {
-        return [new this({ className: "text-pass", content }), deepCopy(value)];
+        return [new this({ className: "text-emerald", content }), deepCopy(value)];
     }
 
     /**
@@ -1430,7 +1430,7 @@ export class Markup {
      * @param {unknown} value
      */
     static red(content, value) {
-        return [new this({ className: "text-fail", content }), deepCopy(value)];
+        return [new this({ className: "text-rose", content }), deepCopy(value)];
     }
 
     /**
@@ -1474,9 +1474,7 @@ export class MockEventTarget extends EventTarget {
 }
 
 export class FormattedString extends String {
-    static RAW = "raw";
-
-    /** @type {string} */
+    /** @type {ArgumentType} */
     type;
 
     /**
@@ -1484,15 +1482,13 @@ export class FormattedString extends String {
      * @param {string} [type]
      */
     constructor(value, type) {
-        if (!type) {
-            if (value instanceof FormattedString) {
-                type = value.type;
-            } else {
-                type = getTypeOf(value);
-            }
+        if (value instanceof FormattedString) {
+            type = value.type;
+        } else if (type === undefined) {
+            type = getTypeOf(value);
         }
 
-        if (type !== FormattedString.RAW) {
+        if (type !== null) {
             value = formatHumanReadable(value);
         }
 
@@ -1501,6 +1497,14 @@ export class FormattedString extends String {
         this.type = type;
     }
 }
+
+export const CASE_EVENT_TYPES = {
+    assertion: 0b1,
+    error: 0b10,
+    interaction: 0b100,
+    query: 0b1000,
+    step: 0b10000,
+};
 
 export const INCLUDE_LEVEL = {
     url: 1,

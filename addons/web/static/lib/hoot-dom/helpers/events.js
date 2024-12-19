@@ -289,10 +289,10 @@ const getEventConstructor = (eventType) => {
         case "mousemove":
         case "mouseover":
         case "mouseout":
-            return [MouseEvent, mapMouseEvent, BUBBLES | CANCELABLE];
+            return [MouseEvent, mapMouseEvent, BUBBLES | CANCELABLE | VIEW];
         case "mouseenter":
         case "mouseleave":
-            return [MouseEvent, mapMouseEvent];
+            return [MouseEvent, mapMouseEvent, VIEW];
 
         // Pointer events
         case "auxclick":
@@ -303,11 +303,11 @@ const getEventConstructor = (eventType) => {
         case "pointermove":
         case "pointerover":
         case "pointerout":
-            return [PointerEvent, mapPointerEvent, BUBBLES | CANCELABLE];
+            return [PointerEvent, mapPointerEvent, BUBBLES | CANCELABLE | VIEW];
         case "pointerenter":
         case "pointerleave":
         case "pointercancel":
-            return [PointerEvent, mapPointerEvent];
+            return [PointerEvent, mapPointerEvent, VIEW];
 
         // Focus events
         case "blur":
@@ -326,7 +326,7 @@ const getEventConstructor = (eventType) => {
         // Keyboard events
         case "keydown":
         case "keyup":
-            return [KeyboardEvent, mapKeyboardEvent, BUBBLES | CANCELABLE];
+            return [KeyboardEvent, mapKeyboardEvent, BUBBLES | CANCELABLE | VIEW];
 
         // Drag events
         case "drag":
@@ -340,9 +340,9 @@ const getEventConstructor = (eventType) => {
 
         // Input events
         case "beforeinput":
-            return [InputEvent, mapInputEvent, BUBBLES | CANCELABLE];
+            return [InputEvent, mapInputEvent, BUBBLES | CANCELABLE | VIEW];
         case "input":
-            return [InputEvent, mapInputEvent, BUBBLES];
+            return [InputEvent, mapInputEvent, BUBBLES | VIEW];
 
         // Composition events
         case "compositionstart":
@@ -358,9 +358,9 @@ const getEventConstructor = (eventType) => {
         case "touchstart":
         case "touchend":
         case "touchmove":
-            return [TouchEvent, mapTouchEvent, BUBBLES | CANCELABLE];
+            return [TouchEvent, mapTouchEvent, BUBBLES | CANCELABLE | VIEW];
         case "touchcancel":
-            return [TouchEvent, mapTouchEvent, BUBBLES];
+            return [TouchEvent, mapTouchEvent, BUBBLES | VIEW];
 
         // Resize events
         case "resize":
@@ -372,7 +372,7 @@ const getEventConstructor = (eventType) => {
 
         // Wheel events
         case "wheel":
-            return [WheelEvent, mapWheelEvent, BUBBLES];
+            return [WheelEvent, mapWheelEvent, BUBBLES | VIEW];
 
         // Animation events
         case "animationcancel":
@@ -886,7 +886,9 @@ const triggerFocus = async (target) => {
         }
         // If document is focused, this will trigger a trusted "blur" event
         previous.blur();
-        if (!$hasFocus()) {
+        if ($hasFocus()) {
+            await Promise.resolve();
+        } else {
             // When document is not focused: manually trigger a "blur" event
             const eventInit = { relatedTarget: target };
             await dispatch(previous, "blur", eventInit);
@@ -896,12 +898,14 @@ const triggerFocus = async (target) => {
     if (isNodeFocusable(target)) {
         const previousSelection = getStringSelection(target);
 
-        // If document is focused, this will trigger a trusted "focus" event
         if ($hasFocus() && isNodeVisible(target)) {
             catchNextEvent(target, "focusin");
         }
+        // If document is focused, this will trigger a trusted "focus" event
         target.focus();
-        if (!$hasFocus()) {
+        if ($hasFocus()) {
+            await Promise.resolve();
+        } else {
             // When document is not focused: manually trigger a "focus" event
             const eventInit = { relatedTarget: previous };
             await dispatch(target, "focus", eventInit);
@@ -1606,8 +1610,9 @@ const runTime = getDefaultRunTimeValue();
 // Event init attributes mappers
 //-----------------------------------------------------------------------------
 
-const BUBBLES = 0b001;
-const CANCELABLE = 0b010;
+const BUBBLES = 0b1;
+const CANCELABLE = 0b10;
+const VIEW = 0b100;
 
 // Generic mappers
 // ---------------
@@ -1630,7 +1635,6 @@ const mapMouseEvent = (eventInit) => ({
     buttons: runTime.buttons,
     clientX: eventInit.clientX ?? eventInit.pageX ?? eventInit.screenX ?? 0,
     clientY: eventInit.clientY ?? eventInit.pageY ?? eventInit.screenY ?? 0,
-    view: getWindow(),
     ...runTime.modifierKeys,
     ...eventInit,
 });
@@ -1665,7 +1669,6 @@ const mapTouchEvent = (eventInit) => {
     const touches = eventInit.targetTouches ||
         eventInit.touches || [new Touch({ identifier: 0, ...eventInit })];
     return {
-        view: getWindow(),
         ...eventInit,
         changedTouches: eventInit.changedTouches || touches,
         target: eventInit.target,
@@ -1683,7 +1686,6 @@ const mapTouchEvent = (eventInit) => {
 const mapInputEvent = (eventInit) => ({
     data: null,
     isComposing: Boolean(runTime.isComposing),
-    view: getWindow(),
     ...eventInit,
 });
 
@@ -1692,7 +1694,6 @@ const mapInputEvent = (eventInit) => ({
  */
 const mapKeyboardEvent = (eventInit) => ({
     isComposing: Boolean(runTime.isComposing),
-    view: getWindow(),
     ...runTime.modifierKeys,
     ...eventInit,
 });
@@ -1872,6 +1873,9 @@ export async function dispatch(target, type, eventInit) {
     }
     if (flags & CANCELABLE) {
         params.cancelable = true;
+    }
+    if (flags & VIEW) {
+        params.view ||= getWindow(target);
     }
     const event = new Constructor(type, params);
 
@@ -2388,8 +2392,8 @@ export async function scroll(target, position, options) {
     if (!hasTouch()) {
         await dispatch(element, "wheel");
     }
-    // This will trigger a trusted "scroll" event
     catchNextEvent(element, "scroll");
+    // This will trigger a trusted "scroll" event
     await Promise.resolve(element.scrollTo(scrollOptions));
 
     return finalizeEvents(options);
