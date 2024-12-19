@@ -547,23 +547,20 @@ class ResPartner(models.Model):
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
         domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
-        help="This account will be used instead of the default one as the payable account for the current partner",
         ondelete='restrict')
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
         domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False)]",
-        help="This account will be used instead of the default one as the receivable account for the current partner",
         ondelete='restrict')
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
         help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
-        help="This payment term will be used instead of the default one for sales orders and customer invoices",
         ondelete='restrict')
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Vendor Payment Terms',
-        help="This payment term will be used instead of the default one for purchase orders and vendor bills")
+    )
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
     invoice_ids = fields.One2many('account.move', 'partner_id', string='Invoices', readonly=True, copy=False)
@@ -624,16 +621,12 @@ class ResPartner(models.Model):
         comodel_name='account.payment.method.line',
         company_dependent=True,
         domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', '=', self.env.company.id)],
-        help="Preferred payment method when buying from this vendor. This will be set by default on all"
-             " outgoing payments created for this vendor",
     )
 
     property_inbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         company_dependent=True,
         domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', '=', self.env.company.id)],
-        help="Preferred payment method when selling to this customer. This will be set by default on all"
-             " incoming payments created for this customer",
     )
 
     def _compute_bank_count(self):
