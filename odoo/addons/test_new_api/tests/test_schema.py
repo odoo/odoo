@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+from odoo.fields import Domain
 from odoo.models import MetaModel
 from odoo.tests import common
 from odoo.addons.base.models.ir_model import model_xmlid, field_xmlid, selection_xmlid
@@ -84,11 +84,12 @@ class TestReflection(common.TransactionCase):
                             for sel in ir_field.selection_ids:
                                 self.assertSelectionXID(sel)
 
-                field_description = field.get_description(self.env)
-                if field.type in ('many2many', 'one2many'):
-                    self.assertFalse(field_description['sortable'])
-                elif field.store and field.column_type:
-                    self.assertTrue(field_description['sortable'])
+                        field_description = field.get_description(self.env)
+                        if field.type in ('many2many', 'one2many'):
+                            self.assertFalse(field_description['sortable'])
+                            self.assertIsInstance(field_description['domain'], (list, str))
+                        elif field.store and field.column_type:
+                            self.assertTrue(field_description['sortable'])
 
 
 class TestSchema(common.TransactionCase):
@@ -593,3 +594,16 @@ class TestSchema(common.TransactionCase):
         """, ['%very_very_very_very_long_field_name%'])
         nb_field_index, = self.env.cr.fetchone()
         self.assertEqual(nb_field_index, 2)
+
+    def test_one2many_domain(self):
+        model = self.env['test_new_api.inverse_m2o_ref']
+        field = model._fields['model_ids']
+        self.assertEqual(
+            field.get_comodel_domain(model),
+            Domain('const', '=', True) & Domain('res_model', '=', model._name),
+        )
+        self.assertEqual(
+            field.get_description(self.env, ['domain'])['domain'],
+            "([('const', '=', True)]) + ([('res_model', '=', 'test_new_api.inverse_m2o_ref')])",
+            "res_model should appear in the descripton of the domain"
+        )

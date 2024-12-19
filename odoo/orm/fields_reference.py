@@ -94,7 +94,7 @@ class Many2oneReference(Integer):
             if not records:
                 continue
             corecord = records.env[invf.model_name].browse(value)
-            records = records.filtered_domain(invf.get_domain_list(corecord))
+            records = records.filtered_domain(invf.get_comodel_domain(corecord))
             if not records:
                 continue
             ids0 = cache.get(corecord, invf, None)
