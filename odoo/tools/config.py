@@ -623,10 +623,21 @@ class configmanager:
         if 'all' in self['dev_mode']:
             self._runtime_options['dev_mode'] = self['dev_mode'] + ['reload', 'qweb', 'xml']
 
+        if test_file := self['test_file']:
+            if not os.path.isfile(test_file):
+                self._log(logging.WARNING, f'test file {test_file!r} cannot be found')
+            elif not test_file.endswith('.py'):
+                self._log(logging.WARNING, f'test file {test_file!r} is not a python file')
+            else:
+                self._log(logging.INFO, 'Transforming --test-file into --test-tags')
+                test_tags = (self['test_tags'] or '').split(',')
+                test_tags.append(os.path.abspath(self['test_file']))
+                self._runtime_options['test_tags'] = ','.join(test_tags)
+                self._runtime_options['test_enable'] = True
         if self['test_enable'] and not self['test_tags']:
             self._runtime_options['test_tags'] = "+standard"
         self._runtime_options['test_enable'] = bool(self['test_tags'])
-        if self['test_enable'] or self['test_file']:
+        if self._runtime_options['test_enable']:
             self._runtime_options['stop_after_init'] = True
 
     def _warn_deprecated_options(self):
