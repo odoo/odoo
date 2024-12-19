@@ -184,6 +184,7 @@ class CloseCode(IntEnum):
     BAD_GATEWAY = 1014
     SESSION_EXPIRED = 4001
     KEEP_ALIVE_TIMEOUT = 4002
+    KILL_NOW = 4003
 
 
 class ConnectionState(IntEnum):
@@ -949,6 +950,10 @@ class WebsocketConnectionHandler:
 
     @classmethod
     def websocket_allowed(cls, request):
+        # WebSockets are disabled during tests because the test environment and
+        # the WebSocket thread use the same cursor, leading to race conditions.
+        # However, they are enabled during tours as RPC requests and WebSocket
+        # instances both use the `TestCursor` class wich is locked.
         return not modules.module.current_test
 
     @classmethod
@@ -1081,7 +1086,7 @@ class WebsocketConnectionHandler:
             # reconnect, preventing old workers from lingering after updates.
             # Non browsers are ignored since IOT devices do not provide the
             # worker version.
-            websocket.disconnect(CloseCode.CLEAN, "OUTDATED_VERSION")
+            websocket._disconnect(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:
@@ -1094,7 +1099,7 @@ class WebsocketConnectionHandler:
                     _logger.exception("Exception occurred during websocket request handling")
 
 
-def _kick_all():
+def _kick_all(code=CloseCode.GOING_AWAY):
     """ Disconnect all the websocket instances. """
     for websocket in _websocket_instances:
         if websocket.state is ConnectionState.OPEN:
