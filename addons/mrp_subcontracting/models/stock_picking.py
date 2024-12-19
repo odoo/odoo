@@ -72,7 +72,11 @@ class StockPicking(models.Model):
                 raise UserError(_("There shouldn't be multiple productions to record for the same subcontracted move."))
             # Manage additional quantities
             quantity_done_move = move.product_uom._compute_quantity(move.quantity, production.product_uom_id)
-            if float_compare(production.product_qty, quantity_done_move, precision_rounding=production.product_uom_id.rounding) == -1:
+            if float_compare(
+                production.product_qty,
+                quantity_done_move,
+                precision_digits=rounding
+                ) == -1:
                 change_qty = self.env['change.production.qty'].create({
                     'mo_id': production.id,
                     'product_qty': quantity_done_move
@@ -164,12 +168,13 @@ class StockPicking(models.Model):
         self.ensure_one()
         group_move = defaultdict(list)
         group_by_company = defaultdict(list)
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for move, bom in subcontract_details:
             # do not create extra production for move that have their quantity updated
             if move.move_orig_ids.production_id:
                 continue
             quantity = move.product_qty or move.quantity
-            if float_compare(quantity, 0, precision_rounding=move.product_uom.rounding) <= 0:
+            if float_compare(quantity, 0, precision_digits=precision_digits) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
 

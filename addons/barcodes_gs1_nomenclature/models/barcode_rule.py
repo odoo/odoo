@@ -44,7 +44,7 @@ class BarcodeRule(models.Model):
     ], string="GS1 Content Type",
         help="The GS1 content type defines what kind of data the rule will process the barcode as:\
         * Date: the barcode will be converted into a Odoo datetime;\
-        * Measure: the barcode's value is related to a specific UoM;\
+        * Measure: the barcode's value is related to a specific unit;\
         * Numeric Identifier: fixed length barcode following a specific encoding;\
         * Alpha-Numeric Name: variable length barcode.")
     gs1_decimal_usage = fields.Boolean('Decimal', help="If True, use the last digit of AI to determine where the first decimal is")

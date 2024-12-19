@@ -17,7 +17,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         cls.company_data_2 = cls.setup_other_company()
 
         cls.uom_units = cls.env.ref('uom.product_uom_unit')
-        cls.uom_dozens = cls.env.ref('uom.product_uom_dozen')
+        cls.uom_hour = cls.env.ref('uom.product_uom_hour')
 
         cls.displace_prdct = cls.env['product.product'].create({
             'name': 'Displacement',
@@ -45,7 +45,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
-                'product_uom_id': self.uom_units.id,
+                'product_uom_id': self.uom_hour.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
@@ -53,7 +53,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
-                'product_uom_id': self.uom_dozens.id,
+                'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }
         ]

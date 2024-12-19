@@ -22,6 +22,13 @@ class StockMove(models.Model):
         distinct_fields.append('sale_line_id')
         return distinct_fields
 
+    @api.depends('sale_line_id', 'sale_line_id.product_uom_id')
+    def _compute_packaging_uom_id(self):
+        super()._compute_packaging_uom_id()
+        for move in self:
+            if move.sale_line_id:
+                move.packaging_uom_id = move.sale_line_id.product_uom_id
+
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.

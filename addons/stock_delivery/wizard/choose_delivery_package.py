@@ -16,9 +16,9 @@ class ChooseDeliveryPackage(models.TransientModel):
 
     @api.depends('delivery_package_type_id')
     def _compute_weight_uom_name(self):
-        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
         for package in self:
-            package.weight_uom_name = weight_uom_id.name
+            package.weight_uom_name = weight_uom_name
 
     @api.depends('delivery_package_type_id')
     def _compute_shipping_weight(self):

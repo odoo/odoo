@@ -197,20 +197,20 @@ class ProductProduct(models.Model):
                     0.0,
                 )
                 continue
-            rounding = product.uom_id.rounding
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             res[product_id] = {}
             if dates_in_the_past:
                 qty_available = quants_res.get(origin_product_id, [0.0])[0] - moves_in_res_past.get(origin_product_id, 0.0) + moves_out_res_past.get(origin_product_id, 0.0)
             else:
                 qty_available = quants_res.get(origin_product_id, [0.0])[0]
             reserved_quantity = quants_res.get(origin_product_id, [False, 0.0])[1]
-            res[product_id]['qty_available'] = float_round(qty_available, precision_rounding=rounding)
-            res[product_id]['free_qty'] = float_round(qty_available - reserved_quantity, precision_rounding=rounding)
-            res[product_id]['incoming_qty'] = float_round(moves_in_res.get(origin_product_id, 0.0), precision_rounding=rounding)
-            res[product_id]['outgoing_qty'] = float_round(moves_out_res.get(origin_product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['qty_available'] = float_round(qty_available, precision_digits=rounding)
+            res[product_id]['free_qty'] = float_round(qty_available - reserved_quantity, precision_digits=rounding)
+            res[product_id]['incoming_qty'] = float_round(moves_in_res.get(origin_product_id, 0.0), precision_digits=rounding)
+            res[product_id]['outgoing_qty'] = float_round(moves_out_res.get(origin_product_id, 0.0), precision_digits=rounding)
             res[product_id]['virtual_available'] = float_round(
                 qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
-                precision_rounding=rounding)
+                precision_digits=rounding)
 
         return res
 
@@ -886,6 +886,23 @@ class ProductTemplate(models.Model):
             }
         return res
 
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        done_moves = self.env['stock.move'].sudo().search_count(
+            [('product_id', 'in', self.with_context(active_test=False).product_variant_ids.ids)], limit=1
+        )
+        if done_moves:
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _(
+                        'This product has been used in at least one inventory movement. '
+                        'It is not advised to change the Unit of Measure since it can lead to inconsistencies. '
+                        'The existing moves will not be recalculated with the new unit of measure.'
+                    )
+                }
+            }
+
     def write(self, vals):
         if 'company_id' in vals and vals['company_id']:
             products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
@@ -906,12 +923,6 @@ class ProductTemplate(models.Model):
                 if quant:
                     raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
 
-        if 'uom_id' in vals:
-            new_uom = self.env['uom.uom'].browse(vals['uom_id'])
-            updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].sudo().search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
-            if done_moves:
-                raise UserError(_("You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."))
         if 'is_storable' in vals and not vals['is_storable'] and sum(self.mapped('nbr_reordering_rules')) != 0:
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('is_storable' in vals and vals['is_storable'] != prod_tmpl.is_storable for prod_tmpl in self):
@@ -927,7 +938,8 @@ class ProductTemplate(models.Model):
             ], limit=1)
             if existing_reserved_move_lines:
                 raise UserError(_("You can not change the inventory tracking of a product that is currently reserved on a stock move. If you need to change the inventory tracking, you should first unreserve the stock move."))
-        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not float_is_zero(p.qty_available, precision_digits=precision_digits) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing inventory tracking"))
         return super().write(vals)
 
@@ -1096,27 +1108,19 @@ class ProductCategory(models.Model):
         return []
 
 
-class ProductPackaging(models.Model):
-    _inherit = "product.packaging"
-
-    package_type_id = fields.Many2one('stock.package.type', 'Package Type')
-    route_ids = fields.Many2many(
-        'stock.route', 'stock_route_packaging', 'packaging_id', 'route_id', 'Routes',
-        domain=[('packaging_selectable', '=', True)],
-        help="Depending on the modules installed, this will allow you to define the route of the product in this packaging: whether it will be bought, manufactured, replenished on order, etc.")
-
-
 class UomUom(models.Model):
     _inherit = 'uom.uom'
 
+    package_type_id = fields.Many2one('stock.package.type', string='Package Type')
+    route_ids = fields.Many2many(related='package_type_id.route_ids', string='Routes', help='Routes propagated from the package type')
+
     def write(self, values):
         # Users can not update the factor if open stock moves are based on it
-        if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
+        keys_to_protect = {'factor', 'relative_factor', 'category_id'}
+        if any(key in values for key in keys_to_protect):
             changed = self.filtered(
                 lambda u: any(u[f] != values[f] if f in values else False
-                              for f in {'factor', 'factor_inv'})) + self.filtered(
-                lambda u: any(u[f].id != int(values[f]) if f in values else False
-                              for f in {'category_id'}))
+                              for f in keys_to_protect))
             if changed:
                 error_msg = _(
                     "You cannot change the ratio of this unit of measure"

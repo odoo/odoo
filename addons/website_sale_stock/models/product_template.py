@@ -48,11 +48,12 @@ class ProductTemplate(models.Model):
                     'product_with_stock_notification_enabled', set())
             )
             stock_notification_email = request and request.session.get('stock_notification_email', '')
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             res.update({
                 'free_qty': free_qty,
                 'cart_qty': product_sudo._get_cart_qty(website),
                 'uom_name': product_sudo.uom_id.name,
-                'uom_rounding': product_sudo.uom_id.rounding,
+                'uom_rounding': 10 ** -precision_digits,
                 'show_availability': product_sudo.show_availability,
                 'out_of_stock_message': product_sudo.out_of_stock_message,
                 'has_stock_notification': has_stock_notification,

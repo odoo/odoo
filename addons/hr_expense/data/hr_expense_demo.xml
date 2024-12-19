@@ -60,7 +60,7 @@
             <field name="name">Travel by car</field>
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="product_id" ref="expense_product_mileage"/>
-            <field name="product_uom_id" ref="uom.product_uom_km"/>
+            <field name="product_uom_id" ref="product_uom_km"/>
             <field eval="108.84" name="quantity"/>
         </record>
 
@@ -131,7 +131,7 @@
             <field name="employee_id" ref="hr.employee_qdp"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
             <field name="product_id" ref="expense_product_mileage"/>
-            <field name="product_uom_id" ref="uom.product_uom_km"/>
+            <field name="product_uom_id" ref="product_uom_km"/>
             <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
             <field eval="120.85" name="quantity"/>
             <field name="sheet_id" ref="customer_meeting_sheet"/>
