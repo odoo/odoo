@@ -61,7 +61,11 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         line_ids = [values['line_id']]
 
         if selected_combo_items and values['line_id']:
+            min_quantity = quantity
             for combo_item in selected_combo_items:
+                # The requested quantity might not be available for the combo item. If so, the
+                # line's quantity will be lowered to the maximum available quantity in
+                # `_cart_update`.
                 item_values = order_sudo._cart_update(
                     product_id=combo_item['product_id'],
                     line_id=False,
@@ -75,6 +79,14 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
                     **kwargs,
                 )
                 line_ids.append(item_values['line_id'])
+                min_quantity = min(min_quantity, item_values['quantity'])
+            # A combo product and its items should have the same quantity (by definition). So, if
+            # the requested quantity isn't available for one or more combo items, we should lower
+            # the quantity of the combo product and its items to the maximum available quantity of
+            # the combo item with the least available quantity.
+            if min_quantity < quantity:
+                lines = request.env['sale.order.line'].browse(line_ids)
+                lines.product_uom_qty = min_quantity
 
         values['notification_info'] = self._get_cart_notification_information(order_sudo, line_ids)
         values['cart_quantity'] = order_sudo.cart_quantity

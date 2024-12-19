@@ -59,6 +59,14 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
             ctaWrapper.classList.add('out_of_stock');
         }
     }
+    if (combination.product_type === 'combo' && combination.max_combo_quantity !== undefined) {
+        $addQtyInput.data('max', combination.max_combo_quantity || 1);
+        if (combination.max_combo_quantity < 1) {
+            ctaWrapper.classList.replace('d-flex', 'd-none');
+            ctaWrapper.classList.add('out_of_stock');
+        }
+        // TODO(loti): show "out of stock" message?
+    }
 
     // needed xml-side for formatting of remaining qty
     combination.formatQuantity = (qty) => {
