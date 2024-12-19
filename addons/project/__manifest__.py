@@ -201,6 +201,7 @@
             'web/static/src/views/form/button_box/*.scss',
 
             'bus/static/src/**/*.js',
+            ('remove', 'bus/static/src/components/**/*'),
 
             'html_editor/static/src/**/*',
 

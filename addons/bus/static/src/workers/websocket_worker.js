@@ -5,7 +5,7 @@ import { debounce, Deferred } from "@bus/workers/websocket_worker_utils";
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated'|'update_state' | 'log_debug' } WorkerEvent
+ * @typedef { 'connect' | 'reconnect' | 'disconnect' | 'reconnecting' | 'notification' | 'initialized' | 'outdated'| 'worker_state_updated' | 'log_debug' } WorkerEvent
  */
 
 /**
@@ -243,8 +243,8 @@ export class WebsocketWorker {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.debugModeByClient.set(client, debug);
             this.isDebug = [...this.debugModeByClient.values()].some(Boolean);
-            this.sendToClient(client, "initialized");
             this.sendToClient(client, "update_state", this.state);
+            this.sendToClient(client, "initialized");
             return;
         }
         this.newestStartTs = startTs;
@@ -265,8 +265,8 @@ export class WebsocketWorker {
             }
             this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
         }
-        this.sendToClient(client, "initialized");
         this.sendToClient(client, "update_state", this.state);
+        this.sendToClient(client, "initialized");
         if (!this.active) {
             this.sendToClient(client, "outdated");
         }
@@ -514,6 +514,6 @@ export class WebsocketWorker {
      */
     _updateState(newState) {
         this.state = newState;
-        this.broadcast("update_state", newState);
+        this.broadcast("worker_state_updated", newState);
     }
 }
