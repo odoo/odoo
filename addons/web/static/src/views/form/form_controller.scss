@@ -46,6 +46,7 @@
     @include media-breakpoint-down(md) {
         .o_cell:has(+ :is(.o_wrap_label, .o_wrap_field_boolean)),
         .o_wrap_field_boolean,
+        .o_cell_custom:not(.o_wrap_label),
         .o_cell:first-child:last-child {
             margin-bottom: map-get($spacers, 3);
         }
@@ -462,7 +463,10 @@
 
     .o_inner_group {
         --columns: 1;
-        gap: map-get($spacers, 2) $o-horizontal-padding;
+        @include media-breakpoint-down(md) {
+            --inner-group-row-gap: 0;
+        }
+        gap: var(--inner-group-row-gap, map-get($spacers, 2)) $o-horizontal-padding;
         margin-bottom: map-get($spacers, 2);
 
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
@@ -970,6 +974,9 @@
 
             .o_inner_group {
                 margin-bottom: 0 !important;
+                &:last-child {
+                    margin-bottom: map-get($spacers, 3) !important;
+                }
 
                 div[name="carrier_selection"] {
                     > div:not(.alert) {
