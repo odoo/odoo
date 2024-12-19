@@ -1270,12 +1270,12 @@
                                                    readonly="state != 'draft' or (move_type not in ('in_invoice', 'in_refund', 'in_receipt') and not quick_edit_mode)"/>
 
                                             <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
-                                            <field name="amount_residual" class="oe_subtotal_footer_separator" invisible="state == 'draft'"/>
+                                            <field name="amount_residual" class="oe_subtotal_footer_separator"/>
                                         </group>
                                         <field name="invoice_outstanding_credits_debits_widget"
                                             class="oe_invoice_outstanding_credits_debits py-3"
                                             colspan="2" nolabel="1" widget="payment"
-                                            invisible="state != 'posted' or not invoice_has_outstanding"/>
+                                            invisible="not invoice_has_outstanding"/>
                                     </group>
                                 </group>
                             </page>

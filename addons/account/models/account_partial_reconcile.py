@@ -520,6 +520,8 @@ class AccountPartialReconcile(models.Model):
                 partial_lines_to_create = {}
 
                 for caba_treatment, line in move_values['to_process_lines']:
+                    if line.parent_state == 'draft':
+                        raise UserError(_("Cannot generate cash basis entries for draft entries"))
 
                     # ==========================================================================
                     # Compute the balance of the current line on the cash basis entry.
