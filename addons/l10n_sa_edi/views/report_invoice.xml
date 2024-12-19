@@ -7,21 +7,22 @@
             <!--    Add Currency Exchange rate if different currency than SAR    -->
             <xpath expr="//div[hasclass('clearfix')]" position="after">
                 <table t-if="o.company_id.country_id.code == 'SA' and o.currency_id != o.company_id.currency_id"
-                     id="sar_amounts" t-att-style="'ltr' if lang != 'ar_001' else 'rtl'" class="row clearfix ms-auto my-3 table table-sm table-borderless">
+                    id="sar_amounts" style="page-break-inside: avoid;" class="clearfix mx-auto my-3 table-sm table-borderless">
+                    <t t-set="curr_date" t-value="o.invoice_date or datetime.datetime.today()"></t>
                     <t t-set="sar_rate"
-                       t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date)"/>
+                    t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, curr_date)"/>
                     <tr>
-                        <td style="width: 25%"><strong>Exchange Rate</strong></td>
-                        <td style="width: 25%"><strong>Subtotal (SAR)</strong></td>
-                        <td style="width: 25%"><strong>VAT Amount (SAR)</strong></td>
-                        <td style="width: 25%"><strong>Total (SAR)</strong></td>
+                        <td class="w-25"><strong>سعر الصرف<br/>Exchange Rate</strong></td>
+                        <td class="w-25"><strong>الإجمالي الفرعي بالريال السعودي<br/>Subtotal</strong></td>
+                        <td class="w-25"><strong>مبلغ ضريبة القيمة المضافة بالريال السعودي<br/>VAT Amount</strong></td>
+                        <td class="w-25"><strong>الإجمالي بالريال السعودي<br/>Total</strong></td>
                     </tr>
                     <tr>
                         <td><p class="m-0" t-esc="sar_rate" t-options='{"widget": "float", "precision": 5}'/></td>
                         <td><p class="m-0" t-esc="o.amount_untaxed_signed"
                             t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
                         <td><p class="m-0"
-                            t-esc="o.currency_id._convert(o.amount_tax, o.company_id.currency_id, o.company_id, o.invoice_date)"
+                            t-esc="o.currency_id._convert(o.amount_tax, o.company_id.currency_id, o.company_id, curr_date)"
                             t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
                         <td><p class="m-0" t-esc="o.amount_total_signed"
                             t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/></td>
