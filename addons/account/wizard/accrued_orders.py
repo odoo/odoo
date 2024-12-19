@@ -244,6 +244,12 @@ class AccruedExpenseRevenue(models.TransientModel):
             'date': self.date,
             'line_ids': move_lines,
         }
+        if move_lines:
+            company_currency = self.company_id.currency_id.id
+            reference_currency = move_lines[0][2].get('currency_id', company_currency)
+            same_currency = all(move_line[2].get('currency_id', company_currency) == reference_currency for move_line in move_lines)
+            if same_currency and company_currency != reference_currency:
+                move_vals['currency_id'] = reference_currency
         return move_vals, orders_with_entries
 
     def create_entries(self):
