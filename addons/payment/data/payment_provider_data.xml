@@ -308,6 +308,37 @@
         />
     </record>
 
+    <record id="payment_provider_paymob" model="payment.provider">
+        <field name="name">Paymob</field>
+        <field name="image_128" type="base64" file="payment_paymob/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_paymob"/>
+        <!-- For each country available payment methods are different but card is common for all-->
+        <!-- https://developers.paymob.com/egypt/payment-methods -->
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                    ref('payment_method_aman'),
+                    ref('payment.payment_method_card'),
+                    ref('payment_method_contact'),
+                    ref('payment_method_easypaisa'),
+                    ref('payment_method_forsa'),
+                    ref('payment_method_halan'),
+                    ref('payment_method_installments_eg'),
+                    ref('payment_method_jazzcash'),
+                    ref('payment_method_kiosk'),
+                    ref('payment_method_mobile_wallet_eg'),
+                    ref('payment_method_omannet'),
+                    ref('payment_method_premium_card'),
+                    ref('payment_method_souhoola'),
+                    ref('payment_method_stcpay'),
+                    ref('payment_method_sympl'),
+                    ref('payment_method_tabby'),
+                    ref('payment_method_tamara'),
+                    ref('payment_method_valu'),
+                ])]"
+        />
+    </record>
+
     <record id="payment_provider_paypal" model="payment.provider">
         <field name="name">PayPal</field>
         <field name="image_128" type="base64" file="payment_paypal/static/description/icon.png"/>
