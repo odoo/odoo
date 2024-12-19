@@ -268,3 +268,8 @@ export function getAdjacentCharacter(selection, side, editable) {
     }
     return adjacentCharacter;
 }
+
+export function doesSelectionExcludeBlockElements(selection) {
+    const hasBlockElements = [...selection.commonAncestorContainer.childNodes].some(isBlock);
+    return !hasBlockElements;
+}
