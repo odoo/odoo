@@ -6,9 +6,6 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <list string="Product" multi_edit="1" sample="1">
-            <header>
-                <button string="Print Labels" type="object" name="action_open_label_layout"/>
-            </header>
                 <field name="product_variant_count" column_invisible="True"/>
                 <field name="sale_ok" column_invisible="True"/>
                 <field name="currency_id" column_invisible="True"/>
@@ -194,6 +191,17 @@
                 You must define a product for everything you sell or purchase,
                 whether it's a storable product, a consumable or a service.
             </p>
+        </field>
+    </record>
+
+    <record id="action_product_template_print_labels" model="ir.actions.server">
+        <field name="name">Print Labels</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_open_label_layout()
         </field>
     </record>
 

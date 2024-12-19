@@ -36,6 +36,52 @@
             </field>
         </record>
 
+        <record id="action_product_replenishment" model="ir.actions.server">
+            <field name="name">Replenish</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                for record in records:
+                    if record.type == 'consu':
+                        action = {
+                            "name": "Low on stock? Let's replenish.",
+                            "type": "ir.actions.act_window",
+                            "res_model": "product.replenish",
+                            "context": {'default_product_id': records.id},
+                            "views": [[False, "form"]],
+                            "target": "new",
+                        }
+                    else:
+                        raise UserError(env._("Replenishment is only available for inventory-managed products."))
+            </field>
+        </record>
+
+        <record id="action_product_template_replenishment" model="ir.actions.server">
+            <field name="name">Replenish</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                for record in records:
+                    if record.type == 'consu':
+                        action = {
+                            "name": "Low on stock? Let's replenish.",
+                            "type": "ir.actions.act_window",
+                            "res_model": "product.replenish",
+                            "context": {'default_product_tmpl_id': records.id},
+                            "views": [[False, "form"]],
+                            "target": "new",
+                        }
+                    else:
+                        raise UserError(env._("Replenishment is only available for inventory-managed products."))
+            </field>
+        </record>
+
         <record id="view_stock_product_tree" model="ir.ui.view">
             <field name="name">product.stock.list.inherit</field>
             <field name="model">product.product</field>
@@ -120,6 +166,20 @@
                         <field name="is_storable"/>
                         <field name="tracking" invisible="not is_storable" groups="stock.group_production_lot"/>
                     </div>
+                    <field name="show_qty_update_button" invisible="1"/>
+                    <label for="qty_available" class="oe_inline" invisible="not is_storable" groups="stock.group_stock_user"/>
+                    <div class="d-flex gap-2 align-items-baseline hover-show" invisible="not is_storable" groups="stock.group_stock_user">
+                        <field name="qty_available" style="max-width:100px;" readonly="True" groups="!stock.group_stock_manager"/>
+                        <field name="qty_available" style="max-width:100px;" readonly="show_qty_update_button" groups="stock.group_stock_manager"/>
+                        <span name="uom_span" groups="uom.group_uom">
+                            <field name="uom_name" class="oe_inline me-5"/>
+                        </span>
+                        <button id="update_product_qty_button" string="Update" type="object"
+                            name="action_open_quants"
+                            groups="stock.group_stock_manager"
+                            invisible="not show_qty_update_button"
+                            class="btn btn-link py-0 btn-show"/>
+                    </div>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
                     <label for="sale_delay" invisible="not sale_ok"/>
@@ -197,31 +257,6 @@
             </field>
         </record>
 
-        <record id="product_product_view_form_easy_inherit_stock" model="ir.ui.view">
-            <field name="name">product.product.view.form.easy.inherit.stock</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//header/button" position="before">
-                    <button string="Update Quantity" type="object"
-                        name="action_update_quantity_on_hand"
-                        invisible="not is_storable"/>
-                    <button string="Replenish" type="action"
-                        name="%(action_product_replenish)d"
-                        context="{'default_product_id': id}"
-                        groups="stock.group_stock_user"
-                        invisible="type != 'consu'"/>
-                </xpath>
-                <div name="button_box" position="inside">
-                    <button string="Putaway Rules" type="object"
-                        name="action_view_related_putaway_rules"
-                        class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
-                        invisible="type == 'service'"
-                        context="{'invisible_handle': True, 'single_product': True}"/>
-                </div>
-            </field>
-        </record>
-
         <record id="product_view_kanban_catalog" model="ir.ui.view">
             <field name="name">product.view.kanban.catalog.inherit.stock</field>
             <field name="model">product.product</field>
@@ -251,46 +286,39 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//header/button" position="before">
-                        <button string="Update Quantity" type="object"
-                            name="action_update_quantity_on_hand"
-                            invisible="not is_storable"/>
-                        <button string="Replenish" type="action"
-                            name="%(action_product_replenish)d"
-                            context="{'default_product_id': id}"
-                            groups="stock.group_stock_user"
-                            invisible="type != 'consu'"/>
-                    </xpath>
                     <div name="button_box" position="inside">
                         <t groups="stock.group_stock_user">
                             <field name="tracking" invisible="1"/>
                             <field name="show_on_hand_qty_status_button" invisible="1"/>
                             <field name="show_forecasted_qty_status_button" invisible="1"/>
-                            <button class="oe_stat_button"
-                                name="action_update_quantity_on_hand"
-                                icon="fa-cubes"
-                                type="object"
-                                context="{'product_variant': True}"
-                                invisible="not show_on_hand_qty_status_button">
-                                <div class="o_field_widget o_stat_info">
-                                        <span class="o_stat_value d-flex gap-1">
-                                            <field name="qty_available" nolabel="1" class="oe_inline"/>
-                                            <field name="uom_name" class="oe_inline"/>
-                                        </span>
-                                        <span class="o_stat_text">On Hand</span>
-                                </div>
-                            </button>
                             <button type="object"
                                 name="action_product_forecast_report"
                                 invisible="not show_forecasted_qty_status_button"
                                 context="{'default_product_id': id, 'active_model': 'product.template'}"
                                 class="oe_stat_button" icon="fa-area-chart">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value d-flex gap-1">
-                                        <field name="virtual_available" class="oe_inline"/>
-                                        <field name="uom_name" class="oe_inline"/>
-                                    </span>
-                                    <span class="o_stat_text">Forecasted</span>
+                                <div class="d-flex flex-row gap-1 ms-1">
+                                    <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
+                                        <span class="o_stat_value">
+                                            <field name="qty_available" widget="statinfo" nolabel="1"/>
+                                        </span>
+                                        <span class="o_stat_value" invisible="virtual_available != 0">
+                                            <field name="virtual_available" nolabel="1"/>
+                                        </span>
+                                        <span class="o_stat_value text-info" invisible="virtual_available &lt;= 0">
+                                            <field name="virtual_available" nolabel="1"/>
+                                        </span>
+                                        <span class="o_stat_value text-danger" invisible="virtual_available &gt;= 0">
+                                            <field name="virtual_available" nolabel="1"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
+                                        <span class="o_stat_value">
+                                            <field name="uom_name" widget="statinfo" nolabel="1"/>
+                                        </span>
+                                        <span class="o_stat_value text-muted">
+                                            Forecasted
+                                        </span>
+                                    </div>
                                 </div>
                             </button>
                             <button type="object"
@@ -374,44 +402,39 @@
             <field name="priority" eval="15"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//header/button" position="before">
-                        <button string="Update Quantity" type="object"
-                            name="action_update_quantity_on_hand"
-                            invisible="not is_storable"/>
-                        <button string="Replenish" type="action"
-                            name="%(action_product_replenish)d"
-                            context="{'default_product_tmpl_id': id}"
-                            groups="stock.group_stock_user"
-                            invisible="type != 'consu'"/>
-                    </xpath>
                     <button name="action_open_documents" position="before">
                         <t groups="stock.group_stock_user">
                             <field name="tracking" invisible="1"/>
                             <field name="show_on_hand_qty_status_button" invisible="1"/>
                             <field name="show_forecasted_qty_status_button" invisible="1"/>
                             <button type="object"
-                                name="action_update_quantity_on_hand"
-                                invisible="not show_on_hand_qty_status_button"
-                                class="oe_stat_button" icon="fa-cubes">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value d-flex gap-1">
-                                        <field name="qty_available" nolabel="1" class="oe_inline"/>
-                                        <field name="uom_name" class="oe_inline"/>
-                                    </span>
-                                    <span class="o_stat_text">On Hand</span>
-                                </div>
-                            </button>
-                            <button type="object"
                                 name="action_product_tmpl_forecast_report"
                                 invisible="not show_forecasted_qty_status_button"
                                 context="{'default_product_tmpl_id': id}"
                                 class="oe_stat_button" icon="fa-area-chart">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value d-flex gap-1">
-                                        <field name="virtual_available" nolabel="1" class="oe_inline"/>
-                                        <field name="uom_name" class="oe_inline"/>
-                                    </span>
-                                    <span class="o_stat_text">Forecasted</span>
+                                <div class="d-flex flex-row gap-1 ms-1">
+                                    <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
+                                        <span class="o_stat_value">
+                                            <field name="qty_available" widget="statinfo" nolabel="1"/>
+                                        </span>
+                                        <span class="o_stat_value" invisible="virtual_available != 0">
+                                            <field name="virtual_available" nolabel="1"/>
+                                        </span>
+                                        <span class="o_stat_value text-info" invisible="virtual_available &lt;= 0">
+                                            <field name="virtual_available" nolabel="1"/>
+                                        </span>
+                                        <span class="o_stat_value text-danger" invisible="virtual_available &gt;= 0">
+                                            <field name="virtual_available" nolabel="1"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
+                                        <span class="o_stat_value">
+                                            <field name="uom_name" widget="statinfo" nolabel="1"/>
+                                        </span>
+                                        <span class="o_stat_value text-muted">
+                                            Forecasted
+                                        </span>
+                                    </div>
                                 </div>
                             </button>
                         </t>
