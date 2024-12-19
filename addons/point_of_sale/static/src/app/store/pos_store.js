@@ -238,6 +238,7 @@ export class PosStore extends Reactive {
         this.currency = this.config.currency_id;
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
+        this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
         // Check cashier
         this.checkPreviousLoggedCashier();

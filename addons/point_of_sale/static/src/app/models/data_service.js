@@ -40,6 +40,7 @@ export class PosData extends Reactive {
         };
 
         this.initIndexedDB();
+        await this.verifyCurrentSession();
         await this.initData();
 
         effect(
@@ -61,6 +62,21 @@ export class PosData extends Reactive {
         browser.addEventListener("offline", () => {
             this.network.offline = true;
         });
+    }
+
+    async verifyCurrentSession() {
+        // If another device close the session we need to invalided the indexedDB on
+        // on the current device during the next reload
+        const localSessionId = localStorage.getItem(`pos.session.${odoo.pos_config_id}`);
+        if (
+            parseInt(localSessionId) &&
+            parseInt(localSessionId) !== parseInt(odoo.pos_session_id)
+        ) {
+            await this.resetIndexedDB();
+            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
+            window.location.reload();
+        }
+        localStorage.setItem(`pos.session.${odoo.pos_config_id}`, odoo.pos_session_id);
     }
 
     async resetIndexedDB() {
@@ -328,9 +344,9 @@ export class PosData extends Reactive {
                 result = values;
             }
 
+            const nonExistentRecords = [];
             if (limitedFields) {
                 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
-                const nonExistentRecords = [];
 
                 for (const record of result) {
                     const localRecord = this.models[model].get(record.id);
@@ -377,7 +393,11 @@ export class PosData extends Reactive {
                 }
             }
 
-            if (this.models[model] && this.opts.autoLoadedOrmMethods.includes(type)) {
+            if (
+                this.models[model] &&
+                this.opts.autoLoadedOrmMethods.includes(type) &&
+                (!limitedFields || nonExistentRecords.length)
+            ) {
                 const data = await this.missingRecursive({ [model]: result });
                 const results = this.models.loadData(data);
                 result = results[model];
@@ -417,6 +437,10 @@ export class PosData extends Reactive {
 
     async missingRecursive(recordMap, idsMap = {}, acc = {}) {
         const missingRecords = {};
+        const recordInMapByModelIds = Object.entries(recordMap).reduce((acc, [model, records]) => {
+            acc[model] = new Set(records.map((r) => r.id));
+            return acc;
+        }, {});
 
         for (const [model, records] of Object.entries(recordMap)) {
             if (!acc[model]) {
@@ -445,7 +469,9 @@ export class PosData extends Reactive {
                     }
 
                     const record = this.models[rel.relation].get(value);
-                    return !record || !record.id;
+                    return (
+                        (!record || !record.id) && !recordInMapByModelIds[rel.relation]?.has(value)
+                    );
                 });
 
                 if (missing.length > 0) {
