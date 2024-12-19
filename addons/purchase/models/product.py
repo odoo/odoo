@@ -79,6 +79,14 @@ class ProductProduct(models.Model):
         action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
 
+    def _filter_sellers(self, params=False):
+        company_id = self.env.company.id
+        if params and 'order_id' in params and params['order_id'].company_id:
+            company_id = params['order_id'].company_id.id
+
+        filter = super()._filter_sellers(params)
+        return lambda s: filter(s) and (not s.company_id or s.company_id.id == company_id)
+
 
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
