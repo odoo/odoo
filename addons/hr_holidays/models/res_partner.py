@@ -2,7 +2,7 @@
 
 from odoo import api, models
 from odoo.addons.mail.tools.discuss import Store
-
+from datetime import date as d
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -24,7 +24,12 @@ class ResPartner(models.Model):
         return self.env['res.users']._get_on_leave_ids(partner=True)
 
     def _to_store_defaults(self):
+        today = d.today()
         def out_of_office_date_end(partner):
+            if partner.user_ids:
+                public_holiday = partner.user_ids.employee_id.get_public_holidays_data(today, today)
+                if public_holiday:
+                    return "public_holiday"
             # in the rare case of multi-user partner, return the earliest possible return date
             dates = partner.mapped("user_ids.leave_date_to")
             states = partner.mapped("user_ids.current_leave_state")
