@@ -48,7 +48,7 @@ const threadPatch = {
                 if (!this.selfMember) {
                     return null;
                 }
-                const messages = this.nonEmptyMessages;
+                const messages = this.messages;
                 const separator = this.selfMember.localNewMessageSeparator;
                 if (separator === 0 && !this.loadOlder) {
                     return messages[0];
