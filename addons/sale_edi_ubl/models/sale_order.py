@@ -4,22 +4,8 @@ from odoo import _, api, models, Command
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _get_order_edi_decoder(self, file_data):
-        """ Override of sale to add edi decoder for xml files.
-
-        :param dict file_data: File data to decode.
-        :return function: Function with decoding capibility `_import_order_ubl` for different xml
-        formats.
-        """
-        if file_data['type'] == 'xml':
-            ubl_cii_xml_builder = self._get_order_ubl_builder_from_xml_tree(file_data['xml_tree'])
-            if ubl_cii_xml_builder is not None:
-                return ubl_cii_xml_builder._import_order_ubl
-
-        return super()._get_order_edi_decoder(file_data)
-
     @api.model
-    def _get_order_ubl_builder_from_xml_tree(self, tree):
+    def _get_record_ubl_builder_from_xml_tree(self, tree):
         """ Return sale order ubl builder with decording capibily to given tree
 
         :param xml tree: xml tree to find builder.
@@ -57,3 +43,9 @@ class SaleOrder(models.Model):
             'price_unit': price_unit,
             'tax_ids': [Command.set(tax_ids)],
         } for name, quantity, price_unit, tax_ids in lines_vals]
+
+    def _get_supplier_id(self):
+        return self.company_id.partner_id
+
+    def _get_edi_builders(self):
+        return super()._get_edi_builders() + [self.env['sale.edi.xml.ubl_bis3']]
