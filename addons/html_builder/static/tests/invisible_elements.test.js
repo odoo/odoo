@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { InvisibleElementsPanel } from "@html_builder/builder/sidebar_builder_tabs/invisible_elements_panel";
+import { InvisibleElementsPanel } from "@html_builder/builder/builder_sidebar/invisible_elements_panel";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import {
     defineWebsiteModels,

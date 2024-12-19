@@ -13,24 +13,24 @@ import {
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { registry } from "@web/core/registry";
-import { BuilderOverlayPlugin } from "./plugins/builder_overlay/builder_overlay_plugin";
-import { DropZonePlugin } from "./plugins/drop_zone_plugin";
-import { BuilderOptionsPlugin } from "./plugins/builder_options_plugin";
-import { HandleDirtyElementPlugin } from "./plugins/handle_dirty_element_plugin";
-import { MediaWebsitePlugin } from "./plugins/media_website_plugin";
-import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
-import { SnippetModel } from "./snippet_model";
-import { BlockTab, blockTab } from "./sidebar_builder_tabs/block_tab";
-import { CustomizeTab, customizeTab } from "./sidebar_builder_tabs/customize_tab";
-import { InvisibleElementsPanel } from "./sidebar_builder_tabs/invisible_elements_panel";
+import { BuilderOverlayPlugin } from "../plugins/builder_overlay/builder_overlay_plugin";
+import { DropZonePlugin } from "../plugins/drop_zone_plugin";
+import { BuilderOptionsPlugin } from "../plugins/builder_options_plugin";
+import { HandleDirtyElementPlugin } from "../plugins/handle_dirty_element_plugin";
+import { MediaWebsitePlugin } from "../plugins/media_website_plugin";
+import { SetupEditorPlugin } from "../plugins/setup_editor_plugin";
+import { SnippetModel } from "../snippet_model";
+import { BlockTab, blockTab } from "./tabs/block_tab/block_tab";
+import { CustomizeTab, customizeTab } from "./tabs/customize_tab";
+import { InvisibleElementsPanel } from "./invisible_elements_panel";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useSetupAction } from "@web/search/action_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { BuilderActionsPlugin } from "./plugins/builder_actions_plugin";
-import { OperationPlugin } from "./plugins/operation_plugin";
+import { BuilderActionsPlugin } from "../plugins/builder_actions_plugin";
+import { OperationPlugin } from "../plugins/operation_plugin";
 
 const BUILDER_PLUGIN = [
     BuilderOptionsPlugin,

@@ -1,4 +1,4 @@
-import { BuilderSidebar } from "@html_builder/builder/builder_sidebar";
+import { BuilderSidebar } from "@html_builder/builder/builder_sidebar/builder_sidebar";
 import { WebsiteBuilder } from "@html_builder/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";

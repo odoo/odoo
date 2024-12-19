@@ -5,7 +5,7 @@ import { RPCError } from "@web/core/network/rpc";
 import { useDraggable } from "@web/core/utils/draggable";
 import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
-import { AddSnippetDialog } from "../add_snippet_dialog/add_snippet_dialog";
+import { AddSnippetDialog } from "./add_snippet_dialog/add_snippet_dialog";
 
 // TODO move it in web (copy from web_studio)
 function copyElementOnDrag() {
