@@ -349,17 +349,18 @@ const threadPatch = {
     },
     /** @param {string} body */
     async post(body) {
-        if (this.model === "discuss.channel" && body.startsWith("/")) {
-            const [firstWord] = body.substring(1).split(/\s/);
-            const command = commandRegistry.get(firstWord, false);
-            if (
-                command &&
-                (!command.channel_types || command.channel_types.includes(this.channel_type))
-            ) {
-                await this.executeCommand(command, body);
-                return;
-            }
-        }
+        // canned responses
+        // if (this.model === "discuss.channel") {
+        //     const [firstWord] = body.substring(1).split(/\s/);
+        //     const command = commandRegistry.get(firstWord, false);
+        //     if (
+        //         command &&
+        //         (!command.channel_types || command.channel_types.includes(this.channel_type))
+        //     ) {
+        //         await this.executeCommand(command, body);
+        //         return;
+        //     }
+        // }
         return super.post(...arguments);
     },
     get showUnreadBanner() {
