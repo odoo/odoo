@@ -52,4 +52,9 @@ from . import test_product
 from . import test_unexpected_invoice
 from . import test_mail_tracking_value
 from . import test_res_partner_merge
+<<<<<<< 18.0
 from . import test_account_merge_wizard
+||||||| 70a4087efe64356bfffb01f23aac926a506ba0fb
+=======
+from . import test_account_move_attachment
+>>>>>>> 7aa3d9f1d986dcdd40e1f14530d5afd9849cf3e4
