@@ -169,6 +169,20 @@ class ProductTemplate(models.Model):
         included_computed_price = self.taxes_id.with_context(force_price_include=True).compute_all(price, self.currency_id)
         return included_computed_price['total_excluded']
 
+    @api.onchange('type')
+    def _onchange_type_update_taxes(self):
+        tax_fields = ['taxes_id', 'supplier_taxes_id']
+        for tax_field in tax_fields:
+            default_tax = self[tax_field]
+            if default_tax and self.type != default_tax.tax_scope:
+                matching_tax = self.env['account.tax'].search([
+                    ('amount', '=', default_tax.amount),
+                    ('type_tax_use', '=', default_tax.type_tax_use),
+                    ('company_id', '=', self.env.company.id),
+                    ('tax_scope', '=', self.type),
+                ], limit=1)
+                self[tax_field] = [(6, 0, [matching_tax.id])] if matching_tax else default_tax
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
