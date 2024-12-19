@@ -474,7 +474,8 @@ export class LinkPlugin extends Plugin {
         if (
             this.linkElement &&
             cleanZWChars(this.linkElement.innerText) === "" &&
-            !this.linkElement.querySelector("img")
+            !this.linkElement.querySelector("img") &&
+            this.linkElement.parentElement?.isContentEditable
         ) {
             this.linkElement.remove();
         }
@@ -589,7 +590,7 @@ export class LinkPlugin extends Plugin {
             const attributes = [...link.attributes].filter(
                 (a) => !["style", "href", "class"].includes(a.name)
             );
-            if (!classes.length && !attributes.length) {
+            if (!classes.length && !attributes.length && link.parentElement.isContentEditable) {
                 link.remove();
             }
         }
