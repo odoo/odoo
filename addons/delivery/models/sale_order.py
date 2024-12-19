@@ -113,6 +113,19 @@ class SaleOrder(models.Model):
             pickup_locations = getattr(self.carrier_id, function_name)(partner_address, **kwargs)
             if not pickup_locations:
                 return error
+
+            country_codes = [location["country_code"] for location in pickup_locations]
+            country_records = self.env['res.country'].search([('code', 'in', country_codes)])
+            country_map = {country.code: {'image_url': country.image_url, 'id': country.id, 'name': country.name}
+               for country in country_records}
+            for location in pickup_locations:
+                country_code = location.get("country_code")
+                location.update({
+                    "country_flag": country_map[country_code]['image_url'],
+                    "country_id": country_map[country_code]['id'],
+                    "country_name": country_map[country_code]['name']
+                })
+
             return {'pickup_locations': pickup_locations}
         except UserError as e:
             return {'error': str(e)}
