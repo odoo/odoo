@@ -1,5 +1,6 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     selector: '.o_portal_details',
@@ -47,6 +48,102 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
         this._adaptAddressForm();
     },
 });
+
+publicWidget.registry.portalPicture = publicWidget.Widget.extend({
+    selector: ".o_portal_picture_card",
+    events: {
+        "click .o_portal_profile_pic_edit": "_onEditProfilePicClick",
+        "click .o_portal_profile_pic_clear": "_onProfilePicClearClick",
+        "change .o_file_upload": "_onFileUploadChange",
+    },
+
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this.notification = this.bindService("notification");
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onEditProfilePicClick: function (ev) {
+        ev.preventDefault();
+        const pictureCardEl = ev.currentTarget.closest(".o_portal_picture_card");
+        pictureCardEl.querySelector(".o_file_upload")?.click();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onFileUploadChange: function (ev) {
+        if (!ev.currentTarget.files.length) {
+            return;
+        }
+        const pictureCardEl = ev.currentTarget.closest(".o_portal_picture_card");
+        const currentValue = pictureCardEl.querySelector(".o_wportal_avatar_img").value;
+        const reader = new FileReader();
+        const file = ev.currentTarget.files[0];
+        reader.onload = (ev) => {
+            const img = new Image();
+            img.onload = () => {
+                pictureCardEl.querySelector(".o_wportal_avatar_img").src = ev.target.result;
+                pictureCardEl.querySelector("input#remove_profile")?.remove();
+            };
+            img.onerror = () => {
+                this.notification.add(_t("The selected image is broken or invalid."), {
+                    type: "danger",
+                });
+                pictureCardEl.querySelector("input[type=file]").value = null;
+                pictureCardEl.querySelector(".o_wportal_avatar_img").src = currentValue;
+            };
+
+            img.src = ev.target.result;
+        };
+        reader.onerror = () => {
+            this.notification.add(_t("Failed to read the selected image."), {
+                type: "danger",
+            });
+        };
+
+        reader.readAsDataURL(file);
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onProfilePicClearClick: function (ev) {
+        ev.preventDefault();
+        const pictureCardEl = ev.currentTarget.closest(".o_portal_picture_card");
+
+        const removeProfileInput = pictureCardEl.querySelector("input#remove_profile");
+        const clearImageInput = pictureCardEl.querySelector("input#forum_clear_image");
+        if (!removeProfileInput && !clearImageInput) {
+            pictureCardEl.querySelector(".o_wportal_avatar_img").src =
+                "/web/static/img/placeholder.png";
+
+            const inputElement = document.createElement("input");
+            inputElement.type = "hidden";
+            Object.assign(
+                inputElement,
+                this.target.querySelector("span")?.textContent === "Public Profile"
+                    ? { name: "clear_image", id: "forum_clear_image" }
+                    : { name: "remove_profile", id: "remove_profile", value: "true" }
+            );
+            pictureCardEl.appendChild(inputElement);
+        }
+    },
+});
+
+export default publicWidget.registry.portalDetails;
 
 export const PortalHomeCounters = publicWidget.Widget.extend({
     selector: '.o_portal_my_home',

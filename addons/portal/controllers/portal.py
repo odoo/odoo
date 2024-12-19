@@ -2,6 +2,7 @@
 
 import math
 import re
+import base64
 
 from werkzeug import urls
 
@@ -180,6 +181,7 @@ class CustomerPortal(Controller):
     def account(self, redirect=None, **post):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
+        website = request.website
         values.update({
             'error': {},
             'error_message': [],
@@ -188,7 +190,13 @@ class CustomerPortal(Controller):
         if post and request.httprequest.method == 'POST':
             if not partner.can_edit_vat():
                 post['country_id'] = str(partner.country_id.id)
-
+            if post.get("image_1920") or post.get("remove_profile"):
+                image_file = post.get("image_1920").read()
+                post["image_1920"] = base64.b64encode(image_file)
+            else:
+                post.pop("image_1920", None)
+            # remove unnessary fields
+            post.pop("remove_profile", None)
             error, error_message = self.details_form_validate(post)
             values.update({'error': error, 'error_message': error_message})
             values.update(post)
@@ -212,6 +220,7 @@ class CustomerPortal(Controller):
 
         values.update({
             'partner': partner,
+            'website': website,
             'countries': countries,
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
@@ -368,7 +377,7 @@ class CustomerPortal(Controller):
 
     def _get_optional_fields(self):
         """ This method is there so that we can override the optional fields """
-        return ["street2", "zipcode", "state_id", "vat", "company_name"]
+        return ["street2", "zipcode", "state_id", "vat", "company_name", "image_1920"]
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         """Check if current user is allowed to access the specified record.

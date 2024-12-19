@@ -40,9 +40,6 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
 publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
     selector: '.o_wprofile_editor_form',
     read_events: {
-        'click .o_forum_profile_pic_edit': '_onEditProfilePicClick',
-        'change .o_forum_file_upload': '_onFileUploadChange',
-        'click .o_forum_profile_pic_clear': '_onProfilePicClearClick',
         'click .o_forum_profile_bio_edit': '_onProfileBioEditClick',
         'click .o_forum_profile_bio_cancel_edit': '_onProfileBioCancelEditClick',
     },
@@ -57,7 +54,6 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         }
 
         const textareaEl = this.el.querySelector("textarea.o_wysiwyg_loader");
-
         const options = {
             recordInfo: {
                 context: this._getContext(),
@@ -81,44 +77,6 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onEditProfilePicClick: function (ev) {
-        ev.preventDefault();
-        ev.currentTarget.closest("form").querySelector(".o_forum_file_upload").click();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onFileUploadChange: function (ev) {
-        if (!ev.currentTarget.files.length) {
-            return;
-        }
-        const formEl = ev.currentTarget.closest("form");
-        var reader = new window.FileReader();
-        reader.readAsDataURL(ev.currentTarget.files[0]);
-        reader.onload = function (ev) {
-            formEl.querySelector(".o_wforum_avatar_img").src = ev.target.result;
-        };
-        formEl.querySelector("#forum_clear_image")?.remove();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onProfilePicClearClick: function (ev) {
-        const formEl = ev.currentTarget.closest("form");
-        formEl.querySelector(".o_wforum_avatar_img").src = "/web/static/img/placeholder.png";
-        const inputElement = document.createElement("input");
-        inputElement.setAttribute("name", "clear_image");
-        inputElement.setAttribute("id", "forum_clear_image");
-        inputElement.setAttribute("type", "hidden");
-        formEl.append(inputElement);
-    },
 
     /**
      * @private
