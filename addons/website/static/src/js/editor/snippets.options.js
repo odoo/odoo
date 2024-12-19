@@ -2657,8 +2657,9 @@ options.registry.HeaderNavbar = options.Class.extend({
 });
 
 const VisibilityPageOptionUpdate = options.Class.extend({
-    pageOptionName: undefined,
-    showOptionWidgetName: undefined,
+    pageOptionName: null,
+    overlayOptionName: null,
+    showOptionWidgetName: null,
     shownValue: '',
 
     /**
@@ -2670,7 +2671,7 @@ const VisibilityPageOptionUpdate = options.Class.extend({
             // In most cases, this is not a problem but here it is as the code
             // that follows clicks on the visibility checkbox regardless of its
             // status. This avoids searching for that checkbox entirely.
-            return;
+            return; // Prevent duplicate actions if already shown
         }
         // TODO improve: here we make a hack so that if we make the invisible
         // header appear for edition, its actual visibility for the page is
@@ -2688,16 +2689,12 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      * @see this.selectClass for params
      */
     async visibility(previewMode, widgetValue, params) {
-        const show = (widgetValue !== 'hidden');
-        await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: this.pageOptionName, value: show}],
-                onSuccess: () => resolve(),
-                onFailure: reject,
-            });
-        });
-        this.trigger_up('snippet_option_visibility_update', {show: show});
+        await this._toggleVisibilityOption(widgetValue);
+        await this._changeVisibility(widgetValue);
+
+        // Simulate resize to update dependent features
+        const targetWindow = this.$target[0].ownerDocument.defaultView;
+        targetWindow.dispatchEvent(new targetWindow.Event("resize"));
     },
 
     //--------------------------------------------------------------------------
@@ -2705,25 +2702,92 @@ const VisibilityPageOptionUpdate = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Updates the visibility toggle state based on widgetValue.
+     */
+    async _toggleVisibilityOption(widgetValue) {
+        const show = (widgetValue !== 'hidden');
+        await new Promise((resolve, reject) => {
+            this.trigger_up('action_demand', {
+                actionName: 'toggle_page_option',
+                params: [{ name: this.pageOptionName, value: show }],
+                onSuccess: resolve,
+                onFailure: reject,
+            });
+        });
+        this.trigger_up('snippet_option_visibility_update', { show: show });
+    },
+
+    /**
+     * Handles additional visibility changes (e.g., transparency settings).
+     */
+    async _changeVisibility(widgetValue) {
+        if (widgetValue === "hidden") {
+            return;
+        }
+        const transparent = widgetValue === "transparent";
+
+        // Toggle overlay option
+        await this._togglePageOption(this.overlayOptionName, transparent);
+
+        if (transparent) {
+            await this._togglePageOption(this.colorOptionName, "");
+            await this._togglePageOption(this.textColorOptionName, "");
+        }
+    },
+
+    /**
+     * Utility to toggle a page option.
+     */
+    async _togglePageOption(optionName, value) {
+        if (!optionName) return; // Skip if option name is undefined
+        return new Promise((resolve, reject) => {
+            this.trigger_up('action_demand', {
+                actionName: "toggle_page_option",
+                params: [{ name: optionName, value: value }],
+                onSuccess: resolve,
+                onFailure: reject,
+            });
+        });
+    },
+
+    /**
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'visibility') {
+        if (methodName === "visibility") {
             const shown = await this._isShown();
-            return shown ? this.shownValue : 'hidden';
+            if (this.overlayOptionName) {
+                this.shownValue = await this._getOverlayState();
+            }
+            return shown ? this.shownValue : "hidden";
         }
         return this._super(...arguments);
     },
+
+    /**
+     * Fetches overlay state for transparency settings.
+     */
+    async _getOverlayState() {
+        return new Promise((resolve, reject) => {
+            this.trigger_up("action_demand", {
+                actionName: "get_page_option",
+                params: [this.overlayOptionName],
+                onSuccess: (v) => resolve(v ? "transparent" : "regular"),
+                onFailure: reject,
+            });
+        });
+    },
+
     /**
      * @private
      * @returns {boolean}
      */
     async _isShown() {
         return new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'get_page_option',
+            this.trigger_up("action_demand", {
+                actionName: "get_page_option",
                 params: [this.pageOptionName],
-                onSuccess: v => resolve(!!v),
+                onSuccess: (v) => resolve(!!v),
                 onFailure: reject,
             });
         });
@@ -2731,135 +2795,66 @@ const VisibilityPageOptionUpdate = options.Class.extend({
 });
 
 options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
-    pageOptionName: 'header_visible',
-    showOptionWidgetName: 'regular_header_visibility_opt',
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Handles the switching between 3 differents visibilities of the header.
-     *
-     * @see this.selectClass for params
-     */
-    async visibility(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        await this._changeVisibility(widgetValue);
-        // TODO this is hacky but changing the header visibility may have an
-        // effect on features like FullScreenHeight which depend on viewport
-        // size so we simulate a resize.
-        const targetWindow = this.$target[0].ownerDocument.defaultView;
-        targetWindow.dispatchEvent(new targetWindow.Event('resize'));
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _changeVisibility(widgetValue) {
-        const show = (widgetValue !== 'hidden');
-        if (!show) {
-            return;
-        }
-        const transparent = (widgetValue === 'transparent');
-        await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_overlay', value: transparent}],
-                onSuccess: () => resolve(),
-                onFailure: reject,
-            });
-        });
-        if (!transparent) {
-            return;
-        }
-        // TODO should be able to change both options at the same time, as the
-        // `params` list suggests.
-        await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_color', value: ''}],
-                onSuccess: () => resolve(),
-                onFailure: reject,
-            });
-        });
-        await new Promise(resolve => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_text_color', value: ''}],
-                onSuccess: () => resolve(),
-            });
-        });
-    },
-    /**
-     * @override
-     */
-    async _computeWidgetState(methodName, params) {
-        const _super = this._super.bind(this);
-        if (methodName === 'visibility') {
-            this.shownValue = await new Promise((resolve, reject) => {
-                this.trigger_up('action_demand', {
-                    actionName: 'get_page_option',
-                    params: ['header_overlay'],
-                    onSuccess: v => resolve(v ? 'transparent' : 'regular'),
-                    onFailure: reject,
-                });
-            });
-        }
-        return _super(...arguments);
-    },
+    pageOptionName: "header_visible",
+    overlayOptionName: "header_overlay",
+    showOptionWidgetName: "regular_header_visibility_opt",
 });
 
-options.registry.topMenuColor = options.Class.extend({
+options.registry.BaseColorOption = options.Class.extend({
+    colorOptionName: null,
 
-    //--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
     // Options
-    //--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
     /**
      * @override
      */
     async selectStyle(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        if (widgetValue && !isCSSColor(widgetValue)) {
-            widgetValue = params.colorPrefix + widgetValue;
-        }
-        await new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: params.pageOptionName, value: widgetValue}],
-                onSuccess: resolve,
-                onFailure: reject,
-            });
+      await this._super(...arguments);
+      if (widgetValue && !isCSSColor(widgetValue)) {
+        widgetValue = params.colorPrefix + widgetValue;
+      }
+      await new Promise((resolve, reject) => {
+        this.trigger_up("action_demand", {
+          actionName: "toggle_page_option",
+          params: [{ name: params.pageOptionName, value: widgetValue }],
+          onSuccess: resolve,
+          onFailure: reject,
         });
+      });
     },
 
-    //--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
     // Private
-    //--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
     /**
      * @override
      */
-    _computeVisibility: async function () {
-        const show = await this._super(...arguments);
-        if (!show) {
-            return false;
-        }
-        return new Promise((resolve, reject) => {
-            this.trigger_up('action_demand', {
-                actionName: 'get_page_option',
-                params: ['header_overlay'],
-                onSuccess: value => resolve(!!value),
-                onFailure: reject,
-            });
+    async _computeVisibility() {
+      this.colorOptionName = this.data["colorOptionName"];
+      const show = await this._super(...arguments);
+      if (!show) {
+        return false;
+      }
+      return new Promise((resolve, reject) => {
+        this.trigger_up("action_demand", {
+          actionName: "get_page_option",
+          params: [this.colorOptionName],
+          onSuccess: value => resolve(!!value),
+          onFailure: reject,
         });
+      });
     },
+  });
+
+options.registry.BreadcrumbOptions = VisibilityPageOptionUpdate.extend({
+    pageOptionName: "breadcrumb_visible",
+    overlayOptionName: "breadcrumb_overlay",
+    showOptionWidgetName: "regular_breadcrumb_visibility_opt",
 });
+
 
 /**
  * Manage the visibility of snippets on mobile/desktop.
