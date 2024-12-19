@@ -774,7 +774,7 @@ export class ThreadService {
     async search(searchTerm, thread, before = false) {
         const { messages, count } = await rpc(this.getFetchRoute(thread), {
             ...this.getFetchParams(thread),
-            search_term: await prettifyMessageContent(searchTerm), // formatted like message_post
+            search_term: searchTerm,
             before,
         });
         return {

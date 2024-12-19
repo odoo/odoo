@@ -1,5 +1,8 @@
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
+import { escape } from "@web/core/utils/strings";
+
+const Markup = markup().constructor;
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -139,4 +142,69 @@ export function parseVersion(v) {
             return compareVersion(v, other) < 0;
         },
     };
+}
+
+/**
+ * Applies list join on content and returns a markup result built for HTML.
+ *
+ * @param {Array<string|ReturnType<markup>>} args
+ * @returns {ReturnType<markup>}
+ */
+export function markupHtmlJoin(...args) {
+    return markup(args.map((arg) => (arg instanceof Markup ? arg : escape(arg))).join(""));
+}
+
+/**
+ * Applies string replace on content and returns a markup result built for HTML.
+ *
+ * @param {string|ReturnType<markup} content
+ * @param {string | RegExp} search
+ * @param {string} replacement
+ * @returns {ReturnType<markup>}
+ */
+export function markupHtmlReplace(content, search, replacement) {
+    if (!(content instanceof Markup)) {
+        content = markup(escape(content));
+    }
+    if ((typeof search === "string" || search instanceof String) && !(search instanceof Markup)) {
+        search = markup(escape(search));
+    }
+    if (!(replacement instanceof Markup)) {
+        replacement = markup(escape(replacement));
+    }
+    return markup(content.replace(search, replacement));
+}
+
+/**
+ * Applies string slice on content and returns a markup result built for HTML.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @returns {string|ReturnType<markup>}
+ */
+export function markupHtmlTrim(content) {
+    if (!(content instanceof Markup)) {
+        content = markup(escape(content));
+    }
+    return markup(content.trim());
+}
+
+/**
+ * @param {Element} node
+ * @param {string|ReturnType<markup>} content
+ */
+export function setElementContent(node, content) {
+    if (content instanceof Markup) {
+        node.innerHTML = content;
+    } else {
+        node.textContent = content;
+    }
+}
+
+/**
+ * @param {string|ReturnType<markup>} content
+ */
+export function createDocumentFragmentFromContent(content) {
+    const div = document.createElement("div");
+    setElementContent(div, content);
+    return new DOMParser().parseFromString(div.innerHTML, "text/html");
 }
