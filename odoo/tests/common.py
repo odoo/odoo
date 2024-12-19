@@ -1399,6 +1399,8 @@ class ChromeBrowser:
             message += '\n' + stack
 
         log_type = type
+        if self._result.done() and "AssetsLoadingError" in message:
+            log_type = 'warning'
         _logger = self._logger.getChild('browser')
         _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
