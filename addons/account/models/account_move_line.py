@@ -1525,6 +1525,8 @@ class AccountMoveLine(models.Model):
 
         line_to_write = self
         vals = self._sanitize_vals(vals)
+        lines_to_unreconcile = self.env['account.move.line']
+        st_lines_to_unreconcile = self.env['account.bank.statement.line']
         for line in self:
             if not any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in vals):
                 line_to_write -= line
@@ -1541,9 +1543,19 @@ class AccountMoveLine(models.Model):
             if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['tax']):
                 line._check_tax_lock_date()
 
-            # Check the reconciliation.
-            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['reconciliation']):
-                line._check_reconciliation()
+            # Break the reconciliation.
+            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['reconciliation']) and (line.matched_debit_ids or line.matched_credit_ids):
+                lines_to_unreconcile += line
+                st_lines_to_unreconcile += (line.matched_debit_ids.debit_move_id + line.matched_credit_ids.credit_move_id).statement_line_id
+
+        lines_to_unreconcile.remove_move_reconcile()
+        for st_line in st_lines_to_unreconcile:
+            try:
+                st_line.move_id._check_fiscal_lock_dates()
+                st_line.move_id.line_ids._check_tax_lock_date()
+            except UserError:
+                st_lines_to_unreconcile -= st_line
+        st_lines_to_unreconcile.action_undo_reconciliation()
 
         move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
@@ -2046,6 +2058,8 @@ class AccountMoveLine(models.Model):
                             remaining_credit_amount_curr -= credit_exchange_amount
 
             if exchange_lines_to_fix:
+                if 'draft' in exchange_lines_to_fix.mapped('parent_state'):
+                    raise UserError(_("Draft documents can only be matched if they are in the same currency."))
                 res['exchange_values'] = exchange_lines_to_fix._prepare_exchange_difference_move_vals(
                     amounts_list,
                     exchange_date=max(
@@ -2196,8 +2210,8 @@ class AccountMoveLine(models.Model):
 
         if any(aml.reconciled for aml in self):
             raise UserError(_("You are trying to reconcile some entries that are already reconciled."))
-        if any(aml.parent_state != 'posted' for aml in self):
-            raise UserError(_("You can only reconcile posted entries."))
+        if any(aml.parent_state not in {'posted', 'draft'} for aml in self):
+            raise UserError(_("You can only reconcile draft and posted entries."))
         accounts = self.mapped(lambda x: x._get_reconciliation_aml_field_value('account_id', shadowed_aml_values))
         if len(accounts) > 1:
             raise UserError(_(
